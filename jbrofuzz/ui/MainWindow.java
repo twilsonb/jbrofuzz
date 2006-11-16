@@ -88,6 +88,8 @@ public class MainWindow
 
     tabbedPane.setSelectedComponent(mainFuzzingPanel);
     pane.add(tabbedPane);
+    // The image icon
+    setIconImage(mainImageCreator.getImageIcon("icon.png").getImage());
   }
   /**
    * <p>Access the main object that is responsible for launching an instance of

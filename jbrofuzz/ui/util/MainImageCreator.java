@@ -40,6 +40,26 @@ public class MainImageCreator {
   private MainWindow mainWindow;
 
   /**
+   * The frame icon (png file) displayed on the top left of the frame.
+   * @since 0.3
+   */
+  private static final String frameIconText =
+   "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAp1J" +
+   "REFUOE+lk1tPE1EUhaHQltJ22tI77fReoFfoDVoEKRQoFEEFEhRBTDDEEKM+iUiAakj8ASYm" +
+   "JiQmvvjqP/zcrYThWSfZM8nMnO+svfY6ve12m57/uToA+3AOb3yW6MQ2zsAExdU2Nn+enl5d" +
+   "B/63evtQnAlKiycMKH5ihS26m3duerMLxZ1kKFjEMhQjPrlHsrSLzjBwA+jFYHWSmTnCH6li" +
+   "tgfQW70aQPGnUFwJgvFp3IEiRouTUvNMdlK7gD6DhXB2nUh+C59aJFU9QDdg1QD9gw4MJhue" +
+   "cAmzK0You0Gs/JTA2Cr6ARv+eB2zKDPKf5HsGpHMBkYlqAFS1UPsvjG8kWksDpVgaoVaq004" +
+   "0yKQXMAdqlJpXeKJVnF4R9DpTfT0GzRA7cEVpeUz0tOHeEJTzO58Y1R8mHr4hXT1JY39n+LJ" +
+   "EwrSlsHikvKIZ6N3AOtX1G4qO/+WdOU5jd1rFvZ/ECtuU1m5YO3oN2abXxQ1SMi0RqZeaIDC" +
+   "yiehfyC//J7szDGp2iHh/AaJ4hYLosYh7RUFXGyeUm5d3NSVBgiNbxIYbeAS+UarW2CnTDY/" +
+   "Ut/5jjNYoLJ2xeL+L9zRGqXW+a3a2xyY7Sr9JgfuSIXK+mdi+UfMbX6lsnpJrv6Gxb1rUiJ5" +
+   "ZPIAr7SQm33FpHy7BXRnbbIyVt7DIiHxxO6TLD8jmJxHzayQESPH517jE5VqZklG6MWXqGsA" +
+   "iyPUTZpHLaN4EpicITyRe13T3GqJspioNymSCUVaXSI41sRou5NE1/AEvvCUZD1Kvv5OEreN" +
+   "0eykR6JsHgqTm++828IwaCcuz9LSCXZvRlMQTq9jFenu4Djp+8dCD0hQ5Bzo+mSREzX3mErz" +
+   "nKFAAV+khksO33B0RgN0zPjX+gPK6Z2eb2W0vwAAAABJRU5ErkJggg==";
+
+  /**
    * The exit image is a gif file in base 64.
    * @since 0.1
    */
@@ -90,22 +110,23 @@ public class MainImageCreator {
   /**
    * The add image is a png file in base 64.
    * @since 0.1
+   * @version 0.3
    */
   private static final String addImageText =
-      "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAoZJ" +
-      "REFUOE+Fk0lPU1EYhq8L41J/hPFfKHEeNsZoKIPQOsYhCJGgOIahFQlRJIpIpdVCpQtdaAkI" +
-      "qZqwICBWUEoxBUK1WKUkVEG43NvLPY+nrBAWnuTN2XxP3vfLec86IQTKimMsakq0pkbZ0N2t" +
-      "MDenrN+4SQknEspvW76SWVy8clRR0vBKafPzTNbdw8jJxdx/AGE9QXDHTlwVlf/MLZuuhlOq" +
-      "Sqz+AVq+jdSefYijNt5n7MBdVbUWVhPTJAY/SQ0yPTTEZE8P0erbGOcvoKfhPCufd++jqeQS" +
-      "s/E4vycmSI6PMzs1hTLW7CXmfkK81Ufc5+O7x81cy1PMGzfQd++R8fNInjxF+NhxIqWlRO/c" +
-      "YdRux2U7hjLe8gxjYAAxNros8/Mg4s1rjCo7utxZy85BKywi5bCjuZsw3nSh+l/yMCtHwt5W" +
-      "9L5eRHgYMRzC6O9nqcOPca8W/eAhNEs2akERmsOB5vVgdL9F7XxNo/VkGvah90pYgiIUYikN" +
-      "t/sxHz4glZklZWGxoJBFu4PFljT8DrWrk0bbCbmzx0vqfR9iJIz4MoIZ/IDZ0YZwNmDYrOiH" +
-      "LWgS1u2VqE1OjECnjO2n3iJjR5+/IPHKT7IrwEwgwHRbG7OepwjXI4xzZzCOZJM8fpqQ1cbE" +
-      "zZtEa+8SLi+j9ex5lNSfP8zHfyxrIZHg19g4X6urEY8bWLpYhJAOn3btxVlyGXVmhl/fvpGI" +
-      "RFCTybUl0RcWiNXWIRrqMUsvI7Jy6d+aIUty+/8N02SS73X3pbMTcf0aIjef4LbtuOTbrm7j" +
-      "mnrqstuRsjJ+Xr1CPD+PSenavnkLrvKK/8PCNIl4mgnK4QHHLT7Ku6+8nNiw7MGqT/QXynPE" +
-      "y7nmhIYAAAAASUVORK5CYII=";
+      "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAACVUlEQVR4nH2SO2tUYRCGn/nO" +
+      "dy7Zs4ludKNbGFBZoqiohWAjCAp2FgpWIuJfEEQs7cTSfyC2KlgIlsHCSyXiBS/BIImbjcaN" +
+      "ezY5e87u941FFFYR327gnWFm3ke894yoOcj7pz7dvHkrnp1Fu13CTZt53W6zevFC89zly3OA" +
+      "/jZb/pKqN2ltE9sbDUySIFMN2iiLef9vKxZojtTHjTF71FqcDVHnsc7hnCKhLQD5o7n/9dv1" +
+      "7MuXF6CPJAjuF1nWcL0ewfgEfmkJREmiCP+9cyxrte5qUez33pdBtfpaPty+o/FwQJAkIKBl" +
+      "zoQxpO/nGD59hqlvI6sktJzDbpsiqtcZ5DmPP85hRYTGoYME49WNm9fXkK9LuIUFsBanjkqa" +
+      "0pzaim9sJ5jewWA9p3j1BosIviwIyghU8cUAKQcwlkIUg1c2AhGIQggtRDFBXMFu7Aqogv76" +
+      "iIKJQjSOEfUoiurvkAREQBSjziFGwBiwAWIEEUFsgFRi1G0MNHi0KKAsoSgZ5jnWVhI6S8uE" +
+      "qxlqwPX7xN9XGA8EKmOYXkm2lrP4YY60HCBZj/Vul9pkDSmz7FrZzfYBj8UGYdnNTv64d/f0" +
+      "9OQE/u07zOIyL1dWeH740PL5q1cOFL3ejbLf3zVer5+wNk1f2TSdBVaBGVutPsmi5DRDj0Qx" +
+      "iFAWfexk7WhSq3WSWu3SKGEPRqCZVO+PGGPAhoi1EAQYMagbTgPz/2O7JyKDtc4K7XaBX1jA" +
+      "f/5Mu9UC5yv/YntU38KxsQ47d7E4P4+Z2YvubrIF5cDZMw8BM2r+CQbeCNwWeEAbAAAAAElF" +
+      "TkSuQmCC";
+
   /**
    * The remove image is a png file in base 64.
    * @since 0.1
@@ -547,7 +568,7 @@ public class MainImageCreator {
   private ImageIcon startImageIcon;
   private ImageIcon addImageIcon;
   private ImageIcon removeImageIcon;
-
+  private ImageIcon frameIcon;
   /**
    * <p>The main constructor creating an instance of all the image icons being
    * used to instantiate the various ImageIcons present.</p>
@@ -556,6 +577,7 @@ public class MainImageCreator {
   public MainImageCreator(MainWindow mainWindow) {
     this.mainWindow = mainWindow;
 
+    frameIcon = new ImageIcon(Base64.decode(frameIconText));
     exitImageIcon = new ImageIcon(Base64.decode(exitImageText));
     addImageIcon = new ImageIcon(Base64.decode(addImageText));
     removeImageIcon = new ImageIcon(Base64.decode(removeImageText));
@@ -564,6 +586,7 @@ public class MainImageCreator {
     helpImageIcon = new ImageIcon(Base64.decode(helpImageText));
     aboutImageIcon = new ImageIcon(Base64.decode(aboutImageText));
   }
+
   /**
    * Method responsible for returning the ImageIcon for each of the images
    * on the Menu Bar.
@@ -602,6 +625,9 @@ public class MainImageCreator {
     if (s.equals("remove.gif")) {
       return removeImageIcon;
     }
-    return exitImageIcon;
+    if (s.equals("icon.png")) {
+      return frameIcon;
+    }
+    return frameIcon;
   }
 }
