@@ -32,14 +32,11 @@ import java.io.FileReader;
 
 import jbrofuzz.*;
 /**
- * <p>Description: Class holding the definitions of the generators. </p>
- *
- * <p>Not used in current version</p>
- *
- * <p>Company: </p>
+ * <p>Description: Class holding the definitions of the generators as they are
+ * being read from file. </p>
  *
  * @author subere@uncon.org
- * @version 0.1
+ * @since 0.3
  */
 public class Definitions {
   private final JBroFuzz jbrofuzz;
@@ -93,7 +90,8 @@ public class Definitions {
   }
   /**
    * Get fields from name
-   * @return JBroFuzz
+   * @param name String
+   * @return Vector
    */
   public Vector getFields(String name) {
     Vector fields = new Vector();

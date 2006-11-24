@@ -76,7 +76,7 @@ public class MainDefinitionsPanel
 
     add(listPanel);
     /**
-     * @todo Update the test so that to get the list of generators from the
+     * @todo Update the text so that to get the list of generators from the
      * format page.
      */
     listTextArea.setText(
@@ -205,6 +205,7 @@ public class MainDefinitionsPanel
         "<IFRAME SRC=\"javascript:alert('XSS');\"></IFRAME>\n\n\n"
 
         );
+    listTextArea.setCaretPosition(0);
   }
 
   public MainWindow getMainWindow() {
