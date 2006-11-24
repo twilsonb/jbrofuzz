@@ -218,8 +218,9 @@ public class MainMenuBar extends JMenuBar {
   }
 
   /**
-   * Show about box..
-   * @return null
+   * Generate a JOptionPane attached to the main window, displaying the about
+   * box.
+   *
    */
   public void showAboutBox() {
     String message = mainWindow.getJBroFuzz().getVersion().getAboutText();
@@ -232,9 +233,14 @@ public class MainMenuBar extends JMenuBar {
                                   getImageIcon("about.gif"));
   }
 
+  /**
+   * Generate a JOptionPane attached to the main window, displaying the
+   * disclaimer box.
+   *
+   */
   public void showDisclaimerBox() {
     String message = mainWindow.getJBroFuzz().getVersion().getDisclaimerText();
-
+    // JOptionPane.showMessageDialog(
     JOptionPane.showMessageDialog(mainWindow,
                                   message,
                                   "Disclaimer JBroFuzz",
@@ -244,22 +250,8 @@ public class MainMenuBar extends JMenuBar {
   }
 
   /**
-   * Not yet implemented
-   * @return null
-   */
-  public void notYetImplemented() {
-    String message = "Not yet implemented";
-    JOptionPane.showMessageDialog(mainWindow,
-                                  message,
-                                  "Feature status",
-                                  JOptionPane.INFORMATION_MESSAGE,
-                                  this.mainWindow.getMainImageCreator().
-                                  getImageIcon("about.gif"));
-  }
-
-  /**
-   * Method responsible for calling the fuzz start method of the main window,
-   * thus kicking off a fuzzing process.
+   * <p>Method responsible for calling the fuzz start method of the main window,
+   * thus kicking off a fuzzing process.</p>
    */
   public void fuzzStart() {
     mainWindow.setTabFuzzing();

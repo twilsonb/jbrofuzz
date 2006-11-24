@@ -89,19 +89,39 @@ public class MainFuzzingPanel extends JPanel {
     targetScrollPane.setHorizontalScrollBarPolicy(
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-    targetScrollPane.setPreferredSize(new Dimension(220, 20));
+    targetScrollPane.setPreferredSize(new Dimension(480, 20));
     targetPanel.add(targetScrollPane);
 
 
-    targetPanel.setBounds(10, 20, 240, 60);
+    targetPanel.setBounds(10, 20, 500, 60);
     add(targetPanel);
+
+    /*
+     * @todo 0.5 limit the type of input a user can enter at particular JTextAreas
+     * a port should allow only int of length max 5. In need of a fixed size document.
+
+         class FixedSizePlainDocument extends PlainDocument {
+        public FixedSizePlainDocument() {
+        }
+
+        public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+            if (str != null) {
+                                  if ( (getLength() + str.length()) <= maxSize) {
+                                                super.insertString(offs, str, a);
+                                  }
+            }
+        }
+    }
+     *
+     */
+
     // The port panel
     JPanel portPanel = new JPanel();
     portPanel.setBorder(BorderFactory.createCompoundBorder(
         BorderFactory.createTitledBorder(" Port "),
         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-    port = new JTextArea(1, 1);
+    port = new JTextArea(1,1);
 
     port.setEditable(true);
     port.setVisible(true);
@@ -119,7 +139,7 @@ public class MainFuzzingPanel extends JPanel {
     portScrollPane.setPreferredSize(new Dimension(50, 20));
     portPanel.add(portScrollPane);
 
-    portPanel.setBounds(250, 20, 60, 60);
+    portPanel.setBounds(510, 20, 60, 60);
     add(portPanel);
     // The message panel
     JPanel requestPanel = new JPanel();
@@ -140,14 +160,14 @@ public class MainFuzzingPanel extends JPanel {
     messageScrollPane.setVerticalScrollBarPolicy(
         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-    messageScrollPane.setPreferredSize(new Dimension(480, 160));
+    messageScrollPane.setPreferredSize(new Dimension(350, 160));
     requestPanel.add(messageScrollPane);
 
-    requestPanel.setBounds(10, 80, 500, 200);
+    requestPanel.setBounds(10, 80, 370, 200);
     add(requestPanel);
     // The top buttons
     buttonGeneneratorAdd = new JButton(ADD_GEN_STR);
-    buttonGeneneratorAdd.setBounds(550, 30, 130, 20);
+    buttonGeneneratorAdd.setBounds(580, 30, 130, 20);
     add(buttonGeneneratorAdd);
     buttonGeneneratorAdd.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
@@ -156,7 +176,7 @@ public class MainFuzzingPanel extends JPanel {
     }
     );
     buttonGeneneratorRemove = new JButton("Remove Generator");
-    buttonGeneneratorRemove.setBounds(700, 30, 150, 20);
+    buttonGeneneratorRemove.setBounds(730, 30, 150, 20);
     add(buttonGeneneratorRemove);
     buttonGeneneratorRemove.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -182,11 +202,11 @@ public class MainFuzzingPanel extends JPanel {
     generatorScrollPane.setPreferredSize(new Dimension(180, 100));
     generatorPanel.add(generatorScrollPane);
 
-    generatorPanel.setBounds(650, 60, 200, 150);
+    generatorPanel.setBounds(680, 60, 200, 150);
     add(generatorPanel);
     // The fuzz buttons
     buttonFuzzStart = new JButton("Fuzz!");
-    buttonFuzzStart.setBounds(700, 220, 70, 20);
+    buttonFuzzStart.setBounds(730, 240, 70, 20);
     add(buttonFuzzStart);
     buttonFuzzStart.addActionListener
         (
@@ -216,7 +236,7 @@ public class MainFuzzingPanel extends JPanel {
     );
     buttonFuzzStop = new JButton("Stop");
     buttonFuzzStop.setEnabled(false);
-    buttonFuzzStop.setBounds(780, 220, 70, 20);
+    buttonFuzzStop.setBounds(810, 240, 70, 20);
     add(buttonFuzzStop);
     buttonFuzzStop.addActionListener(
         new ActionListener() {
@@ -248,21 +268,21 @@ public class MainFuzzingPanel extends JPanel {
     outputScrollPane.setVerticalScrollBarPolicy(
         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-    outputScrollPane.setPreferredSize(new Dimension(820, 140));
+    outputScrollPane.setPreferredSize(new Dimension(850, 140));
     outputPanel.add(outputScrollPane);
 
-    outputPanel.setBounds(10, 280, 840, 180);
+    outputPanel.setBounds(10, 280, 870, 180);
     add(outputPanel);
 
     // Some value defaults
-    target.setText("127.0.0.1");
+    target.setText("http://127.0.0.1");
     port.setText("80");
     message.setText("GET / HTTP/1.0\n\n");
   }
 
   public void fuzzStart() {
     // Check to see if a message is present
-    if(message.getText().equals("")) {
+    if("".equals(message.getText())) {
       JOptionPane.showMessageDialog(this,
                                     "The request field is blank.\n" +
                                     "Specify a request\n",
@@ -289,7 +309,8 @@ public class MainFuzzingPanel extends JPanel {
 
     // If no generator fuzz points exist, just send a single request
     if(!(original.contains("\n"))) {
-      getJBroFuzz().setGenerator(message.getText(), 0, 0, "ZER");
+      StringBuffer sbuf = new StringBuffer(message.getText());
+      getJBroFuzz().setGenerator(sbuf, 0, 0, "ZER");
       getJBroFuzz().runGenerator();
     }
     else {
@@ -301,7 +322,8 @@ public class MainFuzzingPanel extends JPanel {
         final int start = Integer.parseInt(fuzzEntry[0]);
         final int finish = Integer.parseInt(fuzzEntry[1]);
 
-        getJBroFuzz().setGenerator(message.getText(), start, finish,
+        StringBuffer sbuf = new StringBuffer(message.getText());
+        getJBroFuzz().setGenerator(sbuf, start, finish,
                                    fuzzEntry[2]);
         // Run the generator, that also performs the connection requests
         getJBroFuzz().runGenerator();
@@ -312,15 +334,55 @@ public class MainFuzzingPanel extends JPanel {
   public void fuzzStop() {
     getJBroFuzz().stopGenerator();
   }
-
+  /**
+   * Get the value of the target String stripping out, any protocol
+   * specifications as well as any trailing slashes.
+   * @return String
+   */
   public String getTargetText() {
-    return target.getText();
+    String text = target.getText();
+    int len = text.length();
+
+    if(text.startsWith("ftp://")) {
+      text = text.substring(6,len);
+      len = text.length();
+      target.setText(text);
+    }
+    if(text.startsWith("http://")) {
+      text = text.substring(7,len);
+      len = text.length();
+      target.setText(text);
+    }
+    if(text.startsWith("https://")) {
+      text = text.substring(8,len);
+      len = text.length();
+      target.setText(text);
+    }
+    if(text.endsWith("/")){
+      text = text.substring(0, len - 1);
+      len = text.length();
+      target.setText(text);
+    }
+    return text;
   }
 
+  /**
+   * <p>Get the value of the port String trimming it down to a maximum of 5
+   * characters.</p>
+   * @return String
+   */
   public String getPortText() {
-    return port.getText();
+    String text = port.getText();
+    int len = text.length();
+
+    return text;
   }
 
+  /**
+   * <p>Get the value of the Message String that is to be transmitted on the
+   * given Socket request that will be created.</p>
+   * @return String
+   */
   public String getMessageText() {
     return message.getText();
   }
@@ -329,6 +391,14 @@ public class MainFuzzingPanel extends JPanel {
     return counter;
   }
 
+  /**
+   * <p>Set the output text to contain the specified String, by appending that
+   * String to the already present output String value. If the total number of
+   * lines exceeds 1000, proceed to clear the original String value present
+   * within the JTextArea prior to appending the given String.</p>
+   *
+   * @param s String
+   */
   public void setOutputText(String s) {
     final int lines = outputTable.getLineCount();
     // Refresh after 1000 lines

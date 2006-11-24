@@ -1,5 +1,5 @@
 /**
- * JBroFuzz.java 0.2
+ * JBroFuzz.java 0.3
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -41,22 +41,23 @@ import jbrofuzz.ui.*;
  * done in other programs.
  *
  * @todo Check out what is happening with POST request lengths
- * @todo See what is happening with truncated replies prob within the Connection
- * class
+ * @todo Write a generator parser from a file that can be changed.
  */
 
 
 /**
  * <p>Title: Java Bro Fuzzer</p>
  *
- * <p>Description: The central class launching the application.</p>
+ * <p>Description: The central class launching the application. This class
+ * instantiates a request iterator, a version, a main window and a file handler.
+ * The order in which the last three are instantiated should not be altered.</p>
  *
  * @author subere@uncon.org
  * @version 0.3
  */
 public class JBroFuzz {
 
-  private Generator generator;
+  private RequestIterator generator;
   private final Version version;
   private static MainWindow mainwindow;
   private static FileHandler filehandler;
@@ -96,9 +97,10 @@ public class JBroFuzz {
    * @param finish int
    * @param type int
    */
-  public void setGenerator(final String request, final int start,
+  public void setGenerator(final StringBuffer request, final int start,
                            final int finish, final String type) {
-    generator = new Generator(this, request, start, finish, type);
+
+    generator = new RequestIterator(this, request, start, finish, type);
   }
 
   /**

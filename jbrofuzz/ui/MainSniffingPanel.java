@@ -278,15 +278,101 @@ public class MainSniffingPanel
                                          " \\ " + session + "*.txt)"),
         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-    String rh = rHostText.getText();
-    String rp = rPortText.getText();
-    String lh = lHostText.getText();
-    String lp = lPortText.getText();
+    final String rh = getRemoteHostText();
+    final String rp = getRemotePortText();
+    final String lh = getLocalHostText();
+    final String lp = getLocalPortText();
+
     System.out.println(rh + ":" + rp + " <=> " + lh + ":" + lp);
 
     reflector = new TCPConnectionListener(this, rh, rp, lh, lp);
     reflector.start();
     stopPressed = false;
+  }
+
+  /**
+   * Method for accessing the Remote Host port field and retrieving it's value.
+   *
+   * @return String
+   */
+  public String getRemotePortText() {
+    return rPortText.getText();
+  }
+
+  /**
+   * Method for accessing the Local Host port field and retrieving it's value.
+   * @return String
+   */
+  public String getLocalPortText() {
+    return lPortText.getText();
+  }
+
+  /**
+   * Method for accessing the Local Host text field and retrieving it's value.
+   * This method performs sanitisation attempting to remove protocol as well as
+   * trailing slashes.
+   *
+   * @return String
+   */
+  public String getLocalHostText() {
+    String text = lHostText.getText();
+    int len = text.length();
+
+    if(text.startsWith("ftp://")) {
+      text = text.substring(6,len);
+      len = text.length();
+      lHostText.setText(text);
+    }
+    if(text.startsWith("http://")) {
+      text = text.substring(7,len);
+      len = text.length();
+      lHostText.setText(text);
+    }
+    if(text.startsWith("https://")) {
+      text = text.substring(8,len);
+      len = text.length();
+      lHostText.setText(text);
+    }
+    if(text.endsWith("/")){
+      text = text.substring(0, len - 1);
+      len = text.length();
+      lHostText.setText(text);
+    }
+    return text;
+  }
+
+  /**
+   * Method for accessing the Remote Host text field and retrieving it's value.
+   * This method performs sanitisation attempting to remove protocol as well as
+   * trailing slashes.
+   *
+   * @return String
+   */
+  public String getRemoteHostText() {
+    String text = rHostText.getText();
+    int len = text.length();
+
+    if(text.startsWith("ftp://")) {
+      text = text.substring(6,len);
+      len = text.length();
+      rHostText.setText(text);
+    }
+    if(text.startsWith("http://")) {
+      text = text.substring(7,len);
+      len = text.length();
+      rHostText.setText(text);
+    }
+    if(text.startsWith("https://")) {
+      text = text.substring(8,len);
+      len = text.length();
+      rHostText.setText(text);
+    }
+    if(text.endsWith("/")){
+      text = text.substring(0, len - 1);
+      len = text.length();
+      rHostText.setText(text);
+    }
+    return text;
   }
 
   private void closeConnectionListener() {

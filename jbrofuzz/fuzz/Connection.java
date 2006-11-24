@@ -35,7 +35,8 @@ import java.net.*;
  * on a given address, port and for a given request.</p>
  *
  * @author subere@uncon.org
- * @version 0.1
+ * @version 0.3
+ * @since 0.1
  */
 public class Connection {
 
@@ -43,7 +44,9 @@ public class Connection {
   private Socket socket;
   private InputStream in_stream;
   private OutputStream out_stream;
-
+  // The maximum size for the socket I/O
+  private final static int SEND_BUF_SIZE = 256 * 1024;
+  private final static int RECV_BUF_SIZE = 256 * 1024;
   /**
    * <p>Implement a connection to a particular address, on a given port,
    * specifying the message to be transmitted.</p>
@@ -52,13 +55,13 @@ public class Connection {
    * @param port String
    * @param message String
    */
-  public Connection(String address, String port, String message) {
+  public Connection(String address, String port, StringBuffer message) {
 
     String conAddress = address;
-    String conMessage = message;
+    StringBuffer conMessage = message;
     int conPort = 0;
-    // int replyLength = 0;
-    byte[] recv = new byte[65535];
+    byte[] recv = new byte[RECV_BUF_SIZE];
+
     // Check the connection port value
     try {
       conPort = Integer.parseInt(port);
@@ -75,6 +78,9 @@ public class Connection {
       socket = new Socket();
       socket.bind(null);
       socket.connect(new InetSocketAddress(conAddress, conPort), 5000);
+
+      socket.setSendBufferSize(SEND_BUF_SIZE);
+      socket.setReceiveBufferSize(RECV_BUF_SIZE);
     }
     catch (UnknownHostException e) {
       reply = "The IP address of the host could not be determined : " +
@@ -102,7 +108,7 @@ public class Connection {
     }
     // Write to the output stream
     try {
-      out_stream.write(conMessage.getBytes());
+      out_stream.write(conMessage.toString().getBytes());
     }
     catch (IOException e) {
       reply =
