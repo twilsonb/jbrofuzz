@@ -82,7 +82,7 @@ public class Format {
   /**
    * <p>An array list of all the supported generators.</p>
    * @since 0.2
-   */
+   *
   public static final String[] GENERATORS = {
       "ZER (Request as is)",
       "BFO (Buffer Overflows)",
@@ -94,4 +94,7 @@ public class Format {
       "DEC (Decimal Fuzz Type)",
       "HEX (Hexadecimal Fuzz Type)",
       "SQL (SQL Injections)"};
+   }
+   }
+   */
 }

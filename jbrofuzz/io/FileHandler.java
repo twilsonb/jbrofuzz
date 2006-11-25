@@ -30,6 +30,7 @@ import java.io.*;
 
 import jbrofuzz.ui.*;
 import jbrofuzz.*;
+import java.util.Vector;
 /**
  * <p>Title: Java Browser Fuzzer</p>
  *
@@ -87,7 +88,7 @@ public class FileHandler {
                                runningDate);
 
       systemDirectory = new File(baseDir + File.separator + "jbrofuzz" +
-                               File.separator + "system");
+                                 File.separator + "system");
 
       if (!fuzzDirectory.exists()) {
         fuzzDirectory.mkdirs();
@@ -128,15 +129,15 @@ public class FileHandler {
 
   private static String getFileText(int type) {
     StringBuffer output = new StringBuffer();
-        output.append("------------ ");
-        output.append(runningDate);
-        output.append(" ---");
-    if(type == INFO_FILE) {
+    output.append("------------ ");
+    output.append(runningDate);
+    output.append(" ---");
+    if (type == INFO_FILE) {
       output.append("[Console Information]-------------------\r\n");
       output.append(Format.SYSTEM_INFO);
       output.append("\r\n\r\n");
     }
-    if(type == EXCP_FILE) {
+    if (type == EXCP_FILE) {
       output.append("[Exceptions Thrown and Caught]----------\r\n");
     }
     return output.toString();
@@ -145,7 +146,7 @@ public class FileHandler {
   private static void appendFile(JFrame f, File fileName, String content) {
     String file = fileName.toString();
     try {
-      if(errors < 3) {
+      if (errors < 3) {
         content += "\r\n";
         final boolean append = true;
         OutputStream output = new FileOutputStream(file, append);
@@ -171,6 +172,7 @@ public class FileHandler {
       errors++;
     }
   }
+
   /**
    * <p>Method for reading snif files that have been generated within a sniffing
    * session. Typically, the contents of the file are returned within the
@@ -186,7 +188,7 @@ public class FileHandler {
     StringBuffer out = new StringBuffer();
     File file;
     try {
-       file = new File(snifDirectory, fileName);
+      file = new File(snifDirectory, fileName);
     }
     catch (NullPointerException e) {
       JOptionPane.showMessageDialog(f, "Cannot Find Location"
@@ -201,22 +203,22 @@ public class FileHandler {
       BufferedReader bufRead = new BufferedReader(input);
       String line;
       line = bufRead.readLine();
-      while(line != null) {
+      while (line != null) {
         out.append(line + "\n");
         line = bufRead.readLine();
       }
       bufRead.close();
     }
-    catch(ArrayIndexOutOfBoundsException e) {
+    catch (ArrayIndexOutOfBoundsException e) {
       JOptionPane.showMessageDialog(f, "Cannot Find Location"
-                              + "\n" + fileName
-                              + "\nAn Array Error Occured",
-                              "JBroFuzz File Read Error",
-                              JOptionPane.ERROR_MESSAGE);
+                                    + "\n" + fileName
+                                    + "\nAn Array Error Occured",
+                                    "JBroFuzz File Read Error",
+                                    JOptionPane.ERROR_MESSAGE);
       return new StringBuffer("");
 
     }
-    catch(IOException e) {
+    catch (IOException e) {
       JOptionPane.showMessageDialog(f, "Cannot Read Location"
                                     + "\n" + fileName
                                     + "\nA File Read Error Occured",
@@ -228,11 +230,11 @@ public class FileHandler {
   }
 
   private static void createFile(JFrame f, String fileName, String content,
-                                int fileType) {
+                                 int fileType) {
 
     if (fileType == FileHandler.FUZZ_FILE) {
       try {
-        if(errors < 3) {
+        if (errors < 3) {
           currentFile = new File(fuzzDirectory, fileName);
           if (!currentFile.exists()) {
             currentFile.createNewFile();
@@ -254,7 +256,7 @@ public class FileHandler {
 
     if (fileType == FileHandler.SNIF_FILE) {
       try {
-        if(errors < 3) {
+        if (errors < 3) {
           currentFile = new File(snifDirectory, fileName);
           if (!currentFile.exists()) {
             currentFile.createNewFile();
@@ -274,7 +276,7 @@ public class FileHandler {
 
     if (fileType == FileHandler.INFO_FILE) {
       try {
-        if(errors < 3) {
+        if (errors < 3) {
           currentFile = new File(systemDirectory, fileName);
           if (!currentFile.exists()) {
             currentFile.createNewFile();
@@ -294,7 +296,7 @@ public class FileHandler {
 
     if (fileType == FileHandler.EXCP_FILE) {
       try {
-        if(errors < 3) {
+        if (errors < 3) {
           currentFile = new File(systemDirectory, fileName);
           if (!currentFile.exists()) {
             currentFile.createNewFile();
@@ -313,6 +315,7 @@ public class FileHandler {
     }
 
   }
+
   /**
    * <p>Method for writting a new fuzz file under the created fuzzing directory.
    * The file name and content is specified as a string input to the method.
@@ -327,6 +330,7 @@ public class FileHandler {
   public static void writeFuzzFile(String name, String content) {
     createFile(g, name, content, FileHandler.FUZZ_FILE);
   }
+
   /**
    * <p>Method for writting a new snif file under the created sniffing
    * directory. The file name and content is specified as a string input to the
@@ -341,6 +345,7 @@ public class FileHandler {
   public static void writeSnifFile(String name, String content) {
     createFile(g, name, content, FileHandler.SNIF_FILE);
   }
+
   /**
    * <p>Method for appending content to the exceptions log. The content is
    * specified as a string input to the method. The location where this file is
@@ -353,6 +358,7 @@ public class FileHandler {
   public static void writeExceptionsFile(String content) {
     createFile(g, exceptionsFile.toString(), content, FileHandler.EXCP_FILE);
   }
+
   /**
    * <p>Method for appending content to the console log. The content is
    * specified as a string input to the method. The location where this file is
@@ -364,6 +370,37 @@ public class FileHandler {
    */
   public static void writeConsoleFile(String content) {
     createFile(g, consoleFile.toString(), content, FileHandler.INFO_FILE);
+  }
+
+  /**
+   * <p>Method for returning the contents of a generator file as a Vector
+   * @param generatorFile String
+   * @return Vector
+   */
+  public static Vector readGenerators(String generatorFile) {
+    final int MAX_LINES = 1024;
+    final int MAX_LINE_LENGTH = 256;
+    int line_counter = 0;
+    Vector file = new Vector();
+    try {
+      BufferedReader in = new BufferedReader(new FileReader(generatorFile));
+      String line = in.readLine();
+      line_counter++;
+      while ((line != null) && (line_counter < MAX_LINES)) {
+        if(line.length() > MAX_LINE_LENGTH) {
+          line = line.substring(0, MAX_LINE_LENGTH);
+        }
+        file.add(line);
+        line = in.readLine();
+        line_counter++;
+      }
+      in.close();
+    }
+    catch (IOException e1) {
+      System.out.println("An IO Exception was thrown");
+    }
+    file.trimToSize();
+    return file;
   }
 
 }

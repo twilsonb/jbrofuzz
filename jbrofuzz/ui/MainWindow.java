@@ -158,6 +158,14 @@ public class MainWindow
     return mainSniffingPanel;
   }
   /**
+   * <p>Method returning the main definitions panel that is being instantiated
+   * through the main window.</p>
+   * @return MainDefinitionsPanel
+   */
+  public MainDefinitionsPanel getDefinitionsPanel() {
+    return mainDefinitionsPanel;
+  }
+  /**
    * <p>Method for returning the main menu bar that is being instantiated
    * through the main window.</p>
    * @return MainMenuBar

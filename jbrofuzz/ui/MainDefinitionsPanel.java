@@ -62,7 +62,7 @@ public class MainDefinitionsPanel
     listPanel.setBounds(10, 90, 870, 370);
 
     listTextArea = new JTextArea();
-    listTextArea.setFont(new Font("Verdana", Font.PLAIN, 14));
+    listTextArea.setFont(new Font("Verdana", Font.PLAIN, 13));
     listTextArea.setEditable(false);
     listTextArea.setLineWrap(true);
     listTextArea.setWrapStyleWord(true);
@@ -79,6 +79,7 @@ public class MainDefinitionsPanel
      * @todo Update the text so that to get the list of generators from the
      * format page.
      */
+    /*
     listTextArea.setText(
         "The following generators are available, provided a user has selected " +
         "(highlighted) part of the message request within the fuzzing panel:\n" +
@@ -205,10 +206,15 @@ public class MainDefinitionsPanel
         "<IFRAME SRC=\"javascript:alert('XSS');\"></IFRAME>\n\n\n"
 
         );
+    */
     listTextArea.setCaretPosition(0);
   }
 
   public MainWindow getMainWindow() {
     return m;
+  }
+
+  public void setDefinitionsText(String str) {
+    listTextArea.append(str + "\n");
   }
 }

@@ -26,6 +26,7 @@
 package jbrofuzz;
 
 import jbrofuzz.fuzz.*;
+import jbrofuzz.fuzz.def.*;
 import jbrofuzz.io.*;
 import jbrofuzz.snif.*;
 import jbrofuzz.ui.*;
@@ -61,6 +62,7 @@ public class JBroFuzz {
   private final Version version;
   private static MainWindow mainwindow;
   private static FileHandler filehandler;
+  private static Constructor constructor;
   //
   private TCPConnectionListener listener;
   /**
@@ -72,6 +74,8 @@ public class JBroFuzz {
     version = new Version(3);
     mainwindow = new MainWindow(this);
     filehandler = new FileHandler(mainwindow);
+    java.util.Vector fileIn = filehandler.readGenerators("def/jbrofuzz-generators");
+    constructor = new Constructor(this,fileIn);
   }
 
   /**
@@ -147,6 +151,14 @@ public class JBroFuzz {
    */
   public FileHandler getFileHandler() {
     return filehandler;
+  }
+
+  /**
+   * Get the Constructor used in this instance of JBroFuzz
+   * @return Constructor
+   */
+  public Constructor getConstructor() {
+    return constructor;
   }
 
   /**
