@@ -436,11 +436,14 @@ public class MainFuzzingPanel extends JPanel {
       final int sPoint = message.getSelectionStart();
       final int fPoint = message.getSelectionEnd();
 
+      String generators = getJBroFuzz().getConstructor().getAllGeneratorNamesAndComments();
+      String [] generatorArray = generators.split(", ");
+
       // Then prompt the user for the type of fuzzer
       String selectedValue = (String) JOptionPane.showInputDialog(this,
           "Select the type \nof fuzzing generator:", ADD_GEN_STR,
           JOptionPane.INFORMATION_MESSAGE, null,
-          Format.GENERATORS, Format.GENERATORS[0]);
+          generatorArray, generatorArray[0]);
       // And finally add the fuzzing point
       if(selectedValue != null) {
         selectedValue = selectedValue.substring(0,3);
