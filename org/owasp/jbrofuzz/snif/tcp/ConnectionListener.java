@@ -95,7 +95,7 @@ public class ConnectionListener extends Thread implements
     }
     catch (IOException e) {
       mn.getMainWindow().log("ServerSocket IOException..." + e.getMessage());
-
+      mn.getMainWindow().getTCPSniffingPanel().buttonStop();
     }
   }
   /**

@@ -73,6 +73,8 @@ public class DefinitionsPanel extends JPanel {
     listTextArea.setEditable(false);
     listTextArea.setLineWrap(true);
     listTextArea.setWrapStyleWord(true);
+    getFrameWindow().popup(listTextArea);
+
     JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
@@ -88,7 +90,7 @@ public class DefinitionsPanel extends JPanel {
    *
    * @return Window
    */
-  public Window getFrameWindow() {
+  public FrameWindow getFrameWindow() {
     return m;
   }
   /**

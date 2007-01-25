@@ -51,6 +51,8 @@ public class SystemLogger extends JPanel {
   private JTextArea listTextArea;
   // The info button
   private JButton infoButton;
+  // The line count
+  private int lineCount;
   /**
    * Constructor for the System Logger Panel of the represented as a tab. Only a
    * single instance of this class is constructed.
@@ -60,12 +62,8 @@ public class SystemLogger extends JPanel {
   public SystemLogger(FrameWindow m) {
     super();
     setLayout(null);
-    /*
-    setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" System "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-    */
     this.m = m;
+    lineCount = 0;
     // Define the JPanel
     JPanel listPanel = new JPanel();
 
@@ -82,6 +80,7 @@ public class SystemLogger extends JPanel {
     listTextArea.setWrapStyleWord(true);
     listTextArea.setBackground(Color.WHITE);
     listTextArea.setForeground(Color.BLACK);
+    getFrameWindow().popup(listTextArea);
 
     JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
@@ -131,9 +130,9 @@ public class SystemLogger extends JPanel {
    * <p>Method for returning the main window frame that this tab is attached on.
    * </p>
    *
-   * @return Window
+   * @return FrameWindow
    */
-  public Window getFrameWindow() {
+  public FrameWindow getFrameWindow() {
     return m;
   }
   /**
@@ -144,6 +143,20 @@ public class SystemLogger extends JPanel {
    * @param str String
    */
   public void addLoggingEvent(String str) {
+    lineCount++;
     listTextArea.append("[" + Time.dateAndTime() + "] " + str + "\n");
+    // Fix the disappearing tab problem
+    int tab = -1;
+    int totalTabs = getFrameWindow().getTabbedPane().getComponentCount();
+    for(int i = 0; i < totalTabs; i++) {
+      String title = getFrameWindow().getTabbedPane().getTitleAt(i);
+      if(title.startsWith(" System")) {
+        tab = i;
+      }
+    }
+    if((tab > -1)) {
+      getFrameWindow().getTabbedPane().setTitleAt(tab,
+                                                  " System (" + lineCount + ")");
+    }
   }
 }

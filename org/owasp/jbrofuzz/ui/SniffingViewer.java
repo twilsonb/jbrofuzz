@@ -76,6 +76,8 @@ public class SniffingViewer extends JFrame {
     listTextArea.setEditable(false);
     listTextArea.setLineWrap(false);
     listTextArea.setWrapStyleWord(false);
+    m.getMainWindow().popup(listTextArea);
+
     JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(JScrollPane.
                                                   VERTICAL_SCROLLBAR_AS_NEEDED);

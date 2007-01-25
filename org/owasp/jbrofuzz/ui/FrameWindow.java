@@ -34,6 +34,15 @@ import javax.swing.JTabbedPane;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.ver.Format;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import javax.swing.JMenuItem;
+import javax.swing.JTextArea;
+import java.awt.event.ActionEvent;
+import javax.swing.JPopupMenu;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.ActionListener;
+import javax.swing.KeyStroke;
+import java.awt.event.MouseEvent;
 /**
  * <p>The main window of JBroFuzz responsible for the graphical
  * user interface.</p>
@@ -58,10 +67,21 @@ public class FrameWindow extends JFrame {
   private final FuzzingPanel mFuzzingPanel;
   // The system logger panel
   private final SystemLogger mSystemLogger;
-
+  /**
+   * Unique int identifier for the TCP Sniffing Panel
+   */
   public static final int TCP_SNIFFING_PANEL_ID = 123;
+  /**
+   * Unique int identifier for the TCP Fuzzing Panel
+   */
   public static final int TCP_FUZZING_PANEL_ID = 124;
+  /**
+   * Unique int identifier for the Generators Panel
+   */
   public static final int GENERATORS_PANEL_ID = 125;
+  /**
+   * Unique int identifier for the System Panel
+   */
   public static final int SYSTEM_PANEL_ID = 126;
 
   /**
@@ -98,6 +118,76 @@ public class FrameWindow extends JFrame {
     setIconImage(ImageCreator.frameImageIcon.getImage());
     log("System Launch, Welcome!");
   }
+  /**
+   * Method for setting up the right click copy paste cut and select all menu.
+   * @param area JTextArea
+   */
+  public void popup(final JTextArea area) {
+
+    final JPopupMenu popmenu = new JPopupMenu();
+
+    JMenuItem i1 = new JMenuItem("Cut");
+    JMenuItem i2 = new JMenuItem("Copy");
+    JMenuItem i3 = new JMenuItem("Paste");
+    JMenuItem i4 = new JMenuItem("Select All");
+
+    i1.setAccelerator(KeyStroke.getKeyStroke(
+      KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+    i2.setAccelerator(KeyStroke.getKeyStroke(
+      KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+    i3.setAccelerator(KeyStroke.getKeyStroke(
+      KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+    i4.setAccelerator(KeyStroke.getKeyStroke(
+      KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+
+    popmenu.add(i1);
+    popmenu.add(i2);
+    popmenu.add(i3);
+    popmenu.addSeparator();
+    popmenu.add(i4);
+
+
+    i1.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        area.cut();
+      }
+    });
+
+    i2.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        area.copy();
+      }
+    });
+
+    i3.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        area.paste();
+      }
+    });
+
+    i4.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        area.selectAll();
+      }
+    });
+
+    area.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent e) {
+        checkForTriggerEvent(e);
+      }
+
+      public void mouseReleased(MouseEvent e) {
+        checkForTriggerEvent(e);
+      }
+
+      private void checkForTriggerEvent(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+          area.requestFocus();
+          popmenu.show(e.getComponent(), e.getX(), e.getY());
+        }
+      }
+    });
+  }
 
   /**
    * <p>Access the m object that is responsible for launching an instance of
@@ -108,6 +198,20 @@ public class FrameWindow extends JFrame {
     return mJBroFuzz;
   }
 
+  /**
+   * <p>Method for accessing the Tabbed Pane within the current Frame Window.
+   * </p>
+   * @return JTabbedPane
+   */
+  public JTabbedPane getTabbedPane() {
+    return tabbedPane;
+  }
+  /**
+   * Set which tab to hide based on the int n of ID values. These are taken
+   * from the FrameWindow.
+   *
+   * @param n int
+   */
   public void setTabHide(int n) {
     if(n == GENERATORS_PANEL_ID) {
       tabbedPane.remove(mDefinitionsPanel);
@@ -122,7 +226,12 @@ public class FrameWindow extends JFrame {
       tabbedPane.remove(mSystemLogger);
     }
   }
-
+  /**
+   * Set which tab to show based on the int n of ID values. These are taken
+   * from the FrameWindow.
+   *
+   * @param n int
+   */
   public void setTabShow(int n) {
     if(n == GENERATORS_PANEL_ID) {
       tabbedPane.addTab("Definitions", mDefinitionsPanel);
