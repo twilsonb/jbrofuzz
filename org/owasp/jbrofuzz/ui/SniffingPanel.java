@@ -127,6 +127,7 @@ public class SniffingPanel extends JPanel {
     rHostText.setLineWrap(false);
     rHostText.setWrapStyleWord(true);
     rHostText.setMargin(new Insets(1, 1, 1, 1));
+    getMainWindow().popup(rHostText);
     JScrollPane rHostScrollPane = new JScrollPane(rHostText);
     rHostScrollPane.setVerticalScrollBarPolicy(JScrollPane.
                                                VERTICAL_SCROLLBAR_NEVER);
@@ -141,6 +142,7 @@ public class SniffingPanel extends JPanel {
     rPortText.setLineWrap(false);
     rPortText.setWrapStyleWord(true);
     rPortText.setMargin(new Insets(1, 1, 1, 1));
+    getMainWindow().popup(rPortText);
     JScrollPane rPortScrollPane = new JScrollPane(rPortText);
     rPortScrollPane.setVerticalScrollBarPolicy(JScrollPane.
                                                VERTICAL_SCROLLBAR_NEVER);
@@ -156,6 +158,7 @@ public class SniffingPanel extends JPanel {
     lHostText.setWrapStyleWord(true);
     lHostText.setMargin(new Insets(1, 1, 1, 1));
     JScrollPane lHostScrollPane = new JScrollPane(lHostText);
+    getMainWindow().popup(lHostText);
     lHostScrollPane.setVerticalScrollBarPolicy(JScrollPane.
                                                VERTICAL_SCROLLBAR_NEVER);
     lHostScrollPane.setHorizontalScrollBarPolicy(JScrollPane.
@@ -170,6 +173,7 @@ public class SniffingPanel extends JPanel {
     lPortText.setWrapStyleWord(true);
     lPortText.setMargin(new Insets(1, 1, 1, 1));
     JScrollPane lPortScrollPane = new JScrollPane(lPortText);
+    getMainWindow().popup(lPortText);
     lPortScrollPane.setVerticalScrollBarPolicy(JScrollPane.
                                                VERTICAL_SCROLLBAR_NEVER);
     lPortScrollPane.setHorizontalScrollBarPolicy(JScrollPane.
@@ -245,11 +249,7 @@ public class SniffingPanel extends JPanel {
     // The action listener for the stop button
     stopButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        stopButton.setEnabled(false);
-        startButton.setEnabled(true);
-        // getMainWindow().setTabFuzzingEnabled(true);
-        // getMainWindow().getFrameMenuBar().setFuzzStartEnabled(true);
-        closeConnectionListener();
+        buttonStop();
       }
     });
 
@@ -375,10 +375,6 @@ public class SniffingPanel extends JPanel {
     return text;
   }
 
-  private void closeConnectionListener() {
-    reflector.stopConnection();
-  }
-
   /**
    * <p>Return the status of whether or not the stop button has been pressed.</p>
    * @return boolean
@@ -446,5 +442,16 @@ public class SniffingPanel extends JPanel {
     s += "" + counter;
     counter++;
     return s;
+  }
+
+  /**
+   * Method for hitting the stop button.
+   */
+  public void buttonStop() {
+    stopButton.setEnabled(false);
+    startButton.setEnabled(true);
+    if(reflector != null ) {
+      reflector.stopConnection();
+    }
   }
 }

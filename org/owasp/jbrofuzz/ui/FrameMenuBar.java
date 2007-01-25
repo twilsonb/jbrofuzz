@@ -25,6 +25,12 @@
  */
 package org.owasp.jbrofuzz.ui;
 
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.text.*;
+
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -85,10 +91,15 @@ public class FrameMenuBar extends JMenuBar {
 
     file.add(exit);
     // Edit
-    JMenuItem cut = new JMenuItem("Cut");
-    JMenuItem copy = new JMenuItem("Copy");
-    JMenuItem paste = new JMenuItem("Paste");
-    JMenuItem selectAll = new JMenuItem("Select All");
+    Action cutAction = new CutAction();
+    Action copyAction = new CopyAction();
+    Action pasteAction = new PasteAction();
+    Action selectAllAction = new SelectAllAction();
+
+    JMenuItem cut = new JMenuItem(cutAction);
+    JMenuItem copy = new JMenuItem(copyAction);
+    JMenuItem paste = new JMenuItem(pasteAction);
+    JMenuItem selectAll = new JMenuItem(selectAllAction);
 
     cut.setAccelerator(KeyStroke.getKeyStroke('X',
                                               Toolkit.getDefaultToolkit().
@@ -156,7 +167,8 @@ public class FrameMenuBar extends JMenuBar {
 
     // Help
     JMenuItem topics = new JMenuItem("Topics", ImageCreator.topicsImageIcon);
-    JMenuItem disclaimer = new JMenuItem("Disclaimer", ImageCreator.disclaimerImageIcon);
+    JMenuItem disclaimer = new JMenuItem("Disclaimer",
+                                         ImageCreator.disclaimerImageIcon);
     JMenuItem about = new JMenuItem("About", ImageCreator.helpImageIcon);
 
     about.setAccelerator(KeyStroke.getKeyStroke('0',
@@ -186,7 +198,7 @@ public class FrameMenuBar extends JMenuBar {
 
     fuzzing.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        if(! fuzzing.getState()) {
+        if (!fuzzing.getState()) {
           getFrameWindow().setTabHide(FrameWindow.TCP_FUZZING_PANEL_ID);
         }
         else {
@@ -197,7 +209,7 @@ public class FrameMenuBar extends JMenuBar {
 
     sniffing.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        if(! sniffing.getState()) {
+        if (!sniffing.getState()) {
           getFrameWindow().setTabHide(FrameWindow.TCP_SNIFFING_PANEL_ID);
         }
         else {
@@ -208,7 +220,7 @@ public class FrameMenuBar extends JMenuBar {
 
     generators.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        if(! generators.getState()) {
+        if (!generators.getState()) {
           getFrameWindow().setTabHide(FrameWindow.GENERATORS_PANEL_ID);
         }
         else {
@@ -219,7 +231,7 @@ public class FrameMenuBar extends JMenuBar {
 
     system.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        if(! system.getState()) {
+        if (!system.getState()) {
           getFrameWindow().setTabHide(FrameWindow.SYSTEM_PANEL_ID);
         }
         else {
@@ -227,7 +239,6 @@ public class FrameMenuBar extends JMenuBar {
         }
       }
     });
-
 
     disclaimer.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -251,22 +262,67 @@ public class FrameMenuBar extends JMenuBar {
       }
     });
 
-    copy.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent h)
-    {
-      /*
-    JScrollPane scrollPane = (FuzzingPanel)getMainWindow().
-                             .getSelectedComponent();
-    JTextPane textPane = (JTextPane)scrollPane.getViewport().getView();
-    textPane.cut();
-      */
-    }
-    });
-
-
   }
 
   private FrameWindow getFrameWindow() {
     return mFrameWindow;
   }
 }
+
+class CutAction extends TextAction {
+  public CutAction() {
+    super("Cut");
+  }
+
+  public void actionPerformed(ActionEvent evt) {
+    JTextComponent text = getTextComponent(evt);
+    if(text != null) {
+      text.cut();
+      text.requestFocus();
+    }
+  }
+}
+
+class CopyAction extends TextAction {
+  public CopyAction() {
+    super("Copy");
+  }
+
+  public void actionPerformed(ActionEvent evt) {
+    JTextComponent text = getTextComponent(evt);
+    if(text != null) {
+      text.copy();
+      text.requestFocus();
+    }
+  }
+}
+
+class PasteAction extends TextAction {
+  public PasteAction() {
+    super("Paste");
+  }
+
+  public void actionPerformed(ActionEvent evt) {
+    JTextComponent text = getTextComponent(evt);
+    if(text != null) {
+      text.paste();
+      text.requestFocus();
+    }
+  }
+}
+
+class SelectAllAction extends TextAction {
+  public SelectAllAction() {
+    super("Select All");
+  }
+
+  public void actionPerformed(ActionEvent evt) {
+    JTextComponent text = getTextComponent(evt);
+    if(text != null) {
+      text.selectAll();
+      text.requestFocus();
+    }
+  }
+}
+
+

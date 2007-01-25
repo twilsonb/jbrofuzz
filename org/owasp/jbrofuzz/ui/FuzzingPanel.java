@@ -120,7 +120,7 @@ public class FuzzingPanel extends JPanel {
     target.setMargin(new Insets(1, 1, 1, 1));
     target.setBackground(Color.WHITE);
     target.setForeground(Color.BLACK);
-    pop(target);
+    getMainWindow().popup(target);
 
     JScrollPane targetScrollPane = new JScrollPane(target);
     targetScrollPane.setVerticalScrollBarPolicy(21);
@@ -147,7 +147,7 @@ public class FuzzingPanel extends JPanel {
     port.setMargin(new Insets(1, 1, 1, 1));
     port.setBackground(Color.WHITE);
     port.setForeground(Color.BLACK);
-    pop(port);
+    getMainWindow().popup(port);
 
     JScrollPane portScrollPane = new JScrollPane(port);
     portScrollPane.setVerticalScrollBarPolicy(21);
@@ -174,7 +174,7 @@ public class FuzzingPanel extends JPanel {
     message.setMargin(new Insets(1, 1, 1, 1));
     message.setBackground(Color.WHITE);
     message.setForeground(Color.BLACK);
-    pop(message);
+    getMainWindow().popup(message);
 
     JScrollPane messageScrollPane = new JScrollPane(message);
     messageScrollPane.setVerticalScrollBarPolicy(20);
@@ -294,7 +294,7 @@ public class FuzzingPanel extends JPanel {
     outputTable.setMargin(new Insets(3, 3, 3, 3));
     outputTable.setBackground(Color.WHITE);
     outputTable.setForeground(Color.BLACK);
-    pop(outputTable);
+    getMainWindow().popup(outputTable);
 
     JScrollPane outputScrollPane = new JScrollPane(outputTable);
     outputScrollPane.setVerticalScrollBarPolicy(20);
@@ -522,74 +522,6 @@ public class FuzzingPanel extends JPanel {
                                    Integer.parseInt(splitString[1]),
                                    Integer.parseInt(splitString[2]));
     }
-  }
-
-
-  public void pop(final JTextArea area) {
-
-    final JPopupMenu popmenu = new JPopupMenu();
-
-    JMenuItem i1 = new JMenuItem("Cut");
-    JMenuItem i2 = new JMenuItem("Copy");
-    JMenuItem i3 = new JMenuItem("Paste");
-    JMenuItem i4 = new JMenuItem("Select All");
-
-    i1.setAccelerator(KeyStroke.getKeyStroke(
-      KeyEvent.VK_X, ActionEvent.CTRL_MASK));
-    i2.setAccelerator(KeyStroke.getKeyStroke(
-      KeyEvent.VK_C, ActionEvent.CTRL_MASK));
-    i3.setAccelerator(KeyStroke.getKeyStroke(
-      KeyEvent.VK_V, ActionEvent.CTRL_MASK));
-    i4.setAccelerator(KeyStroke.getKeyStroke(
-      KeyEvent.VK_A, ActionEvent.CTRL_MASK));
-
-    popmenu.add(i1);
-    popmenu.add(i2);
-    popmenu.add(i3);
-    popmenu.addSeparator();
-    popmenu.add(i4);
-
-
-    i1.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        area.cut();
-      }
-    });
-
-    i2.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        area.copy();
-      }
-    });
-
-    i3.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        area.paste();
-      }
-    });
-
-    i4.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        area.selectAll();
-      }
-    });
-
-    area.addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent e) {
-        checkForTriggerEvent(e);
-      }
-
-      public void mouseReleased(MouseEvent e) {
-        checkForTriggerEvent(e);
-      }
-
-      private void checkForTriggerEvent(MouseEvent e) {
-        if (e.isPopupTrigger()) {
-          area.requestFocus();
-          popmenu.show(e.getComponent(), e.getX(), e.getY());
-        }
-      }
-    });
   }
 
   public void setFuzzStart(final boolean b) {
