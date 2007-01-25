@@ -190,7 +190,7 @@ public class RequestIterator {
 
     if (type.equals("ZER")) {
 
-      String fl = "mJBroFuzz-session-" + counter + "-1-1.txt";
+      String fl = "jbrofuzz-session-" + counter + "-1-1.txt";
 
       mJBroFuzz.getMainWindow().getFuzzingPanel().setOutputText(Format.HD1);
       mJBroFuzz.getFileHandler().writeFuzzFile(fl, Format.HD1);
@@ -216,7 +216,7 @@ public class RequestIterator {
       stout = getNext();
       while ((!("".equals(stout.toString()))) && (!(generatorStopped))) {
 
-        String fk = "mJBroFuzz-session-" + counter + "-" + getCurrentRequest() +
+        String fk = "jbrofuzz-session-" + counter + "-" + getCurrentRequest() +
                     "-" + getTotalRequest() + ".txt";
 
         mJBroFuzz.getMainWindow().getFuzzingPanel().setOutputText(Format.HDS +

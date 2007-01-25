@@ -34,8 +34,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import javax.swing.SwingWorker;
+import javax.swing.SwingWorker3;
 import javax.swing.JCheckBoxMenuItem;
+
+import javax.swing.*;
 
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.ver.Format;
@@ -77,7 +79,6 @@ public class FrameMenuBar extends JMenuBar {
 
     // File
     JMenuItem exit = new JMenuItem("Exit", ImageCreator.exitImageIcon);
-
     exit.setAccelerator(KeyStroke.getKeyStroke('1',
                                                Toolkit.getDefaultToolkit().
                                                getMenuShortcutKeyMask(), false));
@@ -249,6 +250,19 @@ public class FrameMenuBar extends JMenuBar {
                                       ImageCreator.aboutImageIcon);
       }
     });
+
+    copy.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent h)
+    {
+      /*
+    JScrollPane scrollPane = (FuzzingPanel)getMainWindow().
+                             .getSelectedComponent();
+    JTextPane textPane = (JTextPane)scrollPane.getViewport().getView();
+    textPane.cut();
+      */
+    }
+    });
+
 
   }
 

@@ -30,6 +30,12 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.*;
 
 public class FuzzingTableModel extends AbstractTableModel {
+  /**
+   * <p>The String used to separate columns when a toString representation of
+   * a set number of columns or rows is required. This is typically used in
+   * method getRow() that returns a String.</p>
+   */
+  public static final String STRING_COLUMN_SEPARATOR = "          ";
 
     private static final int INDEX_GENERATOR = 0;
     private static final int INDEX_START = 1;
@@ -50,17 +56,6 @@ public class FuzzingTableModel extends AbstractTableModel {
     public boolean isCellEditable(int row, int column) {
         if (column == INDEX_GENERATOR) return true;
         else return false;
-    }
-
-    public Class getColumnClass(int column) {
-        switch (column) {
-            case INDEX_GENERATOR:
-            case INDEX_START:
-            case INDEX_END:
-               return String.class;
-            default:
-               return Object.class;
-        }
     }
 
     public Object getValueAt(int row, int column) {
@@ -103,6 +98,16 @@ public class FuzzingTableModel extends AbstractTableModel {
         return columnNames.length;
     }
 
+    public String getRow(int row) {
+      String output = "";
+      if((row > -1) && (row < dataVector.size())) {
+        for(int i = 0; i < columnNames.length; i++) {
+          output += getValueAt(row, i) + STRING_COLUMN_SEPARATOR;
+        }
+      }
+      return output;
+    }
+
     public boolean hasEmptyRow() {
         if (dataVector.size() == 0) return false;
         Generator Generator = (Generator)dataVector.get(dataVector.size() - 1);
@@ -134,7 +139,7 @@ public class FuzzingTableModel extends AbstractTableModel {
       }
       if(rowToRemove > -1) {
         dataVector.removeElementAt(rowToRemove);
-        fireTableRowsDeleted(0, dataVector.size() - 1);
+        fireTableRowsDeleted(0, rowToRemove);
       }
     }
  }

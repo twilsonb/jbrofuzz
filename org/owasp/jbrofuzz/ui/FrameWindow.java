@@ -26,6 +26,7 @@
 package org.owasp.jbrofuzz.ui;
 
 import java.awt.Container;
+import java.awt.Color;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
