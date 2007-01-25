@@ -25,11 +25,23 @@
  */
 package org.owasp.jbrofuzz.ui;
 
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.text.*;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.Color;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -37,15 +49,20 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTable;
 import javax.swing.*;
-import javax.swing.SwingWorker;
+
+import javax.swing.SwingWorker3;
 
 import javax.swing.table.TableColumn;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.ver.Format;
 /**
- * <p>The main fuzzing panel, displayed within the Main Frame Window.</p>
+ * <p>The main "TCP Fuzzing" panel, displayed within the Main Frame Window.</p>
+ * <p>This panel performs all TCP related fuzzing operations, including the
+ * addition and removal of generators, reporting back the results into the
+ * current window, as well as writting them to file.</p>
  *
  * @author subere (at) uncon org
  * @version 0.4
@@ -57,35 +74,33 @@ public class FuzzingPanel extends JPanel {
   private final JPanel outputPanel;
   // The JTextArea
   private final JTextArea target, port, message, outputTable;
-  // The JTable
+  // The JTable of the generator
   private JTable generatorTable;
-  //
+  // And the table model that goes with it
   private FuzzingTableModel mFuzzingTableModel;
   // The JButtons
-  private final JButton buttonGeneneratorAdd, buttonGeneneratorRemove;
-  private final JButton buttonFuzzStart, buttonFuzzStop;
+  private final JButton buttonAddGen, buttonRemGen,
+  buttonFuzzStart, buttonFuzzStop;
   // The swing worker used when the button "fuzz" is pressed
-  private SwingWorker worker;
+  private SwingWorker3 worker;
   // A counter for the number of times fuzz has been clicked
   private int counter;
   // The names of the columns within the table of generators
-  private static final String[] COLUMNNAMES = {"Generator", "Start", "End"};
+  private static final String[] COLUMNNAMES = {
+                                              "Generator", "Start", "End"};
 
-  private static final String addGenString = "Add Generator";
+  private static final String ADDGENSTRING = "Add Generator";
   /**
+   * This constructor is used for the "TCP Fuzzing Panel" that resides under the
+   * FrameWindow, within the corresponding tabbed panel.
    *
    * @param m FrameWindow
    */
   public FuzzingPanel(FrameWindow m) {
     super();
     setLayout(null);
-    /*
-    setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Fuzzing "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-    */
+
     this.m = m;
-    // The counter being set
     counter = 0;
 
 
@@ -103,6 +118,9 @@ public class FuzzingPanel extends JPanel {
     target.setLineWrap(false);
     target.setWrapStyleWord(true);
     target.setMargin(new Insets(1, 1, 1, 1));
+    target.setBackground(Color.WHITE);
+    target.setForeground(Color.BLACK);
+    pop(target);
 
     JScrollPane targetScrollPane = new JScrollPane(target);
     targetScrollPane.setVerticalScrollBarPolicy(21);
@@ -114,7 +132,6 @@ public class FuzzingPanel extends JPanel {
 
     targetPanel.setBounds(10, 20, 500, 60);
     add(targetPanel);
-
     // The port panel
     JPanel portPanel = new JPanel();
     portPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
@@ -128,6 +145,9 @@ public class FuzzingPanel extends JPanel {
     port.setLineWrap(false);
     port.setWrapStyleWord(true);
     port.setMargin(new Insets(1, 1, 1, 1));
+    port.setBackground(Color.WHITE);
+    port.setForeground(Color.BLACK);
+    pop(port);
 
     JScrollPane portScrollPane = new JScrollPane(port);
     portScrollPane.setVerticalScrollBarPolicy(21);
@@ -152,6 +172,9 @@ public class FuzzingPanel extends JPanel {
     message.setLineWrap(true);
     message.setWrapStyleWord(true);
     message.setMargin(new Insets(1, 1, 1, 1));
+    message.setBackground(Color.WHITE);
+    message.setForeground(Color.BLACK);
+    pop(message);
 
     JScrollPane messageScrollPane = new JScrollPane(message);
     messageScrollPane.setVerticalScrollBarPolicy(20);
@@ -162,18 +185,18 @@ public class FuzzingPanel extends JPanel {
     requestPanel.setBounds(10, 80, 500, 200);
     add(requestPanel);
     // The top buttons
-    buttonGeneneratorAdd = new JButton(addGenString);
-    buttonGeneneratorAdd.setBounds(580, 30, 130, 20);
-    add(buttonGeneneratorAdd);
-    buttonGeneneratorAdd.addActionListener(new ActionListener() {
+    buttonAddGen = new JButton(ADDGENSTRING);
+    buttonAddGen.setBounds(580, 30, 130, 20);
+    add(buttonAddGen);
+    buttonAddGen.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
         generatorAdd();
       }
     });
-    buttonGeneneratorRemove = new JButton("Remove Generator");
-    buttonGeneneratorRemove.setBounds(730, 30, 150, 20);
-    add(buttonGeneneratorRemove);
-    buttonGeneneratorRemove.addActionListener(new ActionListener() {
+    buttonRemGen = new JButton("Remove Generator");
+    buttonRemGen.setBounds(730, 30, 150, 20);
+    add(buttonRemGen);
+    buttonRemGen.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         generatorRemove();
       }
@@ -189,6 +212,9 @@ public class FuzzingPanel extends JPanel {
      */
     mFuzzingTableModel = new FuzzingTableModel(COLUMNNAMES);
     generatorTable = new JTable();
+    generatorTable.setBackground(Color.WHITE);
+    generatorTable.setForeground(Color.BLACK);
+
     generatorTable.setModel(mFuzzingTableModel);
     // Set the column widths
     TableColumn column = null;
@@ -217,7 +243,7 @@ public class FuzzingPanel extends JPanel {
     add(buttonFuzzStart);
     buttonFuzzStart.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
-        worker = new SwingWorker() {
+        worker = new SwingWorker3() {
           public Object construct() {
             buttonFuzzStart.setEnabled(false);
             buttonFuzzStop.setEnabled(true);
@@ -266,7 +292,9 @@ public class FuzzingPanel extends JPanel {
     outputTable.setLineWrap(false);
     outputTable.setWrapStyleWord(true);
     outputTable.setMargin(new Insets(3, 3, 3, 3));
-
+    outputTable.setBackground(Color.WHITE);
+    outputTable.setForeground(Color.BLACK);
+    pop(outputTable);
 
     JScrollPane outputScrollPane = new JScrollPane(outputTable);
     outputScrollPane.setVerticalScrollBarPolicy(20);
@@ -278,20 +306,23 @@ public class FuzzingPanel extends JPanel {
     add(outputPanel);
 
     // Some value defaults
-    target.setText("http://127.0.0.1");
+    target.setText("http://10.255.1.224");
     port.setText("80");
     message.setText(
-      "POST / HTTP/1.0\nContent-Length: 87\n\nuser_name=asdf&password=asdf\n\n");
+      "POST / HTTP/1.0\r\nContent-Length: 87\r\n\nuser_name=asdf&password=asdf\r\n\r\n");
   }
+
   /**
    * <p>Method trigered when the fuzz button is pressed in the current panel.
    * </p>
    */
   public void fuzzStart() {
     // Check to see if a message is present
+    message.copy();
     if ("".equals(message.getText())) {
       JOptionPane.showMessageDialog(this,
-                                    "The request field is blank.\n" + "Specify a request\n",
+                                    "The request field is blank.\n" +
+                                    "Specify a request\n",
                                     "Empty Request Field",
                                     JOptionPane.INFORMATION_MESSAGE);
       return;
@@ -301,42 +332,36 @@ public class FuzzingPanel extends JPanel {
     counter %= 100;
     // Update the border of the output panel
     outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Output (Last 1000 Lines)  " + "Loggin in folder (" +
+      createTitledBorder(" Output (Last 1000 Lines)  " + "Logging in folder (" +
                          Format.DATE +
                          // getJBroFuzz().getVersion().getDate() +
                          ") Session " + counter),
       BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-
     // Clear the text of the output pane
     outputTable.setText("");
-    /*
-    final String original = generatorTable.getText();
 
-
-    // If no generator fuzz points exist, just send a single request
-    if (!(original.contains("\n"))) {
+    final int rows = generatorTable.getRowCount();
+    if (rows < 1) {
       StringBuffer sbuf = new StringBuffer(message.getText());
       getJBroFuzz().setGenerator(sbuf, 0, 0, "ZER");
       getJBroFuzz().runGenerator();
     }
     else {
-      // Get the fuzz points
-      final String[] fuzzPoints = original.split("\n");
-      for (int i = 0; i < fuzzPoints.length; i++) {
-        final String[] fuzzEntry = fuzzPoints[i].split(" : ");
-
-        final int start = Integer.parseInt(fuzzEntry[0]);
-        final int finish = Integer.parseInt(fuzzEntry[1]);
+      for (int i = 0; i < rows; i++) {
+        final String generator = (String) mFuzzingTableModel.getValueAt(i, 0);
+        final int start = ((Integer) mFuzzingTableModel.getValueAt(i, 1)).
+                          intValue();
+        final int end = ((Integer) mFuzzingTableModel.getValueAt(i, 2)).
+                        intValue();
 
         StringBuffer sbuf = new StringBuffer(message.getText());
-        getJBroFuzz().setGenerator(sbuf, start, finish, fuzzEntry[2]);
-        // Run the generator, that also performs the connection requests
+        getJBroFuzz().setGenerator(sbuf, start, end, generator);
         getJBroFuzz().runGenerator();
       }
     }
-   */
   }
+
   /**
    * <p>Method trigered when attempting to stop any fuzzing taking place.</p>
    */
@@ -394,6 +419,7 @@ public class FuzzingPanel extends JPanel {
   public String getMessageText() {
     return message.getText();
   }
+
   /**
    * <p>Get the number of times that fuzzing has been attempted.</p>
    * @return int
@@ -421,6 +447,7 @@ public class FuzzingPanel extends JPanel {
     final int caret = outputTable.getText().length();
     outputTable.setCaretPosition(caret);
   }
+
   /**
    * <p>Method for adding a generator.</p>
    */
@@ -432,14 +459,15 @@ public class FuzzingPanel extends JPanel {
     }
     catch (IllegalArgumentException e) {
       JOptionPane.showInputDialog(this,
-        "An exception was thrown while attempting to get the selected text",
-                                  addGenString, JOptionPane.ERROR_MESSAGE);
+                                  "An exception was thrown while attempting to get the selected text",
+                                  ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
       selectedText = "";
     }
     // If no text has been selected, prompt the user to select some text
     if (selectedText == null) {
       JOptionPane.showMessageDialog(this,
-        "Select (highlight) a text range \nfrom the Request field", addGenString,
+                                    "Select (highlight) a text range \nfrom the Request field",
+                                    ADDGENSTRING,
                                     JOptionPane.ERROR_MESSAGE);
     }
     // Else find out the location of where the text has been selected
@@ -453,10 +481,10 @@ public class FuzzingPanel extends JPanel {
 
       // Then prompt the user for the type of fuzzer
       String selectedValue = (String) JOptionPane.showInputDialog(this,
-        "Select the type \nof fuzzing generator:", addGenString,
-                             JOptionPane.INFORMATION_MESSAGE, null,
-                               generatorArray, generatorArray[0]);
-      // And finally add the fuzzing point
+        "Select the type of fuzzing generator:", ADDGENSTRING,
+        JOptionPane.INFORMATION_MESSAGE, null,
+        generatorArray, generatorArray[0]);
+      // And finally add the generator
       if ((selectedValue != null)) {
         if (selectedValue.length() > 3) {
           selectedValue = selectedValue.substring(0, 3);
@@ -468,32 +496,101 @@ public class FuzzingPanel extends JPanel {
       }
     }
   }
+
   /**
    * <p>Method for removing a generator.</p>
    */
   public void generatorRemove() {
-    String s = ""; // generatorTable.getText();
-    if (!(s.contains("\n"))) {
+    int rows = generatorTable.getRowCount();
+    if (rows < 1) {
       return;
     }
-    final String[] fuzzPoints = s.split("\n");
+    String[] fuzzPoints = new String[rows];
+    for (int i = 0; i < rows; i++) {
+      fuzzPoints[i] = mFuzzingTableModel.getRow(i);
+    }
 
     final String selectedFuzzPoint = (String) JOptionPane.showInputDialog(this,
-      "Select the fuzz point to remove:", "Remove Generator",
-                                     JOptionPane.INFORMATION_MESSAGE, null,
-                                                 fuzzPoints, fuzzPoints[0]);
+      "Select the generator to remove:", "Remove Generator",
+      JOptionPane.INFORMATION_MESSAGE, null,
+      fuzzPoints, fuzzPoints[0]);
 
     if (selectedFuzzPoint != null) {
-      final int start = s.indexOf(selectedFuzzPoint);
-      final int end = start + selectedFuzzPoint.length();
-      final int total = s.length();
-
-      s = s.substring(0, start) + s.substring(end + 1, total);
-      // generatorTable.setText(s);
+      String[] splitString = selectedFuzzPoint.split(FuzzingTableModel.
+        STRING_COLUMN_SEPARATOR);
+      mFuzzingTableModel.removeRow(splitString[0],
+                                   Integer.parseInt(splitString[1]),
+                                   Integer.parseInt(splitString[2]));
     }
   }
 
 
+  public void pop(final JTextArea area) {
+
+    final JPopupMenu popmenu = new JPopupMenu();
+
+    JMenuItem i1 = new JMenuItem("Cut");
+    JMenuItem i2 = new JMenuItem("Copy");
+    JMenuItem i3 = new JMenuItem("Paste");
+    JMenuItem i4 = new JMenuItem("Select All");
+
+    i1.setAccelerator(KeyStroke.getKeyStroke(
+      KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+    i2.setAccelerator(KeyStroke.getKeyStroke(
+      KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+    i3.setAccelerator(KeyStroke.getKeyStroke(
+      KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+    i4.setAccelerator(KeyStroke.getKeyStroke(
+      KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+
+    popmenu.add(i1);
+    popmenu.add(i2);
+    popmenu.add(i3);
+    popmenu.addSeparator();
+    popmenu.add(i4);
+
+
+    i1.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        area.cut();
+      }
+    });
+
+    i2.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        area.copy();
+      }
+    });
+
+    i3.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        area.paste();
+      }
+    });
+
+    i4.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        area.selectAll();
+      }
+    });
+
+    area.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent e) {
+        checkForTriggerEvent(e);
+      }
+
+      public void mouseReleased(MouseEvent e) {
+        checkForTriggerEvent(e);
+      }
+
+      private void checkForTriggerEvent(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+          area.requestFocus();
+          popmenu.show(e.getComponent(), e.getX(), e.getY());
+        }
+      }
+    });
+  }
 
   public void setFuzzStart(final boolean b) {
     buttonFuzzStart.setEnabled(b);

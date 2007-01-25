@@ -36,10 +36,6 @@ import org.owasp.jbrofuzz.ver.Format;
  * @todo Check to see what happens when in fuzzing a socket has been triggered
  * which cannot connect and then a different URL is placed as part of the socket
  * request.
- *
- * @todo Question if it is better to close the thread from the main, as
- * done in other programs.
- *
  */
 
 
@@ -71,7 +67,7 @@ public class JBroFuzz {
     Format.setLookAndFeel(this);
     // Launch the GUI
     mainwindow = new FrameWindow(this);
-
+    //
     filehandler = new FileHandler(mainwindow);
     constructor = new Constructor(this);
   }
@@ -155,7 +151,6 @@ public class JBroFuzz {
    * with parameters of the JFrame (the mainWindow extends the JFrame).</p>
    */
   public void setupWindow() {
-    // Global Frame Issues
     mainwindow.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
     mainwindow.setLocation(100, 100);
     mainwindow.setSize(900, 550);
@@ -170,7 +165,6 @@ public class JBroFuzz {
   public static void main(final String[] args) {
     javax.swing.SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-
         final JBroFuzz centralObject = new JBroFuzz();
         centralObject.setupWindow();
       }

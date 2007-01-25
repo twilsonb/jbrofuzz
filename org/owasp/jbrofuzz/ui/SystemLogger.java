@@ -80,6 +80,9 @@ public class SystemLogger extends JPanel {
     listTextArea.setEditable(false);
     listTextArea.setLineWrap(true);
     listTextArea.setWrapStyleWord(true);
+    listTextArea.setBackground(Color.WHITE);
+    listTextArea.setForeground(Color.BLACK);
+
     JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);

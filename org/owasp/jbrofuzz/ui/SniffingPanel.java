@@ -38,7 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingWorker;
+import javax.swing.SwingWorker3;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -65,7 +65,7 @@ public class SniffingPanel extends JPanel {
   // A counter for the number of times start has been clicked
   private int counter, session;
   // The swing worker used when the button "start" is pressed
-  private SwingWorker worker;
+  private SwingWorker3 worker;
   // The frame that the sniffing panel is attached
   private FrameWindow m;
   // The JTable that holds all the data
@@ -225,7 +225,7 @@ public class SniffingPanel extends JPanel {
     startButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
 
-        worker = new SwingWorker() {
+        worker = new SwingWorker3() {
           public Object construct() {
             startButton.setEnabled(false);
             stopButton.setEnabled(true);

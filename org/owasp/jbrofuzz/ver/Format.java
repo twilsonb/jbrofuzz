@@ -71,16 +71,26 @@ public class Format {
    * @since 0.1
    */
   public static final String SYSTEM_INFO = "Vendor:  " +
-    System.getProperty("java.vendor") + "\r\n" + "Version: " +
-    System.getProperty("java.version") + "\r\n" + "Installed at: " +
-    System.getProperty("java.home") + "\r\n" + "Website: " +
-    System.getProperty("java.vendor.url") + "\r\n" + "User: " +
-    System.getProperty("user.name") + "\r\n" + "Home $: " +
-    System.getProperty("user.home") + "\r\n" + "Current $: " +
-    System.getProperty("user.dir") + "\r\n" + "O/S: " +
-    System.getProperty("os.name") + "\r\n" + "Version: " +
-    System.getProperty("os.version") + "\r\n" + "Architecture: " +
-    System.getProperty("os.arch") + "\r\n";
+                                           System.getProperty("java.vendor") +
+                                           "\r\n" + "Version: " +
+                                           System.getProperty("java.version") +
+                                           "\r\n" + "Installed at: " +
+                                           System.getProperty("java.home") +
+                                           "\r\n" + "Website: " +
+                                           System.getProperty("java.vendor.url") +
+                                           "\r\n" + "User: " +
+                                           System.getProperty("user.name") +
+                                           "\r\n" + "Home $: " +
+                                           System.getProperty("user.home") +
+                                           "\r\n" + "Current $: " +
+                                           System.getProperty("user.dir") +
+                                           "\r\n" + "O/S: " +
+                                           System.getProperty("os.name") +
+                                           "\r\n" + "Version: " +
+                                           System.getProperty("os.version") +
+                                           "\r\n" + "Architecture: " +
+                                           System.getProperty("os.arch") +
+                                           "\r\n";
 
   /**
    * <p>The list of generators used if a file is not found to load the generators
@@ -142,21 +152,18 @@ public class Format {
    * win32 o/s and all other.</p>
    *
    * @param mJBroFuzz JBroFuzz
+   * @todo include more o/s specific look and feels, particular focus should be
+   * given on the mac and the com.sun.java.swing.plaf.motif.MotifLookAndFeel.
    */
   public static final void setLookAndFeel(JBroFuzz mJBroFuzz) {
     try {
       String os = System.getProperty("os.name");
       os = os.toLowerCase();
 
-      if(os.startsWith("windows")) {
+      if (os.startsWith("windows")) {
         UIManager.setLookAndFeel(
           "com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
       }
-      if(os.startsWith("motif")) {
-        UIManager.setLookAndFeel(
-          "com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-      }
-
     }
     catch (UnsupportedLookAndFeelException e) {
       mJBroFuzz.getMainWindow().log("An unsupported look and feel exception was thrown while setting the User Interface Manager");
@@ -165,15 +172,15 @@ public class Format {
       mJBroFuzz.getMainWindow().log("A class not found exception was thrown while setting the User Interface Manager");
     }
     catch (InstantiationException e) {
-      mJBroFuzz.getMainWindow().log("An instantiation exception was thrown while setting the User Interface Manager");
+      mJBroFuzz.getMainWindow().log(
+        "An instantiation exception was thrown while setting the User Interface Manager");
     }
     catch (IllegalAccessException e) {
       mJBroFuzz.getMainWindow().log("An illegal access exception was thrown while setting the User Interface Manager");
     }
     catch (SecurityException e) {
-      mJBroFuzz.getMainWindow().log("A security exception was thrown while setting the User Interface Manager");
+      mJBroFuzz.getMainWindow().log(
+        "A security exception was thrown while setting the User Interface Manager");
     }
   }
-
-
 }
