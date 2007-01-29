@@ -183,7 +183,7 @@ public class RequestIterator {
   public void run() {
     String target = mJBroFuzz.getMainWindow().getFuzzingPanel().getTargetText();
     String port = mJBroFuzz.getMainWindow().getFuzzingPanel().getPortText();
-    StringBuffer stout = processRequest(this.request);
+    StringBuffer stout = this.request;
 
     // Get the counter value to generate unique file-names
     int counter = mJBroFuzz.getMainWindow().getFuzzingPanel().getFuzzCount();
@@ -292,7 +292,7 @@ public class RequestIterator {
    *
    * @param conMessage StringBuffer
    * @return StringBuffer
-   */
+   *
   private static StringBuffer processRequest(final StringBuffer conMessage) {
     // Re-write the content length integer if its a POST request (messy)
     if (conMessage.length() >= 4) {
@@ -321,5 +321,6 @@ public class RequestIterator {
     }
     return conMessage;
   }
+  */
 
 }
