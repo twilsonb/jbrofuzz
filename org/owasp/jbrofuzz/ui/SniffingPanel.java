@@ -128,7 +128,7 @@ public class SniffingPanel extends JPanel {
     rHostText.setLineWrap(false);
     rHostText.setWrapStyleWord(true);
     rHostText.setMargin(new Insets(1, 1, 1, 1));
-    getMainWindow().popup(rHostText);
+    getFrameWindow().popup(rHostText);
     JScrollPane rHostScrollPane = new JScrollPane(rHostText);
     rHostScrollPane.setVerticalScrollBarPolicy(21);
     rHostScrollPane.setHorizontalScrollBarPolicy(31);
@@ -141,7 +141,7 @@ public class SniffingPanel extends JPanel {
     rPortText.setLineWrap(false);
     rPortText.setWrapStyleWord(true);
     rPortText.setMargin(new Insets(1, 1, 1, 1));
-    getMainWindow().popup(rPortText);
+    getFrameWindow().popup(rPortText);
     JScrollPane rPortScrollPane = new JScrollPane(rPortText);
     rPortScrollPane.setVerticalScrollBarPolicy(21);
     rPortScrollPane.setHorizontalScrollBarPolicy(31);
@@ -155,7 +155,7 @@ public class SniffingPanel extends JPanel {
     lHostText.setWrapStyleWord(true);
     lHostText.setMargin(new Insets(1, 1, 1, 1));
     JScrollPane lHostScrollPane = new JScrollPane(lHostText);
-    getMainWindow().popup(lHostText);
+    getFrameWindow().popup(lHostText);
     lHostScrollPane.setVerticalScrollBarPolicy(21);
     lHostScrollPane.setHorizontalScrollBarPolicy(31);
     lHostScrollPane.setPreferredSize(new Dimension(220, 20));
@@ -168,7 +168,7 @@ public class SniffingPanel extends JPanel {
     lPortText.setWrapStyleWord(true);
     lPortText.setMargin(new Insets(1, 1, 1, 1));
     JScrollPane lPortScrollPane = new JScrollPane(lPortText);
-    getMainWindow().popup(lPortText);
+    getFrameWindow().popup(lPortText);
     lPortScrollPane.setVerticalScrollBarPolicy(21);
     lPortScrollPane.setHorizontalScrollBarPolicy(31);
     lPortScrollPane.setPreferredSize(new Dimension(50, 20));
@@ -206,7 +206,7 @@ public class SniffingPanel extends JPanel {
         else {
           int selectedRow = lsm.getMinSelectionIndex();
           String s = tableModel.getValueAt(selectedRow);
-          SniffingViewer vew = new SniffingViewer(getMainWindow().
+          SniffingViewer vew = new SniffingViewer(getFrameWindow().
             getTCPSniffingPanel(), s);
         }
       }
@@ -264,7 +264,7 @@ public class SniffingPanel extends JPanel {
           Browser.displayURL(url.toString());
         }
         catch (IOException ex) {
-          getMainWindow().log("Could not launch link in external browser");
+          getFrameWindow().log("Could not launch link in external browser");
         }
       }
     });
@@ -397,7 +397,7 @@ public class SniffingPanel extends JPanel {
    * Panel.</p>
    * @return MainWindow
    */
-  public FrameWindow getMainWindow() {
+  public FrameWindow getFrameWindow() {
     return m;
   }
 

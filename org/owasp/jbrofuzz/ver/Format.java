@@ -167,20 +167,20 @@ public class Format {
 
     }
     catch (UnsupportedLookAndFeelException e) {
-      mJBroFuzz.getMainWindow().log("An unsupported look and feel exception was thrown while setting the User Interface Manager");
+      mJBroFuzz.getFrameWindow().log("An unsupported look and feel exception was thrown while setting the User Interface Manager");
     }
     catch (ClassNotFoundException e) {
-//      mJBroFuzz.getMainWindow().log("A class not found exception was thrown while setting the User Interface Manager");
+//      mJBroFuzz.getFrameWindow().log("A class not found exception was thrown while setting the User Interface Manager");
     }
     catch (InstantiationException e) {
-      mJBroFuzz.getMainWindow().log(
+      mJBroFuzz.getFrameWindow().log(
         "An instantiation exception was thrown while setting the User Interface Manager");
     }
     catch (IllegalAccessException e) {
-      mJBroFuzz.getMainWindow().log("An illegal access exception was thrown while setting the User Interface Manager");
+      mJBroFuzz.getFrameWindow().log("An illegal access exception was thrown while setting the User Interface Manager");
     }
     catch (SecurityException e) {
-      mJBroFuzz.getMainWindow().log(
+      mJBroFuzz.getFrameWindow().log(
         "A security exception was thrown while setting the User Interface Manager");
     }
   }

@@ -86,7 +86,7 @@ class Agent implements Runnable {
       }
     }
     catch (IOException e) {
-      mJBroFuzz.getMainWindow().log("TCPAgent: " + e.getMessage());
+      mJBroFuzz.getFrameWindow().log("TCPAgent: " + e.getMessage());
     }
     //
     agentMonitor.agentHasDied(this);
@@ -95,7 +95,7 @@ class Agent implements Runnable {
   private void log(final byte buffer[], final int nBytes) {
     synchronized (System.out) {
       final Date currentTime = new Date();
-      final String fileName = mJBroFuzz.getMainWindow().getTCPSniffingPanel().
+      final String fileName = mJBroFuzz.getFrameWindow().getTCPSniffingPanel().
                               getCounter();
 
       mJBroFuzz.getFileHandler().writeSnifFile(fileName + ".txt",
@@ -128,7 +128,7 @@ class Agent implements Runnable {
       row.append(" bytes)          ");
       row.append(dateFormat.format(currentTime));
       // Append a row in the table
-      mJBroFuzz.getMainWindow().getTCPSniffingPanel().addRow(row.toString());
+      mJBroFuzz.getFrameWindow().getTCPSniffingPanel().addRow(row.toString());
       // formatted string
       StringBuffer sb = new StringBuffer(nBytes);
       // formatted binary string
