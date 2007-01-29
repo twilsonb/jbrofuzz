@@ -164,12 +164,13 @@ public class Format {
         UIManager.setLookAndFeel(
           "com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
       }
+
     }
     catch (UnsupportedLookAndFeelException e) {
       mJBroFuzz.getMainWindow().log("An unsupported look and feel exception was thrown while setting the User Interface Manager");
     }
     catch (ClassNotFoundException e) {
-      mJBroFuzz.getMainWindow().log("A class not found exception was thrown while setting the User Interface Manager");
+//      mJBroFuzz.getMainWindow().log("A class not found exception was thrown while setting the User Interface Manager");
     }
     catch (InstantiationException e) {
       mJBroFuzz.getMainWindow().log(

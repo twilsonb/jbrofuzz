@@ -128,8 +128,7 @@ class Agent implements Runnable {
       row.append(" bytes)          ");
       row.append(dateFormat.format(currentTime));
       // Append a row in the table
-      mJBroFuzz.getMainWindow().getTCPSniffingPanel().addTableRequestRow(row.
-        toString());
+      mJBroFuzz.getMainWindow().getTCPSniffingPanel().addRow(row.toString());
       // formatted string
       StringBuffer sb = new StringBuffer(nBytes);
       // formatted binary string

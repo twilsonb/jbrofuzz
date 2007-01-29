@@ -89,7 +89,7 @@ public class SystemLogger extends JPanel {
     listPanel.add(listTextScrollPane);
 
     infoButton = new JButton("Info");
-    infoButton.setBounds(765, 33, 70, 40);
+    infoButton.setBounds(800, 33, 70, 40);
     infoButton.setEnabled(true);
     // The action listener for the info button
     infoButton.addActionListener(new ActionListener() {

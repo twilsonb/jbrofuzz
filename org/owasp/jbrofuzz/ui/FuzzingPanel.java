@@ -169,7 +169,7 @@ public class FuzzingPanel extends JPanel {
     message.setEditable(true);
     message.setVisible(true);
     message.setFont(new Font("Verdana", Font.PLAIN, 12));
-    message.setLineWrap(true);
+    message.setLineWrap(false);
     message.setWrapStyleWord(true);
     message.setMargin(new Insets(1, 1, 1, 1));
     message.setBackground(Color.WHITE);
@@ -178,7 +178,7 @@ public class FuzzingPanel extends JPanel {
 
     JScrollPane messageScrollPane = new JScrollPane(message);
     messageScrollPane.setVerticalScrollBarPolicy(20);
-
+    messageScrollPane.setHorizontalScrollBarPolicy(30);
     messageScrollPane.setPreferredSize(new Dimension(480, 160));
     requestPanel.add(messageScrollPane);
 
@@ -309,7 +309,15 @@ public class FuzzingPanel extends JPanel {
     target.setText("http://10.255.1.224");
     port.setText("80");
     message.setText(
-      "POST / HTTP/1.0\r\nContent-Length: 87\r\n\nuser_name=asdf&password=asdf\r\n\r\n");
+      "GET / HTTP/1.1\r\n" +
+      "Host: 127.0.0.1:6161\r\n" +
+      "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n" +
+      "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n" +
+      "Accept-Language: en-gb,en;q=0.5\r\n" +
+      "Accept-Encoding: gzip,deflate\r\n" +
+      "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n" +
+      "Keep-Alive: 300\r\n" +
+      "Connection: keep-alive\r\n\r\n");
   }
 
   /**
