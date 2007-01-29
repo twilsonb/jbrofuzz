@@ -76,7 +76,7 @@ public class SniffingViewer extends JFrame {
     listTextArea.setEditable(false);
     listTextArea.setLineWrap(false);
     listTextArea.setWrapStyleWord(false);
-    m.getMainWindow().popup(listTextArea);
+    m.getFrameWindow().popup(listTextArea);
 
     JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(JScrollPane.
@@ -88,7 +88,7 @@ public class SniffingViewer extends JFrame {
 
     add(listPanel);
 
-    StringBuffer text = m.getMainWindow().getJBroFuzz().getFileHandler().
+    StringBuffer text = m.getFrameWindow().getJBroFuzz().getFileHandler().
                         readSnifFile(this, number);
     //Find the header
     int headerEnd = text.indexOf("]");

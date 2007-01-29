@@ -29,7 +29,6 @@ package org.owasp.jbrofuzz.ui;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.text.*;
 
 import java.awt.Dimension;
@@ -39,9 +38,6 @@ import java.awt.Color;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -50,7 +46,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTable;
-import javax.swing.*;
 
 import javax.swing.SwingWorker3;
 
@@ -120,7 +115,7 @@ public class FuzzingPanel extends JPanel {
     target.setMargin(new Insets(1, 1, 1, 1));
     target.setBackground(Color.WHITE);
     target.setForeground(Color.BLACK);
-    getMainWindow().popup(target);
+    getFrameWindow().popup(target);
 
     JScrollPane targetScrollPane = new JScrollPane(target);
     targetScrollPane.setVerticalScrollBarPolicy(21);
@@ -147,7 +142,7 @@ public class FuzzingPanel extends JPanel {
     port.setMargin(new Insets(1, 1, 1, 1));
     port.setBackground(Color.WHITE);
     port.setForeground(Color.BLACK);
-    getMainWindow().popup(port);
+    getFrameWindow().popup(port);
 
     JScrollPane portScrollPane = new JScrollPane(port);
     portScrollPane.setVerticalScrollBarPolicy(21);
@@ -174,7 +169,7 @@ public class FuzzingPanel extends JPanel {
     message.setMargin(new Insets(1, 1, 1, 1));
     message.setBackground(Color.WHITE);
     message.setForeground(Color.BLACK);
-    getMainWindow().popup(message);
+    getFrameWindow().popup(message);
 
     JScrollPane messageScrollPane = new JScrollPane(message);
     messageScrollPane.setVerticalScrollBarPolicy(20);
@@ -247,9 +242,6 @@ public class FuzzingPanel extends JPanel {
           public Object construct() {
             buttonFuzzStart.setEnabled(false);
             buttonFuzzStop.setEnabled(true);
-            // getMainMenuBar().setFuzzStartEnabled(false);
-            // getMainMenuBar().setFuzzStopEnabled(true);
-            // getMainWindow().setTabSniffingEnabled(false);
             fuzzStart();
             return "start-window-return";
           }
@@ -257,9 +249,6 @@ public class FuzzingPanel extends JPanel {
           public void finished() {
             buttonFuzzStart.setEnabled(true);
             buttonFuzzStop.setEnabled(false);
-            // getMainMenuBar().setFuzzStartEnabled(true);
-            // getMainMenuBar().setFuzzStopEnabled(false);
-            // getMainWindow().setTabSniffingEnabled(true);
           }
         };
         worker.start();
@@ -274,9 +263,6 @@ public class FuzzingPanel extends JPanel {
         fuzzStop();
         buttonFuzzStart.setEnabled(true);
         buttonFuzzStop.setEnabled(false);
-        // getMainMenuBar().setFuzzStartEnabled(true);
-        // getMainMenuBar().setFuzzStopEnabled(false);
-        // getMainWindow().setTabSniffingEnabled(true);
       }
     });
     // The output panel
@@ -294,7 +280,7 @@ public class FuzzingPanel extends JPanel {
     outputTable.setMargin(new Insets(3, 3, 3, 3));
     outputTable.setBackground(Color.WHITE);
     outputTable.setForeground(Color.BLACK);
-    getMainWindow().popup(outputTable);
+    getFrameWindow().popup(outputTable);
 
     JScrollPane outputScrollPane = new JScrollPane(outputTable);
     outputScrollPane.setVerticalScrollBarPolicy(20);
@@ -306,18 +292,18 @@ public class FuzzingPanel extends JPanel {
     add(outputPanel);
 
     // Some value defaults
-    target.setText("http://10.255.1.224");
+    target.setText("http://intranet");
     port.setText("80");
     message.setText(
-      "GET / HTTP/1.1\r\n" +
-      "Host: 127.0.0.1:6161\r\n" +
-      "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n" +
-      "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n" +
-      "Accept-Language: en-gb,en;q=0.5\r\n" +
-      "Accept-Encoding: gzip,deflate\r\n" +
-      "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n" +
-      "Keep-Alive: 300\r\n" +
-      "Connection: keep-alive\r\n\r\n");
+      "GET /index.html HTTP/1.0\n" +
+      "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\n" +
+      "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n" +
+      "Accept-Language: en-gb,en;q=0.5\n" +
+      "Accept-Encoding: gzip,deflate\n" +
+      "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n" +
+      "Keep-Alive: 300\n" +
+      "Connection: keep-alive\n\n");
+    message.setCaretPosition(0);
   }
 
   /**
@@ -548,7 +534,7 @@ public class FuzzingPanel extends JPanel {
     return m.getJBroFuzz();
   }
 
-  public FrameWindow getMainWindow() {
+  public FrameWindow getFrameWindow() {
     return m;
   }
 

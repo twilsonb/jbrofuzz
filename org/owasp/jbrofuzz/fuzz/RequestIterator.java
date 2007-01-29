@@ -181,33 +181,33 @@ public class RequestIterator {
    *
    */
   public void run() {
-    String target = mJBroFuzz.getMainWindow().getFuzzingPanel().getTargetText();
-    String port = mJBroFuzz.getMainWindow().getFuzzingPanel().getPortText();
+    String target = mJBroFuzz.getFrameWindow().getFuzzingPanel().getTargetText();
+    String port = mJBroFuzz.getFrameWindow().getFuzzingPanel().getPortText();
     StringBuffer stout = this.request;
 
     // Get the counter value to generate unique file-names
-    int counter = mJBroFuzz.getMainWindow().getFuzzingPanel().getFuzzCount();
+    int counter = mJBroFuzz.getFrameWindow().getFuzzingPanel().getFuzzCount();
 
     if (type.equals("ZER")) {
 
       String fl = "jbrofuzz-session-" + counter + "-1-1.txt";
 
-      mJBroFuzz.getMainWindow().getFuzzingPanel().setOutputText(Format.HD1);
+      mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(Format.HD1);
       mJBroFuzz.getFileHandler().writeFuzzFile(fl, Format.HD1);
 
       String r = "Request: " + target + "Port: " + port + "\n" + stout;
 
-      mJBroFuzz.getMainWindow().getFuzzingPanel().setOutputText(r);
+      mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(r);
       mJBroFuzz.getFileHandler().writeFuzzFile(fl, r);
 
 
       Connection noFuzzingConnection = new Connection(target, port, stout);
       String t = "\nReply:\n" + noFuzzingConnection.getReply();
 
-      mJBroFuzz.getMainWindow().getFuzzingPanel().setOutputText(t);
+      mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(t);
       mJBroFuzz.getFileHandler().writeFuzzFile(fl, t);
 
-      mJBroFuzz.getMainWindow().getFuzzingPanel().setOutputText(Format.FT1);
+      mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(Format.FT1);
       mJBroFuzz.getFileHandler().writeFuzzFile(fl, Format.FT1);
     }
     else {
@@ -219,7 +219,7 @@ public class RequestIterator {
         String fk = "jbrofuzz-session-" + counter + "-" + getCurrentRequest() +
                     "-" + getTotalRequest() + ".txt";
 
-        mJBroFuzz.getMainWindow().getFuzzingPanel().setOutputText(Format.HDS +
+        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(Format.HDS +
           getCurrentRequest() + "-" + getTotalRequest() + Format.FTS);
 
         mJBroFuzz.getFileHandler().writeFuzzFile(fk,
@@ -227,7 +227,7 @@ public class RequestIterator {
                                                 "-" + getTotalRequest() +
                                                 Format.FTS);
 
-        mJBroFuzz.getMainWindow().getFuzzingPanel().setOutputText("Request: " +
+        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText("Request: " +
           target + " Port: " + port + "\n" + stout + "\n");
         mJBroFuzz.getFileHandler().writeFuzzFile(fk,
                                                 "Request: " + target + " Port: " +
@@ -237,11 +237,11 @@ public class RequestIterator {
 
         final String s = con.getReply();
 
-        mJBroFuzz.getMainWindow().getFuzzingPanel().setOutputText(
+        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(
           "\nReply:\n" + s);
         mJBroFuzz.getFileHandler().writeFuzzFile(fk, "\nReply:\n" + s);
 
-        mJBroFuzz.getMainWindow().getFuzzingPanel().setOutputText(Format.HDE +
+        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(Format.HDE +
           getCurrentRequest() + "-" + getTotalRequest() + Format.FTS);
 
         mJBroFuzz.getFileHandler().writeFuzzFile(fk,

@@ -59,7 +59,7 @@ public class Constructor {
 
     // If the length is zero define the generators from the Format default list
     if (len == 0) {
-      mJBroFuzz.getMainWindow().log("Loading default generator list");
+      mJBroFuzz.getFrameWindow().log("Loading default generator list");
       String[] defaultArray = Format.DEFAULT_GENERATORS.split("\n");
       len = defaultArray.length;
       fileInput.setSize(len);
@@ -139,10 +139,10 @@ public class Constructor {
       }
     }
 
-    mJBroFuzz.getMainWindow().getDefinitionsPanel().setDefinitionsText(
+    mJBroFuzz.getFrameWindow().getDefinitionsPanel().setDefinitionsText(
       getAllGeneratorNames() + "\n\n");
 
-    mJBroFuzz.getMainWindow().getDefinitionsPanel().setDefinitionsText(
+    mJBroFuzz.getFrameWindow().getDefinitionsPanel().setDefinitionsText(
       getAllGenerators());
 
   }

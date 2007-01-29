@@ -94,8 +94,8 @@ public class ConnectionListener extends Thread implements
       server.setReuseAddress(false);
     }
     catch (IOException e) {
-      mn.getMainWindow().log("ServerSocket IOException..." + e.getMessage());
-      mn.getMainWindow().getTCPSniffingPanel().buttonStop();
+      mn.getFrameWindow().log("ServerSocket IOException..." + e.getMessage());
+      mn.getFrameWindow().getTCPSniffingPanel().buttonStop();
     }
   }
   /**
@@ -106,7 +106,7 @@ public class ConnectionListener extends Thread implements
     while (!connectionStopped) {
       try {
         Socket clientSocket = server.accept();
-        con = new Connection(mn.getMainWindow().getJBroFuzz(), clientSocket,
+        con = new Connection(mn.getFrameWindow().getJBroFuzz(), clientSocket,
                                 (ConnectionMonitor)this, this.remoteAddress,
                                 this.remotePort);
       }

@@ -76,7 +76,7 @@ public class JBroFuzz {
    * Return the main window, thus allowing access to Gui components
    * @return MainWindow
    */
-  public FrameWindow getMainWindow() {
+  public FrameWindow getFrameWindow() {
     return mainwindow;
   }
 

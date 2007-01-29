@@ -120,8 +120,6 @@ public class SystemLogger extends JPanel {
 
       }
     });
-
-
     add(listPanel);
     add(infoButton);
     listTextArea.setCaretPosition(0);
