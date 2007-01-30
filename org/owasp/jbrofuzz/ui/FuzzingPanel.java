@@ -109,7 +109,7 @@ public class FuzzingPanel extends JPanel {
 
     target.setEditable(true);
     target.setVisible(true);
-    target.setFont(new Font("Verdana", Font.PLAIN, 12));
+    target.setFont(new Font("Verdana", Font.BOLD, 12));
     target.setLineWrap(false);
     target.setWrapStyleWord(true);
     target.setMargin(new Insets(1, 1, 1, 1));
@@ -136,7 +136,7 @@ public class FuzzingPanel extends JPanel {
 
     port.setEditable(true);
     port.setVisible(true);
-    port.setFont(new Font("Verdana", Font.PLAIN, 12));
+    port.setFont(new Font("Verdana", Font.BOLD, 12));
     port.setLineWrap(false);
     port.setWrapStyleWord(true);
     port.setMargin(new Insets(1, 1, 1, 1));
@@ -185,7 +185,7 @@ public class FuzzingPanel extends JPanel {
     add(buttonAddGen);
     buttonAddGen.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
-        generatorAdd();
+        generatorAddButton();
       }
     });
     buttonRemGen = new JButton("Remove Generator");
@@ -193,7 +193,7 @@ public class FuzzingPanel extends JPanel {
     add(buttonRemGen);
     buttonRemGen.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        generatorRemove();
+        generatorRemoveButton();
       }
     });
 
@@ -240,15 +240,12 @@ public class FuzzingPanel extends JPanel {
       public void actionPerformed(final ActionEvent e) {
         worker = new SwingWorker3() {
           public Object construct() {
-            buttonFuzzStart.setEnabled(false);
-            buttonFuzzStop.setEnabled(true);
-            fuzzStart();
+            fuzzStartButton();
             return "start-window-return";
           }
 
           public void finished() {
-            buttonFuzzStart.setEnabled(true);
-            buttonFuzzStop.setEnabled(false);
+            fuzzStopButton();
           }
         };
         worker.start();
@@ -260,9 +257,7 @@ public class FuzzingPanel extends JPanel {
     add(buttonFuzzStop);
     buttonFuzzStop.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
-        fuzzStop();
-        buttonFuzzStart.setEnabled(true);
-        buttonFuzzStop.setEnabled(false);
+        fuzzStopButton();
       }
     });
     // The output panel
@@ -292,17 +287,17 @@ public class FuzzingPanel extends JPanel {
     add(outputPanel);
 
     // Some value defaults
-    target.setText("http://intranet");
+    target.setText("http://192.168.1.254");
     port.setText("80");
     message.setText(
-      "GET /index.html HTTP/1.0\n" +
-      "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\n" +
-      "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n" +
-      "Accept-Language: en-gb,en;q=0.5\n" +
-      "Accept-Encoding: gzip,deflate\n" +
-      "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n" +
-      "Keep-Alive: 300\n" +
-      "Connection: keep-alive\n\n");
+      "GET /index.html HTTP/1.0\r\n" +
+      "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n" +
+      "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n" +
+      "Accept-Language: en-gb,en;q=0.5\r\n" +
+      "Accept-Encoding: gzip,deflate\r\n" +
+      "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n" +
+      "Keep-Alive: 300\r\n" +
+      "Connection: keep-alive\r\n\r\n");
     message.setCaretPosition(0);
   }
 
@@ -310,9 +305,20 @@ public class FuzzingPanel extends JPanel {
    * <p>Method trigered when the fuzz button is pressed in the current panel.
    * </p>
    */
-  public void fuzzStart() {
+  public void fuzzStartButton() {
+    if(! buttonFuzzStart.isEnabled()) {
+      return;
+    }
+    // UI and Colors
+    buttonFuzzStart.setEnabled(false);
+    buttonFuzzStop.setEnabled(true);
+    target.setEditable(false);
+    target.setBackground(Color.BLACK);
+    target.setForeground(Color.WHITE);
+    port.setEditable(false);
+    port.setBackground(Color.BLACK);
+    port.setForeground(Color.WHITE);
     // Check to see if a message is present
-    message.copy();
     if ("".equals(message.getText())) {
       JOptionPane.showMessageDialog(this,
                                     "The request field is blank.\n" +
@@ -359,8 +365,20 @@ public class FuzzingPanel extends JPanel {
   /**
    * <p>Method trigered when attempting to stop any fuzzing taking place.</p>
    */
-  public void fuzzStop() {
+  public void fuzzStopButton() {
+    if(! buttonFuzzStop.isEnabled()) {
+      return;
+    }
     getJBroFuzz().stopGenerator();
+    // UI and Colors
+    buttonFuzzStart.setEnabled(true);
+    buttonFuzzStop.setEnabled(false);
+    target.setEditable(true);
+    target.setBackground(Color.WHITE);
+    target.setForeground(Color.BLACK);
+    port.setEditable(true);
+    port.setBackground(Color.WHITE);
+    port.setForeground(Color.BLACK);
   }
 
   /**
@@ -445,7 +463,7 @@ public class FuzzingPanel extends JPanel {
   /**
    * <p>Method for adding a generator.</p>
    */
-  public void generatorAdd() {
+  public void generatorAddButton() {
     // Check to see what text has been selected
     String selectedText;
     try {
@@ -494,7 +512,7 @@ public class FuzzingPanel extends JPanel {
   /**
    * <p>Method for removing a generator.</p>
    */
-  public void generatorRemove() {
+  public void generatorRemoveButton() {
     int rows = generatorTable.getRowCount();
     if (rows < 1) {
       return;
@@ -518,22 +536,43 @@ public class FuzzingPanel extends JPanel {
     }
   }
 
-  public void setFuzzStart(final boolean b) {
+  /**
+   * Set the button enable status of the Fuzz! button
+   * @param b boolean
+   */
+  public void setFuzzStartButtonEnable(final boolean b) {
     buttonFuzzStart.setEnabled(b);
   }
 
-  public void setFuzzStop(final boolean b) {
+  /**
+   * Set the button enable status of the Stop button
+   * @param b boolean
+   */
+  public void setFuzzStopButtonEnable(final boolean b) {
     buttonFuzzStop.setEnabled(b);
   }
 
-  public FrameMenuBar getMainMenuBar() {
+  /**
+   * Access the MenuBar being used in this window
+   * @return FrameMenuBar
+   *
+  public FrameMenuBar getFrameMenuBar() {
     return m.getFrameMenuBar();
   }
+  */
 
-  public JBroFuzz getJBroFuzz() {
+ /**
+  * Access the main object that launches and is responsible for the application.
+  * @return JBroFuzz
+  */
+ public JBroFuzz getJBroFuzz() {
     return m.getJBroFuzz();
   }
 
+  /**
+   * Access the main frame window in which this panel is attached to.
+   * @return FrameWindow
+   */
   public FrameWindow getFrameWindow() {
     return m;
   }

@@ -26,24 +26,20 @@
 package org.owasp.jbrofuzz.ui;
 
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.text.*;
-
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Action;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker3;
-import javax.swing.JCheckBoxMenuItem;
-
-import javax.swing.*;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.TextAction;
 
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.ver.Format;
@@ -185,7 +181,7 @@ public class FrameMenuBar extends JMenuBar {
     //
     topics.setEnabled(false);
     pause.setEnabled(false);
-
+    preferences.setEnabled(false);
     //
     // The action listeners for each component...
     //
@@ -240,6 +236,71 @@ public class FrameMenuBar extends JMenuBar {
       }
     });
 
+    start.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        final SwingWorker3 worker = new SwingWorker3() {
+          public Object construct() {
+            int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
+            String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
+            if (s.equals(" TCP Fuzzing ")) {
+              getFrameWindow().getFuzzingPanel().fuzzStartButton();
+            }
+            if (s.equals(" TCP Sniffing ")) {
+              getFrameWindow().getTCPSniffingPanel().buttonStart();
+            }
+            return "start-menu-bar-return";
+          }
+
+          public void finished() {
+            int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
+            String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
+            if (s.equals(" TCP Fuzzing ")) {
+              getFrameWindow().getFuzzingPanel().fuzzStopButton();
+            }
+            if (s.equals(" TCP Sniffing ")) {
+              // getFrameWindow().getTCPSniffingPanel().buttonStop();
+            }
+          }
+        };
+        worker.start();
+      }
+    });
+
+    stop.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
+        String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
+        if(s.equals(" TCP Fuzzing ")) {
+          getFrameWindow().getFuzzingPanel().fuzzStopButton();
+        }
+        if(s.equals(" TCP Sniffing ")){
+          getFrameWindow().getTCPSniffingPanel().buttonStop();
+        }
+      }
+    });
+
+    add.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+
+        int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
+        String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
+        if(s.equals(" TCP Fuzzing ")) {
+          getFrameWindow().getFuzzingPanel().generatorAddButton();
+        }
+      }
+    });
+
+    remove.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+
+        int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
+        String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
+        if(s.equals(" TCP Fuzzing ")) {
+          getFrameWindow().getFuzzingPanel().generatorRemoveButton();
+        }
+      }
+    });
+
     disclaimer.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         String message = Format.DISCLAIMER;
@@ -247,7 +308,7 @@ public class FrameMenuBar extends JMenuBar {
         JOptionPane.showMessageDialog(getFrameWindow(), message,
                                       "Disclaimer JBroFuzz",
                                       JOptionPane.ERROR_MESSAGE,
-                                      ImageCreator.aboutImageIcon);
+                                      ImageCreator.OWASP_IMAGE);
       }
     });
 
@@ -258,7 +319,7 @@ public class FrameMenuBar extends JMenuBar {
         JOptionPane.showMessageDialog(getFrameWindow(), message,
                                       "About JBroFuzz",
                                       JOptionPane.INFORMATION_MESSAGE,
-                                      ImageCreator.aboutImageIcon);
+                                      ImageCreator.OWASP_IMAGE);
       }
     });
 

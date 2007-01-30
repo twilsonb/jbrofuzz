@@ -206,6 +206,7 @@ public class FrameWindow extends JFrame {
   public JTabbedPane getTabbedPane() {
     return tabbedPane;
   }
+
   /**
    * Set which tab to hide based on the int n of ID values. These are taken
    * from the FrameWindow.

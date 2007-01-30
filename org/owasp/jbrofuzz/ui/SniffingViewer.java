@@ -36,6 +36,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import javax.swing.text.DefaultEditorKit;
 /**
  * @author subere (at) uncon org
  * @version 0.4
@@ -77,12 +79,12 @@ public class SniffingViewer extends JFrame {
     listTextArea.setLineWrap(false);
     listTextArea.setWrapStyleWord(false);
     m.getFrameWindow().popup(listTextArea);
-
+    /*
+    listTextArea.getDocument().putProperty( DefaultEditorKit.EndOfLineStringProperty, "\r\n" );
+    */
     JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
-    listTextScrollPane.setVerticalScrollBarPolicy(JScrollPane.
-                                                  VERTICAL_SCROLLBAR_AS_NEEDED);
-    listTextScrollPane.setHorizontalScrollBarPolicy(JScrollPane.
-      HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    listTextScrollPane.setVerticalScrollBarPolicy(20);
+    listTextScrollPane.setHorizontalScrollBarPolicy(30);
     listTextScrollPane.setPreferredSize(new Dimension(500, 410));
     listPanel.add(listTextScrollPane);
 

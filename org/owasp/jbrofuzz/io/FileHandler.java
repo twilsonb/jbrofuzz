@@ -306,5 +306,4 @@ public class FileHandler {
     file.trimToSize();
     return file;
   }
-
 }

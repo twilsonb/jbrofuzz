@@ -286,41 +286,4 @@ public class RequestIterator {
     return mJBroFuzz;
   }
 
-  /**
-   * <p>Method for altering the length of the Content-Length if the request is
-   * a post.</p>
-   *
-   * @param conMessage StringBuffer
-   * @return StringBuffer
-   *
-  private static StringBuffer processRequest(final StringBuffer conMessage) {
-    // Re-write the content length integer if its a POST request (messy)
-    if (conMessage.length() >= 4) {
-      if (conMessage.substring(0, 4).equals("POST")) {
-
-        final String[] bodyHeader = conMessage.toString().split("\n\n");
-        if (bodyHeader.length >= 2) {
-
-          final int lengthHeader = bodyHeader[1].getBytes().length - 1;
-
-          // Find the Content-Length header field
-          int indexPoint = conMessage.toString().indexOf("Content-Length:");
-          if (indexPoint > -1) {
-
-            indexPoint += "Content-Length".length();
-            if (indexPoint < conMessage.length()) {
-              final int finalPoint = conMessage.indexOf("\n", indexPoint);
-              if (finalPoint > -1) {
-                conMessage.delete(indexPoint + 1, finalPoint);
-                conMessage.insert(indexPoint + 1, " " + lengthHeader);
-              }
-            }
-          }
-        }
-      }
-    }
-    return conMessage;
-  }
-  */
-
 }
