@@ -443,6 +443,9 @@ public class SniffingPanel extends JPanel {
    * Method for hitting the stop button.
    */
   public void buttonStop() {
+    if(!stopButton.isEnabled()) {
+      return;
+    }
     stopButton.setEnabled(false);
     startButton.setEnabled(true);
     if(reflector != null ) {
@@ -482,6 +485,9 @@ public class SniffingPanel extends JPanel {
    * Method for hitting the start button.
    */
   public void buttonStart() {
+    if(!startButton.isEnabled()) {
+      return;
+    }
     startButton.setEnabled(false);
     stopButton.setEnabled(true);
     session++;

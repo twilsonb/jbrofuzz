@@ -27,6 +27,8 @@ package org.owasp.jbrofuzz.ui.util;
 
 import javax.swing.ImageIcon;
 
+import java.io.File;
+
 import org.owasp.jbrofuzz.util.Base64;
 /**
  * <p>This static class holds the Base64 Strings corresponding to all the
@@ -42,6 +44,112 @@ import org.owasp.jbrofuzz.util.Base64;
  * @version 0.4
  */
 public class ImageCreator {
+
+  private static final String OWASP =
+    "iVBORw0KGgoAAAANSUhEUgAAAGAAAABYCAMAAAA9bwLKAAAAAXNSR0ICQMB9xQAAAqxQTFRF" +
+    "AAAAExMTGxsbCwsLFBkbFBUaCgkGDxASBggFBwgKAAETAAEaAwkUDhIbGBYYEBAOBgsZDhAP" +
+    "CQwaGBkWCAcFCw0SAQIjExkiCAs1DBE8CxEhBgkvAwUrCAsuExUhGx0hDRREFR1WERZGHSIk" +
+    "HCMqHiQwGSJaGCBHHCdlHy5xHzR3IBwbICAeOzs7KyssLjAuMjIzIiMiNTg2JSksKS0wNTk7" +
+    "KScoMTEvKjAzNDU5KCgmJSUpODc8KzI4PD1BJTFrMDx2JjV4ISxqJC50KDyIJj6RMT2HPkM/" +
+    "PUJEKkGMNEWMNEuYOVKcKkWVNU+jPFWgQD4/U1NTSktLQkNDWVdYW1tbWFZXUFJPRkhHTU5R" +
+    "TVBTVFVZVlhbRkhKSEdMRUVJVlhXXVxgQE6VQ1abRFSPVF2cRFujXWBfXWBhXmObS2OnVWmr" +
+    "W3CuWnSyWW2wTXGtTnSxXYG3YF5fc3JzY2Nja2tre3p7bnBvaGpnb3Fyd3h5ZWlrdXV4eXd4" +
+    "aGZneHZ3YmqqZnm0dHy2YnOtdnarfoGAdoa6aoO5e5C9e4zAe5TDbYrBgH+Ai4uMg4OEmpqb" +
+    "iYeIkpKTmJiWiomHkJCOlpiVkpiYlpaYjo6Qh4iKj5CRkI6PhIu8i5C4kZC6go3Bh5fFkZzI" +
+    "nqCfi6HLl6bMmqvRnrHSjqXRoJ6foZ+goKCeu7u7q6uso6OjrbCvs7OzuLq3p6mmtri3p6ip" +
+    "t7i5qKqnr7CxpqWosK+xoK3Ooa3Rp7XVs7vZo7DOucLcv8DBvMXgwL/C29vbw8PDy8vL09PT" +
+    "0M7Q1tjXzNDR1tbYyczVxsbIx8jKyMbH2dnW2NbXyMfKw8rhy9Hk1t/w3d7h3uHg4d/g4ODe" +
+    "8/Pz6+vr4+Pj8PDu+Pj29vb46efo6ubl7u7w6Ojm7vDu9vj3GyzEYgAAAAF0Uk5TAEDm2GYA" +
+    "AAAJcEhZcwAACdgAAAnYAcegua0AAAAZdEVYdFNvZnR3YXJlAE1pY3Jvc29mdCBPZmZpY2V/" +
+    "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";
+  /**
+   * <p>The owasp image being displayed in the about box. This image is
+   * originally a png file.</p>.
+   * @since 0.4
+   */
+  public static final ImageIcon OWASP_IMAGE = new ImageIcon(Base64.decode(
+    OWASP));
+
 
   private static final String FRAMEICON =
     "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAp1J" +
