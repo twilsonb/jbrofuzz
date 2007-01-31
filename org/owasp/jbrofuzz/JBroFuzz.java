@@ -88,7 +88,6 @@ public class JBroFuzz {
    */
   public void setGenerator(final StringBuffer request, final int start,
                            final int finish, final String type) {
-
     generator = new RequestIterator(this, request, start, finish, type);
   }
 
