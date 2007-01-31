@@ -26,23 +26,22 @@
 package org.owasp.jbrofuzz.ui;
 
 import java.awt.Container;
-import java.awt.Color;
-
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-
-import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.ver.Format;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import javax.swing.JMenuItem;
-import javax.swing.JTextArea;
 import java.awt.event.ActionEvent;
-import javax.swing.JPopupMenu;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
-import java.awt.event.ActionListener;
-import javax.swing.KeyStroke;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
+
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import org.owasp.jbrofuzz.ver.Format;
 /**
  * <p>The main window of JBroFuzz responsible for the graphical
  * user interface.</p>

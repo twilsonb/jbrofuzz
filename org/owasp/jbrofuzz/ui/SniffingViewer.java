@@ -36,8 +36,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
-import javax.swing.text.DefaultEditorKit;
 /**
  * @author subere (at) uncon org
  * @version 0.4

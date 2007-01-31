@@ -27,7 +27,6 @@ package org.owasp.jbrofuzz.ui;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Window;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;

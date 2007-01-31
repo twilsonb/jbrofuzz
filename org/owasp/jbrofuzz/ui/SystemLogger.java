@@ -25,18 +25,17 @@
  */
 package org.owasp.jbrofuzz.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Window;
-import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.*;
-
-import java.awt.event.*;
 
 import org.owasp.jbrofuzz.ver.Time;
 /**
