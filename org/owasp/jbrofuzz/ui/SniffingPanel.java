@@ -25,13 +25,13 @@
  */
 package org.owasp.jbrofuzz.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.Color;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -44,11 +44,9 @@ import javax.swing.SwingWorker3;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.Ostermiller.util.Browser;
 import org.owasp.jbrofuzz.snif.tcp.ConnectionListener;
 import org.owasp.jbrofuzz.ver.Format;
-
-import com.Ostermiller.util.Browser;
-import java.io.*;
 
 /**
  * The Sniffing Panel User Interface based on the instance of a JPanel. This

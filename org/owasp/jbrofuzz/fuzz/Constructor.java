@@ -30,8 +30,8 @@ import java.util.Vector;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.tcp.Generator;
-import org.owasp.jbrofuzz.ver.Format;
 import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.ver.Format;
 /**
  * <p>The Constructor constructs a list of Definitions, iterating though each
  * Generator and accumulating values inputted from the corresponding file.</p>

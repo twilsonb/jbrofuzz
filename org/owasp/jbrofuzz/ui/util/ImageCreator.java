@@ -27,8 +27,6 @@ package org.owasp.jbrofuzz.ui.util;
 
 import javax.swing.ImageIcon;
 
-import java.io.File;
-
 import org.owasp.jbrofuzz.util.Base64;
 /**
  * <p>This static class holds the Base64 Strings corresponding to all the

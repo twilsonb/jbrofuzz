@@ -28,6 +28,7 @@ package org.owasp.jbrofuzz.ver;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 

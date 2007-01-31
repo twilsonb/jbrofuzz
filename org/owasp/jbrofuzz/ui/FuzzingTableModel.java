@@ -26,8 +26,8 @@
 package org.owasp.jbrofuzz.ui;
 
 import java.util.Vector;
+
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.*;
 
 public class FuzzingTableModel extends AbstractTableModel {
   /**

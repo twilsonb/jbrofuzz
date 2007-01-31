@@ -30,7 +30,6 @@ import org.owasp.jbrofuzz.fuzz.RequestIterator;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.snif.tcp.ConnectionListener;
 import org.owasp.jbrofuzz.ui.FrameWindow;
-
 import org.owasp.jbrofuzz.ver.Format;
 /**
  * @todo Check to see what happens when in fuzzing a socket has been triggered

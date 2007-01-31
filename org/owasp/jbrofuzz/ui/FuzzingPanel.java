@@ -26,16 +26,10 @@
 package org.owasp.jbrofuzz.ui;
 
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.text.*;
-
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.Color;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -44,11 +38,9 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTable;
-
+import javax.swing.JTextArea;
 import javax.swing.SwingWorker3;
-
 import javax.swing.table.TableColumn;
 
 import org.owasp.jbrofuzz.JBroFuzz;
