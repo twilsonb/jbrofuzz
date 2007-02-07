@@ -1,5 +1,5 @@
 /**
- * RequestIterator.java 0.4
+ * RequestIterator.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -44,7 +44,7 @@ import org.owasp.jbrofuzz.ver.Format;
  * of establishing sockets though the Connection class.</p>
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class RequestIterator {
 
@@ -63,8 +63,9 @@ public class RequestIterator {
   // The boolean checking if stop has been pressed
   private boolean generatorStopped;
   /**
-   * The main constructor passring a jbrofuzz object, the string, the start
-   * location, the finish location and the type of fuzzing.
+   * The main constructor passing a jbrofuzz object, the string to be sent,
+   * the start location wihtin that String were the fuzzing point begins from
+   * and the finish location and the type of fuzzing.
    * @param mJBroFuzz JBroFuzz
    * @param request String
    * @param start int
@@ -187,22 +188,19 @@ public class RequestIterator {
 
     // Get the counter value to generate unique file-names
     int counter = mJBroFuzz.getFrameWindow().getFuzzingPanel().getFuzzCount();
-
+    // If a single request has been specified...
     if (type.equals("ZER")) {
-
       String fl = "jbrofuzz-session-" + counter + "-1-1.txt";
 
       mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(Format.HD1);
       mJBroFuzz.getFileHandler().writeFuzzFile(fl, Format.HD1);
-
-      String r = "Request: " + target + "Port: " + port + "\n" + stout;
+      String r = "Request: " + target + "Port: " + port + "\r\n" + stout;
 
       mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(r);
       mJBroFuzz.getFileHandler().writeFuzzFile(fl, r);
 
-
       Connection noFuzzingConnection = new Connection(target, port, stout);
-      String t = "\nReply:\n" + noFuzzingConnection.getReply();
+      String t = "\nReply:\r\n" + noFuzzingConnection.getReply();
 
       mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(t);
       mJBroFuzz.getFileHandler().writeFuzzFile(fl, t);
@@ -228,18 +226,18 @@ public class RequestIterator {
                                                 Format.FTS);
 
         mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText("Request: " +
-          target + " Port: " + port + "\n" + stout + "\n");
+          target + " Port: " + port + "\n" + stout + "\r\n");
         mJBroFuzz.getFileHandler().writeFuzzFile(fk,
                                                 "Request: " + target + " Port: " +
-                                                port + "\n" + stout + "\n");
+                                                port + "\r\n" + stout + "\r\n");
 
         Connection con = new Connection(target, port, stout);
 
         final String s = con.getReply();
 
         mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(
-          "\nReply:\n" + s);
-        mJBroFuzz.getFileHandler().writeFuzzFile(fk, "\nReply:\n" + s);
+          "\nReply:\r\n" + s);
+        mJBroFuzz.getFileHandler().writeFuzzFile(fk, "\nReply:\r\n" + s);
 
         mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(Format.HDE +
           getCurrentRequest() + "-" + getTotalRequest() + Format.FTS);

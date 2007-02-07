@@ -30,7 +30,7 @@ package org.owasp.jbrofuzz.snif.tcp;
  * implemented.</p>
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public interface AgentMonitor {
 

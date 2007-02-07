@@ -33,7 +33,7 @@ import java.net.Socket;
 import org.owasp.jbrofuzz.JBroFuzz;
 /**
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 class Connection implements Runnable, AgentMonitor {
 

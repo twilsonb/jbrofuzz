@@ -39,7 +39,7 @@ import org.owasp.jbrofuzz.ui.SniffingPanel;
  * corresponding socket.</p>
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class ConnectionListener extends Thread implements
   ConnectionMonitor {

@@ -41,7 +41,7 @@ import org.owasp.jbrofuzz.ver.Time;
 /**
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class SystemLogger extends JPanel {
   // The frame that the sniffing panel is attached

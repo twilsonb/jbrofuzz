@@ -1,5 +1,5 @@
 /**
- * SwingWorker.java
+ * SwingWorker3.java
  */
 package javax.swing;
 

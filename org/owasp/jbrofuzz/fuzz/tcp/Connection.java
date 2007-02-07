@@ -40,7 +40,7 @@ import java.net.UnknownHostException;
  * on a given address, port and for a given request.</p>
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  * @since 0.1
  */
 public class Connection {

@@ -47,16 +47,16 @@ import org.owasp.jbrofuzz.ver.Format;
  * <p>The main menu bar attached to the main window.</p>
  *
  * @author subere (at) uncon org
- * @version 0.4
+ * @version 0.5
  */
-public class FrameMenuBar extends JMenuBar {
+public class FrameMenuBar extends JMenuBar{
 
   private final FrameWindow mFrameWindow;
   private final JMenu file, edit, view, panel, options, help;
   // Used under the Panel JMenu as items
   private JMenuItem start, pause, stop, add, remove;
   // Used under the view JMenu as items
-  private JCheckBoxMenuItem fuzzing, sniffing, generators, system;
+  private JCheckBoxMenuItem directories, fuzzing, sniffing, generators, system;
   /**
    *
    * @param mFrameWindow FrameWindow
@@ -116,11 +116,13 @@ public class FrameMenuBar extends JMenuBar {
     edit.add(selectAll);
 
     // View
+    directories = new JCheckBoxMenuItem("Web Directories", true);
     fuzzing = new JCheckBoxMenuItem("TCP Fuzzing", true);
     sniffing = new JCheckBoxMenuItem("TCP Sniffing", true);
     generators = new JCheckBoxMenuItem("Generators", true);
     system = new JCheckBoxMenuItem("System", true);
 
+    view.add(directories);
     view.add(fuzzing);
     view.add(sniffing);
     view.add(generators);
@@ -188,7 +190,17 @@ public class FrameMenuBar extends JMenuBar {
     exit.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         getFrameWindow().dispose();
-        // System.exit(0);
+      }
+    });
+
+    directories.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        if (!directories.getState()) {
+          getFrameWindow().setTabHide(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+        }
+        else {
+          getFrameWindow().setTabShow(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+        }
       }
     });
 
@@ -297,7 +309,7 @@ public class FrameMenuBar extends JMenuBar {
         String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
         if(s.equals(" TCP Fuzzing ")) {
           getFrameWindow().getFuzzingPanel().generatorRemoveButton();
-        }
+          }
       }
     });
 

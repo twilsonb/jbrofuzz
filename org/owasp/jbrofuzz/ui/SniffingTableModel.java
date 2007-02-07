@@ -31,7 +31,7 @@ import javax.swing.table.AbstractTableModel;
 /**
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class SniffingTableModel extends AbstractTableModel {
 

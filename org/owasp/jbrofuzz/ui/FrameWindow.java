@@ -1,5 +1,5 @@
 /**
- * FrameWindow.java 0.4
+ * FrameWindow.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -49,35 +49,54 @@ import org.owasp.jbrofuzz.ver.Format;
  * occupying this entire frame.</p>
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class FrameWindow extends JFrame {
+
   // The main Object behind it all...
   private final JBroFuzz mJBroFuzz;
+
   // The main menu bar attached to this window frame...
   private final FrameMenuBar mMenuBar;
+
   // The tabbed pane holding the different views
   private static JTabbedPane tabbedPane;
-  // The main sniffing pane
+
+  // The web directories panel
+  private final WebDirectoriesPanel mWebDirectoriesPanel;
+
+  // The main sniffing panel
   private final SniffingPanel mSniffingPanel;
+
   // The main definitions panel
   private final DefinitionsPanel mDefinitionsPanel;
+
   // The main fuzzing panel
   private final FuzzingPanel mFuzzingPanel;
+
   // The system logger panel
   private final SystemLogger mSystemLogger;
+
+  /**
+   * Unique int identifier for the Web Directory Panel
+   */
+  public static final int WEB_DIRECTORIES_PANEL_ID = 121;
+
   /**
    * Unique int identifier for the TCP Sniffing Panel
    */
   public static final int TCP_SNIFFING_PANEL_ID = 123;
+
   /**
    * Unique int identifier for the TCP Fuzzing Panel
    */
   public static final int TCP_FUZZING_PANEL_ID = 124;
+
   /**
    * Unique int identifier for the Generators Panel
    */
   public static final int GENERATORS_PANEL_ID = 125;
+
   /**
    * Unique int identifier for the System Panel
    */
@@ -99,6 +118,7 @@ public class FrameWindow extends JFrame {
     Container pane = getContentPane();
     pane.setLayout(null);
     // The tabbed panels
+    mWebDirectoriesPanel = new WebDirectoriesPanel(this);
     mFuzzingPanel = new FuzzingPanel(this);
     mSniffingPanel = new SniffingPanel(this);
     mDefinitionsPanel = new DefinitionsPanel(this);
@@ -107,16 +127,19 @@ public class FrameWindow extends JFrame {
     tabbedPane = new JTabbedPane(3);
     // tabbedPane.setPreferredSize(new Dimension(588,368));
     tabbedPane.setBounds(0, 0, 895, 500);
+    // Do not change the names!!!
+    tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
     tabbedPane.add(" TCP Fuzzing ", mFuzzingPanel);
     tabbedPane.add(" TCP Sniffing ", mSniffingPanel);
     tabbedPane.add(" Generators ", mDefinitionsPanel);
     tabbedPane.add(" System ", mSystemLogger);
-    tabbedPane.setSelectedComponent(mFuzzingPanel);
+    tabbedPane.setSelectedComponent(mWebDirectoriesPanel);
     pane.add(tabbedPane);
     // The image icon
     setIconImage(ImageCreator.frameImageIcon.getImage());
     log("System Launch, Welcome!");
   }
+
   /**
    * Method for setting up the right click copy paste cut and select all menu.
    * @param area JTextArea
@@ -144,7 +167,6 @@ public class FrameWindow extends JFrame {
     popmenu.add(i3);
     popmenu.addSeparator();
     popmenu.add(i4);
-
 
     i1.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -225,6 +247,9 @@ public class FrameWindow extends JFrame {
     if(n == SYSTEM_PANEL_ID) {
       tabbedPane.remove(mSystemLogger);
     }
+    if(n == WEB_DIRECTORIES_PANEL_ID) {
+      tabbedPane.remove(mWebDirectoriesPanel);
+    }
   }
   /**
    * Set which tab to show based on the int n of ID values. These are taken
@@ -234,16 +259,19 @@ public class FrameWindow extends JFrame {
    */
   public void setTabShow(int n) {
     if(n == GENERATORS_PANEL_ID) {
-      tabbedPane.addTab("Definitions", mDefinitionsPanel);
+      tabbedPane.addTab(" Definitions ", mDefinitionsPanel);
     }
     if(n == TCP_FUZZING_PANEL_ID) {
-      tabbedPane.addTab("TCP Fuzzing", mFuzzingPanel);
+      tabbedPane.addTab(" TCP Fuzzing ", mFuzzingPanel);
     }
     if(n == TCP_SNIFFING_PANEL_ID) {
-      tabbedPane.addTab("TCP Sniffing", mSniffingPanel);
+      tabbedPane.addTab(" TCP Sniffing ", mSniffingPanel);
     }
     if(n == SYSTEM_PANEL_ID) {
-      tabbedPane.addTab("System", mSystemLogger);
+      tabbedPane.addTab(" System ", mSystemLogger);
+    }
+    if(n == WEB_DIRECTORIES_PANEL_ID) {
+      tabbedPane.addTab(" Web Directories ", mWebDirectoriesPanel);
     }
   }
   /**
@@ -273,6 +301,13 @@ public class FrameWindow extends JFrame {
     return mMenuBar;
   }
 
+  /**
+   * <p>Method for returning the web directoires panel that is being used.</p>
+   * @return WebDirectoriesPanel
+   */
+  public WebDirectoriesPanel getWebDirectoriesPanel() {
+    return mWebDirectoriesPanel;
+  }
 
   /**
    * <p>Method for returning the m fuzzing panel that is being instantiated

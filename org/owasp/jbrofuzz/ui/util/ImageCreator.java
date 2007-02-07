@@ -39,7 +39,7 @@ import org.owasp.jbrofuzz.util.Base64;
  * representation of the image.</p>
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class ImageCreator {
 

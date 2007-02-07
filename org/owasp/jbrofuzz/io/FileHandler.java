@@ -43,7 +43,7 @@ import org.owasp.jbrofuzz.ver.Format;
  * <p>Class responsible for all File Creation.</p>
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class FileHandler {
 

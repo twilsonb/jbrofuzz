@@ -38,7 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 /**
  * @author subere (at) uncon org
- * @version 0.4
+ * @version 0.5
  * @since 0.2
  */
 public class SniffingViewer extends JFrame {

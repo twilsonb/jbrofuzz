@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * </p>
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class Generator {
   // The String name of the generator

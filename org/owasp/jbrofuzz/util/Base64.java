@@ -32,7 +32,7 @@ package org.owasp.jbrofuzz.util;
  *
  * @author subere (at) uncon . org
  * @since 0.1
- * @version 0.4
+ * @version 0.5
  */
 public class Base64 {
 
