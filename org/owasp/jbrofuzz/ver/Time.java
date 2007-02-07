@@ -33,7 +33,7 @@ import java.util.Date;
  * formats.
  *
  * @author subere@uncon.org
- * @version 0.4
+ * @version 0.5
  */
 public class Time {
 

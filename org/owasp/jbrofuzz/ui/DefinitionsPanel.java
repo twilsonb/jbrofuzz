@@ -36,7 +36,7 @@ import javax.swing.JTextArea;
 /**
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class DefinitionsPanel extends JPanel {
   // The frame that the sniffing panel is attached

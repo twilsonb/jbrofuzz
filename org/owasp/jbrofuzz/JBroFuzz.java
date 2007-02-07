@@ -46,7 +46,7 @@ import org.owasp.jbrofuzz.ver.Format;
  * The order in which the last three are instantiated should not be altered.</p>
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class JBroFuzz {
 

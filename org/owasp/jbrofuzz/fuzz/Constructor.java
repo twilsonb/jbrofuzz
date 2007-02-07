@@ -37,7 +37,7 @@ import org.owasp.jbrofuzz.ver.Format;
  * Generator and accumulating values inputted from the corresponding file.</p>
  *
  * @author subere (at) uncon . org
- * @version 0.4
+ * @version 0.5
  */
 public class Constructor {
   final private JBroFuzz mJBroFuzz;

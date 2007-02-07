@@ -52,7 +52,7 @@ import org.owasp.jbrofuzz.ver.Format;
  * current window, as well as writting them to file.</p>
  *
  * @author subere (at) uncon org
- * @version 0.4
+ * @version 0.5
  */
 public class FuzzingPanel extends JPanel {
   // The frame that the sniffing panel is attached
@@ -98,7 +98,6 @@ public class FuzzingPanel extends JPanel {
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
     target = new JTextArea(1, 1);
-
     target.setEditable(true);
     target.setVisible(true);
     target.setFont(new Font("Verdana", Font.BOLD, 12));
@@ -171,7 +170,8 @@ public class FuzzingPanel extends JPanel {
 
     requestPanel.setBounds(10, 80, 500, 200);
     add(requestPanel);
-    // The top buttons
+
+    // The add generator button
     buttonAddGen = new JButton(ADDGENSTRING);
     buttonAddGen.setBounds(580, 30, 130, 20);
     add(buttonAddGen);
@@ -180,6 +180,8 @@ public class FuzzingPanel extends JPanel {
         generatorAddButton();
       }
     });
+
+    // The remove generator button
     buttonRemGen = new JButton("Remove Generator");
     buttonRemGen.setBounds(730, 30, 150, 20);
     add(buttonRemGen);
