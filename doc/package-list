@@ -1,5 +1,6 @@
 javax.swing
 org.owasp.jbrofuzz
+org.owasp.jbrofuzz.dir
 org.owasp.jbrofuzz.fuzz
 org.owasp.jbrofuzz.fuzz.tcp
 org.owasp.jbrofuzz.io
