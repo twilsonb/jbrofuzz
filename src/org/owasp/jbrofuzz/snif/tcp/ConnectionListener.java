@@ -25,13 +25,11 @@
  */
 package org.owasp.jbrofuzz.snif.tcp;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Vector;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-import org.owasp.jbrofuzz.ui.SniffingPanel;
+import org.owasp.jbrofuzz.ui.*;
 /**
  * <p>Title: Java Bro Fuzzer</p>
  *
@@ -41,8 +39,7 @@ import org.owasp.jbrofuzz.ui.SniffingPanel;
  * @author subere (at) uncon . org
  * @version 0.5
  */
-public class ConnectionListener extends Thread implements
-  ConnectionMonitor {
+public class ConnectionListener extends Thread implements ConnectionMonitor {
 
   private String remoteAddress, localAddress;
   private int remotePort, localPort;
@@ -62,8 +59,8 @@ public class ConnectionListener extends Thread implements
    * @param localPort String
    */
   public ConnectionListener(SniffingPanel mn, String remoteAddress,
-                               String remotePort, String localAddress,
-                               String localPort) {
+                            String remotePort, String localAddress,
+                            String localPort) {
     this.mn = mn;
     this.remoteAddress = remoteAddress;
     this.localAddress = localAddress;
@@ -75,7 +72,7 @@ public class ConnectionListener extends Thread implements
     catch (NumberFormatException e1) {
       this.remotePort = 0;
     }
-    if((this.remotePort < 0) || (this.remotePort > 65535)) {
+    if ((this.remotePort < 0) || (this.remotePort > 65535)) {
       this.remotePort = 0;
     }
     try {
@@ -84,7 +81,7 @@ public class ConnectionListener extends Thread implements
     catch (NumberFormatException e1) {
       this.localPort = 0;
     }
-    if((this.localPort < 0) || (this.localPort > 65535)) {
+    if ((this.localPort < 0) || (this.localPort > 65535)) {
       this.localPort = 0;
     }
 
@@ -98,6 +95,7 @@ public class ConnectionListener extends Thread implements
       mn.getFrameWindow().getTCPSniffingPanel().buttonStop();
     }
   }
+
   /**
    *
    */
@@ -107,8 +105,8 @@ public class ConnectionListener extends Thread implements
       try {
         Socket clientSocket = server.accept();
         con = new Connection(mn.getFrameWindow().getJBroFuzz(), clientSocket,
-                                (ConnectionMonitor)this, this.remoteAddress,
-                                this.remotePort);
+                             (ConnectionMonitor)this, this.remoteAddress,
+                             this.remotePort);
       }
       catch (Exception e) {
         connectionStopped = true;

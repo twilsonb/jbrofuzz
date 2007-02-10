@@ -25,12 +25,11 @@
  */
 package org.owasp.jbrofuzz;
 
-import org.owasp.jbrofuzz.fuzz.Constructor;
-import org.owasp.jbrofuzz.fuzz.RequestIterator;
-import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.snif.tcp.ConnectionListener;
-import org.owasp.jbrofuzz.ui.FrameWindow;
-import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.fuzz.*;
+import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.snif.tcp.*;
+import org.owasp.jbrofuzz.ui.*;
+import org.owasp.jbrofuzz.ver.*;
 /**
  * @todo Check to see what happens when in fuzzing a socket has been triggered
  * which cannot connect and then a different URL is placed as part of the socket
@@ -114,8 +113,8 @@ public class JBroFuzz {
    */
   public void createrSniffer(final String address, final String port,
                              final String lAddress, final String lPort) {
-    listener = new ConnectionListener(mainwindow.getTCPSniffingPanel(),
-                                      address, port, lAddress, lPort);
+    listener = new ConnectionListener(mainwindow.getTCPSniffingPanel(), address,
+                                      port, lAddress, lPort);
   }
 
   /**

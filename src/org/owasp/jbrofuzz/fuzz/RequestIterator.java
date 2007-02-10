@@ -25,10 +25,9 @@
  */
 package org.owasp.jbrofuzz.fuzz;
 
-import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.tcp.Connection;
-import org.owasp.jbrofuzz.fuzz.tcp.Generator;
-import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.fuzz.tcp.*;
+import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>Title: Java Bro Fuzzer</p>
  *
@@ -221,15 +220,15 @@ public class RequestIterator {
           getCurrentRequest() + "-" + getTotalRequest() + Format.FTS);
 
         mJBroFuzz.getFileHandler().writeFuzzFile(fk,
-                                                Format.HDS + getCurrentRequest() +
-                                                "-" + getTotalRequest() +
-                                                Format.FTS);
+                                                 Format.HDS + getCurrentRequest() +
+                                                 "-" + getTotalRequest() +
+                                                 Format.FTS);
 
         mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText("Request: " +
           target + " Port: " + port + "\n" + stout + "\r\n");
         mJBroFuzz.getFileHandler().writeFuzzFile(fk,
-                                                "Request: " + target + " Port: " +
-                                                port + "\r\n" + stout + "\r\n");
+                                                 "Request: " + target + " Port: " +
+                                                 port + "\r\n" + stout + "\r\n");
 
         Connection con = new Connection(target, port, stout);
 
@@ -243,9 +242,9 @@ public class RequestIterator {
           getCurrentRequest() + "-" + getTotalRequest() + Format.FTS);
 
         mJBroFuzz.getFileHandler().writeFuzzFile(fk,
-                                                Format.HDE + getCurrentRequest() +
-                                                "-" + getTotalRequest() +
-                                                Format.FTS);
+                                                 Format.HDE + getCurrentRequest() +
+                                                 "-" + getTotalRequest() +
+                                                 Format.FTS);
 
         stout = getNext();
       }
@@ -276,6 +275,7 @@ public class RequestIterator {
   public String getCurrentRequest() {
     return Long.toString(currentValue, 10);
   }
+
   /**
    * Return the main constructor object.
    * @return JBroFuzz

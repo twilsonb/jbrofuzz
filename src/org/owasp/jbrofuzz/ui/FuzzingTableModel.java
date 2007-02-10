@@ -25,9 +25,9 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.table.AbstractTableModel;
+import javax.swing.table.*;
 
 public class FuzzingTableModel extends AbstractTableModel {
   /**
@@ -37,145 +37,149 @@ public class FuzzingTableModel extends AbstractTableModel {
    */
   public static final String STRING_COLUMN_SEPARATOR = "          ";
 
-    private static final int INDEX_GENERATOR = 0;
-    private static final int INDEX_START = 1;
-    private static final int INDEX_END = 2;
+  private static final int INDEX_GENERATOR = 0;
+  private static final int INDEX_START = 1;
+  private static final int INDEX_END = 2;
 
-    private String[] columnNames;
-    private Vector dataVector;
+  private String[] columnNames;
+  private Vector dataVector;
 
-    public FuzzingTableModel(String[] columnNames) {
-        this.columnNames = columnNames;
-        dataVector = new Vector();
+  public FuzzingTableModel(String[] columnNames) {
+    this.columnNames = columnNames;
+    dataVector = new Vector();
+  }
+
+  public String getColumnName(int column) {
+    return columnNames[column];
+  }
+
+  public boolean isCellEditable(int row, int column) {
+    if (column == INDEX_GENERATOR) {
+      return true;
     }
-
-    public String getColumnName(int column) {
-        return columnNames[column];
+    else {
+      return false;
     }
+  }
 
-    public boolean isCellEditable(int row, int column) {
-        if (column == INDEX_GENERATOR) return true;
-        else return false;
+  public Object getValueAt(int row, int column) {
+    Generator record = (Generator) dataVector.get(row);
+    switch (column) {
+      case INDEX_GENERATOR:
+        return record.getType();
+      case INDEX_START:
+        return new Integer(record.getStart());
+      case INDEX_END:
+        return new Integer(record.getEnd());
+      default:
+        return new Object();
     }
+  }
 
-    public Object getValueAt(int row, int column) {
-        Generator record = (Generator)dataVector.get(row);
-        switch (column) {
-            case INDEX_GENERATOR:
-               return record.getType();
-            case INDEX_START:
-               return new Integer(record.getStart());
-            case INDEX_END:
-               return new Integer(record.getEnd());
-            default:
-               return new Object();
-        }
+  public void setValueAt(Object value, int row, int column) {
+    Generator record = (Generator) dataVector.get(row);
+    switch (column) {
+      case INDEX_GENERATOR:
+        record.setType((String) value);
+        break;
+      case INDEX_START:
+        record.setStart(((Integer) value).intValue());
+        break;
+      case INDEX_END:
+        record.setEnd(((Integer) value).intValue());
+        break;
+      default:
+        System.out.println("invalid index");
     }
+    fireTableCellUpdated(row, column);
+  }
 
-    public void setValueAt(Object value, int row, int column) {
-        Generator record = (Generator)dataVector.get(row);
-        switch (column) {
-            case INDEX_GENERATOR:
-               record.setType((String)value);
-               break;
-            case INDEX_START:
-               record.setStart(((Integer)value).intValue());
-               break;
-            case INDEX_END:
-               record.setEnd(((Integer)value).intValue());
-               break;
-            default:
-               System.out.println("invalid index");
-        }
-        fireTableCellUpdated(row, column);
-    }
+  public int getRowCount() {
+    return dataVector.size();
+  }
 
-    public int getRowCount() {
-        return dataVector.size();
-    }
+  public int getColumnCount() {
+    return columnNames.length;
+  }
 
-    public int getColumnCount() {
-        return columnNames.length;
-    }
-
-    public String getRow(int row) {
-      String output = "";
-      if((row > -1) && (row < dataVector.size())) {
-        for(int i = 0; i < columnNames.length; i++) {
-          output += getValueAt(row, i) + STRING_COLUMN_SEPARATOR;
-        }
-      }
-      return output;
-    }
-
-    public boolean hasEmptyRow() {
-        if (dataVector.size() == 0) return false;
-        Generator Generator = (Generator)dataVector.get(dataVector.size() - 1);
-        if (Generator.getType().trim().equals("") &&
-           Generator.getStart() == 0 &&
-           Generator.getEnd() == 0)
-        {
-           return true;
-        }
-        else return false;
-    }
-
-    public void addRow(String generator, int start, int end) {
-      Generator addingGenerator = new Generator(generator, start, end);
-      dataVector.add(addingGenerator);
-      fireTableRowsInserted(
-         dataVector.size() - 1,
-         dataVector.size() - 1);
-    }
-
-    public void removeRow(String generator, int start, int end) {
-      int rowToRemove = -1;
-      for(int i = 0; i < dataVector.size(); i++) {
-        Generator record = (Generator)dataVector.get(i);
-        if (record.getType().equals(generator) &&
-            record.getStart() == start && record.getEnd() == end) {
-          rowToRemove = i;
-        }
-      }
-      if(rowToRemove > -1) {
-        dataVector.removeElementAt(rowToRemove);
-        fireTableRowsDeleted(0, rowToRemove);
+  public String getRow(int row) {
+    String output = "";
+    if ((row > -1) && (row < dataVector.size())) {
+      for (int i = 0; i < columnNames.length; i++) {
+        output += getValueAt(row, i) + STRING_COLUMN_SEPARATOR;
       }
     }
- }
+    return output;
+  }
+
+  public boolean hasEmptyRow() {
+    if (dataVector.size() == 0) {
+      return false;
+    }
+    Generator Generator = (Generator) dataVector.get(dataVector.size() - 1);
+    if (Generator.getType().trim().equals("") && Generator.getStart() == 0 &&
+        Generator.getEnd() == 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  public void addRow(String generator, int start, int end) {
+    Generator addingGenerator = new Generator(generator, start, end);
+    dataVector.add(addingGenerator);
+    fireTableRowsInserted(dataVector.size() - 1, dataVector.size() - 1);
+  }
+
+  public void removeRow(String generator, int start, int end) {
+    int rowToRemove = -1;
+    for (int i = 0; i < dataVector.size(); i++) {
+      Generator record = (Generator) dataVector.get(i);
+      if (record.getType().equals(generator) && record.getStart() == start &&
+          record.getEnd() == end) {
+        rowToRemove = i;
+      }
+    }
+    if (rowToRemove > -1) {
+      dataVector.removeElementAt(rowToRemove);
+      fireTableRowsDeleted(0, rowToRemove);
+    }
+  }
+}
 
 class Generator {
-     protected String type;
-     protected Integer start;
-     protected Integer end;
+  protected String type;
+  protected Integer start;
+  protected Integer end;
 
-     public Generator(String generator, int start, int end) {
-         type = generator;
-         this.start = new Integer(start);
-         this.end = new Integer(end);
-     }
+  public Generator(String generator, int start, int end) {
+    type = generator;
+    this.start = new Integer(start);
+    this.end = new Integer(end);
+  }
 
-     public String getType() {
-         return type.toString();
-     }
+  public String getType() {
+    return type.toString();
+  }
 
-     public void setType(String type) {
-         this.type = type;
-     }
+  public void setType(String type) {
+    this.type = type;
+  }
 
-     public int getStart() {
-         return start.intValue();
-     }
+  public int getStart() {
+    return start.intValue();
+  }
 
-     public void setStart(int start) {
-         this.start = new Integer(start);
-     }
+  public void setStart(int start) {
+    this.start = new Integer(start);
+  }
 
-     public int getEnd() {
-         return end.intValue();
-     }
+  public int getEnd() {
+    return end.intValue();
+  }
 
-     public void setEnd(int end) {
-         this.end = new Integer(end);
-     }
- }
+  public void setEnd(int end) {
+    this.end = new Integer(end);
+  }
+}

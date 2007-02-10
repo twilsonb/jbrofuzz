@@ -25,9 +25,9 @@
  */
 package org.owasp.jbrofuzz.ui.util;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
-import org.owasp.jbrofuzz.util.Base64;
+import org.owasp.jbrofuzz.util.*;
 /**
  * <p>This static class holds the Base64 Strings corresponding to all the
  * images used by JBroFuzz. Each String is then parsed into an ImageIcon object
@@ -145,8 +145,7 @@ public class ImageCreator {
    * originally a png file.</p>.
    * @since 0.4
    */
-  public static final ImageIcon OWASP_IMAGE = new ImageIcon(Base64.decode(
-    OWASP));
+  public static final ImageIcon OWASP_IMAGE = new ImageIcon(Base64.decode(OWASP));
 
 
   private static final String FRAMEICON =
@@ -189,7 +188,8 @@ public class ImageCreator {
    * <p>The exit image seen in the menu bar. This is an original gif file.</p>
    * @since 0.1
    */
-  public static final ImageIcon exitImageIcon = new ImageIcon(Base64.decode(EXIT));
+  public static final ImageIcon exitImageIcon = new ImageIcon(Base64.decode(
+    EXIT));
 
   private static final String STOP =
     "R0lGODlhDwAPAHAAACH5BAEAAIsALAAAAAAPAA8AhwAAAEnF5UnV9UrW9kLP5zO4" +
@@ -213,7 +213,8 @@ public class ImageCreator {
     "HJGgxJKj5o6YPnRKvEJT5REkQofyJEJT4BGJQ1MW6SlIYJyPWHMw7XnnjsA0PbWK" +
     "5Sqo6qI4ObAUJZtDkNdFe8JyvdP2TlmBe7q6FYSnrF1FigwKHhgQADs=";
 
-  public static final ImageIcon stopImageIcon = new ImageIcon(Base64.decode(STOP));
+  public static final ImageIcon stopImageIcon = new ImageIcon(Base64.decode(
+    STOP));
 
   private static final String PAUSE =
     "R0lGODlhDwAPAHAAACH5BAEAAHoALAAAAAAPAA8AhgAAAFu83Ve93QGgwgB2kABcdwBPalXB" +
@@ -231,7 +232,8 @@ public class ImageCreator {
    * <p>The stop image seen in the menu bar. This is an original gif file.</p>
    * @since 0.1
    */
-  public static final ImageIcon pauseImageIcon = new ImageIcon(Base64.decode(PAUSE));
+  public static final ImageIcon pauseImageIcon = new ImageIcon(Base64.decode(
+    PAUSE));
 
   private static final String START =
     "R0lGODlhDwAPAHAAACH5BAEAAGQALAAAAAAPAA8AhgAAAFnE3LPX10u1zkHQ8kvS8aLAykOm" +
@@ -249,7 +251,8 @@ public class ImageCreator {
    * This is an original gif file.</p>
    * @since 0.1
    */
-  public static final ImageIcon startImageIcon = new ImageIcon(Base64.decode(START));
+  public static final ImageIcon startImageIcon = new ImageIcon(Base64.decode(
+    START));
 
   private static final String ADD =
     "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAACVUlEQVR4nH2SO2tUYRCGn/nO" +
@@ -285,7 +288,8 @@ public class ImageCreator {
    * minus sign.</p>
    * @since 0.1
    */
-  public static final ImageIcon removeImageIcon = new ImageIcon(Base64.decode(REMOVE));
+  public static final ImageIcon removeImageIcon = new ImageIcon(Base64.decode(
+    REMOVE));
 
   private static final String DISCLAIMER =
     "R0lGODlhDwAPAHAAACH5BAEAACUALAAAAAAPAA8AhQAAABQAFSUAJ2YAaGwAbmAA" +
@@ -298,7 +302,8 @@ public class ImageCreator {
   /**
    * <p>The disclaimer image.</p>
    */
-  public static final ImageIcon disclaimerImageIcon = new ImageIcon(Base64.decode(DISCLAIMER));
+  public static final ImageIcon disclaimerImageIcon = new ImageIcon(Base64.
+    decode(DISCLAIMER));
 
   private static final String TOPICS =
     "R0lGODlhDwAPAHAAACH5BAEAAB4ALAAAAAAPAA8AhAAAABUBASgCAm0HBzsEBH4w" +
@@ -309,7 +314,8 @@ public class ImageCreator {
   /**
    * <p>The topics help image.</p>
    */
-  public static final ImageIcon topicsImageIcon = new ImageIcon(Base64.decode(TOPICS));
+  public static final ImageIcon topicsImageIcon = new ImageIcon(Base64.decode(
+    TOPICS));
 
   private static final String HELP =
     "R0lGODlhDwAPAHAAACH5BAEAAEYALAAAAAAPAA8AhgAAAAAAOAAAPAAAMQAAcwAAYwAAPwAA" +
@@ -327,7 +333,8 @@ public class ImageCreator {
    * </p>
    * @since 0.1
    */
-  public static final ImageIcon helpImageIcon = new ImageIcon(Base64.decode(HELP));
+  public static final ImageIcon helpImageIcon = new ImageIcon(Base64.decode(
+    HELP));
 
   private static final String ABOUT =
     "R0lGODlhOQBYAPf/AP//////zP//mf//Zv//M///AP/M///MzP/Mmf/MZv/MM//MAP+Z//+Z" +
@@ -735,5 +742,6 @@ public class ImageCreator {
    * attached to it.</p>
    * @since 0.1
    */
-  public static final ImageIcon aboutImageIcon = new ImageIcon(Base64.decode(ABOUT));
+  public static final ImageIcon aboutImageIcon = new ImageIcon(Base64.decode(
+    ABOUT));
 }

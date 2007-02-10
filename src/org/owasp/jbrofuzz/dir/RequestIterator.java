@@ -25,27 +25,33 @@
  */
 package org.owasp.jbrofuzz.dir;
 
-import java.util.Vector;
-
 import java.io.*;
+import java.net.*;
 
 import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.util.*;
 import org.apache.commons.httpclient.methods.*;
 import org.apache.commons.httpclient.params.*;
-import org.owasp.jbrofuzz.ui.FrameWindow;
+import org.owasp.jbrofuzz.ui.*;
 /**
  * <p>Class for generating the recursive directory requests.</p>
+ *
  * @author subere@uncon.org
  * @version 0.5
  */
 public class RequestIterator {
+  // The  frame window that the request iterator
   private FrameWindow m;
   // The original url string
   private String url;
   // The vector of directories to be passed
-  private String [] directories;
+  private String[] directories;
   // The vector of responses that will come back
-  private String [] responses;
+  private String[] responses;
+  // The boolean to see if the iterator has paused
+  private boolean paused, stopped;
+  // The integer of the current request count
+  private int i;
 
   /**
    * <p>Constructor for creating a web directory request iterator that iterates
@@ -60,59 +66,90 @@ public class RequestIterator {
     this.url = url;
     this.directories = directories.split("\n");
     this.responses = new String[directories.length()];
+    this.stopped = false;
+    i = 0;
   }
+
   /**
    * Method used for running the request iterator once it has been initialised.
    */
   public void run() {
-    for(int i = 0; i < directories.length; i++) {
-      String currentUrl = url + directories[i];
+    for (i = 0; i < directories.length; i++) {
+      if (stopped) {
+        return;
+      }
+      String currentURI = "";
+      try {
+        currentURI = url + URIUtil.encodeWithinAuthority(directories[i]);
+      }
+      catch (URIException ex) {
+        currentURI = "";
+        m.log("Could not encode the URI: " + url + directories[i]);
+      }
+
+      if (currentURI.equalsIgnoreCase("")) {
+        return;
+      }
 
       HttpClient client = new HttpClient();
-
-      GetMethod method = new GetMethod(currentUrl);
+      GetMethod method = new GetMethod(currentURI);
 
       method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-        new DefaultHttpMethodRetryHandler(3, false));
+                                      new DefaultHttpMethodRetryHandler(3, false));
       try {
-        responses[i] =  i + "\n";
-        responses[i] +=  currentUrl + "\n";
+        responses[i] = i + "\n";
+        responses[i] += currentURI + "\n";
         int statusCode = client.executeMethod(method);
         responses[i] += statusCode + "\n";
         responses[i] += method.getStatusText() + "\n";
-        responses[i] += "comments?\n";
-        responses[i] += "scripts?\n";
-/*
- * Still to come...
-         if(statusCode != HttpStatus.SC_OK) {
-          responses[i] = "Method returned: " + method.getStatusLine();
-         }
-        else {
+        responses[i] += "N\n";
+        responses[i] += "N\n";
+
+        /**
+         * @todo How does web scarab check for comments and scripts?
+         */
+        if (statusCode == HttpStatus.SC_OK) {
           byte[] responseBody = method.getResponseBody();
-          responses[i] = new String(responseBody);
+          String s  = new String(responseBody);
+          System.out.println(s);
         }
-*/
       }
-      catch(HttpException e) {
-        responses[i] =  i + "\n";
-        responses[i] +=  currentUrl + "\n";
+      catch (HttpException e) {
+        responses[i] = i + "\n";
+        responses[i] += currentURI + "\n";
         responses[i] += "000" + "\n";
         responses[i] += "Fatal protocol violation" + "\n";
-        responses[i] += "comments?\n";
-        responses[i] += "scripts?\n";
+        responses[i] += "N\n";
+        responses[i] += "N\n";
       }
-      catch(IOException e) {
-        responses[i] =  i + "\n";
-        responses[i] +=  currentUrl + "\n";
+      catch (IOException e) {
+        responses[i] = i + "\n";
+        responses[i] += currentURI + "\n";
         responses[i] += "000" + "\n";
         responses[i] += "Fatal transport error" + "\n";
-        responses[i] += "comments?\n";
-        responses[i] += "scripts?\n";
+        responses[i] += "N\n";
+        responses[i] += "N\n";
       }
       finally {
         method.releaseConnection();
       }
       m.getWebDirectoriesPanel().addRow(responses[i]);
     }
+  }
+
+  public void stop() {
+    stopped = true;
+  }
+
+  public void pause() {
+    paused = true;
+  }
+
+  public boolean isStopped() {
+    return stopped;
+  }
+
+  public boolean isPaused() {
+    return paused;
   }
 }

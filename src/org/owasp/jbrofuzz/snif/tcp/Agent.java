@@ -25,13 +25,11 @@
  */
 package org.owasp.jbrofuzz.snif.tcp;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.*;
+import java.text.*;
+import java.util.*;
 
-import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.*;
 
 /**
  *
@@ -53,9 +51,8 @@ class Agent implements Runnable {
   private static SimpleDateFormat dateFormat = new SimpleDateFormat(
     "yyyy-MM-dd HH-mm-ss-SSS");
 
-  public Agent(JBroFuzz mJBroFuzz, InputStream inStream,
-                  OutputStream outStream, AgentMonitor agentMonitor,
-                  String name) {
+  public Agent(JBroFuzz mJBroFuzz, InputStream inStream, OutputStream outStream,
+               AgentMonitor agentMonitor, String name) {
 
     this.mJBroFuzz = mJBroFuzz;
 
@@ -99,10 +96,10 @@ class Agent implements Runnable {
                               getCounter();
 
       mJBroFuzz.getFileHandler().writeSnifFile(fileName + ".txt",
-                                              "[" + name + ", (" + nBytes +
-                                              " bytes) " +
-                                              dateFormat.format(currentTime) +
-                                              "]");
+                                               "[" + name + ", (" + nBytes +
+                                               " bytes) " +
+                                               dateFormat.format(currentTime) +
+                                               "]");
 
       final StringBuffer row = new StringBuffer(100);
       row.append(fileName);

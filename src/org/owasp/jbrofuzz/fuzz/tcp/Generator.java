@@ -25,7 +25,7 @@
  */
 package org.owasp.jbrofuzz.fuzz.tcp;
 
-import java.util.ArrayList;
+import java.util.*;
 /**
  * <p>Class responsible for creating the generators passed from the definitions.
  * </p>

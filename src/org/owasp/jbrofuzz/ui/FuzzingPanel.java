@@ -1,5 +1,5 @@
 /**
- * FuzzingPanel.java 0.4
+ * FuzzingPanel.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -26,25 +26,14 @@
 package org.owasp.jbrofuzz.ui;
 
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.SwingWorker3;
-import javax.swing.table.TableColumn;
+import javax.swing.*;
+import javax.swing.table.*;
 
-import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>The main "TCP Fuzzing" panel, displayed within the Main Frame Window.</p>
  * <p>This panel performs all TCP related fuzzing operations, including the
@@ -95,7 +84,7 @@ public class FuzzingPanel extends JPanel {
     JPanel targetPanel = new JPanel();
     targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Target "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+                          BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
     target = new JTextArea(1, 1);
     target.setEditable(true);
@@ -148,7 +137,7 @@ public class FuzzingPanel extends JPanel {
     JPanel requestPanel = new JPanel();
     requestPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Request "),
-      BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+                           BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
     message = new JTextArea();
 
@@ -195,7 +184,7 @@ public class FuzzingPanel extends JPanel {
     JPanel generatorPanel = new JPanel();
     generatorPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Added Generators Table"),
-      BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+                             BorderFactory.createEmptyBorder(5, 5, 5, 5)));
     /*
      * Fuzzing Table Model
      */
@@ -258,7 +247,7 @@ public class FuzzingPanel extends JPanel {
     outputPanel = new JPanel();
     outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output (Last 1000 Lines) "),
-      BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+                          BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
     outputTable = new JTextArea();
 
@@ -283,15 +272,11 @@ public class FuzzingPanel extends JPanel {
     // Some value defaults
     target.setText("http://192.168.1.254");
     port.setText("80");
-    message.setText(
-      "GET /index.html HTTP/1.0\r\n" +
-      "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n" +
-      "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n" +
+    message.setText("GET /index.html HTTP/1.0\r\n" + "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n" + "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n" +
       "Accept-Language: en-gb,en;q=0.5\r\n" +
       "Accept-Encoding: gzip,deflate\r\n" +
       "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n" +
-      "Keep-Alive: 300\r\n" +
-      "Connection: keep-alive\r\n\r\n");
+      "Keep-Alive: 300\r\n" + "Connection: keep-alive\r\n\r\n");
     message.setCaretPosition(0);
   }
 
@@ -300,7 +285,7 @@ public class FuzzingPanel extends JPanel {
    * </p>
    */
   public void fuzzStartButton() {
-    if(! buttonFuzzStart.isEnabled()) {
+    if (!buttonFuzzStart.isEnabled()) {
       return;
     }
     // UI and Colors
@@ -315,8 +300,7 @@ public class FuzzingPanel extends JPanel {
     // Check to see if a message is present
     if ("".equals(message.getText())) {
       JOptionPane.showMessageDialog(this,
-                                    "The request field is blank.\n" +
-                                    "Specify a request\n",
+                                    "The request field is blank.\n" + "Specify a request\n",
                                     "Empty Request Field",
                                     JOptionPane.INFORMATION_MESSAGE);
       return;
@@ -330,7 +314,7 @@ public class FuzzingPanel extends JPanel {
                          Format.DATE +
                          // getJBroFuzz().getVersion().getDate() +
                          ") Session " + counter),
-      BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+                          BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
     // Clear the text of the output pane
     outputTable.setText("");
@@ -360,7 +344,7 @@ public class FuzzingPanel extends JPanel {
    * <p>Method trigered when attempting to stop any fuzzing taking place.</p>
    */
   public void fuzzStopButton() {
-    if(! buttonFuzzStop.isEnabled()) {
+    if (!buttonFuzzStop.isEnabled()) {
       return;
     }
     getJBroFuzz().stopGenerator();
@@ -465,16 +449,15 @@ public class FuzzingPanel extends JPanel {
     }
     catch (IllegalArgumentException e) {
       JOptionPane.showInputDialog(this,
-                                  "An exception was thrown while attempting to get the selected text",
+        "An exception was thrown while attempting to get the selected text",
                                   ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
       selectedText = "";
     }
     // If no text has been selected, prompt the user to select some text
     if (selectedText == null) {
       JOptionPane.showMessageDialog(this,
-                                    "Select (highlight) a text range \nfrom the Request field",
-                                    ADDGENSTRING,
-                                    JOptionPane.ERROR_MESSAGE);
+        "Select (highlight) a text range \nfrom the Request field",
+                                    ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
     }
     // Else find out the location of where the text has been selected
     else {
@@ -488,8 +471,8 @@ public class FuzzingPanel extends JPanel {
       // Then prompt the user for the type of fuzzer
       String selectedValue = (String) JOptionPane.showInputDialog(this,
         "Select the type of fuzzing generator:", ADDGENSTRING,
-        JOptionPane.INFORMATION_MESSAGE, null,
-        generatorArray, generatorArray[0]);
+                             JOptionPane.INFORMATION_MESSAGE, null,
+                                generatorArray, generatorArray[0]);
       // And finally add the generator
       if ((selectedValue != null)) {
         if (selectedValue.length() > 3) {
@@ -518,8 +501,8 @@ public class FuzzingPanel extends JPanel {
 
     final String selectedFuzzPoint = (String) JOptionPane.showInputDialog(this,
       "Select the generator to remove:", "Remove Generator",
-      JOptionPane.INFORMATION_MESSAGE, null,
-      fuzzPoints, fuzzPoints[0]);
+                                     JOptionPane.INFORMATION_MESSAGE, null,
+                                                  fuzzPoints, fuzzPoints[0]);
 
     if (selectedFuzzPoint != null) {
       String[] splitString = selectedFuzzPoint.split(FuzzingTableModel.
@@ -550,16 +533,16 @@ public class FuzzingPanel extends JPanel {
    * Access the MenuBar being used in this window
    * @return FrameMenuBar
    *
-  public FrameMenuBar getFrameMenuBar() {
+     public FrameMenuBar getFrameMenuBar() {
     return m.getFrameMenuBar();
-  }
-  */
+     }
+   */
 
- /**
-  * Access the main object that launches and is responsible for the application.
-  * @return JBroFuzz
-  */
- public JBroFuzz getJBroFuzz() {
+  /**
+   * Access the main object that launches and is responsible for the application.
+   * @return JBroFuzz
+   */
+  public JBroFuzz getJBroFuzz() {
     return m.getJBroFuzz();
   }
 

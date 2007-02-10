@@ -25,13 +25,12 @@
  */
 package org.owasp.jbrofuzz.fuzz;
 
-import java.util.ArrayList;
-import java.util.Vector;
+import java.util.*;
 
-import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.tcp.Generator;
-import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.fuzz.tcp.*;
+import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>The Constructor constructs a list of Definitions, iterating though each
  * Generator and accumulating values inputted from the corresponding file.</p>

@@ -25,23 +25,14 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
-import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.ui.util.*;
+import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>The main window of JBroFuzz responsible for the graphical
  * user interface.</p>
@@ -153,14 +144,14 @@ public class FrameWindow extends JFrame {
     JMenuItem i3 = new JMenuItem("Paste");
     JMenuItem i4 = new JMenuItem("Select All");
 
-    i1.setAccelerator(KeyStroke.getKeyStroke(
-      KeyEvent.VK_X, ActionEvent.CTRL_MASK));
-    i2.setAccelerator(KeyStroke.getKeyStroke(
-      KeyEvent.VK_C, ActionEvent.CTRL_MASK));
-    i3.setAccelerator(KeyStroke.getKeyStroke(
-      KeyEvent.VK_V, ActionEvent.CTRL_MASK));
-    i4.setAccelerator(KeyStroke.getKeyStroke(
-      KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+    i1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+      ActionEvent.CTRL_MASK));
+    i2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+      ActionEvent.CTRL_MASK));
+    i3.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
+      ActionEvent.CTRL_MASK));
+    i4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
+      ActionEvent.CTRL_MASK));
 
     popmenu.add(i1);
     popmenu.add(i2);
@@ -235,22 +226,23 @@ public class FrameWindow extends JFrame {
    * @param n int
    */
   public void setTabHide(int n) {
-    if(n == GENERATORS_PANEL_ID) {
+    if (n == GENERATORS_PANEL_ID) {
       tabbedPane.remove(mDefinitionsPanel);
     }
-    if(n == TCP_FUZZING_PANEL_ID) {
+    if (n == TCP_FUZZING_PANEL_ID) {
       tabbedPane.remove(mFuzzingPanel);
     }
-    if(n == TCP_SNIFFING_PANEL_ID) {
+    if (n == TCP_SNIFFING_PANEL_ID) {
       tabbedPane.remove(mSniffingPanel);
     }
-    if(n == SYSTEM_PANEL_ID) {
+    if (n == SYSTEM_PANEL_ID) {
       tabbedPane.remove(mSystemLogger);
     }
-    if(n == WEB_DIRECTORIES_PANEL_ID) {
+    if (n == WEB_DIRECTORIES_PANEL_ID) {
       tabbedPane.remove(mWebDirectoriesPanel);
     }
   }
+
   /**
    * Set which tab to show based on the int n of ID values. These are taken
    * from the FrameWindow.
@@ -258,22 +250,23 @@ public class FrameWindow extends JFrame {
    * @param n int
    */
   public void setTabShow(int n) {
-    if(n == GENERATORS_PANEL_ID) {
+    if (n == GENERATORS_PANEL_ID) {
       tabbedPane.addTab(" Definitions ", mDefinitionsPanel);
     }
-    if(n == TCP_FUZZING_PANEL_ID) {
+    if (n == TCP_FUZZING_PANEL_ID) {
       tabbedPane.addTab(" TCP Fuzzing ", mFuzzingPanel);
     }
-    if(n == TCP_SNIFFING_PANEL_ID) {
+    if (n == TCP_SNIFFING_PANEL_ID) {
       tabbedPane.addTab(" TCP Sniffing ", mSniffingPanel);
     }
-    if(n == SYSTEM_PANEL_ID) {
+    if (n == SYSTEM_PANEL_ID) {
       tabbedPane.addTab(" System ", mSystemLogger);
     }
-    if(n == WEB_DIRECTORIES_PANEL_ID) {
+    if (n == WEB_DIRECTORIES_PANEL_ID) {
       tabbedPane.addTab(" Web Directories ", mWebDirectoriesPanel);
     }
   }
+
   /**
    * <p>Method returning the m sniffing panel that is being instantiated
    * through the m window.</p>

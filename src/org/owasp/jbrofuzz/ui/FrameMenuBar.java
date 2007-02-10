@@ -26,30 +26,22 @@
 package org.owasp.jbrofuzz.ui;
 
 
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 
+import javax.swing.*;
 import javax.swing.Action;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingWorker3;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.TextAction;
+import javax.swing.text.*;
 
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.ui.util.*;
+import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>The main menu bar attached to the main window.</p>
  *
  * @author subere (at) uncon org
  * @version 0.5
  */
-public class FrameMenuBar extends JMenuBar{
+public class FrameMenuBar extends JMenuBar {
 
   private final FrameWindow mFrameWindow;
   private final JMenu file, edit, view, panel, options, help;
@@ -82,8 +74,7 @@ public class FrameMenuBar extends JMenuBar{
     // File
     JMenuItem exit = new JMenuItem("Exit", ImageCreator.exitImageIcon);
     exit.setAccelerator(KeyStroke.getKeyStroke('1',
-                                               Toolkit.getDefaultToolkit().
-                                               getMenuShortcutKeyMask(), false));
+                                               Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
     file.add(exit);
     // Edit
@@ -98,14 +89,11 @@ public class FrameMenuBar extends JMenuBar{
     JMenuItem selectAll = new JMenuItem(selectAllAction);
 
     cut.setAccelerator(KeyStroke.getKeyStroke('X',
-                                              Toolkit.getDefaultToolkit().
-                                              getMenuShortcutKeyMask(), false));
+                                              Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
     copy.setAccelerator(KeyStroke.getKeyStroke('C',
-                                               Toolkit.getDefaultToolkit().
-                                               getMenuShortcutKeyMask(), false));
+                                               Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
     paste.setAccelerator(KeyStroke.getKeyStroke('V',
-                                                Toolkit.getDefaultToolkit().
-                                                getMenuShortcutKeyMask(), false));
+                                                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
     selectAll.setAccelerator(KeyStroke.getKeyStroke('A',
       Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
@@ -136,17 +124,13 @@ public class FrameMenuBar extends JMenuBar{
     remove = new JMenuItem("Remove", ImageCreator.removeImageIcon);
 
     add.setAccelerator(KeyStroke.getKeyStroke('=',
-                                              Toolkit.getDefaultToolkit().
-                                              getMenuShortcutKeyMask(), false));
+                                              Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
     remove.setAccelerator(KeyStroke.getKeyStroke('-',
-                                                 Toolkit.getDefaultToolkit().
-                                                 getMenuShortcutKeyMask(), false));
+                                                 Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
     start.setAccelerator(KeyStroke.getKeyStroke('\n',
-                                                Toolkit.getDefaultToolkit().
-                                                getMenuShortcutKeyMask(), false));
+                                                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
     stop.setAccelerator(KeyStroke.getKeyStroke('\b',
-                                               Toolkit.getDefaultToolkit().
-                                               getMenuShortcutKeyMask(), false));
+                                               Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
     panel.add(start);
     panel.add(pause);
@@ -170,8 +154,7 @@ public class FrameMenuBar extends JMenuBar{
     JMenuItem about = new JMenuItem("About", ImageCreator.helpImageIcon);
 
     about.setAccelerator(KeyStroke.getKeyStroke('0',
-                                                Toolkit.getDefaultToolkit().
-                                                getMenuShortcutKeyMask(), false));
+                                                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
     help.add(topics);
     help.addSeparator();
     help.add(disclaimer);
@@ -273,8 +256,7 @@ public class FrameMenuBar extends JMenuBar{
               // getFrameWindow().getTCPSniffingPanel().buttonStop();
             }
           }
-        };
-        worker.start();
+        }; worker.start();
       }
     });
 
@@ -282,10 +264,10 @@ public class FrameMenuBar extends JMenuBar{
       public void actionPerformed(ActionEvent e) {
         int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
         String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
-        if(s.equals(" TCP Fuzzing ")) {
+        if (s.equals(" TCP Fuzzing ")) {
           getFrameWindow().getFuzzingPanel().fuzzStopButton();
         }
-        if(s.equals(" TCP Sniffing ")){
+        if (s.equals(" TCP Sniffing ")) {
           getFrameWindow().getTCPSniffingPanel().buttonStop();
         }
       }
@@ -296,7 +278,7 @@ public class FrameMenuBar extends JMenuBar{
 
         int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
         String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
-        if(s.equals(" TCP Fuzzing ")) {
+        if (s.equals(" TCP Fuzzing ")) {
           getFrameWindow().getFuzzingPanel().generatorAddButton();
         }
       }
@@ -307,9 +289,9 @@ public class FrameMenuBar extends JMenuBar{
 
         int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
         String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
-        if(s.equals(" TCP Fuzzing ")) {
+        if (s.equals(" TCP Fuzzing ")) {
           getFrameWindow().getFuzzingPanel().generatorRemoveButton();
-          }
+        }
       }
     });
 
@@ -349,7 +331,7 @@ class CutAction extends TextAction {
 
   public void actionPerformed(ActionEvent evt) {
     JTextComponent text = getTextComponent(evt);
-    if(text != null) {
+    if (text != null) {
       text.cut();
       text.requestFocus();
     }
@@ -363,7 +345,7 @@ class CopyAction extends TextAction {
 
   public void actionPerformed(ActionEvent evt) {
     JTextComponent text = getTextComponent(evt);
-    if(text != null) {
+    if (text != null) {
       text.copy();
       text.requestFocus();
     }
@@ -377,7 +359,7 @@ class PasteAction extends TextAction {
 
   public void actionPerformed(ActionEvent evt) {
     JTextComponent text = getTextComponent(evt);
-    if(text != null) {
+    if (text != null) {
       text.paste();
       text.requestFocus();
     }
@@ -391,11 +373,10 @@ class SelectAllAction extends TextAction {
 
   public void actionPerformed(ActionEvent evt) {
     JTextComponent text = getTextComponent(evt);
-    if(text != null) {
+    if (text != null) {
       text.selectAll();
       text.requestFocus();
     }
   }
 }
-
 

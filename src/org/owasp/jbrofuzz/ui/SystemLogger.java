@@ -25,19 +25,12 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
-import org.owasp.jbrofuzz.ver.Time;
+import org.owasp.jbrofuzz.ver.*;
 /**
  *
  * @author subere (at) uncon . org
@@ -68,7 +61,7 @@ public class SystemLogger extends JPanel {
 
     listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" System Logger "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+                        BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     // Set the bounds
     listPanel.setBounds(10, 90, 870, 370);
 
@@ -93,27 +86,23 @@ public class SystemLogger extends JPanel {
     // The action listener for the info button
     infoButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        final String systemInfo =
-            "[System Info Start]\r\n" +
-            "  [Java]\r\n" +
-            "    Vendor:  " + System.getProperty("java.vendor") + "\r\n" +
-            "    Version: " + System.getProperty("java.version") + "\r\n" +
-            "    Installed at: " + System.getProperty("java.home") + "\r\n" +
-            "    Website: " + System.getProperty("java.vendor.url") + "\r\n" +
-            "  [User]\r\n" +
-            "    User: " + System.getProperty("user.name") + "\r\n" +
-            "    Home dir: " + System.getProperty("user.home") + "\r\n" +
-            "    Current dir: " + System.getProperty("user.dir") + "\r\n" +
-            "  [O/S]\r\n" +
-            "    Name: " + System.getProperty("os.name") + "\r\n" +
-            "    Version: " + System.getProperty("os.version") + "\r\n" +
-            "    Architecture: " + System.getProperty("os.arch") + "\r\n" +
-            "[System Info End]\r\n";
+        final String systemInfo = "[System Info Start]\r\n" + "  [Java]\r\n" +
+          "    Vendor:  " + System.getProperty("java.vendor") + "\r\n" +
+          "    Version: " + System.getProperty("java.version") + "\r\n" +
+          "    Installed at: " + System.getProperty("java.home") + "\r\n" +
+          "    Website: " + System.getProperty("java.vendor.url") + "\r\n" +
+          "  [User]\r\n" + "    User: " + System.getProperty("user.name") +
+          "\r\n" + "    Home dir: " + System.getProperty("user.home") + "\r\n" +
+          "    Current dir: " + System.getProperty("user.dir") + "\r\n" +
+          "  [O/S]\r\n" + "    Name: " + System.getProperty("os.name") + "\r\n" +
+          "    Version: " + System.getProperty("os.version") + "\r\n" +
+          "    Architecture: " + System.getProperty("os.arch") + "\r\n" +
+          "[System Info End]\r\n";
 
 
-        String [] info = systemInfo.split("\r\n");
+        String[] info = systemInfo.split("\r\n");
 
-        for(int i = 0; i < info.length; i++) {
+        for (int i = 0; i < info.length; i++) {
           addLoggingEvent(info[i]);
         }
 
@@ -123,6 +112,7 @@ public class SystemLogger extends JPanel {
     add(infoButton);
     listTextArea.setCaretPosition(0);
   }
+
   /**
    * <p>Method for returning the main window frame that this tab is attached on.
    * </p>
@@ -132,6 +122,7 @@ public class SystemLogger extends JPanel {
   public FrameWindow getFrameWindow() {
     return m;
   }
+
   /**
    * <p>Method for setting the text within the JTextArea displayed as part of
    * this panel. This method simply appends any string given adding a new
@@ -145,13 +136,13 @@ public class SystemLogger extends JPanel {
     // Fix the disappearing tab problem
     int tab = -1;
     int totalTabs = getFrameWindow().getTabbedPane().getComponentCount();
-    for(int i = 0; i < totalTabs; i++) {
+    for (int i = 0; i < totalTabs; i++) {
       String title = getFrameWindow().getTabbedPane().getTitleAt(i);
-      if(title.startsWith(" System")) {
+      if (title.startsWith(" System")) {
         tab = i;
       }
     }
-    if((tab > -1)) {
+    if ((tab > -1)) {
       getFrameWindow().getTabbedPane().setTitleAt(tab,
                                                   " System (" + lineCount + ")");
     }
