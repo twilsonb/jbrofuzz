@@ -243,6 +243,9 @@ public class FrameMenuBar extends JMenuBar {
             if (s.equals(" TCP Sniffing ")) {
               getFrameWindow().getTCPSniffingPanel().buttonStart();
             }
+            if (s.equals(" Web Directories ")) {
+              getFrameWindow().getWebDirectoriesPanel().buttonStart() ;
+            }
             return "start-menu-bar-return";
           }
 
@@ -253,7 +256,10 @@ public class FrameMenuBar extends JMenuBar {
               getFrameWindow().getFuzzingPanel().fuzzStopButton();
             }
             if (s.equals(" TCP Sniffing ")) {
-              // getFrameWindow().getTCPSniffingPanel().buttonStop();
+              getFrameWindow().getTCPSniffingPanel().buttonStop();
+            }
+            if (s.equals(" Web Directories ")) {
+              getFrameWindow().getWebDirectoriesPanel().buttonStop() ;
             }
           }
         }; worker.start();
@@ -269,6 +275,9 @@ public class FrameMenuBar extends JMenuBar {
         }
         if (s.equals(" TCP Sniffing ")) {
           getFrameWindow().getTCPSniffingPanel().buttonStop();
+        }
+        if (s.equals(" Web Directories ")) {
+          getFrameWindow().getWebDirectoriesPanel().buttonStop() ;
         }
       }
     });
