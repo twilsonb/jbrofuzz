@@ -263,10 +263,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   }
 
   /**
-   * @todo Add button disability while directory check is progressing and
-   * also add functionality from the menu bar.
+   * {@todo Load a file of directories from somewhere}
    */
-
   /**
    * Method triggered when the start button is pressed.
    */
