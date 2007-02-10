@@ -25,12 +25,10 @@
  */
 package org.owasp.jbrofuzz.snif.tcp;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
-import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.*;
 /**
  * @author subere (at) uncon . org
  * @version 0.5
@@ -47,14 +45,14 @@ class Connection implements Runnable, AgentMonitor {
   private String destHost = null;
   private InputStream destIn = null;
   private boolean connectionClosed = false;
-   private Agent fromSrcToDest = null;
-   private Agent fromDestToSrc = null;
+  private Agent fromSrcToDest = null;
+  private Agent fromDestToSrc = null;
 
   //
   private JBroFuzz mJBroFuzz;
 
   public Connection(JBroFuzz mJBroFuzz, Socket s, ConnectionMonitor cm,
-                       String destHost, int destPort) {
+                    String destHost, int destPort) {
 
     this.mJBroFuzz = mJBroFuzz;
     srcSocket = s;
@@ -93,9 +91,9 @@ class Connection implements Runnable, AgentMonitor {
 
       // Create our two agents
       fromSrcToDest = new Agent(this.mJBroFuzz, srcIn, destOut, this,
-                                   "{Local Host => Remote Host}");
+                                "{Local Host => Remote Host}");
       fromDestToSrc = new Agent(this.mJBroFuzz, destIn, srcOut, this,
-                                   "{Remote Host => Local Host}");
+                                "{Remote Host => Local Host}");
 
       // No need for our thread to continue, we'll be notified if
       // either of our agents dies

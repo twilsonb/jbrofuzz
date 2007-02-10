@@ -25,9 +25,9 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.util.ArrayList;
+import java.util.*;
 
-import javax.swing.table.AbstractTableModel;
+import javax.swing.table.*;
 /**
  *
  * @author subere (at) uncon . org

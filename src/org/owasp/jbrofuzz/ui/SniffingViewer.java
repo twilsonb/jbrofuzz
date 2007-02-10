@@ -25,17 +25,10 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 /**
  * @author subere (at) uncon org
  * @version 0.5
@@ -78,8 +71,8 @@ public class SniffingViewer extends JFrame {
     listTextArea.setWrapStyleWord(false);
     m.getFrameWindow().popup(listTextArea);
     /*
-    listTextArea.getDocument().putProperty( DefaultEditorKit.EndOfLineStringProperty, "\r\n" );
-    */
+         listTextArea.getDocument().putProperty( DefaultEditorKit.EndOfLineStringProperty, "\r\n" );
+     */
     JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(30);

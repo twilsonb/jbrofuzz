@@ -25,13 +25,9 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 /**
  *
@@ -53,17 +49,17 @@ public class DefinitionsPanel extends JPanel {
     super();
     setLayout(null);
     /*
-    setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+         setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Generators "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-    */
+     */
     this.m = m;
     // Define the JPanel
     JPanel listPanel = new JPanel();
 
     listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Fuzzing Generators "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+                        BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     // Set the bounds
     listPanel.setBounds(10, 90, 870, 370);
 
@@ -83,6 +79,7 @@ public class DefinitionsPanel extends JPanel {
     add(listPanel);
     listTextArea.setCaretPosition(0);
   }
+
   /**
    * <p>Method for returning the main window frame that this tab is attached on.
    * </p>
@@ -92,6 +89,7 @@ public class DefinitionsPanel extends JPanel {
   public FrameWindow getFrameWindow() {
     return m;
   }
+
   /**
    * <p>Method for setting the text within the JTextArea displayed as part of
    * this panel. This method simply appends any string given adding a new

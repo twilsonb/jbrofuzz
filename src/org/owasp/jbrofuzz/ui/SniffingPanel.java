@@ -1,5 +1,5 @@
 /**
- * TCPSniffingPanel.java 0.4
+ * TCPSniffingPanel.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -25,28 +25,17 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingWorker3;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.*;
+import javax.swing.event.*;
 
-import com.Ostermiller.util.Browser;
-import org.owasp.jbrofuzz.snif.tcp.ConnectionListener;
-import org.owasp.jbrofuzz.ver.Format;
+import com.Ostermiller.util.*;
+import org.owasp.jbrofuzz.snif.tcp.*;
+import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
 
 /**
  * The Sniffing Panel User Interface based on the instance of a JPanel. This
@@ -102,22 +91,22 @@ public class SniffingPanel extends JPanel {
     // Set the borders
     rHostPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Remote Host "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+                         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     rPortPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     lHostPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Local Host "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+                         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     lPortPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" List of Requests "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+                        BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     // Set the bounds
-    rHostPanel.setBounds(10, 20, 240, 60);
-    rPortPanel.setBounds(250, 20, 60, 60);
-    lHostPanel.setBounds(320, 20, 240, 60);
-    lPortPanel.setBounds(560, 20, 60, 60);
+    rHostPanel.setBounds(10, 20, 220, 60);
+    rPortPanel.setBounds(230, 20, 60, 60);
+    lHostPanel.setBounds(300, 20, 220, 60);
+    lPortPanel.setBounds(520, 20, 60, 60);
     listPanel.setBounds(10, 90, 870, 370);
     // Setup the remote host text
     rHostText = new JTextArea(1, 1);
@@ -130,7 +119,7 @@ public class SniffingPanel extends JPanel {
     JScrollPane rHostScrollPane = new JScrollPane(rHostText);
     rHostScrollPane.setVerticalScrollBarPolicy(21);
     rHostScrollPane.setHorizontalScrollBarPolicy(31);
-    rHostScrollPane.setPreferredSize(new Dimension(220, 20));
+    rHostScrollPane.setPreferredSize(new Dimension(200, 20));
     rHostPanel.add(rHostScrollPane);
     // Setup the remote host port
     rPortText = new JTextArea(1, 1);
@@ -156,7 +145,7 @@ public class SniffingPanel extends JPanel {
     getFrameWindow().popup(lHostText);
     lHostScrollPane.setVerticalScrollBarPolicy(21);
     lHostScrollPane.setHorizontalScrollBarPolicy(31);
-    lHostScrollPane.setPreferredSize(new Dimension(220, 20));
+    lHostScrollPane.setPreferredSize(new Dimension(200, 20));
     lHostPanel.add(lHostScrollPane);
     // Setup the local port text
     lPortText = new JTextArea(1, 1);
@@ -205,21 +194,21 @@ public class SniffingPanel extends JPanel {
           int selectedRow = lsm.getMinSelectionIndex();
           String s = tableModel.getValueAt(selectedRow);
           SniffingViewer vew = new SniffingViewer(getFrameWindow().
-            getTCPSniffingPanel(), s);
+                                                  getTCPSniffingPanel(), s);
         }
       }
     }); // ListSelectionListener
 
     // The start, stop buttons
-    startButton = new JButton("Start");
-    startButton.setBounds(630, 33, 70, 40);
+    startButton = new JButton("Start", ImageCreator.startImageIcon);
+    startButton.setBounds(590, 33, 90, 40);
     startButton.setEnabled(true);
     startButton.setToolTipText("Start Sniffing between Local and Remote Host");
-    stopButton = new JButton("Stop");
+    stopButton = new JButton("Stop", ImageCreator.stopImageIcon);
     stopButton.setEnabled(false);
-    stopButton.setBounds(715, 33, 70, 40);
+    stopButton.setBounds(695, 33, 90, 40);
     stopButton.setToolTipText("Stop Sniffing");
-    browserButton = new JButton("Bro");
+    browserButton = new JButton("Bro", ImageCreator.pauseImageIcon);
     browserButton.setBounds(800, 33, 70, 40);
     browserButton.setEnabled(true);
     browserButton.setToolTipText("Open in external browser");
@@ -232,6 +221,7 @@ public class SniffingPanel extends JPanel {
             buttonStart();
             return "start-window-return";
           }
+
           public void finished() {
           }
         };
@@ -249,7 +239,7 @@ public class SniffingPanel extends JPanel {
       public void actionPerformed(ActionEvent e) {
         Browser.init();
         StringBuffer url = new StringBuffer();
-        if(getRemotePortText().equals("443")) {
+        if (getRemotePortText().equals("443")) {
           url.append("https://");
         }
         else {
@@ -441,12 +431,12 @@ public class SniffingPanel extends JPanel {
    * Method for hitting the stop button.
    */
   public void buttonStop() {
-    if(!stopButton.isEnabled()) {
+    if (!stopButton.isEnabled()) {
       return;
     }
     stopButton.setEnabled(false);
     startButton.setEnabled(true);
-    if(reflector != null ) {
+    if (reflector != null) {
       reflector.stopConnection();
     }
 
@@ -466,7 +456,7 @@ public class SniffingPanel extends JPanel {
     lPortText.setForeground(Color.black);
 
     // Update the border of the output panel
-    if(counter == 0) {
+    if (counter == 0) {
       listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
         createTitledBorder(" List of Requests " + "[Last log was empty] "),
         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
@@ -483,7 +473,7 @@ public class SniffingPanel extends JPanel {
    * Method for hitting the start button.
    */
   public void buttonStart() {
-    if(!startButton.isEnabled()) {
+    if (!startButton.isEnabled()) {
       return;
     }
     startButton.setEnabled(false);
@@ -513,8 +503,8 @@ public class SniffingPanel extends JPanel {
     // Update the border of the output panel
     listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" List of Requests " + "[Logging in folder .\\" +
-                         Format.DATE + "\\" + session + "*.txt]  [" +
-                         rh + ":" + rp + " <=> " + lh + ":" + lp + "] "),
+                         Format.DATE + "\\" + session + "*.txt]  [" + rh + ":" +
+                         rp + " <=> " + lh + ":" + lp + "] "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
     reflector = new ConnectionListener(this, rh, rp, lh, lp);

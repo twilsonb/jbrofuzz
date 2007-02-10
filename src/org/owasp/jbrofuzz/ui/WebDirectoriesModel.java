@@ -1,5 +1,5 @@
 /**
- * WebDirectoriesModel.java 0.4
+ * WebDirectoriesModel.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -25,10 +25,15 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.table.AbstractTableModel;
-
+import javax.swing.table.*;
+/**
+ * The Table Model for the Web Directories return table.
+ *
+ * @author subere (at) uncon . org
+ * @version 0.5
+ */
 public class WebDirectoriesModel extends AbstractTableModel {
   /**
    * <p>The String used to separate columns when a toString representation of
@@ -37,71 +42,125 @@ public class WebDirectoriesModel extends AbstractTableModel {
    */
   public static final String STRING_COLUMN_SEPARATOR = "          ";
 
-  private String[] columnNames;
+  // The names of the columns within the table of generators
+  private static final String[] COLUMNNAMES = {
+                                              "No", "URI", "Code",
+                                              "Status Text", "Comments",
+                                              "Scripts"};
+  // The vector of ResponseOutputs
   private Vector dataVector;
 
-  public WebDirectoriesModel(String[] columnNames) {
-    this.columnNames = columnNames;
+  /**
+   * Default constructor for this web directory model. This is to be attached
+   * to a JTable.
+   */
+  public WebDirectoriesModel() {
     dataVector = new Vector();
   }
 
+  /**
+   * Method for obtaining the String name of a given column.
+   *
+   * @param column int
+   * @return String
+   */
   public String getColumnName(int column) {
-    return columnNames[column];
+    String out = "";
+    if ((column > -1) && (column < COLUMNNAMES.length)) {
+      out = COLUMNNAMES[column];
+    }
+    return out;
   }
 
+  /**
+   * Method for returning a particular value within the existing table model.
+   *
+   * @param row int
+   * @param column int
+   * @return Object
+   */
   public Object getValueAt(int row, int column) {
-    ResponseOutput record = (ResponseOutput) dataVector.get(row);
-    switch (column) {
-      case 0:
-        return record.getID();
-      case 1:
-        return record.getURI();
-      case 2:
-        return record.getStatusCode();
-      case 3:
-        return record.getStatusText();
-      case 4:
-        return record.getComments();
-      case 5:
-        return record.getScripts();
-      default:
-        return "";
+    if ((row < 0) || (row > dataVector.size() - 1)) {
+      return "";
+    }
+    else {
+      ResponseOutput record = (ResponseOutput) dataVector.get(row);
+      switch (column) {
+        case 0:
+          return record.getID();
+        case 1:
+          return record.getURI();
+        case 2:
+          return record.getStatusCode();
+        case 3:
+          return record.getStatusText();
+        case 4:
+          return record.getComments();
+        case 5:
+          return record.getScripts();
+        default:
+          return "";
+      }
     }
   }
 
+  /**
+   * Return the total number of rows
+   * @return int
+   */
   public int getRowCount() {
     return dataVector.size();
   }
 
+  /**
+   * Return the total number of columns
+   * @return int
+   */
   public int getColumnCount() {
-    return columnNames.length;
+    return COLUMNNAMES.length;
   }
 
+  /**
+   * Return a given row in String format using the stated separator
+   * @param row int
+   * @return String
+   */
   public String getRow(int row) {
     String output = "";
     if ((row > -1) && (row < dataVector.size())) {
-      for (int i = 0; i < columnNames.length; i++) {
+      for (int i = 0; i < COLUMNNAMES.length; i++) {
         output += getValueAt(row, i) + STRING_COLUMN_SEPARATOR;
       }
     }
     return output;
   }
 
+  /**
+   * Add a row to the table model.
+   *
+   * @param id String
+   * @param uri String
+   * @param statusCode String
+   * @param statusText String
+   * @param comments String
+   * @param scripts String
+   */
   public void addRow(String id, String uri, String statusCode,
                      String statusText, String comments, String scripts) {
 
     ResponseOutput response = new ResponseOutput(id, uri, statusCode,
-                                                 statusText,
-                                                 comments, scripts);
+                                                 statusText, comments, scripts);
     dataVector.add(response);
-    fireTableRowsInserted(
-      dataVector.size() - 1,
-      dataVector.size() - 1);
+    fireTableRowsInserted(dataVector.size() - 1, dataVector.size() - 1);
   }
 
+  /**
+   * Remove all the rows within the given table model.
+   */
   public void removeAllRows() {
     dataVector.removeAllElements();
-    fireTableRowsDeleted(0, 0);
+
+    fireTableRowsDeleted(0,1);
   }
 }
 
@@ -153,10 +212,6 @@ class ResponseOutput {
 /**
  * @todo Find Comments in file/
  *       Find Scripts in file/
- */
-
-/**
- * @todo Escape special characters
  */
 
 /**

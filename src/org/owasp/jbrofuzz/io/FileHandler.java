@@ -25,20 +25,13 @@
  */
 package org.owasp.jbrofuzz.io;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Vector;
+import java.io.*;
+import java.util.*;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
-import org.owasp.jbrofuzz.ui.FrameWindow;
-import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.ui.*;
+import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>Class responsible for all File Creation.</p>
  *
@@ -165,8 +158,7 @@ public class FileHandler {
     }
     catch (NullPointerException e) {
       JOptionPane.showMessageDialog(f,
-                                    "Cannot Find Location" + "\n" + fileName +
-                                    "\nA File Read Error Occured",
+                                    "Cannot Find Location" + "\n" + fileName + "\nA File Read Error Occured",
                                     "JBroFuzz File Read Error",
                                     JOptionPane.ERROR_MESSAGE);
       return new StringBuffer("");
@@ -184,8 +176,7 @@ public class FileHandler {
     }
     catch (ArrayIndexOutOfBoundsException e) {
       JOptionPane.showMessageDialog(f,
-                                    "Cannot Find Location" + "\n" + fileName +
-                                    "\nAn Array Error Occured",
+                                    "Cannot Find Location" + "\n" + fileName + "\nAn Array Error Occured",
                                     "JBroFuzz File Read Error",
                                     JOptionPane.ERROR_MESSAGE);
       return new StringBuffer("");
@@ -193,8 +184,7 @@ public class FileHandler {
     }
     catch (IOException e) {
       JOptionPane.showMessageDialog(f,
-                                    "Cannot Read Location" + "\n" + fileName +
-                                    "\nA File Read Error Occured",
+                                    "Cannot Read Location" + "\n" + fileName + "\nA File Read Error Occured",
                                     "JBroFuzz File Read Error",
                                     JOptionPane.ERROR_MESSAGE);
       return new StringBuffer("");
@@ -202,8 +192,7 @@ public class FileHandler {
     return out;
   }
 
-  private static void createFile(String fileName, String content,
-                                 int fileType) {
+  private static void createFile(String fileName, String content, int fileType) {
 
     if (fileType == FileHandler.FUZZ_FILE) {
       try {
@@ -211,7 +200,7 @@ public class FileHandler {
           currentFile = new File(fuzzDirectory, fileName);
           if (!currentFile.exists()) {
             boolean success = currentFile.createNewFile();
-            if(! success) {
+            if (!success) {
               g.log("Failed to create file");
             }
           }
@@ -232,7 +221,7 @@ public class FileHandler {
           currentFile = new File(snifDirectory, fileName);
           if (!currentFile.exists()) {
             boolean success = currentFile.createNewFile();
-            if(! success) {
+            if (!success) {
               g.log("Failed to create file");
             }
           }

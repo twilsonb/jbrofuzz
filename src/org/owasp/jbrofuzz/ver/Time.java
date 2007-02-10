@@ -25,9 +25,8 @@
  */
 package org.owasp.jbrofuzz.ver;
 
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.text.*;
+import java.util.*;
 /**
  * This class gives back the current date and time in a number of predefined
  * formats.
@@ -95,8 +94,8 @@ public class Time {
       return dateAt;
     }
     catch (NullPointerException e) {
-    //  Logger.logError(
-     //   "Timer reports: Illegal length of long time\nfor Date conversion.");
+      //  Logger.logError(
+      //   "Timer reports: Illegal length of long time\nfor Date conversion.");
       return null;
     }
   }
@@ -114,8 +113,8 @@ public class Time {
       return relativeTime;
     }
     catch (NullPointerException e) {
-    //  Logger.logError(
-    //    "Timer reports: Empty Date object\npassed for Date conversion.");
+      //  Logger.logError(
+      //    "Timer reports: Empty Date object\npassed for Date conversion.");
       relativeTime = 0;
       return relativeTime;
     }

@@ -25,33 +25,20 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import java.awt.Insets;
-import java.awt.Color;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JTable;
+import javax.swing.*;
+import javax.swing.table.*;
 
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.dir.RequestIterator;
-import org.owasp.jbrofuzz.ui.util.TableSorter;
-
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingWorker3;
-import javax.swing.table.TableColumn;
+import org.owasp.jbrofuzz.dir.*;
+import org.owasp.jbrofuzz.ui.util.*;
 /**
  *
  * @author subere (at) uncon . org
  * @version 0.5
  */
-public class WebDirectoriesPanel extends JPanel {
+public class WebDirectoriesPanel extends JPanel implements KeyListener {
 
   // The frame that the sniffing panel is attached
   private FrameWindow m;
@@ -68,10 +55,11 @@ public class WebDirectoriesPanel extends JPanel {
   // The correspondng table model
   private WebDirectoriesModel responseTableModel;
 
-  // The names of the columns within the table of generators
-  private static final String[] COLUMNNAMES = {
-                                              "ID", "URI", "Code", "Status Text",
-                                              "Comments", "Scripts"};
+  // The request iterator to loop through the directories
+  private RequestIterator cesg;
+
+  // The directory panel that needs to update the line number
+  private JPanel directoryPanel;
 
   /**
    * The constructor for the Web Directory Panel. This constructor spawns the
@@ -80,15 +68,14 @@ public class WebDirectoriesPanel extends JPanel {
    * @param m FrameWindow
    */
   public WebDirectoriesPanel(FrameWindow m) {
-    super();
-    setLayout(null);
+    super(null, true);
     this.m = m;
 
     // Define the directory JPanel
-    JPanel directoryPanel = new JPanel();
+    directoryPanel = new JPanel();
     directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Directories "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+      createTitledBorder(" Total Directories to test: "),
+                             BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     directoryPanel.setBounds(630, 20, 230, 430);
     add(directoryPanel);
 
@@ -96,15 +83,14 @@ public class WebDirectoriesPanel extends JPanel {
     JPanel targetPanel = new JPanel();
     targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Target URI"),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+                          BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     targetPanel.setBounds(10, 20, 500, 60);
     add(targetPanel);
 
     // Define the port JPanel
     JPanel portPanel = new JPanel();
     portPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Port "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+      createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     portPanel.setBounds(520, 20, 100, 60);
     add(portPanel);
 
@@ -112,7 +98,7 @@ public class WebDirectoriesPanel extends JPanel {
     JPanel outputPanel = new JPanel();
     outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+                          BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     outputPanel.setBounds(10, 150, 610, 300);
     add(outputPanel);
 
@@ -160,6 +146,7 @@ public class WebDirectoriesPanel extends JPanel {
     directoryText.setMargin(new Insets(1, 1, 1, 1));
     directoryText.setBackground(Color.WHITE);
     directoryText.setForeground(Color.BLACK);
+    directoryText.addKeyListener(this);
     getFrameWindow().popup(directoryText);
     JScrollPane directoryScrollPane = new JScrollPane(directoryText);
     directoryScrollPane.setVerticalScrollBarPolicy(20);
@@ -179,7 +166,9 @@ public class WebDirectoriesPanel extends JPanel {
             buttonStart();
             return "start-window-return";
           }
+
           public void finished() {
+            buttonStop();
           }
         };
         worker.start();
@@ -200,16 +189,16 @@ public class WebDirectoriesPanel extends JPanel {
     add(stopButton);
     stopButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
-
+        buttonStop();
       }
     });
 
-    responseTableModel = new WebDirectoriesModel(COLUMNNAMES);
+    responseTableModel = new WebDirectoriesModel();
     TableSorter sorter = new TableSorter(responseTableModel);
     responseTable = new JTable(sorter);
     sorter.setTableHeader(responseTable.getTableHeader());
     responseTable.getTableHeader().setToolTipText(
-            "Click to specify sorting; Control-Click to specify secondary sorting");
+      "Click to specify sorting; Control-Click to specify secondary sorting");
     responseTable.setFont(new Font("Monospaced", Font.BOLD, 12));
     responseTable.setBackground(Color.black);
     responseTable.setForeground(Color.white);
@@ -220,19 +209,29 @@ public class WebDirectoriesPanel extends JPanel {
     for (int i = 0; i < responseTableModel.getColumnCount(); i++) {
       column = responseTable.getColumnModel().getColumn(i);
       if (i == 0) {
-        column.setPreferredWidth(20);
+        column.setPreferredWidth(30);
       }
       if (i == 1) {
-        column.setPreferredWidth(280);
+        column.setPreferredWidth(300);
       }
       if (i == 2) {
         column.setPreferredWidth(30);
       }
       if (i == 3) {
-        column.setPreferredWidth(100);
+        column.setPreferredWidth(120);
+      }
+      if (i == 4) {
+        column.setPreferredWidth(20);
+      }
+      if (i == 5) {
+        column.setPreferredWidth(20);
       }
 
     }
+
+    /**
+     * @todo Right click select all copy-paste open in browser
+     */
     JScrollPane listTextScrollPane = new JScrollPane(responseTable);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
@@ -240,10 +239,19 @@ public class WebDirectoriesPanel extends JPanel {
     listTextScrollPane.setWheelScrollingEnabled(true);
     outputPanel.add(listTextScrollPane);
 
-    targetText.setText("http://intranet/");
+    startButton.setEnabled(true);
+    stopButton.setEnabled(false);
+    pauseButton.setEnabled(false);
+
+    targetText.setText("http://localhost");
     portText.setText("80");
-    directoryText.setText("images\nfuzz\nrss\nlife\n");
+    directoryText.setText("images\nfuzz\nrss\nlife\nlive\nli ve\n");
+    directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+      createTitledBorder(" Total Directories to test: "
+                         + directoryText.getLineCount() + " "),
+                             BorderFactory.createEmptyBorder(1, 1, 1, 1)));
   }
+
   /**
    * <p>Method for returning the main window frame that this tab is attached on.
    * </p>
@@ -263,32 +271,55 @@ public class WebDirectoriesPanel extends JPanel {
    * Method triggered when the start button is pressed.
    */
   public void buttonStart() {
-    String port = portText.getText();
+
+    if (!startButton.isEnabled()) {
+      return;
+    }
+    // UI and Colors
+    startButton.setEnabled(false);
+    stopButton.setEnabled(true);
+    targetText.setEditable(false);
+    targetText.setBackground(Color.BLACK);
+    targetText.setForeground(Color.WHITE);
+    portText.setEditable(false);
+    portText.setBackground(Color.BLACK);
+    portText.setForeground(Color.WHITE);
+
+    /**
+     * @todo Pass the port as parameter to the requestIterator
+     */
+
     String uri = targetText.getText();
     // Add a trailing / if one is not there
-    if(!uri.endsWith("/")) {
+    if (!uri.endsWith("/")) {
       uri += "/";
-    }
-    // Add a leading http or https depending on the port
-    if((!uri.startsWith("http://")) || (!uri.startsWith("https://"))) {
-      if(port.equals("80")) {
-        StringBuffer s = new StringBuffer(uri);
-        s.insert(0, "http://");
-        uri = s.toString();
-      }
-      if(port.equals("443")) {
-        StringBuffer s = new StringBuffer(uri);
-        s.insert(0, "https://");
-        uri = s.toString();
-      }
     }
     String dirs = directoryText.getText();
 
     responseTableModel.removeAllRows();
 
-    RequestIterator cesg = new RequestIterator(getFrameWindow(), uri, dirs);
+    cesg = new RequestIterator(getFrameWindow(), uri, dirs);
     cesg.run();
+  }
 
+  /**
+   * <p>Method for stopping the request iterator.</p>
+   */
+  public void buttonStop() {
+    if (!stopButton.isEnabled()) {
+      return;
+    }
+    // UI and Colors
+    stopButton.setEnabled(false);
+    startButton.setEnabled(true);
+    targetText.setEditable(true);
+    targetText.setBackground(Color.WHITE);
+    targetText.setForeground(Color.BLACK);
+    portText.setEditable(true);
+    portText.setBackground(Color.WHITE);
+    portText.setForeground(Color.BLACK);
+
+    cesg.stop();
   }
 
   /**
@@ -300,7 +331,7 @@ public class WebDirectoriesPanel extends JPanel {
   public void addRow(String s) {
     String[] inputArray = s.split("\n");
     responseTableModel.addRow(inputArray[0], inputArray[1], inputArray[2],
-      inputArray[3], inputArray[4], inputArray[5]);
+                              inputArray[3], inputArray[4], inputArray[5]);
     // int totalRows = responseTableModel.getRowCount();
     // responseTableModel.setValueAt(s, totalRows - 1, 0);
     // Set the last row to be visible
@@ -308,5 +339,32 @@ public class WebDirectoriesPanel extends JPanel {
       getRowCount(), 0, true));
   }
 
+  /**
+   * Handle the key typed event from the text field.
+   * @param e KeyEvent
+   */
+  public void keyTyped(KeyEvent e) {
+    directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+      createTitledBorder(" Total Directories to test: "
+                         + directoryText.getLineCount() + " "),
+                             BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+  }
+
+  /**
+   * Handle the key pressed event from the text field.
+   *
+   * @param e KeyEvent
+   */
+  public void keyPressed(KeyEvent e) {
+    // System.out.println(directoryText.getLineCount() );
+  }
+
+  /**
+   * Handle the key released event from the text field.
+   * @param e KeyEvent
+   */
+  public void keyReleased(KeyEvent e) {
+    // System.out.println(directoryText.getLineCount() );
+  }
 
 }

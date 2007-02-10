@@ -25,13 +25,8 @@
  */
 package org.owasp.jbrofuzz.fuzz.tcp;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.io.*;
+import java.net.*;
 /**
  * Description: The class responsible for making the connection for the
  * purposes of fuzzing through the corresponding socket.
