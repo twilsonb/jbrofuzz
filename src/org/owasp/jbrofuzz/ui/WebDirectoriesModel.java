@@ -40,7 +40,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
    * a set number of columns or rows is required. This is typically used in
    * method getRow() that returns a String.</p>
    */
-  public static final String STRING_COLUMN_SEPARATOR = "          ";
+  public static final String STRING_COLUMN_SEPARATOR = ",";
 
   // The names of the columns within the table of generators
   private static final String[] COLUMNNAMES = {
@@ -126,13 +126,17 @@ public class WebDirectoriesModel extends AbstractTableModel {
    * @return String
    */
   public String getRow(int row) {
-    String output = "";
+    StringBuffer output = new StringBuffer();
     if ((row > -1) && (row < dataVector.size())) {
       for (int i = 0; i < COLUMNNAMES.length; i++) {
-        output += getValueAt(row, i) + STRING_COLUMN_SEPARATOR;
+        output.append(getValueAt(row, i));
+        if (i < COLUMNNAMES.length - 1) {
+          output.append(STRING_COLUMN_SEPARATOR);
+        }
       }
+      output.append("\n");
     }
-    return output;
+    return output.toString();
   }
 
   /**
@@ -160,7 +164,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
   public void removeAllRows() {
     dataVector.removeAllElements();
 
-    fireTableRowsDeleted(0,1);
+    fireTableRowsDeleted(0, 1);
   }
 }
 
@@ -208,12 +212,3 @@ class ResponseOutput {
     return scripts.toString();
   }
 }
-
-/**
- * @todo Find Comments in file/
- *       Find Scripts in file/
- */
-
-/**
- * @todo Right click open in browser
- */

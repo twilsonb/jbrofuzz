@@ -84,6 +84,10 @@ public class FileHandler {
     systemDirectory = new File(baseDir + File.separator + "jbrofuzz" +
                                File.separator + "system");
 
+    /**
+     * @todo 1. Use the system directory to write a web dir log...
+     */
+
     int failedDirCounter = 0;
 
     if (!fuzzDirectory.exists()) {
