@@ -28,6 +28,8 @@ package org.owasp.jbrofuzz.dir;
 import java.io.*;
 import java.net.*;
 
+import java.nio.charset.*;
+
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.util.*;
 import org.apache.commons.httpclient.methods.*;
@@ -52,6 +54,8 @@ public class RequestIterator {
   private boolean paused, stopped;
   // The integer of the current request count
   private int i;
+  // The port on which directory enumeration is taking place
+  private int port;
 
   /**
    * <p>Constructor for creating a web directory request iterator that iterates
@@ -61,10 +65,12 @@ public class RequestIterator {
    * @param url String
    * @param directories String
    */
-  public RequestIterator(FrameWindow m, String url, String directories) {
+  public RequestIterator(FrameWindow m, String url, String directories,
+                         int port) {
     this.m = m;
     this.url = url;
     this.directories = directories.split("\n");
+    this.port = port;
     this.responses = new String[directories.length()];
     this.stopped = false;
     i = 0;
@@ -78,6 +84,7 @@ public class RequestIterator {
       if (stopped) {
         return;
       }
+
       String currentURI = "";
       try {
         currentURI = url + URIUtil.encodeWithinAuthority(directories[i]);
@@ -87,13 +94,16 @@ public class RequestIterator {
         m.log("Could not encode the URI: " + url + directories[i]);
       }
 
+      // Checks...
       if (currentURI.equalsIgnoreCase("")) {
+        return;
+      }
+      if ((port <= 0) || (port > 65535)) {
         return;
       }
 
       HttpClient client = new HttpClient();
       GetMethod method = new GetMethod(currentURI);
-
       method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
                                       new DefaultHttpMethodRetryHandler(3, false));
       try {
@@ -102,16 +112,41 @@ public class RequestIterator {
         int statusCode = client.executeMethod(method);
         responses[i] += statusCode + "\n";
         responses[i] += method.getStatusText() + "\n";
-        responses[i] += "N\n";
-        responses[i] += "N\n";
 
-        /**
-         * @todo How does web scarab check for comments and scripts?
-         */
         if (statusCode == HttpStatus.SC_OK) {
-          byte[] responseBody = method.getResponseBody();
-          String s  = new String(responseBody);
-          System.out.println(s);
+          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+          InputStream in = method.getResponseBodyAsStream();
+
+          byte[] buff = new byte[65535];
+          int got;
+          while ((got = in.read(buff)) > -1) {
+            baos.write(buff, 0, got);
+          }
+          byte[] allbytes = baos.toByteArray();
+          String results = new String(allbytes, Charset.forName("ISO-8859-1"));
+
+          // Check for comments
+          if (results.contains("<!--")) {
+            responses[i] += "Yes\n";
+          }
+          else {
+            responses[i] += "No\n";
+          }
+          // Check for scripts
+          if ((results.contains("<script")) || (results.contains("<SCRIPT"))) {
+            responses[i] += "Yes\n";
+          }
+          else {
+            responses[i] += "No\n";
+          }
+
+
+        }
+        // If no ok response has come back just append comments and scripts
+        else {
+          responses[i] += "No\n";
+          responses[i] += "No\n";
+
         }
       }
       catch (HttpException e) {
@@ -119,16 +154,16 @@ public class RequestIterator {
         responses[i] += currentURI + "\n";
         responses[i] += "000" + "\n";
         responses[i] += "Fatal protocol violation" + "\n";
-        responses[i] += "N\n";
-        responses[i] += "N\n";
+        responses[i] += "\n";
+        responses[i] += "\n";
       }
       catch (IOException e) {
         responses[i] = i + "\n";
         responses[i] += currentURI + "\n";
         responses[i] += "000" + "\n";
         responses[i] += "Fatal transport error" + "\n";
-        responses[i] += "N\n";
-        responses[i] += "N\n";
+        responses[i] += "\n";
+        responses[i] += "\n";
       }
       finally {
         method.releaseConnection();

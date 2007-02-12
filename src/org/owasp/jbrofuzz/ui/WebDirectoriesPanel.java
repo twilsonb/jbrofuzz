@@ -33,6 +33,9 @@ import javax.swing.table.*;
 
 import org.owasp.jbrofuzz.dir.*;
 import org.owasp.jbrofuzz.ui.util.*;
+
+import com.Ostermiller.util.*;
+import java.io.IOException;
 /**
  *
  * @author subere (at) uncon . org
@@ -199,11 +202,15 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     sorter.setTableHeader(responseTable.getTableHeader());
     responseTable.getTableHeader().setToolTipText(
       "Click to specify sorting; Control-Click to specify secondary sorting");
+    popup(responseTable);
+
     responseTable.setFont(new Font("Monospaced", Font.BOLD, 12));
     responseTable.setBackground(Color.black);
     responseTable.setForeground(Color.white);
     responseTable.setSurrendersFocusOnKeystroke(true);
-    responseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    // responseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    responseTable.setColumnSelectionAllowed(false);
+    responseTable.setRowSelectionAllowed(true);
     // Set the column widths
     TableColumn column = null;
     for (int i = 0; i < responseTableModel.getColumnCount(); i++) {
@@ -229,9 +236,6 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
 
     }
 
-    /**
-     * @todo Right click select all copy-paste open in browser
-     */
     JScrollPane listTextScrollPane = new JScrollPane(responseTable);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
@@ -283,20 +287,22 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     portText.setBackground(Color.BLACK);
     portText.setForeground(Color.WHITE);
 
-    /**
-     * @todo Pass the port as parameter to the requestIterator
-     */
-
     String uri = targetText.getText();
     // Add a trailing / if one is not there
     if (!uri.endsWith("/")) {
       uri += "/";
     }
     String dirs = directoryText.getText();
-
+    int port = 0;
+    try {
+      port = Integer.parseInt(portText.getText());
+    }
+    catch (NumberFormatException ex) {
+      m.log("Port has to be between [1 - 65535] in \"Web Directories\" Tab");
+    }
     responseTableModel.removeAllRows();
 
-    cesg = new RequestIterator(getFrameWindow(), uri, dirs);
+    cesg = new RequestIterator(getFrameWindow(), uri, dirs, port);
     cesg.run();
   }
 
@@ -328,13 +334,21 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
    */
   public void addRow(String s) {
     String[] inputArray = s.split("\n");
-    responseTableModel.addRow(inputArray[0], inputArray[1], inputArray[2],
-                              inputArray[3], inputArray[4], inputArray[5]);
-    // int totalRows = responseTableModel.getRowCount();
-    // responseTableModel.setValueAt(s, totalRows - 1, 0);
-    // Set the last row to be visible
-    responseTable.scrollRectToVisible(responseTable.getCellRect(responseTable.
-      getRowCount(), 0, true));
+    if(inputArray.length != 6) {
+      String error = "Web Directory Error! Cannot fit " + inputArray.length +
+                     " columns into 6.";
+      if(inputArray.length > 1) {
+        error += " First column was " + inputArray[0];
+      }
+      m.log(error);
+    }
+    else {
+      responseTableModel.addRow(inputArray[0], inputArray[1], inputArray[2],
+                                inputArray[3], inputArray[4], inputArray[5]);
+      // Set the last row to be visible
+      responseTable.scrollRectToVisible(responseTable.getCellRect(responseTable.
+        getRowCount(), 0, true));
+    }
   }
 
   /**
@@ -364,5 +378,86 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   public void keyReleased(KeyEvent e) {
     // System.out.println(directoryText.getLineCount() );
   }
+
+  /**
+   * Method for setting up the right click copy paste cut and select all menu.
+   * @param area JTextArea
+   */
+  private void popup(final JTable area) {
+
+    final JPopupMenu popmenu = new JPopupMenu();
+
+    JMenuItem i2 = new JMenuItem("Copy");
+    JMenuItem i4 = new JMenuItem("Select All");
+    JMenuItem i5 = new JMenuItem("Open in Browser");
+
+    i2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+      ActionEvent.CTRL_MASK));
+    i4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
+      ActionEvent.CTRL_MASK));
+
+    popmenu.add(i2);
+    popmenu.addSeparator();
+    popmenu.add(i4);
+    popmenu.addSeparator() ;
+    popmenu.add(i5);
+
+    i2.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        area.removeRowSelectionInterval(0,area.getRowCount() - 1);
+        int [] a = area.getSelectedRows();
+        System.out.println(a.length);
+        StringBuffer s = new StringBuffer() ;
+        for(int i = 0; i < a.length ; i++) {
+          TableSorter ts = (TableSorter) area.getModel();
+          WebDirectoriesModel wm = (WebDirectoriesModel) ts.getTableModel() ;
+          String row = wm.getRow(a[i]);
+          s.append(row);
+        }
+        JTextArea myTempArea = new JTextArea(s.toString() );
+        myTempArea.copy() ;
+      }
+    });
+
+    i4.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        area.selectAll() ;
+      }
+    });
+
+    i5.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        Browser.init();
+        String url = (String) area.getValueAt(area.getSelectedRow() ,
+                     1 % area.getColumnCount());
+        System.out.println(url);
+        try {
+          Browser.displayURL(url);
+        }
+        catch (IOException ex) {
+          getFrameWindow().log("Could not launch link in external browser");
+        }
+      }
+    });
+
+    area.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent e) {
+        checkForTriggerEvent(e);
+      }
+
+      public void mouseReleased(MouseEvent e) {
+        checkForTriggerEvent(e);
+      }
+
+      private void checkForTriggerEvent(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+          area.requestFocus();
+          popmenu.show(e.getComponent(), e.getX(), e.getY());
+        }
+      }
+    });
+  }
+
+
 
 }

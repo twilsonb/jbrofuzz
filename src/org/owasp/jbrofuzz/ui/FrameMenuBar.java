@@ -30,8 +30,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
-import javax.swing.Action;
 import javax.swing.text.*;
+import javax.swing.table.*;
 
 import org.owasp.jbrofuzz.ui.util.*;
 import org.owasp.jbrofuzz.ver.*;
