@@ -30,6 +30,7 @@ import java.text.*;
 import java.util.*;
 
 import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.io.*;
 
 /**
  *
@@ -92,17 +93,17 @@ class Agent implements Runnable {
   private void log(final byte buffer[], final int nBytes) {
     synchronized (System.out) {
       final Date currentTime = new Date();
-      final String fileName = mJBroFuzz.getFrameWindow().getTCPSniffingPanel().
+      final String fileNumber = mJBroFuzz.getFrameWindow().getTCPSniffingPanel().
                               getCounter();
 
-      mJBroFuzz.getFileHandler().writeSnifFile(fileName + ".txt",
+      FileHandler.writeSnifFile(fileNumber,
                                                "[" + name + ", (" + nBytes +
                                                " bytes) " +
                                                dateFormat.format(currentTime) +
                                                "]");
 
       final StringBuffer row = new StringBuffer(100);
-      row.append(fileName);
+      row.append(fileNumber);
       row.append("          ");
       row.append(name);
       if (nBytes < 100000) {
@@ -199,10 +200,10 @@ class Agent implements Runnable {
       pb.append("\n");
       // If less than 5% binary?
       if ((bin_counter / nBytes) < .05) {
-        mJBroFuzz.getFileHandler().writeSnifFile(fileName + ".txt", sb.toString());
+        FileHandler.writeSnifFile(fileNumber, sb.toString());
       }
       else {
-        mJBroFuzz.getFileHandler().writeSnifFile(fileName + ".txt", pb.toString());
+        FileHandler.writeSnifFile(fileNumber, pb.toString());
       }
     }
   }
