@@ -64,6 +64,9 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   // The directory panel that needs to update the line number
   private JPanel directoryPanel;
 
+  // The session count counting how many times start has been hit
+  private int session;
+
   /**
    * The constructor for the Web Directory Panel. This constructor spawns the
    * main panel involving web directories.
@@ -73,6 +76,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   public WebDirectoriesPanel(FrameWindow m) {
     super(null, true);
     this.m = m;
+    session = 0;
 
     // Define the directory JPanel
     directoryPanel = new JPanel();
@@ -85,7 +89,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     // Define the target JPanel
     JPanel targetPanel = new JPanel();
     targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Target URI"),
+      createTitledBorder(" Target URI (http/https) "),
                           BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     targetPanel.setBounds(10, 20, 500, 60);
     add(targetPanel);
@@ -267,7 +271,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   }
 
   /**
-   * {@todo Load a file of directories from somewhere}
+   * @todo Load a file of directories from somewhere}
    */
   /**
    * Method triggered when the start button is pressed.
@@ -277,6 +281,10 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     if (!startButton.isEnabled()) {
       return;
     }
+    // Increment the session number
+    session++;
+    session %= 100;
+
     // UI and Colors
     startButton.setEnabled(false);
     stopButton.setEnabled(true);
@@ -406,7 +414,6 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
       public void actionPerformed(ActionEvent e) {
         area.removeRowSelectionInterval(0,area.getRowCount() - 1);
         int [] a = area.getSelectedRows();
-        System.out.println(a.length);
         StringBuffer s = new StringBuffer() ;
         for(int i = 0; i < a.length ; i++) {
           TableSorter ts = (TableSorter) area.getModel();
@@ -430,7 +437,6 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
         Browser.init();
         String url = (String) area.getValueAt(area.getSelectedRow() ,
                      1 % area.getColumnCount());
-        System.out.println(url);
         try {
           Browser.displayURL(url);
         }
@@ -458,6 +464,18 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     });
   }
 
-
-
+  /**
+   * Get the session number. This number represents the number of times the
+   * start button has been hit.
+   *
+   * @return String
+   */
+  public String getSessionNumber() {
+    String s = "";
+    if(session < 10) {
+      s += "0";
+    }
+    s += session;
+    return s;
+  }
 }

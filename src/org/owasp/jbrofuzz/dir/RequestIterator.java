@@ -26,7 +26,6 @@
 package org.owasp.jbrofuzz.dir;
 
 import java.io.*;
-import java.net.*;
 
 import java.nio.charset.*;
 
@@ -34,7 +33,13 @@ import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.util.*;
 import org.apache.commons.httpclient.methods.*;
 import org.apache.commons.httpclient.params.*;
+
+import org.apache.commons.httpclient.contrib.ssl.*;
+import org.apache.commons.httpclient.protocol.*;
+
 import org.owasp.jbrofuzz.ui.*;
+import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>Class for generating the recursive directory requests.</p>
  *
@@ -51,7 +56,7 @@ public class RequestIterator {
   // The vector of responses that will come back
   private String[] responses;
   // The boolean to see if the iterator has paused
-  private boolean paused, stopped;
+  private boolean stopped;
   // The integer of the current request count
   private int i;
   // The port on which directory enumeration is taking place
@@ -64,6 +69,7 @@ public class RequestIterator {
    * @param m FrameWindow
    * @param url String
    * @param directories String
+   * @param port int
    */
   public RequestIterator(FrameWindow m, String url, String directories,
                          int port) {
@@ -74,6 +80,10 @@ public class RequestIterator {
     this.responses = new String[directories.length()];
     this.stopped = false;
     i = 0;
+
+    // Allow for self-signed certificates by
+    Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
+    Protocol.registerProtocol("https", easyhttps);
   }
 
   /**
@@ -139,14 +149,11 @@ public class RequestIterator {
           else {
             responses[i] += "No\n";
           }
-
-
         }
         // If no ok response has come back just append comments and scripts
         else {
           responses[i] += "No\n";
           responses[i] += "No\n";
-
         }
       }
       catch (HttpException e) {
@@ -154,37 +161,47 @@ public class RequestIterator {
         responses[i] += currentURI + "\n";
         responses[i] += "000" + "\n";
         responses[i] += "Fatal protocol violation" + "\n";
-        responses[i] += "\n";
-        responses[i] += "\n";
+        responses[i] += " \n";
+        responses[i] += " \n";
       }
       catch (IOException e) {
         responses[i] = i + "\n";
         responses[i] += currentURI + "\n";
         responses[i] += "000" + "\n";
         responses[i] += "Fatal transport error" + "\n";
-        responses[i] += "\n";
-        responses[i] += "\n";
+        responses[i] += " \n";
+        responses[i] += " \n";
+        e.printStackTrace() ;
       }
       finally {
         method.releaseConnection();
       }
+      // Add a row to the displaying table
       m.getWebDirectoriesPanel().addRow(responses[i]);
+      // Create a String to be written to file
+      String outToFile = Time.dateAndTime();
+      String [] tempArray = responses[i].split("\n");
+      for(int m = 0; m < tempArray.length; m++) {
+        outToFile += "," + tempArray[m];
+      }
+      // Write the file
+      FileHandler.writeWebDirFile(m.getWebDirectoriesPanel().getSessionNumber(),
+                                  outToFile);
     }
   }
 
+  /**
+   * Stop the Request Iterator, if it currently running.
+   */
   public void stop() {
     stopped = true;
   }
 
-  public void pause() {
-    paused = true;
-  }
-
+  /**
+   * Check to see if the current Request Iterator is stopped.
+   * @return boolean
+   */
   public boolean isStopped() {
     return stopped;
-  }
-
-  public boolean isPaused() {
-    return paused;
   }
 }

@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML><!--JBuilder QuickDoc-->
+<HEAD>
+<TITLE>Class org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory</TITLE><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+</HEAD>
+<BODY>
+
+<H2>
+<FONT SIZE="-1">org.apache.commons.httpclient.contrib.ssl</FONT>
+<BR>Class EasySSLProtocolSocketFactory</H2>
+<DL>
+<DT>public class <B>EasySSLProtocolSocketFactory</B><DT>implements org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory
+</DL>
+<DL><DD><p> EasySSLProtocolSocketFactory can be used to creats SSL <A HREF="Socket">Socket</A>s that accept self-signed certificates. </p> <p> This socket factory SHOULD NOT be used for productive systems due to security reasons, unless it is a concious decision and you are perfectly aware of security implications of accepting self-signed certificates </p> <p> Example of using custom protocol socket factory for a specific host: <pre>
+Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
+HttpClient client = new HttpClient();
+client.getHostConfiguration().setHost("localhost", 443, easyhttps);
+// use relative url only
+GetMethod httpget = new GetMethod("/");
+client.executeMethod(httpget);
+</pre> </p> <p> Example of using custom protocol socket factory per default instead of the standard one: <pre>
+Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
+Protocol.registerProtocol("https", easyhttps);
+HttpClient client = new HttpClient();
+GetMethod httpget = new GetMethod("https://localhost/");
+client.executeMethod(httpget);
+</pre> </p><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Author:</B><DD><a href="mailto:oleg -at- ural.ru">Oleg Kalnichevski</a> <p> DISCLAIMER: HttpClient developers DO NOT actively support this component. The component is provided as a reference material, which may be inappropriate for use without additional customization. </p></DD>
+</DL>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF"><TD COLSPAN=1><FONT SIZE="+2">
+<B>Field Detail</B>
+</FONT></TD></TR></TABLE>
+
+<A NAME="LOG"></A>
+
+<H3>LOG</H3>
+<PRE>
+private static final org.apache.commons.logging.Log <B>LOG</B></PRE>
+<DL><DD>Log object for this class.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF"><TD COLSPAN=1><FONT SIZE="+2">
+<B>Constructor Detail</B>
+</FONT></TD></TR></TABLE>
+
+<A NAME="EasySSLProtocolSocketFactory()"></A>
+
+<H3>EasySSLProtocolSocketFactory</H3>
+<PRE>
+public <B>EasySSLProtocolSocketFactory</B>()</PRE>
+<DL><DD>Constructor for EasySSLProtocolSocketFactory.<DL><DD></DD></DL></DD>
+</DL>
+<DL></DL>
+<HR>
+
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF"><TD COLSPAN=1><FONT SIZE="+2">
+<B>Method Detail</B>
+</FONT></TD></TR></TABLE>
+
+<A NAME="createSocket(java.lang.String, int, java.net.InetAddress, int)"></A>
+
+<H3>createSocket</H3>
+<PRE>
+public java.net.Socket <B>createSocket</B>(java.lang.String&nbsp;host,
+                                    int&nbsp;port,
+                                    java.net.InetAddress&nbsp;clientHost,
+                                    int&nbsp;clientPort)</PRE>
+<DL><DD><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>SecureProtocolSocketFactory#createSocket(java.lang.String,int,java.net.InetAddress,int)</DD>
+</DL>
+<HR>
+
+<A NAME="createSocket(java.lang.String, int, java.net.InetAddress, int, org.apache.commons.httpclient.params.HttpConnectionParams)"></A>
+
+<H3>createSocket</H3>
+<PRE>
+public java.net.Socket <B>createSocket</B>(java.lang.String&nbsp;host,
+                                    int&nbsp;port,
+                                    java.net.InetAddress&nbsp;localAddress,
+                                    int&nbsp;localPort,
+                                    org.apache.commons.httpclient.params.HttpConnectionParams&nbsp;params)</PRE>
+<DL><DD>Attempts to get a new socket connection to the given host within the given time limit. <p> To circumvent the limitations of older JREs that do not support connect timeout a controller thread is executed. The controller thread attempts to create a new socket within the given limit of time. If socket constructor does not return until the timeout expires, the controller terminates and throws an <A HREF="ConnectTimeoutException">ConnectTimeoutException</A> </p><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>Parameters:</B><DD><CODE>host</CODE> - the host name/IP</DD>
+<DD><CODE>port</CODE> - the port on the host</DD>
+<DD><CODE>clientHost</CODE> - the local host name/IP to bind the socket to</DD>
+<DD><CODE>clientPort</CODE> - the port on the local machine</DD>
+<DD><CODE>params</CODE> - <A HREF="HttpConnectionParams Http connection parameters">Http connection parameters</A></DD>
+<DT><B>Returns:</B><DD>Socket a new socket</DD>
+<DT><B>Throws:</B><DD><CODE>IOException</CODE> - if an I/O error occurs while creating the socket</DD>
+<DD><CODE>UnknownHostException</CODE> - if the IP address of the host cannot be determined</DD>
+</DL>
+<HR>
+
+<A NAME="createSocket(java.lang.String, int)"></A>
+
+<H3>createSocket</H3>
+<PRE>
+public java.net.Socket <B>createSocket</B>(java.lang.String&nbsp;host,
+                                    int&nbsp;port)</PRE>
+<DL><DD><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>SecureProtocolSocketFactory#createSocket(java.lang.String,int)</DD>
+</DL>
+<HR>
+
+<A NAME="createSocket(java.net.Socket, java.lang.String, int, boolean)"></A>
+
+<H3>createSocket</H3>
+<PRE>
+public java.net.Socket <B>createSocket</B>(java.net.Socket&nbsp;socket,
+                                    java.lang.String&nbsp;host,
+                                    int&nbsp;port,
+                                    boolean&nbsp;autoClose)</PRE>
+<DL><DD><DL><DD></DD></DL></DD>
+</DL>
+<DL><DT><B>See Also:</B><DD>SecureProtocolSocketFactory#createSocket(java.net.Socket,java.lang.String,int,boolean)</DD>
+</DL>
+<HR>
+
+</BODY>
+</HTML>

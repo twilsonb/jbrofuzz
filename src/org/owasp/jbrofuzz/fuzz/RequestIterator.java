@@ -28,6 +28,7 @@ package org.owasp.jbrofuzz.fuzz;
 import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.fuzz.tcp.*;
 import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.io.*;
 /**
  * <p>Title: Java Bro Fuzzer</p>
  *
@@ -73,12 +74,7 @@ public class RequestIterator {
    */
   public RequestIterator(JBroFuzz mJBroFuzz, StringBuffer request, int start,
                          int finish, String type) {
-    /**
-     * @todo Change the way a file while fuzzing gets created, as if you
-     * add to generators of the same type, the file data gets appended.
-     * Example: two binary generators of the same length will append data to the
-     * same file.
-     */
+
     this.mJBroFuzz = mJBroFuzz;
     this.request = request;
     this.type = type;
@@ -185,66 +181,71 @@ public class RequestIterator {
     String port = mJBroFuzz.getFrameWindow().getFuzzingPanel().getPortText();
     StringBuffer stout = this.request;
 
-    // Get the counter value to generate unique file-names
-    int counter = mJBroFuzz.getFrameWindow().getFuzzingPanel().getFuzzCount();
     // If a single request has been specified...
     if (type.equals("ZER")) {
-      String fl = "jbrofuzz-session-" + counter + "-1-1.txt";
 
-      mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(Format.HD1);
-      mJBroFuzz.getFileHandler().writeFuzzFile(fl, Format.HD1);
-      String r = "Request: " + target + "Port: " + port + "\r\n" + stout;
+      final String filename = mJBroFuzz.getFrameWindow().getFuzzingPanel().
+                              getCounter(false);
+      final String header =
+        "-----JBroFuzz------Start--(1 of 1)--[" + filename + "]----\n" +
+        "Request: " + target + " Port: " + port + "\n" + stout;
+      final String footer =
+        "\n-----JBroFuzz------End----(1 of 1)--[" + filename + "]----\n";
 
-      mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(r);
-      mJBroFuzz.getFileHandler().writeFuzzFile(fl, r);
+      mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(header);
+      FileHandler.writeFuzzFile(header, filename);
 
       Connection noFuzzingConnection = new Connection(target, port, stout);
       String t = "\nReply:\r\n" + noFuzzingConnection.getReply();
 
       mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(t);
-      mJBroFuzz.getFileHandler().writeFuzzFile(fl, t);
+      FileHandler.writeFuzzFile(t, filename);
 
-      mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(Format.FT1);
-      mJBroFuzz.getFileHandler().writeFuzzFile(fl, Format.FT1);
+      mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(footer);
+      FileHandler.writeFuzzFile(
+        footer,
+        mJBroFuzz.getFrameWindow().getFuzzingPanel().getCounter(true));
     }
+    // If multiple requests have been specified...
     else {
-
       // Skip the first request
       stout = getNext();
       while ((!("".equals(stout.toString()))) && (!(generatorStopped))) {
 
-        String fk = "jbrofuzz-session-" + counter + "-" + getCurrentRequest() +
-                    "-" + getTotalRequest() + ".txt";
+        String filename = mJBroFuzz.getFrameWindow().getFuzzingPanel().
+                          getCounter(false);
 
-        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(Format.HDS +
-          getCurrentRequest() + "-" + getTotalRequest() + Format.FTS);
+        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(
+          "\n-----JBroFuzz------Start--(" + currentValue + "-" + maxValue + ")--[" + filename +
+          "]----\n");
+        FileHandler.writeFuzzFile(
+          "\n-----JBroFuzz------Start--(" + currentValue + "-" + maxValue + ")--[" + filename +
+          "]----\n",
+          filename);
 
-        mJBroFuzz.getFileHandler().writeFuzzFile(fk,
-                                                 Format.HDS + getCurrentRequest() +
-                                                 "-" + getTotalRequest() +
-                                                 Format.FTS);
-
-        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText("Request: " +
-          target + " Port: " + port + "\n" + stout + "\r\n");
-        mJBroFuzz.getFileHandler().writeFuzzFile(fk,
-                                                 "Request: " + target + " Port: " +
-                                                 port + "\r\n" + stout + "\r\n");
+        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(
+          "Request: " + target + " Port: " + port + "\n" + stout + "\n");
+        FileHandler.writeFuzzFile(
+          "Request: " + target + " Port: " + port + "\r\n" + stout + "\n",
+          filename);
 
         Connection con = new Connection(target, port, stout);
 
         final String s = con.getReply();
 
         mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(
-          "\nReply:\r\n" + s);
-        mJBroFuzz.getFileHandler().writeFuzzFile(fk, "\nReply:\r\n" + s);
+          "\nReply:\n" + s);
+        FileHandler.writeFuzzFile(
+          "\nReply:\n" + s, filename);
 
-        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(Format.HDE +
-          getCurrentRequest() + "-" + getTotalRequest() + Format.FTS);
+        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(
+          "\n-----JBroFuzz------End----(" + currentValue + "-" + maxValue + ")--[" + filename +
+          "]----\n");
 
-        mJBroFuzz.getFileHandler().writeFuzzFile(fk,
-                                                 Format.HDE + getCurrentRequest() +
-                                                 "-" + getTotalRequest() +
-                                                 Format.FTS);
+        FileHandler.writeFuzzFile(
+          "\n-----JBroFuzz------End----(" + currentValue + "-" + maxValue + ")--[" + filename +
+          "]----\n",
+          mJBroFuzz.getFrameWindow().getFuzzingPanel().getCounter(true));
 
         stout = getNext();
       }
@@ -261,27 +262,10 @@ public class RequestIterator {
   }
 
   /**
-   * Return the total number of iterations that the generator will go through.
-   * @return String
-   */
-  public String getTotalRequest() {
-    return Long.toString(maxValue, 10);
-  }
-
-  /**
-   * Return the current iteration that the generator is on.
-   * @return String
-   */
-  public String getCurrentRequest() {
-    return Long.toString(currentValue, 10);
-  }
-
-  /**
    * Return the main constructor object.
    * @return JBroFuzz
    */
   public JBroFuzz getJBroFuzz() {
     return mJBroFuzz;
   }
-
 }

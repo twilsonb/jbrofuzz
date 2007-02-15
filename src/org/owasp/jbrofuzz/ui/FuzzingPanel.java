@@ -60,7 +60,7 @@ public class FuzzingPanel extends JPanel {
   // The swing worker used when the button "fuzz" is pressed
   private SwingWorker3 worker;
   // A counter for the number of times fuzz has been clicked
-  private int counter;
+  private int counter, session;
   // The names of the columns within the table of generators
   private static final String[] COLUMNNAMES = {
                                               "Generator", "Start", "End"};
@@ -77,8 +77,8 @@ public class FuzzingPanel extends JPanel {
     setLayout(null);
 
     this.m = m;
-    counter = 0;
-
+    counter = 1;
+    session = 0;
 
     // The target panel
     JPanel targetPanel = new JPanel();
@@ -270,7 +270,7 @@ public class FuzzingPanel extends JPanel {
     add(outputPanel);
 
     // Some value defaults
-    target.setText("http://192.168.1.254");
+    target.setText("http://localhost");
     port.setText("80");
     message.setText("GET /index.html HTTP/1.0\r\n" + "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n" + "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n" +
       "Accept-Language: en-gb,en;q=0.5\r\n" +
@@ -305,15 +305,15 @@ public class FuzzingPanel extends JPanel {
                                     JOptionPane.INFORMATION_MESSAGE);
       return;
     }
-    // Increment the counter
-    counter++;
-    counter %= 100;
+    // Increment the session and reset the counter
+    session++;
+    counter = 1;
     // Update the border of the output panel
     outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output (Last 1000 Lines)  " + "Logging in folder (" +
                          Format.DATE +
                          // getJBroFuzz().getVersion().getDate() +
-                         ") Session " + counter),
+                         ") Session " + session),
                           BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
     // Clear the text of the output pane
@@ -411,14 +411,6 @@ public class FuzzingPanel extends JPanel {
   }
 
   /**
-   * <p>Get the number of times that fuzzing has been attempted.</p>
-   * @return int
-   */
-  public int getFuzzCount() {
-    return counter;
-  }
-
-  /**
    * <p>Set the output text to contain the specified String, by appending that
    * String to the already present output String value. If the total number of
    * lines exceeds 1000, proceed to clear the original String value present
@@ -487,7 +479,8 @@ public class FuzzingPanel extends JPanel {
   }
 
   /**
-   * <p>Method for removing a generator.</p>
+   * <p>Method for removing a generator. This method operates by removing a
+   * row from the corresponding table model of the generator table.</p>
    */
   public void generatorRemoveButton() {
     int rows = generatorTable.getRowCount();
@@ -530,15 +523,6 @@ public class FuzzingPanel extends JPanel {
   }
 
   /**
-   * Access the MenuBar being used in this window
-   * @return FrameMenuBar
-   *
-     public FrameMenuBar getFrameMenuBar() {
-    return m.getFrameMenuBar();
-     }
-   */
-
-  /**
    * Access the main object that launches and is responsible for the application.
    * @return JBroFuzz
    */
@@ -552,6 +536,39 @@ public class FuzzingPanel extends JPanel {
    */
   public FrameWindow getFrameWindow() {
     return m;
+  }
+
+  /**
+   * <p>Method for returning the counter held within the Sniffing Panel which
+   * is responsible for counting the number of requests having been made. This
+   * method is used for generating unique sequential file name and row
+   * counts.</p>
+   *
+   * @param newCount boolean Increment the counter by 1
+   * @return String
+   */
+  public String getCounter(boolean newCount) {
+    String s = "";
+    // Integrity checks and loop calls...
+    if ((counter < 0) || (counter > 1000000)) {      counter = 1;    }
+    if ((session < 0) || (session > 100)) {      session = 1;    }
+
+    // Append zeros to the session [0 - 99]
+    if(session < 10) {      s += "0";    }
+    s += session + "-";
+    // Append zeros to the counter [0 - 999999]
+    if (counter < 100000) {      s += "0";    }
+    if (counter < 10000) {      s += "0";    }
+    if (counter < 1000) {      s += "0";    }
+    if (counter < 100) {      s += "0";    }
+    if (counter < 10) {      s += "0";    }
+    s += counter;
+
+    if(newCount) {
+      counter++;
+    }
+
+    return s;
   }
 
 }

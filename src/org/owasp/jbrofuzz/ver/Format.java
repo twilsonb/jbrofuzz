@@ -40,30 +40,6 @@ import org.owasp.jbrofuzz.*;
  */
 public class Format {
   /**
-   * <p>The header used when writting a single fuzz request.</p>
-   */
-  public static final String HD1 =
-    "\n-----JBroFuzz------Start--(1 of 1)------\n";
-  /**
-   * <p>The footer used when writting a single fuzz request.</p>
-   */
-  public static final String FT1 =
-    "\n-----JBroFuzz------End----(1 of 1)------\n";
-  /**
-   * <p>The header used when writting any fuzz request (other than a single
-   * request).</p>
-   */
-  public static final String HDS = "\n-----JBroFuzz------Start--(";
-  /**
-   * <p>The footer used when writting any fuzz request (other than a single
-   * request).</p>
-   */
-  public static final String HDE = "\n-----JBroFuzz------End----(";
-  /**
-   * <p>The end of the String used to complete both HDS and HDE Strings.</p>
-   */
-  public static final String FTS = ")------\n";
-  /**
    * <p>The system info providing console information and potentially useful
    * for debugging under different JVMs.</p>
    *
@@ -203,11 +179,12 @@ public class Format {
    * <p>The text shown in the disclaimer box.</p>
    */
   public static final String DISCLAIMER =
-    "You should only use this software to test the security\n" +
-    "of your own network protocol application or those you are authorised\n" +
-    "to do so. The authors of JBroFuzz take no legal or other\n" +
-    "responsibility for any problems that might occur while running\n" +
-    "JBroFuzz on a particular application or network protocol.\n";
+    "You should only use this software to test the security of\n" +
+    "your own network protocol application or those you are\n" +
+    "authorised to do so. The authors of JBroFuzz take no\n" +
+    "legal or other responsibility for any problems that\n" +
+    "might occur while running JBroFuzz on a\n" +
+    "particular application or network protocol.\n";
 //
 // Variables used to define the current date as reference
 //

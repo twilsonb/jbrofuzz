@@ -39,7 +39,6 @@ import org.owasp.jbrofuzz.ver.*;
  * @version 0.5
  */
 public class FileHandler {
-
   private static FrameWindow g;
   // The current file used for creation
   private static File currentFile;
@@ -48,23 +47,28 @@ public class FileHandler {
   // The snif directory of operation
   private static File snifDirectory;
   // The info directory of operation
-  private static File systemDirectory;
+  private static File webEnumDirectory;
   // A constant for counting file IO errors
   private static int errors;
   // Global constants
   private static final int FUZZ_FILE = 0;
   private static final int SNIF_FILE = 1;
+  private static final int WEBD_FILE = 2;
   // The date from the version
   private static String runningDate;
+  // A counter for the number of sessions being run to generate a file
+  private static int session;
   /**
    * <p>Constructor responsible for generating the necessary directories and
    * files for the correct operation of JBroFuzz.</p>
    * @param g MainWindow
    */
   public FileHandler(FrameWindow g) {
-    this.g = g;
+    FileHandler.g = g;
     // Set the number of errors that can potentially occur
     errors = 0;
+    // Set the current working session
+    session = 1;
     // Get the date
     runningDate = Format.DATE;
     //g.getJBroFuzz().getVersion().getDate();
@@ -81,12 +85,9 @@ public class FileHandler {
                              File.separator + "sniffing" + File.separator +
                              runningDate);
 
-    systemDirectory = new File(baseDir + File.separator + "jbrofuzz" +
-                               File.separator + "system");
-
-    /**
-     * @todo 1. Use the system directory to write a web dir log...
-     */
+    webEnumDirectory = new File(baseDir + File.separator + "jbrofuzz" +
+                                File.separator + "web-dir" + File.separator +
+                                runningDate);
 
     int failedDirCounter = 0;
 
@@ -105,10 +106,10 @@ public class FileHandler {
       }
 
     }
-    if (!systemDirectory.exists()) {
-      boolean success = systemDirectory.mkdirs();
+    if (!webEnumDirectory.exists()) {
+      boolean success = webEnumDirectory.mkdirs();
       if (!success) {
-        g.log("Failed to create \"system\" directory");
+        g.log("Failed to create \"web-dir\" directory");
         failedDirCounter++;
       }
     }
@@ -237,36 +238,75 @@ public class FileHandler {
         errors++;
       }
     }
+
+    if (fileType == FileHandler.WEBD_FILE) {
+      try {
+        if (errors < 3) {
+          currentFile = new File(webEnumDirectory, fileName);
+          if (!currentFile.exists()) {
+            boolean success = currentFile.createNewFile();
+            if (!success) {
+              g.log("Failed to create file");
+            }
+          }
+          appendFile(currentFile, content);
+        }
+      }
+      catch (IOException e) {
+        g.log("Cannot Create File" + "\n" + fileName + " A File Error Occured");
+        errors++;
+      }
+    }
   }
 
   /**
-   * <p>Method for writting a new fuzz file under the created fuzzing directory.
-   * The file name and content is specified as a string input to the method.
+   * <p>Method for writting a new fuzz file within the created fuzzing
+   * directory. The content of the file is specified as a String input to the
+   * method.
    * The location where this file is saved is within the directory jbrofuzz\
    * fuzzing\[session date]\ . </p>
+   * <p>The two long values being passed are responsible for the file name.</p>
    * <p>If the file exists, the content is simply appended to the end of the
    * file.</p>
    *
-   * @param name String The file name
-   * @param content String The content of the file
+   * @param content String
+   * @param name String
    */
-  public static void writeFuzzFile(String name, String content) {
-    createFile(name, content, FileHandler.FUZZ_FILE);
+  public static void writeFuzzFile(String content, String name) {
+    // Actually create the file
+    createFile(name + ".txt", content, FileHandler.FUZZ_FILE);
   }
 
   /**
-   * <p>Method for writting a new snif file under the created sniffing
+   * <p>Method for writting a new snif file within the created sniffing
    * directory. The file name and content is specified as a string input to the
    * method. The location where this file is saved is within the directory
    * jbrofuzz\sniffing\[session date]\ . </p>
    * <p>If the file exists, the content is simply appended to the end of the
    * file.</p>
    *
-   * @param name String The file name
-   * @param content String The content of the file
+   * @param name String
+   * @param content String
    */
   public static void writeSnifFile(String name, String content) {
-    createFile(name, content, FileHandler.SNIF_FILE);
+    // Actually create the file
+    createFile(name + ".txt", content, FileHandler.SNIF_FILE);
+  }
+
+  /**
+   * <p>Method for writting a new web directories file wtin the created
+   * web-dir directory. The file name and content is specified as a string
+   * input to the method. </p>
+   * <p>The location where this file is saved is within the directory
+   * jbrofuzz\web-dir\[session date]\ . </p>
+   * <p>If the file exists, the content is simply appended to the end of the
+   * file.</p>
+   *
+   * @param name String The name of the file
+   * @param content String The content to be written to disk
+   */
+  public static void writeWebDirFile(String name, String content) {
+    createFile(name + ".csv",content, FileHandler.WEBD_FILE);
   }
 
   /**
