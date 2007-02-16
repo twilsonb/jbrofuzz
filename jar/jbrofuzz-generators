@@ -1,4 +1,11 @@
-# JBroFuzz Generator Definitions for version 0.4
+# JBroFuzz Generator Definitions for version 0.5
+#
+# -----------------------------------------------------------------------------
+# Pre conditions
+# -----------------------------------------------------------------------------
+#
+# Maximum number of lines		1024
+# Maximum line length			256
 #
 # -----------------------------------------------------------------------------
 # A bit of (fuzzing) theory 
@@ -22,7 +29,7 @@
 # particular part of the request against the given value list. 
 #
 # -----------------------------------------------------------------------------
-# What JBroFuzz-0.4 supports (what you change in this file and will work)
+# What JBroFuzz-0.5 supports (what you change in this file and will work)
 # -----------------------------------------------------------------------------
 #
 # This version supports the alteration/addition of replasive generators as seen 
@@ -67,14 +74,14 @@
 # Will produce a line of 100 A's
 #
 # -----------------------------------------------------------------------------
-# What JBroFuzz-0.4 does not support (file changes that will NOT work)
+# What JBroFuzz-0.5 does not support (file changes that will NOT work)
 # -----------------------------------------------------------------------------
 #
 # This version does not support the addition/alteration
 # of recursive generators (starting with R)
 #
 # Copyright (C) 2007 subere (at) uncon org
-# Version 0.4
+# Version 0.5
 #
 
 P:INT:Integer Overflows:12
