@@ -42,8 +42,6 @@ public class Constructor {
   final private JBroFuzz mJBroFuzz;
   private ArrayList generators;
 
-  private static final String GEN_FILE = "jbrofuzz-generators";
-
   /**
    * <p>The main constructor responsible for piecing together a definitions
    * class holding all the generators.</p>
@@ -53,7 +51,7 @@ public class Constructor {
   public Constructor(JBroFuzz mJBroFuzz) {
     this.mJBroFuzz = mJBroFuzz;
     generators = new ArrayList();
-    Vector fileInput = FileHandler.readGenerators(GEN_FILE);
+    Vector fileInput = FileHandler.readGenerators(Format.FILE_GEN);
     int len = fileInput.size();
 
     // If the length is zero define the generators from the Format default list

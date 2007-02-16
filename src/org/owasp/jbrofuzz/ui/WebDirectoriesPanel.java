@@ -32,6 +32,8 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import org.owasp.jbrofuzz.dir.*;
+import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.io.*;
 import org.owasp.jbrofuzz.ui.util.*;
 
 import com.Ostermiller.util.*;
@@ -253,7 +255,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
 
     targetText.setText("http://localhost");
     portText.setText("80");
-    directoryText.setText("images\nfuzz\nrss\nlife\nlive\nli ve\n");
+    StringBuffer s = FileHandler.readDirectories(Format.FILE_DIR);
+    directoryText.setText(s.toString());
     directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Total Directories to test: "
                          + directoryText.getLineCount() + " "),

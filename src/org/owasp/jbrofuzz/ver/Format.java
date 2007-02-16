@@ -40,6 +40,18 @@ import org.owasp.jbrofuzz.*;
  */
 public class Format {
   /**
+   * The generators file name, expected to be read from within the directory
+   * from which JBroFuzz gets launched.
+   */
+  public static final String FILE_GEN = "jar\\jbrofuzz-generators";
+
+  /**
+   * The directories file name, expected to be read from within the directory
+   * from which JBroFuzz gets launched.
+   */
+  public static final String FILE_DIR = "jar\\jbrofuzz-directories";
+
+  /**
    * <p>The system info providing console information and potentially useful
    * for debugging under different JVMs.</p>
    *
@@ -66,6 +78,17 @@ public class Format {
                                            "\r\n" + "Architecture: " +
                                            System.getProperty("os.arch") +
                                            "\r\n";
+
+  /**
+   * <p> The list of directories used if a file is not found to load the
+   * directories from.</p>
+   */
+  public static final String DEFAULT_DIRECTORIES =
+    "images\n" +
+    ".svn\n" +
+    "fuzz\n" +
+    "rss\n" +
+    "live\n";
 
   /**
    * <p>The list of generators used if a file is not found to load the generators

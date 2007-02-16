@@ -334,9 +334,72 @@ public class FileHandler {
       in.close();
     }
     catch (IOException e1) {
-      g.log("Generator file: " + generatorFile + " could not be found");
+      if(g != null) {
+        g.log("Generator file: " + generatorFile + " could not be found");
+      }
     }
     file.trimToSize();
     return file;
   }
+
+  /**
+   * <p>Method for returning the contents of a directories file as a Vector
+   * @param directoriesFile String
+   * @return Vector
+   */
+  public static StringBuffer readDirectories(String directoriesFile) {
+    final int maxLines = 102350;
+    final int maxLineLength = 256;
+    int line_counter = 0;
+    Vector file = new Vector();
+    try {
+      BufferedReader in = new BufferedReader(new FileReader(directoriesFile));
+      String line = in.readLine();
+      line_counter++;
+      // Check for max lines and line lengths
+      while ((line != null) && (line_counter < maxLines)) {
+        if (line.length() > maxLineLength) {
+          line = line.substring(0, maxLineLength);
+        }
+        if (! line.startsWith("#")) {
+          file.add(line);
+          line_counter++;
+        }
+        line = in.readLine();
+      }
+      in.close();
+    }
+    catch (IOException e1) {
+      if( g != null) {
+        g.log("Directories file: " + directoriesFile + " could not be found");
+      }
+    }
+
+    file.trimToSize();
+    int len = file.size() ;
+
+    // If the length is zero define the generators from the Format default list
+    if (len == 0) {
+      if( g != null) {
+        g.log("Loading default generator list");
+      }
+      String[] defaultArray = Format.DEFAULT_DIRECTORIES.split("\n");
+      len = defaultArray.length;
+      file.setSize(len);
+      for (int x = 0; x < len; x++) {
+        file.add(x, defaultArray[x] + "\n");
+      }
+    }
+
+    StringBuffer output = new StringBuffer();
+    for(int x = 0; x < file.size() ; x++) {
+      String s = (String) file.elementAt(x);
+      if(s != null) {
+        output.append(s + "\n");
+      }
+    }
+    return output;
+  }
+
 }
+
