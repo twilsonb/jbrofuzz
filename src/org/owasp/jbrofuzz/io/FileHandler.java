@@ -71,7 +71,6 @@ public class FileHandler {
     session = 1;
     // Get the date
     runningDate = Format.DATE;
-    //g.getJBroFuzz().getVersion().getDate();
 
     String baseDir = System.getProperty("user.dir");
     // try {
@@ -381,13 +380,13 @@ public class FileHandler {
     // If the length is zero define the generators from the Format default list
     if (len == 0) {
       if( g != null) {
-        g.log("Loading default generator list");
+        g.log("Loading default directories list");
       }
       String[] defaultArray = Format.DEFAULT_DIRECTORIES.split("\n");
       len = defaultArray.length;
       file.setSize(len);
       for (int x = 0; x < len; x++) {
-        file.add(x, defaultArray[x] + "\n");
+        file.add(x, defaultArray[x]);
       }
     }
 

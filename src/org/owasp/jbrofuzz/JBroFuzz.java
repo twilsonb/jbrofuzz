@@ -30,6 +30,7 @@ import org.owasp.jbrofuzz.io.*;
 import org.owasp.jbrofuzz.snif.tcp.*;
 import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.dir.*;
 /**
  * @todo Check to see what happens when in fuzzing a socket has been triggered
  * which cannot connect and then a different URL is placed as part of the socket
@@ -53,10 +54,11 @@ public class JBroFuzz {
   private static FrameWindow mainwindow;
   private static FileHandler filehandler;
   private static Constructor constructor;
+  private static DConstructor dconstructor;
   //
   private ConnectionListener listener;
   /**
-   * <p>The main constructor object, instantiating a MainWindow, a FileHander
+   * <p>The main creation object, instantiating a MainWindow, a FileHander
    * and a Version object. The order in which construction takes place is
    * rather important.</p>
    */
@@ -65,9 +67,9 @@ public class JBroFuzz {
     Format.setLookAndFeel(this);
     // Launch the GUI
     mainwindow = new FrameWindow(this);
-    //
     filehandler = new FileHandler(mainwindow);
     constructor = new Constructor(this);
+    dconstructor = new DConstructor(this);
   }
 
   /**

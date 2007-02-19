@@ -155,7 +155,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
     ResponseOutput response = new ResponseOutput(id, uri, statusCode,
                                                  statusText, comments, scripts);
     dataVector.add(response);
-    fireTableRowsInserted(dataVector.size() - 1, dataVector.size() - 1);
+    fireTableRowsInserted(0, dataVector.size() - 1);
   }
 
   /**
