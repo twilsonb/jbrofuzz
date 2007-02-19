@@ -72,24 +72,52 @@ public class DRequestIterator {
    * @param port int
    */
   public DRequestIterator(FrameWindow m, String url, String directories,
-                         int port) {
+                         String port) {
     this.m = m;
     this.url = url;
+    this.port = 0;
     this.directories = directories.split("\n");
-    this.port = port;
     this.responses = new String[directories.length()];
     this.stopped = false;
     i = 0;
 
-    // Allow for self-signed certificates by
-    Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
-    Protocol.registerProtocol("https", easyhttps);
+    // Check the port
+    try {
+      this.port = Integer.parseInt(port);
+    }
+    catch(NumberFormatException e1) {
+      this.port = 0;
+      m.log("Web Directories Panel: Specify a valid port: \"" + port + "\"");
+    }
+    if((this.port < 1) || (this.port > 65535)) {
+      this.port = 0;
+      m.log("Web Directories Panel: Port has to be between [1 - 65535]");
+    }
+    // Establish the protocols, if the port is valid
+    if(this.port != 0) {
+
+      // For https, allow self-signed certificates
+      if(this.url.startsWith("https://")) {
+        Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), this.port);
+        Protocol.registerProtocol("https", easyhttps);
+      }
+      // For http, just show affection
+      if(this.url.startsWith("http://")) {
+        Protocol easyhttp = new Protocol("http", new DefaultProtocolSocketFactory(), this.port);
+        Protocol.registerProtocol("http", easyhttp);
+      }
+    }
   }
 
   /**
    * Method used for running the request iterator once it has been initialised.
    */
   public void run() {
+    // Check for a valid URL
+    if(url.equalsIgnoreCase("")) {
+      return;
+    }
+
     for (i = 0; i < directories.length; i++) {
       if (stopped) {
         return;
@@ -119,7 +147,10 @@ public class DRequestIterator {
       try {
         responses[i] = i + "\n";
         responses[i] += currentURI + "\n";
-        int statusCode = client.executeMethod(method);
+        int statusCode = 0;
+        //
+        statusCode = client.executeMethod(method);
+        //
         responses[i] += statusCode + "\n";
         responses[i] += method.getStatusText() + "\n";
 
