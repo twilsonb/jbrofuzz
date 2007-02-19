@@ -73,6 +73,9 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   // A buffer array of Strings for caching prior to displaying
   private StringArrayQueue resultsBuffer;
 
+  // The table sorter
+  private TableSorter sorter;
+
   /**
    * The constructor for the Web Directory Panel. This constructor spawns the
    * main panel involving web directories.
@@ -97,7 +100,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     // Define the target JPanel
     JPanel targetPanel = new JPanel();
     targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Target URI (http/https) "),
+      createTitledBorder(" Target URI [HTTP/HTTPS] "),
                           BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     targetPanel.setBounds(10, 20, 500, 60);
     add(targetPanel);
@@ -209,7 +212,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     });
 
     responseTableModel = new WebDirectoriesModel();
-    TableSorter sorter = new TableSorter(responseTableModel);
+    sorter = new TableSorter(responseTableModel);
     responseTable = new JTable(sorter);
     sorter.setTableHeader(responseTable.getTableHeader());
     responseTable.getTableHeader().setToolTipText(
@@ -273,6 +276,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
       createTitledBorder(" Total Directories to test: "
                          + directoryText.getLineCount() + " "),
                              BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+    directoryText.setCaretPosition(0);
   }
   /**
    * <p>Method for returning the main window frame that this tab is attached on.
@@ -292,6 +296,11 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     if (!startButton.isEnabled()) {
       return;
     }
+    //
+    //
+    sorter.removeTableHeader(responseTable.getTableHeader());
+    //
+    //
     // Increment the session number
     session++;
     session %= 100;
@@ -312,13 +321,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
       uri += "/";
     }
     String dirs = directoryText.getText();
-    int port = 0;
-    try {
-      port = Integer.parseInt(portText.getText());
-    }
-    catch (NumberFormatException ex) {
-      m.log("Port has to be between [1 - 65535] in \"Web Directories\" Tab");
-    }
+    String port = portText.getText();
+
     responseTableModel.removeAllRows();
 
     cesg = new DRequestIterator(getFrameWindow(), uri, dirs, port);
@@ -342,6 +346,11 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     if (!stopButton.isEnabled()) {
       return;
     }
+    //
+    //
+    sorter.setTableHeader(responseTable.getTableHeader());
+    //
+    //
     // UI and Colors
     stopButton.setEnabled(false);
     startButton.setEnabled(true);
