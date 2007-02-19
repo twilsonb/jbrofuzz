@@ -32,6 +32,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import org.owasp.jbrofuzz.dir.*;
+import org.owasp.jbrofuzz.util.*;
 import org.owasp.jbrofuzz.ver.*;
 import org.owasp.jbrofuzz.io.*;
 import org.owasp.jbrofuzz.ui.util.*;
@@ -61,13 +62,16 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   private WebDirectoriesModel responseTableModel;
 
   // The request iterator to loop through the directories
-  private RequestIterator cesg;
+  private DRequestIterator cesg;
 
   // The directory panel that needs to update the line number
   private JPanel directoryPanel;
 
   // The session count counting how many times start has been hit
   private int session;
+
+  // A buffer array of Strings for caching prior to displaying
+  private StringArrayQueue resultsBuffer;
 
   /**
    * The constructor for the Web Directory Panel. This constructor spawns the
@@ -79,6 +83,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     super(null, true);
     this.m = m;
     session = 0;
+    // Define the buffer
+    resultsBuffer = new StringArrayQueue(10);
 
     // Define the directory JPanel
     directoryPanel = new JPanel();
@@ -255,14 +261,19 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
 
     targetText.setText("http://localhost");
     portText.setText("80");
-    StringBuffer s = FileHandler.readDirectories(Format.FILE_DIR);
-    directoryText.setText(s.toString());
+  }
+
+  /**
+   * Set the text content of the directories jtextarea.
+   * @param s StringBuffer
+   */
+  public void setDirectoriesText(StringBuffer s) {
+    directoryText.setText(s.toString() );
     directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Total Directories to test: "
                          + directoryText.getLineCount() + " "),
                              BorderFactory.createEmptyBorder(1, 1, 1, 1)));
   }
-
   /**
    * <p>Method for returning the main window frame that this tab is attached on.
    * </p>
@@ -273,9 +284,6 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     return m;
   }
 
-  /**
-   * @todo Load a file of directories from somewhere}
-   */
   /**
    * Method triggered when the start button is pressed.
    */
@@ -313,9 +321,19 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     }
     responseTableModel.removeAllRows();
 
-    cesg = new RequestIterator(getFrameWindow(), uri, dirs, port);
+    cesg = new DRequestIterator(getFrameWindow(), uri, dirs, port);
     cesg.run();
   }
+
+  /**
+   * @todo Check the JTable Sorter...
+   */
+
+  /**
+   * @todo Show these in the error log
+   19-Feb-2007 01:10:55 org.apache.commons.httpclient.auth.AuthChallengeProcessor selectAuthScheme
+   INFO: ntlm authentication scheme selected
+   */
 
   /**
    * <p>Method for stopping the request iterator.</p>
@@ -344,6 +362,14 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
    *
    */
   public void addRow(String s) {
+    // If the buffer if full, add ten rows
+    if(resultsBuffer.isFull()) {
+      //
+    }
+    else {
+      resultsBuffer.push(s);
+    }
+
     String[] inputArray = s.split("\n");
     if(inputArray.length != 6) {
       String error = "Web Directory Error! Cannot fit " + inputArray.length +
@@ -359,6 +385,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
       // Set the last row to be visible
       responseTable.scrollRectToVisible(responseTable.getCellRect(responseTable.
         getRowCount(), 0, true));
+
     }
   }
 
