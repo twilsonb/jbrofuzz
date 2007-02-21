@@ -1,5 +1,5 @@
 /**
- * Base64.java
+ * Base64.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -26,9 +26,9 @@
 package org.owasp.jbrofuzz.util;
 
 /**
- * <p>Class responsible for encoding and decoding a given byte array to a Base64
- * String and vice-versa. The operation of the class is performed by invoking
- * the encode and decode methods.</p>
+ * <p>Class responsible for encoding and decoding a given byte array to a
+ * Base64 String and vice-versa. The operation of the class is performed by
+ * invoking the encode and decode methods.</p>
  *
  * @author subere (at) uncon . org
  * @since 0.1

@@ -1,5 +1,5 @@
 /**
- * SystemLogger.java 0.4
+ * SystemLogger.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -32,11 +32,14 @@ import javax.swing.*;
 
 import org.owasp.jbrofuzz.ver.*;
 /**
+ * The panel holding the system logging information that is part of the main
+ * frame window.
  *
  * @author subere (at) uncon . org
  * @version 0.5
  */
 public class SystemLogger extends JPanel {
+
   // The frame that the sniffing panel is attached
   private FrameWindow m;
   // The JTable that holds all the data
@@ -45,6 +48,7 @@ public class SystemLogger extends JPanel {
   private JButton infoButton;
   // The line count
   private int lineCount;
+
   /**
    * Constructor for the System Logger Panel of the represented as a tab. Only a
    * single instance of this class is constructed.

@@ -60,14 +60,14 @@ public class SniffingPanel extends JPanel {
   private SwingWorker3 worker;
   // The frame that the sniffing panel is attached
   private FrameWindow m;
-  // The JTable that holds all the data
-  // private JTable listTextArea;
   // The table model
   private SniffingTableModel tableModel;
   // The boolean if stop has been pressed
   private boolean stopPressed;
   // The TCP Connection listener
   private ConnectionListener reflector;
+  // The sniffing viewer frame
+  private SniffingViewer vew;
 
   /**
    * <p>Main Constructor for the Sniffing Panel, passing the Main Window
@@ -193,7 +193,7 @@ public class SniffingPanel extends JPanel {
         else {
           int selectedRow = lsm.getMinSelectionIndex();
           String s = tableModel.getValueAt(selectedRow);
-          SniffingViewer vew = new SniffingViewer(getFrameWindow().
+          vew = new SniffingViewer(getFrameWindow().
                                                   getTCPSniffingPanel(), s);
         }
       }
@@ -215,7 +215,7 @@ public class SniffingPanel extends JPanel {
     // The action listener for the start button
     startButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-
+        // Worker, working...
         worker = new SwingWorker3() {
           public Object construct() {
             buttonStart();
@@ -371,13 +371,18 @@ public class SniffingPanel extends JPanel {
    * <p>Method for adding an extra row to the requests / replies JTable
    * @param s String
    */
-  public void addRow(String s) {
-    tableModel.addEmptyRow();
-    int totalRows = tableModel.getRowCount();
-    tableModel.setValueAt(s, totalRows - 1, 0);
-    // Set the last row to be visible
-    listTextArea.scrollRectToVisible(listTextArea.getCellRect(listTextArea.
-      getRowCount(), 0, true));
+  public void addRow(final String s) {
+
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        tableModel.addEmptyRow();
+        int totalRows = tableModel.getRowCount();
+        tableModel.setValueAt(s, totalRows - 1, 0);
+        // Set the last row to be visible
+        listTextArea.scrollRectToVisible(listTextArea.getCellRect(listTextArea.
+          getRowCount(), 0, true));
+      }
+    });
   }
 
   /**

@@ -1,5 +1,5 @@
 /**
- * Format.java 0.4
+ * Format.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -34,22 +34,25 @@ import org.owasp.jbrofuzz.*;
 /**
  * <p>Class responsible for holding the description of a number of static
  * parameters and constants relating to the application.</p>
+ * <p>Typical parameters found in this class include the file names for
+ * the generators and the directories list, user properties.</p>
  *
  * @author subere (at) uncon . org
  * @version 0.5
  */
 public class Format {
+
   /**
    * The generators file name, expected to be read from within the directory
    * from which JBroFuzz gets launched.
    */
-  public static final String FILE_GEN = "jar\\jbrofuzz-generators";
+  public static final String FILE_GEN = "jbrofuzz-generators";
 
   /**
    * The directories file name, expected to be read from within the directory
    * from which JBroFuzz gets launched.
    */
-  public static final String FILE_DIR = "jar\\jbrofuzz-directories";
+  public static final String FILE_DIR = "jbrofuzz-directories";
 
   /**
    * <p>The system info providing console information and potentially useful
@@ -193,11 +196,15 @@ public class Format {
    * <p>The text shown in the about box.</p>
    */
   public static final String ABOUTTEXT = "Java Bro Fuzzer Version:  " + VERSION +
-    "\n" + "Codename:  " + CODENAME + "\n\n" +
-    "JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software\n" +
-    "and you are welcome to redistribute it under the GNU GPL license\n\n" +
-    "Copyright (c) 2007  subere (at) uncon org\n\n" + "Running Under  Java " +
-    System.getProperty("java.version") + "\n";
+                                         "\n" + "Codename:  " + CODENAME +
+                                         "\n\n" +
+                                         "JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software\n" +
+                                         "and you are welcome to redistribute it under the GNU GPL license\n\n" +
+                                         "Copyright (c) 2007  subere (at) uncon org\n\n" +
+                                         "Running Under  Java " +
+                                         System.getProperty("java.version") +
+                                         "\n";
+
   /**
    * <p>The text shown in the disclaimer box.</p>
    */
@@ -208,9 +215,10 @@ public class Format {
     "legal or other responsibility for any problems that\n" +
     "might occur while running JBroFuzz on a\n" +
     "particular application or network protocol.\n";
-//
-// Variables used to define the current date as reference
-//
+
+  //
+  // Variables used to define the current date as reference
+  //
   private static final String DATE_FORMAT = "DDD yyyy-MM-dd HH-mm-ss";
   private static final String ISO_LAN_CODE = "en";
   private static final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT,
@@ -225,8 +233,6 @@ public class Format {
    * win32 o/s and all other.</p>
    *
    * @param mJBroFuzz JBroFuzz
-   * @todo include more o/s specific look and feels, particular focus should be
-   * given on the mac and the com.sun.java.swing.plaf.motif.MotifLookAndFeel.
    */
   public static final void setLookAndFeel(JBroFuzz mJBroFuzz) {
     try {
@@ -238,21 +244,29 @@ public class Format {
       }
     }
     catch (UnsupportedLookAndFeelException e) {
-      mJBroFuzz.getFrameWindow().log("An unsupported look and feel exception was thrown while setting the User Interface Manager");
+      mJBroFuzz.getFrameWindow().log(
+        "An unsupported look and feel exception was thrown while setting the " +
+        "User Interface Manager");
     }
     catch (ClassNotFoundException e) {
-      mJBroFuzz.getFrameWindow().log("A class not found exception was thrown while setting the User Interface Manager");
+      mJBroFuzz.getFrameWindow().log(
+        "A class not found exception was thrown while setting the " +
+        "User Interface Manager");
     }
     catch (InstantiationException e) {
       mJBroFuzz.getFrameWindow().log(
-        "An instantiation exception was thrown while setting the User Interface Manager");
+        "An instantiation exception was thrown while setting the User " +
+        "Interface Manager");
     }
     catch (IllegalAccessException e) {
-      mJBroFuzz.getFrameWindow().log("An illegal access exception was thrown while setting the User Interface Manager");
+      mJBroFuzz.getFrameWindow().log(
+        "An illegal access exception was " +
+        "thrown while setting the User Interface Manager");
     }
     catch (SecurityException e) {
       mJBroFuzz.getFrameWindow().log(
-        "A security exception was thrown while setting the User Interface Manager");
+        "A security exception was thrown while setting the User " +
+        "Interface Manager");
     }
   }
 }

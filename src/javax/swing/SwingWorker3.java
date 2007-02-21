@@ -1,5 +1,5 @@
 /**
- * SwingWorker3.java
+ * SwingWorker3.java 0.5
  */
 package javax.swing;
 
@@ -19,11 +19,11 @@ package javax.swing;
  * @version 3
  */
 public abstract class SwingWorker3 {
-  private Object value; // see getValue(), setValue()
+  private Object value;
 
   /**
-   * Class to maintain reference to current worker thread
-   * under separate synchronization control.
+   * <p>Class to maintain reference to current worker thread
+   * under separate synchronization control.</p>
    */
   private static class ThreadVar {
     private Thread thread;
@@ -43,8 +43,8 @@ public abstract class SwingWorker3 {
   private ThreadVar threadVar;
 
   /**
-   * Get the value produced by the worker thread, or null if it
-   * hasn't been constructed yet.
+   * <p>Get the value produced by the worker thread, or null if it
+   * hasn't been constructed yet.</p>
    *
    * @return Object
    */
@@ -53,7 +53,7 @@ public abstract class SwingWorker3 {
   }
 
   /**
-   * Set the value produced by worker thread
+   * <p>Set the value produced by worker thread</p>
    *
    * @param x Object
    */
@@ -62,22 +62,22 @@ public abstract class SwingWorker3 {
   }
 
   /**
-   * Compute the value to be returned by the <code>get</code> method.
+   * <p>Compute the value to be returned by the <code>get</code> method.</p>
    *
    * @return Object
    */
   public abstract Object construct();
 
   /**
-   * Called on the event dispatching thread (not on the worker thread)
-   * after the <code>construct</code> method has returned.
+   * <p>Called on the event dispatching thread (not on the worker thread)
+   * after the <code>construct</code> method has returned.</p>
    */
   public void finished() {
   }
 
   /**
-   * A new method that interrupts the worker thread.  Call this method
-   * to force the worker to stop what it's doing.
+   * <p>A new method that interrupts the worker thread.  Call this method
+   * to force the worker to stop what it's doing.</p>
    */
   public void interrupt() {
     Thread t = threadVar.get();
@@ -88,9 +88,9 @@ public abstract class SwingWorker3 {
   }
 
   /**
-   * Return the value created by the <code>construct</code> method.
+   * <p>Return the value created by the <code>construct</code> method.
    * Returns null if either the constructing thread or the current
-   * thread was interrupted before a value was produced.
+   * thread was interrupted before a value was produced.</p>
    *
    * @return the value created by the <code>construct</code> method
    */
@@ -112,8 +112,8 @@ public abstract class SwingWorker3 {
 
 
   /**
-   * Start a thread that will call the <code>construct</code> method
-   * and then exit.
+   * <p>Start a thread that will call the <code>construct</code> method
+   * and then exit.</p>
    */
   public SwingWorker3() {
     final Runnable doFinished = new Runnable() {
@@ -140,7 +140,7 @@ public abstract class SwingWorker3 {
   }
 
   /**
-   * Start the worker thread.
+   * <p>Start the worker thread.</p>
    */
   public void start() {
     Thread t = threadVar.get();

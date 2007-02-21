@@ -1,5 +1,5 @@
 /**
- * DefinitionsPanel.java 0.4
+ * DefinitionsPanel.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -30,7 +30,7 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- *
+ * <p>The definitions panel holding a description of the generators loaded.</p>
  * @author subere (at) uncon . org
  * @version 0.5
  */

@@ -1,5 +1,5 @@
 /**
- * Time.java 0.4
+ * Time.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -28,16 +28,18 @@ package org.owasp.jbrofuzz.ver;
 import java.text.*;
 import java.util.*;
 /**
- * This class gives back the current date and time in a number of predefined
- * formats.
+ * <p>This class gives back the current date and time in a number of predefined
+ * formats.</p>
+ * <p>All available public methods are static.</p>
  *
- * @author subere@uncon.org
+ * @author subere (at) uncon . org
  * @version 0.5
  */
 public class Time {
 
   private static Date currentDate;
   private static Date currentTime;
+
   /**
    * Gives the date in yyyy.MM.dd format
    *
@@ -94,8 +96,6 @@ public class Time {
       return dateAt;
     }
     catch (NullPointerException e) {
-      //  Logger.logError(
-      //   "Timer reports: Illegal length of long time\nfor Date conversion.");
       return null;
     }
   }
@@ -113,8 +113,6 @@ public class Time {
       return relativeTime;
     }
     catch (NullPointerException e) {
-      //  Logger.logError(
-      //    "Timer reports: Empty Date object\npassed for Date conversion.");
       relativeTime = 0;
       return relativeTime;
     }

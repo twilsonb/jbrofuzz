@@ -1,5 +1,5 @@
 /**
- * JBroFuzz.java 0.4
+ * JBroFuzz.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -31,12 +31,6 @@ import org.owasp.jbrofuzz.snif.tcp.*;
 import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.ver.*;
 import org.owasp.jbrofuzz.dir.*;
-/**
- * @todo Check to see what happens when in fuzzing a socket has been triggered
- * which cannot connect and then a different URL is placed as part of the socket
- * request.
- */
-
 
 /**
  * <p>Title: Java Bro Fuzzer</p>
@@ -44,6 +38,9 @@ import org.owasp.jbrofuzz.dir.*;
  * <p>Description: The central class launching the application. This class
  * instantiates a request iterator, a version, a main window and a file handler.
  * The order in which the last three are instantiated should not be altered.</p>
+ * <p>In order to fill in the contents of the corresponding text fields
+ * (directories and generators), constructors are created to populate the
+ * corresponding fields.
  *
  * @author subere (at) uncon . org
  * @version 0.5

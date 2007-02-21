@@ -96,6 +96,7 @@ public class FrameWindow extends JFrame {
   /**
    * <p>The constuctor of the main window launched in JBroFuzz. This class
    * should be instantiated as a singleton and never again.</p>
+   *
    * @param mJBroFuzz JBroFuzz
    */
   public FrameWindow(JBroFuzz mJBroFuzz) {
@@ -133,6 +134,7 @@ public class FrameWindow extends JFrame {
 
   /**
    * Method for setting up the right click copy paste cut and select all menu.
+   *
    * @param area JTextArea
    */
   public void popup(final JTextArea area) {
@@ -145,13 +147,13 @@ public class FrameWindow extends JFrame {
     JMenuItem i4 = new JMenuItem("Select All");
 
     i1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-      ActionEvent.CTRL_MASK));
+                                             ActionEvent.CTRL_MASK));
     i2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-      ActionEvent.CTRL_MASK));
+                                             ActionEvent.CTRL_MASK));
     i3.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-      ActionEvent.CTRL_MASK));
+                                             ActionEvent.CTRL_MASK));
     i4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-      ActionEvent.CTRL_MASK));
+                                             ActionEvent.CTRL_MASK));
 
     popmenu.add(i1);
     popmenu.add(i2);
@@ -204,6 +206,7 @@ public class FrameWindow extends JFrame {
   /**
    * <p>Access the m object that is responsible for launching an instance of
    * this class.</p>
+   *
    * @return JBroFuzz
    */
   public JBroFuzz getJBroFuzz() {
@@ -213,6 +216,7 @@ public class FrameWindow extends JFrame {
   /**
    * <p>Method for accessing the Tabbed Pane within the current Frame Window.
    * </p>
+   *
    * @return JTabbedPane
    */
   public JTabbedPane getTabbedPane() {
@@ -270,6 +274,7 @@ public class FrameWindow extends JFrame {
   /**
    * <p>Method returning the m sniffing panel that is being instantiated
    * through the m window.</p>
+   *
    * @return mSniffingPanel
    */
   public SniffingPanel getTCPSniffingPanel() {
@@ -279,6 +284,7 @@ public class FrameWindow extends JFrame {
   /**
    * <p>Method returning the m definitions panel that is being instantiated
    * through the m window.</p>
+   *
    * @return mDefinitionsPanel
    */
   public DefinitionsPanel getDefinitionsPanel() {
@@ -288,6 +294,7 @@ public class FrameWindow extends JFrame {
   /**
    * <p>Method for returning the m menu bar that is being instantiated
    * through the m window.</p>
+   *
    * @return mMenuBar
    */
   public FrameMenuBar getFrameMenuBar() {
@@ -296,6 +303,7 @@ public class FrameWindow extends JFrame {
 
   /**
    * <p>Method for returning the web directoires panel that is being used.</p>
+   *
    * @return WebDirectoriesPanel
    */
   public WebDirectoriesPanel getWebDirectoriesPanel() {
@@ -305,6 +313,7 @@ public class FrameWindow extends JFrame {
   /**
    * <p>Method for returning the m fuzzing panel that is being instantiated
    * through the m window.</p>
+   *
    * @return mFuzzingPanel
    */
   public FuzzingPanel getFuzzingPanel() {
@@ -313,9 +322,15 @@ public class FrameWindow extends JFrame {
 
   /**
    * <p>Method for logging values within the system event log.</p>
+   *
    * @param str String
    */
-  public void log(String str) {
-    mSystemLogger.addLoggingEvent(str);
+  public void log(final String str) {
+    SwingUtilities.invokeLater(new Runnable() {
+      public void run() {
+        mSystemLogger.addLoggingEvent(str);
+
+      }
+    });
   }
 }

@@ -1,4 +1,6 @@
 javax.swing
+org.apache.commons.httpclient.contrib.ssl
+org.apache.commons.httpclient.protocol
 org.owasp.jbrofuzz
 org.owasp.jbrofuzz.dir
 org.owasp.jbrofuzz.fuzz

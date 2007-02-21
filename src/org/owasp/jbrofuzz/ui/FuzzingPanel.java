@@ -61,10 +61,7 @@ public class FuzzingPanel extends JPanel {
   private SwingWorker3 worker;
   // A counter for the number of times fuzz has been clicked
   private int counter, session;
-  // The names of the columns within the table of generators
-  private static final String[] COLUMNNAMES = {
-                                              "Generator", "Start", "End"};
-
+  // Just a string that is being used a lot
   private static final String ADDGENSTRING = "Add Generator";
   /**
    * This constructor is used for the "TCP Fuzzing Panel" that resides under the
@@ -188,7 +185,7 @@ public class FuzzingPanel extends JPanel {
     /*
      * Fuzzing Table Model
      */
-    mFuzzingTableModel = new FuzzingTableModel(COLUMNNAMES);
+    mFuzzingTableModel = new FuzzingTableModel(this);
     generatorTable = new JTable();
     generatorTable.setBackground(Color.WHITE);
     generatorTable.setForeground(Color.BLACK);

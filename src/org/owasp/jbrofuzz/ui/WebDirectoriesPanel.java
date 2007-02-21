@@ -1,5 +1,5 @@
 /**
- * WebDirectoriesPanel.java 0.4
+ * WebDirectoriesPanel.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -32,14 +32,13 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import org.owasp.jbrofuzz.dir.*;
-import org.owasp.jbrofuzz.util.*;
-import org.owasp.jbrofuzz.ver.*;
-import org.owasp.jbrofuzz.io.*;
 import org.owasp.jbrofuzz.ui.util.*;
 
 import com.Ostermiller.util.*;
 import java.io.IOException;
+import org.owasp.jbrofuzz.ver.Format;
 /**
+ * <p>The main panel for the web directory.</p>
  *
  * @author subere (at) uncon . org
  * @version 0.5
@@ -53,7 +52,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   private JTextArea targetText, directoryText, portText;
 
   // The jbuttons present in the user interface
-  private final JButton startButton, stopButton, pauseButton;
+  private final JButton startButton, stopButton;
 
   // The jtable holding all the responses
   private JTable responseTable;
@@ -65,13 +64,13 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   private DRequestIterator cesg;
 
   // The directory panel that needs to update the line number
-  private JPanel directoryPanel;
+  private JPanel directoryPanel, outputPanel;
 
   // The session count counting how many times start has been hit
   private int session;
 
-  // A buffer array of Strings for caching prior to displaying
-  private StringArrayQueue resultsBuffer;
+  // The progress bar for the site
+  private JProgressBar progressBar;
 
   // The table sorter
   private TableSorter sorter;
@@ -86,14 +85,12 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     super(null, true);
     this.m = m;
     session = 0;
-    // Define the buffer
-    resultsBuffer = new StringArrayQueue(10);
 
     // Define the directory JPanel
     directoryPanel = new JPanel();
     directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Total Directories to test: "),
-                             BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     directoryPanel.setBounds(630, 20, 230, 430);
     add(directoryPanel);
 
@@ -101,7 +98,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     JPanel targetPanel = new JPanel();
     targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Target URI [HTTP/HTTPS] "),
-                          BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     targetPanel.setBounds(10, 20, 500, 60);
     add(targetPanel);
 
@@ -113,10 +110,10 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     add(portPanel);
 
     // Define the output JPanel
-    JPanel outputPanel = new JPanel();
+    outputPanel = new JPanel();
     outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output "),
-                          BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     outputPanel.setBounds(10, 150, 610, 300);
     add(outputPanel);
 
@@ -174,7 +171,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
 
     // The add generator button
     startButton = new JButton("Start", ImageCreator.startImageIcon);
-    startButton.setBounds(340, 100, 80, 40);
+    startButton.setBounds(450, 95, 80, 40);
     add(startButton);
     startButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
@@ -193,17 +190,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
       }
     });
 
-    pauseButton = new JButton("Pause", ImageCreator.pauseImageIcon);
-    pauseButton.setBounds(430, 100, 100, 40);
-    add(pauseButton);
-    pauseButton.addActionListener(new ActionListener() {
-      public void actionPerformed(final ActionEvent e) {
-
-      }
-    });
-
     stopButton = new JButton("Stop", ImageCreator.stopImageIcon);
-    stopButton.setBounds(540, 100, 80, 40);
+    stopButton.setBounds(540, 95, 80, 40);
     add(stopButton);
     stopButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
@@ -214,16 +202,17 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     responseTableModel = new WebDirectoriesModel();
     sorter = new TableSorter(responseTableModel);
     responseTable = new JTable(sorter);
-    sorter.setTableHeader(responseTable.getTableHeader());
+
+
     responseTable.getTableHeader().setToolTipText(
       "Click to specify sorting; Control-Click to specify secondary sorting");
     popup(responseTable);
-
+    sorter.setTableHeader(responseTable.getTableHeader());
     responseTable.setFont(new Font("Monospaced", Font.BOLD, 12));
     responseTable.setBackground(Color.black);
     responseTable.setForeground(Color.white);
     responseTable.setSurrendersFocusOnKeystroke(true);
-    // responseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    responseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     responseTable.setColumnSelectionAllowed(false);
     responseTable.setRowSelectionAllowed(true);
     // Set the column widths
@@ -258,9 +247,23 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     listTextScrollPane.setWheelScrollingEnabled(true);
     outputPanel.add(listTextScrollPane);
 
+    progressBar = new JProgressBar(0);
+    progressBar.setValue(0);
+    progressBar.setStringPainted(true);
+    progressBar.setMinimum(0);
+    progressBar.setMaximum(100);
+    progressBar.setPreferredSize(new Dimension(310, 20));
+    JPanel progressPanel = new JPanel();
+    progressPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+      createTitledBorder(" Progress "),
+      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+    progressPanel.setBounds(10, 85, 330, 60);
+    progressPanel.add(progressBar);
+    add(progressPanel);
+
     startButton.setEnabled(true);
     stopButton.setEnabled(false);
-    pauseButton.setEnabled(false);
+
 
     targetText.setText("http://localhost");
     portText.setText("80");
@@ -271,13 +274,33 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
    * @param s StringBuffer
    */
   public void setDirectoriesText(StringBuffer s) {
-    directoryText.setText(s.toString() );
+    directoryText.setText(s.toString());
     directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Total Directories to test: "
                          + directoryText.getLineCount() + " "),
-                             BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     directoryText.setCaretPosition(0);
   }
+
+  /**
+   * Set the progress bar on the display to a value between 0 and 100.
+   * @param percent int
+   */
+  public void setProgressBar(final int percent) {
+    if ((percent >= 0) && (percent <= 100)) {
+      SwingWorker3 progressWorker = new SwingWorker3() {
+        public Object construct() {
+          progressBar.setValue(percent);
+          return "progress-update-return";
+        }
+
+        public void finished() {
+        }
+      };
+      progressWorker.start();
+    }
+  }
+
   /**
    * <p>Method for returning the main window frame that this tab is attached on.
    * </p>
@@ -292,18 +315,17 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
    * Method triggered when the start button is pressed.
    */
   public void buttonStart() {
-
     if (!startButton.isEnabled()) {
       return;
     }
-    //
-    //
-    sorter.removeTableHeader(responseTable.getTableHeader());
-    //
-    //
     // Increment the session number
     session++;
     session %= 100;
+    // Update the panel, indicating directory
+    outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+      createTitledBorder(" Output " + "[Logging in file \\web-dir\\" +
+                         Format.DATE + "\\" + getSessionNumber() + ".csv]  "),
+      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
     // UI and Colors
     startButton.setEnabled(false);
@@ -330,27 +352,13 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   }
 
   /**
-   * @todo Check the JTable Sorter...
-   */
-
-  /**
-   * @todo Show these in the error log
-   19-Feb-2007 01:10:55 org.apache.commons.httpclient.auth.AuthChallengeProcessor selectAuthScheme
-   INFO: ntlm authentication scheme selected
-   */
-
-  /**
    * <p>Method for stopping the request iterator.</p>
    */
   public void buttonStop() {
     if (!stopButton.isEnabled()) {
       return;
     }
-    //
-    //
-    sorter.setTableHeader(responseTable.getTableHeader());
-    //
-    //
+
     // UI and Colors
     stopButton.setEnabled(false);
     startButton.setEnabled(true);
@@ -371,29 +379,28 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
    *
    */
   public void addRow(String s) {
-    // If the buffer if full, add ten rows
-    if(resultsBuffer.isFull()) {
-      //
-    }
-    else {
-      resultsBuffer.push(s);
-    }
 
-    String[] inputArray = s.split("\n");
-    if(inputArray.length != 6) {
+    final String[] inputArray = s.split("\n");
+    if (inputArray.length != 6) {
       String error = "Web Directory Error! Cannot fit " + inputArray.length +
                      " columns into 6.";
-      if(inputArray.length > 1) {
+      if (inputArray.length > 1) {
         error += " First column was " + inputArray[0];
       }
       m.log(error);
     }
     else {
-      responseTableModel.addRow(inputArray[0], inputArray[1], inputArray[2],
-                                inputArray[3], inputArray[4], inputArray[5]);
-      // Set the last row to be visible
-      responseTable.scrollRectToVisible(responseTable.getCellRect(responseTable.
-        getRowCount(), 0, true));
+      SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+          responseTableModel.addRow(inputArray[0], inputArray[1], inputArray[2],
+                                    inputArray[3], inputArray[4], inputArray[5]);
+          // Set the last row to be visible
+          responseTable.scrollRectToVisible(responseTable.getCellRect(
+            responseTable.
+            getRowCount() - 1, 0, true));
+
+        }
+      });
 
     }
   }
@@ -406,7 +413,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Total Directories to test: "
                          + directoryText.getLineCount() + " "),
-                             BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
   }
 
   /**
@@ -439,43 +446,43 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     JMenuItem i5 = new JMenuItem("Open in Browser");
 
     i2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-      ActionEvent.CTRL_MASK));
+                                             ActionEvent.CTRL_MASK));
     i4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-      ActionEvent.CTRL_MASK));
+                                             ActionEvent.CTRL_MASK));
 
     popmenu.add(i2);
     popmenu.addSeparator();
     popmenu.add(i4);
-    popmenu.addSeparator() ;
+    popmenu.addSeparator();
     popmenu.add(i5);
 
     i2.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        area.removeRowSelectionInterval(0,area.getRowCount() - 1);
-        int [] a = area.getSelectedRows();
-        StringBuffer s = new StringBuffer() ;
-        for(int i = 0; i < a.length ; i++) {
-          TableSorter ts = (TableSorter) area.getModel();
-          WebDirectoriesModel wm = (WebDirectoriesModel) ts.getTableModel() ;
+        area.removeRowSelectionInterval(0, area.getRowCount() - 1);
+        int[] a = area.getSelectedRows();
+        StringBuffer s = new StringBuffer();
+        for (int i = 0; i < a.length; i++) {
+          TableSorter tb = (TableSorter) area.getModel();
+          WebDirectoriesModel wm = (WebDirectoriesModel) tb.getTableModel();
           String row = wm.getRow(a[i]);
           s.append(row);
         }
-        JTextArea myTempArea = new JTextArea(s.toString() );
-        myTempArea.copy() ;
+        JTextArea myTempArea = new JTextArea(s.toString());
+        myTempArea.copy();
       }
     });
 
     i4.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        area.selectAll() ;
+        area.selectAll();
       }
     });
 
     i5.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         Browser.init();
-        String url = (String) area.getValueAt(area.getSelectedRow() ,
-                     1 % area.getColumnCount());
+        String url = (String) area.getValueAt(area.getSelectedRow(),
+                                              1 % area.getColumnCount());
         try {
           Browser.displayURL(url);
         }
@@ -511,7 +518,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
    */
   public String getSessionNumber() {
     String s = "";
-    if(session < 10) {
+    if (session < 10) {
       s += "0";
     }
     s += session;
