@@ -27,8 +27,6 @@ package org.owasp.jbrofuzz.dir;
 
 import java.io.*;
 
-import java.nio.charset.*;
-
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.util.*;
 import org.apache.commons.httpclient.methods.*;
@@ -43,10 +41,11 @@ import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>Class for generating the recursive directory requests.</p>
  *
- * @author subere@uncon.org
+ * @author subere (at) uncon . org
  * @version 0.5
  */
 public class DRequestIterator {
+
   // The  frame window that the request iterator
   private FrameWindow m;
   // The original url string
@@ -61,6 +60,8 @@ public class DRequestIterator {
   private int i;
   // The port on which directory enumeration is taking place
   private int port;
+  // The boolean to check if the URI/Port combo throws an exception
+  private boolean uriPortOk;
 
   /**
    * <p>Constructor for creating a web directory request iterator that iterates
@@ -80,6 +81,7 @@ public class DRequestIterator {
     this.responses = new String[directories.length()];
     this.stopped = false;
     i = 0;
+    uriPortOk = false;
 
     // Check the port
     try {
@@ -117,6 +119,12 @@ public class DRequestIterator {
     if(url.equalsIgnoreCase("")) {
       return;
     }
+    if(url.contains(" ")) {
+      return;
+    }
+    if((port < 1) || (port > 65536)) {
+      return;
+    }
 
     for (i = 0; i < directories.length; i++) {
       if (stopped) {
@@ -141,9 +149,14 @@ public class DRequestIterator {
       }
 
       HttpClient client = new HttpClient();
+      client.getParams().setParameter(HttpConnectionParams.CONNECTION_TIMEOUT, new Integer(10000));
+
       GetMethod method = new GetMethod(currentURI);
       method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-                                      new DefaultHttpMethodRetryHandler(3, false));
+                                      new DefaultHttpMethodRetryHandler(1, false));
+      method.setFollowRedirects(true);
+      method.setDoAuthentication(true);
+
       try {
         responses[i] = i + "\n";
         responses[i] += currentURI + "\n";
@@ -164,13 +177,15 @@ public class DRequestIterator {
             baos.write(buff, 0, got);
           }
           byte[] allbytes = baos.toByteArray();
-          /**
-           * @todo Get the Charset encoding from the header
-           *
-          String encoding1 = method.getRequestCharSet();
-          String encoding2 = method.getResponseCharSet();
-           */
-          String results = new String(allbytes, Charset.forName("ISO-8859-1"));
+
+          String results = null;
+          try {
+            results = new String(allbytes, method.getResponseCharSet());
+          }
+          catch (UnsupportedEncodingException ex1) {
+            m.log("Web Directories: Unsupported Character Encoding");
+            results = "";
+          }
 
           // Check for comments
           if (results.contains("<!--")) {
@@ -200,6 +215,8 @@ public class DRequestIterator {
         responses[i] += "Fatal protocol violation" + "\n";
         responses[i] += " \n";
         responses[i] += " \n";
+        // Bomb out...
+        stop();
       }
       catch (IOException e) {
         responses[i] = i + "\n";
@@ -209,6 +226,8 @@ public class DRequestIterator {
         responses[i] += " \n";
         responses[i] += " \n";
         e.printStackTrace() ;
+        // Bomb out...
+        stop();
       }
       finally {
         method.releaseConnection();
@@ -224,6 +243,9 @@ public class DRequestIterator {
       // Write the file
       FileHandler.writeWebDirFile(m.getWebDirectoriesPanel().getSessionNumber(),
                                   outToFile);
+      // Update the progress bar
+      double percentage = 100 * ((double) (i + 1)) / ((double) directories.length);
+      m.getWebDirectoriesPanel().setProgressBar((int) percentage);
     }
   }
 

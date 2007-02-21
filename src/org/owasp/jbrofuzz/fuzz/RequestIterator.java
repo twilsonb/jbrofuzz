@@ -27,7 +27,6 @@ package org.owasp.jbrofuzz.fuzz;
 
 import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.fuzz.tcp.*;
-import org.owasp.jbrofuzz.ver.*;
 import org.owasp.jbrofuzz.io.*;
 /**
  * <p>Title: Java Bro Fuzzer</p>

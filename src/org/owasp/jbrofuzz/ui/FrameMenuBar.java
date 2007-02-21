@@ -1,5 +1,5 @@
 /**
- * FrameMenuBar.java 0.4
+ * FrameMenuBar.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -31,7 +31,6 @@ import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.text.*;
-import javax.swing.table.*;
 
 import org.owasp.jbrofuzz.ui.util.*;
 import org.owasp.jbrofuzz.ver.*;
@@ -49,6 +48,7 @@ public class FrameMenuBar extends JMenuBar {
   private JMenuItem start, pause, stop, add, remove;
   // Used under the view JMenu as items
   private JCheckBoxMenuItem directories, fuzzing, sniffing, generators, system;
+
   /**
    *
    * @param mFrameWindow FrameWindow

@@ -1,5 +1,5 @@
 /**
- * ImageCreator.java 0.4
+ * ImageCreator.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -32,6 +32,7 @@ import org.owasp.jbrofuzz.util.*;
  * <p>This static class holds the Base64 Strings corresponding to all the
  * images used by JBroFuzz. Each String is then parsed into an ImageIcon object
  * which can be publicly referenced from this class.</p>
+ *
  * <p>To add an image to the list of images so that the image can be referenced
  * as an ImageIcon two steps must be followed. First you have to create the
  * Base64 String holding the image representation; typically this String is kept
@@ -737,6 +738,7 @@ public class ImageCreator {
     "SGgqGyxTB8m3EA0q5zQ5WCJBJsggjAABih2UoUScmCyQfO+DAOPLfQYioopo8Dr582BY2PeD" +
     "xQChLDhkIlyAeBMtqqeEAlygfMxnooc8EDhRceL6ekQkg3TvelD5HlKSEhSf+MaFAkGfU6Jo" +
     "G4EYIIq+qZ9CRqPJ9BGkOCny5Hsi2UdRCqQB3pOOKTHCyFW68pWwjKUsZ0nLgAAAOw==";
+
   /**
    * <p>The about image icon which is a rotating gif file with the java logo
    * attached to it.</p>

@@ -29,6 +29,7 @@ import java.util.*;
 
 import javax.swing.table.*;
 /**
+ * <p>The table model that is being used within the Sniffing Panel.</p>
  *
  * @author subere (at) uncon . org
  * @version 0.5

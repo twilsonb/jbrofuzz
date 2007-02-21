@@ -41,6 +41,7 @@ public class StringArrayStack {
 
   /**
    * Constructor for the FILO stack array, passing as argument the capacity.
+   *
    * @param capacity int
    */
   public StringArrayStack(int capacity) {
@@ -50,6 +51,7 @@ public class StringArrayStack {
 
   /**
    * Method for checking if the String Stack Array is empty.
+   *
    * @return boolean
    */
   public boolean isEmpty() {
@@ -59,6 +61,7 @@ public class StringArrayStack {
   /**
    * Method for adding an element to the Stack Array. This will be a push
    * action.
+   *
    * @param element String
    */
   public void push(String element) {
@@ -69,6 +72,7 @@ public class StringArrayStack {
 
   /**
    * Method for popping an element from the Stack Array
+   *
    * @return String
    */
   public String pop() {

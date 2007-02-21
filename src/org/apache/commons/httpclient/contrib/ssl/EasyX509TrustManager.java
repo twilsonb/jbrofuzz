@@ -1,4 +1,6 @@
 /*
+ * EasyX509TrustManager.java 0.5
+ *
  * ====================================================================
  *
  *  Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,7 +23,6 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- *
  */
 
 package org.apache.commons.httpclient.contrib.ssl;

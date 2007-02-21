@@ -1,7 +1,5 @@
 /*
- * $Header: /home/jerenkrantz/tmp/commons/commons-convert/cvs/home/cvs/jakarta-commons//httpclient/src/java/org/apache/commons/httpclient/protocol/Protocol.java,v 1.5.2.2 2004/02/22 18:21:16 olegk Exp $
- * $Revision: 1.5.2.2 $
- * $Date: 2004/02/22 18:21:16 $
+ * Protocol.java 0.5
  *
  * ====================================================================
  *
@@ -26,7 +24,6 @@
  * <http://www.apache.org/>.
  *
  * [Additional notices, if required by prior licensing conditions]
- *
  */
 package org.apache.commons.httpclient.protocol;
 
@@ -76,7 +73,6 @@ public class Protocol {
         if (protocol == null) {
             throw new IllegalArgumentException("protocol is null");
         }
-
         PROTOCOLS.put(id, protocol);
     }
 

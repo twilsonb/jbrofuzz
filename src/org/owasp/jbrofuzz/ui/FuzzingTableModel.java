@@ -1,5 +1,5 @@
 /**
- * FuzzingTableModel.java 0.4
+ * FuzzingTableModel.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -29,7 +29,15 @@ import java.util.*;
 
 import javax.swing.table.*;
 
+/**
+ * The fuzzing table model used within the generators table of the "TCP Fuzzing"
+ * panel.
+ *
+ * @author subere (at) uncon . org
+ * @version 0.5
+ */
 public class FuzzingTableModel extends AbstractTableModel {
+
   /**
    * <p>The String used to separate columns when a toString representation of
    * a set number of columns or rows is required. This is typically used in
@@ -41,18 +49,39 @@ public class FuzzingTableModel extends AbstractTableModel {
   private static final int INDEX_START = 1;
   private static final int INDEX_END = 2;
 
-  private String[] columnNames;
+  // The names of the columns within the table of generators
+  private static final String[] COLUMNNAMES = {
+                                              "Generator", "Start", "End"};
+  // The vector of data
   private Vector dataVector;
+  // The panel that the model is attached to
+  private FuzzingPanel fPanel;
 
-  public FuzzingTableModel(String[] columnNames) {
-    this.columnNames = columnNames;
+  /**
+   * <p>Main Constructor passes the Fuzzing Panel.</p>
+   * @param fPanel FuzzingPanel
+   */
+  public FuzzingTableModel(FuzzingPanel fPanel) {
+    this.fPanel = fPanel;
     dataVector = new Vector();
   }
 
+  /**
+   * Get a given column name.
+   *
+   * @param column int
+   * @return String
+   */
   public String getColumnName(int column) {
-    return columnNames[column];
+    return COLUMNNAMES[column];
   }
 
+  /**
+   * Check to see if a generator table is editable
+   * @param row int
+   * @param column int
+   * @return boolean
+   */
   public boolean isCellEditable(int row, int column) {
     if (column == INDEX_GENERATOR) {
       return true;
@@ -62,6 +91,14 @@ public class FuzzingTableModel extends AbstractTableModel {
     }
   }
 
+  /**
+   * <p>Get the value within the generator table at a given location of column
+   * and row.</p>
+   *
+   * @param row int
+   * @param column int
+   * @return Object
+   */
   public Object getValueAt(int row, int column) {
     Generator record = (Generator) dataVector.get(row);
     switch (column) {
@@ -76,6 +113,12 @@ public class FuzzingTableModel extends AbstractTableModel {
     }
   }
 
+  /**
+   * <p>Set a value at the corresponding row and column location.</p>
+   * @param value Object
+   * @param row int
+   * @param column int
+   */
   public void setValueAt(Object value, int row, int column) {
     Generator record = (Generator) dataVector.get(row);
     switch (column) {
@@ -89,36 +132,54 @@ public class FuzzingTableModel extends AbstractTableModel {
         record.setEnd(((Integer) value).intValue());
         break;
       default:
-        System.out.println("invalid index");
+        fPanel.getFrameWindow().log("TCP Fuzzing Panel: Invalid index ");
     }
     fireTableCellUpdated(row, column);
   }
 
+  /**
+   * Get a complete row count of the generator table.
+   * @return int
+   */
   public int getRowCount() {
     return dataVector.size();
   }
 
+  /**
+   * Get a complete column count of the generator table
+   * @return int
+   */
   public int getColumnCount() {
-    return columnNames.length;
+    return COLUMNNAMES.length;
   }
 
+  /**
+   * <p>Get a row depending on the corresponding integer given.</p>
+   * @param row int
+   * @return String
+   */
   public String getRow(int row) {
     String output = "";
     if ((row > -1) && (row < dataVector.size())) {
-      for (int i = 0; i < columnNames.length; i++) {
+      for (int i = 0; i < COLUMNNAMES.length; i++) {
         output += getValueAt(row, i) + STRING_COLUMN_SEPARATOR;
       }
     }
     return output;
   }
 
+  /**
+   * <p>Check to see if an empty row exists within the generator table.</p>
+   * @return boolean
+   */
   public boolean hasEmptyRow() {
     if (dataVector.size() == 0) {
       return false;
     }
-    Generator Generator = (Generator) dataVector.get(dataVector.size() - 1);
-    if (Generator.getType().trim().equals("") && Generator.getStart() == 0 &&
-        Generator.getEnd() == 0) {
+    Generator gen = (Generator) dataVector.get(dataVector.size() - 1);
+    if (gen.getType().trim().equalsIgnoreCase("") &&
+        gen.getStart() == 0 &&
+        gen.getEnd() == 0) {
       return true;
     }
     else {
@@ -126,12 +187,26 @@ public class FuzzingTableModel extends AbstractTableModel {
     }
   }
 
+  /**
+   * <p>Add a row to the generator list.</p>
+   *
+   * @param generator String
+   * @param start int
+   * @param end int
+   */
   public void addRow(String generator, int start, int end) {
     Generator addingGenerator = new Generator(generator, start, end);
     dataVector.add(addingGenerator);
     fireTableRowsInserted(dataVector.size() - 1, dataVector.size() - 1);
   }
 
+  /**
+   * <p>Remove a row from the generator list.</p>
+   *
+   * @param generator String
+   * @param start int
+   * @param end int
+   */
   public void removeRow(String generator, int start, int end) {
     int rowToRemove = -1;
     for (int i = 0; i < dataVector.size(); i++) {

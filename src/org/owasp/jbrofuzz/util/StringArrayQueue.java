@@ -33,6 +33,7 @@ package org.owasp.jbrofuzz.util;
  * @version 0.5
  */
 public class StringArrayQueue {
+
   // The String array holding the elements
   private String[] fifo;
   // The beginning and end of the queue
@@ -42,6 +43,7 @@ public class StringArrayQueue {
 
   /**
    * Constructor for the FIFO stack queue, passing as argument the capacity.
+   *
    * @param capacity int
    */
   public StringArrayQueue(int capacity) {
@@ -62,6 +64,7 @@ public class StringArrayQueue {
 
   /**
    * Method returns true if array is full
+   *
    * @return boolean
    */
   public boolean isFull() {
@@ -70,6 +73,7 @@ public class StringArrayQueue {
 
   /**
    * Method for adding an element to the array queue.
+   *
    * @param s String
    */
   public void push(String s){

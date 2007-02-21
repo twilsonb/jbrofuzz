@@ -1,5 +1,5 @@
 /**
- * FileHandler.java 0.4
+ * FileHandler.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -33,7 +33,8 @@ import javax.swing.*;
 import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.ver.*;
 /**
- * <p>Class responsible for all File Creation.</p>
+ * <p>Class responsible for all File Creation. This class holds the file read
+ * and create methods.</p>
  *
  * @author subere (at) uncon . org
  * @version 0.5
@@ -347,7 +348,7 @@ public class FileHandler {
    * @return Vector
    */
   public static StringBuffer readDirectories(String directoriesFile) {
-    final int maxLines = 102350;
+    final int maxLines = 100000;
     final int maxLineLength = 256;
     int line_counter = 0;
     Vector file = new Vector();

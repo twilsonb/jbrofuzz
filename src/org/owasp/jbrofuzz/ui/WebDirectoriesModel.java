@@ -35,6 +35,7 @@ import javax.swing.table.*;
  * @version 0.5
  */
 public class WebDirectoriesModel extends AbstractTableModel {
+
   /**
    * <p>The String used to separate columns when a toString representation of
    * a set number of columns or rows is required. This is typically used in
@@ -106,6 +107,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
 
   /**
    * Return the total number of rows
+   *
    * @return int
    */
   public int getRowCount() {
@@ -114,6 +116,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
 
   /**
    * Return the total number of columns
+   *
    * @return int
    */
   public int getColumnCount() {
@@ -122,6 +125,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
 
   /**
    * Return a given row in String format using the stated separator
+   *
    * @param row int
    * @return String
    */

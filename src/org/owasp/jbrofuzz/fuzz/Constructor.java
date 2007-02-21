@@ -1,5 +1,5 @@
 /**
- * Constructor.java 0.4
+ * Constructor.java 0.5
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -301,6 +301,7 @@ public class Constructor {
 
   /**
    * <p>Method for accessing the main JBroFuzz object.</p>
+   *
    * @return JBroFuzz
    */
   public JBroFuzz getJBroFuzz() {
