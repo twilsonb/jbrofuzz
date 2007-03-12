@@ -193,26 +193,26 @@ class ResponseOutput {
   }
 
   public String getID() {
-    return id.toString();
+    return id;
   }
 
   public String getURI() {
-    return uri.toString();
+    return uri;
   }
 
   public String getStatusCode() {
-    return statusCode.toString();
+    return statusCode;
   }
 
   public String getStatusText() {
-    return statusText.toString();
+    return statusText;
   }
 
   public String getComments() {
-    return comments.toString();
+    return comments;
   }
 
   public String getScripts() {
-    return scripts.toString();
+    return scripts;
   }
 }

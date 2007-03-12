@@ -453,7 +453,7 @@ public class FuzzingPanel extends JPanel {
       final int sPoint = message.getSelectionStart();
       final int fPoint = message.getSelectionEnd();
 
-      String generators = getJBroFuzz().getConstructor().
+      String generators = getJBroFuzz().getTCPConstructor().
                           getAllGeneratorNamesAndComments();
       String[] generatorArray = generators.split(", ");
 
