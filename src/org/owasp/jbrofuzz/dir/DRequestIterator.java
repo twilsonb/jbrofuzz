@@ -60,8 +60,6 @@ public class DRequestIterator {
   private int i;
   // The port on which directory enumeration is taking place
   private int port;
-  // The boolean to check if the URI/Port combo throws an exception
-  private boolean uriPortOk;
 
   /**
    * <p>Constructor for creating a web directory request iterator that iterates
@@ -81,7 +79,6 @@ public class DRequestIterator {
     this.responses = new String[directories.length()];
     this.stopped = false;
     i = 0;
-    uriPortOk = false;
 
     // Check the port
     try {
@@ -235,14 +232,16 @@ public class DRequestIterator {
       // Add a row to the displaying table
       m.getWebDirectoriesPanel().addRow(responses[i]);
       // Create a String to be written to file
-      String outToFile = Time.dateAndTime();
+      StringBuffer outToFile = new StringBuffer();
+      outToFile.append(Time.dateAndTime());
+      // String outToFile = Time.dateAndTime();
       String [] tempArray = responses[i].split("\n");
       for(int m = 0; m < tempArray.length; m++) {
-        outToFile += "," + tempArray[m];
+        outToFile.append("," + tempArray[m]);
       }
       // Write the file
       FileHandler.writeWebDirFile(m.getWebDirectoriesPanel().getSessionNumber(),
-                                  outToFile);
+                                  outToFile.toString());
       // Update the progress bar
       double percentage = 100 * ((double) (i + 1)) / ((double) directories.length);
       m.getWebDirectoriesPanel().setProgressBar((int) percentage);

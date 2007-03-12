@@ -94,9 +94,9 @@ public class RequestIterator {
     }
     else {
       maxValue = 0;
-      maxValue = (long) getJBroFuzz().getConstructor().getGeneratorLength(type);
+      maxValue = (long) getJBroFuzz().getTCPConstructor().getGeneratorLength(type);
       // For a recursive generator, generate the corresponding maximum value
-      char genType = getJBroFuzz().getConstructor().getGeneratorType(type);
+      char genType = getJBroFuzz().getTCPConstructor().getGeneratorType(type);
       if (genType == Generator.RECURSIVE) {
         long baseValue = maxValue;
         for (int i = 1; i < len; i++) {
@@ -126,11 +126,11 @@ public class RequestIterator {
       // Append blanks, if generator is recursive
       int blank_count = 0;
 
-      char genType = getJBroFuzz().getConstructor().getGeneratorType(type);
+      char genType = getJBroFuzz().getTCPConstructor().getGeneratorType(type);
       // Check to see if the generator is recursive
       if (genType == Generator.RECURSIVE) {
 
-        int radix = getJBroFuzz().getConstructor().getGeneratorLength(type);
+        int radix = getJBroFuzz().getTCPConstructor().getGeneratorLength(type);
         blank_count = Long.toString(currentValue, radix).length() - len;
         while (blank_count < 0) {
           fuzzedValue.append("0");
@@ -154,7 +154,7 @@ public class RequestIterator {
       // Check to see if the generator is replasive
       if (genType == Generator.REPLASIVE) {
         int v = (int) currentValue;
-        StringBuffer b = getJBroFuzz().getConstructor().getGeneratorElement(
+        StringBuffer b = getJBroFuzz().getTCPConstructor().getGeneratorElement(
           type, v);
         fuzzedValue.append(b);
       }

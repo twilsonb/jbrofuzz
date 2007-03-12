@@ -57,8 +57,7 @@ public class FileHandler {
   private static final int WEBD_FILE = 2;
   // The date from the version
   private static String runningDate;
-  // A counter for the number of sessions being run to generate a file
-  private static int session;
+
   /**
    * <p>Constructor responsible for generating the necessary directories and
    * files for the correct operation of JBroFuzz.</p>
@@ -68,8 +67,6 @@ public class FileHandler {
     FileHandler.g = g;
     // Set the number of errors that can potentially occur
     errors = 0;
-    // Set the current working session
-    session = 1;
     // Get the date
     runningDate = Format.DATE;
 

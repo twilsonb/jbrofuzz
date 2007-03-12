@@ -50,7 +50,7 @@ public class JBroFuzz {
   private RequestIterator generator;
   private static FrameWindow mainwindow;
   private static FileHandler filehandler;
-  private static Constructor constructor;
+  private static TConstructor tconstructor;
   private static DConstructor dconstructor;
   //
   private ConnectionListener listener;
@@ -65,8 +65,12 @@ public class JBroFuzz {
     // Launch the GUI
     mainwindow = new FrameWindow(this);
     filehandler = new FileHandler(mainwindow);
-    constructor = new Constructor(this);
+    tconstructor = new TConstructor(this);
     dconstructor = new DConstructor(this);
+
+    listener = new ConnectionListener(mainwindow.getTCPSniffingPanel(), "",
+                                      "", "", "");
+    generator = new RequestIterator(this, new StringBuffer(""), 0, 0, "ZER");
   }
 
   /**
@@ -132,11 +136,19 @@ public class JBroFuzz {
   }
 
   /**
-   * Get the Constructor used in this instance of JBroFuzz
+   * Get the TCP fuzzing Constructor used in this instance of JBroFuzz.
    * @return Constructor
    */
-  public Constructor getConstructor() {
-    return constructor;
+  public TConstructor getTCPConstructor() {
+    return tconstructor;
+  }
+
+  /**
+   * Get the directory fuzzing Constructor used in this instance of JBroFuzz.
+   * @return DConstructor
+   */
+  public DConstructor getDIRConstructor() {
+    return dconstructor;
   }
 
   /**

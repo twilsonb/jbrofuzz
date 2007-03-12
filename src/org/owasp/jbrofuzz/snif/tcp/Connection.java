@@ -147,7 +147,8 @@ class Connection implements Runnable, AgentMonitor {
       destOut.close();
       destSocket.close();
     }
-    catch (Exception e) {}
+    catch (IOException e) {
+    }
   }
 
   public String getSrcHost() {

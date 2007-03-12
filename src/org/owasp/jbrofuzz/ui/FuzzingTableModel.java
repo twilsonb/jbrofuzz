@@ -159,13 +159,13 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @return String
    */
   public String getRow(int row) {
-    String output = "";
+    StringBuffer output = new StringBuffer();
     if ((row > -1) && (row < dataVector.size())) {
       for (int i = 0; i < COLUMNNAMES.length; i++) {
-        output += getValueAt(row, i) + STRING_COLUMN_SEPARATOR;
+        output.append(getValueAt(row, i) + STRING_COLUMN_SEPARATOR);
       }
     }
-    return output;
+    return output.toString();
   }
 
   /**
@@ -235,7 +235,7 @@ class Generator {
   }
 
   public String getType() {
-    return type.toString();
+    return type;
   }
 
   public void setType(String type) {
