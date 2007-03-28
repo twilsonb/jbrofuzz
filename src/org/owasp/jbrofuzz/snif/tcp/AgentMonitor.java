@@ -1,12 +1,12 @@
 /**
- * AgentMonitor.java 0.5
+ * AgentMonitor.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,8 +29,8 @@ package org.owasp.jbrofuzz.snif.tcp;
  * <p>An interface to the TCPAgent requiring for agentHadDied to be
  * implemented.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public interface AgentMonitor {
 

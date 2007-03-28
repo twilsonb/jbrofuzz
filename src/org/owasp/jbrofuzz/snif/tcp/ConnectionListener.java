@@ -1,12 +1,12 @@
 /**
- * TCPConnectionListener.java 0.5
+ * TCPConnectionListener.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,8 +36,8 @@ import org.owasp.jbrofuzz.ui.*;
  * <p>Description: The class responsible for making the connection through the
  * corresponding socket.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class ConnectionListener extends Thread implements ConnectionMonitor {
 
@@ -108,23 +108,22 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
                              (ConnectionMonitor)this, this.remoteAddress,
                              this.remotePort);
       }
-      catch (Exception e) {
+      catch (IOException ex) {
         connectionStopped = true;
         break;
       }
-    }
+    } // while loop
+
     try {
       server.close();
     }
-    catch (Exception e) {
-      //
+    catch (IOException ex1) {
     }
     finally {
       try {
         server.close();
       }
-      catch (Exception e) {
-        //
+      catch (IOException ex2) {
       }
     }
 

@@ -1,12 +1,12 @@
 /**
- * WebDirectoriesPanel.java 0.5
+ * WebDirectoriesPanel.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,21 +27,20 @@ package org.owasp.jbrofuzz.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
 
+import com.Ostermiller.util.*;
 import org.owasp.jbrofuzz.dir.*;
 import org.owasp.jbrofuzz.ui.util.*;
-
-import com.Ostermiller.util.*;
-import java.io.IOException;
-import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>The main panel for the web directory.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class WebDirectoriesPanel extends JPanel implements KeyListener {
 
@@ -127,6 +126,9 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     targetText.setMargin(new Insets(1, 1, 1, 1));
     targetText.setBackground(Color.WHITE);
     targetText.setForeground(Color.BLACK);
+    //
+    // targetPanel.getInputMap().put(KeyStroke.getKeyStroke("a"), "none");
+    //
     getFrameWindow().popup(targetText);
     JScrollPane targetScrollPane = new JScrollPane(targetText);
     targetScrollPane.setVerticalScrollBarPolicy(21);
@@ -170,7 +172,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     directoryPanel.add(directoryScrollPane);
 
     // The add generator button
-    startButton = new JButton("Start", ImageCreator.startImageIcon);
+    startButton = new JButton("Start", ImageCreator.START_IMG);
     startButton.setBounds(450, 95, 80, 40);
     add(startButton);
     startButton.addActionListener(new ActionListener() {
@@ -190,7 +192,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
       }
     });
 
-    stopButton = new JButton("Stop", ImageCreator.stopImageIcon);
+    stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
     stopButton.setBounds(540, 95, 80, 40);
     add(stopButton);
     stopButton.addActionListener(new ActionListener() {
@@ -276,8 +278,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   public void setDirectoriesText(StringBuffer s) {
     directoryText.setText(s.toString());
     directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Total Directories to test: "
-                         + directoryText.getLineCount() + " "),
+      createTitledBorder(" Total Directories to test: " +
+                         directoryText.getLineCount() + " "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     directoryText.setCaretPosition(0);
   }
@@ -378,16 +380,17 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
    * @param s String
    *
    */
-  public void addRow(String s) {
+  public void addRow(final String s) {
 
     final String[] inputArray = s.split("\n");
     if (inputArray.length != 6) {
-      String error = "Web Directory Error! Cannot fit " + inputArray.length +
-                     " columns into 6.";
+      StringBuffer error = new StringBuffer("Web Directory Error! Cannot fit " +
+                                            inputArray.length +
+                                            " columns into 6.");
       if (inputArray.length > 1) {
-        error += " First column was " + inputArray[0];
+        error.append(" First column was " + inputArray[0]);
       }
-      m.log(error);
+      m.log(error.toString());
     }
     else {
       SwingUtilities.invokeLater(new Runnable() {
@@ -396,9 +399,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
                                     inputArray[3], inputArray[4], inputArray[5]);
           // Set the last row to be visible
           responseTable.scrollRectToVisible(responseTable.getCellRect(
-            responseTable.
-            getRowCount() - 1, 0, true));
-
+            responseTable.getRowCount() - 1, 0, true));
         }
       });
 
@@ -407,12 +408,12 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
 
   /**
    * Handle the key typed event from the text field.
-   * @param e KeyEvent
+   * @param ke KeyEvent
    */
-  public void keyTyped(KeyEvent e) {
+  public void keyTyped(KeyEvent ke) {
     directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Total Directories to test: "
-                         + directoryText.getLineCount() + " "),
+      createTitledBorder(" Total Directories to test: " +
+                         directoryText.getLineCount() + " "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
   }
 
@@ -481,8 +482,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     i5.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         Browser.init();
-        String url = (String) area.getValueAt(area.getSelectedRow(),
-                                              1 % area.getColumnCount());
+        final String url = (String) area.getValueAt(area.getSelectedRow(),
+          1 % area.getColumnCount());
         try {
           Browser.displayURL(url);
         }

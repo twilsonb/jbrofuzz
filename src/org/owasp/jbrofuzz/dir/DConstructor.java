@@ -1,5 +1,5 @@
 /**
- * DConstructor.java 0.5
+ * DConstructor.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -25,9 +25,9 @@
  */
 package org.owasp.jbrofuzz.dir;
 
-import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.ver.Format;
-import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.ver.*;
 
 /**
  * Class used for constructing the contents of the text displayed within the
@@ -35,7 +35,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
  * ability to report errors to the main GUI log panel (system)
  *
  * @author subere (at) uncon org
- * @version 0.5
+ * @version 0.6
  */
 public class DConstructor {
   /**

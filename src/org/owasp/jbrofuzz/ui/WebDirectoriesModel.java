@@ -1,12 +1,12 @@
 /**
- * WebDirectoriesModel.java 0.5
+ * WebDirectoriesModel.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,17 +31,18 @@ import javax.swing.table.*;
 /**
  * The Table Model for the Web Directories return table.
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class WebDirectoriesModel extends AbstractTableModel {
 
+  private static final long serialVersionUID = 185093L;
   /**
    * <p>The String used to separate columns when a toString representation of
    * a set number of columns or rows is required. This is typically used in
    * method getRow() that returns a String.</p>
    */
-  public static final String STRING_COLUMN_SEPARATOR = ",";
+  public static final String STRING_SEPARATOR = ",";
 
   // The names of the columns within the table of generators
   private static final String[] COLUMNNAMES = {
@@ -135,7 +136,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
       for (int i = 0; i < COLUMNNAMES.length; i++) {
         output.append(getValueAt(row, i));
         if (i < COLUMNNAMES.length - 1) {
-          output.append(STRING_COLUMN_SEPARATOR);
+          output.append(STRING_SEPARATOR);
         }
       }
       output.append("\n");

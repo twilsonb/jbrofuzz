@@ -6,7 +6,7 @@
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,8 +30,8 @@ import java.util.*;
  * <p>Class responsible for creating the generators passed from the definitions.
  * </p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class Generator {
   // The String name of the generator

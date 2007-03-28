@@ -1,12 +1,12 @@
 /**
- * Format.java 0.5
+ * Format.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,8 +37,8 @@ import org.owasp.jbrofuzz.*;
  * <p>Typical parameters found in this class include the file names for
  * the generators and the directories list, user properties.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class Format {
 
@@ -86,21 +86,16 @@ public class Format {
    * <p> The list of directories used if a file is not found to load the
    * directories from.</p>
    */
-  public static final String DEFAULT_DIRECTORIES =
-    "images\n" +
-    ".svn\n" +
-    "fuzz\n" +
-    "rss\n" +
-    "live\n";
+  public static final String DEFAULT_DIRS = "images\n" + ".svn\n" + "fuzz\n" +
+    "rss\n" + "live\n";
 
   /**
    * <p>The list of generators used if a file is not found to load the generators
    * from.</p>
    */
-  public static final String DEFAULT_GENERATORS;
+  public static final String DEFAULT_GENS;
   static {
-    DEFAULT_GENERATORS =
-      "# JBroFuzz Generator Definitions for version 0.3\n" + "#\n" + "# -----------------------------------------------------------------------------\n" +
+    DEFAULT_GENS = "# JBroFuzz Generator Definitions for version 0.3\n" + "#\n" + "# -----------------------------------------------------------------------------\n" +
       "# A bit of (fuzzing) theory \n" + "# -----------------------------------------------------------------------------\n" +
       "#\n" +
       "# In the current version, there are two categories of generators. These are:\n" +
@@ -140,11 +135,11 @@ public class Format {
       "#\n" + "# This version does not support the addition/alteration\n" +
       "# of recursive generators (starting with R)\n" + "#\n" +
       "# Copyright (C) 2006 subere (at) uncon org\n" + "# Version 0.3\n" +
-      "#\n" +
-      "\n" + "P:INT:Integer Overflows:12\n" + "> Exploits | Integer values \n" +
-      "-1\n" + "0\n" + "0x100\n" + "0x1000\n" + "0x3fffffff\n" + "0x7ffffffe\n" +
-      "0x7fffffff\n" + "0x80000000\n" + "0xfffffffe\n" + "0xffffffff\n" +
-      "0x10000\n" + "0x100000\n" + "\n" + "P:FSE:Format String Errors:19\n" +
+      "#\n" + "\n" + "P:INT:Integer Overflows:12\n" +
+      "> Exploits | Integer values \n" + "-1\n" + "0\n" + "0x100\n" +
+      "0x1000\n" + "0x3fffffff\n" + "0x7ffffffe\n" + "0x7fffffff\n" +
+      "0x80000000\n" + "0xfffffffe\n" + "0xffffffff\n" + "0x10000\n" +
+      "0x100000\n" + "\n" + "P:FSE:Format String Errors:19\n" +
       "> Exploits | Format String Errors\n" + "%s%p%x%d\n" + ".1024d\n" +
       "%.2049d\n" + "%p%p%p%p\n" + "%x%x%x%x\n" + "%d%d%d%d\n" + "%s%s%s%s\n" +
       "%99999999999s\n" + "%08x\n" + "%%20d\n" + "%%20n\n" + "%%20x\n" +
@@ -177,27 +172,26 @@ public class Format {
       "R:OCT:Octal Fuzz Type:8\n" + "> Category String | Characters | Octal\n" +
       "0\n" + "1\n" + "2\n" + "3\n" + "4\n" + "5\n" + "6\n" + "7\n" + "\n" +
       "R:BIN:Binary Fuzz Type:2\n" +
-      "> Category String | Characters | Binary\n" +
-      "0\n" + "1\n" + "\n" + "P:BFO:Buffer Overflows:17\n" +
-      "> Exploits | Buffer overflows\n" + "A\n" + "f(x)=A x 3\n" +
-      "f(x)=A x 5\n" +
-      "f(x)=A x 9\n" + "f(x)=A x 17\n" + "f(x)=A x 33\n" + "f(x)=A x 65\n" +
-      "f(x)=A x 129\n" + "f(x)=A x 257\n" + "f(x)=A x 513\n" +
-      "f(x)=A x 1025\n" +
-      "f(x)=A x 2049\n" + "f(x)=A x 4197\n" + "f(x)=A x 8193\n" +
-      "f(x)=A x 16385\n" + "f(x)=A x 32769\n" + "f(x)=A x 65537\n" + "\n";
+      "> Category String | Characters | Binary\n" + "0\n" + "1\n" + "\n" +
+      "P:BFO:Buffer Overflows:17\n" + "> Exploits | Buffer overflows\n" + "A\n" +
+      "f(x)=A x 3\n" + "f(x)=A x 5\n" + "f(x)=A x 9\n" + "f(x)=A x 17\n" +
+      "f(x)=A x 33\n" + "f(x)=A x 65\n" + "f(x)=A x 129\n" + "f(x)=A x 257\n" +
+      "f(x)=A x 513\n" + "f(x)=A x 1025\n" + "f(x)=A x 2049\n" +
+      "f(x)=A x 4197\n" + "f(x)=A x 8193\n" + "f(x)=A x 16385\n" +
+      "f(x)=A x 32769\n" + "f(x)=A x 65537\n" + "\n";
   }
+
   /**
    * <p>Each version of JBroFuzz has a codename, which is defined by this public
    * variable.</p>
    */
-  public static final String CODENAME = "Pluto "; /* - God of Death */
+  public static final String CODENAME = "Apollo"; /* - God of the Sun */
 
   /**
    * <p>The version of JBroFuzz in String format and always of the form "x.x"
    * where 'x' is a single digit in the range of [0-9].</p>
    */
-  public static final String VERSION = "0.5";
+  public static final String VERSION = "0.6";
 
   /**
    * <p>The text shown in the about box.</p>
@@ -205,10 +199,9 @@ public class Format {
   public static final String ABOUTTEXT = "Java Bro Fuzzer Version:  " + VERSION +
                                          "\n" + "Codename:  " + CODENAME +
                                          "\n\n" +
-                                         "JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software\n" +
-                                         "and you are welcome to redistribute it under the GNU GPL license\n\n" +
-                                         "Copyright (c) 2007  subere (at) uncon org\n\n" +
-                                         "Running Under  Java " +
+    "JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software\n" +
+    "and you are welcome to redistribute it under the GNU GPL license\n\n" +
+    "Copyright (c) 2007  subere (at) uncon org\n\n" + "Running Under  Java " +
                                          System.getProperty("java.version") +
                                          "\n";
 
@@ -241,11 +234,11 @@ public class Format {
    *
    * @param mJBroFuzz JBroFuzz
    */
-  public static final void setLookAndFeel(JBroFuzz mJBroFuzz) {
+  public static final void setLookAndFeel(final JBroFuzz mJBroFuzz) {
     try {
-      String os = System.getProperty("os.name");
-      os = os.toLowerCase(new Locale(ISO_LAN_CODE));
-      if (os.startsWith("windows")) {
+      String oSystem = System.getProperty("os.name");
+      oSystem = oSystem.toLowerCase(new Locale(ISO_LAN_CODE));
+      if (oSystem.startsWith("windows")) {
         UIManager.setLookAndFeel(
           "com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
       }
@@ -266,8 +259,7 @@ public class Format {
         "Interface Manager");
     }
     catch (IllegalAccessException e) {
-      mJBroFuzz.getFrameWindow().log(
-        "An illegal access exception was " +
+      mJBroFuzz.getFrameWindow().log("An illegal access exception was " +
         "thrown while setting the User Interface Manager");
     }
     catch (SecurityException e) {

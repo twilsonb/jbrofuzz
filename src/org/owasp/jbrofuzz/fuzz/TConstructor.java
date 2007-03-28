@@ -1,5 +1,5 @@
 /**
- * Constructor.java 0.5
+ * Constructor.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -35,8 +35,8 @@ import org.owasp.jbrofuzz.ver.*;
  * <p>The Constructor constructs a list of Definitions, iterating though each
  * Generator and accumulating values inputted from the corresponding file.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class TConstructor {
   final private JBroFuzz mJBroFuzz;
@@ -57,7 +57,7 @@ public class TConstructor {
     // If the length is zero define the generators from the Format default list
     if (len == 0) {
       mJBroFuzz.getFrameWindow().log("Loading default generator list");
-      String[] defaultArray = Format.DEFAULT_GENERATORS.split("\n");
+      String[] defaultArray = Format.DEFAULT_GENS.split("\n");
       len = defaultArray.length;
       fileInput.setSize(len);
       for (int x = 0; x < len; x++) {

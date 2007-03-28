@@ -1,12 +1,12 @@
 /**
- * FuzzingTableModel.java 0.5
+ * FuzzingTableModel.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,17 +33,19 @@ import javax.swing.table.*;
  * The fuzzing table model used within the generators table of the "TCP Fuzzing"
  * panel.
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class FuzzingTableModel extends AbstractTableModel {
+
+  private static final long serialVersionUID = 1021L;
 
   /**
    * <p>The String used to separate columns when a toString representation of
    * a set number of columns or rows is required. This is typically used in
    * method getRow() that returns a String.</p>
    */
-  public static final String STRING_COLUMN_SEPARATOR = "          ";
+  public static final String STRING_SEPARATOR = "          ";
 
   private static final int INDEX_GENERATOR = 0;
   private static final int INDEX_START = 1;
@@ -162,7 +164,7 @@ public class FuzzingTableModel extends AbstractTableModel {
     StringBuffer output = new StringBuffer();
     if ((row > -1) && (row < dataVector.size())) {
       for (int i = 0; i < COLUMNNAMES.length; i++) {
-        output.append(getValueAt(row, i) + STRING_COLUMN_SEPARATOR);
+        output.append(getValueAt(row, i) + STRING_SEPARATOR);
       }
     }
     return output.toString();
@@ -177,8 +179,7 @@ public class FuzzingTableModel extends AbstractTableModel {
       return false;
     }
     Generator gen = (Generator) dataVector.get(dataVector.size() - 1);
-    if (gen.getType().trim().equalsIgnoreCase("") &&
-        gen.getStart() == 0 &&
+    if (gen.getType().trim().equalsIgnoreCase("") && gen.getStart() == 0 &&
         gen.getEnd() == 0) {
       return true;
     }

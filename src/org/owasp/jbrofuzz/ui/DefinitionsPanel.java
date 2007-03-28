@@ -1,12 +1,12 @@
 /**
- * DefinitionsPanel.java 0.5
+ * DefinitionsPanel.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,8 +31,8 @@ import javax.swing.*;
 
 /**
  * <p>The definitions panel holding a description of the generators loaded.</p>
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class DefinitionsPanel extends JPanel {
   // The frame that the sniffing panel is attached

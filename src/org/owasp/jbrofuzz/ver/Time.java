@@ -1,12 +1,12 @@
 /**
- * Time.java 0.5
+ * Time.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,8 +32,8 @@ import java.util.*;
  * formats.</p>
  * <p>All available public methods are static.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class Time {
 
@@ -47,9 +47,9 @@ public class Time {
    */
   public static String dateToday() {
     currentDate = new Date();
-    SimpleDateFormat justDate = new SimpleDateFormat("dd.MM.yyyy");
-    String today = justDate.format(currentDate);
-    return today;
+    final SimpleDateFormat justDate = new SimpleDateFormat("dd.MM.yyyy",
+      new Locale("en"));
+    return justDate.format(currentDate);
   }
 
   /**
@@ -58,9 +58,9 @@ public class Time {
    */
   public static String dateAndTime() {
     currentTime = new Date();
-    SimpleDateFormat dateTime = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-    String today = dateTime.format(currentTime);
-    return today;
+    final SimpleDateFormat dateTime = new SimpleDateFormat(
+      "dd.MM.yyyy HH:mm:ss", new Locale("en"));
+    return dateTime.format(currentTime);
   }
 
   /**
@@ -70,19 +70,12 @@ public class Time {
    * @param hoursMinutes String
    * @return Date
    */
-  public static Date dateTimeAt(String hoursMinutes) {
-    try {
-      String usingToday = dateToday() + "." + hoursMinutes;
-      SimpleDateFormat converter = new SimpleDateFormat("dd.MM.yyyy.HH:mm");
-      ParsePosition pos = new ParsePosition(0);
-      Date dateTime = converter.parse(usingToday, pos);
-      return dateTime;
-    }
-    catch (NullPointerException e) {
-      //Logger.logError(
-      //  "Timer reports: Illegal format of input time\nfor Date conversion.");
-      return null;
-    }
+  public static Date dateTimeAt(final String hoursMinutes) {
+    final String usingToday = dateToday() + "." + hoursMinutes;
+    final SimpleDateFormat converter = new SimpleDateFormat("dd.MM.yyyy.HH:mm",
+      new Locale("en"));
+    final ParsePosition pos = new ParsePosition(0);
+    return converter.parse(usingToday, pos);
   }
 
   /**
@@ -90,14 +83,8 @@ public class Time {
    * @param date long
    * @return Date
    */
-  public static Date getUsingLong(long date) {
-    try {
-      Date dateAt = new Date(date);
-      return dateAt;
-    }
-    catch (NullPointerException e) {
-      return null;
-    }
+  public static Date getUsingLong(final long date) {
+    return new Date(date);
   }
 
   /**
@@ -106,16 +93,10 @@ public class Time {
    * @param dateTime Date
    * @return long
    */
-  public static long getUsingDate(Date dateTime) {
+  public static long getUsingDate(final Date dateTime) {
     long relativeTime;
-    try {
-      relativeTime = dateTime.getTime();
-      return relativeTime;
-    }
-    catch (NullPointerException e) {
-      relativeTime = 0;
-      return relativeTime;
-    }
+    relativeTime = dateTime.getTime();
+    return relativeTime;
   }
 
   /**
@@ -123,10 +104,10 @@ public class Time {
    * @param date long
    * @return String
    */
-  public static String hourMinSec(long date) {
-    Date temp = Time.getUsingLong(date);
-    SimpleDateFormat dateTime = new SimpleDateFormat("HH:mm:ss");
-    String now = dateTime.format(temp);
-    return now;
+  public static String hourMinSec(final long date) {
+    final Date temp = Time.getUsingLong(date);
+    final SimpleDateFormat dateTime = new SimpleDateFormat("HH:mm:ss",
+      new Locale("en"));
+    return dateTime.format(temp);
   }
 }

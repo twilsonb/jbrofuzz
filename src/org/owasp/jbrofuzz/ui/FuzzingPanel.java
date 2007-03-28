@@ -1,12 +1,12 @@
 /**
- * FuzzingPanel.java 0.5
+ * FuzzingPanel.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,7 +41,7 @@ import org.owasp.jbrofuzz.ver.*;
  * current window, as well as writting them to file.</p>
  *
  * @author subere (at) uncon org
- * @version 0.5
+ * @version 0.6
  */
 public class FuzzingPanel extends JPanel {
   // The frame that the sniffing panel is attached
@@ -270,10 +270,10 @@ public class FuzzingPanel extends JPanel {
     target.setText("http://localhost");
     port.setText("80");
     message.setText("GET /index.html HTTP/1.0\r\n" + "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n" + "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n" +
-      "Accept-Language: en-gb,en;q=0.5\r\n" +
-      "Accept-Encoding: gzip,deflate\r\n" +
-      "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n" +
-      "Keep-Alive: 300\r\n" + "Connection: keep-alive\r\n\r\n");
+                    "Accept-Language: en-gb,en;q=0.5\r\n" +
+                    "Accept-Encoding: gzip,deflate\r\n" +
+                    "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n" +
+                    "Keep-Alive: 300\r\n" + "Connection: keep-alive\r\n\r\n");
     message.setCaretPosition(0);
   }
 
@@ -382,7 +382,7 @@ public class FuzzingPanel extends JPanel {
     }
     if (text.endsWith("/")) {
       text = text.substring(0, len - 1);
-      len = text.length();
+      // If another if statement is included, update the len variable here
       target.setText(text);
     }
     return text;
@@ -496,7 +496,7 @@ public class FuzzingPanel extends JPanel {
 
     if (selectedFuzzPoint != null) {
       String[] splitString = selectedFuzzPoint.split(FuzzingTableModel.
-        STRING_COLUMN_SEPARATOR);
+        STRING_SEPARATOR);
       mFuzzingTableModel.removeRow(splitString[0],
                                    Integer.parseInt(splitString[1]),
                                    Integer.parseInt(splitString[2]));
@@ -547,21 +547,37 @@ public class FuzzingPanel extends JPanel {
   public String getCounter(boolean newCount) {
     String s = "";
     // Integrity checks and loop calls...
-    if ((counter < 0) || (counter > 1000000)) {      counter = 1;    }
-    if ((session < 0) || (session > 100)) {      session = 1;    }
+    if ((counter < 0) || (counter > 1000000)) {
+      counter = 1;
+    }
+    if ((session < 0) || (session > 100)) {
+      session = 1;
+    }
 
     // Append zeros to the session [0 - 99]
-    if(session < 10) {      s += "0";    }
+    if (session < 10) {
+      s += "0";
+    }
     s += session + "-";
     // Append zeros to the counter [0 - 999999]
-    if (counter < 100000) {      s += "0";    }
-    if (counter < 10000) {      s += "0";    }
-    if (counter < 1000) {      s += "0";    }
-    if (counter < 100) {      s += "0";    }
-    if (counter < 10) {      s += "0";    }
+    if (counter < 100000) {
+      s += "0";
+    }
+    if (counter < 10000) {
+      s += "0";
+    }
+    if (counter < 1000) {
+      s += "0";
+    }
+    if (counter < 100) {
+      s += "0";
+    }
+    if (counter < 10) {
+      s += "0";
+    }
     s += counter;
 
-    if(newCount) {
+    if (newCount) {
       counter++;
     }
 

@@ -1,12 +1,12 @@
 /**
- * FileHandler.java 0.5
+ * FileHandler.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,10 +36,13 @@ import org.owasp.jbrofuzz.ver.*;
  * <p>Class responsible for all File Creation. This class holds the file read
  * and create methods.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class FileHandler {
+  // The singleton object
+  private static FileHandler singletonFileHandlerObject;
+
   private static FrameWindow g;
   // The current file used for creation
   private static File currentFile;
@@ -50,7 +53,7 @@ public class FileHandler {
   // The info directory of operation
   private static File webEnumDirectory;
   // A constant for counting file IO errors
-  private static int errors;
+  private static int errors = 0;
   // Global constants
   private static final int FUZZ_FILE = 0;
   private static final int SNIF_FILE = 1;
@@ -59,19 +62,39 @@ public class FileHandler {
   private static String runningDate;
 
   /**
-   * <p>Constructor responsible for generating the necessary directories and
-   * files for the correct operation of JBroFuzz.</p>
-   * @param g MainWindow
+   * <p>
+   * Singleton Constructor responsible for generating the necessary directories
+   * and files for the correct operation of JBroFuzz.
+   * </p>
+   * @param g FrameWindow
+   * @return FileHandler
    */
-  public FileHandler(FrameWindow g) {
+  public static synchronized FileHandler createFileHandler(FrameWindow g) {
+    if(singletonFileHandlerObject == null) {
+      singletonFileHandlerObject = new FileHandler(g);
+    }
+    return singletonFileHandlerObject;
+  }
+
+  /**
+   * <p>
+   * This method overides the clone method of Object, so that not to support
+   * cloning for this particular object. This is done to follow singleton
+   * best practice implementation.
+   * </p>
+   * @return Object
+   * @throws CloneNotSupportedException
+   */
+  public Object clone() throws CloneNotSupportedException {
+    throw new CloneNotSupportedException();
+  }
+
+  private FileHandler(FrameWindow g) {
     FileHandler.g = g;
-    // Set the number of errors that can potentially occur
-    errors = 0;
     // Get the date
     runningDate = Format.DATE;
 
     String baseDir = System.getProperty("user.dir");
-    // try {
 
     // Create the necessary directory with the obtained timestamp
     fuzzDirectory = new File(baseDir + File.separator + "jbrofuzz" +
@@ -121,11 +144,12 @@ public class FileHandler {
 
   private static void appendFile(File fileName, String content) {
     String file = fileName.toString();
+    OutputStream output = null;
     try {
       if (errors < 3) {
         content += "\r\n";
         final boolean append = true;
-        OutputStream output = new FileOutputStream(file, append);
+        output = new FileOutputStream(file, append);
         byte buffer[] = content.getBytes();
         output.write(buffer);
         output.close();
@@ -138,6 +162,15 @@ public class FileHandler {
     catch (IOException e) {
       g.log("Cannot Save to File" + file + "A File Write Error Occured");
       errors++;
+    }
+    finally {
+      try {
+        if (output != null) {
+          output.close();
+        }
+      }
+      catch (IOException ex) {
+      }
     }
   }
 
@@ -165,9 +198,10 @@ public class FileHandler {
                                     JOptionPane.ERROR_MESSAGE);
       return new StringBuffer("");
     }
+    BufferedReader bufRead = null;
     try {
       FileReader input = new FileReader(file);
-      BufferedReader bufRead = new BufferedReader(input);
+      bufRead = new BufferedReader(input);
       String line;
       line = bufRead.readLine();
       while (line != null) {
@@ -190,6 +224,13 @@ public class FileHandler {
                                     "JBroFuzz File Read Error",
                                     JOptionPane.ERROR_MESSAGE);
       return new StringBuffer("");
+    }
+    finally {
+      try {
+        bufRead.close();
+      }
+      catch (IOException ex) {
+      }
     }
     return out;
   }
@@ -303,7 +344,7 @@ public class FileHandler {
    * @param content String The content to be written to disk
    */
   public static void writeWebDirFile(String name, String content) {
-    createFile(name + ".csv",content, FileHandler.WEBD_FILE);
+    createFile(name + ".csv", content, FileHandler.WEBD_FILE);
   }
 
   /**
@@ -316,8 +357,9 @@ public class FileHandler {
     final int maxLineLength = 256;
     int line_counter = 0;
     Vector file = new Vector();
+    BufferedReader in = null;
     try {
-      BufferedReader in = new BufferedReader(new FileReader(generatorFile));
+      in = new BufferedReader(new FileReader(generatorFile));
       String line = in.readLine();
       line_counter++;
       while ((line != null) && (line_counter < maxLines)) {
@@ -331,8 +373,17 @@ public class FileHandler {
       in.close();
     }
     catch (IOException e1) {
-      if(g != null) {
+      if (g != null) {
         g.log("Generator file: " + generatorFile + " could not be found");
+      }
+    }
+    finally {
+      try {
+        if (in != null) {
+          in.close();
+        }
+      }
+      catch (IOException ex) {
       }
     }
     file.trimToSize();
@@ -349,8 +400,9 @@ public class FileHandler {
     final int maxLineLength = 256;
     int line_counter = 0;
     Vector file = new Vector();
+    BufferedReader in = null;
     try {
-      BufferedReader in = new BufferedReader(new FileReader(directoriesFile));
+      in = new BufferedReader(new FileReader(directoriesFile));
       String line = in.readLine();
       line_counter++;
       // Check for max lines and line lengths
@@ -358,7 +410,7 @@ public class FileHandler {
         if (line.length() > maxLineLength) {
           line = line.substring(0, maxLineLength);
         }
-        if (! line.startsWith("#")) {
+        if (!line.startsWith("#")) {
           file.add(line);
           line_counter++;
         }
@@ -367,20 +419,29 @@ public class FileHandler {
       in.close();
     }
     catch (IOException e1) {
-      if( g != null) {
+      if (g != null) {
         g.log("Directories file: " + directoriesFile + " could not be found");
+      }
+    }
+    finally {
+      try {
+        if (in != null) {
+          in.close();
+        }
+      }
+      catch (IOException ex) {
       }
     }
 
     file.trimToSize();
-    int len = file.size() ;
+    int len = file.size();
 
     // If the length is zero define the generators from the Format default list
     if (len == 0) {
-      if( g != null) {
+      if (g != null) {
         g.log("Loading default directories list");
       }
-      String[] defaultArray = Format.DEFAULT_DIRECTORIES.split("\n");
+      String[] defaultArray = Format.DEFAULT_DIRS.split("\n");
       len = defaultArray.length;
       file.setSize(len);
       for (int x = 0; x < len; x++) {
@@ -389,9 +450,9 @@ public class FileHandler {
     }
 
     StringBuffer output = new StringBuffer();
-    for(int x = 0; x < file.size() ; x++) {
+    for (int x = 0; x < file.size(); x++) {
       String s = (String) file.elementAt(x);
-      if(s != null) {
+      if (s != null) {
         output.append(s + "\n");
       }
     }
@@ -399,4 +460,3 @@ public class FileHandler {
   }
 
 }
-
