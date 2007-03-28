@@ -1,12 +1,12 @@
 /**
- * JBroFuzz.java 0.5
+ * JBroFuzz.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,12 +25,12 @@
  */
 package org.owasp.jbrofuzz;
 
+import org.owasp.jbrofuzz.dir.*;
 import org.owasp.jbrofuzz.fuzz.*;
 import org.owasp.jbrofuzz.io.*;
 import org.owasp.jbrofuzz.snif.tcp.*;
 import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.ver.*;
-import org.owasp.jbrofuzz.dir.*;
 
 /**
  * <p>Title: Java Bro Fuzzer</p>
@@ -42,16 +42,16 @@ import org.owasp.jbrofuzz.dir.*;
  * (directories and generators), constructors are created to populate the
  * corresponding fields.
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class JBroFuzz {
 
   private RequestIterator generator;
-  private static FrameWindow mainwindow;
-  private static FileHandler filehandler;
-  private static TConstructor tconstructor;
-  private static DConstructor dconstructor;
+  private FrameWindow mainwindow;
+  private FileHandler filehandler;
+  private TConstructor tconstructor;
+  private DConstructor dconstructor;
   //
   private ConnectionListener listener;
   /**
@@ -64,12 +64,12 @@ public class JBroFuzz {
     Format.setLookAndFeel(this);
     // Launch the GUI
     mainwindow = new FrameWindow(this);
-    filehandler = new FileHandler(mainwindow);
+    filehandler = FileHandler.createFileHandler(mainwindow);
     tconstructor = new TConstructor(this);
     dconstructor = new DConstructor(this);
 
-    listener = new ConnectionListener(mainwindow.getTCPSniffingPanel(), "",
-                                      "", "", "");
+    listener = new ConnectionListener(mainwindow.getTCPSniffingPanel(), "", "",
+                                      "", "");
     generator = new RequestIterator(this, new StringBuffer(""), 0, 0, "ZER");
   }
 

@@ -1,12 +1,12 @@
 /**
- * Base64.java 0.5
+ * Base64.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,9 +30,9 @@ package org.owasp.jbrofuzz.util;
  * Base64 String and vice-versa. The operation of the class is performed by
  * invoking the encode and decode methods.</p>
  *
- * @author subere (at) uncon . org
+ * @author subere (at) uncon (dot) org
  * @since 0.1
- * @version 0.5
+ * @version 0.6
  */
 public class Base64 {
 
@@ -41,9 +41,9 @@ public class Base64 {
    * @param raw byte[]
    * @return String
    */
-  public static String encode(byte[] raw) {
+  public static String encode(final byte[] raw) {
 
-    StringBuffer encoded = new StringBuffer();
+    final StringBuffer encoded = new StringBuffer();
     for (int i = 0; i < raw.length; i += 3) {
       encoded.append(encodeBlock(raw, i));
     }
@@ -55,20 +55,20 @@ public class Base64 {
    * @param base64 String
    * @return byte[]
    */
-  public static byte[] decode(String base64) {
+  public static byte[] decode(final String base64) {
 
     int pad = 0;
     for (int i = base64.length() - 1; base64.charAt(i) == '='; i--) {
       pad++;
     }
-    int length = base64.length() * 6 / 8 - pad;
+    final int length = base64.length() * 6 / 8 - pad;
     byte[] raw = new byte[length];
     int rawIndex = 0;
     for (int i = 0; i < base64.length(); i += 4) {
-      int block = (getValue(base64.charAt(i)) << 18) +
-                  (getValue(base64.charAt(i + 1)) << 12) +
-                  (getValue(base64.charAt(i + 2)) << 6) +
-                  (getValue(base64.charAt(i + 3)));
+      final int block = (getValue(base64.charAt(i)) << 18) +
+                        (getValue(base64.charAt(i + 1)) << 12) +
+                        (getValue(base64.charAt(i + 2)) << 6) +
+                        (getValue(base64.charAt(i + 3)));
       for (int j = 0; j < 3 && rawIndex + j < raw.length; j++) {
         raw[rawIndex + j] = (byte) ((block >> (8 * (2 - j))) & 0xff);
       }
@@ -77,18 +77,18 @@ public class Base64 {
     return raw;
   }
 
-  private static char[] encodeBlock(byte[] raw, int offset) {
+  private static char[] encodeBlock(final byte[] raw, final int offset) {
     int block = 0;
-    int slack = raw.length - offset - 1;
-    int end = (slack >= 2) ? 2 : slack;
+    final int slack = raw.length - offset - 1;
+    final int end = (slack >= 2) ? 2 : slack;
     for (int i = 0; i <= end; i++) {
-      byte b = raw[offset + i];
-      int neuter = (b < 0) ? b + 256 : b;
+      final byte b = raw[offset + i];
+      final int neuter = (b < 0) ? b + 256 : b;
       block += neuter << (8 * (2 - i));
     }
     char[] base64 = new char[4];
     for (int i = 0; i < 4; i++) {
-      int sixbit = (block >>> (6 * (3 - i))) & 0x3f;
+      final int sixbit = (block >>> (6 * (3 - i))) & 0x3f;
       base64[i] = getChar(sixbit);
     }
     if (slack < 1) {
@@ -100,7 +100,7 @@ public class Base64 {
     return base64;
   }
 
-  private static char getChar(int sixBit) {
+  private static char getChar(final int sixBit) {
     if (sixBit >= 0 && sixBit <= 25) {
       return (char) ('A' + sixBit);
     }
@@ -119,7 +119,7 @@ public class Base64 {
     return '?';
   }
 
-  private static int getValue(char c) {
+  private static int getValue(final char c) {
     if (c >= 'A' && c <= 'Z') {
       return c - 'A';
     }

@@ -1,12 +1,12 @@
 /**
- * FrameMenuBar.java 0.5
+ * FrameMenuBar.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,6 +30,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.Action;
 import javax.swing.text.*;
 
 import org.owasp.jbrofuzz.ui.util.*;
@@ -38,7 +39,7 @@ import org.owasp.jbrofuzz.ver.*;
  * <p>The main menu bar attached to the main window.</p>
  *
  * @author subere (at) uncon org
- * @version 0.5
+ * @version 0.6
  */
 public class FrameMenuBar extends JMenuBar {
 
@@ -72,7 +73,7 @@ public class FrameMenuBar extends JMenuBar {
     add(help);
 
     // File
-    JMenuItem exit = new JMenuItem("Exit", ImageCreator.exitImageIcon);
+    JMenuItem exit = new JMenuItem("Exit", ImageCreator.EXIT_IMG);
     exit.setAccelerator(KeyStroke.getKeyStroke('1',
                                                Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
@@ -117,11 +118,11 @@ public class FrameMenuBar extends JMenuBar {
     view.add(system);
 
     // Panel
-    start = new JMenuItem("Start", ImageCreator.startImageIcon);
-    pause = new JMenuItem("Pause", ImageCreator.pauseImageIcon);
-    stop = new JMenuItem("Stop", ImageCreator.stopImageIcon);
-    add = new JMenuItem("Add", ImageCreator.addImageIcon);
-    remove = new JMenuItem("Remove", ImageCreator.removeImageIcon);
+    start = new JMenuItem("Start", ImageCreator.START_IMG);
+    pause = new JMenuItem("Pause", ImageCreator.PAUSE_IMG);
+    stop = new JMenuItem("Stop", ImageCreator.STOP_IMG);
+    add = new JMenuItem("Add", ImageCreator.ADD_IMG);
+    remove = new JMenuItem("Remove", ImageCreator.REMOVE_IMG);
 
     add.setAccelerator(KeyStroke.getKeyStroke('=',
                                               Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
@@ -148,10 +149,10 @@ public class FrameMenuBar extends JMenuBar {
     options.add(preferences);
 
     // Help
-    JMenuItem topics = new JMenuItem("Topics", ImageCreator.topicsImageIcon);
+    JMenuItem topics = new JMenuItem("Topics", ImageCreator.TOPICS_IMG);
     JMenuItem disclaimer = new JMenuItem("Disclaimer",
-                                         ImageCreator.disclaimerImageIcon);
-    JMenuItem about = new JMenuItem("About", ImageCreator.helpImageIcon);
+                                         ImageCreator.DISCLAIMER_IMG);
+    JMenuItem about = new JMenuItem("About", ImageCreator.HELP_IMG);
 
     about.setAccelerator(KeyStroke.getKeyStroke('0',
                                                 Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
@@ -244,7 +245,7 @@ public class FrameMenuBar extends JMenuBar {
               getFrameWindow().getTCPSniffingPanel().buttonStart();
             }
             if (s.equals(" Web Directories ")) {
-              getFrameWindow().getWebDirectoriesPanel().buttonStart() ;
+              getFrameWindow().getWebDirectoriesPanel().buttonStart();
             }
             return "start-menu-bar-return";
           }
@@ -259,7 +260,7 @@ public class FrameMenuBar extends JMenuBar {
               getFrameWindow().getTCPSniffingPanel().buttonStop();
             }
             if (s.equals(" Web Directories ")) {
-              getFrameWindow().getWebDirectoriesPanel().buttonStop() ;
+              getFrameWindow().getWebDirectoriesPanel().buttonStop();
             }
           }
         }; worker.start();
@@ -277,7 +278,7 @@ public class FrameMenuBar extends JMenuBar {
           getFrameWindow().getTCPSniffingPanel().buttonStop();
         }
         if (s.equals(" Web Directories ")) {
-          getFrameWindow().getWebDirectoriesPanel().buttonStop() ;
+          getFrameWindow().getWebDirectoriesPanel().buttonStop();
         }
       }
     });
@@ -388,4 +389,3 @@ class SelectAllAction extends TextAction {
     }
   }
 }
-

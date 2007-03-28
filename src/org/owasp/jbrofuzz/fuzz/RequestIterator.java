@@ -1,12 +1,12 @@
 /**
- * RequestIterator.java 0.5
+ * RequestIterator.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,8 +42,8 @@ import org.owasp.jbrofuzz.io.*;
  * <p>Effectively, a request generator generates connections when run by means
  * of establishing sockets though the Connection class.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class RequestIterator {
 
@@ -94,7 +94,8 @@ public class RequestIterator {
     }
     else {
       maxValue = 0;
-      maxValue = (long) getJBroFuzz().getTCPConstructor().getGeneratorLength(type);
+      maxValue = (long) getJBroFuzz().getTCPConstructor().getGeneratorLength(
+        type);
       // For a recursive generator, generate the corresponding maximum value
       char genType = getJBroFuzz().getTCPConstructor().getGeneratorType(type);
       if (genType == Generator.RECURSIVE) {
@@ -185,11 +186,10 @@ public class RequestIterator {
 
       final String filename = mJBroFuzz.getFrameWindow().getFuzzingPanel().
                               getCounter(false);
-      final String header =
-        "-----JBroFuzz------Start--(1 of 1)--[" + filename + "]----\n" +
-        "Request: " + target + " Port: " + port + "\n" + stout;
-      final String footer =
-        "\n-----JBroFuzz------End----(1 of 1)--[" + filename + "]----\n";
+      final String header = "-----JBroFuzz------Start--(1 of 1)--[" + filename +
+        "]----\n" + "Request: " + target + " Port: " + port + "\n" + stout;
+      final String footer = "\n-----JBroFuzz------End----(1 of 1)--[" +
+        filename + "]----\n";
 
       mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(header);
       FileHandler.writeFuzzFile(header, filename);
@@ -201,8 +201,7 @@ public class RequestIterator {
       FileHandler.writeFuzzFile(t, filename);
 
       mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(footer);
-      FileHandler.writeFuzzFile(
-        footer,
+      FileHandler.writeFuzzFile(footer,
         mJBroFuzz.getFrameWindow().getFuzzingPanel().getCounter(true));
     }
     // If multiple requests have been specified...
@@ -215,35 +214,31 @@ public class RequestIterator {
                           getCounter(false);
 
         mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(
-          "\n-----JBroFuzz------Start--(" + currentValue + "-" + maxValue + ")--[" + filename +
-          "]----\n");
-        FileHandler.writeFuzzFile(
-          "\n-----JBroFuzz------Start--(" + currentValue + "-" + maxValue + ")--[" + filename +
-          "]----\n",
+          "\n-----JBroFuzz------Start--(" + currentValue + "-" + maxValue +
+          ")--[" + filename + "]----\n");
+        FileHandler.writeFuzzFile("\n-----JBroFuzz------Start--(" +
+          currentValue + "-" + maxValue + ")--[" + filename + "]----\n",
           filename);
 
-        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(
-          "Request: " + target + " Port: " + port + "\n" + stout + "\n");
-        FileHandler.writeFuzzFile(
-          "Request: " + target + " Port: " + port + "\r\n" + stout + "\n",
-          filename);
+        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText("Request: " +
+          target + " Port: " + port + "\n" + stout + "\n");
+        FileHandler.writeFuzzFile("Request: " + target + " Port: " + port +
+          "\r\n" + stout + "\n", filename);
 
         Connection con = new Connection(target, port, stout);
 
         final String s = con.getReply();
 
-        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(
-          "\nReply:\n" + s);
-        FileHandler.writeFuzzFile(
-          "\nReply:\n" + s, filename);
+        mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText("\nReply:\n" +
+          s);
+        FileHandler.writeFuzzFile("\nReply:\n" + s, filename);
 
         mJBroFuzz.getFrameWindow().getFuzzingPanel().setOutputText(
-          "\n-----JBroFuzz------End----(" + currentValue + "-" + maxValue + ")--[" + filename +
-          "]----\n");
+          "\n-----JBroFuzz------End----(" + currentValue + "-" + maxValue +
+          ")--[" + filename + "]----\n");
 
-        FileHandler.writeFuzzFile(
-          "\n-----JBroFuzz------End----(" + currentValue + "-" + maxValue + ")--[" + filename +
-          "]----\n",
+        FileHandler.writeFuzzFile("\n-----JBroFuzz------End----(" +
+          currentValue + "-" + maxValue + ")--[" + filename + "]----\n",
           mJBroFuzz.getFrameWindow().getFuzzingPanel().getCounter(true));
 
         stout = getNext();

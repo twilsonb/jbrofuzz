@@ -1,12 +1,12 @@
 /**
- * FrameWindow.java 0.5
+ * FrameWindow.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,8 +39,8 @@ import org.owasp.jbrofuzz.ver.*;
  * <p>This window holds all the Panels that are attached inside the TabbedPane
  * occupying this entire frame.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class FrameWindow extends JFrame {
 
@@ -51,7 +51,7 @@ public class FrameWindow extends JFrame {
   private final FrameMenuBar mMenuBar;
 
   // The tabbed pane holding the different views
-  private static JTabbedPane tabbedPane;
+  private JTabbedPane tabbedPane;
 
   // The web directories panel
   private final WebDirectoriesPanel mWebDirectoriesPanel;
@@ -128,7 +128,7 @@ public class FrameWindow extends JFrame {
     tabbedPane.setSelectedComponent(mWebDirectoriesPanel);
     pane.add(tabbedPane);
     // The image icon
-    setIconImage(ImageCreator.frameImageIcon.getImage());
+    setIconImage(ImageCreator.FRAME_IMG.getImage());
     log("System Launch, Welcome!");
   }
 

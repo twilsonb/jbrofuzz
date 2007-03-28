@@ -1,12 +1,12 @@
 /**
- * SystemLogger.java 0.5
+ * SystemLogger.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,8 +35,8 @@ import org.owasp.jbrofuzz.ver.*;
  * The panel holding the system logging information that is part of the main
  * frame window.
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class SystemLogger extends JPanel {
 
@@ -91,17 +91,27 @@ public class SystemLogger extends JPanel {
     infoButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         final String systemInfo = "[System Info Start]\r\n" + "  [Java]\r\n" +
-          "    Vendor:  " + System.getProperty("java.vendor") + "\r\n" +
-          "    Version: " + System.getProperty("java.version") + "\r\n" +
-          "    Installed at: " + System.getProperty("java.home") + "\r\n" +
-          "    Website: " + System.getProperty("java.vendor.url") + "\r\n" +
-          "  [User]\r\n" + "    User: " + System.getProperty("user.name") +
-          "\r\n" + "    Home dir: " + System.getProperty("user.home") + "\r\n" +
-          "    Current dir: " + System.getProperty("user.dir") + "\r\n" +
-          "  [O/S]\r\n" + "    Name: " + System.getProperty("os.name") + "\r\n" +
-          "    Version: " + System.getProperty("os.version") + "\r\n" +
-          "    Architecture: " + System.getProperty("os.arch") + "\r\n" +
-          "[System Info End]\r\n";
+                                  "    Vendor:  " +
+                                  System.getProperty("java.vendor") + "\r\n" +
+                                  "    Version: " +
+                                  System.getProperty("java.version") + "\r\n" +
+                                  "    Installed at: " +
+                                  System.getProperty("java.home") + "\r\n" +
+                                  "    Website: " +
+                                  System.getProperty("java.vendor.url") +
+                                  "\r\n" + "  [User]\r\n" + "    User: " +
+                                  System.getProperty("user.name") + "\r\n" +
+                                  "    Home dir: " +
+                                  System.getProperty("user.home") + "\r\n" +
+                                  "    Current dir: " +
+                                  System.getProperty("user.dir") + "\r\n" +
+                                  "  [O/S]\r\n" + "    Name: " +
+                                  System.getProperty("os.name") + "\r\n" +
+                                  "    Version: " +
+                                  System.getProperty("os.version") + "\r\n" +
+                                  "    Architecture: " +
+                                  System.getProperty("os.arch") + "\r\n" +
+                                  "[System Info End]\r\n";
 
 
         String[] info = systemInfo.split("\r\n");

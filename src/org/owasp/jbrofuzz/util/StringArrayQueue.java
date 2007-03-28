@@ -1,12 +1,12 @@
 /**
- * StringArrayQueue.java 0.5
+ * StringArrayQueue.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,16 +28,16 @@ package org.owasp.jbrofuzz.util;
 /**
  * <p>Implementation of a String Queue Array operating in true FIFO style.</p>
  *
- * @author subere (at) uncon . org
+ * @author subere (at) uncon (dot) org
  * @since 0.5
- * @version 0.5
+ * @version 0.6
  */
 public class StringArrayQueue {
 
   // The String array holding the elements
   private String[] fifo;
   // The beginning and end of the queue
-  private int start,end;
+  private int start, end;
   // A boolean to check if the queue is full
   private boolean full;
 
@@ -58,8 +58,8 @@ public class StringArrayQueue {
    *
    * @return boolean
    */
-  public boolean isEmpty(){
-      return ((start == end) && !full);
+  public boolean isEmpty() {
+    return ((start == end) && !full);
   }
 
   /**
@@ -76,26 +76,26 @@ public class StringArrayQueue {
    *
    * @param s String
    */
-  public void push(String s){
-      if(!full) {
-        fifo[start = (++start % fifo.length)] = s;
-      }
-      if(start == end) {
-        full = true;
-      }
+  public void push(String s) {
+    if (!full) {
+      fifo[start = (++start % fifo.length)] = s;
+    }
+    if (start == end) {
+      full = true;
+    }
   }
 
   /**
    * Method for popping an element from the list.
    * @return String
    */
-  public String pop(){
-      if(full) {
-        full = false;
-      }
-      else if(isEmpty()) {
-        return "";
-      }
-      return fifo[end = (++end % fifo.length)];
+  public String pop() {
+    if (full) {
+      full = false;
+    }
+    else if (isEmpty()) {
+      return "";
+    }
+    return fifo[end = (++end % fifo.length)];
   }
 }

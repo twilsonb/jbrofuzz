@@ -1,5 +1,5 @@
 /**
- * TCPSniffingViewer.java 0.5
+ * TCPSniffingViewer.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -30,12 +30,14 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import org.owasp.jbrofuzz.io.*;
+
 /**
  * <p>Class extending a jframe for displaying the contents of each TCP sniffing
  * request/reply that has been made.</p>
  *
  * @author subere (at) uncon org
- * @version 0.5
+ * @version 0.6
  * @since 0.2
  */
 public class SniffingViewer extends JFrame {
@@ -86,8 +88,7 @@ public class SniffingViewer extends JFrame {
 
     add(listPanel);
 
-    StringBuffer text = m.getFrameWindow().getJBroFuzz().getFileHandler().
-                        readSnifFile(this, number);
+    StringBuffer text = FileHandler.readSnifFile(this, number);
     //Find the header
     int headerEnd = text.indexOf("]");
     if ((headerEnd < 0)) {

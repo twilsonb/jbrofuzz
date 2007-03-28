@@ -6,7 +6,7 @@
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,15 +31,15 @@ import javax.swing.table.*;
 /**
  * <p>The table model that is being used within the Sniffing Panel.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class SniffingTableModel extends AbstractTableModel {
 
   private String[] columnNames;
   private ArrayList dataVector;
 
-  private static final long serialVersionUID = 123L;
+  private static final long serialVersionUID = 188923L;
   /**
    * Main Constructor for the Table Model
    */

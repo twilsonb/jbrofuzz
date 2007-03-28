@@ -1,12 +1,12 @@
 /*
- * TCPAgent.java 0.5
+ * TCPAgent.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,8 +34,8 @@ import org.owasp.jbrofuzz.io.*;
 
 /**
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 class Agent implements Runnable {
 
@@ -94,13 +94,11 @@ class Agent implements Runnable {
     synchronized (System.out) {
       final Date currentTime = new Date();
       final String fileNumber = mJBroFuzz.getFrameWindow().getTCPSniffingPanel().
-                              getCounter();
+                                getCounter();
 
       FileHandler.writeSnifFile(fileNumber,
-                                               "[" + name + ", (" + nBytes +
-                                               " bytes) " +
-                                               dateFormat.format(currentTime) +
-                                               "]");
+                                "[" + name + ", (" + nBytes + " bytes) " +
+                                dateFormat.format(currentTime) + "]");
 
       final StringBuffer row = new StringBuffer(100);
       row.append(fileNumber);

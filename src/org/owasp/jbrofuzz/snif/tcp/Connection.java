@@ -1,12 +1,12 @@
 /**
- * Connection.java 0.5
+ * Connection.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,8 +30,8 @@ import java.net.*;
 
 import org.owasp.jbrofuzz.*;
 /**
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 class Connection implements Runnable, AgentMonitor {
 
@@ -118,27 +118,40 @@ class Connection implements Runnable, AgentMonitor {
   private boolean connectToDest() {
     // Ok, we've got the host name and port to which we wish to
     // connect, try to establish a connection
+
     try {
       destSocket = new Socket(destHost, destPort);
       destIn = destSocket.getInputStream();
       destOut = destSocket.getOutputStream();
     }
-    catch (Exception e) {
+    catch (UnknownHostException ex) {
       cm.connectionError(this,
                          "connect error: " + destHost + "/" + destPort + " " +
-                         e);
+                         ex);
       return false;
+
+    }
+    catch (IOException ex) {
+      cm.connectionError(this,
+                         "connect error: " + destHost + "/" + destPort + " " +
+                         ex);
+      return false;
+
     }
     return true;
+
   }
 
   private void closeSrc() {
+
     try {
       srcIn.close();
       srcOut.close();
       srcSocket.close();
     }
-    catch (Exception e) {}
+    catch (IOException ex) {
+    }
+
   }
 
   private void closeDest() {
@@ -147,7 +160,7 @@ class Connection implements Runnable, AgentMonitor {
       destOut.close();
       destSocket.close();
     }
-    catch (IOException e) {
+    catch (IOException ex) {
     }
   }
 

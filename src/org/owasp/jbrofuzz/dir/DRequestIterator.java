@@ -1,5 +1,5 @@
 /**
- * DRequestIterator.java 0.5
+ * DRequestIterator.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -28,21 +28,19 @@ package org.owasp.jbrofuzz.dir;
 import java.io.*;
 
 import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.util.*;
+import org.apache.commons.httpclient.contrib.ssl.*;
 import org.apache.commons.httpclient.methods.*;
 import org.apache.commons.httpclient.params.*;
-
-import org.apache.commons.httpclient.contrib.ssl.*;
 import org.apache.commons.httpclient.protocol.*;
-
-import org.owasp.jbrofuzz.ui.*;
+import org.apache.commons.httpclient.util.*;
 import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>Class for generating the recursive directory requests.</p>
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class DRequestIterator {
 
@@ -71,7 +69,7 @@ public class DRequestIterator {
    * @param port int
    */
   public DRequestIterator(FrameWindow m, String url, String directories,
-                         String port) {
+                          String port) {
     this.m = m;
     this.url = url;
     this.port = 0;
@@ -84,25 +82,29 @@ public class DRequestIterator {
     try {
       this.port = Integer.parseInt(port);
     }
-    catch(NumberFormatException e1) {
+    catch (NumberFormatException e1) {
       this.port = 0;
       m.log("Web Directories Panel: Specify a valid port: \"" + port + "\"");
     }
-    if((this.port < 1) || (this.port > 65535)) {
+    if ((this.port < 1) || (this.port > 65535)) {
       this.port = 0;
       m.log("Web Directories Panel: Port has to be between [1 - 65535]");
     }
     // Establish the protocols, if the port is valid
-    if(this.port != 0) {
+    if (this.port != 0) {
 
       // For https, allow self-signed certificates
-      if(this.url.startsWith("https://")) {
-        Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), this.port);
+      if (this.url.startsWith("https://")) {
+        Protocol easyhttps = new Protocol("https",
+                                          new EasySSLProtocolSocketFactory(),
+                                          this.port);
         Protocol.registerProtocol("https", easyhttps);
       }
       // For http, just show affection
-      if(this.url.startsWith("http://")) {
-        Protocol easyhttp = new Protocol("http", new DefaultProtocolSocketFactory(), this.port);
+      if (this.url.startsWith("http://")) {
+        Protocol easyhttp = new Protocol("http",
+                                         new DefaultProtocolSocketFactory(),
+                                         this.port);
         Protocol.registerProtocol("http", easyhttp);
       }
     }
@@ -113,13 +115,13 @@ public class DRequestIterator {
    */
   public void run() {
     // Check for a valid URL
-    if(url.equalsIgnoreCase("")) {
+    if (url.equalsIgnoreCase("")) {
       return;
     }
-    if(url.contains(" ")) {
+    if (url.contains(" ")) {
       return;
     }
-    if((port < 1) || (port > 65536)) {
+    if ((port < 1) || (port > 65536)) {
       return;
     }
 
@@ -146,7 +148,8 @@ public class DRequestIterator {
       }
 
       HttpClient client = new HttpClient();
-      client.getParams().setParameter(HttpConnectionParams.CONNECTION_TIMEOUT, new Integer(10000));
+      client.getParams().setParameter(HttpConnectionParams.CONNECTION_TIMEOUT,
+                                      new Integer(10000));
 
       GetMethod method = new GetMethod(currentURI);
       method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
@@ -222,7 +225,7 @@ public class DRequestIterator {
         responses[i] += "Fatal transport error" + "\n";
         responses[i] += " \n";
         responses[i] += " \n";
-        e.printStackTrace() ;
+        e.printStackTrace();
         // Bomb out...
         stop();
       }
@@ -235,15 +238,16 @@ public class DRequestIterator {
       StringBuffer outToFile = new StringBuffer();
       outToFile.append(Time.dateAndTime());
       // String outToFile = Time.dateAndTime();
-      String [] tempArray = responses[i].split("\n");
-      for(int m = 0; m < tempArray.length; m++) {
+      final String[] tempArray = responses[i].split("\n");
+      for (int m = 0; m < tempArray.length; m++) {
         outToFile.append("," + tempArray[m]);
       }
       // Write the file
       FileHandler.writeWebDirFile(m.getWebDirectoriesPanel().getSessionNumber(),
                                   outToFile.toString());
       // Update the progress bar
-      double percentage = 100 * ((double) (i + 1)) / ((double) directories.length);
+      final double percentage = 100 * ((double) (i + 1)) /
+                                ((double) directories.length);
       m.getWebDirectoriesPanel().setProgressBar((int) percentage);
     }
   }

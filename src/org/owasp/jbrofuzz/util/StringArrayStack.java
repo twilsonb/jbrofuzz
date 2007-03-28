@@ -1,12 +1,12 @@
 /**
- * StringArrayStack.java 0.5
+ * StringArrayStack.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,9 +28,9 @@ package org.owasp.jbrofuzz.util;
 /**
  * <p>Implementation of a String Stack Array operating in true FILO style.</p>
  *
- * @author subere (at) uncon . org
+ * @author subere (at) uncon (dot) org
  * @since 0.5
- * @version 0.5
+ * @version 0.6
  */
 public class StringArrayStack {
 

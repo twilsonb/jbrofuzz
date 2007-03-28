@@ -1,12 +1,12 @@
 /**
- * TCPSniffingPanel.java 0.5
+ * TCPSniffingPanel.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon . org
+ * Copyright (C) 2007 subere (at) uncon (dot) org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,16 +34,16 @@ import javax.swing.event.*;
 
 import com.Ostermiller.util.*;
 import org.owasp.jbrofuzz.snif.tcp.*;
+import org.owasp.jbrofuzz.ui.util.*;
 import org.owasp.jbrofuzz.ver.*;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
 
 /**
  * The Sniffing Panel User Interface based on the instance of a JPanel. This
  * class constructs the entire panel for the "TCP Sniffing" tab as seen by the
  * user in the main frame.
  *
- * @author subere (at) uncon . org
- * @version 0.5
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
  */
 public class SniffingPanel extends JPanel {
 
@@ -193,22 +193,21 @@ public class SniffingPanel extends JPanel {
         else {
           int selectedRow = lsm.getMinSelectionIndex();
           String s = tableModel.getValueAt(selectedRow);
-          vew = new SniffingViewer(getFrameWindow().
-                                                  getTCPSniffingPanel(), s);
+          vew = new SniffingViewer(getFrameWindow().getTCPSniffingPanel(), s);
         }
       }
     }); // ListSelectionListener
 
     // The start, stop buttons
-    startButton = new JButton("Start", ImageCreator.startImageIcon);
+    startButton = new JButton("Start", ImageCreator.START_IMG);
     startButton.setBounds(590, 33, 90, 40);
     startButton.setEnabled(true);
     startButton.setToolTipText("Start Sniffing between Local and Remote Host");
-    stopButton = new JButton("Stop", ImageCreator.stopImageIcon);
+    stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
     stopButton.setEnabled(false);
     stopButton.setBounds(695, 33, 90, 40);
     stopButton.setToolTipText("Stop Sniffing");
-    browserButton = new JButton("Bro", ImageCreator.pauseImageIcon);
+    browserButton = new JButton("Bro", ImageCreator.PAUSE_IMG);
     browserButton.setBounds(800, 33, 70, 40);
     browserButton.setEnabled(true);
     browserButton.setToolTipText("Open in external browser");
@@ -319,7 +318,7 @@ public class SniffingPanel extends JPanel {
     }
     if (text.endsWith("/")) {
       text = text.substring(0, len - 1);
-      len = text.length();
+      // If another if statement is included, update the len variable here
       lHostText.setText(text);
     }
     return text;
@@ -353,7 +352,7 @@ public class SniffingPanel extends JPanel {
     }
     if (text.endsWith("/")) {
       text = text.substring(0, len - 1);
-      len = text.length();
+      // If another if statement is included, update the len variable here
       rHostText.setText(text);
     }
     return text;
