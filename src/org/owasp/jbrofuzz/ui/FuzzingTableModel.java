@@ -107,9 +107,9 @@ public class FuzzingTableModel extends AbstractTableModel {
       case INDEX_GENERATOR:
         return record.getType();
       case INDEX_START:
-        return new Integer(record.getStart());
+        return  Integer.valueOf(record.getStart());
       case INDEX_END:
-        return new Integer(record.getEnd());
+        return  Integer.valueOf(record.getEnd());
       default:
         return new Object();
     }

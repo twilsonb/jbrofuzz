@@ -149,7 +149,7 @@ public class DRequestIterator {
 
       HttpClient client = new HttpClient();
       client.getParams().setParameter(HttpConnectionParams.CONNECTION_TIMEOUT,
-                                      new Integer(10000));
+                                      Integer.valueOf(10000));
 
       GetMethod method = new GetMethod(currentURI);
       method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,

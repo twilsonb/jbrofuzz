@@ -49,6 +49,11 @@
         <patternset refid="dest.exclude" />
         <include name="**/*.*" />
       </fileset>
+      <fileset dir="${jar.dir}">
+      	<patternset refid="dest.exclude" />
+      	<exclude name="**/*.jar" />
+      	<include name="**/jbrofuzz-*" />
+      </fileset>
       <zipfileset src="${lib.dir}/commons-codec-1.3.jar" />
       <zipfileset src="${lib.dir}/commons-httpclient-3.0.1.jar" />
       <zipfileset src="${lib.dir}/commons-logging-1.1.jar" />
