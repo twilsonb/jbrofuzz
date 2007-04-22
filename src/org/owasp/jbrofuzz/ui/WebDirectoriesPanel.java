@@ -50,9 +50,15 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   // The text areas used in their corresponding panels
   private JTextArea targetText, directoryText, portText;
 
-  // The jbuttons present in the user interface
+  // The JButtons present in the user interface
   private final JButton startButton, stopButton;
 
+  // The JCheckBox to continue if an error occurs
+  private final JCheckBox errorCheckBox;
+  
+  // The JCheckBox boolean checkbox
+  private boolean checkbox;
+  
   // The jtable holding all the responses
   private JTable responseTable;
 
@@ -84,7 +90,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     super(null, true);
     this.m = m;
     session = 0;
-
+    checkbox = false;
+    
     // Define the directory JPanel
     directoryPanel = new JPanel();
     directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
@@ -173,7 +180,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
 
     // The add generator button
     startButton = new JButton("Start", ImageCreator.START_IMG);
-    startButton.setBounds(450, 95, 80, 40);
+    startButton.setBounds(350, 95, 80, 40);
     add(startButton);
     startButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
@@ -193,7 +200,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     });
 
     stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
-    stopButton.setBounds(540, 95, 80, 40);
+    stopButton.setBounds(440, 95, 80, 40);
     add(stopButton);
     stopButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
@@ -201,6 +208,15 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
       }
     });
 
+    errorCheckBox = new JCheckBox("Continue on Error", false);
+    errorCheckBox.setBounds(530, 95, 120, 10);
+    add(errorCheckBox);
+    errorCheckBox.addActionListener(new ActionListener() {
+        public void actionPerformed(final ActionEvent e) {
+          checkbox = (!checkbox);
+        }
+      });
+    
     responseTableModel = new WebDirectoriesModel();
     sorter = new TableSorter(responseTableModel);
     responseTable = new JTable(sorter);
@@ -524,5 +540,15 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     }
     s += session;
     return s;
+  }
+  
+  /**
+   * Get the value of the check box, allowing the application to
+   * continue running even if an error occurs.
+   * 
+   * @return boolean
+   */
+  public boolean getCheckBoxValue() {
+	  return checkbox;
   }
 }
