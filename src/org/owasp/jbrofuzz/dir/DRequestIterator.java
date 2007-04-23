@@ -228,7 +228,6 @@ public class DRequestIterator {
         responses[i] += "Fatal transport error" + "\n";
         responses[i] += " \n";
         responses[i] += " \n";
-        e.printStackTrace();
         // Bomb out...
     	boolean currentValueTicked = m.getWebDirectoriesPanel().getCheckBoxValue();
     	if (currentValueTicked) {
