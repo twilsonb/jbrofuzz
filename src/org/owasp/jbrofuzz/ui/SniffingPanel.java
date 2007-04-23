@@ -205,10 +205,10 @@ public class SniffingPanel extends JPanel {
     startButton.setToolTipText("Start Sniffing between Local and Remote Host");
     stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
     stopButton.setEnabled(false);
-    stopButton.setBounds(695, 33, 90, 40);
+    stopButton.setBounds(690, 33, 90, 40);
     stopButton.setToolTipText("Stop Sniffing");
     browserButton = new JButton("Bro", ImageCreator.PAUSE_IMG);
-    browserButton.setBounds(800, 33, 70, 40);
+    browserButton.setBounds(790, 33, 80, 40);
     browserButton.setEnabled(true);
     browserButton.setToolTipText("Open in external browser");
     // The action listener for the start button

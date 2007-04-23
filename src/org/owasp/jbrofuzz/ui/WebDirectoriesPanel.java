@@ -90,7 +90,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     super(null, true);
     this.m = m;
     session = 0;
-    checkbox = false;
+    checkbox = true;
     
     // Define the directory JPanel
     directoryPanel = new JPanel();
@@ -180,7 +180,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
 
     // The add generator button
     startButton = new JButton("Start", ImageCreator.START_IMG);
-    startButton.setBounds(350, 95, 80, 40);
+    startButton.setBounds(420, 95, 90, 20);
+    startButton.setToolTipText("Start Fuzzing through the Directories List");
     add(startButton);
     startButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
@@ -200,7 +201,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     });
 
     stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
-    stopButton.setBounds(440, 95, 80, 40);
+    stopButton.setBounds(520, 95, 90, 20);
+    stopButton.setToolTipText("Stop Fuzzing through the Directories List");
     add(stopButton);
     stopButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
@@ -209,7 +211,8 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     });
 
     errorCheckBox = new JCheckBox("Continue on Error", false);
-    errorCheckBox.setBounds(530, 95, 120, 10);
+    errorCheckBox.setBounds(370, 120, 140, 20);
+    errorCheckBox.setToolTipText("Continue attempting to Fuzz, even if an error occurs");
     add(errorCheckBox);
     errorCheckBox.addActionListener(new ActionListener() {
         public void actionPerformed(final ActionEvent e) {
