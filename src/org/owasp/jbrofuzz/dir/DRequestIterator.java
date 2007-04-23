@@ -216,7 +216,10 @@ public class DRequestIterator {
         responses[i] += " \n";
         responses[i] += " \n";
         // Bomb out...
-        stop();
+    	boolean currentValueTicked = m.getWebDirectoriesPanel().getCheckBoxValue();
+    	if (currentValueTicked) {
+            stop();
+    	}        
       }
       catch (IOException e) {
         responses[i] = i + "\n";
@@ -227,7 +230,10 @@ public class DRequestIterator {
         responses[i] += " \n";
         e.printStackTrace();
         // Bomb out...
-        stop();
+    	boolean currentValueTicked = m.getWebDirectoriesPanel().getCheckBoxValue();
+    	if (currentValueTicked) {
+            stop();
+    	}
       }
       finally {
         method.releaseConnection();
@@ -256,7 +262,7 @@ public class DRequestIterator {
    * Stop the Request Iterator, if it currently running.
    */
   public void stop() {
-    stopped = true;
+	 stopped = true;
   }
 
   /**
