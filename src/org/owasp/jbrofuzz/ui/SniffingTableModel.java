@@ -69,12 +69,6 @@ public class SniffingTableModel extends AbstractTableModel {
     return false;
   }
 
-  /*
-     public Class getColumnClass(final int column) {
-    return String.class;
-     }
-   */
-
   /**
    * <p>Method for returning the Objectlocated at a particular row/column.</p>
    * @param row int

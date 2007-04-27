@@ -31,6 +31,7 @@ import java.io.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.text.MaskFormatter;
 
 import com.Ostermiller.util.*;
 import org.owasp.jbrofuzz.snif.tcp.*;
@@ -47,11 +48,11 @@ import org.owasp.jbrofuzz.ver.*;
  */
 public class SniffingPanel extends JPanel {
 
-  private final JTextArea rHostText, rPortText, lHostText, lPortText;
+  private final JTextField rHostText, rPortText, lHostText, lPortText;
   // The buttons to start and stop the listener, as well as launch a browser
   private final JButton startButton, stopButton, browserButton;
   //
-  private final JTable listTextArea;
+  private final JTable sniffingTable;
   //
   private JPanel listPanel;
   // A counter for the number of times start has been clicked
@@ -109,76 +110,62 @@ public class SniffingPanel extends JPanel {
     lPortPanel.setBounds(520, 20, 60, 60);
     listPanel.setBounds(10, 90, 870, 370);
     // Setup the remote host text
-    rHostText = new JTextArea(1, 1);
+    rHostText = new JTextField();
     rHostText.setEditable(true);
     rHostText.setFont(new Font("Verdana", Font.BOLD, 12));
-    rHostText.setLineWrap(false);
-    rHostText.setWrapStyleWord(true);
     rHostText.setMargin(new Insets(1, 1, 1, 1));
     getFrameWindow().popup(rHostText);
-    JScrollPane rHostScrollPane = new JScrollPane(rHostText);
-    rHostScrollPane.setVerticalScrollBarPolicy(21);
-    rHostScrollPane.setHorizontalScrollBarPolicy(31);
-    rHostScrollPane.setPreferredSize(new Dimension(200, 20));
-    rHostPanel.add(rHostScrollPane);
+    rHostText.setPreferredSize(new Dimension(200, 20));
+    rHostPanel.add(rHostText);
     // Setup the remote host port
-    rPortText = new JTextArea(1, 1);
+    rPortText = new JFormattedTextField(createFormatter("#####"));
     rPortText.setEditable(true);
     rPortText.setFont(new Font("Verdana", Font.BOLD, 12));
-    rPortText.setLineWrap(false);
-    rPortText.setWrapStyleWord(true);
+    // rPortText.setLineWrap(false);
+    // rPortText.setWrapStyleWord(true);
     rPortText.setMargin(new Insets(1, 1, 1, 1));
     getFrameWindow().popup(rPortText);
-    JScrollPane rPortScrollPane = new JScrollPane(rPortText);
-    rPortScrollPane.setVerticalScrollBarPolicy(21);
-    rPortScrollPane.setHorizontalScrollBarPolicy(31);
-    rPortScrollPane.setPreferredSize(new Dimension(50, 20));
-    rPortPanel.add(rPortScrollPane);
+    rPortText.setPreferredSize(new Dimension(50, 20));
+    rPortPanel.add(rPortText);
     // Setup the local host text
-    lHostText = new JTextArea(1, 1);
+    lHostText = new JTextField();
     lHostText.setEditable(true);
     lHostText.setFont(new Font("Verdana", Font.BOLD, 12));
-    lHostText.setLineWrap(false);
-    lHostText.setWrapStyleWord(true);
+    // lHostText.setLineWrap(false);
+    // lHostText.setWrapStyleWord(true);
     lHostText.setMargin(new Insets(1, 1, 1, 1));
-    JScrollPane lHostScrollPane = new JScrollPane(lHostText);
     getFrameWindow().popup(lHostText);
-    lHostScrollPane.setVerticalScrollBarPolicy(21);
-    lHostScrollPane.setHorizontalScrollBarPolicy(31);
-    lHostScrollPane.setPreferredSize(new Dimension(200, 20));
-    lHostPanel.add(lHostScrollPane);
+    lHostText.setPreferredSize(new Dimension(200, 20));
+    lHostPanel.add(lHostText);
     // Setup the local port text
-    lPortText = new JTextArea(1, 1);
+    lPortText = new JFormattedTextField(createFormatter("#####"));
     lPortText.setEditable(true);
     lPortText.setFont(new Font("Verdana", Font.BOLD, 12));
-    lPortText.setLineWrap(false);
-    lPortText.setWrapStyleWord(true);
+    //lPortText.setLineWrap(false);
+    // lPortText.setWrapStyleWord(true);
     lPortText.setMargin(new Insets(1, 1, 1, 1));
-    JScrollPane lPortScrollPane = new JScrollPane(lPortText);
     getFrameWindow().popup(lPortText);
-    lPortScrollPane.setVerticalScrollBarPolicy(21);
-    lPortScrollPane.setHorizontalScrollBarPolicy(31);
-    lPortScrollPane.setPreferredSize(new Dimension(50, 20));
-    lPortPanel.add(lPortScrollPane);
+    lPortText.setPreferredSize(new Dimension(50, 20));
+    lPortPanel.add(lPortText);
     // The table of list of requests text
     tableModel = new SniffingTableModel();
 
-    listTextArea = new JTable();
-    listTextArea.setModel(tableModel);
-    listTextArea.setFont(new Font("Monospaced", Font.BOLD, 12));
-    listTextArea.setBackground(Color.black);
-    listTextArea.setForeground(Color.white);
-    listTextArea.setSurrendersFocusOnKeystroke(true);
-    listTextArea.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    sniffingTable = new JTable();
+    sniffingTable.setModel(tableModel);
+    sniffingTable.setFont(new Font("Monospaced", Font.BOLD, 12));
+    sniffingTable.setBackground(Color.black);
+    sniffingTable.setForeground(Color.white);
+    sniffingTable.setSurrendersFocusOnKeystroke(true);
+    sniffingTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
+    JScrollPane listTextScrollPane = new JScrollPane(sniffingTable);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
-    listTextScrollPane.setPreferredSize(new Dimension(860, 340));
+    listTextScrollPane.setPreferredSize(new Dimension(850, 330));
     listTextScrollPane.setWheelScrollingEnabled(true);
     listPanel.add(listTextScrollPane);
     // Add the action listener for each row
-    ListSelectionModel rowSM = listTextArea.getSelectionModel();
+    ListSelectionModel rowSM = sniffingTable.getSelectionModel();
 
     rowSM.addListSelectionListener(new ListSelectionListener() {
       public void valueChanged(ListSelectionEvent e) {
@@ -378,7 +365,7 @@ public class SniffingPanel extends JPanel {
         int totalRows = tableModel.getRowCount();
         tableModel.setValueAt(s, totalRows - 1, 0);
         // Set the last row to be visible
-        listTextArea.scrollRectToVisible(listTextArea.getCellRect(listTextArea.
+        sniffingTable.scrollRectToVisible(sniffingTable.getCellRect(sniffingTable.
           getRowCount(), 0, true));
       }
     });
@@ -515,4 +502,14 @@ public class SniffingPanel extends JPanel {
     reflector.start();
     stopPressed = false;
   }
+  
+  private MaskFormatter createFormatter(String s) {
+	    MaskFormatter formatter = null;
+	    try {
+	        formatter = new MaskFormatter(s);
+	    } catch (java.text.ParseException exc) {
+	        m.log("Fuzzing Panel: Could not format port Formatter");  
+	    }
+	    return formatter;
+	}
 }

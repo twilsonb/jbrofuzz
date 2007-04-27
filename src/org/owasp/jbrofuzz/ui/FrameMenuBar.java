@@ -46,7 +46,7 @@ public class FrameMenuBar extends JMenuBar {
   private final FrameWindow mFrameWindow;
   private final JMenu file, edit, view, panel, options, help;
   // Used under the Panel JMenu as items
-  private JMenuItem start, pause, stop, add, remove;
+  private JMenuItem showAll, hideAll, start, pause, stop, add, remove;
   // Used under the view JMenu as items
   private JCheckBoxMenuItem directories, fuzzing, sniffing, generators, system;
 
@@ -105,18 +105,28 @@ public class FrameMenuBar extends JMenuBar {
     edit.add(selectAll);
 
     // View
+    JMenu showHide = new JMenu("Show/Hide");
+    
     directories = new JCheckBoxMenuItem("Web Directories", true);
     fuzzing = new JCheckBoxMenuItem("TCP Fuzzing", true);
     sniffing = new JCheckBoxMenuItem("TCP Sniffing", true);
     generators = new JCheckBoxMenuItem("Generators", true);
     system = new JCheckBoxMenuItem("System", true);
 
-    view.add(directories);
-    view.add(fuzzing);
-    view.add(sniffing);
-    view.add(generators);
-    view.add(system);
+    showAll = new JMenuItem("Show All");
+    hideAll = new JMenuItem("Hide All");
+    
+    showHide.add(directories);
+    showHide.add(fuzzing);
+    showHide.add(sniffing);
+    showHide.add(generators);
+    showHide.add(system);
 
+    view.add(showHide);
+    view.addSeparator();
+    view.add(showAll);
+    view.add(hideAll);
+    
     // Panel
     start = new JMenuItem("Start", ImageCreator.START_IMG);
     pause = new JMenuItem("Pause", ImageCreator.PAUSE_IMG);
@@ -231,6 +241,36 @@ public class FrameMenuBar extends JMenuBar {
         }
       }
     });
+    
+    showAll.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            getFrameWindow().setTabShow(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+            directories.setState(true);
+            getFrameWindow().setTabShow(FrameWindow.TCP_FUZZING_PANEL_ID);
+            fuzzing.setState(true);
+            getFrameWindow().setTabShow(FrameWindow.TCP_SNIFFING_PANEL_ID);
+            sniffing.setState(true);
+            getFrameWindow().setTabShow(FrameWindow.GENERATORS_PANEL_ID);
+            generators.setState(true);
+            getFrameWindow().setTabShow(FrameWindow.SYSTEM_PANEL_ID);
+            system.setState(true);
+        }
+      });    
+
+    hideAll.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            getFrameWindow().setTabHide(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+            directories.setState(false);
+            getFrameWindow().setTabHide(FrameWindow.TCP_FUZZING_PANEL_ID);
+            fuzzing.setState(false);
+            getFrameWindow().setTabHide(FrameWindow.TCP_SNIFFING_PANEL_ID);
+            sniffing.setState(false);
+            getFrameWindow().setTabHide(FrameWindow.GENERATORS_PANEL_ID);
+            generators.setState(false);
+            getFrameWindow().setTabHide(FrameWindow.SYSTEM_PANEL_ID);
+            system.setState(false);
+        }
+      });    
 
     start.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {

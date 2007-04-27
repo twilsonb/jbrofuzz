@@ -33,7 +33,7 @@ import javax.swing.*;
 import org.owasp.jbrofuzz.io.*;
 
 /**
- * <p>Class extending a jframe for displaying the contents of each TCP sniffing
+ * <p>Class extending a JFrame for displaying the contents of each TCP sniffing
  * request/reply that has been made.</p>
  *
  * @author subere (at) uncon org
