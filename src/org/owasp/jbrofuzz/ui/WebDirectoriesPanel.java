@@ -31,6 +31,7 @@ import java.io.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
+import javax.swing.text.MaskFormatter;
 
 import com.Ostermiller.util.*;
 import org.owasp.jbrofuzz.dir.*;
@@ -48,7 +49,9 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   private FrameWindow m;
 
   // The text areas used in their corresponding panels
-  private JTextArea targetText, directoryText, portText;
+  private JTextArea directoryText;
+  
+  private JTextField targetText, portText;
 
   // The JButtons present in the user interface
   private final JButton startButton, stopButton;
@@ -112,7 +115,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     JPanel portPanel = new JPanel();
     portPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-    portPanel.setBounds(520, 20, 100, 60);
+    portPanel.setBounds(510, 20, 60, 60);
     add(portPanel);
 
     // Define the output JPanel
@@ -124,41 +127,30 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     add(outputPanel);
 
     // Define the target text area
-    targetText = new JTextArea(1, 1);
+    targetText = new JTextField(); 
     targetText.setEditable(true);
     targetText.setVisible(true);
     targetText.setFont(new Font("Verdana", Font.BOLD, 12));
-    targetText.setLineWrap(false);
-    targetText.setWrapStyleWord(true);
     targetText.setMargin(new Insets(1, 1, 1, 1));
     targetText.setBackground(Color.WHITE);
     targetText.setForeground(Color.BLACK);
-    //
-    // targetPanel.getInputMap().put(KeyStroke.getKeyStroke("a"), "none");
-    //
+    targetText.setPreferredSize(new Dimension(480, 20));
     getFrameWindow().popup(targetText);
-    JScrollPane targetScrollPane = new JScrollPane(targetText);
-    targetScrollPane.setVerticalScrollBarPolicy(21);
-    targetScrollPane.setHorizontalScrollBarPolicy(31);
-    targetScrollPane.setPreferredSize(new Dimension(480, 20));
-    targetPanel.add(targetScrollPane);
+    targetPanel.add(targetText);
 
     // Define the port text area
-    portText = new JTextArea(1, 1);
+    portText =  new JFormattedTextField(createFormatter("#####"));
     portText.setEditable(true);
     portText.setVisible(true);
     portText.setFont(new Font("Verdana", Font.BOLD, 12));
-    portText.setLineWrap(false);
-    portText.setWrapStyleWord(true);
     portText.setMargin(new Insets(1, 1, 1, 1));
     portText.setBackground(Color.WHITE);
     portText.setForeground(Color.BLACK);
     getFrameWindow().popup(portText);
-    JScrollPane portScrollPane = new JScrollPane(portText);
-    portScrollPane.setVerticalScrollBarPolicy(21);
-    portScrollPane.setHorizontalScrollBarPolicy(31);
-    portScrollPane.setPreferredSize(new Dimension(80, 20));
-    portPanel.add(portScrollPane);
+    portText.setPreferredSize(new Dimension(50, 20));
+    portPanel.add(portText);
+  
+
 
     // Define the directory text area
     directoryText = new JTextArea(1, 1);
@@ -554,4 +546,15 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   public boolean getCheckBoxValue() {
 	  return checkbox;
   }
+  
+  private MaskFormatter createFormatter(String s) {
+	    MaskFormatter formatter = null;
+	    try {
+	        formatter = new MaskFormatter(s);
+	    } catch (java.text.ParseException exc) {
+	        m.log("Fuzzing Panel: Could not format port Formatter");  
+	    }
+	    return formatter;
+	}
+  
 }

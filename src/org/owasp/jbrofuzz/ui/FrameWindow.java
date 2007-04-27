@@ -29,6 +29,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.text.*;
 
 import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.ui.util.*;
@@ -125,7 +126,7 @@ public class FrameWindow extends JFrame {
     tabbedPane.add(" TCP Sniffing ", mSniffingPanel);
     tabbedPane.add(" Generators ", mDefinitionsPanel);
     tabbedPane.add(" System ", mSystemLogger);
-    tabbedPane.setSelectedComponent(mWebDirectoriesPanel);
+    tabbedPane.setSelectedComponent(mFuzzingPanel);
     pane.add(tabbedPane);
     // The image icon
     setIconImage(ImageCreator.FRAME_IMG.getImage());
@@ -137,7 +138,7 @@ public class FrameWindow extends JFrame {
    *
    * @param area JTextArea
    */
-  public void popup(final JTextArea area) {
+  public void popup(final JTextComponent area) {
 
     final JPopupMenu popmenu = new JPopupMenu();
 

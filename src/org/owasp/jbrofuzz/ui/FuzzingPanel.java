@@ -31,8 +31,10 @@ import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
+import javax.swing.text.*;
 
 import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>The main "TCP Fuzzing" panel, displayed within the Main Frame Window.</p>
@@ -48,8 +50,16 @@ public class FuzzingPanel extends JPanel {
   private final FrameWindow m;
   // The JPanels
   private final JPanel outputPanel;
+  // The JTextField
+  private final JTextField target;
+  // The port JFormattedTextField
+  private final JFormattedTextField port;
   // The JTextArea
-  private final JTextArea target, port, message, outputTable;
+  private final JTextArea message;
+  // The JTable were results are outputed
+  private JTable outputTable;
+  // And the table model that goes with it
+  private SniffingTableModel outputTableModel;
   // The JTable of the generator
   private JTable generatorTable;
   // And the table model that goes with it
@@ -83,24 +93,17 @@ public class FuzzingPanel extends JPanel {
       createTitledBorder(" Target "),
                           BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-    target = new JTextArea(1, 1);
+    target = new JTextField();
     target.setEditable(true);
     target.setVisible(true);
     target.setFont(new Font("Verdana", Font.BOLD, 12));
-    target.setLineWrap(false);
-    target.setWrapStyleWord(true);
     target.setMargin(new Insets(1, 1, 1, 1));
     target.setBackground(Color.WHITE);
     target.setForeground(Color.BLACK);
     getFrameWindow().popup(target);
 
-    JScrollPane targetScrollPane = new JScrollPane(target);
-    targetScrollPane.setVerticalScrollBarPolicy(21);
-    targetScrollPane.setHorizontalScrollBarPolicy(31);
-
-    targetScrollPane.setPreferredSize(new Dimension(480, 20));
-    targetPanel.add(targetScrollPane);
-
+    target.setPreferredSize(new Dimension(480, 20));
+    targetPanel.add(target);
 
     targetPanel.setBounds(10, 20, 500, 60);
     add(targetPanel);
@@ -109,24 +112,18 @@ public class FuzzingPanel extends JPanel {
     portPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-    port = new JTextArea(1, 1);
+    port = new JFormattedTextField(createFormatter("#####"));
 
     port.setEditable(true);
     port.setVisible(true);
     port.setFont(new Font("Verdana", Font.BOLD, 12));
-    port.setLineWrap(false);
-    port.setWrapStyleWord(true);
     port.setMargin(new Insets(1, 1, 1, 1));
     port.setBackground(Color.WHITE);
     port.setForeground(Color.BLACK);
     getFrameWindow().popup(port);
 
-    JScrollPane portScrollPane = new JScrollPane(port);
-    portScrollPane.setVerticalScrollBarPolicy(21);
-    portScrollPane.setHorizontalScrollBarPolicy(31);
-
-    portScrollPane.setPreferredSize(new Dimension(50, 20));
-    portPanel.add(portScrollPane);
+    port.setPreferredSize(new Dimension(50, 20));
+    portPanel.add(port);
 
     portPanel.setBounds(510, 20, 60, 60);
     add(portPanel);
@@ -158,9 +155,8 @@ public class FuzzingPanel extends JPanel {
     add(requestPanel);
 
     // The add generator button
-    buttonAddGen = new JButton(ADDGENSTRING);
-    buttonAddGen.setBounds(580, 30, 130, 20);
-    add(buttonAddGen);
+    buttonAddGen = new JButton(ImageCreator.ADD_IMG);
+    buttonAddGen.setToolTipText("Add a Generator");
     buttonAddGen.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
         generatorAddButton();
@@ -168,9 +164,8 @@ public class FuzzingPanel extends JPanel {
     });
 
     // The remove generator button
-    buttonRemGen = new JButton("Remove Generator");
-    buttonRemGen.setBounds(730, 30, 150, 20);
-    add(buttonRemGen);
+    buttonRemGen = new JButton(ImageCreator.REMOVE_IMG);
+    buttonRemGen.setToolTipText("Remove a Generator");
     buttonRemGen.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         generatorRemoveButton();
@@ -179,6 +174,8 @@ public class FuzzingPanel extends JPanel {
 
     // The generator panel
     JPanel generatorPanel = new JPanel();
+    generatorPanel.setLayout(null);
+    
     generatorPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Added Generators Table"),
                              BorderFactory.createEmptyBorder(5, 5, 5, 5)));
@@ -208,13 +205,21 @@ public class FuzzingPanel extends JPanel {
     generatorScrollPane.setVerticalScrollBarPolicy(20);
 
     generatorScrollPane.setPreferredSize(new Dimension(180, 100));
+    
+    generatorScrollPane.setBounds(15, 25, 180, 100);
+    buttonRemGen.setBounds(235, 60, 40, 20);
+    buttonAddGen.setBounds(235, 25, 40, 20);
+    
     generatorPanel.add(generatorScrollPane);
-
-    generatorPanel.setBounds(680, 60, 200, 160);
+    generatorPanel.add(buttonRemGen);
+    generatorPanel.add(buttonAddGen);
+    
+    generatorPanel.setBounds(570, 20, 300, 160);
     add(generatorPanel);
     // The fuzz buttons
-    buttonFuzzStart = new JButton("Fuzz!");
-    buttonFuzzStart.setBounds(730, 240, 70, 20);
+    buttonFuzzStart = new JButton("Fuzz!", ImageCreator.START_IMG);
+    buttonFuzzStart.setBounds(670, 230, 90, 40);
+    buttonFuzzStart.setToolTipText("Start Fuzzing!");
     add(buttonFuzzStart);
     buttonFuzzStart.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
@@ -231,9 +236,10 @@ public class FuzzingPanel extends JPanel {
         worker.start();
       }
     });
-    buttonFuzzStop = new JButton("Stop");
+    buttonFuzzStop = new JButton("Stop", ImageCreator.STOP_IMG);
     buttonFuzzStop.setEnabled(false);
-    buttonFuzzStop.setBounds(810, 240, 70, 20);
+    buttonFuzzStop.setToolTipText("Stop Fuzzing");
+    buttonFuzzStop.setBounds(770, 230, 90, 40);
     add(buttonFuzzStop);
     buttonFuzzStop.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
@@ -246,24 +252,25 @@ public class FuzzingPanel extends JPanel {
       createTitledBorder(" Output (Last 1000 Lines) "),
                           BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-    outputTable = new JTextArea();
-
-    outputTable.setEditable(false);
-    outputTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
-    outputTable.setLineWrap(false);
-    outputTable.setWrapStyleWord(true);
-    outputTable.setMargin(new Insets(3, 3, 3, 3));
-    outputTable.setBackground(Color.WHITE);
-    outputTable.setForeground(Color.BLACK);
-    getFrameWindow().popup(outputTable);
+    outputTableModel = new SniffingTableModel();
+    
+    outputTable = new JTable();
+    outputTable.setModel(outputTableModel);
+    
+    outputTable.setFont(new Font("Monospaced", Font.BOLD, 12));
+    outputTable.setBackground(Color.BLACK);
+    outputTable.setForeground(Color.WHITE);
+    outputTable.setSurrendersFocusOnKeystroke(true);
+    outputTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    // getFrameWindow().popup(outputTable);
 
     JScrollPane outputScrollPane = new JScrollPane(outputTable);
     outputScrollPane.setVerticalScrollBarPolicy(20);
 
-    outputScrollPane.setPreferredSize(new Dimension(850, 130));
+    outputScrollPane.setPreferredSize(new Dimension(840, 130));
     outputPanel.add(outputScrollPane);
 
-    outputPanel.setBounds(10, 280, 870, 170);
+    outputPanel.setBounds(10, 280, 860, 170);
     add(outputPanel);
 
     // Some value defaults
@@ -314,7 +321,7 @@ public class FuzzingPanel extends JPanel {
                           BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
     // Clear the text of the output pane
-    outputTable.setText("");
+    // outputTable.setText("");
 
     final int rows = generatorTable.getRowCount();
     if (rows < 1) {
@@ -406,25 +413,19 @@ public class FuzzingPanel extends JPanel {
   public String getMessageText() {
     return message.getText();
   }
+  
+  public void addRowInOuputTable(final String s) {
+	    SwingUtilities.invokeLater(new Runnable() {
+	        public void run() {
+	          outputTableModel.addEmptyRow();
+	          int totalRows = outputTableModel.getRowCount();
+	          outputTableModel.setValueAt(s, totalRows - 1, 0);
+	          // Set the last row to be visible
+	          outputTable.scrollRectToVisible(outputTable.getCellRect(outputTable.
+	            getRowCount(), 0, true));
+	        }
+	      });
 
-  /**
-   * <p>Set the output text to contain the specified String, by appending that
-   * String to the already present output String value. If the total number of
-   * lines exceeds 1000, proceed to clear the original String value present
-   * within the JTextArea prior to appending the given String.</p>
-   *
-   * @param s String
-   */
-  public void setOutputText(String s) {
-    final int lines = outputTable.getLineCount();
-    // Refresh after 1000 lines
-    if (lines > 1000) {
-      outputTable.setText("");
-    }
-    outputTable.append(s);
-
-    final int caret = outputTable.getText().length();
-    outputTable.setCaretPosition(caret);
   }
 
   /**
@@ -583,5 +584,15 @@ public class FuzzingPanel extends JPanel {
 
     return s;
   }
+  
+  private MaskFormatter createFormatter(String s) {
+	    MaskFormatter formatter = null;
+	    try {
+	        formatter = new MaskFormatter(s);
+	    } catch (java.text.ParseException exc) {
+	        m.log("Fuzzing Panel: Could not format port Formatter");  
+	    }
+	    return formatter;
+	}
 
 }

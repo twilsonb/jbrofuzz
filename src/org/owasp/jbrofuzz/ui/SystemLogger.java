@@ -81,7 +81,7 @@ public class SystemLogger extends JPanel {
     JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
-    listTextScrollPane.setPreferredSize(new Dimension(860, 340));
+    listTextScrollPane.setPreferredSize(new Dimension(850, 330));
     listPanel.add(listTextScrollPane);
 
     infoButton = new JButton("Info");
