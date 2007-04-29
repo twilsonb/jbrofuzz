@@ -28,6 +28,7 @@ package org.owasp.jbrofuzz.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.text.ParseException;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -51,7 +52,9 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   // The text areas used in their corresponding panels
   private JTextArea directoryText;
   
-  private JTextField targetText, portText;
+  private JTextField targetText;
+  
+  private JFormattedTextField portText;
 
   // The JButtons present in the user interface
   private final JButton startButton, stopButton;
@@ -139,7 +142,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     targetPanel.add(targetText);
 
     // Define the port text area
-    portText =  new JFormattedTextField(createFormatter("#####"));
+    portText = new JFormattedTextField();
     portText.setEditable(true);
     portText.setVisible(true);
     portText.setFont(new Font("Verdana", Font.BOLD, 12));
@@ -150,8 +153,6 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
     portText.setPreferredSize(new Dimension(50, 20));
     portPanel.add(portText);
   
-
-
     // Define the directory text area
     directoryText = new JTextArea(1, 1);
     directoryText.setEditable(true);
@@ -546,15 +547,5 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
   public boolean getCheckBoxValue() {
 	  return checkbox;
   }
-  
-  private MaskFormatter createFormatter(String s) {
-	    MaskFormatter formatter = null;
-	    try {
-	        formatter = new MaskFormatter(s);
-	    } catch (java.text.ParseException exc) {
-	        m.log("Fuzzing Panel: Could not format port Formatter");  
-	    }
-	    return formatter;
-	}
-  
+ 
 }

@@ -1,5 +1,5 @@
 /**
- * TCPSniffingViewer.java 0.6
+ * WindowViewer.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -40,27 +40,43 @@ import org.owasp.jbrofuzz.io.*;
  * @version 0.6
  * @since 0.2
  */
-public class SniffingViewer extends JFrame {
+public class WindowViewer extends JFrame {
 
   // The name of the request which will be displayed
   private String name;
   // The main sniffing panel
-  private SniffingPanel m;
+  private FrameWindow m;
+  
   /**
-   * <p>The sniffing viewer that gets launched for each each request within the
-   * table of the main sniffing panel. This JFrame does get called by
-   * MainSniffingPanel.</p>
-   * @param m MainSniffingPanel
+   * <p>Constant used for specifying within which directory to look for the 
+   * corresponding file. Using this value will point to the sniffing directory
+   * used for the corresponding session.</p>
+   */
+  
+  protected static final int VIEW_SNIFFING_PANEL = 1;
+  /**
+   * <p>Constant used for specifying wihtin which directory to look for the
+   * corresponding file. Using this value will point to the fuzzing directory
+   * used for the correspondng session.</p>
+   */
+  protected static final int VIEW_FUZZING_PANEL = 2;
+  
+  /**
+   * <p>The window viewer that gets launched for each request within 
+   * the corresponding panel.</p>
+   * 
+   * @param m FrameWindow
    * @param name String
    */
-  public SniffingViewer(SniffingPanel m, String name) {
+  public WindowViewer(FrameWindow m, String name, int typeOfPanel) {
     super();
     this.name = name;
     this.m = m;
 
     String[] input = name.split(" ");
-    String number = input[0] + ".txt";
-    setTitle("Sniffing Viewer " + number);
+    String number = input[0] + ".html";
+    setTitle("Window Viewer " + number);
+    
     // The container pane
     Container pane = getContentPane();
     pane.setLayout(null);
@@ -76,10 +92,8 @@ public class SniffingViewer extends JFrame {
     listTextArea.setEditable(false);
     listTextArea.setLineWrap(false);
     listTextArea.setWrapStyleWord(false);
-    m.getFrameWindow().popup(listTextArea);
-    /*
-         listTextArea.getDocument().putProperty( DefaultEditorKit.EndOfLineStringProperty, "\r\n" );
-     */
+    m.popup(listTextArea);
+
     JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(30);
@@ -88,7 +102,13 @@ public class SniffingViewer extends JFrame {
 
     add(listPanel);
 
-    StringBuffer text = FileHandler.readSnifFile(this, number);
+    StringBuffer text = new StringBuffer();
+    if(typeOfPanel == VIEW_SNIFFING_PANEL) {
+    	text = FileHandler.readSnifFile(this, number);
+    }
+    if(typeOfPanel == VIEW_FUZZING_PANEL) {
+    	text = FileHandler.readFuzzFile(this, number);
+    }
     //Find the header
     int headerEnd = text.indexOf("]");
     if ((headerEnd < 0)) {
