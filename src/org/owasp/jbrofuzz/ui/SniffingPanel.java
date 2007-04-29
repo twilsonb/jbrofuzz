@@ -31,7 +31,6 @@ import java.io.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.text.MaskFormatter;
 
 import com.Ostermiller.util.*;
 import org.owasp.jbrofuzz.snif.tcp.*;
@@ -67,8 +66,8 @@ public class SniffingPanel extends JPanel {
   private boolean stopPressed;
   // The TCP Connection listener
   private ConnectionListener reflector;
-  // The sniffing viewer frame
-  private SniffingViewer vew;
+  // The window viewer frame
+  private WindowViewer vew;
 
   /**
    * <p>Main Constructor for the Sniffing Panel, passing the Main Window
@@ -118,7 +117,7 @@ public class SniffingPanel extends JPanel {
     rHostText.setPreferredSize(new Dimension(200, 20));
     rHostPanel.add(rHostText);
     // Setup the remote host port
-    rPortText = new JFormattedTextField(createFormatter("#####"));
+    rPortText = new JFormattedTextField();
     rPortText.setEditable(true);
     rPortText.setFont(new Font("Verdana", Font.BOLD, 12));
     // rPortText.setLineWrap(false);
@@ -138,7 +137,7 @@ public class SniffingPanel extends JPanel {
     lHostText.setPreferredSize(new Dimension(200, 20));
     lHostPanel.add(lHostText);
     // Setup the local port text
-    lPortText = new JFormattedTextField(createFormatter("#####"));
+    lPortText = new JFormattedTextField();
     lPortText.setEditable(true);
     lPortText.setFont(new Font("Verdana", Font.BOLD, 12));
     //lPortText.setLineWrap(false);
@@ -180,7 +179,7 @@ public class SniffingPanel extends JPanel {
         else {
           int selectedRow = lsm.getMinSelectionIndex();
           String s = tableModel.getValueAt(selectedRow);
-          vew = new SniffingViewer(getFrameWindow().getTCPSniffingPanel(), s);
+          vew = new WindowViewer(getFrameWindow(), s, WindowViewer.VIEW_SNIFFING_PANEL);
         }
       }
     }); // ListSelectionListener
@@ -502,14 +501,4 @@ public class SniffingPanel extends JPanel {
     reflector.start();
     stopPressed = false;
   }
-  
-  private MaskFormatter createFormatter(String s) {
-	    MaskFormatter formatter = null;
-	    try {
-	        formatter = new MaskFormatter(s);
-	    } catch (java.text.ParseException exc) {
-	        m.log("Fuzzing Panel: Could not format port Formatter");  
-	    }
-	    return formatter;
-	}
 }

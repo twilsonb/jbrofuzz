@@ -30,6 +30,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
 import javax.swing.text.*;
 
@@ -112,7 +114,7 @@ public class FuzzingPanel extends JPanel {
     portPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-    port = new JFormattedTextField(createFormatter("#####"));
+    port = new JFormattedTextField();
 
     port.setEditable(true);
     port.setVisible(true);
@@ -266,13 +268,33 @@ public class FuzzingPanel extends JPanel {
 
     JScrollPane outputScrollPane = new JScrollPane(outputTable);
     outputScrollPane.setVerticalScrollBarPolicy(20);
-
     outputScrollPane.setPreferredSize(new Dimension(840, 130));
     outputPanel.add(outputScrollPane);
-
     outputPanel.setBounds(10, 280, 860, 170);
     add(outputPanel);
 
+    // Add the action listener for each row
+    ListSelectionModel rowSM = outputTable.getSelectionModel();
+
+    rowSM.addListSelectionListener(new ListSelectionListener() {
+      public void valueChanged(ListSelectionEvent e) {
+        //Ignore extra messages
+        if (e.getValueIsAdjusting()) {
+          return;
+        }
+        ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+        if (lsm.isSelectionEmpty()) {
+          // No rows selected
+        }
+        else {
+          int selectedRow = lsm.getMinSelectionIndex();
+          String s = outputTableModel.getValueAt(selectedRow);
+          WindowViewer vew = new WindowViewer(getFrameWindow(), s, WindowViewer.VIEW_FUZZING_PANEL);
+        }
+      }
+    }); // ListSelectionListener
+
+    
     // Some value defaults
     target.setText("http://localhost");
     port.setText("80");
@@ -585,14 +607,4 @@ public class FuzzingPanel extends JPanel {
     return s;
   }
   
-  private MaskFormatter createFormatter(String s) {
-	    MaskFormatter formatter = null;
-	    try {
-	        formatter = new MaskFormatter(s);
-	    } catch (java.text.ParseException exc) {
-	        m.log("Fuzzing Panel: Could not format port Formatter");  
-	    }
-	    return formatter;
-	}
-
 }

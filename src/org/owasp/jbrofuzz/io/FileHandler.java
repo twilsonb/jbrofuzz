@@ -234,6 +234,67 @@ public class FileHandler {
     }
     return out;
   }
+  
+  /**
+   * <p>Method for reading fuzz files that have been generated within a fuzzing
+   * session. Typically, the contents of the file are returned within the
+   * StringBuffer. In the event of an error, the StringBuffer returned is set to
+   * "". </p>
+   * 
+   * @param f
+   * @param fileName
+   * @return
+   */
+  public static StringBuffer readFuzzFile(JFrame f, String fileName) {
+	    StringBuffer out = new StringBuffer();
+	    File file;
+	    try {
+	      file = new File(fuzzDirectory, fileName);
+	    }
+	    catch (NullPointerException e) {
+	      JOptionPane.showMessageDialog(f,
+	                                    "Cannot Find Location" + "\n" + fileName + "\nA File Read Error Occured",
+	                                    "JBroFuzz File Read Error",
+	                                    JOptionPane.ERROR_MESSAGE);
+	      return new StringBuffer("");
+	    }
+	    BufferedReader bufRead = null;
+	    try {
+	      FileReader input = new FileReader(file);
+	      bufRead = new BufferedReader(input);
+	      String line;
+	      line = bufRead.readLine();
+	      while (line != null) {
+	        out.append(line + "\n");
+	        line = bufRead.readLine();
+	      }
+	      bufRead.close();
+	    }
+	    catch (ArrayIndexOutOfBoundsException e) {
+	      JOptionPane.showMessageDialog(f,
+	                                    "Cannot Find Location" + "\n" + fileName + "\nAn Array Error Occured",
+	                                    "JBroFuzz File Read Error",
+	                                    JOptionPane.ERROR_MESSAGE);
+	      return new StringBuffer("");
+
+	    }
+	    catch (IOException e) {
+	      JOptionPane.showMessageDialog(f,
+	                                    "Cannot Read Location" + "\n" + fileName + "\nA File Read Error Occured",
+	                                    "JBroFuzz File Read Error",
+	                                    JOptionPane.ERROR_MESSAGE);
+	      return new StringBuffer("");
+	    }
+	    finally {
+	      try {
+	        bufRead.close();
+	      }
+	      catch (IOException ex) {
+	      }
+	    }
+	    return out;
+	  }
+	    
 
   private static void createFile(String fileName, String content, int fileType) {
 
@@ -312,7 +373,7 @@ public class FileHandler {
    */
   public static void writeFuzzFile(String content, String name) {
     // Actually create the file
-    createFile(name + ".txt", content, FileHandler.FUZZ_FILE);
+    createFile(name + ".html", content, FileHandler.FUZZ_FILE);
   }
 
   /**
@@ -328,7 +389,7 @@ public class FileHandler {
    */
   public static void writeSnifFile(String name, String content) {
     // Actually create the file
-    createFile(name + ".txt", content, FileHandler.SNIF_FILE);
+    createFile(name + ".html", content, FileHandler.SNIF_FILE);
   }
 
   /**
