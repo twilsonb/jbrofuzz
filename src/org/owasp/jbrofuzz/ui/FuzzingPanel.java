@@ -68,7 +68,7 @@ public class FuzzingPanel extends JPanel {
   private FuzzingTableModel mFuzzingTableModel;
   // The JButtons
   private final JButton buttonAddGen, buttonRemGen,
-  buttonFuzzStart, buttonFuzzStop;
+  buttonFuzzStart, buttonFuzzStop, buttonPlot;
   // The swing worker used when the button "fuzz" is pressed
   private SwingWorker3 worker;
   // A counter for the number of times fuzz has been clicked
@@ -220,7 +220,7 @@ public class FuzzingPanel extends JPanel {
     add(generatorPanel);
     // The fuzz buttons
     buttonFuzzStart = new JButton("Fuzz!", ImageCreator.START_IMG);
-    buttonFuzzStart.setBounds(670, 230, 90, 40);
+    buttonFuzzStart.setBounds(580, 230, 90, 40);
     buttonFuzzStart.setToolTipText("Start Fuzzing!");
     add(buttonFuzzStart);
     buttonFuzzStart.addActionListener(new ActionListener() {
@@ -241,13 +241,35 @@ public class FuzzingPanel extends JPanel {
     buttonFuzzStop = new JButton("Stop", ImageCreator.STOP_IMG);
     buttonFuzzStop.setEnabled(false);
     buttonFuzzStop.setToolTipText("Stop Fuzzing");
-    buttonFuzzStop.setBounds(770, 230, 90, 40);
+    buttonFuzzStop.setBounds(680, 230, 90, 40);
     add(buttonFuzzStop);
     buttonFuzzStop.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
-        fuzzStopButton();
+      	SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+          	fuzzStopButton();
+          }
+        });       
       }
     });
+    // The plot button
+    buttonPlot = new JButton("Bro", ImageCreator.PAUSE_IMG);
+    buttonPlot.setEnabled(true);
+    buttonPlot.setToolTipText("Plot Fuzzing Results");
+    buttonPlot.setBounds(780, 230, 80, 40);
+    add(buttonPlot);
+    buttonPlot.addActionListener(new ActionListener() {
+      // public void actionPerformed(final ActionEvent e) {
+      	public void actionPerformed(final ActionEvent e) {
+        	SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            	WindowPlotter wd = new WindowPlotter(getFrameWindow(), "Title");
+            }
+          });
+        
+      }
+    });
+   
     // The output panel
     outputPanel = new JPanel();
     outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
