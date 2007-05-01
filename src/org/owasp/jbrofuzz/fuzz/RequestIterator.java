@@ -31,6 +31,7 @@ import java.util.Date;
 import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.fuzz.tcp.*;
 import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>Title: Java Bro Fuzzer</p>
  *
@@ -191,7 +192,7 @@ public class RequestIterator {
 		while ( (! stout.toString().equalsIgnoreCase("")) && (! generatorStopped) ) {
 
 			final Date currentTime = new Date();
-			String filename = mJBroFuzz.getFrameWindow().getFuzzingPanel().getCounter(false);
+			String filename = mJBroFuzz.getFrameWindow().getFuzzingPanel().getCounter(true);
 
 			mJBroFuzz.getFrameWindow().getFuzzingPanel().addRowInOuputTable(
 					filename + "          " + 
@@ -209,11 +210,7 @@ public class RequestIterator {
 			Connection con = new Connection(target, port, stout);
 
 			final String s = con.getReply();
-			FileHandler.writeFuzzFile("\r\nReply:\r\n-->\r\n" + s, filename);
-			
-			FileHandler.writeFuzzFile("\r\n<!-- {" + currentValue + "/" + maxValue + "}, " 
-					+ mJBroFuzz.getFrameWindow().getFuzzingPanel().getCounter(true) + "-->\r\n",  
-					filename) ;
+			FileHandler.writeFuzzFile(Format.LINE_SEPARATOR + "\r\n" + s, filename);
 			
 			stout = getNext();
 		}
