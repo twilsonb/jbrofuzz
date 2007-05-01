@@ -112,8 +112,9 @@ class PlotCanvas extends Canvas {
 	 * Paint when the AWT tells us to...
 	 */
 	public void paint(Graphics g) {
-		// Dynamically calculate size information
-		// (the canvas may have been resized externally...)
+		Graphics2D g2 = (Graphics2D) g;
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		// 
 		Dimension size = getSize();
 		int d = Math.min(size.width, size.height); // diameter
 		int ed = d/20; // eye diameter
