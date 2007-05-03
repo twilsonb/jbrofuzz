@@ -60,6 +60,7 @@
       <zipfileset src="${lib.dir}/junit-4.1.jar" />
       <zipfileset src="${lib.dir}/junit-4.1-src.jar" />
       <zipfileset src="${lib.dir}/ostermillerutils_1_06_00.jar" />
+      <zipfileset src="${lib.dir}/jcckit.jar" />
       <manifest>
         <attribute name="Main-Class" value="org.owasp.jbrofuzz.JBroFuzz" />
       </manifest>
