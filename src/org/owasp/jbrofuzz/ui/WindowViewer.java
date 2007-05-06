@@ -30,7 +30,8 @@
 		
 		import javax.swing.*;
 		
-		import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
 		
 		/**
 		 * <p>Class extending a JFrame for displaying the contents of each TCP sniffing
@@ -72,7 +73,8 @@
 		    super();
 		    this.name = name;
 		    this.m = m;
-		
+		    setIconImage(ImageCreator.FRAME_IMG.getImage());
+		    
 		    String[] input = name.split(" ");
 		    String number = input[0] + ".html";
 		    setTitle("Window Viewer " + number);

@@ -254,7 +254,7 @@ public class FuzzingPanel extends JPanel {
     });
     // The plot button
     buttonPlot = new JButton("Bro", ImageCreator.PAUSE_IMG);
-    buttonPlot.setEnabled(true);
+    buttonPlot.setEnabled(false);
     buttonPlot.setToolTipText("Plot Fuzzing Results");
     buttonPlot.setBounds(780, 230, 80, 40);
     add(buttonPlot);
@@ -318,7 +318,7 @@ public class FuzzingPanel extends JPanel {
 
     
     // Some value defaults
-    target.setText("http://localhost");
+    target.setText("http://192.168.1.254");
     port.setText("80");
     message.setText("GET /index.html HTTP/1.0\r\n" + "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n" + "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n" +
                     "Accept-Language: en-gb,en;q=0.5\r\n" +
@@ -326,6 +326,7 @@ public class FuzzingPanel extends JPanel {
                     "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n" +
                     "Keep-Alive: 300\r\n" + "Connection: keep-alive\r\n\r\n");
     message.setCaretPosition(0);
+    mFuzzingTableModel.addRow("DEC", 21, 22);
   }
 
   /**
@@ -339,6 +340,7 @@ public class FuzzingPanel extends JPanel {
     // UI and Colors
     buttonFuzzStart.setEnabled(false);
     buttonFuzzStop.setEnabled(true);
+    buttonPlot.setEnabled(true);
     target.setEditable(false);
     target.setBackground(Color.BLACK);
     target.setForeground(Color.WHITE);

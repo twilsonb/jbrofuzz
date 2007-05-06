@@ -240,16 +240,14 @@ public class FileHandler {
 	 *
 	 * @param f JFrame 
 	 * @return int
-	 * @since 0.2
+	 * @since 0.6
 	 */
-	public static int[] readFuzzDirectoryFiles(JFrame f) {
+	public static int[] getFuzzDirHashes(JFrame f) {
 
-		// if(fuzzDirectory.isDirectory()) {
 		File[] folderFiles = fuzzDirectory.listFiles();
 		int[] hashValue = new int[folderFiles.length];
 
 		for(int i = 0; i < folderFiles.length; i++) {
-			// if(folderFiles[i].getName().endsWith("html")) {
 			BufferedReader bufRead = null;
 			try {
 				FileReader input = new FileReader(folderFiles[i]);
@@ -277,14 +275,12 @@ public class FileHandler {
 						"Cannot Find Location" + "\n" + folderFiles[i].getName() + "\nAn Array Error Occured",
 						"JBroFuzz File Read Error",
 						JOptionPane.ERROR_MESSAGE);
-				// return new int[1];
 			}
 			catch (IOException e) {
 				JOptionPane.showMessageDialog(f,
 						"Cannot Read Location" + "\n" + folderFiles[i].getName() + "\nA File Read Error Occured",
 						"JBroFuzz File Read Error",
 						JOptionPane.ERROR_MESSAGE);
-				// return new int[1];
 			}
 			finally {
 				try {
@@ -293,9 +289,18 @@ public class FileHandler {
 				catch (IOException ex) {
 				}
 			}    			 
-			//}
 		}
-		// }
+		return hashValue;
+	}
+
+	public static String[] getFuzzDirNames(JFrame f) {
+
+		File[] folderFiles = fuzzDirectory.listFiles();
+		String[] hashValue = new String[folderFiles.length];
+
+		for(int i = 0; i < folderFiles.length; i++) {
+			hashValue[i] = folderFiles[i].getName();    			 
+		}
 		return hashValue;
 	}
 

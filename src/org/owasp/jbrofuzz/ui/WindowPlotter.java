@@ -30,6 +30,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
@@ -44,7 +45,6 @@ import jcckit.data.DataPlot;
 import jcckit.data.DataPoint;
 import jcckit.util.ConfigParameters;
 import jcckit.util.PropertiesBasedConfigData;
-
 /**
  * <p>Class extending a JFrame for displaying fuzzed results in a linear 
  * graph.</p>
@@ -64,26 +64,29 @@ public class WindowPlotter extends JFrame {
 	// The y size of the frame
 	private static final int y = 450;
 
-	private int[] _data = null;
+	private int [] y_data = null;
+	private String [] x_data = null;
+
 	private DataPlot _dataPlot;
 
 	public WindowPlotter(FrameWindow m, String name) {
 		super(name);
 		this.name = name;
 		this.m = m;
+		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		
+		y_data = FileHandler.getFuzzDirHashes(this.m);
+		x_data = FileHandler.getFuzzDirNames(this.m);
 
-		_data = FileHandler.readFuzzDirectoryFiles(this.m);
+		normaliseData();
 
 		GraphicsPlotCanvas plotCanvas = createPlotCanvas();
 
 		_dataPlot = new DataPlot();
 		_dataPlot.addElement(new DataCurve(""));
 		plotCanvas.connect(_dataPlot);
-
 		setLayout(new BorderLayout());
 		add(plotCanvas.getGraphicsCanvas(), BorderLayout.CENTER);
-		add(createControlPanel(), BorderLayout.SOUTH);
-
 		// Global frame issues
 		setLocation(180, 140);
 		setSize(x, y);
@@ -91,90 +94,73 @@ public class WindowPlotter extends JFrame {
 		setVisible(true);
 		setDefaultCloseOperation(2);
 
-		addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					dispose();
-				}
-			}
-		});
-		
-		int [] results = FileHandler.readFuzzDirectoryFiles(this.m);
-		
-		for(int i = 0; i < results.length; i++) {
-			System.out.print(" " + results[i]);
-		}
-		System.out.println("");
+		drawData();
 	}
 
 	private GraphicsPlotCanvas createPlotCanvas() {
+		int xMin = 0;
+		int xMax = y_data.length + 1;
+		int yMin = 0;
+		int yMax = 1000;
+
 		Properties props = new Properties();
 		ConfigParameters config
 		= new ConfigParameters(new PropertiesBasedConfigData(props));
+		props.put("foreground", "0xffffff");
+		props.put("background", "0");
+
 		props.put("plot/legendVisible", "false");
-		props.put("plot/coordinateSystem/xAxis/minimum", "-0.5");
-		props.put("plot/coordinateSystem/xAxis/maximum", "6.5");
-		props.put("plot/coordinateSystem/xAxis/axisLabel", "");
-		props.put("plot/coordinateSystem/xAxis/ticLabelFormat/className",
-		"jcckit.plot.TicLabelMap");
-		props.put("plot/coordinateSystem/xAxis/ticLabelFormat/map",
-		"0=Mo;1=Tu;2=We;3=Th;4=Fr;5=Sa;6=Su");
-		props.put("plot/coordinateSystem/yAxis/axisLabel", "fuzzing fingerprint");
-		props.put("plot/coordinateSystem/yAxis/maximum", "1000");
-		props.put("plot/coordinateSystem/yAxis/ticLabelFormat", "%d%%");
+		props.put("plot/coordinateSystem/xAxis/minimum", "" + xMin);
+		props.put("plot/coordinateSystem/xAxis/maximum", "" + xMax);
+		props.put("plot/coordinateSystem/xAxis/axisLabel", "Fuzzing Instance File Generated");
+
+		props.put("plot/coordinateSystem/yAxis/minimum", "" + yMin);
+		props.put("plot/coordinateSystem/yAxis/maximum", "" + yMax);
+		props.put("plot/coordinateSystem/yAxis/axisLabel", "Normalised Fuzzing Hash Value [0 - 1000]");
+
 		props.put("plot/curveFactory/definitions", "curve");
-		props.put("plot/curveFactory/curve/withLine", "false");
-		props.put("plot/curveFactory/curve/symbolFactory/className", 
-		"jcckit.plot.BarFactory");
-		props.put("plot/curveFactory/curve/symbolFactory/attributes/className", 
-		"jcckit.graphic.ShapeAttributes");
-		props.put("plot/curveFactory/curve/symbolFactory/attributes/fillColor", 
-		"0xfe8000");
-		props.put("plot/curveFactory/curve/symbolFactory/attributes/lineColor", 
-		"0");
-		props.put("plot/curveFactory/curve/symbolFactory/size", "0.08");
-		props.put("plot/initialHintForNextCurve/className", 
-		"jcckit.plot.PositionHint");
+		props.put("plot/curveFactory/curve/withLine", "true");
+
+		props.put("plot/initialHintForNextCurve/className", "jcckit.plot.PositionHint");
 		props.put("plot/initialHintForNextCurve/position", "0 0.1");
 
+		props.put("plot/curveFactory/curve/initialHintForNextPoint/className", "jcckit.plot.ShapeAttributesHint");
+		props.put("plot/curveFactory/curve/initialHintForNextPoint/initialAttributes/fillColor", "0x00090");
+		props.put("plot/curveFactory/curve/initialHintForNextPoint/fillColorHSBIncrement", "0.0 0.0 0.018");
+		props.put("plot/curveFactory/curve/withLine", "true");
+		props.put("plot/curveFactory/curve/symbolFactory/className", "jcckit.plot.CircleSymbolFactory");
+		props.put("plot/curveFactory/curve/symbolFactory/size", "0.015");
+		
+		StringBuffer xAxisMap = new StringBuffer();
+		for(int i=0; i < x_data.length; i++) {
+			if(i == 0) {
+				xAxisMap.append("0=0;");
+			} else {
+				if(xAxisMap.length() < 100000) {
+					xAxisMap.append((i+1) + "=" + x_data[i] + ";");
+				}
+			}
+		}
+		props.put("plot/coordinateSystem/xAxis/ticLabelFormat/className", "jcckit.plot.TicLabelMap");
+		props.put("plot/coordinateSystem/xAxis/ticLabelFormat/map", xAxisMap.toString());
 		return new GraphicsPlotCanvas(config);
 	}
-	
-	private Panel createControlPanel() {
-		Panel controlPanel = new Panel();
-		Button startButton = new Button("animate");
-		startButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new Thread() {
-					public void run() {
-						animate();
-					}
-				}.start();
-			}
-		});
-		controlPanel.add(startButton);
 
-		return controlPanel;
-	}
-	
-
-	private void animate() {
+	private void drawData() {
 		DataCurve curve = new DataCurve("");
-		for (int i = 0; i < _data.length; i++) {
+		for (int i = 0; i < y_data.length; i++) {
 			curve.addElement(new DataPoint(i, 0));
+			int x = i + 1;
+			int y = y_data[i];
+			curve.replaceElementAt(i, new DataPoint(x, y));
 		}
 		_dataPlot.replaceElementAt(0, curve);
+	}
 
-		for (int i = 0; i < _data.length; i++) {
-			double x = i;
-			double y = 0;
-			while (y < _data[i]) {
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {}
-				y = Math.min(_data[i], y + 5);
-				curve.replaceElementAt(i, new DataPoint(x, y));
-			}
+	private void normaliseData() {
+		int norm = y_data[0];
+		for(int i = 0; i < y_data.length; i++) {
+			y_data[i] = Math.abs((y_data[i] - norm + 10) % 1000);
 		}
 	}
 
