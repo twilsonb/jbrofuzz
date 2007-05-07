@@ -31,8 +31,11 @@ import org.owasp.jbrofuzz.ver.*;
 
 /**
  * Class used for constructing the contents of the text displayed within the
- * web directories panel. The necessity of this class lies within having the
- * ability to report errors to the main GUI log panel (system)
+ * web directories panel. This text is displayed within the "Total 
+ * directories to test" Panel.</p>
+ * The necessity of this class lies within having the
+ * ability to report errors to the main system panel in the event of 
+ * not finding the right file to load.</p>
  *
  * @author subere (at) uncon org
  * @version 0.6

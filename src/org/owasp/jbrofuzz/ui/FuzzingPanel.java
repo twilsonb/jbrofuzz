@@ -33,15 +33,18 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
-import javax.swing.text.*;
 
 import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.io.*;
 /**
- * <p>The main "TCP Fuzzing" panel, displayed within the Main Frame Window.</p>
- * <p>This panel performs all TCP related fuzzing operations, including the
- * addition and removal of generators, reporting back the results into the
+ * <p>The main "TCP Fuzzing" panel, displayed within the Main 
+ * Frame Window.</p>
+ * <p>This panel performs all TCP related fuzzing operations, 
+ * including the
+ * addition and removal of generators, reporting back the 
+ * results into the
  * current window, as well as writting them to file.</p>
  *
  * @author subere (at) uncon org
@@ -263,7 +266,7 @@ public class FuzzingPanel extends JPanel {
       	public void actionPerformed(final ActionEvent e) {
         	SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-            	WindowPlotter wd = new WindowPlotter(getFrameWindow(), "Title");
+            	fuzzBroButton();
             }
           });
         
@@ -407,6 +410,20 @@ public class FuzzingPanel extends JPanel {
     port.setEditable(true);
     port.setBackground(Color.WHITE);
     port.setForeground(Color.BLACK);
+  }
+  
+  public void fuzzBroButton() {
+  	if(!buttonPlot.isEnabled()) {
+  		return;
+  	}
+  	final WindowPlotter wd = new WindowPlotter(getFrameWindow(), FileHandler.getFuzzDirName());
+  	wd.addKeyListener(new KeyAdapter() {
+      public void keyPressed(KeyEvent ke) {
+        if (ke.getKeyCode() == 27) {
+          wd.dispose();
+        }
+      }
+    });
   }
 
   /**

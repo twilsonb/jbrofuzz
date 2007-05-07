@@ -6,6 +6,7 @@ org.owasp.jbrofuzz.dir
 org.owasp.jbrofuzz.fuzz
 org.owasp.jbrofuzz.fuzz.tcp
 org.owasp.jbrofuzz.io
+org.owasp.jbrofuzz.pub
 org.owasp.jbrofuzz.snif.tcp
 org.owasp.jbrofuzz.ui
 org.owasp.jbrofuzz.ui.util

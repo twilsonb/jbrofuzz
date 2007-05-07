@@ -1,0 +1,26 @@
+JBroFuzz is licensed under the GNU General Public License; 
+a copy should be included within this file; If not you can
+find it at http://www.gnu.org/licenses/gpl.txt
+
+This product includes software developed by
+The Apache Software Foundation (http://www.apache.org/).
+The following libraries used are licensed under the 
+Apache License that should also be included within this
+file:
+	commons-codec
+	commons-httpclient
+	commons-logging
+
+This product includes JUnit. JUnit is Open Source 
+Software, released under the Common Public License 
+Version 1.0.
+
+This product includes JCCKit. JCCKit is licensed under the
+GNU Lesser General Public License; a copy should be included
+within this file; If not you can find it at:
+http://www.gnu.org/licenses/lgpl.txt
+
+This product included OstermillerUtils. OstermillerUtils are
+licensed under the GNU Lesser General Public License; a copy 
+should be included within this file; If not you can find 
+it at: http://www.gnu.org/licenses/lgpl.txt

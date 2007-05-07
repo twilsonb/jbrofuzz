@@ -34,7 +34,8 @@ import org.owasp.jbrofuzz.*;
 /**
  * <p>Class responsible for holding the description of a number of static
  * parameters and constants relating to the application.</p>
- * <p>Typical parameters found in this class include the file names for
+ * <p>Typical parameters found in this class include the file 
+ * names for
  * the generators and the directories list, user properties.</p>
  *
  * @author subere (at) uncon (dot) org
@@ -221,6 +222,25 @@ public class Format {
 		"might occur while running JBroFuzz on a\n" +
 		"particular application or network protocol.\n";
 
+	/**
+	 * <p>The readme text shown in the open source tab.</p> 
+	 */
+	public static final String OPEN_SOURCE_README =
+		"Open Source Fuzzing\n\nUsage:\n\n" +
+		"Valid formats are: “mydomain.com”, “myuni.ac.uk”, etc. " +
+		"Do not include the ‘@’ symbol or any of the quotes \" " +
+		"in the domain.\n\n" +
+		"Description:\n\n" + 
+		"This tab allows you to harvest email addresses that are " +
+		"in the public domain, given the Fully Qualified Domain " +
+		"Name (FQDN) that is under scrutiny.\n\n" +
+		"This is achieved by submitting a total of five (5) requests " +
+		"to Google Web Search and Google Groups with the FQDN provided " +
+		"and filtering through the responses.\n\n" +
+		"Notes:\n\n" +
+		"E-mail addresses returned are not limited to the domain " +
+		"specified, but also include addresses which have been indexed " +
+		"along side the domain in question.";
 	//
 	// Variables used to define the current date as reference
 	//

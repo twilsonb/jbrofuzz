@@ -29,8 +29,9 @@ import java.util.*;
 
 import javax.swing.table.*;
 /**
- * The Table Model for the Web Directories return table.
- *
+ * <p>The Table Model for the Web Directories return table.</p>
+ * <p>This table model is used for replies for the web directories.</p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */

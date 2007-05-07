@@ -31,9 +31,7 @@ import java.util.*;
 
 import org.owasp.jbrofuzz.ui.*;
 /**
- * <p>Title: Java Bro Fuzzer</p>
- *
- * <p>Description: The class responsible for making the connection through the
+ * <p>The class responsible for making the connection through the
  * corresponding socket.</p>
  *
  * @author subere (at) uncon (dot) org
@@ -49,6 +47,7 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
   private Connection con = null;
   // Boolean to allow for termination
   private boolean connectionStopped;
+  
   /**
    * The main constructor for the Connection Listener.
    *

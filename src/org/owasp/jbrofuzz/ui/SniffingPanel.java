@@ -38,9 +38,11 @@ import org.owasp.jbrofuzz.ui.util.*;
 import org.owasp.jbrofuzz.ver.*;
 
 /**
- * The Sniffing Panel User Interface based on the instance of a JPanel. This
- * class constructs the entire panel for the "TCP Sniffing" tab as seen by the
- * user in the main frame.
+ * <p>The Sniffing Panel User Interface based on the instance 
+ * of a JPanel. This
+ * class constructs the entire panel for the "TCP Sniffing" tab 
+ * as seen by the
+ * user in the main frame.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6
@@ -107,7 +109,7 @@ public class SniffingPanel extends JPanel {
     rPortPanel.setBounds(230, 20, 60, 60);
     lHostPanel.setBounds(300, 20, 220, 60);
     lPortPanel.setBounds(520, 20, 60, 60);
-    listPanel.setBounds(10, 90, 870, 370);
+    listPanel.setBounds(10, 90, 870, 360);
     // Setup the remote host text
     rHostText = new JTextField();
     rHostText.setEditable(true);
@@ -160,7 +162,7 @@ public class SniffingPanel extends JPanel {
     JScrollPane listTextScrollPane = new JScrollPane(sniffingTable);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
-    listTextScrollPane.setPreferredSize(new Dimension(850, 330));
+    listTextScrollPane.setPreferredSize(new Dimension(850, 320));
     listTextScrollPane.setWheelScrollingEnabled(true);
     listPanel.add(listTextScrollPane);
     // Add the action listener for each row
@@ -222,23 +224,7 @@ public class SniffingPanel extends JPanel {
     // The action listener for the browser button
     browserButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        Browser.init();
-        StringBuffer url = new StringBuffer();
-        if (getRemotePortText().equals("443")) {
-          url.append("https://");
-        }
-        else {
-          url.append("http://");
-        }
-        url.append(getLocalHostText());
-        url.append(":");
-        url.append(getLocalPortText());
-        try {
-          Browser.displayURL(url.toString());
-        }
-        catch (IOException ex) {
-          getFrameWindow().log("Could not launch link in external browser");
-        }
+
       }
     });
 
@@ -456,6 +442,26 @@ public class SniffingPanel extends JPanel {
         createTitledBorder(" List of Requests " + "[Last log was .\\" +
                            Format.DATE + "\\" + session + "*.txt] "),
         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+    }
+  }
+  
+  public void buttonBro() {
+    Browser.init();
+    StringBuffer url = new StringBuffer();
+    if (getRemotePortText().equals("443")) {
+      url.append("https://");
+    }
+    else {
+      url.append("http://");
+    }
+    url.append(getLocalHostText());
+    url.append(":");
+    url.append(getLocalPortText());
+    try {
+      Browser.displayURL(url.toString());
+    }
+    catch (IOException ex) {
+      getFrameWindow().log("Could not launch link in external browser");
     }
   }
 

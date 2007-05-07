@@ -1,5 +1,5 @@
 /**
- * Generator.java
+ * Generator.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -27,8 +27,10 @@ package org.owasp.jbrofuzz.fuzz.tcp;
 
 import java.util.*;
 /**
- * <p>Class responsible for creating the generators passed from the definitions.
- * </p>
+ * <p>Class responsible for creating the generators passed from the 
+ * definitions file.</p>
+ * <p>This class the main interpreter for the text format in which
+ * the generators are expected to be read from the file.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6

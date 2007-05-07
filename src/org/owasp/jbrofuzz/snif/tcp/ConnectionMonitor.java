@@ -26,10 +26,9 @@
 package org.owasp.jbrofuzz.snif.tcp;
 
 /**
- * <p>Title: Java Browser Fuzzer</p>
- *
- * <p>Description: The interface to the TCPConnectionMonitor requiring
- * attemptingConnection, addingConnection, removingConnection and connectionError
+ * <p>The interface to the TCPConnectionMonitor requiring
+ * attemptingConnection, addingConnection, removingConnection 
+ * and connectionError
  * to be implemented.</p>
  *
  * <p>Company: </p>

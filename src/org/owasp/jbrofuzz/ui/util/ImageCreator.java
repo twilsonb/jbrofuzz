@@ -29,7 +29,8 @@ import javax.swing.*;
 
 import org.owasp.jbrofuzz.util.*;
 /**
- * <p>This static class holds the Base64 Strings corresponding to all the
+ * <p>This static class holds the Base64 Strings corresponding 
+ * to all the
  * images used by JBroFuzz. Each String is then parsed into an ImageIcon object
  * which can be publicly referenced from this class.</p>
  *

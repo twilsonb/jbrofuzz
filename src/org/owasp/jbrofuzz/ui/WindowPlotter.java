@@ -48,6 +48,7 @@ import jcckit.util.PropertiesBasedConfigData;
 /**
  * <p>Class extending a JFrame for displaying fuzzed results in a linear 
  * graph.</p>
+ * <p>This class launched a JFrame inside the "TCP Fuzzing" Panel.</p>
  *
  * @author subere (at) uncon org
  * @version 0.6
@@ -75,8 +76,8 @@ public class WindowPlotter extends JFrame {
 		this.m = m;
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 		
-		y_data = FileHandler.getFuzzDirHashes(this.m);
-		x_data = FileHandler.getFuzzDirNames(this.m);
+		y_data = FileHandler.getFuzzDirFileHashes(this.m);
+		x_data = FileHandler.getFuzzDirFileNames(this.m);
 
 		normaliseData();
 

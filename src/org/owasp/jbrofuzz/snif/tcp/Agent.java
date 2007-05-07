@@ -33,6 +33,8 @@ import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.io.*;
 
 /**
+ * <p>The Agent class implements the grouping necessary for the 
+ * ConnectionListener to function correctly.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6
@@ -84,7 +86,7 @@ class Agent implements Runnable {
       }
     }
     catch (IOException e) {
-      mJBroFuzz.getFrameWindow().log("TCPAgent: " + e.getMessage());
+      // mJBroFuzz.getFrameWindow().log("TCPAgent: " + e.getMessage());
     }
     //
     agentMonitor.agentHasDied(this);

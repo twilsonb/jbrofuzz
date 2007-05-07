@@ -35,6 +35,9 @@ import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>Class responsible for all File Creation. This class holds the file read
  * and create methods.</p>
+ * <p>At runtime, three directories are created inside to the
+ * fuzzing, sniffing and web-dir directories. The names of these 
+ * directories are identical and correspond to a timestamp value.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6
@@ -236,13 +239,20 @@ public class FileHandler {
 	}
 
 	/**
-	 * <p></p>
+	 * <p>Method for returning an integer array of hashes for each file
+	 * found inside the session fuzz directory created at runtime.</p>
+	 * <p>Each hash is an integer between the value of [0 - 1000] and is 
+	 * calculated by means of consecutive addition of the byte values
+	 * found on each line.</p>
+	 * <p>As a result of this, files with small alterations e.g. date
+	 * and time stamps will have little differences in their hash value,
+	 * thus keeping the hamming distance between them to a minimum.</p>
 	 *
 	 * @param f JFrame 
 	 * @return int
 	 * @since 0.6
 	 */
-	public static int[] getFuzzDirHashes(JFrame f) {
+	public static int[] getFuzzDirFileHashes(JFrame f) {
 
 		File[] folderFiles = fuzzDirectory.listFiles();
 		int[] hashValue = new int[folderFiles.length];
@@ -293,7 +303,7 @@ public class FileHandler {
 		return hashValue;
 	}
 
-	public static String[] getFuzzDirNames(JFrame f) {
+	public static String[] getFuzzDirFileNames(JFrame f) {
 
 		File[] folderFiles = fuzzDirectory.listFiles();
 		String[] hashValue = new String[folderFiles.length];
@@ -303,7 +313,6 @@ public class FileHandler {
 		}
 		return hashValue;
 	}
-
 
 
 	/**
@@ -479,11 +488,15 @@ public class FileHandler {
 	}
 
 	/**
-	 * <p>Method for returning the contents of a generator file as a Vector
+	 * <p>Method for returning the contents of a generator file as a
+	 * StringBuffer.</p>
+	 * <p>Comment lines starting with '#' will be ignored and not 
+	 * returned as contents of the StringBuffer.</p>
+	 * 
 	 * @param generatorFile String
-	 * @return Vector
+	 * @return StringBuffer
 	 */
-	public static Vector readGenerators(String generatorFile) {
+	public static StringBuffer readGenerators(String generatorFile) {
 		final int maxLines = 1024;
 		final int maxLineLength = 256;
 		int line_counter = 0;
@@ -497,9 +510,11 @@ public class FileHandler {
 				if (line.length() > maxLineLength) {
 					line = line.substring(0, maxLineLength);
 				}
-				file.add(line);
+				if (!line.startsWith("#")) {
+					file.add(line);
+					line_counter++;
+				}				
 				line = in.readLine();
-				line_counter++;
 			}
 			in.close();
 		}
@@ -518,13 +533,38 @@ public class FileHandler {
 			}
 		}
 		file.trimToSize();
-		return file;
+
+    int len = file.size();
+
+    // If the length is zero define the generators from the Format default list
+    if (len == 0) {
+      g.log("Loading default generator list");
+      String[] defaultArray = Format.DEFAULT_GENS.split("\n");
+      len = defaultArray.length;
+      file.setSize(len);
+      for (int x = 0; x < len; x++) {
+        file.add(x, defaultArray[x]);
+      }
+    }
+		
+		StringBuffer output = new StringBuffer();
+		for (int x = 0; x < file.size(); x++) {
+			String s = (String) file.elementAt(x);
+			if (s != null) {
+				output.append(s + "\n");
+			}
+		}
+		return output;
 	}
 
 	/**
-	 * <p>Method for returning the contents of a directories file as a Vector
+	 * <p>Method for returning the contents of a directories file as a 
+	 * StringBuffer.</p>
+	 * <p>Comment lines starting with '#' will be ignored and not 
+	 * returned as contents of the StringBuffer.</p>
+	 * 
 	 * @param directoriesFile String
-	 * @return Vector
+	 * @return StringBuffer
 	 */
 	public static StringBuffer readDirectories(String directoriesFile) {
 		final int maxLines = 100000;
@@ -589,5 +629,13 @@ public class FileHandler {
 		}
 		return output;
 	}
-
+	
+	/**
+	 * <p>Method for returning the name, as a String of the fuzzing 
+	 * directory used in the current session.</p>
+	 * @return
+	 */
+	public static String getFuzzDirName() {
+		return "/" + fuzzDirectory.getName() + "/";
+	}
 }

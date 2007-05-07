@@ -30,8 +30,9 @@ import java.util.*;
 import javax.swing.table.*;
 
 /**
- * The fuzzing table model used within the generators table of the "TCP Fuzzing"
- * panel.
+ * <p>The fuzzing table model used within the generators table of 
+ * the "TCP Fuzzing"
+ * panel.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6

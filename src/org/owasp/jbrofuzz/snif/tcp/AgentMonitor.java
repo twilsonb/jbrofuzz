@@ -26,7 +26,8 @@
 package org.owasp.jbrofuzz.snif.tcp;
 
 /**
- * <p>An interface to the TCPAgent requiring for agentHadDied to be
+ * <p>A public interface to the TCPAgent requiring for agentHadDied 
+ * to be
  * implemented.</p>
  *
  * @author subere (at) uncon (dot) org

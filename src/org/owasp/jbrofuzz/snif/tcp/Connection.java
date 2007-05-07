@@ -30,6 +30,10 @@ import java.net.*;
 
 import org.owasp.jbrofuzz.*;
 /**
+ * <p>The class responsible for launching a proxy between the two
+ * Sockets. This class uses the Agent class in order to achieve
+ * this.</p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
