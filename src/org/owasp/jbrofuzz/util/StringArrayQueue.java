@@ -26,7 +26,8 @@
 package org.owasp.jbrofuzz.util;
 
 /**
- * <p>Implementation of a String Queue Array operating in true FIFO style.</p>
+ * <p>Implementation of a String Queue Array operating in true 
+ * FIFO style.</p>
  *
  * @author subere (at) uncon (dot) org
  * @since 0.5

@@ -30,7 +30,7 @@ import java.util.*;
 import javax.swing.table.*;
 /**
  * <p>The table model that is being used within the Sniffing Panel.</p>
- *
+ * <p>This model is used for the requests and replies being made.</p>
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */

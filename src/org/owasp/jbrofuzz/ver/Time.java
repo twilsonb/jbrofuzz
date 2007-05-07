@@ -28,7 +28,8 @@ package org.owasp.jbrofuzz.ver;
 import java.text.*;
 import java.util.*;
 /**
- * <p>This class gives back the current date and time in a number of predefined
+ * <p>This class gives back the current date and time in a 
+ * number of predefined
  * formats.</p>
  * <p>All available public methods are static.</p>
  *

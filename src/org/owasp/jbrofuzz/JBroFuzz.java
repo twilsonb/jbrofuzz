@@ -36,7 +36,8 @@ import org.owasp.jbrofuzz.ver.*;
  * <p>Title: Java Bro Fuzzer</p>
  *
  * <p>Description: The central class launching the application. This class
- * instantiates a request iterator, a version, a main window and a file handler.
+ * instantiates a request iterator, a version, a main frame window and 
+ * a file handler.
  * The order in which the last three are instantiated should not be altered.</p>
  * <p>In order to fill in the contents of the corresponding text fields
  * (directories and generators), constructors are created to populate the

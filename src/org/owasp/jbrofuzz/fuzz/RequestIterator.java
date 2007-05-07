@@ -33,8 +33,6 @@ import org.owasp.jbrofuzz.fuzz.tcp.*;
 import org.owasp.jbrofuzz.io.*;
 import org.owasp.jbrofuzz.ver.*;
 /**
- * <p>Title: Java Bro Fuzzer</p>
- *
  * <p>The request generator instantiates the correct generator,
  * holding the complete set of requests. This class runs through all the
  * requests that a generator has to make holding the complete request being

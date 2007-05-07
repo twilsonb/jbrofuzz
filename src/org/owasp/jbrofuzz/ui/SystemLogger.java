@@ -32,8 +32,9 @@ import javax.swing.*;
 
 import org.owasp.jbrofuzz.ver.*;
 /**
- * The panel holding the system logging information that is part of the main
- * frame window.
+ * <p>The panel holding the system logging information that is part 
+ * of the main
+ * frame window.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6
@@ -67,7 +68,7 @@ public class SystemLogger extends JPanel {
       createTitledBorder(" System Logger "),
                         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     // Set the bounds
-    listPanel.setBounds(10, 90, 870, 370);
+    listPanel.setBounds(10, 90, 870, 360);
 
     listTextArea = new JTextArea();
     listTextArea.setFont(new Font("Verdana", Font.PLAIN, 10));
@@ -81,7 +82,7 @@ public class SystemLogger extends JPanel {
     JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
-    listTextScrollPane.setPreferredSize(new Dimension(850, 330));
+    listTextScrollPane.setPreferredSize(new Dimension(850, 320));
     listPanel.add(listTextScrollPane);
 
     infoButton = new JButton("Info");

@@ -63,6 +63,12 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
+/**
+ * <p>This class needs some more work and javadoc is not the only
+ * section!</p>
+ * @author subere (at) uncon (dot) org
+ * @version 0.6
+ */
 public class TableSorter extends AbstractTableModel {
 
   private static final long serialVersionUID = 129903L;

@@ -33,7 +33,9 @@ import org.owasp.jbrofuzz.io.*;
 import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>The Constructor constructs a list of Definitions, iterating though each
- * Generator and accumulating values inputted from the corresponding file.</p>
+ * Generator and accumulating values inputted from the corresponding 
+ * file. This file is located at runtime and should be in the same 
+ * directory location from which the jar file is launched.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6
@@ -51,24 +53,15 @@ public class TConstructor {
   public TConstructor(JBroFuzz mJBroFuzz) {
     this.mJBroFuzz = mJBroFuzz;
     generators = new ArrayList();
-    Vector fileInput = FileHandler.readGenerators(Format.FILE_GEN);
-    int len = fileInput.size();
-
-    // If the length is zero define the generators from the Format default list
-    if (len == 0) {
-      mJBroFuzz.getFrameWindow().log("Loading default generator list");
-      String[] defaultArray = Format.DEFAULT_GENS.split("\n");
-      len = defaultArray.length;
-      fileInput.setSize(len);
-      for (int x = 0; x < len; x++) {
-        fileInput.add(x, defaultArray[x]);
-      }
-    }
-
+    
+    StringBuffer fileContents = FileHandler.readGenerators(Format.FILE_GEN);
+    String [] fileInput = fileContents.toString().split("\n");
+    int len = fileInput.length;
+ 
     for (int i = 0; i < len; i++) {
       boolean firstLineOk = false;
 
-      String line = (String) fileInput.elementAt(i);
+      String line = (String) fileInput[i];
       if (line.startsWith("#")) {
         // Comment line hit, do nothing
       }
@@ -108,7 +101,7 @@ public class TConstructor {
           // Check that there remaining element in the generator Vector
           if (i < len - generatorLength - 1) {
             // Check that the second line starts with a #
-            String line2 = (String) fileInput.elementAt(i + 1);
+            String line2 = fileInput[i + 1];
             if (line2.startsWith(">")) {
               line2 = line2.substring(1);
               // Check to see that the Generator name is unique
@@ -123,7 +116,7 @@ public class TConstructor {
                 for (int j = 1; j <= generatorLength; j++) {
 
                   StringBuffer myBuffer = new StringBuffer();
-                  myBuffer.append(fileInput.elementAt(i + 1 + j));
+                  myBuffer.append(fileInput[i + 1 + j]);
                   myGen.addAlphabetValue(myBuffer);
 
                 }

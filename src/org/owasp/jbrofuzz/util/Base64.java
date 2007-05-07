@@ -26,8 +26,10 @@
 package org.owasp.jbrofuzz.util;
 
 /**
- * <p>Class responsible for encoding and decoding a given byte array to a
- * Base64 String and vice-versa. The operation of the class is performed by
+ * <p>Class responsible for encoding and decoding a given byte array 
+ * to a
+ * Base64 String and vice-versa. The operation of the class 
+ * is performed by
  * invoking the encode and decode methods.</p>
  *
  * @author subere (at) uncon (dot) org

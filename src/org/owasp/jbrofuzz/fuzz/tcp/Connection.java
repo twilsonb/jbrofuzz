@@ -1,5 +1,5 @@
 /**
- * Connection.java
+ * Connection.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -31,8 +31,8 @@ import java.net.*;
  * Description: The class responsible for making the connection for the
  * purposes of fuzzing through the corresponding socket.
  *
- * <p>This class gets used to establish each sequencial connection being made
- * on a given address, port and for a given request.</p>
+ * <p>This class gets used to establish each sequencial connection 
+ * being made on a given address, port and for a given request.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6

@@ -38,6 +38,8 @@ import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.ver.*;
 /**
  * <p>Class for generating the recursive directory requests.</p>
+ * <p>Once the object is instantiated, the run method should be 
+ * used to run through the requests.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6

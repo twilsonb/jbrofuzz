@@ -30,7 +30,8 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * <p>The definitions panel holding a description of the generators loaded.</p>
+ * <p>The definitions panel holding a description of the generators 
+ * loaded.</p>
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
@@ -61,7 +62,7 @@ public class DefinitionsPanel extends JPanel {
       createTitledBorder(" Fuzzing Generators "),
                         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     // Set the bounds
-    listPanel.setBounds(10, 90, 870, 370);
+    listPanel.setBounds(10, 80, 870, 370);
 
     listTextArea = new JTextArea();
     listTextArea.setFont(new Font("Verdana", Font.PLAIN, 13));

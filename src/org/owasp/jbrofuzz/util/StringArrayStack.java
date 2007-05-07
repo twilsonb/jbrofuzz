@@ -26,7 +26,8 @@
 package org.owasp.jbrofuzz.util;
 
 /**
- * <p>Implementation of a String Stack Array operating in true FILO style.</p>
+ * <p>Implementation of a String Stack Array operating in true 
+ * FILO style.</p>
  *
  * @author subere (at) uncon (dot) org
  * @since 0.5

@@ -39,7 +39,7 @@ import org.owasp.jbrofuzz.dir.*;
 import org.owasp.jbrofuzz.ui.util.*;
 import org.owasp.jbrofuzz.ver.*;
 /**
- * <p>The main panel for the web directory.</p>
+ * <p>The web directory panel that is attached to the main frame.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6

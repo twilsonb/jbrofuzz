@@ -6,6 +6,7 @@
   <property name="src.dir" value="src" />
   <property name="class.dir" value="classes" />
   <property name="doc.dir" value="doc" />
+  <property name="lic.dir" value="licenses" />
   <patternset id="dest.exclude">
     <exclude name="Temporary_Files/" />
     <exclude name="Generated Source/" />
@@ -13,6 +14,7 @@
     <exclude name="dependency cache/" />
     <exclude name="jsp cache/" />
     <exclude name="cache files/" />
+    <exclude name=".settings/" />
   </patternset>
   <path id="master-classpath" description="Master Classpath">
     <fileset dir="${lib.dir}">
@@ -52,7 +54,11 @@
       <fileset dir="${jar.dir}">
       	<patternset refid="dest.exclude" />
       	<exclude name="**/*.jar" />
+      	<exclude name="**/*.zip" />
       	<include name="**/jbrofuzz-*" />
+      </fileset>
+      <fileset dir="${lic.dir}">
+      	<include name="LICENSE/*" />
       </fileset>
       <zipfileset src="${lib.dir}/commons-codec-1.3.jar" />
       <zipfileset src="${lib.dir}/commons-httpclient-3.0.1.jar" />
