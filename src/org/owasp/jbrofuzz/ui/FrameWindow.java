@@ -132,12 +132,12 @@ public class FrameWindow extends JFrame {
 		tabbedPane.setBounds(0, 0, 895, 500);
 		// Do not change the names!!!
 		tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
+		tabbedPane.add(" Open Source ", mOpenSourcePanel);
 		tabbedPane.add(" TCP Fuzzing ", mFuzzingPanel);
 		tabbedPane.add(" TCP Sniffing ", mSniffingPanel);
-		tabbedPane.add(" Generators ", mDefinitionsPanel);
-		tabbedPane.add(" System ", mSystemLogger);
-		tabbedPane.add(" Open Source ", mOpenSourcePanel);
-		tabbedPane.setSelectedComponent(mOpenSourcePanel);
+		// tabbedPane.add(" Generators ", mDefinitionsPanel);
+		// tabbedPane.add(" System ", mSystemLogger);
+		tabbedPane.setSelectedComponent(mWebDirectoriesPanel);
 		pane.add(tabbedPane);
 		// The image icon
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
@@ -276,7 +276,7 @@ public class FrameWindow extends JFrame {
 	 */
 	public void setTabShow(int n) {
 		if (n == GENERATORS_PANEL_ID) {
-			tabbedPane.addTab(" Definitions ", mDefinitionsPanel);
+			tabbedPane.addTab(" Generators ", mDefinitionsPanel);
 		}
 		if (n == TCP_FUZZING_PANEL_ID) {
 			tabbedPane.addTab(" TCP Fuzzing ", mFuzzingPanel);
