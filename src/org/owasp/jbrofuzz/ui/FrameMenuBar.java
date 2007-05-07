@@ -109,9 +109,9 @@ public class FrameMenuBar extends JMenuBar {
 		directories = new JCheckBoxMenuItem("Web Directories", true);
 		fuzzing = new JCheckBoxMenuItem("TCP Fuzzing", true);
 		sniffing = new JCheckBoxMenuItem("TCP Sniffing", true);
-		generators = new JCheckBoxMenuItem("Generators", true);
+		generators = new JCheckBoxMenuItem("Generators", false);
 		opensource = new JCheckBoxMenuItem("Open Source", true);
-		system = new JCheckBoxMenuItem("System", true);
+		system = new JCheckBoxMenuItem("System", false);
 
 		showAll = new JMenuItem("Show All");
 		hideAll = new JMenuItem("Hide All");
