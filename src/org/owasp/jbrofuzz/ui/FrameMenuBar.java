@@ -25,7 +25,6 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-
 import java.awt.*;
 import java.awt.event.*;
 
@@ -127,6 +126,65 @@ public class FrameMenuBar extends JMenuBar {
 		view.addSeparator();
 		view.add(showAll);
 		view.add(hideAll);
+		view.addSeparator();
+
+		// -> Look and Feel
+		JMenu lookAndFeel = new JMenu("Look and Feel");
+		UIManager.LookAndFeelInfo [] installedFeels = 
+			UIManager.getInstalledLookAndFeels();
+		ButtonGroup group = new ButtonGroup();
+
+		for(int i = 0; i < Math.min(installedFeels.length, 5); i++) {
+			JRadioButtonMenuItem rb =
+				new JRadioButtonMenuItem( installedFeels[i].getName() );
+			group.add(rb);
+			lookAndFeel.add(rb);
+			rb.setSelected(
+					UIManager.getLookAndFeel().getName().equalsIgnoreCase(
+							installedFeels[i].getName() ));
+
+			rb.putClientProperty("Look and Feel Name", installedFeels[i]);
+
+			rb.addItemListener( new ItemListener() {
+				public void itemStateChanged( ItemEvent ie ) {
+					JRadioButtonMenuItem rbi = 
+						(JRadioButtonMenuItem) ie.getSource();
+
+					if( rbi.isSelected() ) {
+						final UIManager.LookAndFeelInfo info = 
+							(UIManager.LookAndFeelInfo)
+							rbi.getClientProperty("Look and Feel Name");
+
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+
+								try {
+									UIManager.setLookAndFeel(info.getClassName());
+									SwingUtilities.
+									updateComponentTreeUI( getFrameWindow() );
+								}
+								catch(UnsupportedLookAndFeelException e) {
+									getFrameWindow().log("An error occured while setting the Look & Feel");
+								}
+								catch(IllegalAccessException e) {
+									getFrameWindow().log("An error occured while setting the Look & Feel");
+								}
+								catch(ClassNotFoundException e) {
+									getFrameWindow().log("An error occured while setting the Look & Feel");
+								}
+								catch(InstantiationException e) {
+									getFrameWindow().log("An error occured while setting the Look & Feel");
+								}
+
+							}
+						});						
+
+
+					}
+				}
+			} );
+		}
+		view.add(lookAndFeel);
 
 		// Panel
 		start = new JMenuItem("Start", ImageCreator.START_IMG);
@@ -184,226 +242,226 @@ public class FrameMenuBar extends JMenuBar {
 		//
 		exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-			      	getFrameWindow().dispose();
-			      }
-			    });
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						getFrameWindow().dispose();
+					}
+				});
 			}
 		});
 
 		directories.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							if (!directories.getState()) {
-								getFrameWindow().setTabHide(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
-							}
-							else {
-								getFrameWindow().setTabShow(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
-							}
-			      }
-			    });			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (!directories.getState()) {
+							getFrameWindow().setTabHide(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+						}
+						else {
+							getFrameWindow().setTabShow(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+						}
+					}
+				});			   
 			}
 		});
 
 		fuzzing.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							if (!fuzzing.getState()) {
-								getFrameWindow().setTabHide(FrameWindow.TCP_FUZZING_PANEL_ID);
-							}
-							else {
-								getFrameWindow().setTabShow(FrameWindow.TCP_FUZZING_PANEL_ID);
-							}
-			      }
-			    });			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (!fuzzing.getState()) {
+							getFrameWindow().setTabHide(FrameWindow.TCP_FUZZING_PANEL_ID);
+						}
+						else {
+							getFrameWindow().setTabShow(FrameWindow.TCP_FUZZING_PANEL_ID);
+						}
+					}
+				});			   
 			}
 		});
 
 		sniffing.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							if (!sniffing.getState()) {
-								getFrameWindow().setTabHide(FrameWindow.TCP_SNIFFING_PANEL_ID);
-							}
-							else {
-								getFrameWindow().setTabShow(FrameWindow.TCP_SNIFFING_PANEL_ID);
-							}
-			      }
-			    });
-			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (!sniffing.getState()) {
+							getFrameWindow().setTabHide(FrameWindow.TCP_SNIFFING_PANEL_ID);
+						}
+						else {
+							getFrameWindow().setTabShow(FrameWindow.TCP_SNIFFING_PANEL_ID);
+						}
+					}
+				});
+
 			}
 		});
 
 		generators.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							if (!generators.getState()) {
-								getFrameWindow().setTabHide(FrameWindow.GENERATORS_PANEL_ID);
-							}
-							else {
-								getFrameWindow().setTabShow(FrameWindow.GENERATORS_PANEL_ID);
-							}
-			      }
-			    });
-			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (!generators.getState()) {
+							getFrameWindow().setTabHide(FrameWindow.GENERATORS_PANEL_ID);
+						}
+						else {
+							getFrameWindow().setTabShow(FrameWindow.GENERATORS_PANEL_ID);
+						}
+					}
+				});
+
 			}
 		});
 
 		system.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							if (!system.getState()) {
-								getFrameWindow().setTabHide(FrameWindow.SYSTEM_PANEL_ID);
-							}
-							else {
-								getFrameWindow().setTabShow(FrameWindow.SYSTEM_PANEL_ID);
-							}
-			      }
-			    });
-			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (!system.getState()) {
+							getFrameWindow().setTabHide(FrameWindow.SYSTEM_PANEL_ID);
+						}
+						else {
+							getFrameWindow().setTabShow(FrameWindow.SYSTEM_PANEL_ID);
+						}
+					}
+				});
+
 			}
 		});
 
 		opensource.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							if (!opensource.getState()) {
-								getFrameWindow().setTabHide(FrameWindow.OPEN_SOURCE_ID);
-							}
-							else {
-								getFrameWindow().setTabShow(FrameWindow.OPEN_SOURCE_ID);
-							}
-			      }
-			    });
-			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (!opensource.getState()) {
+							getFrameWindow().setTabHide(FrameWindow.OPEN_SOURCE_ID);
+						}
+						else {
+							getFrameWindow().setTabShow(FrameWindow.OPEN_SOURCE_ID);
+						}
+					}
+				});
+
 			}
 		});
 
 		showAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							getFrameWindow().setTabShow(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
-							directories.setState(true);
-							getFrameWindow().setTabShow(FrameWindow.TCP_FUZZING_PANEL_ID);
-							fuzzing.setState(true);
-							getFrameWindow().setTabShow(FrameWindow.TCP_SNIFFING_PANEL_ID);
-							sniffing.setState(true);
-							getFrameWindow().setTabShow(FrameWindow.GENERATORS_PANEL_ID);
-							generators.setState(true);
-							getFrameWindow().setTabShow(FrameWindow.SYSTEM_PANEL_ID);
-							system.setState(true);
-							getFrameWindow().setTabShow(FrameWindow.OPEN_SOURCE_ID);
-							opensource.setState(true);
-			      }
-			    });
-			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						getFrameWindow().setTabShow(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+						directories.setState(true);
+						getFrameWindow().setTabShow(FrameWindow.TCP_FUZZING_PANEL_ID);
+						fuzzing.setState(true);
+						getFrameWindow().setTabShow(FrameWindow.TCP_SNIFFING_PANEL_ID);
+						sniffing.setState(true);
+						getFrameWindow().setTabShow(FrameWindow.GENERATORS_PANEL_ID);
+						generators.setState(true);
+						getFrameWindow().setTabShow(FrameWindow.SYSTEM_PANEL_ID);
+						system.setState(true);
+						getFrameWindow().setTabShow(FrameWindow.OPEN_SOURCE_ID);
+						opensource.setState(true);
+					}
+				});
+
 			}
 		});    
 
 		hideAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							getFrameWindow().setTabHide(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
-							directories.setState(false);
-							getFrameWindow().setTabHide(FrameWindow.TCP_FUZZING_PANEL_ID);
-							fuzzing.setState(false);
-							getFrameWindow().setTabHide(FrameWindow.TCP_SNIFFING_PANEL_ID);
-							sniffing.setState(false);
-							getFrameWindow().setTabHide(FrameWindow.GENERATORS_PANEL_ID);
-							generators.setState(false);
-							getFrameWindow().setTabHide(FrameWindow.SYSTEM_PANEL_ID);
-							system.setState(false);
-							getFrameWindow().setTabHide(FrameWindow.OPEN_SOURCE_ID);
-							opensource.setState(false);
-			      }
-			    });
-			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						getFrameWindow().setTabHide(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+						directories.setState(false);
+						getFrameWindow().setTabHide(FrameWindow.TCP_FUZZING_PANEL_ID);
+						fuzzing.setState(false);
+						getFrameWindow().setTabHide(FrameWindow.TCP_SNIFFING_PANEL_ID);
+						sniffing.setState(false);
+						getFrameWindow().setTabHide(FrameWindow.GENERATORS_PANEL_ID);
+						generators.setState(false);
+						getFrameWindow().setTabHide(FrameWindow.SYSTEM_PANEL_ID);
+						system.setState(false);
+						getFrameWindow().setTabHide(FrameWindow.OPEN_SOURCE_ID);
+						opensource.setState(false);
+					}
+				});
+
 			}
 		});    
 
 		start.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							final SwingWorker3 worker = new SwingWorker3() {
-								public Object construct() {
-									int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
-									String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
-									if (s.equals(" TCP Fuzzing ")) {
-										getFrameWindow().getFuzzingPanel().fuzzStartButton();
-									}
-									if (s.equals(" TCP Sniffing ")) {
-										getFrameWindow().getTCPSniffingPanel().buttonStart();
-									}
-									if (s.equals(" Web Directories ")) {
-										getFrameWindow().getWebDirectoriesPanel().buttonStart();
-									}
-									if (s.equals(" Open Source ")) {
-										getFrameWindow().getOpenSourcePanel().checkStartButton();
-									}
-									return "start-menu-bar-return";
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						final SwingWorker3 worker = new SwingWorker3() {
+							public Object construct() {
+								int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
+								String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
+								if (s.equals(" TCP Fuzzing ")) {
+									getFrameWindow().getFuzzingPanel().fuzzStartButton();
 								}
+								if (s.equals(" TCP Sniffing ")) {
+									getFrameWindow().getTCPSniffingPanel().buttonStart();
+								}
+								if (s.equals(" Web Directories ")) {
+									getFrameWindow().getWebDirectoriesPanel().buttonStart();
+								}
+								if (s.equals(" Open Source ")) {
+									getFrameWindow().getOpenSourcePanel().checkStartButton();
+								}
+								return "start-menu-bar-return";
+							}
 
-								public void finished() {
-									int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
-									String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
-									if (s.equals(" TCP Fuzzing ")) {
-										getFrameWindow().getFuzzingPanel().fuzzStopButton();
-									}
-									if (s.equals(" Web Directories ")) {
-										getFrameWindow().getWebDirectoriesPanel().buttonStop();
-									}
-									if (s.equals(" Open Source ")) {
-										getFrameWindow().getOpenSourcePanel().checkStopButton();
-									}
+							public void finished() {
+								int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
+								String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
+								if (s.equals(" TCP Fuzzing ")) {
+									getFrameWindow().getFuzzingPanel().fuzzStopButton();
 								}
-							}; worker.start();
-			      }
-			    });
-			   
+								if (s.equals(" Web Directories ")) {
+									getFrameWindow().getWebDirectoriesPanel().buttonStop();
+								}
+								if (s.equals(" Open Source ")) {
+									getFrameWindow().getOpenSourcePanel().checkStopButton();
+								}
+							}
+						}; worker.start();
+					}
+				});
+
 			}
 		});
 
 		stop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
-							String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
-							if (s.equals(" TCP Fuzzing ")) {
-								getFrameWindow().getFuzzingPanel().fuzzStopButton();
-							}
-							if (s.equals(" TCP Sniffing ")) {
-								getFrameWindow().getTCPSniffingPanel().buttonStop();
-							}
-							if (s.equals(" Web Directories ")) {
-								getFrameWindow().getWebDirectoriesPanel().buttonStop();
-							}
-							if (s.equals(" Open Source ")) {
-								getFrameWindow().getOpenSourcePanel().checkStopButton();
-							}
-			      }
-			    });
-			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
+						String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
+						if (s.equals(" TCP Fuzzing ")) {
+							getFrameWindow().getFuzzingPanel().fuzzStopButton();
+						}
+						if (s.equals(" TCP Sniffing ")) {
+							getFrameWindow().getTCPSniffingPanel().buttonStop();
+						}
+						if (s.equals(" Web Directories ")) {
+							getFrameWindow().getWebDirectoriesPanel().buttonStop();
+						}
+						if (s.equals(" Open Source ")) {
+							getFrameWindow().getOpenSourcePanel().checkStopButton();
+						}
+					}
+				});
+
 			}
 		});
 
@@ -429,62 +487,62 @@ public class FrameMenuBar extends JMenuBar {
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
-							String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
-							if (s.equals(" TCP Fuzzing ")) {
-								getFrameWindow().getFuzzingPanel().generatorAddButton();
-							}
-			      }
-			    });
-			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
+						String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
+						if (s.equals(" TCP Fuzzing ")) {
+							getFrameWindow().getFuzzingPanel().generatorAddButton();
+						}
+					}
+				});
+
 			}
 		});
 
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
-							String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
-							if (s.equals(" TCP Fuzzing ")) {
-								getFrameWindow().getFuzzingPanel().generatorRemoveButton();
-							}
-			      }
-			    });
-			   
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						int currentTab = getFrameWindow().getTabbedPane().getSelectedIndex();
+						String s = getFrameWindow().getTabbedPane().getTitleAt(currentTab);
+						if (s.equals(" TCP Fuzzing ")) {
+							getFrameWindow().getFuzzingPanel().generatorRemoveButton();
+						}
+					}
+				});
+
 			}
 		});
 
 		disclaimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							JOptionPane.showMessageDialog(getFrameWindow(), 
-									Format.DISCLAIMER,
-									"Disclaimer JBroFuzz",
-									JOptionPane.ERROR_MESSAGE,
-									ImageCreator.OWASP_IMAGE);
-			      }
-			    });
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						JOptionPane.showMessageDialog(getFrameWindow(), 
+								Format.DISCLAIMER,
+								"Disclaimer JBroFuzz",
+								JOptionPane.ERROR_MESSAGE,
+								ImageCreator.OWASP_IMAGE);
+					}
+				});
 			}
 		});
 
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			   SwingUtilities.invokeLater(new Runnable() {
-			      public void run() {
-							JOptionPane.showMessageDialog(getFrameWindow(), 
-									Format.ABOUTTEXT,
-									"About JBroFuzz",
-									JOptionPane.INFORMATION_MESSAGE,
-									ImageCreator.OWASP_IMAGE);
-			      }
-			    });
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						JOptionPane.showMessageDialog(getFrameWindow(), 
+								Format.ABOUTTEXT,
+								"About JBroFuzz",
+								JOptionPane.INFORMATION_MESSAGE,
+								ImageCreator.OWASP_IMAGE);
+					}
+				});
 			}
 		});
 
@@ -516,16 +574,16 @@ class CopyAction extends TextAction {
 
 	public void actionPerformed(final ActionEvent evt) {
 
-	   SwingUtilities.invokeLater(new Runnable() {
-	      public void run() {
-	    		JTextComponent text = getTextComponent(evt);
-	    		if (text != null) {
-	    			text.copy();
-	    			text.requestFocus();
-	    		}
-	      }
-	    });
-	   
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				JTextComponent text = getTextComponent(evt);
+				if (text != null) {
+					text.copy();
+					text.requestFocus();
+				}
+			}
+		});
+
 	}
 }
 
@@ -536,18 +594,18 @@ class PasteAction extends TextAction {
 
 	public void actionPerformed(final ActionEvent evt) {
 
-	   SwingUtilities.invokeLater(new Runnable() {
-	      public void run() {
-	    		JTextComponent text = getTextComponent(evt);
-	    		if (text != null) {
-	    			if (text.isEditable()) {
-	    				text.paste();
-	    				text.requestFocus();
-	    			}
-	    		}
-	      }
-	    });
-	   
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				JTextComponent text = getTextComponent(evt);
+				if (text != null) {
+					if (text.isEditable()) {
+						text.paste();
+						text.requestFocus();
+					}
+				}
+			}
+		});
+
 	}
 }
 
@@ -558,15 +616,15 @@ class SelectAllAction extends TextAction {
 
 	public void actionPerformed(final ActionEvent evt) {
 
-	   SwingUtilities.invokeLater(new Runnable() {
-	      public void run() {
-	    		JTextComponent text = getTextComponent(evt);
-	    		if (text != null) {
-	    			text.selectAll();
-	    			text.requestFocus();
-	    		}
-	      }
-	    });
-	   
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				JTextComponent text = getTextComponent(evt);
+				if (text != null) {
+					text.selectAll();
+					text.requestFocus();
+				}
+			}
+		});
+
 	}
 }
