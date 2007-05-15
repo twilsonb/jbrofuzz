@@ -30,8 +30,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-//import org.owasp.jbrofuzz.ui.util.ImageCreator;
-
+import java.io.IOException;
+import java.net.*;
 /**
  * <p>The about box used in the FrameWindow.</p>
  * 
@@ -45,46 +45,67 @@ public class AboutBox extends JDialog implements ActionListener {
 	private static final int x = 400;
 	private static final int y = 300;
 
+	private static AboutBox instance = null;
+	
+	public static AboutBox getInstance(JFrame parent) {
+		if(instance == null) {
+			instance = new AboutBox(parent);
+		} else {
+			instance.setVisible(true);
+		}
+		return instance;
+	}
 	/**
 	 * The main constructor for the AboutBox.
 	 */
-	public AboutBox(JFrame parent) {
+	private AboutBox(JFrame parent) {
 		super(parent);
 		this.setLayout(new BorderLayout());
 		this.setFont(new Font ("SansSerif", Font.BOLD, 14));
+		URL fileURL = ClassLoader.getSystemClassLoader().getResource("LICENSE/gpl-license.txt");
+		
 		
 		// The about editor pane
-		JEditorPane about = new JEditorPane();
-		about.setText("");
+		JEditorPane about;
+		try {
+			about = new JEditorPane(fileURL);
+		} catch (IOException e) {
+			about = new JEditorPane();
+			e.printStackTrace();
+		}
+		about.setEditable(false);
+		// about.setText("About");
 		
-		JScrollPane aboutScrollPane = new JScrollPane(about);
-    aboutScrollPane.setVerticalScrollBarPolicy(20);
-    aboutScrollPane.setHorizontalScrollBarPolicy(30);
+		JScrollPane abtScrollPane = new JScrollPane(about);
+    abtScrollPane.setVerticalScrollBarPolicy(20);
+    abtScrollPane.setHorizontalScrollBarPolicy(30);
 
     // The license editor pane
 		JEditorPane license = new JEditorPane();
+		license.setEditable(false);
 		license.setText("License");
 		
-		JScrollPane licenseScrollPane = new JScrollPane(license);
-		licenseScrollPane.setVerticalScrollBarPolicy(20);
-		licenseScrollPane.setHorizontalScrollBarPolicy(30);
+		JScrollPane lcsScrollPane = new JScrollPane(license);
+		lcsScrollPane.setVerticalScrollBarPolicy(20);
+		lcsScrollPane.setHorizontalScrollBarPolicy(30);
 		
 		// The acknoledgement editor pane
 		JEditorPane acknoledgements = new JEditorPane();
+		acknoledgements.setEditable(false);
 		acknoledgements.setText("Acknoledgements");
 		
-		JScrollPane acknoledgementsScrollPane = new JScrollPane(acknoledgements);
-		acknoledgementsScrollPane.setVerticalScrollBarPolicy(20);
-		acknoledgementsScrollPane.setHorizontalScrollBarPolicy(30);
+		JScrollPane ackScrollPane = new JScrollPane(acknoledgements);
+		ackScrollPane.setVerticalScrollBarPolicy(20);
+		ackScrollPane.setHorizontalScrollBarPolicy(30);
 		
 		/*
 			JLabel title = new JLabel ("<HTML><CENTER><B>Some Header</B><P><P>&copy;2007 </HTML>");
 		*/
 
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.add(aboutScrollPane, " About ");
-		tabbedPane.add(licenseScrollPane, " License ");
-		tabbedPane.add(acknoledgementsScrollPane, " Acknoledgements ");
+		tabbedPane.add(abtScrollPane, " About ");
+		tabbedPane.add(lcsScrollPane, " License ");
+		tabbedPane.add(ackScrollPane, " Acknoledgements ");
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 		// OK Button
