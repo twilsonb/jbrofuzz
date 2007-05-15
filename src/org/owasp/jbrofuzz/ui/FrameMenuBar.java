@@ -543,7 +543,7 @@ public class FrameMenuBar extends JMenuBar {
 								JOptionPane.INFORMATION_MESSAGE,
 								ImageCreator.OWASP_IMAGE);
 						*/
-						AboutBox cAboutBox = new AboutBox(getFrameWindow());
+						AboutBox cAboutBox = AboutBox.getInstance(getFrameWindow());
 						
 					}
 				});
