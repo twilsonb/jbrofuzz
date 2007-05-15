@@ -31,8 +31,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import org.owasp.jbrofuzz.ui.util.*;
-import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
 /**
  * <p>The main menu bar attached to the main frame window.</p>
  *
@@ -536,11 +536,15 @@ public class FrameMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
+						/*
 						JOptionPane.showMessageDialog(getFrameWindow(), 
 								Format.ABOUTTEXT,
 								"About JBroFuzz",
 								JOptionPane.INFORMATION_MESSAGE,
 								ImageCreator.OWASP_IMAGE);
+						*/
+						AboutBox cAboutBox = new AboutBox(getFrameWindow());
+						
 					}
 				});
 			}
