@@ -1,5 +1,5 @@
 /**
- * Time.java 0.6
+ * JBRTime.java 0.6
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
