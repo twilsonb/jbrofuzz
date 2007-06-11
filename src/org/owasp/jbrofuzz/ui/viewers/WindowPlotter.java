@@ -23,13 +23,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui;
+package org.owasp.jbrofuzz.ui.viewers;
 
 import java.awt.event.*;
 
 import javax.swing.*;
 
 import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 
 import java.awt.BorderLayout;
@@ -56,7 +57,7 @@ import jcckit.util.PropertiesBasedConfigData;
  */
 public class WindowPlotter extends JFrame {
 	// The main frame window
-	private FrameWindow m;
+	private JBRFrame m;
 	// The name of the JFrame displayed as a title
 	private String name;
 
@@ -70,7 +71,7 @@ public class WindowPlotter extends JFrame {
 
 	private DataPlot _dataPlot;
 
-	public WindowPlotter(FrameWindow m, String name) {
+	public WindowPlotter(JBRFrame m, String name) {
 		super(name);
 		this.name = name;
 		this.m = m;

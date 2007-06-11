@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui;
+package org.owasp.jbrofuzz.ui.viewers;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -31,6 +31,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 
 /**
@@ -47,7 +48,7 @@ public class WindowViewer extends JFrame {
 	// The name of the request which will be displayed
 	private String name;
 	// The main frame window
-	private FrameWindow m;
+	private JBRFrame m;
 
 	/**
 	 * <p>Constant used for specifying within which directory to look for the 
@@ -55,13 +56,13 @@ public class WindowViewer extends JFrame {
 	 * used for the corresponding session.</p>
 	 */
 
-	protected static final int VIEW_SNIFFING_PANEL = 1;
+	public static final int VIEW_SNIFFING_PANEL = 1;
 	/**
 	 * <p>Constant used for specifying wihtin which directory to look for the
 	 * corresponding file. Using this value will point to the fuzzing directory
 	 * used for the correspondng session.</p>
 	 */
-	protected static final int VIEW_FUZZING_PANEL = 2;
+	public static final int VIEW_FUZZING_PANEL = 2;
 
 	/**
 	 * <p>The window viewer that gets launched for each request within 
@@ -70,7 +71,7 @@ public class WindowViewer extends JFrame {
 	 * @param m FrameWindow
 	 * @param name String
 	 */
-	public WindowViewer(FrameWindow m, String name, int typeOfPanel) {
+	public WindowViewer(JBRFrame m, String name, int typeOfPanel) {
 		super();
 		this.name = name;
 		this.m = m;

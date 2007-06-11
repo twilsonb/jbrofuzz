@@ -23,11 +23,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui;
+package org.owasp.jbrofuzz.ui.panels;
 
 import java.awt.*;
 
 import javax.swing.*;
+
+import org.owasp.jbrofuzz.ui.JBRFrame;
 
 /**
  * <p>The definitions panel holding a description of the generators 
@@ -35,9 +37,9 @@ import javax.swing.*;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class DefinitionsPanel extends JPanel {
+public class Definitions extends JPanel {
   // The frame that the sniffing panel is attached
-  private FrameWindow m;
+  private JBRFrame m;
   // The JTable that holds all the data
   private JTextArea listTextArea;
   /**
@@ -46,7 +48,7 @@ public class DefinitionsPanel extends JPanel {
    *
    * @param m FrameWindow
    */
-  public DefinitionsPanel(FrameWindow m) {
+  public Definitions(JBRFrame m) {
     super();
     setLayout(null);
     /*
@@ -87,7 +89,7 @@ public class DefinitionsPanel extends JPanel {
    *
    * @return Window
    */
-  public FrameWindow getFrameWindow() {
+  public JBRFrame getFrameWindow() {
     return m;
   }
 

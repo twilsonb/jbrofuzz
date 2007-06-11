@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui;
+package org.owasp.jbrofuzz.ui.panels;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -34,8 +34,11 @@ import javax.swing.event.*;
 
 import com.Ostermiller.util.*;
 import org.owasp.jbrofuzz.snif.tcp.*;
+import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.ui.tablemodels.SniffingTableModel;
 import org.owasp.jbrofuzz.ui.util.*;
-import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
+import org.owasp.jbrofuzz.version.*;
 
 /**
  * <p>The Sniffing Panel User Interface based on the instance 
@@ -47,7 +50,7 @@ import org.owasp.jbrofuzz.ver.*;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class SniffingPanel extends JPanel {
+public class TCPSniffing extends JPanel {
 
   private final JTextField rHostText, rPortText, lHostText, lPortText;
   // The buttons to start and stop the listener, as well as launch a browser
@@ -61,7 +64,7 @@ public class SniffingPanel extends JPanel {
   // The swing worker used when the button "start" is pressed
   private SwingWorker3 worker;
   // The frame that the sniffing panel is attached
-  private FrameWindow m;
+  private JBRFrame m;
   // The table model
   private SniffingTableModel tableModel;
   // The boolean if stop has been pressed
@@ -77,7 +80,7 @@ public class SniffingPanel extends JPanel {
    *
    * @param m MainWindow
    */
-  public SniffingPanel(FrameWindow m) {
+  public TCPSniffing(JBRFrame m) {
     super();
     setLayout(null);
     this.m = m;
@@ -361,7 +364,7 @@ public class SniffingPanel extends JPanel {
    * Panel.</p>
    * @return MainWindow
    */
-  public FrameWindow getFrameWindow() {
+  public JBRFrame getFrameWindow() {
     return m;
   }
 
