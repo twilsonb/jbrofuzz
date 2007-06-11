@@ -148,7 +148,7 @@ public class SystemLogger extends JPanel {
    */
   public void addLoggingEvent(String str) {
     lineCount++;
-    listTextArea.append("[" + Time.dateAndTime() + "] " + str + "\n");
+    listTextArea.append("[" + JBRTime.dateAndTime() + "] " + str + "\n");
     // Fix the disappearing tab problem
     int tab = -1;
     int totalTabs = getFrameWindow().getTabbedPane().getComponentCount();

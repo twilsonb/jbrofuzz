@@ -31,7 +31,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import org.owasp.jbrofuzz.version.Format;
+import org.owasp.jbrofuzz.version.JBRFormat;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 /**
@@ -535,7 +535,7 @@ public class JBRMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						JOptionPane.showMessageDialog(getFrameWindow(), 
-								Format.DISCLAIMER,
+								JBRFormat.DISCLAIMER,
 								"Disclaimer JBroFuzz",
 								JOptionPane.ERROR_MESSAGE,
 								ImageCreator.OWASP_IMAGE);

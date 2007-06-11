@@ -33,7 +33,7 @@ import javax.swing.*;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.pub.GRequestIterator;
-import org.owasp.jbrofuzz.version.Format;
+import org.owasp.jbrofuzz.version.JBRFormat;
 /**
  * <p>The main "Open Source" panel, displayed within the Main Frame Window.</p>
  * 
@@ -174,7 +174,7 @@ public class OpenSource extends JPanel {
 
 		JTextArea info = new JTextArea();
 		
-		info.setText(Format.OPEN_SOURCE_README);
+		info.setText(JBRFormat.OPEN_SOURCE_README);
 		info.setCaretPosition(0);
 		info.setEditable(false);
 		info.setVisible(true);

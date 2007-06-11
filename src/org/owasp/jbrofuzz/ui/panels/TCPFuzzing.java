@@ -368,7 +368,7 @@ public class TCPFuzzing extends JPanel {
     // Update the border of the output panel
     outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output (Last 1000 Lines)  " + "Logging in folder (" +
-                         Format.DATE +
+                         JBRFormat.DATE +
                          // getJBroFuzz().getVersion().getDate() +
                          ") Session " + session),
                           BorderFactory.createEmptyBorder(5, 5, 5, 5)));

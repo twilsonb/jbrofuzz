@@ -36,7 +36,7 @@ import java.util.*;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class Time {
+public class JBRTime {
 
   private static Date currentDate;
   private static Date currentTime;
@@ -106,7 +106,7 @@ public class Time {
    * @return String
    */
   public static String hourMinSec(final long date) {
-    final Date temp = Time.getUsingLong(date);
+    final Date temp = JBRTime.getUsingLong(date);
     final SimpleDateFormat dateTime = new SimpleDateFormat("HH:mm:ss",
       new Locale("en"));
     return dateTime.format(temp);
