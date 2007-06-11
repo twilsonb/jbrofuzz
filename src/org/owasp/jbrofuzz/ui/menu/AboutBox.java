@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.net.*;
 
 import org.owasp.jbrofuzz.ui.util.*;
+import org.owasp.jbrofuzz.version.*;
 /**
  * <p>The about box used in the FrameWindow.</p>
  * 
@@ -68,8 +69,7 @@ public class AboutBox extends JDialog implements ActionListener {
 
 
 		// The about editor label
-		JLabel about = new JLabel ("<HTML><CENTER><B>Some Header</B><P><P>&copy;2007 </HTML>", 
-				ImageCreator.OWASP_IMAGE, JLabel.LEFT);
+		JLabel about = new JLabel (JBRFormat.ABOUTTEXT, ImageCreator.OWASP_IMAGE, JLabel.LEFT);
 		
 		// The license editor pane
 		JEditorPane license;
@@ -103,7 +103,7 @@ public class AboutBox extends JDialog implements ActionListener {
 
 		// OK Button
 		ok = new JButton("OK");
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
 		buttonPanel.add (ok);
 		ok.addActionListener(this);
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);

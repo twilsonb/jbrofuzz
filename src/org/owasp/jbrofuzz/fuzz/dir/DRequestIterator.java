@@ -243,7 +243,7 @@ public class DRequestIterator {
       m.getWebDirectoriesPanel().addRow(responses[i]);
       // Create a String to be written to file
       StringBuffer outToFile = new StringBuffer();
-      outToFile.append(Time.dateAndTime());
+      outToFile.append(JBRTime.dateAndTime());
       // String outToFile = Time.dateAndTime();
       final String[] tempArray = responses[i].split("\n");
       for (int m = 0; m < tempArray.length; m++) {

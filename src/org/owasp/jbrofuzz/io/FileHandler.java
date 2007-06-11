@@ -95,7 +95,7 @@ public class FileHandler {
 	private FileHandler(JBRFrame g) {
 		FileHandler.g = g;
 		// Get the date
-		runningDate = Format.DATE;
+		runningDate = JBRFormat.DATE;
 
 		String baseDir = System.getProperty("user.dir");
 
@@ -139,7 +139,7 @@ public class FileHandler {
 
 		if (failedDirCounter >= 3) {
 			g.log("\tToo many directories could not be created! Are you launching me through your browser?");
-			g.log("\tTry \"java -jar jbrofuzz-" + Format.VERSION +
+			g.log("\tTry \"java -jar jbrofuzz-" + JBRFormat.VERSION +
 			".jar\" on command line...");
 			failedDirCounter = 0;
 		}
@@ -266,7 +266,7 @@ public class FileHandler {
 				boolean passedResponse = false;
 				line = bufRead.readLine();
 				while (line != null) {
-					if(line.startsWith(Format.LINE_SEPARATOR)) {
+					if(line.startsWith(JBRFormat.LINE_SEPARATOR)) {
 						passedResponse = true;
 					}
 					if(passedResponse) {
@@ -539,7 +539,7 @@ public class FileHandler {
     // If the length is zero define the generators from the Format default list
     if (len == 0) {
       g.log("Loading default generator list");
-      String[] defaultArray = Format.DEFAULT_GENS.split("\n");
+      String[] defaultArray = JBRFormat.DEFAULT_GENS.split("\n");
       len = defaultArray.length;
       file.setSize(len);
       for (int x = 0; x < len; x++) {
@@ -612,7 +612,7 @@ public class FileHandler {
 			if (g != null) {
 				g.log("Loading default directories list");
 			}
-			String[] defaultArray = Format.DEFAULT_DIRS.split("\n");
+			String[] defaultArray = JBRFormat.DEFAULT_DIRS.split("\n");
 			len = defaultArray.length;
 			file.setSize(len);
 			for (int x = 0; x < len; x++) {

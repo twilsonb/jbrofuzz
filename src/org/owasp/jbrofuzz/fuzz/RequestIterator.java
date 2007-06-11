@@ -208,7 +208,7 @@ public class RequestIterator {
 			Connection con = new Connection(target, port, stout);
 
 			final String s = con.getReply();
-			FileHandler.writeFuzzFile(Format.LINE_SEPARATOR + "\r\n" + s, filename);
+			FileHandler.writeFuzzFile(JBRFormat.LINE_SEPARATOR + "\r\n" + s, filename);
 			
 			stout = getNext();
 		}

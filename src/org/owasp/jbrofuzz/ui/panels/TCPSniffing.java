@@ -443,7 +443,7 @@ public class TCPSniffing extends JPanel {
     else {
       listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
         createTitledBorder(" List of Requests " + "[Last log was .\\" +
-                           Format.DATE + "\\" + session + "*.txt] "),
+                           JBRFormat.DATE + "\\" + session + "*.txt] "),
         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     }
   }
@@ -502,7 +502,7 @@ public class TCPSniffing extends JPanel {
     // Update the border of the output panel
     listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" List of Requests " + "[Logging in folder .\\" +
-                         Format.DATE + "\\" + session + "*.txt]  [" + rh + ":" +
+                         JBRFormat.DATE + "\\" + session + "*.txt]  [" + rh + ":" +
                          rp + " <=> " + lh + ":" + lp + "] "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 

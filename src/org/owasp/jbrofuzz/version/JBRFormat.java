@@ -41,7 +41,7 @@ import org.owasp.jbrofuzz.*;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class Format {
+public class JBRFormat {
 
 	/**
 	 * The generators file name, expected to be read from within the directory
@@ -188,28 +188,27 @@ public class Format {
 	}
 
 	/**
-	 * <p>Each version of JBroFuzz has a codename, which is defined by this public
-	 * variable.</p>
-	 */
-	public static final String CODENAME = "Apollo"; /* - God of the Sun */
-
-	/**
 	 * <p>The version of JBroFuzz in String format and always of the form "x.x"
 	 * where 'x' is a single digit in the range of [0-9].</p>
 	 */
-	public static final String VERSION = "0.6";
+	public static final String VERSION = "0.7";
 
+	/**
+	 * <p>Each version of JBroFuzz has a codename, which is defined by this public
+	 * variable.</p>
+	 */
+	public static final String CODENAME = getCodeName(VERSION);
+	
 	/**
 	 * <p>The text shown in the about box.</p>
 	 */
-	public static final String ABOUTTEXT = "Java Bro Fuzzer Version:  " + VERSION +
-	"\n" + "Codename:  " + CODENAME +
-	"\n\n" +
-	"JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software\n" +
-	"and you are welcome to redistribute it under the GNU GPL license\n\n" +
-	"Copyright (c) 2007  subere (at) uncon org\n\n" + "Running Under  Java " +
-	System.getProperty("java.version") +
-	"\n";
+	public static final String ABOUTTEXT = 
+		"<HTML><B>Java Bro Fuzzer Version:  " + VERSION +
+		"<BR>" + "Codename: " + CODENAME + "</B><BR><BR>" +
+		"JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software " +
+		"and you are welcome to redistribute it under the GNU GPL license<BR><BR>" +
+		"<B>Copyright &copy;2007  subere (at) uncon org</B><BR><BR>" + 
+		"Running Under  Java " + System.getProperty("java.version") + "<BR></HTML>";
 
 	/**
 	 * <p>The text shown in the disclaimer box.</p>
@@ -293,4 +292,55 @@ public class Format {
 			"Interface Manager");
 		}
 	}
+	
+	  /**
+	   * Return the code name of the current version, based on the version number.
+	   * @return String
+	   */
+	  private static String getCodeName(String versionNumber) {
+
+	    if (versionNumber.equalsIgnoreCase("0.1"))
+	      return "Vesta "; /* - Goddess of the Home */
+	    if (versionNumber.equalsIgnoreCase("0.2"))
+	      return "Jupiter "; /* - King of the Gods */
+	    if (versionNumber.equalsIgnoreCase("0.3"))
+	      return "Juno "; /* - Queen of the Gods */
+	    if (versionNumber.equalsIgnoreCase("0.4"))
+	      return "Neptune "; /* - God of the Sea */
+	    if (versionNumber.equalsIgnoreCase("0.5"))
+	      return "Pluto "; /* - God of Death */
+	    if (versionNumber.equalsIgnoreCase("0.6"))
+	      return "Apollo "; /* - God of the Sun */
+	    if (versionNumber.equalsIgnoreCase("0.7"))
+	      return "Selene "; /* - Goddess of the Moon */
+	    if (versionNumber.equalsIgnoreCase("0.8"))
+	      return "Mars "; /* - God of War */
+	    if (versionNumber.equalsIgnoreCase("0.9"))
+	      return "Dioni "; /* - Goddess of Love */
+	    if (versionNumber.equalsIgnoreCase("1.0"))
+	      return "Cupid "; /* - God of Love */
+	    if (versionNumber.equalsIgnoreCase("1.1"))
+	      return "Mercury "; /* - Messenger of the Gods */
+	    if (versionNumber.equalsIgnoreCase("1.2"))
+	      return "Athena "; /* - Goddess of Wisdom */
+	    if (versionNumber.equalsIgnoreCase("1.3"))
+	      return "Ceres "; /* - The Earth Goddess */
+	    if (versionNumber.equalsIgnoreCase("1.4"))
+	      return "Proserpine "; /* - Goddess of the Underworld */
+	    if (versionNumber.equalsIgnoreCase("1.5"))
+	      return "Vulcan "; /* - The Smith God */
+	    if (versionNumber.equalsIgnoreCase("1.6"))
+	      return "Bacchus "; /* - God of Wine */
+	    if (versionNumber.equalsIgnoreCase("1.7"))
+	      return "Saturn "; /* - God of Time */
+	    if (versionNumber.equalsIgnoreCase("1.8"))
+	      return "Janus "; /* - God of Doors */
+	    if (versionNumber.equalsIgnoreCase("1.9"))
+	      return "Uranus "; /* - Father of Saturn */
+	    if (versionNumber.equalsIgnoreCase("2.0"))
+	      return "Maia "; /* - Goddess of Growth */
+	    if (versionNumber.equalsIgnoreCase("2.1"))
+	      return "Zeus "; 
+	    return "Zeus "; 
+	  }
 }

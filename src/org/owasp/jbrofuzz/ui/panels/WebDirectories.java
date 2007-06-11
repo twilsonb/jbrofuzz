@@ -338,7 +338,7 @@ public class WebDirectories extends JPanel implements KeyListener {
     // Update the panel, indicating directory
     outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output " + "[Logging in file \\web-dir\\" +
-                         Format.DATE + "\\" + getSessionNumber() + ".csv]  "),
+                         JBRFormat.DATE + "\\" + getSessionNumber() + ".csv]  "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
     // UI and Colors

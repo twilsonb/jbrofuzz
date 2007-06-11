@@ -29,24 +29,33 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
+
+import javax.swing.tree.*;
+
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
 /**
  * <p>The preferences panel.</p>
  *
  * @author subere (at) uncon org
  * @version 0.7
  */
-public class JBRPreferences extends JDialog implements ActionListener {
+public class JBRPreferences extends JDialog implements ActionListener, TreeSelectionListener {
 	
+	// The buttons
 	private JButton ok, cancel;
+	// The tree
+	private JTree tree;
+	
 	// Dimensions of the about box
-	private static final int x = 400;
-	private static final int y = 300;
+	private static final int x = 500;
+	private static final int y = 400;
 	
 	private static JBRPreferences instance = null;
 	
 	public static JBRPreferences getInstance(JFrame parent) {
 		if(instance == null) {
-			instance = new AboutBox(parent);
+			instance = new JBRPreferences(parent);
 		} else {
 			instance.setVisible(true);
 		}
@@ -60,11 +69,54 @@ public class JBRPreferences extends JDialog implements ActionListener {
 		this.setLayout(new BorderLayout());
 		this.setFont(new Font ("SansSerif", Font.PLAIN, 12));
 		
-		// OK Button
+		// The tree nodes on the left hand side
+        DefaultMutableTreeNode top =
+            new DefaultMutableTreeNode("Preferences");
+        DefaultMutableTreeNode info = new DefaultMutableTreeNode("Info");
+        DefaultMutableTreeNode dirs = new DefaultMutableTreeNode("Directories");
+        top.add(info);
+        top.add(dirs);
+        
+        // Create a tree that allows one selection at a time.
+        tree = new JTree(top);
+        tree.getSelectionModel().setSelectionMode
+                (TreeSelectionModel.SINGLE_TREE_SELECTION);
+		
+        // Create the right hand side panel
+        JLabel infoPanel = new JLabel("<HTML><CENTER><B>Some Header</B><P><P>&copy;2007 </HTML>", 
+				ImageCreator.OWASP_IMAGE, JLabel.LEFT);
+        
+        // Top split pane
+		JSplitPane prefsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		prefsPane.setLeftComponent(tree);
+		prefsPane.setRightComponent(infoPanel);
+		
+		Dimension minimumSize = new Dimension(100, 50);
+		tree.setMinimumSize(minimumSize);
+		/*
+		prefsPane.setDividerLocation(100); //XXX: ignored in some releases
+        //of Swing. bug 4101306
+		//workaround for bug 4101306:
+		tree.setPreferredSize(new Dimension(100, 100)); 
+
+		prefsPane.setPreferredSize(new Dimension(500, 300));
+		*/
+		prefsPane.setOneTouchExpandable(false);
+		prefsPane.setDividerLocation(150);
+
+		this.getContentPane().add(prefsPane, BorderLayout.CENTER);
+		
+		// Bottom buttons
 		ok = new JButton("OK");
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
+		cancel = new JButton("Cancel");
+		
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
 		buttonPanel.add (ok);
+		buttonPanel.add(cancel);
+		
 		ok.addActionListener(this);
+		cancel.addActionListener(this);
+		
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
@@ -78,4 +130,19 @@ public class JBRPreferences extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent newEvent) {
 		setVisible(false);
 	}  
+	
+	public void valueChanged(TreeSelectionEvent e) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                           tree.getLastSelectedPathComponent();
+
+        if (node == null) return;
+
+        Object nodeInfo = node.getUserObject();
+        if (node.isLeaf()) {
+            System.out.println("Node is Leaf..");
+        }
+        else {
+        	System.out.println("Node is Node...");
+        }
+    }
 }

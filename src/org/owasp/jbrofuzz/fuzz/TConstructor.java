@@ -54,7 +54,7 @@ public class TConstructor {
     this.mJBroFuzz = mJBroFuzz;
     generators = new ArrayList();
     
-    StringBuffer fileContents = FileHandler.readGenerators(Format.FILE_GEN);
+    StringBuffer fileContents = FileHandler.readGenerators(JBRFormat.FILE_GEN);
     String [] fileInput = fileContents.toString().split("\n");
     int len = fileInput.length;
  

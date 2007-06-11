@@ -62,7 +62,7 @@ public class JBroFuzz {
    */
   public JBroFuzz() {
     // Set the default look and feel
-    Format.setLookAndFeel(this);
+    JBRFormat.setLookAndFeel(this);
     // Launch the GUI
     mainwindow = new JBRFrame(this);
     filehandler = FileHandler.createFileHandler(mainwindow);
