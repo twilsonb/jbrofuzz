@@ -23,11 +23,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui;
+package org.owasp.jbrofuzz.ui.tablemodels;
 
 import java.util.*;
 
 import javax.swing.table.*;
+
+import org.owasp.jbrofuzz.ui.panels.TCPFuzzing;
 
 /**
  * <p>The fuzzing table model used within the generators table of 
@@ -58,13 +60,13 @@ public class FuzzingTableModel extends AbstractTableModel {
   // The vector of data
   private Vector dataVector;
   // The panel that the model is attached to
-  private FuzzingPanel fPanel;
+  private TCPFuzzing fPanel;
 
   /**
    * <p>Main Constructor passes the Fuzzing Panel.</p>
    * @param fPanel FuzzingPanel
    */
-  public FuzzingTableModel(FuzzingPanel fPanel) {
+  public FuzzingTableModel(TCPFuzzing fPanel) {
     this.fPanel = fPanel;
     dataVector = new Vector();
   }

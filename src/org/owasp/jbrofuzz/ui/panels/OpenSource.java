@@ -23,16 +23,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui;
+package org.owasp.jbrofuzz.ui.panels;
 
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
 
+import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.pub.GRequestIterator;
-import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.version.Format;
 /**
  * <p>The main "Open Source" panel, displayed within the Main Frame Window.</p>
  * 
@@ -43,9 +44,9 @@ import org.owasp.jbrofuzz.ver.Format;
  * @author subere (at) uncon org
  * @version 0.6
  */
-public class OpenSourcePanel extends JPanel {
+public class OpenSource extends JPanel {
 	// The frame that the open source panel is attached to
-	private FrameWindow mFrameWindow; 
+	private JBRFrame mFrameWindow; 
 	// The target field
 	private final JTextField domain;
 	// The output field
@@ -59,7 +60,7 @@ public class OpenSourcePanel extends JPanel {
   // The progress bar for the site
   private JProgressBar progressBar;
 
-	public OpenSourcePanel(FrameWindow mFrameWindow) {
+	public OpenSource(JBRFrame mFrameWindow) {
 		super();
 		setLayout(null);
 		this.mFrameWindow = mFrameWindow;
@@ -199,7 +200,7 @@ public class OpenSourcePanel extends JPanel {
 	 * Access the main frame window in which this panel is attached to.
 	 * @return FrameWindow
 	 */
-	public FrameWindow getFrameWindow() {
+	public JBRFrame getFrameWindow() {
 		return mFrameWindow;
 	}
 

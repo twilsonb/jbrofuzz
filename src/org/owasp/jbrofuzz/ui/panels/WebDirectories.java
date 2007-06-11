@@ -23,31 +23,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui;
+package org.owasp.jbrofuzz.ui.panels;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.text.ParseException;
 
 import javax.swing.*;
 import javax.swing.table.*;
-import javax.swing.text.MaskFormatter;
 
 import com.Ostermiller.util.*;
-import org.owasp.jbrofuzz.dir.*;
+import org.owasp.jbrofuzz.fuzz.dir.DRequestIterator;
+import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.ui.tablemodels.WebDirectoriesModel;
 import org.owasp.jbrofuzz.ui.util.*;
-import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.version.*;
 /**
  * <p>The web directory panel that is attached to the main frame.</p>
  *
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class WebDirectoriesPanel extends JPanel implements KeyListener {
+public class WebDirectories extends JPanel implements KeyListener {
 
   // The frame that the sniffing panel is attached
-  private FrameWindow m;
+  private JBRFrame m;
 
   // The text areas used in their corresponding panels
   private JTextArea directoryText;
@@ -92,7 +92,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
    *
    * @param m FrameWindow
    */
-  public WebDirectoriesPanel(FrameWindow m) {
+  public WebDirectories(JBRFrame m) {
     super(null, true);
     this.m = m;
     session = 0;
@@ -321,7 +321,7 @@ public class WebDirectoriesPanel extends JPanel implements KeyListener {
    *
    * @return Window
    */
-  public FrameWindow getFrameWindow() {
+  public JBRFrame getFrameWindow() {
     return m;
   }
 

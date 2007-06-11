@@ -23,14 +23,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui;
+package org.owasp.jbrofuzz.ui.panels;
 
 import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
 
-import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.version.*;
 /**
  * <p>The panel holding the system logging information that is part 
  * of the main
@@ -42,7 +43,7 @@ import org.owasp.jbrofuzz.ver.*;
 public class SystemLogger extends JPanel {
 
   // The frame that the sniffing panel is attached
-  private FrameWindow m;
+  private JBRFrame m;
   // The JTable that holds all the data
   private JTextArea listTextArea;
   // The info button
@@ -56,7 +57,7 @@ public class SystemLogger extends JPanel {
    *
    * @param m FrameWindow
    */
-  public SystemLogger(FrameWindow m) {
+  public SystemLogger(JBRFrame m) {
     super();
     setLayout(null);
     this.m = m;
@@ -134,7 +135,7 @@ public class SystemLogger extends JPanel {
    *
    * @return FrameWindow
    */
-  public FrameWindow getFrameWindow() {
+  public JBRFrame getFrameWindow() {
     return m;
   }
 

@@ -32,8 +32,15 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.ui.menu.JBRMenuBar;
+import org.owasp.jbrofuzz.ui.panels.Definitions;
+import org.owasp.jbrofuzz.ui.panels.TCPFuzzing;
+import org.owasp.jbrofuzz.ui.panels.OpenSource;
+import org.owasp.jbrofuzz.ui.panels.TCPSniffing;
+import org.owasp.jbrofuzz.ui.panels.SystemLogger;
+import org.owasp.jbrofuzz.ui.panels.WebDirectories;
 import org.owasp.jbrofuzz.ui.util.*;
-import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.version.*;
 /**
  * <p>The main window of JBroFuzz responsible for the graphical
  * user interface.</p>
@@ -44,34 +51,34 @@ import org.owasp.jbrofuzz.ver.*;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class FrameWindow extends JFrame {
+public class JBRFrame extends JFrame {
 
 	// The main Object behind it all...
 	private final JBroFuzz mJBroFuzz;
 
 	// The main menu bar attached to this window frame...
-	private final FrameMenuBar mMenuBar;
+	private final JBRMenuBar mMenuBar;
 
 	// The tabbed pane holding the different views
 	private JTabbedPane tabbedPane;
 
 	// The web directories panel
-	private final WebDirectoriesPanel mWebDirectoriesPanel;
+	private final WebDirectories mWebDirectoriesPanel;
 
 	// The main sniffing panel
-	private final SniffingPanel mSniffingPanel;
+	private final TCPSniffing mSniffingPanel;
 
 	// The main definitions panel
-	private final DefinitionsPanel mDefinitionsPanel;
+	private final Definitions mDefinitionsPanel;
 
 	// The main fuzzing panel
-	private final FuzzingPanel mFuzzingPanel;
+	private final TCPFuzzing mFuzzingPanel;
 
 	// The system logger panel
 	private final SystemLogger mSystemLogger;
 
 	// The open source panel
-	private final OpenSourcePanel mOpenSourcePanel;
+	private final OpenSource mOpenSourcePanel;
 
 	/**
 	 * Unique int identifier for the Web Directory Panel
@@ -109,23 +116,23 @@ public class FrameWindow extends JFrame {
 	 *
 	 * @param mJBroFuzz JBroFuzz
 	 */
-	public FrameWindow(JBroFuzz mJBroFuzz) {
+	public JBRFrame(JBroFuzz mJBroFuzz) {
 		// The frame
 		super("Java Bro Fuzzer " + Format.VERSION);
 		this.mJBroFuzz = mJBroFuzz;
 		// The menu bar
-		mMenuBar = new FrameMenuBar(this);
+		mMenuBar = new JBRMenuBar(this);
 		setJMenuBar(mMenuBar);
 		// The container pane
 		Container pane = getContentPane();
 		pane.setLayout(null);
 		// The tabbed panels
-		mWebDirectoriesPanel = new WebDirectoriesPanel(this);
-		mFuzzingPanel = new FuzzingPanel(this);
-		mSniffingPanel = new SniffingPanel(this);
-		mDefinitionsPanel = new DefinitionsPanel(this);
+		mWebDirectoriesPanel = new WebDirectories(this);
+		mFuzzingPanel = new TCPFuzzing(this);
+		mSniffingPanel = new TCPSniffing(this);
+		mDefinitionsPanel = new Definitions(this);
 		mSystemLogger = new SystemLogger(this);
-		mOpenSourcePanel = new OpenSourcePanel(this);
+		mOpenSourcePanel = new OpenSource(this);
 		// The tabbed pane, 3 is for bottom orientation
 		tabbedPane = new JTabbedPane(3);
 		// tabbedPane.setPreferredSize(new Dimension(588,368));
@@ -301,7 +308,7 @@ public class FrameWindow extends JFrame {
 	 *
 	 * @return mSniffingPanel
 	 */
-	public SniffingPanel getTCPSniffingPanel() {
+	public TCPSniffing getTCPSniffingPanel() {
 		return mSniffingPanel;
 	}
 
@@ -311,7 +318,7 @@ public class FrameWindow extends JFrame {
 	 *
 	 * @return mDefinitionsPanel
 	 */
-	public DefinitionsPanel getDefinitionsPanel() {
+	public Definitions getDefinitionsPanel() {
 		return mDefinitionsPanel;
 	}
 
@@ -321,7 +328,7 @@ public class FrameWindow extends JFrame {
 	 *
 	 * @return mMenuBar
 	 */
-	public FrameMenuBar getFrameMenuBar() {
+	public JBRMenuBar getFrameMenuBar() {
 		return mMenuBar;
 	}
 
@@ -330,7 +337,7 @@ public class FrameWindow extends JFrame {
 	 *
 	 * @return WebDirectoriesPanel
 	 */
-	public WebDirectoriesPanel getWebDirectoriesPanel() {
+	public WebDirectories getWebDirectoriesPanel() {
 		return mWebDirectoriesPanel;
 	}
 
@@ -340,7 +347,7 @@ public class FrameWindow extends JFrame {
 	 *
 	 * @return mFuzzingPanel
 	 */
-	public FuzzingPanel getFuzzingPanel() {
+	public TCPFuzzing getFuzzingPanel() {
 		return mFuzzingPanel;
 	}
 
@@ -350,7 +357,7 @@ public class FrameWindow extends JFrame {
 	 * 
 	 * @return
 	 */
-	public OpenSourcePanel getOpenSourcePanel() {
+	public OpenSource getOpenSourcePanel() {
 		return mOpenSourcePanel;
 	}
 

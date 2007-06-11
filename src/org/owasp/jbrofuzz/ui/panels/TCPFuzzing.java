@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui;
+package org.owasp.jbrofuzz.ui.panels;
 
 
 import java.awt.*;
@@ -35,8 +35,13 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
 
 import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.ui.tablemodels.FuzzingTableModel;
+import org.owasp.jbrofuzz.ui.tablemodels.SniffingTableModel;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.ui.viewers.WindowPlotter;
+import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
+import org.owasp.jbrofuzz.version.*;
 import org.owasp.jbrofuzz.io.*;
 /**
  * <p>The main "TCP Fuzzing" panel, displayed within the Main 
@@ -50,9 +55,9 @@ import org.owasp.jbrofuzz.io.*;
  * @author subere (at) uncon org
  * @version 0.6
  */
-public class FuzzingPanel extends JPanel {
+public class TCPFuzzing extends JPanel {
   // The frame that the sniffing panel is attached
-  private final FrameWindow m;
+  private final JBRFrame m;
   // The JPanels
   private final JPanel outputPanel;
   // The JTextField
@@ -84,7 +89,7 @@ public class FuzzingPanel extends JPanel {
    *
    * @param m FrameWindow
    */
-  public FuzzingPanel(FrameWindow m) {
+  public TCPFuzzing(JBRFrame m) {
     super();
     setLayout(null);
 
@@ -594,7 +599,7 @@ public class FuzzingPanel extends JPanel {
    * Access the main frame window in which this panel is attached to.
    * @return FrameWindow
    */
-  public FrameWindow getFrameWindow() {
+  public JBRFrame getFrameWindow() {
     return m;
   }
 

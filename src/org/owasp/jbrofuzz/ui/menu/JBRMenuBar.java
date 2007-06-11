@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui;
+package org.owasp.jbrofuzz.ui.menu;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -31,7 +31,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import org.owasp.jbrofuzz.ver.Format;
+import org.owasp.jbrofuzz.version.Format;
+import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 /**
  * <p>The main menu bar attached to the main frame window.</p>
@@ -39,9 +40,9 @@ import org.owasp.jbrofuzz.ui.util.ImageCreator;
  * @author subere (at) uncon org
  * @version 0.6
  */
-public class FrameMenuBar extends JMenuBar {
+public class JBRMenuBar extends JMenuBar {
 
-	private final FrameWindow mFrameWindow;
+	private final JBRFrame mFrameWindow;
 	private final JMenu file, edit, view, panel, options, help;
 	// Used under the Panel JMenu as items
 	private JMenuItem showAll, hideAll, start, bro, stop, add, remove;
@@ -52,7 +53,7 @@ public class FrameMenuBar extends JMenuBar {
 	 *
 	 * @param mFrameWindow FrameWindow
 	 */
-	public FrameMenuBar(FrameWindow mFrameWindow) {
+	public JBRMenuBar(JBRFrame mFrameWindow) {
 
 		this.mFrameWindow = mFrameWindow;
 
@@ -256,10 +257,10 @@ public class FrameMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!directories.getState()) {
-							getFrameWindow().setTabHide(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+							getFrameWindow().setTabHide(JBRFrame.WEB_DIRECTORIES_PANEL_ID);
 						}
 						else {
-							getFrameWindow().setTabShow(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+							getFrameWindow().setTabShow(JBRFrame.WEB_DIRECTORIES_PANEL_ID);
 						}
 					}
 				});			   
@@ -272,10 +273,10 @@ public class FrameMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!fuzzing.getState()) {
-							getFrameWindow().setTabHide(FrameWindow.TCP_FUZZING_PANEL_ID);
+							getFrameWindow().setTabHide(JBRFrame.TCP_FUZZING_PANEL_ID);
 						}
 						else {
-							getFrameWindow().setTabShow(FrameWindow.TCP_FUZZING_PANEL_ID);
+							getFrameWindow().setTabShow(JBRFrame.TCP_FUZZING_PANEL_ID);
 						}
 					}
 				});			   
@@ -288,10 +289,10 @@ public class FrameMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!sniffing.getState()) {
-							getFrameWindow().setTabHide(FrameWindow.TCP_SNIFFING_PANEL_ID);
+							getFrameWindow().setTabHide(JBRFrame.TCP_SNIFFING_PANEL_ID);
 						}
 						else {
-							getFrameWindow().setTabShow(FrameWindow.TCP_SNIFFING_PANEL_ID);
+							getFrameWindow().setTabShow(JBRFrame.TCP_SNIFFING_PANEL_ID);
 						}
 					}
 				});
@@ -305,10 +306,10 @@ public class FrameMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!generators.getState()) {
-							getFrameWindow().setTabHide(FrameWindow.GENERATORS_PANEL_ID);
+							getFrameWindow().setTabHide(JBRFrame.GENERATORS_PANEL_ID);
 						}
 						else {
-							getFrameWindow().setTabShow(FrameWindow.GENERATORS_PANEL_ID);
+							getFrameWindow().setTabShow(JBRFrame.GENERATORS_PANEL_ID);
 						}
 					}
 				});
@@ -322,10 +323,10 @@ public class FrameMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!system.getState()) {
-							getFrameWindow().setTabHide(FrameWindow.SYSTEM_PANEL_ID);
+							getFrameWindow().setTabHide(JBRFrame.SYSTEM_PANEL_ID);
 						}
 						else {
-							getFrameWindow().setTabShow(FrameWindow.SYSTEM_PANEL_ID);
+							getFrameWindow().setTabShow(JBRFrame.SYSTEM_PANEL_ID);
 						}
 					}
 				});
@@ -339,10 +340,10 @@ public class FrameMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!opensource.getState()) {
-							getFrameWindow().setTabHide(FrameWindow.OPEN_SOURCE_ID);
+							getFrameWindow().setTabHide(JBRFrame.OPEN_SOURCE_ID);
 						}
 						else {
-							getFrameWindow().setTabShow(FrameWindow.OPEN_SOURCE_ID);
+							getFrameWindow().setTabShow(JBRFrame.OPEN_SOURCE_ID);
 						}
 					}
 				});
@@ -355,17 +356,17 @@ public class FrameMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						getFrameWindow().setTabShow(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+						getFrameWindow().setTabShow(JBRFrame.WEB_DIRECTORIES_PANEL_ID);
 						directories.setState(true);
-						getFrameWindow().setTabShow(FrameWindow.TCP_FUZZING_PANEL_ID);
+						getFrameWindow().setTabShow(JBRFrame.TCP_FUZZING_PANEL_ID);
 						fuzzing.setState(true);
-						getFrameWindow().setTabShow(FrameWindow.TCP_SNIFFING_PANEL_ID);
+						getFrameWindow().setTabShow(JBRFrame.TCP_SNIFFING_PANEL_ID);
 						sniffing.setState(true);
-						getFrameWindow().setTabShow(FrameWindow.GENERATORS_PANEL_ID);
+						getFrameWindow().setTabShow(JBRFrame.GENERATORS_PANEL_ID);
 						generators.setState(true);
-						getFrameWindow().setTabShow(FrameWindow.SYSTEM_PANEL_ID);
+						getFrameWindow().setTabShow(JBRFrame.SYSTEM_PANEL_ID);
 						system.setState(true);
-						getFrameWindow().setTabShow(FrameWindow.OPEN_SOURCE_ID);
+						getFrameWindow().setTabShow(JBRFrame.OPEN_SOURCE_ID);
 						opensource.setState(true);
 					}
 				});
@@ -378,17 +379,17 @@ public class FrameMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						getFrameWindow().setTabHide(FrameWindow.WEB_DIRECTORIES_PANEL_ID);
+						getFrameWindow().setTabHide(JBRFrame.WEB_DIRECTORIES_PANEL_ID);
 						directories.setState(false);
-						getFrameWindow().setTabHide(FrameWindow.TCP_FUZZING_PANEL_ID);
+						getFrameWindow().setTabHide(JBRFrame.TCP_FUZZING_PANEL_ID);
 						fuzzing.setState(false);
-						getFrameWindow().setTabHide(FrameWindow.TCP_SNIFFING_PANEL_ID);
+						getFrameWindow().setTabHide(JBRFrame.TCP_SNIFFING_PANEL_ID);
 						sniffing.setState(false);
-						getFrameWindow().setTabHide(FrameWindow.GENERATORS_PANEL_ID);
+						getFrameWindow().setTabHide(JBRFrame.GENERATORS_PANEL_ID);
 						generators.setState(false);
-						getFrameWindow().setTabHide(FrameWindow.SYSTEM_PANEL_ID);
+						getFrameWindow().setTabHide(JBRFrame.SYSTEM_PANEL_ID);
 						system.setState(false);
-						getFrameWindow().setTabHide(FrameWindow.OPEN_SOURCE_ID);
+						getFrameWindow().setTabHide(JBRFrame.OPEN_SOURCE_ID);
 						opensource.setState(false);
 					}
 				});
@@ -552,7 +553,7 @@ public class FrameMenuBar extends JMenuBar {
 
 	}
 
-	private FrameWindow getFrameWindow() {
+	private JBRFrame getFrameWindow() {
 		return mFrameWindow;
 	}
 }
