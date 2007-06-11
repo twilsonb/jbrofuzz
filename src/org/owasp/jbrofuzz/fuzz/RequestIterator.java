@@ -31,7 +31,7 @@ import java.util.Date;
 import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.fuzz.tcp.*;
 import org.owasp.jbrofuzz.io.*;
-import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.version.*;
 /**
  * <p>The request generator instantiates the correct generator,
  * holding the complete set of requests. This class runs through all the

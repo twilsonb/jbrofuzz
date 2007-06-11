@@ -30,7 +30,7 @@ import java.util.*;
 import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.fuzz.tcp.*;
 import org.owasp.jbrofuzz.io.*;
-import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.version.*;
 /**
  * <p>The Constructor constructs a list of Definitions, iterating though each
  * Generator and accumulating values inputted from the corresponding 
