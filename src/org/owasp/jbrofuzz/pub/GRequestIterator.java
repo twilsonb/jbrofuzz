@@ -29,7 +29,7 @@ import java.util.regex.*;
 import java.net.*;
 import java.io.*;
 
-import org.owasp.jbrofuzz.ui.FrameWindow;
+import org.owasp.jbrofuzz.ui.JBRFrame;
 
 /**
  * <p>Class for looking domain addresses by making google requests.</p>
@@ -41,11 +41,11 @@ import org.owasp.jbrofuzz.ui.FrameWindow;
  */
 public class GRequestIterator {
 	//The  frame window that the request iterator can be referenced from
-	private FrameWindow mFrameWindow;
+	private JBRFrame mFrameWindow;
 	// The output obtained
 	private StringBuffer output;
 
-	public GRequestIterator(FrameWindow mFrameWindow, String domain) {
+	public GRequestIterator(JBRFrame mFrameWindow, String domain) {
 		this.mFrameWindow = mFrameWindow;
 		output = new StringBuffer();
 		int counter = 1;
