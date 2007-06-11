@@ -237,7 +237,7 @@ public class JBRMenuBar extends JMenuBar {
 		// Disable some items
 		//
 		topics.setEnabled(false);
-		preferences.setEnabled(false);
+		preferences.setEnabled(true);
 		//
 		// The action listeners for each component...
 		//
@@ -511,6 +511,18 @@ public class JBRMenuBar extends JMenuBar {
 						if (s.equals(" TCP Fuzzing ")) {
 							getFrameWindow().getFuzzingPanel().generatorRemoveButton();
 						}
+					}
+				});
+
+			}
+		});
+		
+		preferences.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						JBRPreferences cJBRPreferences = JBRPreferences.getInstance(getFrameWindow());
 					}
 				});
 
