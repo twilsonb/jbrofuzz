@@ -25,12 +25,12 @@
  */
 package org.owasp.jbrofuzz;
 
-import org.owasp.jbrofuzz.dir.*;
 import org.owasp.jbrofuzz.fuzz.*;
+import org.owasp.jbrofuzz.fuzz.dir.*;
 import org.owasp.jbrofuzz.io.*;
 import org.owasp.jbrofuzz.snif.tcp.*;
 import org.owasp.jbrofuzz.ui.*;
-import org.owasp.jbrofuzz.ver.*;
+import org.owasp.jbrofuzz.version.*;
 
 /**
  * <p>Title: Java Bro Fuzzer</p>
@@ -49,7 +49,7 @@ import org.owasp.jbrofuzz.ver.*;
 public class JBroFuzz {
 
   private RequestIterator generator;
-  private FrameWindow mainwindow;
+  private JBRFrame mainwindow;
   private FileHandler filehandler;
   private TConstructor tconstructor;
   private DConstructor dconstructor;
@@ -64,7 +64,7 @@ public class JBroFuzz {
     // Set the default look and feel
     Format.setLookAndFeel(this);
     // Launch the GUI
-    mainwindow = new FrameWindow(this);
+    mainwindow = new JBRFrame(this);
     filehandler = FileHandler.createFileHandler(mainwindow);
     tconstructor = new TConstructor(this);
     dconstructor = new DConstructor(this);
@@ -78,7 +78,7 @@ public class JBroFuzz {
    * Return the main window, thus allowing access to Gui components
    * @return MainWindow
    */
-  public FrameWindow getFrameWindow() {
+  public JBRFrame getFrameWindow() {
     return mainwindow;
   }
 
