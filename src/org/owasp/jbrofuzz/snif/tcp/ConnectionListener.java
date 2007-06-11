@@ -30,6 +30,7 @@ import java.net.*;
 import java.util.*;
 
 import org.owasp.jbrofuzz.ui.*;
+import org.owasp.jbrofuzz.ui.panels.TCPSniffing;
 /**
  * <p>The class responsible for making the connection through the
  * corresponding socket.</p>
@@ -41,7 +42,7 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 
   private String remoteAddress, localAddress;
   private int remotePort, localPort;
-  private SniffingPanel mn;
+  private TCPSniffing mn;
   private ServerSocket server = null;
   private Vector connections = null;
   private Connection con = null;
@@ -57,7 +58,7 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
    * @param localAddress String
    * @param localPort String
    */
-  public ConnectionListener(SniffingPanel mn, String remoteAddress,
+  public ConnectionListener(TCPSniffing mn, String remoteAddress,
                             String remotePort, String localAddress,
                             String localPort) {
     this.mn = mn;
