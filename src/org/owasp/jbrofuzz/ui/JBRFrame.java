@@ -370,7 +370,6 @@ public class JBRFrame extends JFrame {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				mSystemLogger.addLoggingEvent(str);
-
 			}
 		});
 	}
