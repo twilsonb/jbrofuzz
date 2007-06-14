@@ -57,6 +57,9 @@ public class JBRPreferences extends JDialog implements ActionListener, TreeSelec
 		if(instance == null) {
 			instance = new JBRPreferences(parent);
 		} else {
+			// Update Look and Feel
+			SwingUtilities.updateComponentTreeUI( instance );
+			// Set the singleton to be visible
 			instance.setVisible(true);
 		}
 		return instance;
