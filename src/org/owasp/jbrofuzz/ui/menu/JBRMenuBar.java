@@ -43,6 +43,9 @@ import org.owasp.jbrofuzz.ui.util.ImageCreator;
 public class JBRMenuBar extends JMenuBar {
 
 	private final JBRFrame mFrameWindow;
+	// The about box
+	private AboutBox cAboutBox;
+	// The menu items
 	private final JMenu file, edit, view, panel, options, help;
 	// Used under the Panel JMenu as items
 	private JMenuItem showAll, hideAll, start, bro, stop, add, remove;
@@ -214,30 +217,38 @@ public class JBRMenuBar extends JMenuBar {
 
 		// Options
 		JMenuItem preferences = new JMenuItem("Preferences");
-
+		JMenuItem updates = new JMenuItem("Check for Updates");
+		JMenuItem repair = new JMenuItem("Detect and Repair");
+		
 		preferences.setAccelerator(KeyStroke.getKeyStroke('P',
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
+		
+		options.add(updates);
+		options.add(repair);
+		options.addSeparator();
 		options.add(preferences);
 
 		// Help
 		JMenuItem topics = new JMenuItem("Topics", ImageCreator.TOPICS_IMG);
+		JMenuItem faq = new JMenuItem("FAQ", ImageCreator.TOPICS_IMG);
+		JMenuItem tutorial = new JMenuItem("Tutorial");
+		JMenuItem website = new JMenuItem("JBroFuzz Website");
 		JMenuItem disclaimer = new JMenuItem("Disclaimer", ImageCreator.DISCLAIMER_IMG);
 		JMenuItem about = new JMenuItem("About", ImageCreator.HELP_IMG);
 
 		about.setAccelerator(KeyStroke.getKeyStroke('0',
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+		
 		help.add(topics);
+		help.add(faq);
+		help.addSeparator();
+		help.add(tutorial);
+		help.add(website);
 		help.addSeparator();
 		help.add(disclaimer);
-		help.addSeparator();
 		help.add(about);
 
-		//
-		// Disable some items
-		//
-		topics.setEnabled(false);
-		preferences.setEnabled(true);
+		
 		//
 		// The action listeners for each component...
 		//
@@ -534,11 +545,7 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						JOptionPane.showMessageDialog(getFrameWindow(), 
-								JBRFormat.DISCLAIMER,
-								"Disclaimer JBroFuzz",
-								JOptionPane.ERROR_MESSAGE,
-								ImageCreator.OWASP_IMAGE);
+						cAboutBox = AboutBox.getInstance(getFrameWindow(), AboutBox.DISCLAIMER);
 					}
 				});
 			}
@@ -549,15 +556,7 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						/*
-						JOptionPane.showMessageDialog(getFrameWindow(), 
-								Format.ABOUTTEXT,
-								"About JBroFuzz",
-								JOptionPane.INFORMATION_MESSAGE,
-								ImageCreator.OWASP_IMAGE);
-						*/
-						AboutBox cAboutBox = AboutBox.getInstance(getFrameWindow());
-						
+						cAboutBox = AboutBox.getInstance(getFrameWindow(), AboutBox.ABOUT);
 					}
 				});
 			}

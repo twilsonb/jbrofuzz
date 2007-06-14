@@ -43,30 +43,50 @@ import org.owasp.jbrofuzz.version.*;
  */
 public class AboutBox extends JDialog implements ActionListener {
 
+	public static int ABOUT = 0;
+	public static int LICENSE = 1;
+	public static int DISCLAIMER = 2;
+	public static int ACKNOWLEDGEMENTS = 3;
+	
+	// The tabbed pane, holding all the different panels and labels
+	private JTabbedPane tabbedPane;
+	// The ok button at the bottom of the box
 	private JButton ok;
 	// Dimensions of the about box
 	private static final int x = 400;
 	private static final int y = 300;
-
+	// The singleton instance
 	private static AboutBox instance = null;
 
-	public static AboutBox getInstance(JFrame parent) {
+	/**
+	 * <p>Method for returning the singleton instance of the AboutBox JDialog.</p>
+	 * 
+	 * @param parent JFrame
+	 * @return AboutBox
+	 */
+	public static AboutBox getInstance(JFrame parent, int tab) {
 		if(instance == null) {
-			instance = new AboutBox(parent);
+			instance = new AboutBox(parent, tab);
 		} else {
+			// Update Look and Feel
+			SwingUtilities.updateComponentTreeUI( instance );
+			// Set the singleton to be visible
 			instance.setVisible(true);
+			instance.setTab(tab);
 		}
 		return instance;
 	}
 	/**
-	 * The main constructor for the AboutBox.
+	 * <p>The main constructor for the AboutBox. This method is private as it is being called through 
+	 * the singleton method get instance.</p>
 	 */
-	private AboutBox(JFrame parent) {
+	private AboutBox(JFrame parent, int tab) {
 		super(parent);
 		this.setLayout(new BorderLayout());
 		this.setFont(new Font ("SansSerif", Font.PLAIN, 12));
+		
 		URL licenseURL = ClassLoader.getSystemClassLoader().getResource("LICENSE/gpl-license.txt");
-
+		URL	disclaimerURL = ClassLoader.getSystemClassLoader().getResource("LICENSE/NOTICE.txt");
 
 		// The about editor label
 		JLabel about = new JLabel (JBRFormat.ABOUTTEXT, ImageCreator.OWASP_IMAGE, JLabel.LEFT);
@@ -86,21 +106,32 @@ public class AboutBox extends JDialog implements ActionListener {
 		lcsScrollPane.setVerticalScrollBarPolicy(20);
 		lcsScrollPane.setHorizontalScrollBarPolicy(30);
 
+		// The disclaimer editor label
+		JLabel disclaimer = new JLabel( JBRFormat.DISCLAIMER, ImageCreator.OWASP_IMAGE, JLabel.LEFT);
+		
 		// The acknoledgement editor pane
-		JEditorPane acknoledgements = new JEditorPane();
+		JEditorPane acknoledgements;
+		try {
+			acknoledgements = new JEditorPane(disclaimerURL);
+		} catch (IOException e) {
+			acknoledgements = new JEditorPane();
+			acknoledgements.setText("Acknoledgements file cannot be found");
+		}
 		acknoledgements.setEditable(false);
-		acknoledgements.setText("Acknoledgements");
 
 		JScrollPane ackScrollPane = new JScrollPane(acknoledgements);
 		ackScrollPane.setVerticalScrollBarPolicy(20);
 		ackScrollPane.setHorizontalScrollBarPolicy(30);		
 
-		JTabbedPane tabbedPane = new JTabbedPane();
+		// The tabbed pane holding all the different tabs
+		tabbedPane = new JTabbedPane();
 		tabbedPane.add(about, " About ");
 		tabbedPane.add(lcsScrollPane, " License ");
+		tabbedPane.add(disclaimer, " Disclaimer ");
 		tabbedPane.add(ackScrollPane, " Acknoledgements ");
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-
+		// Set the tab to be displayed
+		setTab(tab);
 		// OK Button
 		ok = new JButton("OK");
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
@@ -115,7 +146,16 @@ public class AboutBox extends JDialog implements ActionListener {
 		setResizable(false);
 		setVisible(true);		
 	}
-
+	
+	private void setTab(int tab) {
+		switch (tab) {
+        case 0:  tabbedPane.setSelectedIndex(ABOUT); break;
+        case 1:  tabbedPane.setSelectedIndex(LICENSE); break;
+        case 2:  tabbedPane.setSelectedIndex(DISCLAIMER); break;
+        case 3:  tabbedPane.setSelectedIndex(ACKNOWLEDGEMENTS); break;
+        default: tabbedPane.setSelectedIndex(0); break;
+    }
+	}
 	public void actionPerformed(ActionEvent newEvent) {
 		setVisible(false);
 	}  
