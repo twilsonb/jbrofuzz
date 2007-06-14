@@ -34,6 +34,8 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import org.owasp.jbrofuzz.version.*;
+import org.owasp.jbrofuzz.io.*;
 /**
  * <p>The preferences panel.</p>
  *
@@ -46,7 +48,10 @@ public class JBRPreferences extends JDialog implements ActionListener, TreeSelec
 	private JButton ok, cancel;
 	// The tree
 	private JTree tree;
-	
+	// The JPanels
+	private JPanel infoPanel, dirPanel;
+	// The main split pane
+	private JSplitPane prefsPane;
 	// Dimensions of the about box
 	private static final int x = 500;
 	private static final int y = 400;
@@ -84,13 +89,21 @@ public class JBRPreferences extends JDialog implements ActionListener, TreeSelec
         tree = new JTree(top);
         tree.getSelectionModel().setSelectionMode
                 (TreeSelectionModel.SINGLE_TREE_SELECTION);
-		
-        // Create the right hand side panel
-        JLabel infoPanel = new JLabel("<HTML><CENTER><B>Some Header</B><P><P>&copy;2007 </HTML>", 
-				ImageCreator.OWASP_IMAGE, JLabel.LEFT);
+        tree.addTreeSelectionListener(this);
+        
+        // Create the information panel
+        infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.PAGE_AXIS));
+        initInfoPanel();
+        
+        
+        // Create the directory panel
+        dirPanel = new JPanel();
+        dirPanel.setLayout(new BorderLayout());
+        initDirPanel();
         
         // Top split pane
-		JSplitPane prefsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		prefsPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		prefsPane.setLeftComponent(tree);
 		prefsPane.setRightComponent(infoPanel);
 		
@@ -129,6 +142,41 @@ public class JBRPreferences extends JDialog implements ActionListener, TreeSelec
 		setResizable(false);
 		setVisible(true);		
 	}
+	
+	private void initInfoPanel() {
+		JLabel header = new JLabel("<HTML><H3>&nbsp;&nbsp;Info</H3></HTML>");
+		infoPanel.add(header);
+		header.add(Box.createRigidArea(new Dimension(0,15)));
+		
+		JLabel pathPanel = new JLabel("<HTML>" + System.getProperty("user.dir") + "</HTML>");
+        pathPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+        	      createTitledBorder(" Current Directory "),
+        	                        BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        infoPanel.add(pathPanel);
+        infoPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        
+        JLabel osPanel = new JLabel("<HTML>Name: " + System.getProperty("os.name") + 
+        							"<BR>Version: " + System.getProperty("os.version") +
+        							"<BR>Architecture: " + System.getProperty("os.arch") +
+        							"</HTML>");
+        osPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+      	      createTitledBorder(" Operating System Info "),
+      	                        BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        infoPanel.add(osPanel);
+        infoPanel.add(Box.createRigidArea(new Dimension(0,15)));
+        
+        JLabel timestampPanel = new JLabel("<HTML>" + JBRFormat.DATE + "</HTML>");
+        timestampPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+      	      createTitledBorder(" Directory Timestamp "),
+      	                        BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+        infoPanel.add(timestampPanel);
+	}
+	
+	private void initDirPanel() {
+		JLabel header = new JLabel("<HTML><H3>&nbsp;&nbsp;Directories</H3></HTML>");
+		dirPanel.add(header);
+		header.add(Box.createRigidArea(new Dimension(0,15)));
+	}
 
 	public void actionPerformed(ActionEvent newEvent) {
 		setVisible(false);
@@ -142,7 +190,13 @@ public class JBRPreferences extends JDialog implements ActionListener, TreeSelec
 
         Object nodeInfo = node.getUserObject();
         if (node.isLeaf()) {
-            System.out.println("Node is Leaf..");
+            String s = node.toString();
+            if(s.equalsIgnoreCase("Info")) {
+            	prefsPane.setRightComponent(infoPanel);
+            }
+            if(s.equalsIgnoreCase("Directories")) {
+            	prefsPane.setRightComponent(dirPanel);
+            }
         }
         else {
         	System.out.println("Node is Node...");
