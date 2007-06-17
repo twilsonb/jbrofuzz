@@ -33,7 +33,7 @@ import javax.swing.text.*;
 
 import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.ui.menu.JBRMenuBar;
-import org.owasp.jbrofuzz.ui.panels.Definitions;
+import org.owasp.jbrofuzz.ui.panels.Generators;
 import org.owasp.jbrofuzz.ui.panels.TCPFuzzing;
 import org.owasp.jbrofuzz.ui.panels.OpenSource;
 import org.owasp.jbrofuzz.ui.panels.TCPSniffing;
@@ -69,7 +69,7 @@ public class JBRFrame extends JFrame {
 	private final TCPSniffing mSniffingPanel;
 
 	// The main definitions panel
-	private final Definitions mDefinitionsPanel;
+	private final Generators mDefinitionsPanel;
 
 	// The main fuzzing panel
 	private final TCPFuzzing mFuzzingPanel;
@@ -130,7 +130,7 @@ public class JBRFrame extends JFrame {
 		mWebDirectoriesPanel = new WebDirectories(this);
 		mFuzzingPanel = new TCPFuzzing(this);
 		mSniffingPanel = new TCPSniffing(this);
-		mDefinitionsPanel = new Definitions(this);
+		mDefinitionsPanel = new Generators(this);
 		mSystemLogger = new SystemLogger(this);
 		mOpenSourcePanel = new OpenSource(this);
 		// The tabbed pane, 3 is for bottom orientation
@@ -148,6 +148,13 @@ public class JBRFrame extends JFrame {
 		pane.add(tabbedPane);
 		// The image icon
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		
+    setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+    setLocation(100, 100);
+    setSize(900, 550);
+    setResizable(false);
+    setVisible(true);
+    
 		log("System Launch, Welcome!");
 	}
 
@@ -318,7 +325,7 @@ public class JBRFrame extends JFrame {
 	 *
 	 * @return mDefinitionsPanel
 	 */
-	public Definitions getDefinitionsPanel() {
+	public Generators getDefinitionsPanel() {
 		return mDefinitionsPanel;
 	}
 

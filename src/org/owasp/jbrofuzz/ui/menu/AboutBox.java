@@ -1,5 +1,5 @@
 /**
- * DefinitionsPanel.java 0.6
+ * AboutBox.java 0.7
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -41,7 +41,7 @@ import org.owasp.jbrofuzz.version.*;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class AboutBox extends JDialog implements ActionListener {
+public class AboutBox extends JDialog {
 
 	public static int ABOUT = 0;
 	public static int LICENSE = 1;
@@ -55,33 +55,15 @@ public class AboutBox extends JDialog implements ActionListener {
 	// Dimensions of the about box
 	private static final int x = 400;
 	private static final int y = 300;
-	// The singleton instance
-	private static AboutBox instance = null;
 
-	/**
-	 * <p>Method for returning the singleton instance of the AboutBox JDialog.</p>
-	 * 
-	 * @param parent JFrame
-	 * @return AboutBox
-	 */
-	public static AboutBox getInstance(JFrame parent, int tab) {
-		if(instance == null) {
-			instance = new AboutBox(parent, tab);
-		} else {
-			// Update Look and Feel
-			SwingUtilities.updateComponentTreeUI( instance );
-			// Set the singleton to be visible
-			instance.setVisible(true);
-			instance.setTab(tab);
-		}
-		return instance;
-	}
 	/**
 	 * <p>The main constructor for the AboutBox. This method is private as it is being called through 
 	 * the singleton method get instance.</p>
 	 */
-	private AboutBox(JFrame parent, int tab) {
-		super(parent);
+	public AboutBox(JFrame parent, int tab) {
+		super(parent, " About ", true);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		
 		this.setLayout(new BorderLayout());
 		this.setFont(new Font ("SansSerif", Font.PLAIN, 12));
 		
@@ -136,7 +118,15 @@ public class AboutBox extends JDialog implements ActionListener {
 		ok = new JButton("OK");
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
 		buttonPanel.add (ok);
-		ok.addActionListener(this);
+		ok.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						dispose();
+					}
+				});       
+			}
+		});
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
@@ -156,7 +146,4 @@ public class AboutBox extends JDialog implements ActionListener {
         default: tabbedPane.setSelectedIndex(0); break;
     }
 	}
-	public void actionPerformed(ActionEvent newEvent) {
-		setVisible(false);
-	}  
 }

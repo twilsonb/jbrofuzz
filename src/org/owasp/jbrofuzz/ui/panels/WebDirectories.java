@@ -33,11 +33,13 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import com.Ostermiller.util.*;
+
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.dir.DRequestIterator;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.WebDirectoriesModel;
 import org.owasp.jbrofuzz.ui.util.*;
-import org.owasp.jbrofuzz.version.*;
+import org.owasp.jbrofuzz.fuzz.dir.*;
 /**
  * <p>The web directory panel that is attached to the main frame.</p>
  *
@@ -60,10 +62,10 @@ public class WebDirectories extends JPanel implements KeyListener {
   private final JButton startButton, stopButton;
 
   // The JCheckBox to continue if an error occurs
-  private final JCheckBox errorCheckBox;
+  // private final JCheckBox errorCheckBox;
   
-  // The JCheckBox boolean checkbox
-  private boolean checkbox;
+  // The preferences boolean checkbox
+  // private boolean checkbox;
   
   // The jtable holding all the responses
   private JTable responseTable;
@@ -96,7 +98,8 @@ public class WebDirectories extends JPanel implements KeyListener {
     super(null, true);
     this.m = m;
     session = 0;
-    checkbox = true;
+    
+
     
     // Define the directory JPanel
     directoryPanel = new JPanel();
@@ -173,7 +176,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 
     // The add generator button
     startButton = new JButton("Start", ImageCreator.START_IMG);
-    startButton.setBounds(420, 95, 90, 20);
+    startButton.setBounds(420, 95, 90, 40);
     startButton.setToolTipText("Start Fuzzing through the Directories List");
     add(startButton);
     startButton.addActionListener(new ActionListener() {
@@ -194,7 +197,7 @@ public class WebDirectories extends JPanel implements KeyListener {
     });
 
     stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
-    stopButton.setBounds(520, 95, 90, 20);
+    stopButton.setBounds(520, 95, 90, 40);
     stopButton.setToolTipText("Stop Fuzzing through the Directories List");
     add(stopButton);
     stopButton.addActionListener(new ActionListener() {
@@ -202,7 +205,7 @@ public class WebDirectories extends JPanel implements KeyListener {
         buttonStop();
       }
     });
-
+/*
     errorCheckBox = new JCheckBox("Continue on Error", false);
     errorCheckBox.setBounds(370, 120, 140, 20);
     errorCheckBox.setToolTipText("Continue attempting to Fuzz, even if an error occurs");
@@ -212,7 +215,7 @@ public class WebDirectories extends JPanel implements KeyListener {
           checkbox = (!checkbox);
         }
       });
-    
+    */
     responseTableModel = new WebDirectoriesModel();
     sorter = new TableSorter(responseTableModel);
     responseTable = new JTable(sorter);
@@ -326,6 +329,14 @@ public class WebDirectories extends JPanel implements KeyListener {
   }
 
   /**
+   * Access the main object that launches and is responsible for the application.
+   * @return JBroFuzz
+   */
+  public JBroFuzz getJBroFuzz() {
+    return m.getJBroFuzz();
+  }
+  
+  /**
    * Method triggered when the start button is pressed.
    */
   public void buttonStart() {
@@ -338,7 +349,7 @@ public class WebDirectories extends JPanel implements KeyListener {
     // Update the panel, indicating directory
     outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output " + "[Logging in file \\web-dir\\" +
-                         JBRFormat.DATE + "\\" + getSessionNumber() + ".csv]  "),
+      		getJBroFuzz().getFormat().getDate() + "\\" + getSessionNumber() + ".csv]  "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
     // UI and Colors
@@ -543,9 +554,10 @@ public class WebDirectories extends JPanel implements KeyListener {
    * continue running even if an error occurs.
    * 
    * @return boolean
-   */
+   *
   public boolean getCheckBoxValue() {
 	  return checkbox;
   }
+  */
  
 }

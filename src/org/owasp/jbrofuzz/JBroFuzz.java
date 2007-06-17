@@ -48,123 +48,35 @@ import org.owasp.jbrofuzz.version.*;
  */
 public class JBroFuzz {
 
-  private RequestIterator generator;
-  private JBRFrame mainwindow;
+	private JBRFormat mFormat;
+	private JBRFrame mWindow;
   private FileHandler filehandler;
-  private TConstructor tconstructor;
-  private DConstructor dconstructor;
-  //
-  private ConnectionListener listener;
+
   /**
-   * <p>The main creation object, instantiating a MainWindow, a FileHander
+   * <p>The main creation object, instantiating a mWindow, a FileHander
    * and a Version object. The order in which construction takes place is
    * rather important.</p>
    */
   public JBroFuzz() {
-    // Set the default look and feel
-    JBRFormat.setLookAndFeel(this);
-    // Launch the GUI
-    mainwindow = new JBRFrame(this);
-    filehandler = FileHandler.createFileHandler(mainwindow);
-    tconstructor = new TConstructor(this);
-    dconstructor = new DConstructor(this);
-
-    listener = new ConnectionListener(mainwindow.getTCPSniffingPanel(), "", "",
-                                      "", "");
-    generator = new RequestIterator(this, new StringBuffer(""), 0, 0, "ZER");
+  	mFormat = new JBRFormat(this);
+    mWindow = new JBRFrame(this);
+    filehandler = FileHandler.createFileHandler(mWindow, mFormat);
   }
 
   /**
    * Return the main window, thus allowing access to Gui components
-   * @return MainWindow
+   * @return mWindow
    */
   public JBRFrame getFrameWindow() {
-    return mainwindow;
+    return mWindow;
   }
-
-  /**
-   * Set the generator responsible for running the fuzzing.
-   * @param request String
-   * @param start int
-   * @param finish int
-   * @param type int
-   */
-  public void setGenerator(final StringBuffer request, final int start,
-                           final int finish, final String type) {
-    generator = new RequestIterator(this, request, start, finish, type);
+  
+  public JBRFormat getFormat() {
+  	return mFormat;
   }
-
-  /**
-   * Run the generator(s) present in the Generator object.
-   */
-  public void runGenerator() {
-    generator.run();
-  }
-
-  /**
-   * Stop the generator.
-   */
-  public void stopGenerator() {
-    generator.stop();
-  }
-
-  /**
-   * Create a sniffer using the address/host values stated here within
-   * @param address String
-   * @param port String
-   * @param lAddress String
-   * @param lPort String
-   */
-  public void createrSniffer(final String address, final String port,
-                             final String lAddress, final String lPort) {
-    listener = new ConnectionListener(mainwindow.getTCPSniffingPanel(), address,
-                                      port, lAddress, lPort);
-  }
-
-  /**
-   * Stop the sniffer
-   */
-  public void stopSniffer() {
-    listener.stopConnection();
-  }
-
-  /**
-   * Get the FileHandler used in this instance of JBroFuzz
-   * @return FileHandler
-   */
+  
   public FileHandler getFileHandler() {
-    return filehandler;
-  }
-
-  /**
-   * Get the TCP fuzzing Constructor used in this instance of JBroFuzz.
-   * @return Constructor
-   */
-  public TConstructor getTCPConstructor() {
-    return tconstructor;
-  }
-
-  /**
-   * Get the directory fuzzing Constructor used in this instance of JBroFuzz.
-   * @return DConstructor
-   */
-  public DConstructor getDIRConstructor() {
-    return dconstructor;
-  }
-
-  /**
-   * <p>This method is responsible for setting up the main window within the
-   * dispatching thread.</p>
-   *
-   * <p>It is invoked from the main method and deals solely
-   * with parameters of the JFrame (the mainWindow extends the JFrame).</p>
-   */
-  public void setupWindow() {
-    mainwindow.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-    mainwindow.setLocation(100, 100);
-    mainwindow.setSize(900, 550);
-    mainwindow.setResizable(false);
-    mainwindow.setVisible(true);
+  	return filehandler;
   }
 
   /**
@@ -174,8 +86,7 @@ public class JBroFuzz {
   public static void main(final String[] args) {
     javax.swing.SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        final JBroFuzz centralObject = new JBroFuzz();
-        centralObject.setupWindow();
+        new JBroFuzz();
       }
     });
   }
