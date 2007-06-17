@@ -33,6 +33,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import com.Ostermiller.util.*;
+
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.snif.tcp.*;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.SniffingTableModel;
@@ -227,7 +229,7 @@ public class TCPSniffing extends JPanel {
     // The action listener for the browser button
     browserButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-
+      	buttonBro();
       }
     });
 
@@ -369,6 +371,15 @@ public class TCPSniffing extends JPanel {
   }
 
   /**
+   * Access the main object that launches and is responsible for the application.
+   * @return JBroFuzz
+   */
+  public JBroFuzz getJBroFuzz() {
+    return m.getJBroFuzz();
+  }
+
+
+  /**
    * <p>Method for returning the counter held within the Sniffing Panel which
    * is responsible for counting the number of requests having been made. This
    * method is used for generating unique sequential file name and row
@@ -443,7 +454,7 @@ public class TCPSniffing extends JPanel {
     else {
       listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
         createTitledBorder(" List of Requests " + "[Last log was .\\" +
-                           JBRFormat.DATE + "\\" + session + "*.txt] "),
+                           getJBroFuzz().getFormat().getDate() + "\\" + session + "*.txt] "),
         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     }
   }
@@ -502,7 +513,7 @@ public class TCPSniffing extends JPanel {
     // Update the border of the output panel
     listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" List of Requests " + "[Logging in folder .\\" +
-                         JBRFormat.DATE + "\\" + session + "*.txt]  [" + rh + ":" +
+      		getJBroFuzz().getFormat().getDate() + "\\" + session + "*.txt]  [" + rh + ":" +
                          rp + " <=> " + lh + ":" + lp + "] "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 

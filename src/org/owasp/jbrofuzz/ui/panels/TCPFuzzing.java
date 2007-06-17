@@ -43,6 +43,7 @@ import org.owasp.jbrofuzz.ui.viewers.WindowPlotter;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 import org.owasp.jbrofuzz.version.*;
 import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.fuzz.*;
 /**
  * <p>The main "TCP Fuzzing" panel, displayed within the Main 
  * Frame Window.</p>
@@ -83,6 +84,8 @@ public class TCPFuzzing extends JPanel {
   private int counter, session;
   // Just a string that is being used a lot
   private static final String ADDGENSTRING = "Add Generator";
+  // The request iterator performing all the fuzzing
+  private RequestIterator mRIterator;
   /**
    * This constructor is used for the "TCP Fuzzing Panel" that resides under the
    * FrameWindow, within the corresponding tabbed panel.
@@ -368,7 +371,7 @@ public class TCPFuzzing extends JPanel {
     // Update the border of the output panel
     outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output (Last 1000 Lines)  " + "Logging in folder (" +
-                         JBRFormat.DATE +
+                         getJBroFuzz().getFormat().getDate() +
                          // getJBroFuzz().getVersion().getDate() +
                          ") Session " + session),
                           BorderFactory.createEmptyBorder(5, 5, 5, 5)));
@@ -379,8 +382,10 @@ public class TCPFuzzing extends JPanel {
     final int rows = generatorTable.getRowCount();
     if (rows < 1) {
       StringBuffer sbuf = new StringBuffer(message.getText());
-      getJBroFuzz().setGenerator(sbuf, 0, 0, "ZER");
-      getJBroFuzz().runGenerator();
+      mRIterator = new RequestIterator(getJBroFuzz(), sbuf, 0, 0, "ZER");
+      mRIterator.run();
+      //getJBroFuzz().setGenerator(sbuf, 0, 0, "ZER");
+      //getJBroFuzz().runGenerator();
     }
     else {
       for (int i = 0; i < rows; i++) {
@@ -391,8 +396,9 @@ public class TCPFuzzing extends JPanel {
                         intValue();
 
         StringBuffer sbuf = new StringBuffer(message.getText());
-        getJBroFuzz().setGenerator(sbuf, start, end, generator);
-        getJBroFuzz().runGenerator();
+        mRIterator = new RequestIterator(getJBroFuzz(), sbuf, start, end, generator);
+        mRIterator.run();
+
       }
     }
   }
@@ -404,7 +410,7 @@ public class TCPFuzzing extends JPanel {
     if (!buttonFuzzStop.isEnabled()) {
       return;
     }
-    getJBroFuzz().stopGenerator();
+    mRIterator.stop();
     // UI and Colors
     buttonFuzzStart.setEnabled(true);
     buttonFuzzStop.setEnabled(false);
@@ -521,8 +527,8 @@ public class TCPFuzzing extends JPanel {
       final int sPoint = message.getSelectionStart();
       final int fPoint = message.getSelectionEnd();
 
-      String generators = getJBroFuzz().getTCPConstructor().
-                          getAllGeneratorNamesAndComments();
+      TConstructor mTConstructor = new TConstructor(getJBroFuzz());
+      String generators = mTConstructor.getAllGeneratorNamesAndComments();
       String[] generatorArray = generators.split(", ");
 
       // Then prompt the user for the type of fuzzer

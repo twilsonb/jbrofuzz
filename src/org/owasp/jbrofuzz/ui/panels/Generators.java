@@ -37,7 +37,7 @@ import org.owasp.jbrofuzz.ui.JBRFrame;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class Definitions extends JPanel {
+public class Generators extends JPanel {
   // The frame that the sniffing panel is attached
   private JBRFrame m;
   // The JTable that holds all the data
@@ -48,7 +48,7 @@ public class Definitions extends JPanel {
    *
    * @param m FrameWindow
    */
-  public Definitions(JBRFrame m) {
+  public Generators(JBRFrame m) {
     super();
     setLayout(null);
     /*

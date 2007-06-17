@@ -26,9 +26,13 @@
 package org.owasp.jbrofuzz.io;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 import javax.swing.*;
+
+import org.owasp.jbrofuzz.fuzz.dir.DConstructor;
+import org.owasp.jbrofuzz.fuzz.TConstructor;
 
 import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.version.*;
@@ -45,8 +49,10 @@ import org.owasp.jbrofuzz.version.*;
 public class FileHandler {
 	// The singleton object
 	private static FileHandler singletonFileHandlerObject;
-
+	// The main window frame gui
 	private static JBRFrame g;
+	// The main format object
+	private static JBRFormat f;
 	// The current file used for creation
 	private static File currentFile;
 	// The fuzz directory of operation
@@ -72,9 +78,9 @@ public class FileHandler {
 	 * @param g FrameWindow
 	 * @return FileHandler
 	 */
-	public static synchronized FileHandler createFileHandler(JBRFrame g) {
+	public static synchronized FileHandler createFileHandler(JBRFrame g, JBRFormat f) {
 		if(singletonFileHandlerObject == null) {
-			singletonFileHandlerObject = new FileHandler(g);
+			singletonFileHandlerObject = new FileHandler(g, f);
 		}
 		return singletonFileHandlerObject;
 	}
@@ -92,10 +98,11 @@ public class FileHandler {
 		throw new CloneNotSupportedException();
 	}
 
-	private FileHandler(JBRFrame g) {
+	private FileHandler(JBRFrame g, JBRFormat f) {
 		FileHandler.g = g;
+		FileHandler.f = f;
 		// Get the date
-		runningDate = JBRFormat.DATE;
+		runningDate = f.getDate();
 
 		String baseDir = System.getProperty("user.dir");
 
@@ -143,6 +150,10 @@ public class FileHandler {
 			".jar\" on command line...");
 			failedDirCounter = 0;
 		}
+		
+		// Load the files into the gui
+		DConstructor mDConstructor = new DConstructor(g.getJBroFuzz());
+		TConstructor mTConstructor = new TConstructor(g.getJBroFuzz());
 	}
 
 	private static void appendFile(File fileName, String content) {
@@ -492,16 +503,28 @@ public class FileHandler {
 	 * StringBuffer.</p>
 	 * <p>Comment lines starting with '#' will be ignored and not 
 	 * returned as contents of the StringBuffer.</p>
+	 * <p>This method, initially looks for the file in the same 
+	 * directory as that in which JBroFuzz has been run.</p>
+	 * <p>If this is unsuccessful, it attempts to load it from 
+	 * within the jar file.</p>
+	 * <p>If this is unsuccessful, it loads a default list from 
+	 * the Format file. This list is a lot shorter than the 
+	 * complete list of generators, inside the two files.</p>
 	 * 
 	 * @param generatorFile String
 	 * @return StringBuffer
 	 */
 	public static StringBuffer readGenerators(String generatorFile) {
+		// The maximum number of lines
 		final int maxLines = 1024;
+		// The maximum line length
 		final int maxLineLength = 256;
+		
 		int line_counter = 0;
 		Vector file = new Vector();
 		BufferedReader in = null;
+		int len = 0;
+		// First, attempt to read the file from the same directory
 		try {
 			in = new BufferedReader(new FileReader(generatorFile));
 			String line = in.readLine();
@@ -532,12 +555,56 @@ public class FileHandler {
 			catch (IOException ex) {
 			}
 		}
+		// Check the file size
 		file.trimToSize();
-
-    int len = file.size();
-
-    // If the length is zero define the generators from the Format default list
-    if (len == 0) {
+    len = file.size();
+    
+    // If reading from directory fails, attempt to read from the jar file
+    if (len <= 0) {
+    	line_counter = 0;
+    	
+    	URL fileURL = ClassLoader.getSystemClassLoader().getResource(JBRFormat.FILE_GEN);
+    	
+    	try {
+    		URLConnection connection = fileURL.openConnection();				
+  			connection.connect();
+  			
+  			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+  			String line = in.readLine();
+  			line_counter++;
+  			while ((line != null) && (line_counter < maxLines)) {
+  				if (line.length() > maxLineLength) {
+  					line = line.substring(0, maxLineLength);
+  				}
+  				if (!line.startsWith("#")) {
+  					file.add(line);
+  					line_counter++;
+  				}				
+  				line = in.readLine();
+  			}
+  			in.close();
+  		}
+  		catch (IOException e1) {
+  			if (g != null) {
+  				g.log("Generator file (inside jar): " + fileURL.toString() + " could not be found");
+  			}
+  		}
+  		finally {
+  			try {
+  				if (in != null) {
+  					in.close();
+  				}
+  			}
+  			catch (IOException ex) {
+  			}
+  		}
+    }
+    //  Check the file size
+		file.trimToSize();
+    len = file.size();
+    
+    // If reading from directory and jar fails define the generators from a default list
+    if (len <= 0) {
       g.log("Loading default generator list");
       String[] defaultArray = JBRFormat.DEFAULT_GENS.split("\n");
       len = defaultArray.length;
@@ -572,6 +639,8 @@ public class FileHandler {
 		int line_counter = 0;
 		Vector file = new Vector();
 		BufferedReader in = null;
+		int len = 0;
+		//	 First, attempt to read the file from the same directory
 		try {
 			in = new BufferedReader(new FileReader(directoriesFile));
 			String line = in.readLine();
@@ -603,12 +672,55 @@ public class FileHandler {
 			catch (IOException ex) {
 			}
 		}
-
+		// Check the file size
 		file.trimToSize();
-		int len = file.size();
-
-		// If the length is zero define the generators from the Format default list
-		if (len == 0) {
+		len = file.size();
+		//	 If reading from directory fails, attempt to read from the jar file
+    if (len <= 0) {
+    	line_counter = 0;
+    	
+    	URL fileURL = ClassLoader.getSystemClassLoader().getResource(JBRFormat.FILE_DIR);
+    	
+    	try {
+    		URLConnection connection = fileURL.openConnection();				
+  			connection.connect();
+  			
+  			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+  			String line = in.readLine();
+  			line_counter++;
+  			while ((line != null) && (line_counter < maxLines)) {
+  				if (line.length() > maxLineLength) {
+  					line = line.substring(0, maxLineLength);
+  				}
+  				if (!line.startsWith("#")) {
+  					file.add(line);
+  					line_counter++;
+  				}				
+  				line = in.readLine();
+  			}
+  			in.close();
+  		}
+  		catch (IOException e1) {
+  			if (g != null) {
+  				g.log("Directories file (inside jar): " + fileURL.toString() + " could not be found");
+  			}
+  		}
+  		finally {
+  			try {
+  				if (in != null) {
+  					in.close();
+  				}
+  			}
+  			catch (IOException ex) {
+  			}
+  		}
+    }
+    //  Check the file size
+		file.trimToSize();
+    len = file.size();
+    
+    // If reading from directory and jar fails define the generators from a default list
+		if (len <= 0) {
 			if (g != null) {
 				g.log("Loading default directories list");
 			}
@@ -638,4 +750,29 @@ public class FileHandler {
 	public static String getFuzzDirName() {
 		return "/" + fuzzDirectory.getName() + "/";
 	}
+	
+	public static String getFuzzDirCanonicalPath() {
+		try {
+			return fuzzDirectory.getCanonicalPath();
+		} catch (IOException e) {
+			return "";
+		}
+	}
+
+	public static String getSnifDirCanonicalPath() {
+		try {
+			return snifDirectory.getCanonicalPath();
+		} catch (IOException e) {
+			return "";
+		}
+	}
+	
+	public static String getWebDirCanonicalPath() {
+		try {
+			return webEnumDirectory.getCanonicalPath();
+		} catch (IOException e) {
+			return "";
+		}
+	}
+	
 }

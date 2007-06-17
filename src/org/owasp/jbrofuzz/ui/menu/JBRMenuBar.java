@@ -27,6 +27,7 @@ package org.owasp.jbrofuzz.ui.menu;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -34,6 +35,8 @@ import javax.swing.text.*;
 import org.owasp.jbrofuzz.version.JBRFormat;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
+
+import com.Ostermiller.util.Browser;
 /**
  * <p>The main menu bar attached to the main frame window.</p>
  *
@@ -43,8 +46,6 @@ import org.owasp.jbrofuzz.ui.util.ImageCreator;
 public class JBRMenuBar extends JMenuBar {
 
 	private final JBRFrame mFrameWindow;
-	// The about box
-	private AboutBox cAboutBox;
 	// The menu items
 	private final JMenu file, edit, view, panel, options, help;
 	// Used under the Panel JMenu as items
@@ -217,8 +218,8 @@ public class JBRMenuBar extends JMenuBar {
 
 		// Options
 		JMenuItem preferences = new JMenuItem("Preferences");
-		JMenuItem updates = new JMenuItem("Check for Updates");
-		JMenuItem repair = new JMenuItem("Detect and Repair");
+		JMenuItem updates = new JMenuItem("Check for Updates...");
+		JMenuItem repair = new JMenuItem("Detect and Repair...");
 		
 		preferences.setAccelerator(KeyStroke.getKeyStroke('P',
 				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
@@ -232,7 +233,7 @@ public class JBRMenuBar extends JMenuBar {
 		JMenuItem topics = new JMenuItem("Topics", ImageCreator.TOPICS_IMG);
 		JMenuItem faq = new JMenuItem("FAQ", ImageCreator.TOPICS_IMG);
 		JMenuItem tutorial = new JMenuItem("Tutorial");
-		JMenuItem website = new JMenuItem("JBroFuzz Website");
+		JMenuItem website = new JMenuItem("JBroFuzz Website...");
 		JMenuItem disclaimer = new JMenuItem("Disclaimer", ImageCreator.DISCLAIMER_IMG);
 		JMenuItem about = new JMenuItem("About", ImageCreator.HELP_IMG);
 
@@ -242,7 +243,7 @@ public class JBRMenuBar extends JMenuBar {
 		help.add(topics);
 		help.add(faq);
 		help.addSeparator();
-		help.add(tutorial);
+		// help.add(tutorial);
 		help.add(website);
 		help.addSeparator();
 		help.add(disclaimer);
@@ -512,6 +513,30 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
+		updates.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						new CheckForUpdates(getFrameWindow());
+					}
+				});
+
+			}
+		});
+		
+		repair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						new DetectAndRepair(getFrameWindow());
+					}
+				});
+
+			}
+		});
+		
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -533,19 +558,38 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						JBRPreferences cJBRPreferences = JBRPreferences.getInstance(getFrameWindow());
+						new JBRPreferences(getFrameWindow());
 					}
 				});
 
 			}
 		});
+		
+		website.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+					   Browser.init();
+					    try {
+					      Browser.displayURL(JBRFormat.URL_WEBSITE);
+					    }
+					    catch (IOException ex) {
+					      getFrameWindow().log("Could not launch link in external browser");
+					    }
+					    }
+				});
+			}
+		});
+		
+
 
 		disclaimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						cAboutBox = AboutBox.getInstance(getFrameWindow(), AboutBox.DISCLAIMER);
+						new AboutBox(getFrameWindow(), AboutBox.DISCLAIMER);
 					}
 				});
 			}
@@ -556,7 +600,7 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						cAboutBox = AboutBox.getInstance(getFrameWindow(), AboutBox.ABOUT);
+						new AboutBox(getFrameWindow(), AboutBox.ABOUT);
 					}
 				});
 			}

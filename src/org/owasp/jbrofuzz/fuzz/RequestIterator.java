@@ -54,6 +54,8 @@ public class RequestIterator {
 	private StringBuffer request;
 	// The location within the request where fuzzing takes place
 	private int start, finish, len;
+	// The constructor holding all the fuzzer lists
+	private TConstructor mTConstructor;
 	/*
 	 * As the generator generates fuzzing request, two variables holding the
 	 * currentValue of the generator and the maximum value of the generator.
@@ -91,7 +93,9 @@ public class RequestIterator {
 		maxValue = 0;
 		currentValue = 0;
 		generatorStopped = false;
-				
+		
+		mTConstructor = new TConstructor(getJBroFuzz());
+		
 		// Check start and finish to positive and also within length
 		int strlength = request.length();
 		if ((start < 0) || (finish < 0) || (start > strlength) ||
@@ -104,10 +108,9 @@ public class RequestIterator {
 		// Check for a minimum length of 1 between start and finish
 		if (this.len > 0) {
 			
-			maxValue = (long) getJBroFuzz().getTCPConstructor().
-																				getGeneratorLength(type);
+			maxValue = (long) mTConstructor.getGeneratorLength(type);
 			// For a recursive generator, generate the corresponding maximum value
-			char genType = getJBroFuzz().getTCPConstructor().getGeneratorType(type);
+			char genType = mTConstructor.getGeneratorType(type);
 			if (genType == Generator.RECURSIVE) {
 				long baseValue = maxValue;
 				for (int i = 1; i < this.len; i++) {
@@ -130,11 +133,11 @@ public class RequestIterator {
 
 			fuzzedValue.append(request.substring(0, start));
 			int blank_count = 0;
-			char genType = getJBroFuzz().getTCPConstructor().getGeneratorType(type);
+			char genType = mTConstructor.getGeneratorType(type);
 
 			// Check to see if the generator is recursive
 			if (genType == Generator.RECURSIVE) {
-				int radix = getJBroFuzz().getTCPConstructor().getGeneratorLength(type);
+				int radix = mTConstructor.getGeneratorLength(type);
 				blank_count = Long.toString(currentValue, radix).length() - len;
 				while (blank_count < 0) {
 					fuzzedValue.append("0");
@@ -157,8 +160,7 @@ public class RequestIterator {
 			// Check to see if the generator is replasive
 			if (genType == Generator.REPLASIVE) {
 				int v = (int) currentValue;
-				StringBuffer b = getJBroFuzz().
-				getTCPConstructor().getGeneratorElement(type, v);
+				StringBuffer b = mTConstructor.getGeneratorElement(type, v);
 				fuzzedValue.append(b);
 			}
 
