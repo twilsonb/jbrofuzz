@@ -129,10 +129,10 @@ public class TConstructor {
       }
     }
 
-    mJBroFuzz.getFrameWindow().getDefinitionsPanel().setDefinitionsText(
+    mJBroFuzz.getWindow().getDefinitionsPanel().setDefinitionsText(
       getAllGeneratorNames() + "\n\n");
 
-    mJBroFuzz.getFrameWindow().getDefinitionsPanel().setDefinitionsText(
+    mJBroFuzz.getWindow().getDefinitionsPanel().setDefinitionsText(
       getAllGenerators());
 
   }

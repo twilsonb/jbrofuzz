@@ -47,8 +47,6 @@ public class WindowViewer extends JFrame {
 
 	// The name of the request which will be displayed
 	private String name;
-	// The main frame window
-	private JBRFrame m;
 
 	/**
 	 * <p>Constant used for specifying within which directory to look for the 
@@ -74,7 +72,6 @@ public class WindowViewer extends JFrame {
 	public WindowViewer(JBRFrame m, String name, int typeOfPanel) {
 		super();
 		this.name = name;
-		this.m = m;
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
 		String[] input = name.split(" ");
@@ -108,10 +105,10 @@ public class WindowViewer extends JFrame {
 
 		StringBuffer text = new StringBuffer();
 		if(typeOfPanel == VIEW_SNIFFING_PANEL) {
-			text = FileHandler.readSnifFile(this, number);
+			text = FileHandler.readSnifFile( number );
 		}
 		if(typeOfPanel == VIEW_FUZZING_PANEL) {
-			text = FileHandler.readFuzzFile(this, number);
+			text = FileHandler.readFuzzFile( number );
 		}
 		//Find the header
 		int headerEnd = text.indexOf("]");

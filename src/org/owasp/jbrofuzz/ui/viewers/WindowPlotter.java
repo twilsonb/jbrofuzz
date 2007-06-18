@@ -56,8 +56,6 @@ import jcckit.util.PropertiesBasedConfigData;
  * @since 0.6
  */
 public class WindowPlotter extends JFrame {
-	// The main frame window
-	private JBRFrame m;
 	// The name of the JFrame displayed as a title
 	private String name;
 
@@ -71,14 +69,13 @@ public class WindowPlotter extends JFrame {
 
 	private DataPlot _dataPlot;
 
-	public WindowPlotter(JBRFrame m, String name) {
+	public WindowPlotter(String name) {
 		super(name);
 		this.name = name;
-		this.m = m;
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 		
-		y_data = FileHandler.getFuzzDirFileHashes(this.m);
-		x_data = FileHandler.getFuzzDirFileNames(this.m);
+		y_data = FileHandler.getFuzzDirFileHashes();
+		x_data = FileHandler.getFuzzDirFileNames();
 
 		normaliseData();
 

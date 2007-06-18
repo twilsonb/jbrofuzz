@@ -25,12 +25,9 @@
  */
 package org.owasp.jbrofuzz;
 
-import org.owasp.jbrofuzz.fuzz.*;
-import org.owasp.jbrofuzz.fuzz.dir.*;
-import org.owasp.jbrofuzz.io.*;
-import org.owasp.jbrofuzz.snif.tcp.*;
-import org.owasp.jbrofuzz.ui.*;
-import org.owasp.jbrofuzz.version.*;
+import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
 /**
  * <p>Title: Java Bro Fuzzer</p>
@@ -48,46 +45,78 @@ import org.owasp.jbrofuzz.version.*;
  */
 public class JBroFuzz {
 
+	private FileHandler mHandler;
+
 	private JBRFormat mFormat;
+
 	private JBRFrame mWindow;
-  private FileHandler filehandler;
 
-  /**
-   * <p>The main creation object, instantiating a mWindow, a FileHander
-   * and a Version object. The order in which construction takes place is
-   * rather important.</p>
-   */
-  public JBroFuzz() {
-  	mFormat = new JBRFormat(this);
-    mWindow = new JBRFrame(this);
-    filehandler = FileHandler.createFileHandler(mWindow, mFormat);
-  }
+	/**
+	 * <p>The main creation object, instantiating a Window, a File Hander
+	 * and a Format object. The order in which construction takes place is
+	 * rather important.</p>
+	 */
+	public JBroFuzz() {
 
-  /**
-   * Return the main window, thus allowing access to Gui components
-   * @return mWindow
-   */
-  public JBRFrame getFrameWindow() {
-    return mWindow;
-  }
-  
-  public JBRFormat getFormat() {
-  	return mFormat;
-  }
-  
-  public FileHandler getFileHandler() {
-  	return filehandler;
-  }
+		this.mFormat = new JBRFormat(this);
+		this.mWindow = new JBRFrame(this);
+		// Singleton File Handler
+		this.mHandler = FileHandler.s(this.mWindow, this.mFormat);
 
-  /**
-   * <p>The main method instantiating the constructor.</p>
-   * @param args String[]
-   */
-  public static void main(final String[] args) {
-    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        new JBroFuzz();
-      }
-    });
-  }
+	}
+
+	/**
+	 * <p>Return the main window, thus allowing access to various 
+	 * GUI components.</p>
+	 * 
+	 * @return mWindow JBRFrame
+	 */
+	public JBRFrame getWindow() {
+
+		return this.mWindow;
+
+	}
+
+	/**
+	 * <p>Return the main format object, thus allowing on top of 
+	 * static, also dynamic access to various constant 
+	 * variables, methods, etc.</p>
+	 * 
+	 * @return mFormat JBRFormat
+	 */
+	public JBRFormat getFormat() {
+
+		return this.mFormat;
+
+	}
+
+	/**
+	 * <p>Return the main file handler, thus allowing access to 
+	 * the various read/write IO methods and functions used
+	 * at runtime.</p>
+	 * 
+	 * @return mHandler FileHandler
+	 */
+	public FileHandler getHandler() {
+
+		return this.mHandler;
+
+	}
+
+	/**
+	 * <p>The main method instantiating the constructor.</p>
+	 * 
+	 * @param args String[]
+	 */
+	public static void main(final String[] args) {
+
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+
+				new JBroFuzz();
+
+			}
+		});
+
+	}
 }

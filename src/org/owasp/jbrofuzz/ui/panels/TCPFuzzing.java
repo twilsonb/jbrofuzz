@@ -426,7 +426,7 @@ public class TCPFuzzing extends JPanel {
   	if(!buttonPlot.isEnabled()) {
   		return;
   	}
-  	final WindowPlotter wd = new WindowPlotter(getFrameWindow(), FileHandler.getFuzzDirName());
+  	final WindowPlotter wd = new WindowPlotter(FileHandler.getFuzzDirName());
   	wd.addKeyListener(new KeyAdapter() {
       public void keyPressed(KeyEvent ke) {
         if (ke.getKeyCode() == 27) {
