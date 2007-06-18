@@ -25,48 +25,71 @@
  */
 package org.owasp.jbrofuzz.io;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
-import org.owasp.jbrofuzz.fuzz.dir.DConstructor;
 import org.owasp.jbrofuzz.fuzz.TConstructor;
+import org.owasp.jbrofuzz.fuzz.dir.DConstructor;
+import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
-import org.owasp.jbrofuzz.ui.*;
-import org.owasp.jbrofuzz.version.*;
 /**
- * <p>Class responsible for all File Creation. This class holds the file read
- * and create methods.</p>
- * <p>At runtime, three directories are created inside to the
- * fuzzing, sniffing and web-dir directories. The names of these 
- * directories are identical and correspond to a timestamp value.</p>
- *
+ * <p>
+ * Class responsible for all File Creation. This class holds the file read and
+ * create methods.
+ * </p>
+ * <p>
+ * At runtime, three directories are created inside to the fuzzing, sniffing and
+ * web-dir directories. The names of these directories are identical and
+ * correspond to a timestamp value.
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
 public class FileHandler {
 	// The singleton object
 	private static FileHandler singletonFileHandlerObject;
+
 	// The main window frame gui
 	private static JBRFrame g;
+
 	// The main format object
 	private static JBRFormat f;
+
 	// The current file used for creation
 	private static File currentFile;
+
 	// The fuzz directory of operation
 	private static File fuzzDirectory;
+
 	// The snif directory of operation
 	private static File snifDirectory;
+
 	// The info directory of operation
 	private static File webEnumDirectory;
+
 	// A constant for counting file IO errors
 	private static int errors = 0;
+
 	// Global constants
 	private static final int FUZZ_FILE = 0;
+
 	private static final int SNIF_FILE = 1;
+
 	private static final int WEBD_FILE = 2;
+
 	// The date from the version
 	private static String runningDate;
 
@@ -75,11 +98,14 @@ public class FileHandler {
 	 * Singleton Constructor responsible for generating the necessary directories
 	 * and files for the correct operation of JBroFuzz.
 	 * </p>
-	 * @param g FrameWindow
+	 * 
+	 * @param g
+	 *          FrameWindow
+	 * @param f
 	 * @return FileHandler
 	 */
-	public static synchronized FileHandler createFileHandler(JBRFrame g, JBRFormat f) {
-		if(singletonFileHandlerObject == null) {
+	public static synchronized FileHandler s(JBRFrame g, JBRFormat f) {
+		if (singletonFileHandlerObject == null) {
 			singletonFileHandlerObject = new FileHandler(g, f);
 		}
 		return singletonFileHandlerObject;
@@ -88,9 +114,10 @@ public class FileHandler {
 	/**
 	 * <p>
 	 * This method overides the clone method of Object, so that not to support
-	 * cloning for this particular object. This is done to follow singleton
-	 * best practice implementation.
+	 * cloning for this particular object. This is done to follow singleton best
+	 * practice implementation.
 	 * </p>
+	 * 
 	 * @return Object
 	 * @throws CloneNotSupportedException
 	 */
@@ -98,26 +125,27 @@ public class FileHandler {
 		throw new CloneNotSupportedException();
 	}
 
+	//
+	// Private Constructor due to the use of a singleton architecture
+	//
 	private FileHandler(JBRFrame g, JBRFormat f) {
+
 		FileHandler.g = g;
 		FileHandler.f = f;
-		// Get the date
-		runningDate = f.getDate();
 
+		// Date and current directory
+		runningDate = FileHandler.f.getDate();
 		String baseDir = System.getProperty("user.dir");
 
-		// Create the necessary directory with the obtained timestamp
-		fuzzDirectory = new File(baseDir + File.separator + "jbrofuzz" +
-				File.separator + "fuzzing" + File.separator +
-				runningDate);
+		// Create the necessary directory with the corresponding timestamp
+		fuzzDirectory = new File(baseDir + File.separator + "jbrofuzz"
+				+ File.separator + "fuzzing" + File.separator + runningDate);
 
-		snifDirectory = new File(baseDir + File.separator + "jbrofuzz" +
-				File.separator + "sniffing" + File.separator +
-				runningDate);
+		snifDirectory = new File(baseDir + File.separator + "jbrofuzz"
+				+ File.separator + "sniffing" + File.separator + runningDate);
 
-		webEnumDirectory = new File(baseDir + File.separator + "jbrofuzz" +
-				File.separator + "web-dir" + File.separator +
-				runningDate);
+		webEnumDirectory = new File(baseDir + File.separator + "jbrofuzz"
+				+ File.separator + "web-dir" + File.separator + runningDate);
 
 		int failedDirCounter = 0;
 
@@ -128,6 +156,7 @@ public class FileHandler {
 				failedDirCounter++;
 			}
 		}
+
 		if (!snifDirectory.exists()) {
 			boolean success = snifDirectory.mkdirs();
 			if (!success) {
@@ -136,6 +165,7 @@ public class FileHandler {
 			}
 
 		}
+
 		if (!webEnumDirectory.exists()) {
 			boolean success = webEnumDirectory.mkdirs();
 			if (!success) {
@@ -145,70 +175,81 @@ public class FileHandler {
 		}
 
 		if (failedDirCounter >= 3) {
-			g.log("\tToo many directories could not be created! Are you launching me through your browser?");
-			g.log("\tTry \"java -jar jbrofuzz-" + JBRFormat.VERSION +
-			".jar\" on command line...");
+			g
+			.log("\tToo many directories could not be created! Are you launching me through your browser?");
+			g.log("\tTry \"java -jar jbrofuzz-" + JBRFormat.VERSION
+					+ ".jar\" on command line...");
 			failedDirCounter = 0;
 		}
-		
-		// Load the files into the gui
-		DConstructor mDConstructor = new DConstructor(g.getJBroFuzz());
-		TConstructor mTConstructor = new TConstructor(g.getJBroFuzz());
+
+		// Load the necessary files into the various panels of the application
+		new DConstructor(g.getJBroFuzz());
+		new TConstructor(g.getJBroFuzz());
 	}
 
+	//
+	// Private method ofr appending data to a file, given the name and content
+	//
 	private static void appendFile(File fileName, String content) {
 		String file = fileName.toString();
 		OutputStream output = null;
 		try {
 			if (errors < 3) {
-				content += "\r\n";
+				// content += "\r\n";
 				final boolean append = true;
 				output = new FileOutputStream(file, append);
 				byte buffer[] = content.getBytes();
 				output.write(buffer);
 				output.close();
 			}
-		}
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			g.log("Cannot find " + file + "Unable to Update");
 			errors++;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			g.log("Cannot Save to File" + file + "A File Write Error Occured");
 			errors++;
-		}
-		finally {
+		} finally {
 			try {
 				if (output != null) {
 					output.close();
 				}
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 			}
 		}
 	}
 
 	/**
-	 * <p>Method for reading snif files that have been generated within a sniffing
-	 * session. Typically, the contents of the file are returned within the
-	 * StringBuffer. In the event of an error, the StringBuffer returned is set to
-	 * "". </p>
-	 *
-	 * @param f JFrame The frame within which the file is read
-	 * @param fileName String The string filename of the file
-	 * @return StringBuffer
-	 * @since 0.2
+	 * <p>
+	 * Method for reading files that have been generated during a sniffing
+	 * session.
+	 * </p>
+	 * <p>
+	 * When a user selects to start a sniffing session, by selecting the <i>Start</i>
+	 * button in the <i>TCP Sniffing</i> tab, any traffic in terms of requests
+	 * and replies being made on the corresponding ports is saved in the
+	 * corresponding <i>sniffing directory</i>, unique to the current session.
+	 * <p>
+	 * This method provides the way to access any file within the <i>sniffing
+	 * directory</i> used, provided the file name is known.
+	 * </p>
+	 * <p>
+	 * The contents of the file are returned as a StringBuffer. In the event of an
+	 * error, the StringBuffer returned is set to an empty String of value "".
+	 * </p>
+	 * 
+	 * @param fileName
+	 *          String The name of the file, without any directory reference
+	 * @return StringBuffer The StringBuffer with the contents of the file
+	 * @since 0.7
 	 */
-	public static StringBuffer readSnifFile(JFrame f, String fileName) {
+	public static StringBuffer readSnifFile(String fileName) {
 		StringBuffer out = new StringBuffer();
 		File file;
 		try {
 			file = new File(snifDirectory, fileName);
-		}
-		catch (NullPointerException e) {
-			JOptionPane.showMessageDialog(f,
-					"Cannot Find Location" + "\n" + fileName + "\nA File Read Error Occured",
-					"JBroFuzz File Read Error",
+		} catch (NullPointerException e) {
+			JOptionPane.showMessageDialog(g, "Cannot Find Location" + "\n" + fileName
+					+ "\nA File Read Error Occured", "JBroFuzz File Read Error",
 					JOptionPane.ERROR_MESSAGE);
 			return new StringBuffer("");
 		}
@@ -223,52 +264,51 @@ public class FileHandler {
 				line = bufRead.readLine();
 			}
 			bufRead.close();
-		}
-		catch (ArrayIndexOutOfBoundsException e) {
-			JOptionPane.showMessageDialog(f,
-					"Cannot Find Location" + "\n" + fileName + "\nAn Array Error Occured",
-					"JBroFuzz File Read Error",
+		} catch (ArrayIndexOutOfBoundsException e) {
+			JOptionPane.showMessageDialog(g, "Cannot Find Location" + "\n" + fileName
+					+ "\nAn Array Error Occured", "JBroFuzz File Read Error",
 					JOptionPane.ERROR_MESSAGE);
 			return new StringBuffer("");
 
-		}
-		catch (IOException e) {
-			JOptionPane.showMessageDialog(f,
-					"Cannot Read Location" + "\n" + fileName + "\nA File Read Error Occured",
-					"JBroFuzz File Read Error",
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(g, "Cannot Read Location" + "\n" + fileName
+					+ "\nA File Read Error Occured", "JBroFuzz File Read Error",
 					JOptionPane.ERROR_MESSAGE);
 			return new StringBuffer("");
-		}
-		finally {
+		} finally {
 			try {
 				bufRead.close();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 			}
 		}
 		return out;
 	}
 
 	/**
-	 * <p>Method for returning an integer array of hashes for each file
-	 * found inside the session fuzz directory created at runtime.</p>
-	 * <p>Each hash is an integer between the value of [0 - 1000] and is 
-	 * calculated by means of consecutive addition of the byte values
-	 * found on each line.</p>
-	 * <p>As a result of this, files with small alterations e.g. date
-	 * and time stamps will have little differences in their hash value,
-	 * thus keeping the hamming distance between them to a minimum.</p>
-	 *
-	 * @param f JFrame 
-	 * @return int
+	 * <p>
+	 * Method for returning an integer array of hashes for each file found inside
+	 * the session fuzz directory created at runtime.
+	 * </p>
+	 * <p>
+	 * Each hash is an integer between the value of [0 - 1000] and is calculated
+	 * by means of consecutive addition of the byte values found on each line.
+	 * </p>
+	 * <p>
+	 * As a result of this, files with small alterations e.g. date and time stamps
+	 * will have little differences in their hash value, thus keeping the hamming
+	 * distance between them to a minimum.
+	 * </p>
+	 * 
+	 * @return int[] An array of integers, of length the same as the number of
+	 *         files
 	 * @since 0.6
 	 */
-	public static int[] getFuzzDirFileHashes(JFrame f) {
+	public static int[] getFuzzDirFileHashes() {
 
 		File[] folderFiles = fuzzDirectory.listFiles();
 		int[] hashValue = new int[folderFiles.length];
 
-		for(int i = 0; i < folderFiles.length; i++) {
+		for (int i = 0; i < folderFiles.length; i++) {
 			BufferedReader bufRead = null;
 			try {
 				FileReader input = new FileReader(folderFiles[i]);
@@ -277,12 +317,12 @@ public class FileHandler {
 				boolean passedResponse = false;
 				line = bufRead.readLine();
 				while (line != null) {
-					if(line.startsWith(JBRFormat.LINE_SEPARATOR)) {
+					if (line.startsWith(JBRFormat.LINE_SEPARATOR)) {
 						passedResponse = true;
 					}
-					if(passedResponse) {
+					if (passedResponse) {
 						byte[] b_array = line.getBytes();
-						for(int b_ar = 0; b_ar < b_array.length; b_ar++) {
+						for (int b_ar = 0; b_ar < b_array.length; b_ar++) {
 							hashValue[i] += b_array[b_ar];
 							hashValue[i] %= 1000;
 						}
@@ -290,62 +330,74 @@ public class FileHandler {
 					line = bufRead.readLine();
 				}
 				bufRead.close();
-			}
-			catch (ArrayIndexOutOfBoundsException e) {
-				JOptionPane.showMessageDialog(f,
-						"Cannot Find Location" + "\n" + folderFiles[i].getName() + "\nAn Array Error Occured",
-						"JBroFuzz File Read Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
-			catch (IOException e) {
-				JOptionPane.showMessageDialog(f,
-						"Cannot Read Location" + "\n" + folderFiles[i].getName() + "\nA File Read Error Occured",
-						"JBroFuzz File Read Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
-			finally {
+			} catch (ArrayIndexOutOfBoundsException e) {
+				JOptionPane.showMessageDialog(g, "Cannot Find Location" + "\n"
+						+ folderFiles[i].getName() + "\nAn Array Error Occured",
+						"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(g, "Cannot Read Location" + "\n"
+						+ folderFiles[i].getName() + "\nA File Read Error Occured",
+						"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			} finally {
 				try {
 					bufRead.close();
+				} catch (IOException ex) {
 				}
-				catch (IOException ex) {
-				}
-			}    			 
+			}
 		}
 		return hashValue;
 	}
 
-	public static String[] getFuzzDirFileNames(JFrame f) {
+	/**
+	 * <p>
+	 * Method for returning an integer array of hashes for each file found inside
+	 * the session fuzz directory created at runtime.
+	 * </p>
+	 * <p>
+	 * Each hash is an integer between the value of [0 - 1000] and is calculated
+	 * by means of consecutive addition of the byte values found on each line.
+	 * </p>
+	 * <p>
+	 * As a result of this, files with small alterations e.g. date and time stamps
+	 * will have little differences in their hash value, thus keeping the hamming
+	 * distance between them to a minimum.
+	 * </p>
+	 * 
+	 * @return String[] hashValue
+	 * @since 0.6
+	 */
+	public static String[] getFuzzDirFileNames() {
 
 		File[] folderFiles = fuzzDirectory.listFiles();
 		String[] hashValue = new String[folderFiles.length];
 
-		for(int i = 0; i < folderFiles.length; i++) {
-			hashValue[i] = folderFiles[i].getName();    			 
+		for (int i = 0; i < folderFiles.length; i++) {
+			hashValue[i] = folderFiles[i].getName();
 		}
 		return hashValue;
+
 	}
 
-
 	/**
-	 * <p>Method for reading fuzz files that have been generated within a fuzzing
+	 * <p>
+	 * Method for reading fuzz files that have been generated within a fuzzing
 	 * session. Typically, the contents of the file are returned within the
 	 * StringBuffer. In the event of an error, the StringBuffer returned is set to
-	 * "". </p>
+	 * "".
+	 * </p>
 	 * 
-	 * @param f
 	 * @param fileName
-	 * @return
+	 *          String
+	 * @return StringBuffer
 	 */
-	public static StringBuffer readFuzzFile(JFrame f, String fileName) {
+	public static StringBuffer readFuzzFile(String fileName) {
 		StringBuffer out = new StringBuffer();
 		File file;
 		try {
 			file = new File(fuzzDirectory, fileName);
-		}
-		catch (NullPointerException e) {
-			JOptionPane.showMessageDialog(f,
-					"Cannot Find Location" + "\n" + fileName + "\nA File Read Error Occured",
-					"JBroFuzz File Read Error",
+		} catch (NullPointerException e) {
+			JOptionPane.showMessageDialog(g, "Cannot Find Location" + "\n" + fileName
+					+ "\nA File Read Error Occured", "JBroFuzz File Read Error",
 					JOptionPane.ERROR_MESSAGE);
 			return new StringBuffer("");
 		}
@@ -360,27 +412,21 @@ public class FileHandler {
 				line = bufRead.readLine();
 			}
 			bufRead.close();
-		}
-		catch (ArrayIndexOutOfBoundsException e) {
-			JOptionPane.showMessageDialog(f,
-					"Cannot Find Location" + "\n" + fileName + "\nAn Array Error Occured",
-					"JBroFuzz File Read Error",
+		} catch (ArrayIndexOutOfBoundsException e) {
+			JOptionPane.showMessageDialog(g, "Cannot Find Location" + "\n" + fileName
+					+ "\nAn Array Error Occured", "JBroFuzz File Read Error",
 					JOptionPane.ERROR_MESSAGE);
 			return new StringBuffer("");
 
-		}
-		catch (IOException e) {
-			JOptionPane.showMessageDialog(f,
-					"Cannot Read Location" + "\n" + fileName + "\nA File Read Error Occured",
-					"JBroFuzz File Read Error",
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(g, "Cannot Read Location" + "\n" + fileName
+					+ "\nA File Read Error Occured", "JBroFuzz File Read Error",
 					JOptionPane.ERROR_MESSAGE);
 			return new StringBuffer("");
-		}
-		finally {
+		} finally {
 			try {
 				bufRead.close();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 			}
 		}
 		return out;
@@ -400,12 +446,10 @@ public class FileHandler {
 					}
 					appendFile(currentFile, content);
 				}
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				g.log("Cannot Create File" + "\n" + fileName + " A File Error Occured");
 				errors++;
 			}
-
 
 		}
 
@@ -421,8 +465,7 @@ public class FileHandler {
 					}
 					appendFile(currentFile, content);
 				}
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				g.log("Cannot Create File" + "\n" + fileName + " A File Error Occured");
 				errors++;
 			}
@@ -440,8 +483,7 @@ public class FileHandler {
 					}
 					appendFile(currentFile, content);
 				}
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				g.log("Cannot Create File" + "\n" + fileName + " A File Error Occured");
 				errors++;
 			}
@@ -449,17 +491,23 @@ public class FileHandler {
 	}
 
 	/**
-	 * <p>Method for writting a new fuzz file within the created fuzzing
-	 * directory. The content of the file is specified as a String input to the
-	 * method.
-	 * The location where this file is saved is within the directory jbrofuzz\
-	 * fuzzing\[session date]\ . </p>
-	 * <p>The two long values being passed are responsible for the file name.</p>
-	 * <p>If the file exists, the content is simply appended to the end of the
-	 * file.</p>
-	 *
-	 * @param content String
-	 * @param name String
+	 * <p>
+	 * Method for writting a new fuzz file within the created fuzzing directory.
+	 * The content of the file is specified as a String input to the method. The
+	 * location where this file is saved is within the directory jbrofuzz\
+	 * fuzzing\[session date]\ .
+	 * </p>
+	 * <p>
+	 * The two long values being passed are responsible for the file name.
+	 * </p>
+	 * <p>
+	 * If the file exists, the content is simply appended to the end of the file.
+	 * </p>
+	 * 
+	 * @param content
+	 *          String
+	 * @param name
+	 *          String
 	 */
 	public static void writeFuzzFile(String content, String name) {
 		// Actually create the file
@@ -467,15 +515,20 @@ public class FileHandler {
 	}
 
 	/**
-	 * <p>Method for writting a new snif file within the created sniffing
-	 * directory. The file name and content is specified as a string input to the
-	 * method. The location where this file is saved is within the directory
-	 * jbrofuzz\sniffing\[session date]\ . </p>
-	 * <p>If the file exists, the content is simply appended to the end of the
-	 * file.</p>
-	 *
-	 * @param name String
-	 * @param content String
+	 * <p>
+	 * Method for writting a new snif file within the created sniffing directory.
+	 * The file name and content is specified as a string input to the method. The
+	 * location where this file is saved is within the directory
+	 * jbrofuzz\sniffing\[session date]\ .
+	 * </p>
+	 * <p>
+	 * If the file exists, the content is simply appended to the end of the file.
+	 * </p>
+	 * 
+	 * @param name
+	 *          String
+	 * @param content
+	 *          String
 	 */
 	public static void writeSnifFile(String name, String content) {
 		// Actually create the file
@@ -483,35 +536,51 @@ public class FileHandler {
 	}
 
 	/**
-	 * <p>Method for writting a new web directories file wtin the created
-	 * web-dir directory. The file name and content is specified as a string
-	 * input to the method. </p>
-	 * <p>The location where this file is saved is within the directory
-	 * jbrofuzz\web-dir\[session date]\ . </p>
-	 * <p>If the file exists, the content is simply appended to the end of the
-	 * file.</p>
-	 *
-	 * @param name String The name of the file
-	 * @param content String The content to be written to disk
+	 * <p>
+	 * Method for writting a new web directories file wtin the created web-dir
+	 * directory. The file name and content is specified as a string input to the
+	 * method.
+	 * </p>
+	 * <p>
+	 * The location where this file is saved is within the directory
+	 * jbrofuzz\web-dir\[session date]\ .
+	 * </p>
+	 * <p>
+	 * If the file exists, the content is simply appended to the end of the file.
+	 * </p>
+	 * 
+	 * @param name
+	 *          String The name of the file
+	 * @param content
+	 *          String The content to be written to disk
 	 */
 	public static void writeWebDirFile(String name, String content) {
 		createFile(name + ".csv", content, FileHandler.WEBD_FILE);
 	}
 
 	/**
-	 * <p>Method for returning the contents of a generator file as a
-	 * StringBuffer.</p>
-	 * <p>Comment lines starting with '#' will be ignored and not 
-	 * returned as contents of the StringBuffer.</p>
-	 * <p>This method, initially looks for the file in the same 
-	 * directory as that in which JBroFuzz has been run.</p>
-	 * <p>If this is unsuccessful, it attempts to load it from 
-	 * within the jar file.</p>
-	 * <p>If this is unsuccessful, it loads a default list from 
-	 * the Format file. This list is a lot shorter than the 
-	 * complete list of generators, inside the two files.</p>
+	 * <p>
+	 * Method for returning the contents of a generator file as a StringBuffer.
+	 * </p>
+	 * <p>
+	 * Comment lines starting with '#' will be ignored and not returned as
+	 * contents of the StringBuffer.
+	 * </p>
+	 * <p>
+	 * This method, initially looks for the file in the same directory as that in
+	 * which JBroFuzz has been run.
+	 * </p>
+	 * <p>
+	 * If this is unsuccessful, it attempts to load it from within the jar file.
+	 * </p>
+	 * <p>
+	 * If this is unsuccessful, it loads a default list from the Format file. This
+	 * list is a lot shorter than the complete list of generators, inside the two
+	 * files.
+	 * </p>
 	 * 
-	 * @param generatorFile String
+	 * @param generatorFile
+	 *          String
 	 * @return StringBuffer
 	 */
 	public static StringBuffer readGenerators(String generatorFile) {
@@ -519,7 +588,7 @@ public class FileHandler {
 		final int maxLines = 1024;
 		// The maximum line length
 		final int maxLineLength = 256;
-		
+
 		int line_counter = 0;
 		Vector file = new Vector();
 		BufferedReader in = null;
@@ -536,84 +605,82 @@ public class FileHandler {
 				if (!line.startsWith("#")) {
 					file.add(line);
 					line_counter++;
-				}				
+				}
 				line = in.readLine();
 			}
 			in.close();
-		}
-		catch (IOException e1) {
+		} catch (IOException e1) {
 			if (g != null) {
 				g.log("Generator file: " + generatorFile + " could not be found");
 			}
-		}
-		finally {
+		} finally {
 			try {
 				if (in != null) {
 					in.close();
 				}
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 			}
 		}
 		// Check the file size
 		file.trimToSize();
-    len = file.size();
-    
-    // If reading from directory fails, attempt to read from the jar file
-    if (len <= 0) {
-    	line_counter = 0;
-    	
-    	URL fileURL = ClassLoader.getSystemClassLoader().getResource(JBRFormat.FILE_GEN);
-    	
-    	try {
-    		URLConnection connection = fileURL.openConnection();				
-  			connection.connect();
-  			
-  			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-  			String line = in.readLine();
-  			line_counter++;
-  			while ((line != null) && (line_counter < maxLines)) {
-  				if (line.length() > maxLineLength) {
-  					line = line.substring(0, maxLineLength);
-  				}
-  				if (!line.startsWith("#")) {
-  					file.add(line);
-  					line_counter++;
-  				}				
-  				line = in.readLine();
-  			}
-  			in.close();
-  		}
-  		catch (IOException e1) {
-  			if (g != null) {
-  				g.log("Generator file (inside jar): " + fileURL.toString() + " could not be found");
-  			}
-  		}
-  		finally {
-  			try {
-  				if (in != null) {
-  					in.close();
-  				}
-  			}
-  			catch (IOException ex) {
-  			}
-  		}
-    }
-    //  Check the file size
+		len = file.size();
+
+		// If reading from directory fails, attempt to read from the jar file
+		if (len <= 0) {
+			line_counter = 0;
+
+			URL fileURL = ClassLoader.getSystemClassLoader().getResource(
+					JBRFormat.FILE_GEN);
+
+			try {
+				URLConnection connection = fileURL.openConnection();
+				connection.connect();
+
+				in = new BufferedReader(new InputStreamReader(connection
+						.getInputStream()));
+				String line = in.readLine();
+				line_counter++;
+				while ((line != null) && (line_counter < maxLines)) {
+					if (line.length() > maxLineLength) {
+						line = line.substring(0, maxLineLength);
+					}
+					if (!line.startsWith("#")) {
+						file.add(line);
+						line_counter++;
+					}
+					line = in.readLine();
+				}
+				in.close();
+			} catch (IOException e1) {
+				if (g != null) {
+					g.log("Generator file (inside jar): " + fileURL.toString()
+							+ " could not be found");
+				}
+			} finally {
+				try {
+					if (in != null) {
+						in.close();
+					}
+				} catch (IOException ex) {
+				}
+			}
+		}
+		// Check the file size
 		file.trimToSize();
-    len = file.size();
-    
-    // If reading from directory and jar fails define the generators from a default list
-    if (len <= 0) {
-      g.log("Loading default generator list");
-      String[] defaultArray = JBRFormat.DEFAULT_GENS.split("\n");
-      len = defaultArray.length;
-      file.setSize(len);
-      for (int x = 0; x < len; x++) {
-        file.add(x, defaultArray[x]);
-      }
-    }
-		
+		len = file.size();
+
+		// If reading from directory and jar fails define the generators from a
+		// default list
+		if (len <= 0) {
+			g.log("Loading default generator list");
+			String[] defaultArray = JBRFormat.DEFAULT_GENS.split("\n");
+			len = defaultArray.length;
+			file.setSize(len);
+			for (int x = 0; x < len; x++) {
+				file.add(x, defaultArray[x]);
+			}
+		}
+
 		StringBuffer output = new StringBuffer();
 		for (int x = 0; x < file.size(); x++) {
 			String s = (String) file.elementAt(x);
@@ -625,12 +692,16 @@ public class FileHandler {
 	}
 
 	/**
-	 * <p>Method for returning the contents of a directories file as a 
-	 * StringBuffer.</p>
-	 * <p>Comment lines starting with '#' will be ignored and not 
-	 * returned as contents of the StringBuffer.</p>
+	 * <p>
+	 * Method for returning the contents of a directories file as a StringBuffer.
+	 * </p>
+	 * <p>
+	 * Comment lines starting with '#' will be ignored and not returned as
+	 * contents of the StringBuffer.
+	 * </p>
 	 * 
-	 * @param directoriesFile String
+	 * @param directoriesFile
+	 *          String
 	 * @return StringBuffer
 	 */
 	public static StringBuffer readDirectories(String directoriesFile) {
@@ -640,7 +711,7 @@ public class FileHandler {
 		Vector file = new Vector();
 		BufferedReader in = null;
 		int len = 0;
-		//	 First, attempt to read the file from the same directory
+		// First, attempt to read the file from the same directory
 		try {
 			in = new BufferedReader(new FileReader(directoriesFile));
 			String line = in.readLine();
@@ -657,69 +728,67 @@ public class FileHandler {
 				line = in.readLine();
 			}
 			in.close();
-		}
-		catch (IOException e1) {
+		} catch (IOException e1) {
 			if (g != null) {
 				g.log("Directories file: " + directoriesFile + " could not be found");
 			}
-		}
-		finally {
+		} finally {
 			try {
 				if (in != null) {
 					in.close();
 				}
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 			}
 		}
 		// Check the file size
 		file.trimToSize();
 		len = file.size();
-		//	 If reading from directory fails, attempt to read from the jar file
-    if (len <= 0) {
-    	line_counter = 0;
-    	
-    	URL fileURL = ClassLoader.getSystemClassLoader().getResource(JBRFormat.FILE_DIR);
-    	
-    	try {
-    		URLConnection connection = fileURL.openConnection();				
-  			connection.connect();
-  			
-  			in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-  			String line = in.readLine();
-  			line_counter++;
-  			while ((line != null) && (line_counter < maxLines)) {
-  				if (line.length() > maxLineLength) {
-  					line = line.substring(0, maxLineLength);
-  				}
-  				if (!line.startsWith("#")) {
-  					file.add(line);
-  					line_counter++;
-  				}				
-  				line = in.readLine();
-  			}
-  			in.close();
-  		}
-  		catch (IOException e1) {
-  			if (g != null) {
-  				g.log("Directories file (inside jar): " + fileURL.toString() + " could not be found");
-  			}
-  		}
-  		finally {
-  			try {
-  				if (in != null) {
-  					in.close();
-  				}
-  			}
-  			catch (IOException ex) {
-  			}
-  		}
-    }
-    //  Check the file size
+		// If reading from directory fails, attempt to read from the jar file
+		if (len <= 0) {
+			line_counter = 0;
+
+			URL fileURL = ClassLoader.getSystemClassLoader().getResource(
+					JBRFormat.FILE_DIR);
+
+			try {
+				URLConnection connection = fileURL.openConnection();
+				connection.connect();
+
+				in = new BufferedReader(new InputStreamReader(connection
+						.getInputStream()));
+				String line = in.readLine();
+				line_counter++;
+				while ((line != null) && (line_counter < maxLines)) {
+					if (line.length() > maxLineLength) {
+						line = line.substring(0, maxLineLength);
+					}
+					if (!line.startsWith("#")) {
+						file.add(line);
+						line_counter++;
+					}
+					line = in.readLine();
+				}
+				in.close();
+			} catch (IOException e1) {
+				if (g != null) {
+					g.log("Directories file (inside jar): " + fileURL.toString()
+							+ " could not be found");
+				}
+			} finally {
+				try {
+					if (in != null) {
+						in.close();
+					}
+				} catch (IOException ex) {
+				}
+			}
+		}
+		// Check the file size
 		file.trimToSize();
-    len = file.size();
-    
-    // If reading from directory and jar fails define the generators from a default list
+		len = file.size();
+
+		// If reading from directory and jar fails define the generators from a
+		// default list
 		if (len <= 0) {
 			if (g != null) {
 				g.log("Loading default directories list");
@@ -741,16 +810,19 @@ public class FileHandler {
 		}
 		return output;
 	}
-	
+
 	/**
-	 * <p>Method for returning the name, as a String of the fuzzing 
-	 * directory used in the current session.</p>
+	 * <p>
+	 * Method for returning the name, as a String of the fuzzing directory used in
+	 * the current session.
+	 * </p>
+	 * 
 	 * @return
 	 */
 	public static String getFuzzDirName() {
 		return "/" + fuzzDirectory.getName() + "/";
 	}
-	
+
 	public static String getFuzzDirCanonicalPath() {
 		try {
 			return fuzzDirectory.getCanonicalPath();
@@ -766,7 +838,7 @@ public class FileHandler {
 			return "";
 		}
 	}
-	
+
 	public static String getWebDirCanonicalPath() {
 		try {
 			return webEnumDirectory.getCanonicalPath();
@@ -774,5 +846,5 @@ public class FileHandler {
 			return "";
 		}
 	}
-	
+
 }

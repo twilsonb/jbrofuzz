@@ -95,7 +95,7 @@ class Agent implements Runnable {
   private void log(final byte buffer[], final int nBytes) {
     synchronized (System.out) {
       final Date currentTime = new Date();
-      final String fileNumber = mJBroFuzz.getFrameWindow().getTCPSniffingPanel().
+      final String fileNumber = mJBroFuzz.getWindow().getTCPSniffingPanel().
                                 getCounter();
 
       FileHandler.writeSnifFile(fileNumber,
@@ -126,7 +126,7 @@ class Agent implements Runnable {
       row.append(" bytes)          ");
       row.append(dateFormat.format(currentTime));
       // Append a row in the table
-      mJBroFuzz.getFrameWindow().getTCPSniffingPanel().addRow(row.toString());
+      mJBroFuzz.getWindow().getTCPSniffingPanel().addRow(row.toString());
       // formatted string
       StringBuffer sb = new StringBuffer(nBytes);
       // formatted binary string

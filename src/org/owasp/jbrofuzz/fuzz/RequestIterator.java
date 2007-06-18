@@ -181,8 +181,8 @@ public class RequestIterator {
 	 *
 	 */
 	public void run() {
-		String target = mJBroFuzz.getFrameWindow().getFuzzingPanel().getTargetText();
-		String port = mJBroFuzz.getFrameWindow().getFuzzingPanel().getPortText();
+		String target = mJBroFuzz.getWindow().getFuzzingPanel().getTargetText();
+		String port = mJBroFuzz.getWindow().getFuzzingPanel().getPortText();
 		StringBuffer stout = getNext();
 		
 		if(stout.toString().equalsIgnoreCase("")) {
@@ -192,9 +192,9 @@ public class RequestIterator {
 		while ( (! stout.toString().equalsIgnoreCase("")) && (! generatorStopped) ) {
 
 			final Date currentTime = new Date();
-			String filename = mJBroFuzz.getFrameWindow().getFuzzingPanel().getCounter(true);
+			String filename = mJBroFuzz.getWindow().getFuzzingPanel().getCounter(true);
 
-			mJBroFuzz.getFrameWindow().getFuzzingPanel().addRowInOuputTable(
+			mJBroFuzz.getWindow().getFuzzingPanel().addRowInOuputTable(
 					filename + "          " + 
 					target + ":" + port + "          " + 
 					type + "          " + 
