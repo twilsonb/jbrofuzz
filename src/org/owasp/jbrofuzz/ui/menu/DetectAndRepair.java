@@ -25,22 +25,25 @@
  */
 package org.owasp.jbrofuzz.ui.menu;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
-import java.util.regex.*;
-import java.net.*;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker3;
+import javax.swing.WindowConstants;
 
-import javax.swing.*;
-import javax.swing.text.*;
-
-import org.owasp.jbrofuzz.version.JBRFormat;
-import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.io.*;
-
-import com.Ostermiller.util.Browser;
+import org.owasp.jbrofuzz.version.JBRFormat;
 /**
  * <p>The JPanel used for detecting and repairing.</p>
  *
@@ -49,6 +52,10 @@ import com.Ostermiller.util.Browser;
  */
 public class DetectAndRepair extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -739329653784884215L;
 	// The JPanels inside the main window
 	private JLabel mainLabel;
 	// The start/stop and close button
@@ -58,119 +65,116 @@ public class DetectAndRepair extends JDialog {
 	private static final int y = 300;
 	// The Swing Worker used
 	private SwingWorker3 worker;
-	// The boolean checking for a new version
-	private boolean newVersionExists;
-
-	public DetectAndRepair(JFrame parent) {
+	public DetectAndRepair(final JFrame parent) {
 		super(parent, " Detect And Repair ", true);
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		this.setLayout(new BorderLayout());
 		this.setFont(new Font ("SansSerif", Font.PLAIN, 12));
 
-		newVersionExists = false;
+		this.mainLabel = new JLabel ("<HTML>Select \"Detect\" to run a diagnostic check on JBroFuzz</HTML>", ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
 
-		mainLabel = new JLabel ("<HTML>Select \"Detect\" to run a diagnostic check on JBroFuzz</HTML>", ImageCreator.OWASP_IMAGE, JLabel.LEFT);
-
-		this.getContentPane().add(mainLabel, BorderLayout.CENTER);
+		this.getContentPane().add(this.mainLabel, BorderLayout.CENTER);
 
 
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
 
 		//	Bottom buttons
-		startStop = new JButton("Detect");
-		startStop.setToolTipText("Detect any potential problems with JBroFuzz");
+		this.startStop = new JButton("Detect");
+		this.startStop.setToolTipText("Detect any potential problems with JBroFuzz");
 
-		startStop.addActionListener(new ActionListener() {
+		this.startStop.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				worker = new SwingWorker3() {
+				DetectAndRepair.this.worker = new SwingWorker3() {
+					@Override
 					public Object construct() {
-						startCheck();
+						DetectAndRepair.this.startCheck();
 						return "check-repair-return";
 					}
 
+					@Override
 					public void finished() {
-						finishCheck();
+						DetectAndRepair.this.finishCheck();
 					}
 				};
-				worker.start();
+				DetectAndRepair.this.worker.start();
 			}
 		});
-		buttonPanel.add (startStop);
+		buttonPanel.add (this.startStop);
 
-		close = new JButton("Close");
-		close.setToolTipText("Close this window");
+		this.close = new JButton("Close");
+		this.close.setToolTipText("Close this window");
 
-		close.addActionListener(new ActionListener() {
+		this.close.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						stopCheck();
-						dispose();
+						DetectAndRepair.this.stopCheck();
+						DetectAndRepair.this.dispose();
 					}
 				});       
 			}
 		});
-		buttonPanel.add(close);
+		buttonPanel.add(this.close);
 
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		//		Global frame issues
-		setLocation(Math.abs((parent.getWidth() / 2) - (x / 2 - 100) ), 
-				Math.abs((parent.getHeight() / 2) - (y / 2) + 100 ));
-		setSize(x, y);
-		setResizable(false);
-		setVisible(true);		
+		this.setLocation(Math.abs((parent.getWidth() / 2) - (DetectAndRepair.x / 2 - 100) ), 
+				Math.abs((parent.getHeight() / 2) - (DetectAndRepair.y / 2) + 100 ));
+		this.setSize(DetectAndRepair.x, DetectAndRepair.y);
+		this.setResizable(false);
+		this.setVisible(true);		
 
 	}
 
 	private void startCheck() {
-		if(!startStop.isEnabled()) {
+		if(!this.startStop.isEnabled()) {
 			return;
 		}
-		startStop.setText("Stop");
-		close.setEnabled(false);
+		this.startStop.setText("Stop");
+		this.close.setEnabled(false);
 
-		StringBuffer output = new StringBuffer();
+		final StringBuffer output = new StringBuffer();
 		output.append("<HTML>&nbsp;&nbsp;&nbsp;Checking for necessary files...&nbsp;&nbsp;<BR>");
-		mainLabel.setText(output.toString() + "</HTML>");
+		this.mainLabel.setText(output.toString() + "</HTML>");
 		
 		output.append("<BR>&nbsp;&nbsp;&nbsp;Checking file&nbsp;" + JBRFormat.FILE_GEN + "...&nbsp;&nbsp;");
-		mainLabel.setText(output.toString() + "</HTML>");
+		this.mainLabel.setText(output.toString() + "</HTML>");
 		
-		File gFile = new File(JBRFormat.FILE_GEN);
+		final File gFile = new File(JBRFormat.FILE_GEN);
 		if(gFile.exists()) {
 			output.append("<B>Success</B>");
 		} else {
 			output.append("<B>Failure</B>");
 		}
-		mainLabel.setText(output.toString() + "</HTML>");
+		this.mainLabel.setText(output.toString() + "</HTML>");
 		
 		output.append("<BR>&nbsp;&nbsp;&nbsp;Checking  file&nbsp;" + JBRFormat.FILE_DIR + "...&nbsp;&nbsp;");
-		mainLabel.setText(output.toString() + "</HTML>");
+		this.mainLabel.setText(output.toString() + "</HTML>");
 		
-		File wFile = new File(JBRFormat.FILE_DIR);
+		final File wFile = new File(JBRFormat.FILE_DIR);
 		if(wFile.exists()) {
 			output.append("<B>Success</B><BR>");
 		} else {
 			output.append("<B>Failure</B><BR>");
 		}
-		mainLabel.setText(output.toString() + "</HTML>");
+		this.mainLabel.setText(output.toString() + "</HTML>");
 	}
 
 	private void finishCheck() {
-		if(!startStop.isEnabled()) {
+		if(!this.startStop.isEnabled()) {
 			return;
 		}
-		close.setEnabled(true);
+		this.close.setEnabled(true);
 
-		startStop.setText("Finish");
-		startStop.removeAll();
-		startStop.addActionListener(new ActionListener() {
+		this.startStop.setText("Finish");
+		this.startStop.removeAll();
+		this.startStop.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						startStop.setEnabled(false);
+						DetectAndRepair.this.startStop.setEnabled(false);
 					}
 				});       
 			}
@@ -178,10 +182,10 @@ public class DetectAndRepair extends JDialog {
 	}
 
 	private void stopCheck() {
-		if(!startStop.isEnabled()) {
+		if(!this.startStop.isEnabled()) {
 			return;
 		}
-		close.setEnabled(true);
+		this.close.setEnabled(true);
 	}
 
 

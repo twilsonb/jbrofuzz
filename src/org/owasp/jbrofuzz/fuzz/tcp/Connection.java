@@ -25,8 +25,13 @@
  */
 package org.owasp.jbrofuzz.fuzz.tcp;
 
-import java.io.*;
-import java.net.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 /**
  * Description: The class responsible for making the connection for the
  * purposes of fuzzing through the corresponding socket.
@@ -56,91 +61,91 @@ public class Connection {
    * @param port String
    * @param message String
    */
-  public Connection(String address, String port, StringBuffer message) {
+  public Connection(final String address, final String port, final StringBuffer message) {
 
-    String conAddress = address;
-    conMessage = message;
+    final String conAddress = address;
+    this.conMessage = message;
     int conPort = 0;
-    byte[] recv = new byte[RECV_BUF_SIZE];
+    final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
 
     // Check the connection port value
     try {
       conPort = Integer.parseInt(port);
     }
-    catch (NumberFormatException e1) {
+    catch (final NumberFormatException e1) {
       conPort = 0;
     }
     if (!((conPort > 0) && (conPort < 65536))) {
-      reply = "Port has to be within range (0,65536)\n";
+      this.reply = "Port has to be within range (0,65536)\n";
       return;
     }
     // Create the Socket to the specified address and port
     try {
-      socket = new Socket();
-      socket.bind(null);
-      socket.connect(new InetSocketAddress(conAddress, conPort), 5000);
+      this.socket = new Socket();
+      this.socket.bind(null);
+      this.socket.connect(new InetSocketAddress(conAddress, conPort), 5000);
 
-      socket.setSendBufferSize(SEND_BUF_SIZE);
-      socket.setReceiveBufferSize(RECV_BUF_SIZE);
-      socket.setSoTimeout(30000);
+      this.socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+      this.socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
+      this.socket.setSoTimeout(30000);
     }
-    catch (UnknownHostException e) {
-      reply = "The IP address of the host could not be determined : " +
+    catch (final UnknownHostException e) {
+      this.reply = "The IP address of the host could not be determined : " +
               e.getMessage() + "\n";
     }
-    catch (IOException e) {
-      reply = "An IO Error occured when creating the socket : " + e.getMessage() +
+    catch (final IOException e) {
+      this.reply = "An IO Error occured when creating the socket : " + e.getMessage() +
               "\n";
     }
     // Assign the input stream
     try {
-      in_stream = socket.getInputStream();
+      this.in_stream = this.socket.getInputStream();
     }
-    catch (IOException e) {
-      reply = "An IO Error occured when creating the input stream : " +
+    catch (final IOException e) {
+      this.reply = "An IO Error occured when creating the input stream : " +
               e.getMessage() + "\n";
     }
     // Assign the output stream
     try {
-      out_stream = socket.getOutputStream();
+      this.out_stream = this.socket.getOutputStream();
     }
-    catch (IOException e) {
-      reply = "An IO Error occured when creating the output stream : " +
+    catch (final IOException e) {
+      this.reply = "An IO Error occured when creating the output stream : " +
               e.getMessage() + "\n";
     }
     // Write to the output stream
     try {
-      out_stream.write(conMessage.toString().getBytes());
+      this.out_stream.write(this.conMessage.toString().getBytes());
     }
-    catch (IOException e) {
-      reply =
+    catch (final IOException e) {
+      this.reply =
         "An IO Error occured when attempting to write to the output stream : " +
         e.getMessage() + "\n";
     }
     // Really don't like catching null pointer exceptions...
-    catch (NullPointerException e) {
-      reply = "The output stream is null : " + e.getMessage();
+    catch (final NullPointerException e) {
+      this.reply = "The output stream is null : " + e.getMessage();
       return;
     }
     try {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      final ByteArrayOutputStream baos = new ByteArrayOutputStream();
       int got;
-      while ((got = in_stream.read(recv)) > -1) {
+      while ((got = this.in_stream.read(recv)) > -1) {
         baos.write(recv, 0, got);
       }
-      byte[] allbytes = baos.toByteArray();
+      final byte[] allbytes = baos.toByteArray();
 
-      reply = new String(allbytes);
+      this.reply = new String(allbytes);
     }
-    catch (IOException e) {
+    catch (final IOException e) {
 
     }
     // Close the socket
     try {
-      socket.close();
+      this.socket.close();
     }
-    catch (IOException e) {
-      reply = "An IO Error occured when attempting to close the socket : " +
+    catch (final IOException e) {
+      this.reply = "An IO Error occured when attempting to close the socket : " +
               e.getMessage() + "\n";
     }
   }
@@ -152,7 +157,7 @@ public class Connection {
    * @return String
    */
   public String getReply() {
-    return reply;
+    return this.reply;
   }
 
   /**
@@ -160,6 +165,6 @@ public class Connection {
    * @return StringBuffer
    */
   public StringBuffer getMessage() {
-    return conMessage;
+    return this.conMessage;
   }
 }

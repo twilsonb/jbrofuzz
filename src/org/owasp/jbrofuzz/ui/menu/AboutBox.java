@@ -25,16 +25,28 @@
  */
 package org.owasp.jbrofuzz.ui.menu;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.*;
-
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.*;
+import java.net.URL;
 
-import org.owasp.jbrofuzz.ui.util.*;
-import org.owasp.jbrofuzz.version.*;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import org.owasp.jbrofuzz.version.JBRFormat;
 /**
  * <p>The about box used in the FrameWindow.</p>
  * 
@@ -43,6 +55,10 @@ import org.owasp.jbrofuzz.version.*;
  */
 public class AboutBox extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7515292150164781290L;
 	public static int ABOUT = 0;
 	public static int LICENSE = 1;
 	public static int DISCLAIMER = 2;
@@ -60,69 +76,69 @@ public class AboutBox extends JDialog {
 	 * <p>The main constructor for the AboutBox. This method is private as it is being called through 
 	 * the singleton method get instance.</p>
 	 */
-	public AboutBox(JFrame parent, int tab) {
+	public AboutBox(final JFrame parent, final int tab) {
 		super(parent, " About ", true);
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		
 		this.setLayout(new BorderLayout());
 		this.setFont(new Font ("SansSerif", Font.PLAIN, 12));
 		
-		URL licenseURL = ClassLoader.getSystemClassLoader().getResource("LICENSE/gpl-license.txt");
-		URL	disclaimerURL = ClassLoader.getSystemClassLoader().getResource("LICENSE/NOTICE.txt");
+		final URL licenseURL = ClassLoader.getSystemClassLoader().getResource("LICENSE/gpl-license.txt");
+		final URL	disclaimerURL = ClassLoader.getSystemClassLoader().getResource("LICENSE/NOTICE.txt");
 
 		// The about editor label
-		JLabel about = new JLabel (JBRFormat.ABOUTTEXT, ImageCreator.OWASP_IMAGE, JLabel.LEFT);
+		final JLabel about = new JLabel (JBRFormat.ABOUTTEXT, ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
 		
 		// The license editor pane
 		JEditorPane license;
 		try {
 			license = new JEditorPane(licenseURL);
 			
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			license = new JEditorPane();
 			license.setText("GPL Licence file cannot be found");
 		}
 		license.setEditable(false);
 
-		JScrollPane lcsScrollPane = new JScrollPane(license);
+		final JScrollPane lcsScrollPane = new JScrollPane(license);
 		lcsScrollPane.setVerticalScrollBarPolicy(20);
 		lcsScrollPane.setHorizontalScrollBarPolicy(30);
 
 		// The disclaimer editor label
-		JLabel disclaimer = new JLabel( JBRFormat.DISCLAIMER, ImageCreator.OWASP_IMAGE, JLabel.LEFT);
+		final JLabel disclaimer = new JLabel( JBRFormat.DISCLAIMER, ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
 		
 		// The acknoledgement editor pane
 		JEditorPane acknoledgements;
 		try {
 			acknoledgements = new JEditorPane(disclaimerURL);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			acknoledgements = new JEditorPane();
 			acknoledgements.setText("Acknoledgements file cannot be found");
 		}
 		acknoledgements.setEditable(false);
 
-		JScrollPane ackScrollPane = new JScrollPane(acknoledgements);
+		final JScrollPane ackScrollPane = new JScrollPane(acknoledgements);
 		ackScrollPane.setVerticalScrollBarPolicy(20);
 		ackScrollPane.setHorizontalScrollBarPolicy(30);		
 
 		// The tabbed pane holding all the different tabs
-		tabbedPane = new JTabbedPane();
-		tabbedPane.add(about, " About ");
-		tabbedPane.add(lcsScrollPane, " License ");
-		tabbedPane.add(disclaimer, " Disclaimer ");
-		tabbedPane.add(ackScrollPane, " Acknoledgements ");
-		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		this.tabbedPane = new JTabbedPane();
+		this.tabbedPane.add(about, " About ");
+		this.tabbedPane.add(lcsScrollPane, " License ");
+		this.tabbedPane.add(disclaimer, " Disclaimer ");
+		this.tabbedPane.add(ackScrollPane, " Acknoledgements ");
+		this.getContentPane().add(this.tabbedPane, BorderLayout.CENTER);
 		// Set the tab to be displayed
-		setTab(tab);
+		this.setTab(tab);
 		// OK Button
-		ok = new JButton("OK");
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
-		buttonPanel.add (ok);
-		ok.addActionListener(new ActionListener() {
+		this.ok = new JButton("OK");
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+		buttonPanel.add (this.ok);
+		this.ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						dispose();
+						AboutBox.this.dispose();
 					}
 				});       
 			}
@@ -130,20 +146,20 @@ public class AboutBox extends JDialog {
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		setLocation(Math.abs((parent.getWidth() / 2) - (x / 2 - 100) ), 
-				Math.abs((parent.getHeight() / 2) - (y / 2) + 100 ));
-		setSize(x, y);
-		setResizable(false);
-		setVisible(true);		
+		this.setLocation(Math.abs((parent.getWidth() / 2) - (AboutBox.x / 2 - 100) ), 
+				Math.abs((parent.getHeight() / 2) - (AboutBox.y / 2) + 100 ));
+		this.setSize(AboutBox.x, AboutBox.y);
+		this.setResizable(false);
+		this.setVisible(true);		
 	}
 	
-	private void setTab(int tab) {
+	private void setTab(final int tab) {
 		switch (tab) {
-        case 0:  tabbedPane.setSelectedIndex(ABOUT); break;
-        case 1:  tabbedPane.setSelectedIndex(LICENSE); break;
-        case 2:  tabbedPane.setSelectedIndex(DISCLAIMER); break;
-        case 3:  tabbedPane.setSelectedIndex(ACKNOWLEDGEMENTS); break;
-        default: tabbedPane.setSelectedIndex(0); break;
+        case 0:  this.tabbedPane.setSelectedIndex(AboutBox.ABOUT); break;
+        case 1:  this.tabbedPane.setSelectedIndex(AboutBox.LICENSE); break;
+        case 2:  this.tabbedPane.setSelectedIndex(AboutBox.DISCLAIMER); break;
+        case 3:  this.tabbedPane.setSelectedIndex(AboutBox.ACKNOWLEDGEMENTS); break;
+        default: this.tabbedPane.setSelectedIndex(0); break;
     }
 	}
 }

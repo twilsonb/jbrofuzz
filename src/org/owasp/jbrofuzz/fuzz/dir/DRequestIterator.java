@@ -25,18 +25,28 @@
  */
 package org.owasp.jbrofuzz.fuzz.dir;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.prefs.Preferences;
 
-import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.contrib.ssl.*;
-import org.apache.commons.httpclient.methods.*;
-import org.apache.commons.httpclient.params.*;
-import org.apache.commons.httpclient.protocol.*;
-import org.apache.commons.httpclient.util.*;
-import org.owasp.jbrofuzz.io.*;
-import org.owasp.jbrofuzz.ui.*;
-import org.owasp.jbrofuzz.version.*;
+import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.params.HttpConnectionParams;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory;
+import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.commons.httpclient.util.URIUtil;
+import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.JBRTime;
 /**
  * <p>Class for generating the recursive directory requests.</p>
  * <p>Once the object is instantiated, the run method should be 
@@ -71,21 +81,21 @@ public class DRequestIterator {
 	 * @param directories String
 	 * @param port int
 	 */
-	public DRequestIterator(JBRFrame m, String url, String directories,
-			String port) {
+	public DRequestIterator(final JBRFrame m, final String url, final String directories,
+			final String port) {
 		this.m = m;
 		this.url = url;
 		this.port = 0;
 		this.directories = directories.split("\n");
 		this.responses = new String[directories.length()];
 		this.stopped = false;
-		i = 0;
+		this.i = 0;
 
 		// Check the port
 		try {
 			this.port = Integer.parseInt(port);
 		}
-		catch (NumberFormatException e1) {
+		catch (final NumberFormatException e1) {
 			this.port = 0;
 			m.log("Web Directories Panel: Specify a valid port: \"" + port + "\"");
 		}
@@ -98,14 +108,14 @@ public class DRequestIterator {
 
 			// For https, allow self-signed certificates
 			if (this.url.startsWith("https://")) {
-				Protocol easyhttps = new Protocol("https",
+				final Protocol easyhttps = new Protocol("https",
 						new EasySSLProtocolSocketFactory(),
 						this.port);
 				Protocol.registerProtocol("https", easyhttps);
 			}
 			// For http, just show affection
 			if (this.url.startsWith("http://")) {
-				Protocol easyhttp = new Protocol("http",
+				final Protocol easyhttp = new Protocol("http",
 						new DefaultProtocolSocketFactory(),
 						this.port);
 				Protocol.registerProtocol("http", easyhttp);
@@ -118,147 +128,147 @@ public class DRequestIterator {
 	 */
 	public void run() {
 		// Check for a valid URL
-		if (url.equalsIgnoreCase("")) {
+		if (this.url.equalsIgnoreCase("")) {
 			return;
 		}
-		if (url.contains(" ")) {
+		if (this.url.contains(" ")) {
 			return;
 		}
-		if ((port < 1) || (port > 65536)) {
+		if ((this.port < 1) || (this.port > 65536)) {
 			return;
 		}
 
-		for (i = 0; i < directories.length; i++) {
-			if (stopped) {
+		for (this.i = 0; this.i < this.directories.length; this.i++) {
+			if (this.stopped) {
 				return;
 			}
 
 			String currentURI = "";
 			try {
-				currentURI = url + URIUtil.encodePath(directories[i]);
+				currentURI = this.url + URIUtil.encodePath(this.directories[this.i]);
 			}
-			catch (URIException ex) {
+			catch (final URIException ex) {
 				currentURI = "";
-				m.log("Could not encode the URI: " + url + directories[i]);
+				this.m.log("Could not encode the URI: " + this.url + this.directories[this.i]);
 			}
 
 			// Checks...
 			if (currentURI.equalsIgnoreCase("")) {
 				return;
 			}
-			if ((port <= 0) || (port > 65535)) {
+			if ((this.port <= 0) || (this.port > 65535)) {
 				return;
 			}
 
-			HttpClient client = new HttpClient();
+			final HttpClient client = new HttpClient();
 			client.getParams().setParameter(HttpConnectionParams.CONNECTION_TIMEOUT,
 					Integer.valueOf(10000));
 
-			GetMethod method = new GetMethod(currentURI);
+			final GetMethod method = new GetMethod(currentURI);
 			method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
 					new DefaultHttpMethodRetryHandler(1, false));
 			method.setFollowRedirects(true);
 			method.setDoAuthentication(true);
 
 			try {
-				responses[i] = i + "\n";
-				responses[i] += currentURI + "\n";
+				this.responses[this.i] = this.i + "\n";
+				this.responses[this.i] += currentURI + "\n";
 				int statusCode = 0;
 				//
 				statusCode = client.executeMethod(method);
 				//
-				responses[i] += statusCode + "\n";
-				responses[i] += method.getStatusText() + "\n";
+				this.responses[this.i] += statusCode + "\n";
+				this.responses[this.i] += method.getStatusText() + "\n";
 
 				if (statusCode == HttpStatus.SC_OK) {
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					InputStream in = method.getResponseBodyAsStream();
+					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					final InputStream in = method.getResponseBodyAsStream();
 
-					byte[] buff = new byte[65535];
+					final byte[] buff = new byte[65535];
 					int got;
 					while ((got = in.read(buff)) > -1) {
 						baos.write(buff, 0, got);
 					}
-					byte[] allbytes = baos.toByteArray();
+					final byte[] allbytes = baos.toByteArray();
 
 					String results = null;
 					try {
 						results = new String(allbytes, method.getResponseCharSet());
 					}
-					catch (UnsupportedEncodingException ex1) {
-						m.log("Web Directories: Unsupported Character Encoding");
+					catch (final UnsupportedEncodingException ex1) {
+						this.m.log("Web Directories: Unsupported Character Encoding");
 						results = "";
 					}
 
 					// Check for comments
 					if (results.contains("<!--")) {
-						responses[i] += "Yes\n";
+						this.responses[this.i] += "Yes\n";
 					}
 					else {
-						responses[i] += "No\n";
+						this.responses[this.i] += "No\n";
 					}
 					// Check for scripts
 					if ((results.contains("<script")) || (results.contains("<SCRIPT"))) {
-						responses[i] += "Yes\n";
+						this.responses[this.i] += "Yes\n";
 					}
 					else {
-						responses[i] += "No\n";
+						this.responses[this.i] += "No\n";
 					}
 				}
 				// If no ok response has come back just append comments and scripts
 				else {
-					responses[i] += "No\n";
-					responses[i] += "No\n";
+					this.responses[this.i] += "No\n";
+					this.responses[this.i] += "No\n";
 				}
 			}
-			catch (HttpException e) {
-				responses[i] = i + "\n";
-				responses[i] += currentURI + "\n";
-				responses[i] += "000" + "\n";
-				responses[i] += "Fatal protocol violation" + "\n";
-				responses[i] += " \n";
-				responses[i] += " \n";
+			catch (final HttpException e) {
+				this.responses[this.i] = this.i + "\n";
+				this.responses[this.i] += currentURI + "\n";
+				this.responses[this.i] += "000" + "\n";
+				this.responses[this.i] += "Fatal protocol violation" + "\n";
+				this.responses[this.i] += " \n";
+				this.responses[this.i] += " \n";
 				// Bomb out...
-				Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+				final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 				boolean continueOnError = prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR, false);
 				if (!continueOnError) {
-					stop();
+					this.stop();
 				}        
 			}
-			catch (IOException e) {
-				responses[i] = i + "\n";
-				responses[i] += currentURI + "\n";
-				responses[i] += "000" + "\n";
-				responses[i] += "Fatal transport error" + "\n";
-				responses[i] += " \n";
-				responses[i] += " \n";
+			catch (final IOException e) {
+				this.responses[this.i] = this.i + "\n";
+				this.responses[this.i] += currentURI + "\n";
+				this.responses[this.i] += "000" + "\n";
+				this.responses[this.i] += "Fatal transport error" + "\n";
+				this.responses[this.i] += " \n";
+				this.responses[this.i] += " \n";
 				// Bomb out...
-				Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+				final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 				boolean continueOnError = prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR, false);
 				if (!continueOnError) {
-					stop();
+					this.stop();
 				}
 			}
 			finally {
 				method.releaseConnection();
 			}
 			// Add a row to the displaying table
-			m.getWebDirectoriesPanel().addRow(responses[i]);
+			this.m.getWebDirectoriesPanel().addRow(this.responses[this.i]);
 			// Create a String to be written to file
-			StringBuffer outToFile = new StringBuffer();
+			final StringBuffer outToFile = new StringBuffer();
 			outToFile.append(JBRTime.dateAndTime());
 			// String outToFile = Time.dateAndTime();
-			final String[] tempArray = responses[i].split("\n");
-			for (int m = 0; m < tempArray.length; m++) {
-				outToFile.append("," + tempArray[m]);
+			final String[] tempArray = this.responses[this.i].split("\n");
+			for (final String element : tempArray) {
+				outToFile.append("," + element);
 			}
 			// Write the file
-			FileHandler.writeWebDirFile(m.getWebDirectoriesPanel().getSessionNumber(),
+			FileHandler.writeWebDirFile(this.m.getWebDirectoriesPanel().getSessionNumber(),
 					outToFile.toString());
 			// Update the progress bar
-			final double percentage = 100 * ((double) (i + 1)) /
-			((double) directories.length);
-			m.getWebDirectoriesPanel().setProgressBar((int) percentage);
+			final double percentage = 100 * ((double) (this.i + 1)) /
+			(this.directories.length);
+			this.m.getWebDirectoriesPanel().setProgressBar((int) percentage);
 		}
 	}
 
@@ -266,7 +276,7 @@ public class DRequestIterator {
 	 * Stop the Request Iterator, if it currently running.
 	 */
 	public void stop() {
-		stopped = true;
+		this.stopped = true;
 	}
 
 	/**
@@ -274,6 +284,6 @@ public class DRequestIterator {
 	 * @return boolean
 	 */
 	public boolean isStopped() {
-		return stopped;
+		return this.stopped;
 	}
 }

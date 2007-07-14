@@ -25,18 +25,34 @@
  */
 package org.owasp.jbrofuzz.ui.menu;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.prefs.Preferences;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeSelectionModel;
 
-import javax.swing.tree.*;
-
-import java.util.prefs.*;
-
-import org.owasp.jbrofuzz.version.*;
-import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.version.JBRFormat;
 /**
  * <p>The preferences panel. This is the panel the user sees when 
  * selecting Options -> Preferences from the main menu bar.</p>
@@ -46,6 +62,10 @@ import org.owasp.jbrofuzz.io.*;
  */
 public class JBRPreferences extends JDialog implements TreeSelectionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7783729547247101981L;
 	// The buttons
 	private JButton ok;
 	// The tree
@@ -63,73 +83,73 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 	/**
 	 * The main constructor for the Preferences Window.
 	 */
-	public JBRPreferences(JFrame parent) {
+	public JBRPreferences(final JFrame parent) {
 		super(parent, " Preferences ", true);
 		this.setLayout(new BorderLayout());
 		this.setFont(new Font ("SansSerif", Font.PLAIN, 12));
 		// Set the preferences object access
-		prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+		this.prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 		// Create the nodes
-		DefaultMutableTreeNode top = new DefaultMutableTreeNode("Preferences");
-		createNodes(top);
+		final DefaultMutableTreeNode top = new DefaultMutableTreeNode("Preferences");
+		this.createNodes(top);
 
 		// Create a tree that allows one selection at a time.
-		tree = new JTree(top);
-		tree.getSelectionModel().setSelectionMode
+		this.tree = new JTree(top);
+		this.tree.getSelectionModel().setSelectionMode
 		(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		//Listen for when the selection changes.
-		tree.addTreeSelectionListener(this);
+		this.tree.addTreeSelectionListener(this);
 
 		// Create the scroll pane and add the tree to it. 
-		JScrollPane treeView = new JScrollPane(tree);
+		final JScrollPane treeView = new JScrollPane(this.tree);
 
 		// Create the preferences panel
-		preferences = new JPanel();
-		preferences.setLayout(new BoxLayout(preferences, BoxLayout.PAGE_AXIS));
-		initPreferences();
+		this.preferences = new JPanel();
+		this.preferences.setLayout(new BoxLayout(this.preferences, BoxLayout.PAGE_AXIS));
+		this.initPreferences();
 
 		// Create the fuzzing panel
-		fuzzing = new JPanel();
-		fuzzing.setLayout(new BoxLayout(fuzzing, BoxLayout.PAGE_AXIS));
-		initFuzzing();
+		this.fuzzing = new JPanel();
+		this.fuzzing.setLayout(new BoxLayout(this.fuzzing, BoxLayout.PAGE_AXIS));
+		this.initFuzzing();
 
 		// Create the directories panel
-		directories = new JPanel();
-		directories.setLayout(new BoxLayout(directories, BoxLayout.PAGE_AXIS));
-		initDirectories();
+		this.directories = new JPanel();
+		this.directories.setLayout(new BoxLayout(this.directories, BoxLayout.PAGE_AXIS));
+		this.initDirectories();
 
 		// Create the sniffing panel
-		sniffing = new JPanel();
-		sniffing.setLayout(new BoxLayout(sniffing, BoxLayout.PAGE_AXIS));
-		initSniffing();
+		this.sniffing = new JPanel();
+		this.sniffing.setLayout(new BoxLayout(this.sniffing, BoxLayout.PAGE_AXIS));
+		this.initSniffing();
 
 		// Create the top split pane, showing the treeView and the Preferences
-		splitPane  = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		splitPane.setLeftComponent(treeView);
-		splitPane.setRightComponent(preferences);
-		splitPane.setOneTouchExpandable(true);
-		splitPane.setDividerLocation(150);
+		this.splitPane  = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		this.splitPane.setLeftComponent(treeView);
+		this.splitPane.setRightComponent(this.preferences);
+		this.splitPane.setOneTouchExpandable(true);
+		this.splitPane.setDividerLocation(150);
 
-		Dimension minimumSize = new Dimension(x / 4, y / 2);
-		preferences.setMinimumSize(minimumSize);
+		final Dimension minimumSize = new Dimension(JBRPreferences.x / 4, JBRPreferences.y / 2);
+		this.preferences.setMinimumSize(minimumSize);
 		treeView.setMinimumSize(minimumSize);
-		splitPane.setDividerLocation(100);
-		splitPane.setPreferredSize(new Dimension(x, y));
+		this.splitPane.setDividerLocation(100);
+		this.splitPane.setPreferredSize(new Dimension(JBRPreferences.x, JBRPreferences.y));
 
 		//Add the split pane to this panel
-		this.getContentPane().add(splitPane, BorderLayout.CENTER);
+		this.getContentPane().add(this.splitPane, BorderLayout.CENTER);
 
 		// Bottom button
-		ok = new JButton("OK");
+		this.ok = new JButton("OK");
 
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
-		buttonPanel.add (ok);
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+		buttonPanel.add (this.ok);
 
-		ok.addActionListener(new ActionListener() {
+		this.ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						dispose();
+						JBRPreferences.this.dispose();
 					}
 				});       
 			}
@@ -138,14 +158,14 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		setLocation(Math.abs((parent.getWidth() / 2) - (x / 2 - 100) ), 
-				Math.abs((parent.getHeight() / 2) - (y / 2) + 100 ));
-		setSize(x, y);
-		setResizable(false);
-		setVisible(true);		
+		this.setLocation(Math.abs((parent.getWidth() / 2) - (JBRPreferences.x / 2 - 100) ), 
+				Math.abs((parent.getHeight() / 2) - (JBRPreferences.y / 2) + 100 ));
+		this.setSize(JBRPreferences.x, JBRPreferences.y);
+		this.setResizable(false);
+		this.setVisible(true);		
 	}
 
-	private void createNodes(DefaultMutableTreeNode top) {
+	private void createNodes(final DefaultMutableTreeNode top) {
 		DefaultMutableTreeNode node = null;
 		DefaultMutableTreeNode leaf = null;
 
@@ -160,45 +180,45 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 	}
 
 	private void initPreferences() {
-		JLabel header = new JLabel("<HTML><H3>&nbsp;Preferences</H3></HTML>");
-		preferences.add(header);
-		preferences.add(Box.createRigidArea(new Dimension(0,10)));
+		final JLabel header = new JLabel("<HTML><H3>&nbsp;Preferences</H3></HTML>");
+		this.preferences.add(header);
+		this.preferences.add(Box.createRigidArea(new Dimension(0,10)));
 		
-		JLabel firstBox = new JLabel("<html>" + System.getProperty("user.dir") + "</html>");
+		final JLabel firstBox = new JLabel("<html>" + System.getProperty("user.dir") + "</html>");
 		firstBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
 	      createTitledBorder(" Current Working Directory "),
 	      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		preferences.add(firstBox);
-		preferences.add(Box.createRigidArea(new Dimension(0,10)));
+		this.preferences.add(firstBox);
+		this.preferences.add(Box.createRigidArea(new Dimension(0,10)));
 	}
 
 	private void initFuzzing() {
-		JLabel header = new JLabel("<HTML><H3>&nbsp;Fuzzing</H3></HTML>");
-		fuzzing.add(header);
+		final JLabel header = new JLabel("<HTML><H3>&nbsp;Fuzzing</H3></HTML>");
+		this.fuzzing.add(header);
 		header.add(Box.createRigidArea(new Dimension(0,10)));
 		
-		JLabel secondBox = new JLabel("<html>" + FileHandler.getFuzzDirCanonicalPath()  + "</html>");
+		final JLabel secondBox = new JLabel("<html>" + FileHandler.getFuzzDirCanonicalPath()  + "</html>");
 		secondBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
 	      createTitledBorder(" Fuzzing Directory (where data is saved) "),
 	      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		fuzzing.add(secondBox);
-		fuzzing.add(Box.createRigidArea(new Dimension(0,10)));
+		this.fuzzing.add(secondBox);
+		this.fuzzing.add(Box.createRigidArea(new Dimension(0,10)));
 
 	}
 
 	private void initDirectories() {
-		JLabel header = new JLabel("<HTML><H3>&nbsp;Fuzzing Directories</H3></HTML>");
-		directories.add(header);
+		final JLabel header = new JLabel("<HTML><H3>&nbsp;Fuzzing Directories</H3></HTML>");
+		this.directories.add(header);
 		header.add(Box.createRigidArea(new Dimension(0,10)));
 
-		JLabel fourthBox = new JLabel("<html>" + FileHandler.getWebDirCanonicalPath()  + "</html>");
+		final JLabel fourthBox = new JLabel("<html>" + FileHandler.getWebDirCanonicalPath()  + "</html>");
 		fourthBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
 	      createTitledBorder(" Web Enum Directory (where data is saved) "),
 	      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		directories.add(fourthBox);
-		directories.add(Box.createRigidArea(new Dimension(0,10)));
+		this.directories.add(fourthBox);
+		this.directories.add(Box.createRigidArea(new Dimension(0,10)));
 		
-		boolean checkbox = prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR, false);	
+		final boolean checkbox = this.prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR, false);	
 		final JCheckBox errorCheckBox = new JCheckBox(" While Fuzzing, if an error occurs, Continue ", checkbox);
 		errorCheckBox.setBorderPaintedFlat(true);
 		errorCheckBox.setToolTipText("Continue attempting to Fuzz, even if an error occurs");
@@ -206,47 +226,49 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
     errorCheckBox.addActionListener(new ActionListener() {
         public void actionPerformed(final ActionEvent e) {
         	if(errorCheckBox.isSelected()) {
-        		prefs.putBoolean(JBRFormat.PREF_FUZZ_DIR_ERR, true);
+        		JBRPreferences.this.prefs.putBoolean(JBRFormat.PREF_FUZZ_DIR_ERR, true);
         	} else {
-        		prefs.putBoolean(JBRFormat.PREF_FUZZ_DIR_ERR, false);
+        		JBRPreferences.this.prefs.putBoolean(JBRFormat.PREF_FUZZ_DIR_ERR, false);
         	}
         }
       });
-    directories.add(errorCheckBox);
+    this.directories.add(errorCheckBox);
     header.add(Box.createRigidArea(new Dimension(0,15)));
 	}
 
 	private void initSniffing() {
-		JLabel header = new JLabel("<HTML><H3>&nbsp;Sniffing</H3></HTML>");
-		sniffing.add(header);
+		final JLabel header = new JLabel("<HTML><H3>&nbsp;Sniffing</H3></HTML>");
+		this.sniffing.add(header);
 		header.add(Box.createRigidArea(new Dimension(0,10)));
 		
-		JLabel thirdBox = new JLabel("<html>" + FileHandler.getSnifDirCanonicalPath()  + "</html>");
+		final JLabel thirdBox = new JLabel("<html>" + FileHandler.getSnifDirCanonicalPath()  + "</html>");
 		thirdBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
 	      createTitledBorder(" Sniffing Directory (where data is saved) "),
 	      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		sniffing.add(thirdBox);
-		sniffing.add(Box.createRigidArea(new Dimension(0,10)));
+		this.sniffing.add(thirdBox);
+		this.sniffing.add(Box.createRigidArea(new Dimension(0,10)));
 	}
 
-	public void valueChanged(TreeSelectionEvent e) {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-		tree.getLastSelectedPathComponent();
+	public void valueChanged(final TreeSelectionEvent e) {
+		final DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+		this.tree.getLastSelectedPathComponent();
 
-		if (node == null) return;
+		if (node == null) {
+			return;
+		}
 
-		String s = node.toString();
+		final String s = node.toString();
 		if(s.equalsIgnoreCase("Preferences")) {
-			splitPane.setRightComponent(preferences);
+			this.splitPane.setRightComponent(this.preferences);
 		}
 		if(s.equalsIgnoreCase("Fuzzing")) {
-			splitPane.setRightComponent(fuzzing);
+			this.splitPane.setRightComponent(this.fuzzing);
 		}
 		if(s.equalsIgnoreCase("Directories")) {
-			splitPane.setRightComponent(directories);
+			this.splitPane.setRightComponent(this.directories);
 		}	
 		if(s.equalsIgnoreCase("Sniffing")) {
-			splitPane.setRightComponent(sniffing);
+			this.splitPane.setRightComponent(this.sniffing);
 		}
 
 	}

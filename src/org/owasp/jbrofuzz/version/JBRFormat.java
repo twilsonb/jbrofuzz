@@ -25,13 +25,15 @@
  */
 package org.owasp.jbrofuzz.version;
 
-import java.text.*;
-import java.util.*;
-import java.util.prefs.*;
 
-import javax.swing.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
-import org.owasp.jbrofuzz.*;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import org.owasp.jbrofuzz.JBroFuzz;
 /**
  * <p>Class responsible for holding the description of a number of static
  * parameters and constants relating to the application.</p>
@@ -139,8 +141,8 @@ public class JBRFormat {
 	 * <p>The text, in html format, shown in the about box.</p>
 	 */
 	public static final String ABOUTTEXT = 
-		"<HTML><B>Java Bro Fuzzer Version:  " + VERSION +
-		"<BR>" + "Codename: " + getCodeName(VERSION) + "</B><BR><BR>" +
+		"<HTML><B>Java Bro Fuzzer Version:  " + JBRFormat.VERSION +
+		"<BR>" + "Codename: " + JBRFormat.getCodeName(JBRFormat.VERSION) + "</B><BR><BR>" +
 		"JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software " +
 		"and you are welcome to redistribute it under the GNU GPL license<BR><BR>" +
 		"<B>Copyright &copy;2007  subere (at) uncon org</B><BR><BR>" + 
@@ -189,18 +191,17 @@ public class JBRFormat {
 	 * the launch of the graphical user interface.</p>
 	 * 
 	 * @param mJBroFuzz JBroFuzz
-	 * @return
 	 */
-	public JBRFormat(JBroFuzz mJBroFuzz) {
+	public JBRFormat(final JBroFuzz mJBroFuzz) {
 
 		// Set the codename, based on the version
-		CODENAME = getCodeName(VERSION);
+		JBRFormat.CODENAME = JBRFormat.getCodeName(JBRFormat.VERSION);
 		// Define the date in the specified format
 		final String DATE_FORMAT = "DDD yyyy-MM-dd HH-mm-ss";
-		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT, new Locale(ISO_LAN_CODE));
-		DATE = SDF.format(new Date());
+		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT, new Locale(JBRFormat.ISO_LAN_CODE));
+		JBRFormat.DATE = SDF.format(new Date());
 		// Set the look and feel
-		setLookAndFeel(mJBroFuzz);
+		JBRFormat.setLookAndFeel(mJBroFuzz);
 		// Set some preferences for the mac
 		System.setProperty ("apple.laf.useScreenMenuBar", "true");
 		System.setProperty ("com.apple.mrj.application.apple.menu.about.name", "JBroFuzz");
@@ -209,14 +210,18 @@ public class JBRFormat {
 
 	/**
 	 * Method for returning the actual date pre formated DDD yyyy-MM-dd HH-mm-ss
-	 * @return
+	 * @return String DATE
 	 */
 	public String getDate() {
-		return DATE;
+		return JBRFormat.DATE;
 	}
 
+	/**
+	 * Method for returning the code name of the current version of JBroFuzz
+	 * @return String CODENAME
+	 */
 	public String getCodeName() {
-		return CODENAME;
+		return JBRFormat.CODENAME;
 	}
 
 	/**
@@ -230,25 +235,25 @@ public class JBRFormat {
 		int errors = 0;
 		try {
 			String oSystem = System.getProperty("os.name");
-			oSystem = oSystem.toLowerCase(new Locale(ISO_LAN_CODE));
+			oSystem = oSystem.toLowerCase(new Locale(JBRFormat.ISO_LAN_CODE));
 			if (oSystem.startsWith("windows")) {
 				UIManager.setLookAndFeel(
 				"com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			}
 		}
-		catch (UnsupportedLookAndFeelException e) {
+		catch (final UnsupportedLookAndFeelException e) {
 			errors += 100;
 		}
-		catch (ClassNotFoundException e) {
+		catch (final ClassNotFoundException e) {
 			errors += 100;
 		}
-		catch (InstantiationException e) {
+		catch (final InstantiationException e) {
 			errors += 100;
 		}
-		catch (IllegalAccessException e) {
+		catch (final IllegalAccessException e) {
 			errors += 100;
 		}
-		catch (SecurityException e) {
+		catch (final SecurityException e) {
 			errors += 100;
 		}
 	}
@@ -257,50 +262,71 @@ public class JBRFormat {
 	 * Return the code name of the current version, based on the version number.
 	 * @return String
 	 */
-	private static String getCodeName(String versionNumber) {
+	private static String getCodeName(final String versionNumber) {
 
-		if (versionNumber.equalsIgnoreCase("0.1"))
+		if (versionNumber.equalsIgnoreCase("0.1")) {
 			return "Vesta "; /* - Goddess of the Home */
-		if (versionNumber.equalsIgnoreCase("0.2"))
+		}
+		if (versionNumber.equalsIgnoreCase("0.2")) {
 			return "Jupiter "; /* - King of the Gods */
-		if (versionNumber.equalsIgnoreCase("0.3"))
+		}
+		if (versionNumber.equalsIgnoreCase("0.3")) {
 			return "Juno "; /* - Queen of the Gods */
-		if (versionNumber.equalsIgnoreCase("0.4"))
+		}
+		if (versionNumber.equalsIgnoreCase("0.4")) {
 			return "Neptune "; /* - God of the Sea */
-		if (versionNumber.equalsIgnoreCase("0.5"))
+		}
+		if (versionNumber.equalsIgnoreCase("0.5")) {
 			return "Pluto "; /* - God of Death */
-		if (versionNumber.equalsIgnoreCase("0.6"))
+		}
+		if (versionNumber.equalsIgnoreCase("0.6")) {
 			return "Apollo "; /* - God of the Sun */
-		if (versionNumber.equalsIgnoreCase("0.7"))
+		}
+		if (versionNumber.equalsIgnoreCase("0.7")) {
 			return "Selene "; /* - Goddess of the Moon */
-		if (versionNumber.equalsIgnoreCase("0.8"))
+		}
+		if (versionNumber.equalsIgnoreCase("0.8")) {
 			return "Mars "; /* - God of War */
-		if (versionNumber.equalsIgnoreCase("0.9"))
+		}
+		if (versionNumber.equalsIgnoreCase("0.9")) {
 			return "Dioni "; /* - Goddess of Love */
-		if (versionNumber.equalsIgnoreCase("1.0"))
+		}
+		if (versionNumber.equalsIgnoreCase("1.0")) {
 			return "Cupid "; /* - God of Love */
-		if (versionNumber.equalsIgnoreCase("1.1"))
+		}
+		if (versionNumber.equalsIgnoreCase("1.1")) {
 			return "Mercury "; /* - Messenger of the Gods */
-		if (versionNumber.equalsIgnoreCase("1.2"))
+		}
+		if (versionNumber.equalsIgnoreCase("1.2")) {
 			return "Athena "; /* - Goddess of Wisdom */
-		if (versionNumber.equalsIgnoreCase("1.3"))
+		}
+		if (versionNumber.equalsIgnoreCase("1.3")) {
 			return "Ceres "; /* - The Earth Goddess */
-		if (versionNumber.equalsIgnoreCase("1.4"))
+		}
+		if (versionNumber.equalsIgnoreCase("1.4")) {
 			return "Proserpine "; /* - Goddess of the Underworld */
-		if (versionNumber.equalsIgnoreCase("1.5"))
+		}
+		if (versionNumber.equalsIgnoreCase("1.5")) {
 			return "Vulcan "; /* - The Smith God */
-		if (versionNumber.equalsIgnoreCase("1.6"))
+		}
+		if (versionNumber.equalsIgnoreCase("1.6")) {
 			return "Bacchus "; /* - God of Wine */
-		if (versionNumber.equalsIgnoreCase("1.7"))
+		}
+		if (versionNumber.equalsIgnoreCase("1.7")) {
 			return "Saturn "; /* - God of Time */
-		if (versionNumber.equalsIgnoreCase("1.8"))
+		}
+		if (versionNumber.equalsIgnoreCase("1.8")) {
 			return "Janus "; /* - God of Doors */
-		if (versionNumber.equalsIgnoreCase("1.9"))
+		}
+		if (versionNumber.equalsIgnoreCase("1.9")) {
 			return "Uranus "; /* - Father of Saturn */
-		if (versionNumber.equalsIgnoreCase("2.0"))
+		}
+		if (versionNumber.equalsIgnoreCase("2.0")) {
 			return "Maia "; /* - Goddess of Growth */
-		if (versionNumber.equalsIgnoreCase("2.1"))
-			return "Zeus "; 
+		}
+		if (versionNumber.equalsIgnoreCase("2.1")) {
+			return "Zeus ";
+		} 
 		return "Zeus "; 
 	}
 }

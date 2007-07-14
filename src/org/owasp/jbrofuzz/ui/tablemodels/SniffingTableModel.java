@@ -25,9 +25,9 @@
  */
 package org.owasp.jbrofuzz.ui.tablemodels;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
 /**
  * <p>The table model that is being used within the Sniffing Panel.</p>
  * <p>This model is used for the requests and replies being made.</p>
@@ -44,9 +44,9 @@ public class SniffingTableModel extends AbstractTableModel {
    * Main Constructor for the Table Model
    */
   public SniffingTableModel() {
-    columnNames = new String[1];
-    columnNames[0] = "Requests / Replies";
-    dataVector = new ArrayList();
+    this.columnNames = new String[1];
+    this.columnNames[0] = "Requests / Replies";
+    this.dataVector = new ArrayList();
   }
 
   /**
@@ -54,8 +54,9 @@ public class SniffingTableModel extends AbstractTableModel {
    * @param column int
    * @return String
    */
-  public String getColumnName(final int column) {
-    return columnNames[column];
+  @Override
+	public String getColumnName(final int column) {
+    return this.columnNames[column];
   }
 
   /**
@@ -65,7 +66,8 @@ public class SniffingTableModel extends AbstractTableModel {
    * @param column int
    * @return boolean
    */
-  public boolean isCellEditable(final int row, final int column) {
+  @Override
+	public boolean isCellEditable(final int row, final int column) {
     return false;
   }
 
@@ -76,7 +78,7 @@ public class SniffingTableModel extends AbstractTableModel {
    * @return Object
    */
   public Object getValueAt(final int row, final int column) {
-    return (String) dataVector.get(row);
+    return this.dataVector.get(row);
   }
 
   /**
@@ -85,9 +87,10 @@ public class SniffingTableModel extends AbstractTableModel {
    * @param row int
    * @param column int
    */
-  public void setValueAt(final Object value, final int row, final int column) {
-    dataVector.set(row, value.toString());
-    fireTableCellUpdated(row, column);
+  @Override
+	public void setValueAt(final Object value, final int row, final int column) {
+    this.dataVector.set(row, value.toString());
+    this.fireTableCellUpdated(row, column);
   }
 
   /**
@@ -96,7 +99,7 @@ public class SniffingTableModel extends AbstractTableModel {
    * @return String
    */
   public String getValueAt(final int row) {
-    return (String) dataVector.get(row);
+    return (String) this.dataVector.get(row);
   }
 
   /**
@@ -104,7 +107,7 @@ public class SniffingTableModel extends AbstractTableModel {
    * @return int
    */
   public int getRowCount() {
-    return dataVector.size();
+    return this.dataVector.size();
   }
 
   /**
@@ -112,7 +115,7 @@ public class SniffingTableModel extends AbstractTableModel {
    * @return int
    */
   public int getColumnCount() {
-    return columnNames.length;
+    return this.columnNames.length;
   }
 
   /**
@@ -123,11 +126,11 @@ public class SniffingTableModel extends AbstractTableModel {
   public boolean hasEmptyRow() {
     boolean returnValue = false;
 
-    if (dataVector.size() == 0) {
+    if (this.dataVector.size() == 0) {
       returnValue = false;
     }
     else {
-      final String record = (String) dataVector.get(dataVector.size() - 1);
+      final String record = (String) this.dataVector.get(this.dataVector.size() - 1);
       if ("".equals(record)) {
         returnValue = true;
       }
@@ -140,7 +143,7 @@ public class SniffingTableModel extends AbstractTableModel {
    * method invokes the fireTableRowsInserted method.</p>
    */
   public void addEmptyRow() {
-    dataVector.add("");
-    fireTableRowsInserted(dataVector.size() - 1, dataVector.size() - 1);
+    this.dataVector.add("");
+    this.fireTableRowsInserted(this.dataVector.size() - 1, this.dataVector.size() - 1);
   }
 }

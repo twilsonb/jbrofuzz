@@ -25,12 +25,12 @@
  */
 package org.owasp.jbrofuzz.fuzz;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import org.owasp.jbrofuzz.*;
-import org.owasp.jbrofuzz.fuzz.tcp.*;
-import org.owasp.jbrofuzz.io.*;
-import org.owasp.jbrofuzz.version.*;
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.fuzz.tcp.Generator;
+import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.version.JBRFormat;
 /**
  * <p>The Constructor constructs a list of Definitions, iterating though each
  * Generator and accumulating values inputted from the corresponding 
@@ -50,18 +50,18 @@ public class TConstructor {
    *
    * @param mJBroFuzz JBroFuzz
    */
-  public TConstructor(JBroFuzz mJBroFuzz) {
+  public TConstructor(final JBroFuzz mJBroFuzz) {
     this.mJBroFuzz = mJBroFuzz;
-    generators = new ArrayList();
+    this.generators = new ArrayList();
     
-    StringBuffer fileContents = FileHandler.readGenerators(JBRFormat.FILE_GEN);
-    String [] fileInput = fileContents.toString().split("\n");
-    int len = fileInput.length;
+    final StringBuffer fileContents = FileHandler.readGenerators(JBRFormat.FILE_GEN);
+    final String [] fileInput = fileContents.toString().split("\n");
+    final int len = fileInput.length;
  
     for (int i = 0; i < len; i++) {
       boolean firstLineOk = false;
 
-      String line = (String) fileInput[i];
+      final String line = fileInput[i];
       if (line.startsWith("#")) {
         // Comment line hit, do nothing
       }
@@ -69,7 +69,7 @@ public class TConstructor {
         if (line.length() > 5) {
           // "P|ABC"
           if ((line.charAt(1) == ':') && (line.charAt(5) == ':')) {
-            String[] firstLineArray = line.split(":");
+            final String[] firstLineArray = line.split(":");
             // Check that there are four fields of | in the first line
             if (firstLineArray.length == 4) {
               // Check that the comment is less than 24 characters
@@ -86,7 +86,7 @@ public class TConstructor {
                       firstLineOk = true;
                     }
                   }
-                  catch (NumberFormatException e) {
+                  catch (final NumberFormatException e) {
                     firstLineOk = false;
                     generatorLength = 0;
                   }
@@ -96,8 +96,8 @@ public class TConstructor {
           }
         } // First line check
         if (firstLineOk) {
-          String[] firstArray = line.split(":");
-          int generatorLength = Integer.parseInt(firstArray[3]);
+          final String[] firstArray = line.split(":");
+          final int generatorLength = Integer.parseInt(firstArray[3]);
           // Check that there remaining element in the generator Vector
           if (i < len - generatorLength - 1) {
             // Check that the second line starts with a #
@@ -105,23 +105,23 @@ public class TConstructor {
             if (line2.startsWith(">")) {
               line2 = line2.substring(1);
               // Check to see that the Generator name is unique
-              if (!isGeneratorNameUsed(firstArray[1])) {
+              if (!this.isGeneratorNameUsed(firstArray[1])) {
 
                 // Finally create the generator if all the checks pass
-                Generator myGen = new Generator(firstArray[0].charAt(0),
+                final Generator myGen = new Generator(firstArray[0].charAt(0),
                                                 firstArray[1], firstArray[2],
                                                 generatorLength, line2);
 
                 // Add the values for each element
                 for (int j = 1; j <= generatorLength; j++) {
 
-                  StringBuffer myBuffer = new StringBuffer();
+                  final StringBuffer myBuffer = new StringBuffer();
                   myBuffer.append(fileInput[i + 1 + j]);
                   myGen.addAlphabetValue(myBuffer);
 
                 }
                 // Finally add the generator to the Vector of generators
-                generators.add(myGen);
+                this.generators.add(myGen);
               }
             }
           }
@@ -130,10 +130,10 @@ public class TConstructor {
     }
 
     mJBroFuzz.getWindow().getDefinitionsPanel().setDefinitionsText(
-      getAllGeneratorNames() + "\n\n");
+      this.getAllGeneratorNames() + "\n\n");
 
     mJBroFuzz.getWindow().getDefinitionsPanel().setDefinitionsText(
-      getAllGenerators());
+      this.getAllGenerators());
 
   }
 
@@ -144,11 +144,11 @@ public class TConstructor {
    * @return String
    */
   public String getAllGeneratorNames() {
-    StringBuffer output = new StringBuffer();
+    final StringBuffer output = new StringBuffer();
     output.append("{");
-    for (int i = 0; i < generators.size(); i++) {
-      output.append(((Generator) (generators.get(i))).getName());
-      if (i < generators.size() - 1) {
+    for (int i = 0; i < this.generators.size(); i++) {
+      output.append(((Generator) (this.generators.get(i))).getName());
+      if (i < this.generators.size() - 1) {
         output.append(", ");
       }
     }
@@ -162,13 +162,13 @@ public class TConstructor {
    * @return String
    */
   public String getAllGeneratorNamesAndComments() {
-    StringBuffer output = new StringBuffer();
-    for (int i = 0; i < generators.size(); i++) {
-      output.append(((Generator) (generators.get(i))).getName());
+    final StringBuffer output = new StringBuffer();
+    for (int i = 0; i < this.generators.size(); i++) {
+      output.append(((Generator) (this.generators.get(i))).getName());
       output.append(" (");
-      output.append(((Generator) (generators.get(i))).getComment());
+      output.append(((Generator) (this.generators.get(i))).getComment());
       output.append(")");
-      if (i < generators.size() - 1) {
+      if (i < this.generators.size() - 1) {
         output.append(", ");
       }
     }
@@ -184,21 +184,21 @@ public class TConstructor {
    * @return String
    */
   public String getAllGenerators() {
-    StringBuffer output = new StringBuffer();
-    for (int i = 0; i < generators.size(); i++) {
-      output.append(((Generator) (generators.get(i))).getName());
+    final StringBuffer output = new StringBuffer();
+    for (int i = 0; i < this.generators.size(); i++) {
+      output.append(((Generator) (this.generators.get(i))).getName());
       output.append(":");
-      output.append(((Generator) (generators.get(i))).getComment());
+      output.append(((Generator) (this.generators.get(i))).getComment());
       output.append("\n");
-      int cGenSize = ((Generator) (generators.get(i))).getSize();
+      final int cGenSize = ((Generator) (this.generators.get(i))).getSize();
       for (int j = 0; j < cGenSize; j++) {
-        StringBuffer cur = ((Generator) (generators.get(i))).getElement(j);
+        final StringBuffer cur = ((Generator) (this.generators.get(i))).getElement(j);
         if (cur.length() <= 65) {
           output.append(cur);
         }
         else {
-          int cLen = ((Generator) (generators.get(i))).getElement(j).length();
-          String sCur = cur.substring(0, 65);
+          final int cLen = ((Generator) (this.generators.get(i))).getElement(j).length();
+          final String sCur = cur.substring(0, 65);
           output.append(sCur);
           output.append("    (... Total length: " + cLen + ")");
         }
@@ -216,13 +216,13 @@ public class TConstructor {
    * @param name String
    * @return boolean
    */
-  public boolean isGeneratorNameUsed(String name) {
+  public boolean isGeneratorNameUsed(final String name) {
     boolean output = false;
-    for (int i = 0; i < generators.size(); i++) {
-      String currentName = ((Generator) (generators.get(i))).getName();
+    for (int i = 0; i < this.generators.size(); i++) {
+      final String currentName = ((Generator) (this.generators.get(i))).getName();
       if (currentName.equals(name)) {
         output = true;
-        i = generators.size();
+        i = this.generators.size();
       }
     }
     return output;
@@ -236,14 +236,14 @@ public class TConstructor {
    * @param name String
    * @return int
    */
-  public int getGeneratorLength(String name) {
+  public int getGeneratorLength(final String name) {
     int output = 0;
-    for (int i = 0; i < generators.size(); i++) {
-      String currentName = ((Generator) (generators.get(i))).getName();
+    for (int i = 0; i < this.generators.size(); i++) {
+      final String currentName = ((Generator) (this.generators.get(i))).getName();
       if (currentName.equals(name)) {
-        final Generator currentGenerator = (Generator) (generators.get(i));
+        final Generator currentGenerator = (Generator) (this.generators.get(i));
         output = currentGenerator.getSize();
-        i = generators.size();
+        i = this.generators.size();
       }
     }
     return output;
@@ -259,12 +259,12 @@ public class TConstructor {
    */
   public char getGeneratorType(final String name) {
     char output = Generator.UNKNOWN;
-    for (int i = 0; i < generators.size(); i++) {
-      String currentName = ((Generator) (generators.get(i))).getName();
+    for (int i = 0; i < this.generators.size(); i++) {
+      final String currentName = ((Generator) (this.generators.get(i))).getName();
       if (currentName.equals(name)) {
-        final Generator currentGenerator = (Generator) (generators.get(i));
+        final Generator currentGenerator = (Generator) (this.generators.get(i));
         output = currentGenerator.getType();
-        i = generators.size();
+        i = this.generators.size();
       }
     }
     return output;
@@ -279,14 +279,14 @@ public class TConstructor {
    * @param index int
    * @return StringBuffer
    */
-  public StringBuffer getGeneratorElement(String name, int index) {
+  public StringBuffer getGeneratorElement(final String name, final int index) {
     StringBuffer output = new StringBuffer();
-    for (int i = 0; i < generators.size(); i++) {
-      String currentName = ((Generator) (generators.get(i))).getName();
+    for (int i = 0; i < this.generators.size(); i++) {
+      final String currentName = ((Generator) (this.generators.get(i))).getName();
       if (currentName.equals(name)) {
-        final Generator currentGenerator = (Generator) (generators.get(i));
+        final Generator currentGenerator = (Generator) (this.generators.get(i));
         output = currentGenerator.getElement(index);
-        i = generators.size();
+        i = this.generators.size();
       }
     }
     return output;
@@ -298,6 +298,6 @@ public class TConstructor {
    * @return JBroFuzz
    */
   public JBroFuzz getJBroFuzz() {
-    return mJBroFuzz;
+    return this.mJBroFuzz;
   }
 }

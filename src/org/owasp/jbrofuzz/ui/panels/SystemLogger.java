@@ -25,13 +25,20 @@
  */
 package org.owasp.jbrofuzz.ui.panels;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import org.owasp.jbrofuzz.ui.JBRFrame;
-import org.owasp.jbrofuzz.version.*;
+import org.owasp.jbrofuzz.version.JBRTime;
 /**
  * <p>The panel holding the system logging information that is part 
  * of the main
@@ -42,7 +49,11 @@ import org.owasp.jbrofuzz.version.*;
  */
 public class SystemLogger extends JPanel {
 
-  // The frame that the sniffing panel is attached
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1771587308148328608L;
+	// The frame that the sniffing panel is attached
   private JBRFrame m;
   // The JTable that holds all the data
   private JTextArea listTextArea;
@@ -57,13 +68,13 @@ public class SystemLogger extends JPanel {
    *
    * @param m FrameWindow
    */
-  public SystemLogger(JBRFrame m) {
+  public SystemLogger(final JBRFrame m) {
     super();
-    setLayout(null);
+    this.setLayout(null);
     this.m = m;
-    lineCount = 0;
+    this.lineCount = 0;
     // Define the JPanel
-    JPanel listPanel = new JPanel();
+    final JPanel listPanel = new JPanel();
 
     listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" System Logger "),
@@ -71,27 +82,27 @@ public class SystemLogger extends JPanel {
     // Set the bounds
     listPanel.setBounds(10, 90, 870, 360);
 
-    listTextArea = new JTextArea();
-    listTextArea.setFont(new Font("Verdana", Font.PLAIN, 10));
-    listTextArea.setEditable(false);
-    listTextArea.setLineWrap(true);
-    listTextArea.setWrapStyleWord(true);
-    listTextArea.setBackground(Color.WHITE);
-    listTextArea.setForeground(Color.BLACK);
-    getFrameWindow().popup(listTextArea);
+    this.listTextArea = new JTextArea();
+    this.listTextArea.setFont(new Font("Verdana", Font.PLAIN, 10));
+    this.listTextArea.setEditable(false);
+    this.listTextArea.setLineWrap(true);
+    this.listTextArea.setWrapStyleWord(true);
+    this.listTextArea.setBackground(Color.WHITE);
+    this.listTextArea.setForeground(Color.BLACK);
+    this.getFrameWindow().popup(this.listTextArea);
 
-    JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
+    final JScrollPane listTextScrollPane = new JScrollPane(this.listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
     listTextScrollPane.setPreferredSize(new Dimension(850, 320));
     listPanel.add(listTextScrollPane);
 
-    infoButton = new JButton("Info");
-    infoButton.setBounds(800, 33, 70, 40);
-    infoButton.setEnabled(true);
+    this.infoButton = new JButton("Info");
+    this.infoButton.setBounds(800, 33, 70, 40);
+    this.infoButton.setEnabled(true);
     // The action listener for the info button
-    infoButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+    this.infoButton.addActionListener(new ActionListener() {
+      public void actionPerformed(final ActionEvent e) {
         final String systemInfo = "[System Info Start]\r\n" + "  [Java]\r\n" +
                                   "    Vendor:  " +
                                   System.getProperty("java.vendor") + "\r\n" +
@@ -116,17 +127,17 @@ public class SystemLogger extends JPanel {
                                   "[System Info End]\r\n";
 
 
-        String[] info = systemInfo.split("\r\n");
+        final String[] info = systemInfo.split("\r\n");
 
-        for (int i = 0; i < info.length; i++) {
-          addLoggingEvent(info[i]);
+        for (final String element : info) {
+          SystemLogger.this.addLoggingEvent(element);
         }
 
       }
     });
-    add(listPanel);
-    add(infoButton);
-    listTextArea.setCaretPosition(0);
+    this.add(listPanel);
+    this.add(this.infoButton);
+    this.listTextArea.setCaretPosition(0);
   }
 
   /**
@@ -136,7 +147,7 @@ public class SystemLogger extends JPanel {
    * @return FrameWindow
    */
   public JBRFrame getFrameWindow() {
-    return m;
+    return this.m;
   }
 
   /**
@@ -146,21 +157,21 @@ public class SystemLogger extends JPanel {
    *
    * @param str String
    */
-  public void addLoggingEvent(String str) {
-    lineCount++;
-    listTextArea.append("[" + JBRTime.dateAndTime() + "] " + str + "\n");
+  public void addLoggingEvent(final String str) {
+    this.lineCount++;
+    this.listTextArea.append("[" + JBRTime.dateAndTime() + "] " + str + "\n");
     // Fix the disappearing tab problem
     int tab = -1;
-    int totalTabs = getFrameWindow().getTabbedPane().getComponentCount();
+    final int totalTabs = this.getFrameWindow().getTabbedPane().getComponentCount();
     for (int i = 0; i < totalTabs; i++) {
-      String title = getFrameWindow().getTabbedPane().getTitleAt(i);
+      final String title = this.getFrameWindow().getTabbedPane().getTitleAt(i);
       if (title.startsWith(" System")) {
         tab = i;
       }
     }
     if ((tab > -1)) {
-      getFrameWindow().getTabbedPane().setTitleAt(tab,
-                                                  " System (" + lineCount + ")");
+      this.getFrameWindow().getTabbedPane().setTitleAt(tab,
+                                                  " System (" + this.lineCount + ")");
     }
   }
 }

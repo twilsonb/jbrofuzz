@@ -32,7 +32,7 @@
 
   <target depends="init" name="compile" description="Compilation of Java">
     <echo>Compiling Java Files</echo>
-    <javac srcdir="${src.dir}" destdir="${class.dir}" debug="true" failonerror="true" classpathref="master-classpath" deprecation="true" source="1.4" target="1.4" />
+    <javac srcdir="${src.dir}" destdir="${class.dir}" debug="true" failonerror="true" classpathref="master-classpath" deprecation="true" source="1.5" target="1.5" />
   </target>
 
   <target name="resource">
