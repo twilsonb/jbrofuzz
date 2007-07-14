@@ -28,10 +28,11 @@ package org.owasp.jbrofuzz.fuzz;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.owasp.jbrofuzz.*;
-import org.owasp.jbrofuzz.fuzz.tcp.*;
-import org.owasp.jbrofuzz.io.*;
-import org.owasp.jbrofuzz.version.*;
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.fuzz.tcp.Connection;
+import org.owasp.jbrofuzz.fuzz.tcp.Generator;
+import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.version.JBRFormat;
 /**
  * <p>The request generator instantiates the correct generator,
  * holding the complete set of requests. This class runs through all the
@@ -66,7 +67,7 @@ public class RequestIterator {
 	// The boolean checking if stop has been pressed
 	private boolean generatorStopped;
 //Format the current time in a nice iso 8601 format.
-  private static SimpleDateFormat dateFormat = new SimpleDateFormat(
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
     "yyyy-MM-dd HH-mm-ss-SSS");
 	/**
 	 * The main constructor passing a jbrofuzz object, the string to be sent,
@@ -78,11 +79,11 @@ public class RequestIterator {
 	 * @param finish int
 	 * @param type int
 	 */
-	public RequestIterator(JBroFuzz mJBroFuzz, 
-			StringBuffer request, 
-			int start,
-			int finish, 
-			String type) {
+	public RequestIterator(final JBroFuzz mJBroFuzz, 
+			final StringBuffer request, 
+			final int start,
+			final int finish, 
+			final String type) {
 
 		this.mJBroFuzz = mJBroFuzz;
 		this.request = request;
@@ -90,14 +91,14 @@ public class RequestIterator {
 		this.start = start;
 		this.finish = finish;
 		
-		maxValue = 0;
-		currentValue = 0;
-		generatorStopped = false;
+		this.maxValue = 0;
+		this.currentValue = 0;
+		this.generatorStopped = false;
 		
-		mTConstructor = new TConstructor(getJBroFuzz());
+		this.mTConstructor = new TConstructor(this.getJBroFuzz());
 		
 		// Check start and finish to positive and also within length
-		int strlength = request.length();
+		final int strlength = request.length();
 		if ((start < 0) || (finish < 0) || (start > strlength) ||
 				(finish > strlength)) {
 			this.len = 0;
@@ -108,13 +109,13 @@ public class RequestIterator {
 		// Check for a minimum length of 1 between start and finish
 		if (this.len > 0) {
 			
-			maxValue = (long) mTConstructor.getGeneratorLength(type);
+			this.maxValue = this.mTConstructor.getGeneratorLength(type);
 			// For a recursive generator, generate the corresponding maximum value
-			char genType = mTConstructor.getGeneratorType(type);
+			final char genType = this.mTConstructor.getGeneratorType(type);
 			if (genType == Generator.RECURSIVE) {
-				long baseValue = maxValue;
+				final long baseValue = this.maxValue;
 				for (int i = 1; i < this.len; i++) {
-					maxValue *= baseValue;
+					this.maxValue *= baseValue;
 				}
 			}
 		} // if this.len > 0
@@ -128,45 +129,45 @@ public class RequestIterator {
 	 * @return StringBuffer
 	 */
 	private StringBuffer getNext() {
-		StringBuffer fuzzedValue = new StringBuffer("");
-		if (currentValue < maxValue) {
+		final StringBuffer fuzzedValue = new StringBuffer("");
+		if (this.currentValue < this.maxValue) {
 
-			fuzzedValue.append(request.substring(0, start));
+			fuzzedValue.append(this.request.substring(0, this.start));
 			int blank_count = 0;
-			char genType = mTConstructor.getGeneratorType(type);
+			final char genType = this.mTConstructor.getGeneratorType(this.type);
 
 			// Check to see if the generator is recursive
 			if (genType == Generator.RECURSIVE) {
-				int radix = mTConstructor.getGeneratorLength(type);
-				blank_count = Long.toString(currentValue, radix).length() - len;
+				final int radix = this.mTConstructor.getGeneratorLength(this.type);
+				blank_count = Long.toString(this.currentValue, radix).length() - this.len;
 				while (blank_count < 0) {
 					fuzzedValue.append("0");
 					blank_count++;
 				}
 				// Append the current value, depending on type
-				if (type.equals("DEC")) {
-					fuzzedValue.append("" + Long.toString(currentValue, 10));
+				if (this.type.equals("DEC")) {
+					fuzzedValue.append("" + Long.toString(this.currentValue, 10));
 				}
-				if (type.equals("HEX")) {
-					fuzzedValue.append("" + Long.toHexString(currentValue));
+				if (this.type.equals("HEX")) {
+					fuzzedValue.append("" + Long.toHexString(this.currentValue));
 				}
-				if (type.equals("OCT")) {
-					fuzzedValue.append("" + Long.toOctalString(currentValue));
+				if (this.type.equals("OCT")) {
+					fuzzedValue.append("" + Long.toOctalString(this.currentValue));
 				}
-				if (type.equals("BIN")) {
-					fuzzedValue.append("" + Long.toBinaryString(currentValue));
+				if (this.type.equals("BIN")) {
+					fuzzedValue.append("" + Long.toBinaryString(this.currentValue));
 				}
 			}
 			// Check to see if the generator is replasive
 			if (genType == Generator.REPLASIVE) {
-				int v = (int) currentValue;
-				StringBuffer b = mTConstructor.getGeneratorElement(type, v);
+				final int v = (int) this.currentValue;
+				final StringBuffer b = this.mTConstructor.getGeneratorElement(this.type, v);
 				fuzzedValue.append(b);
 			}
 
-			currentValue++;
+			this.currentValue++;
 			// Append the end of the string
-			fuzzedValue.append(request.substring(finish));
+			fuzzedValue.append(this.request.substring(this.finish));
 		}
 		return fuzzedValue;		
 	}
@@ -181,38 +182,38 @@ public class RequestIterator {
 	 *
 	 */
 	public void run() {
-		String target = mJBroFuzz.getWindow().getFuzzingPanel().getTargetText();
-		String port = mJBroFuzz.getWindow().getFuzzingPanel().getPortText();
-		StringBuffer stout = getNext();
+		final String target = this.mJBroFuzz.getWindow().getFuzzingPanel().getTargetText();
+		final String port = this.mJBroFuzz.getWindow().getFuzzingPanel().getPortText();
+		StringBuffer stout = this.getNext();
 		
 		if(stout.toString().equalsIgnoreCase("")) {
 			stout = this.request;
 		}
 
-		while ( (! stout.toString().equalsIgnoreCase("")) && (! generatorStopped) ) {
+		while ( (! stout.toString().equalsIgnoreCase("")) && (! this.generatorStopped) ) {
 
 			final Date currentTime = new Date();
-			String filename = mJBroFuzz.getWindow().getFuzzingPanel().getCounter(true);
+			final String filename = this.mJBroFuzz.getWindow().getFuzzingPanel().getCounter(true);
 
-			mJBroFuzz.getWindow().getFuzzingPanel().addRowInOuputTable(
+			this.mJBroFuzz.getWindow().getFuzzingPanel().addRowInOuputTable(
 					filename + "          " + 
 					target + ":" + port + "          " + 
-					type + "          " + 
-					dateFormat.format(currentTime) + "          " + 
-					currentValue + "/" + maxValue);
+					this.type + "          " + 
+					RequestIterator.dateFormat.format(currentTime) + "          " + 
+					this.currentValue + "/" + this.maxValue);
 			
-			FileHandler.writeFuzzFile("[{" + currentValue + "/" + maxValue + "}, " 
-															+ filename + " " + dateFormat.format(currentTime) + "] "
+			FileHandler.writeFuzzFile("[{" + this.currentValue + "/" + this.maxValue + "}, " 
+															+ filename + " " + RequestIterator.dateFormat.format(currentTime) + "] "
 															+ "<!-- \r\n" + target + " : " + port + "\r\n"
 															+ stout + "\r\n",  
 															filename) ;
 
-			Connection con = new Connection(target, port, stout);
+			final Connection con = new Connection(target, port, stout);
 
 			final String s = con.getReply();
 			FileHandler.writeFuzzFile(JBRFormat.LINE_SEPARATOR + "\r\n" + s, filename);
 			
-			stout = getNext();
+			stout = this.getNext();
 		}
 }
 
@@ -222,7 +223,7 @@ public class RequestIterator {
  * fuzzing request completes and no more requests are executed.</p>
  */
 public void stop() {
-	generatorStopped = true;
+	this.generatorStopped = true;
 }
 
 /**
@@ -230,6 +231,6 @@ public void stop() {
  * @return JBroFuzz
  */
 public JBroFuzz getJBroFuzz() {
-	return mJBroFuzz;
+	return this.mJBroFuzz;
 }
 }

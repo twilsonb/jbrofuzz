@@ -25,8 +25,10 @@
  */
 package org.owasp.jbrofuzz.version;
 
-import java.text.*;
-import java.util.*;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 /**
  * <p>This class gives back the current date and time in a 
  * number of predefined
@@ -47,10 +49,10 @@ public class JBRTime {
    * @return String
    */
   public static String dateToday() {
-    currentDate = new Date();
+    JBRTime.currentDate = new Date();
     final SimpleDateFormat justDate = new SimpleDateFormat("dd.MM.yyyy",
       new Locale("en"));
-    return justDate.format(currentDate);
+    return justDate.format(JBRTime.currentDate);
   }
 
   /**
@@ -58,10 +60,10 @@ public class JBRTime {
    * @return String
    */
   public static String dateAndTime() {
-    currentTime = new Date();
+    JBRTime.currentTime = new Date();
     final SimpleDateFormat dateTime = new SimpleDateFormat(
       "dd.MM.yyyy HH:mm:ss", new Locale("en"));
-    return dateTime.format(currentTime);
+    return dateTime.format(JBRTime.currentTime);
   }
 
   /**
@@ -72,7 +74,7 @@ public class JBRTime {
    * @return Date
    */
   public static Date dateTimeAt(final String hoursMinutes) {
-    final String usingToday = dateToday() + "." + hoursMinutes;
+    final String usingToday = JBRTime.dateToday() + "." + hoursMinutes;
     final SimpleDateFormat converter = new SimpleDateFormat("dd.MM.yyyy.HH:mm",
       new Locale("en"));
     final ParsePosition pos = new ParsePosition(0);

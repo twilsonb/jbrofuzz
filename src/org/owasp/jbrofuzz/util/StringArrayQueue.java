@@ -47,10 +47,10 @@ public class StringArrayQueue {
    *
    * @param capacity int
    */
-  public StringArrayQueue(int capacity) {
-    fifo = new String[capacity];
-    start = end = 0;
-    full = false;
+  public StringArrayQueue(final int capacity) {
+    this.fifo = new String[capacity];
+    this.start = this.end = 0;
+    this.full = false;
   }
 
   /**
@@ -60,7 +60,7 @@ public class StringArrayQueue {
    * @return boolean
    */
   public boolean isEmpty() {
-    return ((start == end) && !full);
+    return ((this.start == this.end) && !this.full);
   }
 
   /**
@@ -69,7 +69,7 @@ public class StringArrayQueue {
    * @return boolean
    */
   public boolean isFull() {
-    return full;
+    return this.full;
   }
 
   /**
@@ -77,12 +77,12 @@ public class StringArrayQueue {
    *
    * @param s String
    */
-  public void push(String s) {
-    if (!full) {
-      fifo[start = (++start % fifo.length)] = s;
+  public void push(final String s) {
+    if (!this.full) {
+      this.fifo[this.start = (++this.start % this.fifo.length)] = s;
     }
-    if (start == end) {
-      full = true;
+    if (this.start == this.end) {
+      this.full = true;
     }
   }
 
@@ -91,12 +91,12 @@ public class StringArrayQueue {
    * @return String
    */
   public String pop() {
-    if (full) {
-      full = false;
+    if (this.full) {
+      this.full = false;
     }
-    else if (isEmpty()) {
+    else if (this.isEmpty()) {
       return "";
     }
-    return fifo[end = (++end % fifo.length)];
+    return this.fifo[this.end = (++this.end % this.fifo.length)];
   }
 }

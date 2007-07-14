@@ -25,9 +25,9 @@
  */
 package org.owasp.jbrofuzz.ui.tablemodels;
 
-import java.util.*;
+import java.util.Vector;
 
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
 
 import org.owasp.jbrofuzz.ui.panels.TCPFuzzing;
 
@@ -66,9 +66,9 @@ public class FuzzingTableModel extends AbstractTableModel {
    * <p>Main Constructor passes the Fuzzing Panel.</p>
    * @param fPanel FuzzingPanel
    */
-  public FuzzingTableModel(TCPFuzzing fPanel) {
+  public FuzzingTableModel(final TCPFuzzing fPanel) {
     this.fPanel = fPanel;
-    dataVector = new Vector();
+    this.dataVector = new Vector();
   }
 
   /**
@@ -77,8 +77,9 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @param column int
    * @return String
    */
-  public String getColumnName(int column) {
-    return COLUMNNAMES[column];
+  @Override
+	public String getColumnName(final int column) {
+    return FuzzingTableModel.COLUMNNAMES[column];
   }
 
   /**
@@ -87,8 +88,9 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @param column int
    * @return boolean
    */
-  public boolean isCellEditable(int row, int column) {
-    if (column == INDEX_GENERATOR) {
+  @Override
+	public boolean isCellEditable(final int row, final int column) {
+    if (column == FuzzingTableModel.INDEX_GENERATOR) {
       return true;
     }
     else {
@@ -104,8 +106,8 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @param column int
    * @return Object
    */
-  public Object getValueAt(int row, int column) {
-    Generator record = (Generator) dataVector.get(row);
+  public Object getValueAt(final int row, final int column) {
+    final Generator record = (Generator) this.dataVector.get(row);
     switch (column) {
       case INDEX_GENERATOR:
         return record.getType();
@@ -124,8 +126,9 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @param row int
    * @param column int
    */
-  public void setValueAt(Object value, int row, int column) {
-    Generator record = (Generator) dataVector.get(row);
+  @Override
+	public void setValueAt(final Object value, final int row, final int column) {
+    final Generator record = (Generator) this.dataVector.get(row);
     switch (column) {
       case INDEX_GENERATOR:
         record.setType((String) value);
@@ -137,9 +140,9 @@ public class FuzzingTableModel extends AbstractTableModel {
         record.setEnd(((Integer) value).intValue());
         break;
       default:
-        fPanel.getFrameWindow().log("TCP Fuzzing Panel: Invalid index ");
+        this.fPanel.getFrameWindow().log("TCP Fuzzing Panel: Invalid index ");
     }
-    fireTableCellUpdated(row, column);
+    this.fireTableCellUpdated(row, column);
   }
 
   /**
@@ -147,7 +150,7 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @return int
    */
   public int getRowCount() {
-    return dataVector.size();
+    return this.dataVector.size();
   }
 
   /**
@@ -155,7 +158,7 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @return int
    */
   public int getColumnCount() {
-    return COLUMNNAMES.length;
+    return FuzzingTableModel.COLUMNNAMES.length;
   }
 
   /**
@@ -163,11 +166,11 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @param row int
    * @return String
    */
-  public String getRow(int row) {
-    StringBuffer output = new StringBuffer();
-    if ((row > -1) && (row < dataVector.size())) {
-      for (int i = 0; i < COLUMNNAMES.length; i++) {
-        output.append(getValueAt(row, i) + STRING_SEPARATOR);
+  public String getRow(final int row) {
+    final StringBuffer output = new StringBuffer();
+    if ((row > -1) && (row < this.dataVector.size())) {
+      for (int i = 0; i < FuzzingTableModel.COLUMNNAMES.length; i++) {
+        output.append(this.getValueAt(row, i) + FuzzingTableModel.STRING_SEPARATOR);
       }
     }
     return output.toString();
@@ -178,12 +181,12 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @return boolean
    */
   public boolean hasEmptyRow() {
-    if (dataVector.size() == 0) {
+    if (this.dataVector.size() == 0) {
       return false;
     }
-    Generator gen = (Generator) dataVector.get(dataVector.size() - 1);
-    if (gen.getType().trim().equalsIgnoreCase("") && gen.getStart() == 0 &&
-        gen.getEnd() == 0) {
+    final Generator gen = (Generator) this.dataVector.get(this.dataVector.size() - 1);
+    if (gen.getType().trim().equalsIgnoreCase("") && (gen.getStart() == 0) &&
+        (gen.getEnd() == 0)) {
       return true;
     }
     else {
@@ -198,10 +201,10 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @param start int
    * @param end int
    */
-  public void addRow(String generator, int start, int end) {
-    Generator addingGenerator = new Generator(generator, start, end);
-    dataVector.add(addingGenerator);
-    fireTableRowsInserted(dataVector.size() - 1, dataVector.size() - 1);
+  public void addRow(final String generator, final int start, final int end) {
+    final Generator addingGenerator = new Generator(generator, start, end);
+    this.dataVector.add(addingGenerator);
+    this.fireTableRowsInserted(this.dataVector.size() - 1, this.dataVector.size() - 1);
   }
 
   /**
@@ -211,18 +214,18 @@ public class FuzzingTableModel extends AbstractTableModel {
    * @param start int
    * @param end int
    */
-  public void removeRow(String generator, int start, int end) {
+  public void removeRow(final String generator, final int start, final int end) {
     int rowToRemove = -1;
-    for (int i = 0; i < dataVector.size(); i++) {
-      Generator record = (Generator) dataVector.get(i);
-      if (record.getType().equals(generator) && record.getStart() == start &&
-          record.getEnd() == end) {
+    for (int i = 0; i < this.dataVector.size(); i++) {
+      final Generator record = (Generator) this.dataVector.get(i);
+      if (record.getType().equals(generator) && (record.getStart() == start) &&
+          (record.getEnd() == end)) {
         rowToRemove = i;
       }
     }
     if (rowToRemove > -1) {
-      dataVector.removeElementAt(rowToRemove);
-      fireTableRowsDeleted(0, rowToRemove);
+      this.dataVector.removeElementAt(rowToRemove);
+      this.fireTableRowsDeleted(0, rowToRemove);
     }
   }
 }
@@ -232,33 +235,33 @@ class Generator {
   protected Integer start;
   protected Integer end;
 
-  public Generator(String generator, int start, int end) {
-    type = generator;
+  public Generator(final String generator, final int start, final int end) {
+    this.type = generator;
     this.start = new Integer(start);
     this.end = new Integer(end);
   }
 
   public String getType() {
-    return type;
+    return this.type;
   }
 
-  public void setType(String type) {
+  public void setType(final String type) {
     this.type = type;
   }
 
   public int getStart() {
-    return start.intValue();
+    return this.start.intValue();
   }
 
-  public void setStart(int start) {
+  public void setStart(final int start) {
     this.start = new Integer(start);
   }
 
   public int getEnd() {
-    return end.intValue();
+    return this.end.intValue();
   }
 
-  public void setEnd(int end) {
+  public void setEnd(final int end) {
     this.end = new Integer(end);
   }
 }

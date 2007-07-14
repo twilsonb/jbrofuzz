@@ -25,7 +25,7 @@
  */
 package org.owasp.jbrofuzz.fuzz.tcp;
 
-import java.util.*;
+import java.util.ArrayList;
 /**
  * <p>Class responsible for creating the generators passed from the 
  * definitions file.</p>
@@ -79,24 +79,24 @@ public class Generator {
    * @param alphabetSize int
    * @param category String
    */
-  public Generator(char type, String name, String comment, int alphabetSize,
-                   String category) {
+  public Generator(final char type, final String name, final String comment, final int alphabetSize,
+                   final String category) {
     this.name = name;
     this.comment = comment;
     // Set the type
-    this.type = UNKNOWN;
-    if (type == RECURSIVE) {
-      this.type = RECURSIVE;
+    this.type = Generator.UNKNOWN;
+    if (type == Generator.RECURSIVE) {
+      this.type = Generator.RECURSIVE;
     }
-    if (type == REPLASIVE) {
-      this.type = REPLASIVE;
+    if (type == Generator.REPLASIVE) {
+      this.type = Generator.REPLASIVE;
     }
 
     this.alphabetSize = alphabetSize;
     this.category = category;
-    totalAdds = 0;
+    this.totalAdds = 0;
 
-    alphabet = new ArrayList(alphabetSize);
+    this.alphabet = new ArrayList(alphabetSize);
   }
 
   /**
@@ -108,11 +108,11 @@ public class Generator {
    * @param value String
    * @return output boolean
    */
-  public boolean addAlphabetValue(StringBuffer value) {
+  public boolean addAlphabetValue(final StringBuffer value) {
     boolean output = false;
-    if (totalAdds < alphabetSize) {
-      alphabet.add(createStringBuffer(value));
-      totalAdds++;
+    if (this.totalAdds < this.alphabetSize) {
+      this.alphabet.add(Generator.createStringBuffer(value));
+      this.totalAdds++;
       output = true;
     }
     return output;
@@ -125,13 +125,13 @@ public class Generator {
    * @param param String
    * @return String
    */
-  private static StringBuffer createStringBuffer(StringBuffer param) {
+  private static StringBuffer createStringBuffer(final StringBuffer param) {
     // Check to see if the given String states that its a function
     if (param.length() < 5) {
       return param;
     }
 
-    String beginning = param.substring(0, 5);
+    final String beginning = param.substring(0, 5);
     if (!beginning.startsWith("f(x)=")) {
       return param;
     }
@@ -140,20 +140,20 @@ public class Generator {
     param.delete(0, 5);
     // param = param.toString().substring(5);
     // Chop at x, the variable of f(x)
-    String[] paramArray = param.toString().split(" x ");
+    final String[] paramArray = param.toString().split(" x ");
 
     // Check to see if you have two elements
     if (paramArray.length != 2) {
       return param;
     }
     // Define the input string
-    String input = paramArray[0];
+    final String input = paramArray[0];
     // Define the number of times
     int times;
     try {
       times = Integer.parseInt(paramArray[1]);
     }
-    catch (NumberFormatException e) {
+    catch (final NumberFormatException e) {
       times = 1;
     }
 
@@ -162,9 +162,9 @@ public class Generator {
       return param;
     }
 
-    int len = input.length() * times;
+    final int len = input.length() * times;
 
-    StringBuffer newBuffer = new StringBuffer(len);
+    final StringBuffer newBuffer = new StringBuffer(len);
     for (int i = 0; i < times; i++) {
       newBuffer.append(input);
     }
@@ -176,7 +176,7 @@ public class Generator {
    * @return String
    */
   public String getName() {
-    return name;
+    return this.name;
   }
 
   /**
@@ -184,7 +184,7 @@ public class Generator {
    * @return String
    */
   public String getComment() {
-    return comment;
+    return this.comment;
   }
 
   /**
@@ -192,7 +192,7 @@ public class Generator {
    * @return int
    */
   public char getType() {
-    return type;
+    return this.type;
   }
 
   /**
@@ -202,10 +202,10 @@ public class Generator {
   public String getTypeAsString() {
     String output = "Unknown";
 
-    if (type == RECURSIVE) {
+    if (this.type == Generator.RECURSIVE) {
       output = "Recursive";
     }
-    if (type == REPLASIVE) {
+    if (this.type == Generator.REPLASIVE) {
       output = "Replasive";
     }
 
@@ -218,7 +218,7 @@ public class Generator {
    * @return int
    */
   public int getSize() {
-    return alphabetSize;
+    return this.alphabetSize;
   }
 
   /**
@@ -227,7 +227,7 @@ public class Generator {
    * @return String
    */
   public String getCategory() {
-    return category;
+    return this.category;
   }
 
   /**
@@ -235,7 +235,7 @@ public class Generator {
    * @param position int
    * @return String
    */
-  public StringBuffer getElement(int position) {
-    return (StringBuffer) alphabet.get(position % alphabetSize);
+  public StringBuffer getElement(final int position) {
+    return (StringBuffer) this.alphabet.get(position % this.alphabetSize);
   }
 }

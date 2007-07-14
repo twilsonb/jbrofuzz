@@ -45,9 +45,9 @@ public class StringArrayStack {
    *
    * @param capacity int
    */
-  public StringArrayStack(int capacity) {
-    filo = new String[capacity];
-    pointer = -1;
+  public StringArrayStack(final int capacity) {
+    this.filo = new String[capacity];
+    this.pointer = -1;
   }
 
   /**
@@ -56,7 +56,7 @@ public class StringArrayStack {
    * @return boolean
    */
   public boolean isEmpty() {
-    return pointer == -1;
+    return this.pointer == -1;
   }
 
   /**
@@ -65,9 +65,9 @@ public class StringArrayStack {
    *
    * @param element String
    */
-  public void push(String element) {
-    if (pointer + 1 < filo.length) {
-      filo[++pointer] = element;
+  public void push(final String element) {
+    if (this.pointer + 1 < this.filo.length) {
+      this.filo[++this.pointer] = element;
     }
   }
 
@@ -77,9 +77,9 @@ public class StringArrayStack {
    * @return String
    */
   public String pop() {
-    if (isEmpty()) {
+    if (this.isEmpty()) {
       return "";
     }
-    return filo[pointer--];
+    return this.filo[this.pointer--];
   }
 }

@@ -25,9 +25,13 @@
  */
 package org.owasp.jbrofuzz.ui.panels;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import org.owasp.jbrofuzz.ui.JBRFrame;
 
@@ -38,7 +42,11 @@ import org.owasp.jbrofuzz.ui.JBRFrame;
  * @version 0.6
  */
 public class Generators extends JPanel {
-  // The frame that the sniffing panel is attached
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5848591307104017542L;
+	// The frame that the sniffing panel is attached
   private JBRFrame m;
   // The JTable that holds all the data
   private JTextArea listTextArea;
@@ -48,9 +56,9 @@ public class Generators extends JPanel {
    *
    * @param m FrameWindow
    */
-  public Generators(JBRFrame m) {
+  public Generators(final JBRFrame m) {
     super();
-    setLayout(null);
+    this.setLayout(null);
     /*
          setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Generators "),
@@ -58,7 +66,7 @@ public class Generators extends JPanel {
      */
     this.m = m;
     // Define the JPanel
-    JPanel listPanel = new JPanel();
+    final JPanel listPanel = new JPanel();
 
     listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Fuzzing Generators "),
@@ -66,21 +74,21 @@ public class Generators extends JPanel {
     // Set the bounds
     listPanel.setBounds(10, 80, 870, 370);
 
-    listTextArea = new JTextArea();
-    listTextArea.setFont(new Font("Verdana", Font.PLAIN, 13));
-    listTextArea.setEditable(false);
-    listTextArea.setLineWrap(true);
-    listTextArea.setWrapStyleWord(true);
-    getFrameWindow().popup(listTextArea);
+    this.listTextArea = new JTextArea();
+    this.listTextArea.setFont(new Font("Verdana", Font.PLAIN, 13));
+    this.listTextArea.setEditable(false);
+    this.listTextArea.setLineWrap(true);
+    this.listTextArea.setWrapStyleWord(true);
+    this.getFrameWindow().popup(this.listTextArea);
 
-    JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
+    final JScrollPane listTextScrollPane = new JScrollPane(this.listTextArea);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
     listTextScrollPane.setPreferredSize(new Dimension(850, 330));
     listPanel.add(listTextScrollPane);
 
-    add(listPanel);
-    listTextArea.setCaretPosition(0);
+    this.add(listPanel);
+    this.listTextArea.setCaretPosition(0);
   }
 
   /**
@@ -90,7 +98,7 @@ public class Generators extends JPanel {
    * @return Window
    */
   public JBRFrame getFrameWindow() {
-    return m;
+    return this.m;
   }
 
   /**
@@ -100,7 +108,7 @@ public class Generators extends JPanel {
    *
    * @param str String
    */
-  public void setDefinitionsText(String str) {
-    listTextArea.append(str + "\n");
+  public void setDefinitionsText(final String str) {
+    this.listTextArea.append(str + "\n");
   }
 }

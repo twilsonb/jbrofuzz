@@ -27,7 +27,9 @@
  */
 package org.apache.commons.httpclient.protocol;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A class to encapsulate the specifics of a protocol.  This class class also
@@ -63,7 +65,7 @@ public class Protocol {
    *
    * @see #getProtocol(String)
    */
-  public static void registerProtocol(String id, Protocol protocol) {
+  public static void registerProtocol(final String id, final Protocol protocol) {
 
     if (id == null) {
       throw new IllegalArgumentException("id is null");
@@ -71,7 +73,7 @@ public class Protocol {
     if (protocol == null) {
       throw new IllegalArgumentException("protocol is null");
     }
-    PROTOCOLS.put(id, protocol);
+    Protocol.PROTOCOLS.put(id, protocol);
   }
 
   /**
@@ -79,13 +81,13 @@ public class Protocol {
    *
    * @param id the ID of the protocol to remove
    */
-  public static void unregisterProtocol(String id) {
+  public static void unregisterProtocol(final String id) {
 
     if (id == null) {
       throw new IllegalArgumentException("id is null");
     }
 
-    PROTOCOLS.remove(id);
+    Protocol.PROTOCOLS.remove(id);
   }
 
   /**
@@ -97,16 +99,16 @@ public class Protocol {
    *
    * @throws IllegalStateException if a protocol with the ID cannot be found
    */
-  public static Protocol getProtocol(String id) throws IllegalStateException {
+  public static Protocol getProtocol(final String id) throws IllegalStateException {
 
     if (id == null) {
       throw new IllegalArgumentException("id is null");
     }
 
-    Protocol protocol = (Protocol) PROTOCOLS.get(id);
+    Protocol protocol = (Protocol) Protocol.PROTOCOLS.get(id);
 
     if (protocol == null) {
-      protocol = lazyRegisterProtocol(id);
+      protocol = Protocol.lazyRegisterProtocol(id);
     }
 
     return protocol;
@@ -121,7 +123,7 @@ public class Protocol {
    *
    * @throws IllegalStateException if the protocol with id is not recognized
    */
-  private static Protocol lazyRegisterProtocol(String id) throws
+  private static Protocol lazyRegisterProtocol(final String id) throws
     IllegalStateException {
 
     if ("http".equals(id)) {
@@ -164,7 +166,7 @@ public class Protocol {
    * this protocol
    * @param defaultPort the port this protocol defaults to
    */
-  public Protocol(String scheme, ProtocolSocketFactory factory, int defaultPort) {
+  public Protocol(final String scheme, final ProtocolSocketFactory factory, final int defaultPort) {
 
     if (scheme == null) {
       throw new IllegalArgumentException("scheme is null");
@@ -190,8 +192,8 @@ public class Protocol {
    * this protocol
    * @param defaultPort the port this protocol defaults to
    */
-  public Protocol(String scheme, SecureProtocolSocketFactory factory,
-                  int defaultPort) {
+  public Protocol(final String scheme, final SecureProtocolSocketFactory factory,
+                  final int defaultPort) {
 
     if (scheme == null) {
       throw new IllegalArgumentException("scheme is null");
@@ -214,7 +216,7 @@ public class Protocol {
    * @return int
    */
   public int getDefaultPort() {
-    return defaultPort;
+    return this.defaultPort;
   }
 
   /**
@@ -223,7 +225,7 @@ public class Protocol {
    * @return SocketFactory
    */
   public ProtocolSocketFactory getSocketFactory() {
-    return socketFactory;
+    return this.socketFactory;
   }
 
   /**
@@ -231,7 +233,7 @@ public class Protocol {
    * @return The scheme
    */
   public String getScheme() {
-    return scheme;
+    return this.scheme;
   }
 
   /**
@@ -239,7 +241,7 @@ public class Protocol {
    * @return true if this protocol is secure
    */
   public boolean isSecure() {
-    return secure;
+    return this.secure;
   }
 
   /**
@@ -250,16 +252,17 @@ public class Protocol {
    *
    * @return the given port or the defaultPort
    */
-  public int resolvePort(int port) {
-    return port <= 0 ? getDefaultPort() : port;
+  public int resolvePort(final int port) {
+    return port <= 0 ? this.getDefaultPort() : port;
   }
 
   /**
    * Return a string representation of this object.
    * @return a string representation of this object.
    */
-  public String toString() {
-    return scheme + ":" + defaultPort;
+  @Override
+	public String toString() {
+    return this.scheme + ":" + this.defaultPort;
   }
 
   /**
@@ -267,15 +270,16 @@ public class Protocol {
    * @param obj The object to compare against.
    * @return true if the objects are equal.
    */
-  public boolean equals(Object obj) {
+  @Override
+	public boolean equals(final Object obj) {
 
     if (obj instanceof Protocol) {
 
-      Protocol p = (Protocol) obj;
+      final Protocol p = (Protocol) obj;
 
-      return (defaultPort == p.getDefaultPort() &&
-        scheme.equalsIgnoreCase(p.getScheme()) && secure == p.isSecure() &&
-        socketFactory.equals(p.getSocketFactory()));
+      return ((this.defaultPort == p.getDefaultPort()) &&
+        this.scheme.equalsIgnoreCase(p.getScheme()) && (this.secure == p.isSecure()) &&
+        this.socketFactory.equals(p.getSocketFactory()));
 
     }
     else {
@@ -288,7 +292,8 @@ public class Protocol {
    * Return a hash code for this object
    * @return The hash code.
    */
-  public int hashCode() {
-    return scheme.hashCode();
+  @Override
+	public int hashCode() {
+    return this.scheme.hashCode();
   }
 }

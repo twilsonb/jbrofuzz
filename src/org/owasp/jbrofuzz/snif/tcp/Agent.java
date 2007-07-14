@@ -25,12 +25,14 @@
  */
 package org.owasp.jbrofuzz.snif.tcp;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import org.owasp.jbrofuzz.*;
-import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.io.FileHandler;
 
 /**
  * <p>The Agent class implements the grouping necessary for the 
@@ -51,11 +53,11 @@ class Agent implements Runnable {
   private JBroFuzz mJBroFuzz;
 
   // Format the current time in a nice iso 8601 format.
-  private static SimpleDateFormat dateFormat = new SimpleDateFormat(
+  private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
     "yyyy-MM-dd HH-mm-ss-SSS");
 
-  public Agent(JBroFuzz mJBroFuzz, InputStream inStream, OutputStream outStream,
-               AgentMonitor agentMonitor, String name) {
+  public Agent(final JBroFuzz mJBroFuzz, final InputStream inStream, final OutputStream outStream,
+               final AgentMonitor agentMonitor, final String name) {
 
     this.mJBroFuzz = mJBroFuzz;
 
@@ -64,9 +66,9 @@ class Agent implements Runnable {
     this.inStream = inStream;
     this.agentMonitor = agentMonitor;
 
-    buffer = new byte[BUFFER_SIZE];
+    this.buffer = new byte[Agent.BUFFER_SIZE];
 
-    Thread t = new Thread(this);
+    final Thread t = new Thread(this);
     t.start();
   }
 
@@ -76,36 +78,36 @@ class Agent implements Runnable {
 
       while (true) {
         // While there are bytes in the input stream, read them
-        if ((bytesRead = inStream.read(buffer, 0, BUFFER_SIZE)) == -1) {
+        if ((bytesRead = this.inStream.read(this.buffer, 0, Agent.BUFFER_SIZE)) == -1) {
           break;
         }
         // Log the incoming/outgoing packets
-        log(buffer, bytesRead);
+        this.log(this.buffer, bytesRead);
         // Write out to the output stream
-        outStream.write(buffer, 0, bytesRead);
+        this.outStream.write(this.buffer, 0, bytesRead);
       }
     }
-    catch (IOException e) {
+    catch (final IOException e) {
       // mJBroFuzz.getFrameWindow().log("TCPAgent: " + e.getMessage());
     }
     //
-    agentMonitor.agentHasDied(this);
+    this.agentMonitor.agentHasDied(this);
   }
 
   private void log(final byte buffer[], final int nBytes) {
     synchronized (System.out) {
       final Date currentTime = new Date();
-      final String fileNumber = mJBroFuzz.getWindow().getTCPSniffingPanel().
+      final String fileNumber = this.mJBroFuzz.getWindow().getTCPSniffingPanel().
                                 getCounter();
 
       FileHandler.writeSnifFile(fileNumber,
-                                "[" + name + ", (" + nBytes + " bytes) " +
-                                dateFormat.format(currentTime) + "]");
+                                "[" + this.name + ", (" + nBytes + " bytes) " +
+                                Agent.dateFormat.format(currentTime) + "]");
 
       final StringBuffer row = new StringBuffer(100);
       row.append(fileNumber);
       row.append("          ");
-      row.append(name);
+      row.append(this.name);
       if (nBytes < 100000) {
         row.append(' ');
       }
@@ -124,17 +126,17 @@ class Agent implements Runnable {
       row.append("          (");
       row.append(nBytes);
       row.append(" bytes)          ");
-      row.append(dateFormat.format(currentTime));
+      row.append(Agent.dateFormat.format(currentTime));
       // Append a row in the table
-      mJBroFuzz.getWindow().getTCPSniffingPanel().addRow(row.toString());
+      this.mJBroFuzz.getWindow().getTCPSniffingPanel().addRow(row.toString());
       // formatted string
-      StringBuffer sb = new StringBuffer(nBytes);
+      final StringBuffer sb = new StringBuffer(nBytes);
       // formatted binary string
-      StringBuffer pb = new StringBuffer(4 * nBytes);
+      final StringBuffer pb = new StringBuffer(4 * nBytes);
       // hex buffer string
-      StringBuffer hb = new StringBuffer();
+      final StringBuffer hb = new StringBuffer();
       // text buffer string
-      StringBuffer tb = new StringBuffer();
+      final StringBuffer tb = new StringBuffer();
 
       // line position counter
       int line_counter = 0;
@@ -146,32 +148,32 @@ class Agent implements Runnable {
       for (int i = 0; i < nBytes; i++) {
         // 32 bit Unicode to 16 bit ASCII
         final int value = (buffer[i] & 0xFF);
-        if (value == '\r' || value == '\n' || value == '\t' ||
-            (value >= ' ' && value <= '~')) {
+        if ((value == '\r') || (value == '\n') || (value == '\t') ||
+            ((value >= ' ') && (value <= '~'))) {
           sb.append((char) value); // text character
         }
         else {
           sb.append("[");
-          sb.append(hexPad(Integer.toHexString(value), 2));
+          sb.append(Agent.hexPad(Integer.toHexString(value), 2));
           sb.append("]");
           bin_counter++;
         }
 
-        if (value >= ' ' && value <= '~') {
+        if ((value >= ' ') && (value <= '~')) {
           tb.append((char) value); // "printable" character
         }
         else {
           tb.append('.'); // non-printable
         }
 
-        hb.append(hexPad(Integer.toHexString(value), 2));
-        if (line_counter == 3 || line_counter == 7 || line_counter == 11) { // for readability, space every 4 chars
+        hb.append(Agent.hexPad(Integer.toHexString(value), 2));
+        if ((line_counter == 3) || (line_counter == 7) || (line_counter == 11)) { // for readability, space every 4 chars
           hb.append(' ');
           tb.append(' ');
         }
 
         if (line_counter == 15) { // 16 characters per line
-          pb.append(hexPad(Integer.toHexString(byte_counter), 4));
+          pb.append(Agent.hexPad(Integer.toHexString(byte_counter), 4));
           pb.append(":  ");
           pb.append(hb);
           pb.append("    ");
@@ -192,7 +194,7 @@ class Agent implements Runnable {
       for (int i = hb.length(); i < 35; i++) {
         hb.append(' '); // pad to length of other lines
       }
-      pb.append(hexPad(Integer.toHexString(byte_counter), 4));
+      pb.append(Agent.hexPad(Integer.toHexString(byte_counter), 4));
       pb.append(":  ");
       pb.append(hb);
       pb.append("    ");

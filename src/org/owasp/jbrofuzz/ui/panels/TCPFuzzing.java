@@ -26,24 +26,44 @@
 package org.owasp.jbrofuzz.ui.panels;
 
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker3;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.*;
+import javax.swing.table.TableColumn;
+import javax.swing.text.Document;
+import javax.swing.text.StyledEditorKit;
 
-import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.fuzz.RequestIterator;
+import org.owasp.jbrofuzz.fuzz.TConstructor;
+import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.FuzzingTableModel;
 import org.owasp.jbrofuzz.ui.tablemodels.SniffingTableModel;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import org.owasp.jbrofuzz.ui.util.NonWrappingTextPane;
+import org.owasp.jbrofuzz.ui.util.TextHighlighter;
 import org.owasp.jbrofuzz.ui.viewers.WindowPlotter;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
-import org.owasp.jbrofuzz.version.*;
-import org.owasp.jbrofuzz.io.*;
-import org.owasp.jbrofuzz.fuzz.*;
 /**
  * <p>The main "TCP Fuzzing" panel, displayed within the Main 
  * Frame Window.</p>
@@ -57,7 +77,11 @@ import org.owasp.jbrofuzz.fuzz.*;
  * @version 0.6
  */
 public class TCPFuzzing extends JPanel {
-  // The frame that the sniffing panel is attached
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -9148417039346169565L;
+	// The frame that the sniffing panel is attached
   private final JBRFrame m;
   // The JPanels
   private final JPanel outputPanel;
@@ -66,7 +90,7 @@ public class TCPFuzzing extends JPanel {
   // The port JFormattedTextField
   private final JFormattedTextField port;
   // The JTextArea
-  private final JTextArea message;
+  private final NonWrappingTextPane message;
   // The JTable were results are outputed
   private JTable outputTable;
   // And the table model that goes with it
@@ -92,101 +116,114 @@ public class TCPFuzzing extends JPanel {
    *
    * @param m FrameWindow
    */
-  public TCPFuzzing(JBRFrame m) {
+  public TCPFuzzing(final JBRFrame m) {
     super();
-    setLayout(null);
+    this.setLayout(null);
 
     this.m = m;
-    counter = 1;
-    session = 0;
+    this.counter = 1;
+    this.session = 0;
 
     // The target panel
-    JPanel targetPanel = new JPanel();
+    final JPanel targetPanel = new JPanel();
     targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Target "),
                           BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-    target = new JTextField();
-    target.setEditable(true);
-    target.setVisible(true);
-    target.setFont(new Font("Verdana", Font.BOLD, 12));
-    target.setMargin(new Insets(1, 1, 1, 1));
-    target.setBackground(Color.WHITE);
-    target.setForeground(Color.BLACK);
-    getFrameWindow().popup(target);
+    this.target = new JTextField();
+    this.target.setEditable(true);
+    this.target.setVisible(true);
+    this.target.setFont(new Font("Verdana", Font.BOLD, 12));
+    this.target.setMargin(new Insets(1, 1, 1, 1));
+    this.target.setBackground(Color.WHITE);
+    this.target.setForeground(Color.BLACK);
+    this.getFrameWindow().popup(this.target);
 
-    target.setPreferredSize(new Dimension(480, 20));
-    targetPanel.add(target);
+    this.target.setPreferredSize(new Dimension(480, 20));
+    targetPanel.add(this.target);
 
     targetPanel.setBounds(10, 20, 500, 60);
-    add(targetPanel);
+    this.add(targetPanel);
     // The port panel
-    JPanel portPanel = new JPanel();
+    final JPanel portPanel = new JPanel();
     portPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-    port = new JFormattedTextField();
+    this.port = new JFormattedTextField();
 
-    port.setEditable(true);
-    port.setVisible(true);
-    port.setFont(new Font("Verdana", Font.BOLD, 12));
-    port.setMargin(new Insets(1, 1, 1, 1));
-    port.setBackground(Color.WHITE);
-    port.setForeground(Color.BLACK);
-    getFrameWindow().popup(port);
+    this.port.setEditable(true);
+    this.port.setVisible(true);
+    this.port.setFont(new Font("Verdana", Font.BOLD, 12));
+    this.port.setMargin(new Insets(1, 1, 1, 1));
+    this.port.setBackground(Color.WHITE);
+    this.port.setForeground(Color.BLACK);
+    this.getFrameWindow().popup(this.port);
 
-    port.setPreferredSize(new Dimension(50, 20));
-    portPanel.add(port);
+    this.port.setPreferredSize(new Dimension(50, 20));
+    portPanel.add(this.port);
 
     portPanel.setBounds(510, 20, 60, 60);
-    add(portPanel);
+    this.add(portPanel);
     // The message panel
-    JPanel requestPanel = new JPanel();
+    final JPanel requestPanel = new JPanel();
     requestPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Request "),
                            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-    message = new JTextArea();
+    this.message = new NonWrappingTextPane();
 
-    message.setEditable(true);
-    message.setVisible(true);
-    message.setFont(new Font("Verdana", Font.PLAIN, 12));
-    message.setLineWrap(false);
-    message.setWrapStyleWord(true);
-    message.setMargin(new Insets(1, 1, 1, 1));
-    message.setBackground(Color.WHITE);
-    message.setForeground(Color.BLACK);
-    getFrameWindow().popup(message);
+    this.message.setEditable(true);
+    this.message.setVisible(true);
+    this.message.setFont(new Font("Verdana", Font.PLAIN, 12));
+    // message.setLineWrap(false);
+    // message.setWrapStyleWord(true);
+    this.message.setMargin(new Insets(1, 1, 1, 1));
+    this.message.setBackground(Color.WHITE);
+    this.message.setForeground(Color.BLACK);
+    //
+    this.message.setEditorKit(new StyledEditorKit() {
+    			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -6085642347022880064L;
 
-    JScrollPane messageScrollPane = new JScrollPane(message);
+					@Override
+					public Document createDefaultDocument()		{
+    				return new TextHighlighter();
+    			}    			
+    		}
+    );
+    this.getFrameWindow().popup(this.message);
+
+    final JScrollPane messageScrollPane = new JScrollPane(this.message);
     messageScrollPane.setVerticalScrollBarPolicy(20);
     messageScrollPane.setHorizontalScrollBarPolicy(30);
     messageScrollPane.setPreferredSize(new Dimension(480, 160));
     requestPanel.add(messageScrollPane);
 
     requestPanel.setBounds(10, 80, 500, 200);
-    add(requestPanel);
+    this.add(requestPanel);
 
     // The add generator button
-    buttonAddGen = new JButton(ImageCreator.ADD_IMG);
-    buttonAddGen.setToolTipText("Add a Generator");
-    buttonAddGen.addActionListener(new ActionListener() {
+    this.buttonAddGen = new JButton(ImageCreator.ADD_IMG);
+    this.buttonAddGen.setToolTipText("Add a Generator");
+    this.buttonAddGen.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
-        generatorAddButton();
+        TCPFuzzing.this.generatorAddButton();
       }
     });
 
     // The remove generator button
-    buttonRemGen = new JButton(ImageCreator.REMOVE_IMG);
-    buttonRemGen.setToolTipText("Remove a Generator");
-    buttonRemGen.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        generatorRemoveButton();
+    this.buttonRemGen = new JButton(ImageCreator.REMOVE_IMG);
+    this.buttonRemGen.setToolTipText("Remove a Generator");
+    this.buttonRemGen.addActionListener(new ActionListener() {
+      public void actionPerformed(final ActionEvent e) {
+        TCPFuzzing.this.generatorRemoveButton();
       }
     });
 
     // The generator panel
-    JPanel generatorPanel = new JPanel();
+    final JPanel generatorPanel = new JPanel();
     generatorPanel.setLayout(null);
     
     generatorPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
@@ -195,16 +232,16 @@ public class TCPFuzzing extends JPanel {
     /*
      * Fuzzing Table Model
      */
-    mFuzzingTableModel = new FuzzingTableModel(this);
-    generatorTable = new JTable();
-    generatorTable.setBackground(Color.WHITE);
-    generatorTable.setForeground(Color.BLACK);
+    this.mFuzzingTableModel = new FuzzingTableModel(this);
+    this.generatorTable = new JTable();
+    this.generatorTable.setBackground(Color.WHITE);
+    this.generatorTable.setForeground(Color.BLACK);
 
-    generatorTable.setModel(mFuzzingTableModel);
+    this.generatorTable.setModel(this.mFuzzingTableModel);
     // Set the column widths
     TableColumn column = null;
-    for (int i = 0; i < mFuzzingTableModel.getColumnCount(); i++) {
-      column = generatorTable.getColumnModel().getColumn(i);
+    for (int i = 0; i < this.mFuzzingTableModel.getColumnCount(); i++) {
+      column = this.generatorTable.getColumnModel().getColumn(i);
       if (i == 0) {
         column.setPreferredWidth(100);
       }
@@ -212,69 +249,71 @@ public class TCPFuzzing extends JPanel {
         column.setPreferredWidth(50);
       }
     }
-    generatorTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
+    this.generatorTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
 
-    JScrollPane generatorScrollPane = new JScrollPane(generatorTable);
+    final JScrollPane generatorScrollPane = new JScrollPane(this.generatorTable);
     generatorScrollPane.setVerticalScrollBarPolicy(20);
 
     generatorScrollPane.setPreferredSize(new Dimension(180, 100));
     
     generatorScrollPane.setBounds(15, 25, 180, 100);
-    buttonRemGen.setBounds(235, 60, 40, 20);
-    buttonAddGen.setBounds(235, 25, 40, 20);
+    this.buttonRemGen.setBounds(235, 60, 40, 20);
+    this.buttonAddGen.setBounds(235, 25, 40, 20);
     
     generatorPanel.add(generatorScrollPane);
-    generatorPanel.add(buttonRemGen);
-    generatorPanel.add(buttonAddGen);
+    generatorPanel.add(this.buttonRemGen);
+    generatorPanel.add(this.buttonAddGen);
     
     generatorPanel.setBounds(570, 20, 300, 160);
-    add(generatorPanel);
+    this.add(generatorPanel);
     // The fuzz buttons
-    buttonFuzzStart = new JButton("Fuzz!", ImageCreator.START_IMG);
-    buttonFuzzStart.setBounds(580, 230, 90, 40);
-    buttonFuzzStart.setToolTipText("Start Fuzzing!");
-    add(buttonFuzzStart);
-    buttonFuzzStart.addActionListener(new ActionListener() {
+    this.buttonFuzzStart = new JButton("Fuzz!", ImageCreator.START_IMG);
+    this.buttonFuzzStart.setBounds(580, 230, 90, 40);
+    this.buttonFuzzStart.setToolTipText("Start Fuzzing!");
+    this.add(this.buttonFuzzStart);
+    this.buttonFuzzStart.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
-        worker = new SwingWorker3() {
-          public Object construct() {
-            fuzzStartButton();
+        TCPFuzzing.this.worker = new SwingWorker3() {
+          @Override
+					public Object construct() {
+            TCPFuzzing.this.fuzzStartButton();
             return "start-window-return";
           }
 
-          public void finished() {
-            fuzzStopButton();
+          @Override
+					public void finished() {
+            TCPFuzzing.this.fuzzStopButton();
           }
         };
-        worker.start();
+        TCPFuzzing.this.worker.start();
       }
     });
-    buttonFuzzStop = new JButton("Stop", ImageCreator.STOP_IMG);
-    buttonFuzzStop.setEnabled(false);
-    buttonFuzzStop.setToolTipText("Stop Fuzzing");
-    buttonFuzzStop.setBounds(680, 230, 90, 40);
-    add(buttonFuzzStop);
-    buttonFuzzStop.addActionListener(new ActionListener() {
+    this.buttonFuzzStop = new JButton("Stop", ImageCreator.STOP_IMG);
+    this.buttonFuzzStop.setEnabled(false);
+    this.buttonFuzzStop.setToolTipText("Stop Fuzzing");
+    this.buttonFuzzStop.setBounds(680, 230, 90, 40);
+    this.add(this.buttonFuzzStop);
+    this.buttonFuzzStop.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
       	SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-          	fuzzStopButton();
+          	TCPFuzzing.this.fuzzStopButton();
           }
         });       
       }
     });
     // The plot button
-    buttonPlot = new JButton("Bro", ImageCreator.PAUSE_IMG);
-    buttonPlot.setEnabled(false);
-    buttonPlot.setToolTipText("Plot Fuzzing Results");
-    buttonPlot.setBounds(780, 230, 80, 40);
-    add(buttonPlot);
-    buttonPlot.addActionListener(new ActionListener() {
+    this.buttonPlot = new JButton("Bro", ImageCreator.PAUSE_IMG);
+    this.buttonPlot.setEnabled(false);
+    this.buttonPlot.setToolTipText("Plot Fuzzing Results");
+    this.buttonPlot.setBounds(780, 230, 80, 40);
+    this.add(this.buttonPlot);
+    this.buttonPlot.addActionListener(new ActionListener() {
       // public void actionPerformed(final ActionEvent e) {
       	public void actionPerformed(final ActionEvent e) {
         	SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-            	fuzzBroButton();
+            	TCPFuzzing.this.fuzzBroButton();
             }
           });
         
@@ -282,61 +321,61 @@ public class TCPFuzzing extends JPanel {
     });
    
     // The output panel
-    outputPanel = new JPanel();
-    outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+    this.outputPanel = new JPanel();
+    this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output (Last 1000 Lines) "),
                           BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-    outputTableModel = new SniffingTableModel();
+    this.outputTableModel = new SniffingTableModel();
     
-    outputTable = new JTable();
-    outputTable.setModel(outputTableModel);
+    this.outputTable = new JTable();
+    this.outputTable.setModel(this.outputTableModel);
     
-    outputTable.setFont(new Font("Monospaced", Font.BOLD, 12));
-    outputTable.setBackground(Color.BLACK);
-    outputTable.setForeground(Color.WHITE);
-    outputTable.setSurrendersFocusOnKeystroke(true);
-    outputTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    this.outputTable.setFont(new Font("Monospaced", Font.BOLD, 12));
+    this.outputTable.setBackground(Color.BLACK);
+    this.outputTable.setForeground(Color.WHITE);
+    this.outputTable.setSurrendersFocusOnKeystroke(true);
+    this.outputTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     // getFrameWindow().popup(outputTable);
 
-    JScrollPane outputScrollPane = new JScrollPane(outputTable);
+    final JScrollPane outputScrollPane = new JScrollPane(this.outputTable);
     outputScrollPane.setVerticalScrollBarPolicy(20);
     outputScrollPane.setPreferredSize(new Dimension(840, 130));
-    outputPanel.add(outputScrollPane);
-    outputPanel.setBounds(10, 280, 860, 170);
-    add(outputPanel);
+    this.outputPanel.add(outputScrollPane);
+    this.outputPanel.setBounds(10, 280, 860, 170);
+    this.add(this.outputPanel);
 
     // Add the action listener for each row
-    ListSelectionModel rowSM = outputTable.getSelectionModel();
+    final ListSelectionModel rowSM = this.outputTable.getSelectionModel();
 
     rowSM.addListSelectionListener(new ListSelectionListener() {
-      public void valueChanged(ListSelectionEvent e) {
+      public void valueChanged(final ListSelectionEvent e) {
         //Ignore extra messages
         if (e.getValueIsAdjusting()) {
           return;
         }
-        ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+        final ListSelectionModel lsm = (ListSelectionModel) e.getSource();
         if (lsm.isSelectionEmpty()) {
           // No rows selected
         }
         else {
-          int selectedRow = lsm.getMinSelectionIndex();
-          String s = outputTableModel.getValueAt(selectedRow);
-          WindowViewer vew = new WindowViewer(getFrameWindow(), s, WindowViewer.VIEW_FUZZING_PANEL);
+          final int selectedRow = lsm.getMinSelectionIndex();
+          final String s = TCPFuzzing.this.outputTableModel.getValueAt(selectedRow);
+          final WindowViewer vew = new WindowViewer(TCPFuzzing.this.getFrameWindow(), s, WindowViewer.VIEW_FUZZING_PANEL);
         }
       }
     }); // ListSelectionListener
 
     
     // Some value defaults
-    target.setText("http://localhost");
-    port.setText("80");
-    message.setText("GET /index.html HTTP/1.0\r\n" + "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n" + "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n" +
+    this.target.setText("http://localhost");
+    this.port.setText("80");
+    this.message.setText("GET /index.html HTTP/1.0\r\n" + "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n" + "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n" +
                     "Accept-Language: en-gb,en;q=0.5\r\n" +
                     "Accept-Encoding: gzip,deflate\r\n" +
                     "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n" +
                     "Keep-Alive: 300\r\n" + "Connection: keep-alive\r\n\r\n");
-    message.setCaretPosition(0);
+    this.message.setCaretPosition(0);
   }
 
   /**
@@ -344,21 +383,21 @@ public class TCPFuzzing extends JPanel {
    * </p>
    */
   public void fuzzStartButton() {
-    if (!buttonFuzzStart.isEnabled()) {
+    if (!this.buttonFuzzStart.isEnabled()) {
       return;
     }
     // UI and Colors
-    buttonFuzzStart.setEnabled(false);
-    buttonFuzzStop.setEnabled(true);
-    buttonPlot.setEnabled(true);
-    target.setEditable(false);
-    target.setBackground(Color.BLACK);
-    target.setForeground(Color.WHITE);
-    port.setEditable(false);
-    port.setBackground(Color.BLACK);
-    port.setForeground(Color.WHITE);
+    this.buttonFuzzStart.setEnabled(false);
+    this.buttonFuzzStop.setEnabled(true);
+    this.buttonPlot.setEnabled(true);
+    this.target.setEditable(false);
+    this.target.setBackground(Color.BLACK);
+    this.target.setForeground(Color.WHITE);
+    this.port.setEditable(false);
+    this.port.setBackground(Color.BLACK);
+    this.port.setForeground(Color.WHITE);
     // Check to see if a message is present
-    if ("".equals(message.getText())) {
+    if ("".equals(this.message.getText())) {
       JOptionPane.showMessageDialog(this,
                                     "The request field is blank.\n" + "Specify a request\n",
                                     "Empty Request Field",
@@ -366,38 +405,38 @@ public class TCPFuzzing extends JPanel {
       return;
     }
     // Increment the session and reset the counter
-    session++;
-    counter = 1;
+    this.session++;
+    this.counter = 1;
     // Update the border of the output panel
-    outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+    this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output (Last 1000 Lines)  " + "Logging in folder (" +
-                         getJBroFuzz().getFormat().getDate() +
+                         this.getJBroFuzz().getFormat().getDate() +
                          // getJBroFuzz().getVersion().getDate() +
-                         ") Session " + session),
+                         ") Session " + this.session),
                           BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
     // Clear the text of the output pane
     // outputTable.setText("");
 
-    final int rows = generatorTable.getRowCount();
+    final int rows = this.generatorTable.getRowCount();
     if (rows < 1) {
-      StringBuffer sbuf = new StringBuffer(message.getText());
-      mRIterator = new RequestIterator(getJBroFuzz(), sbuf, 0, 0, "ZER");
-      mRIterator.run();
+      final StringBuffer sbuf = new StringBuffer(this.message.getText());
+      this.mRIterator = new RequestIterator(this.getJBroFuzz(), sbuf, 0, 0, "ZER");
+      this.mRIterator.run();
       //getJBroFuzz().setGenerator(sbuf, 0, 0, "ZER");
       //getJBroFuzz().runGenerator();
     }
     else {
       for (int i = 0; i < rows; i++) {
-        final String generator = (String) mFuzzingTableModel.getValueAt(i, 0);
-        final int start = ((Integer) mFuzzingTableModel.getValueAt(i, 1)).
+        final String generator = (String) this.mFuzzingTableModel.getValueAt(i, 0);
+        final int start = ((Integer) this.mFuzzingTableModel.getValueAt(i, 1)).
                           intValue();
-        final int end = ((Integer) mFuzzingTableModel.getValueAt(i, 2)).
+        final int end = ((Integer) this.mFuzzingTableModel.getValueAt(i, 2)).
                         intValue();
 
-        StringBuffer sbuf = new StringBuffer(message.getText());
-        mRIterator = new RequestIterator(getJBroFuzz(), sbuf, start, end, generator);
-        mRIterator.run();
+        final StringBuffer sbuf = new StringBuffer(this.message.getText());
+        this.mRIterator = new RequestIterator(this.getJBroFuzz(), sbuf, start, end, generator);
+        this.mRIterator.run();
 
       }
     }
@@ -407,28 +446,29 @@ public class TCPFuzzing extends JPanel {
    * <p>Method trigered when attempting to stop any fuzzing taking place.</p>
    */
   public void fuzzStopButton() {
-    if (!buttonFuzzStop.isEnabled()) {
+    if (!this.buttonFuzzStop.isEnabled()) {
       return;
     }
-    mRIterator.stop();
+    this.mRIterator.stop();
     // UI and Colors
-    buttonFuzzStart.setEnabled(true);
-    buttonFuzzStop.setEnabled(false);
-    target.setEditable(true);
-    target.setBackground(Color.WHITE);
-    target.setForeground(Color.BLACK);
-    port.setEditable(true);
-    port.setBackground(Color.WHITE);
-    port.setForeground(Color.BLACK);
+    this.buttonFuzzStart.setEnabled(true);
+    this.buttonFuzzStop.setEnabled(false);
+    this.target.setEditable(true);
+    this.target.setBackground(Color.WHITE);
+    this.target.setForeground(Color.BLACK);
+    this.port.setEditable(true);
+    this.port.setBackground(Color.WHITE);
+    this.port.setForeground(Color.BLACK);
   }
   
   public void fuzzBroButton() {
-  	if(!buttonPlot.isEnabled()) {
+  	if(!this.buttonPlot.isEnabled()) {
   		return;
   	}
   	final WindowPlotter wd = new WindowPlotter(FileHandler.getFuzzDirName());
   	wd.addKeyListener(new KeyAdapter() {
-      public void keyPressed(KeyEvent ke) {
+      @Override
+			public void keyPressed(final KeyEvent ke) {
         if (ke.getKeyCode() == 27) {
           wd.dispose();
         }
@@ -442,28 +482,28 @@ public class TCPFuzzing extends JPanel {
    * @return String
    */
   public String getTargetText() {
-    String text = target.getText();
+    String text = this.target.getText();
     int len = text.length();
 
     if (text.startsWith("ftp://")) {
       text = text.substring(6, len);
       len = text.length();
-      target.setText(text);
+      this.target.setText(text);
     }
     if (text.startsWith("http://")) {
       text = text.substring(7, len);
       len = text.length();
-      target.setText(text);
+      this.target.setText(text);
     }
     if (text.startsWith("https://")) {
       text = text.substring(8, len);
       len = text.length();
-      target.setText(text);
+      this.target.setText(text);
     }
     if (text.endsWith("/")) {
       text = text.substring(0, len - 1);
       // If another if statement is included, update the len variable here
-      target.setText(text);
+      this.target.setText(text);
     }
     return text;
   }
@@ -474,7 +514,7 @@ public class TCPFuzzing extends JPanel {
    * @return String
    */
   public String getPortText() {
-    String text = port.getText();
+    final String text = this.port.getText();
     return text;
   }
 
@@ -484,17 +524,17 @@ public class TCPFuzzing extends JPanel {
    * @return String
    */
   public String getMessageText() {
-    return message.getText();
+    return this.message.getText();
   }
   
   public void addRowInOuputTable(final String s) {
 	    SwingUtilities.invokeLater(new Runnable() {
 	        public void run() {
-	          outputTableModel.addEmptyRow();
-	          int totalRows = outputTableModel.getRowCount();
-	          outputTableModel.setValueAt(s, totalRows - 1, 0);
+	          TCPFuzzing.this.outputTableModel.addEmptyRow();
+	          final int totalRows = TCPFuzzing.this.outputTableModel.getRowCount();
+	          TCPFuzzing.this.outputTableModel.setValueAt(s, totalRows - 1, 0);
 	          // Set the last row to be visible
-	          outputTable.scrollRectToVisible(outputTable.getCellRect(outputTable.
+	          TCPFuzzing.this.outputTable.scrollRectToVisible(TCPFuzzing.this.outputTable.getCellRect(TCPFuzzing.this.outputTable.
 	            getRowCount(), 0, true));
 	        }
 	      });
@@ -508,32 +548,32 @@ public class TCPFuzzing extends JPanel {
     // Check to see what text has been selected
     String selectedText;
     try {
-      selectedText = message.getSelectedText();
+      selectedText = this.message.getSelectedText();
     }
-    catch (IllegalArgumentException e) {
+    catch (final IllegalArgumentException e) {
       JOptionPane.showInputDialog(this,
         "An exception was thrown while attempting to get the selected text",
-                                  ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
+                                  TCPFuzzing.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
       selectedText = "";
     }
     // If no text has been selected, prompt the user to select some text
     if (selectedText == null) {
       JOptionPane.showMessageDialog(this,
         "Select (highlight) a text range \nfrom the Request field",
-                                    ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
+                                    TCPFuzzing.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
     }
     // Else find out the location of where the text has been selected
     else {
-      final int sPoint = message.getSelectionStart();
-      final int fPoint = message.getSelectionEnd();
+      final int sPoint = this.message.getSelectionStart();
+      final int fPoint = this.message.getSelectionEnd();
 
-      TConstructor mTConstructor = new TConstructor(getJBroFuzz());
-      String generators = mTConstructor.getAllGeneratorNamesAndComments();
-      String[] generatorArray = generators.split(", ");
+      final TConstructor mTConstructor = new TConstructor(this.getJBroFuzz());
+      final String generators = mTConstructor.getAllGeneratorNamesAndComments();
+      final String[] generatorArray = generators.split(", ");
 
       // Then prompt the user for the type of fuzzer
       String selectedValue = (String) JOptionPane.showInputDialog(this,
-        "Select the type of fuzzing generator:", ADDGENSTRING,
+        "Select the type of fuzzing generator:", TCPFuzzing.ADDGENSTRING,
                              JOptionPane.INFORMATION_MESSAGE, null,
                                 generatorArray, generatorArray[0]);
       // And finally add the generator
@@ -544,7 +584,7 @@ public class TCPFuzzing extends JPanel {
         else {
           selectedValue = "   ";
         }
-        mFuzzingTableModel.addRow(selectedValue, sPoint, fPoint);
+        this.mFuzzingTableModel.addRow(selectedValue, sPoint, fPoint);
       }
     }
   }
@@ -554,13 +594,13 @@ public class TCPFuzzing extends JPanel {
    * row from the corresponding table model of the generator table.</p>
    */
   public void generatorRemoveButton() {
-    int rows = generatorTable.getRowCount();
+    final int rows = this.generatorTable.getRowCount();
     if (rows < 1) {
       return;
     }
-    String[] fuzzPoints = new String[rows];
+    final String[] fuzzPoints = new String[rows];
     for (int i = 0; i < rows; i++) {
-      fuzzPoints[i] = mFuzzingTableModel.getRow(i);
+      fuzzPoints[i] = this.mFuzzingTableModel.getRow(i);
     }
 
     final String selectedFuzzPoint = (String) JOptionPane.showInputDialog(this,
@@ -569,9 +609,9 @@ public class TCPFuzzing extends JPanel {
                                                   fuzzPoints, fuzzPoints[0]);
 
     if (selectedFuzzPoint != null) {
-      String[] splitString = selectedFuzzPoint.split(FuzzingTableModel.
+      final String[] splitString = selectedFuzzPoint.split(FuzzingTableModel.
         STRING_SEPARATOR);
-      mFuzzingTableModel.removeRow(splitString[0],
+      this.mFuzzingTableModel.removeRow(splitString[0],
                                    Integer.parseInt(splitString[1]),
                                    Integer.parseInt(splitString[2]));
     }
@@ -582,7 +622,7 @@ public class TCPFuzzing extends JPanel {
    * @param b boolean
    */
   public void setFuzzStartButtonEnable(final boolean b) {
-    buttonFuzzStart.setEnabled(b);
+    this.buttonFuzzStart.setEnabled(b);
   }
 
   /**
@@ -590,7 +630,7 @@ public class TCPFuzzing extends JPanel {
    * @param b boolean
    */
   public void setFuzzStopButtonEnable(final boolean b) {
-    buttonFuzzStop.setEnabled(b);
+    this.buttonFuzzStop.setEnabled(b);
   }
 
   /**
@@ -598,7 +638,7 @@ public class TCPFuzzing extends JPanel {
    * @return JBroFuzz
    */
   public JBroFuzz getJBroFuzz() {
-    return m.getJBroFuzz();
+    return this.m.getJBroFuzz();
   }
 
   /**
@@ -606,7 +646,7 @@ public class TCPFuzzing extends JPanel {
    * @return FrameWindow
    */
   public JBRFrame getFrameWindow() {
-    return m;
+    return this.m;
   }
 
   /**
@@ -618,41 +658,41 @@ public class TCPFuzzing extends JPanel {
    * @param newCount boolean Increment the counter by 1
    * @return String
    */
-  public String getCounter(boolean newCount) {
+  public String getCounter(final boolean newCount) {
     String s = "";
     // Integrity checks and loop calls...
-    if ((counter < 0) || (counter > 1000000)) {
-      counter = 1;
+    if ((this.counter < 0) || (this.counter > 1000000)) {
+      this.counter = 1;
     }
-    if ((session < 0) || (session > 100)) {
-      session = 1;
+    if ((this.session < 0) || (this.session > 100)) {
+      this.session = 1;
     }
 
     // Append zeros to the session [0 - 99]
-    if (session < 10) {
+    if (this.session < 10) {
       s += "0";
     }
-    s += session + "-";
+    s += this.session + "-";
     // Append zeros to the counter [0 - 999999]
-    if (counter < 100000) {
+    if (this.counter < 100000) {
       s += "0";
     }
-    if (counter < 10000) {
+    if (this.counter < 10000) {
       s += "0";
     }
-    if (counter < 1000) {
+    if (this.counter < 1000) {
       s += "0";
     }
-    if (counter < 100) {
+    if (this.counter < 100) {
       s += "0";
     }
-    if (counter < 10) {
+    if (this.counter < 10) {
       s += "0";
     }
-    s += counter;
+    s += this.counter;
 
     if (newCount) {
-      counter++;
+      this.counter++;
     }
 
     return s;

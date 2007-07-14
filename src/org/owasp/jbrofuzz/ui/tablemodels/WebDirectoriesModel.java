@@ -25,9 +25,9 @@
  */
 package org.owasp.jbrofuzz.ui.tablemodels;
 
-import java.util.*;
+import java.util.Vector;
 
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
 /**
  * <p>The Table Model for the Web Directories return table.</p>
  * <p>This table model is used for replies for the web directories.</p>
@@ -58,7 +58,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
    * to a JTable.
    */
   public WebDirectoriesModel() {
-    dataVector = new Vector();
+    this.dataVector = new Vector();
   }
 
   /**
@@ -67,10 +67,11 @@ public class WebDirectoriesModel extends AbstractTableModel {
    * @param column int
    * @return String
    */
-  public String getColumnName(int column) {
+  @Override
+	public String getColumnName(final int column) {
     String out = "";
-    if ((column > -1) && (column < COLUMNNAMES.length)) {
-      out = COLUMNNAMES[column];
+    if ((column > -1) && (column < WebDirectoriesModel.COLUMNNAMES.length)) {
+      out = WebDirectoriesModel.COLUMNNAMES[column];
     }
     return out;
   }
@@ -82,12 +83,12 @@ public class WebDirectoriesModel extends AbstractTableModel {
    * @param column int
    * @return Object
    */
-  public Object getValueAt(int row, int column) {
-    if ((row < 0) || (row > dataVector.size() - 1)) {
+  public Object getValueAt(final int row, final int column) {
+    if ((row < 0) || (row > this.dataVector.size() - 1)) {
       return "";
     }
     else {
-      ResponseOutput record = (ResponseOutput) dataVector.get(row);
+      final ResponseOutput record = (ResponseOutput) this.dataVector.get(row);
       switch (column) {
         case 0:
           return record.getID();
@@ -113,7 +114,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
    * @return int
    */
   public int getRowCount() {
-    return dataVector.size();
+    return this.dataVector.size();
   }
 
   /**
@@ -122,7 +123,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
    * @return int
    */
   public int getColumnCount() {
-    return COLUMNNAMES.length;
+    return WebDirectoriesModel.COLUMNNAMES.length;
   }
 
   /**
@@ -131,13 +132,13 @@ public class WebDirectoriesModel extends AbstractTableModel {
    * @param row int
    * @return String
    */
-  public String getRow(int row) {
-    StringBuffer output = new StringBuffer();
-    if ((row > -1) && (row < dataVector.size())) {
-      for (int i = 0; i < COLUMNNAMES.length; i++) {
-        output.append(getValueAt(row, i));
-        if (i < COLUMNNAMES.length - 1) {
-          output.append(STRING_SEPARATOR);
+  public String getRow(final int row) {
+    final StringBuffer output = new StringBuffer();
+    if ((row > -1) && (row < this.dataVector.size())) {
+      for (int i = 0; i < WebDirectoriesModel.COLUMNNAMES.length; i++) {
+        output.append(this.getValueAt(row, i));
+        if (i < WebDirectoriesModel.COLUMNNAMES.length - 1) {
+          output.append(WebDirectoriesModel.STRING_SEPARATOR);
         }
       }
       output.append("\n");
@@ -155,22 +156,22 @@ public class WebDirectoriesModel extends AbstractTableModel {
    * @param comments String
    * @param scripts String
    */
-  public void addRow(String id, String uri, String statusCode,
-                     String statusText, String comments, String scripts) {
+  public void addRow(final String id, final String uri, final String statusCode,
+                     final String statusText, final String comments, final String scripts) {
 
-    ResponseOutput response = new ResponseOutput(id, uri, statusCode,
+    final ResponseOutput response = new ResponseOutput(id, uri, statusCode,
                                                  statusText, comments, scripts);
-    dataVector.add(response);
-    fireTableRowsInserted(0, dataVector.size() - 1);
+    this.dataVector.add(response);
+    this.fireTableRowsInserted(0, this.dataVector.size() - 1);
   }
 
   /**
    * Remove all the rows within the given table model.
    */
   public void removeAllRows() {
-    dataVector.removeAllElements();
+    this.dataVector.removeAllElements();
 
-    fireTableRowsDeleted(0, 1);
+    this.fireTableRowsDeleted(0, 1);
   }
 }
 
@@ -183,8 +184,8 @@ class ResponseOutput {
   protected String comments;
   protected String scripts;
 
-  public ResponseOutput(String id, String uri, String statusCode,
-                        String statusText, String comments, String scripts) {
+  public ResponseOutput(final String id, final String uri, final String statusCode,
+                        final String statusText, final String comments, final String scripts) {
 
     this.id = id;
     this.uri = uri;
@@ -195,26 +196,26 @@ class ResponseOutput {
   }
 
   public String getID() {
-    return id;
+    return this.id;
   }
 
   public String getURI() {
-    return uri;
+    return this.uri;
   }
 
   public String getStatusCode() {
-    return statusCode;
+    return this.statusCode;
   }
 
   public String getStatusText() {
-    return statusText;
+    return this.statusText;
   }
 
   public String getComments() {
-    return comments;
+    return this.comments;
   }
 
   public String getScripts() {
-    return scripts;
+    return this.scripts;
   }
 }

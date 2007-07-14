@@ -30,16 +30,22 @@ import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.version.JBRFormat;
 
 /**
- * <p>Title: Java Bro Fuzzer</p>
- *
- * <p>Description: The central class launching the application. This class
- * instantiates a request iterator, a version, a main frame window and 
- * a file handler.
- * The order in which the last three are instantiated should not be altered.</p>
- * <p>In order to fill in the contents of the corresponding text fields
+ * <p>
+ * Title: Java Bro Fuzzer
+ * </p>
+ * 
+ * <p>
+ * Description: The central class launching the application. This class
+ * instantiates a request iterator, a version, a main frame window and a file
+ * handler. The order in which the last three are instantiated should not be
+ * altered.
+ * </p>
+ * <p>
+ * In order to fill in the contents of the corresponding text fields
  * (directories and generators), constructors are created to populate the
  * corresponding fields.
- *
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
@@ -52,9 +58,11 @@ public class JBroFuzz {
 	private JBRFrame mWindow;
 
 	/**
-	 * <p>The main creation object, instantiating a Window, a File Hander
-	 * and a Format object. The order in which construction takes place is
-	 * rather important.</p>
+	 * <p>
+	 * The main creation object, instantiating a Window, a File Hander and a
+	 * Format object. The order in which construction takes place is rather
+	 * important.
+	 * </p>
 	 */
 	public JBroFuzz() {
 
@@ -66,8 +74,9 @@ public class JBroFuzz {
 	}
 
 	/**
-	 * <p>Return the main window, thus allowing access to various 
-	 * GUI components.</p>
+	 * <p>
+	 * Return the main window, thus allowing access to various GUI components.
+	 * </p>
 	 * 
 	 * @return mWindow JBRFrame
 	 */
@@ -78,9 +87,10 @@ public class JBroFuzz {
 	}
 
 	/**
-	 * <p>Return the main format object, thus allowing on top of 
-	 * static, also dynamic access to various constant 
-	 * variables, methods, etc.</p>
+	 * <p>
+	 * Return the main format object, thus allowing on top of static, also dynamic
+	 * access to various constant variables, methods, etc.
+	 * </p>
 	 * 
 	 * @return mFormat JBRFormat
 	 */
@@ -91,9 +101,10 @@ public class JBroFuzz {
 	}
 
 	/**
-	 * <p>Return the main file handler, thus allowing access to 
-	 * the various read/write IO methods and functions used
-	 * at runtime.</p>
+	 * <p>
+	 * Return the main file handler, thus allowing access to the various
+	 * read/write IO methods and functions used at runtime.
+	 * </p>
 	 * 
 	 * @return mHandler FileHandler
 	 */
@@ -104,9 +115,12 @@ public class JBroFuzz {
 	}
 
 	/**
-	 * <p>The main method instantiating the constructor.</p>
+	 * <p>
+	 * The main method instantiating the constructor.
+	 * </p>
 	 * 
-	 * @param args String[]
+	 * @param args
+	 *          String[]
 	 */
 	public static void main(final String[] args) {
 

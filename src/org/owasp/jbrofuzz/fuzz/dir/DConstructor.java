@@ -25,9 +25,9 @@
  */
 package org.owasp.jbrofuzz.fuzz.dir;
 
-import org.owasp.jbrofuzz.*;
-import org.owasp.jbrofuzz.io.*;
-import org.owasp.jbrofuzz.version.*;
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
 /**
  * Class used for constructing the contents of the text displayed within the
@@ -47,9 +47,9 @@ public class DConstructor {
    *
    * @param mJBroFuzz JBroFuzz
    */
-  public DConstructor(JBroFuzz mJBroFuzz) {
+  public DConstructor(final JBroFuzz mJBroFuzz) {
 
-    StringBuffer dirTextBuffer = FileHandler.readDirectories(JBRFormat.FILE_DIR);
+    final StringBuffer dirTextBuffer = FileHandler.readDirectories(JBRFormat.FILE_DIR);
 
     mJBroFuzz.getWindow().getWebDirectoriesPanel().setDirectoriesText(
       dirTextBuffer);

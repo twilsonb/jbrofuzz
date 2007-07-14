@@ -25,22 +25,31 @@
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.text.JTextComponent;
 
-import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.ui.menu.JBRMenuBar;
 import org.owasp.jbrofuzz.ui.panels.Generators;
-import org.owasp.jbrofuzz.ui.panels.TCPFuzzing;
 import org.owasp.jbrofuzz.ui.panels.OpenSource;
-import org.owasp.jbrofuzz.ui.panels.TCPSniffing;
 import org.owasp.jbrofuzz.ui.panels.SystemLogger;
+import org.owasp.jbrofuzz.ui.panels.TCPFuzzing;
+import org.owasp.jbrofuzz.ui.panels.TCPSniffing;
 import org.owasp.jbrofuzz.ui.panels.WebDirectories;
-import org.owasp.jbrofuzz.ui.util.*;
-import org.owasp.jbrofuzz.version.*;
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import org.owasp.jbrofuzz.version.JBRFormat;
 /**
  * <p>The main window of JBroFuzz responsible for the graphical
  * user interface.</p>
@@ -52,6 +61,11 @@ import org.owasp.jbrofuzz.version.*;
  * @version 0.6
  */
 public class JBRFrame extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8877330557328054872L;
 
 	// The main Object behind it all...
 	private final JBroFuzz mJBroFuzz;
@@ -116,46 +130,46 @@ public class JBRFrame extends JFrame {
 	 *
 	 * @param mJBroFuzz JBroFuzz
 	 */
-	public JBRFrame(JBroFuzz mJBroFuzz) {
+	public JBRFrame(final JBroFuzz mJBroFuzz) {
 		// The frame
 		super("Java Bro Fuzzer " + JBRFormat.VERSION);
 		this.mJBroFuzz = mJBroFuzz;
 		// The menu bar
-		mMenuBar = new JBRMenuBar(this);
-		setJMenuBar(mMenuBar);
+		this.mMenuBar = new JBRMenuBar(this);
+		this.setJMenuBar(this.mMenuBar);
 		// The container pane
-		Container pane = getContentPane();
+		final Container pane = this.getContentPane();
 		pane.setLayout(null);
 		// The tabbed panels
-		mWebDirectoriesPanel = new WebDirectories(this);
-		mFuzzingPanel = new TCPFuzzing(this);
-		mSniffingPanel = new TCPSniffing(this);
-		mDefinitionsPanel = new Generators(this);
-		mSystemLogger = new SystemLogger(this);
-		mOpenSourcePanel = new OpenSource(this);
+		this.mWebDirectoriesPanel = new WebDirectories(this);
+		this.mFuzzingPanel = new TCPFuzzing(this);
+		this.mSniffingPanel = new TCPSniffing(this);
+		this.mDefinitionsPanel = new Generators(this);
+		this.mSystemLogger = new SystemLogger(this);
+		this.mOpenSourcePanel = new OpenSource(this);
 		// The tabbed pane, 3 is for bottom orientation
-		tabbedPane = new JTabbedPane(3);
+		this.tabbedPane = new JTabbedPane(3);
 		// tabbedPane.setPreferredSize(new Dimension(588,368));
-		tabbedPane.setBounds(0, 0, 895, 500);
+		this.tabbedPane.setBounds(0, 0, 895, 500);
 		// Do not change the names!!!
-		tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
-		tabbedPane.add(" Open Source ", mOpenSourcePanel);
-		tabbedPane.add(" TCP Fuzzing ", mFuzzingPanel);
-		tabbedPane.add(" TCP Sniffing ", mSniffingPanel);
+		this.tabbedPane.add(" Web Directories ", this.mWebDirectoriesPanel);
+		this.tabbedPane.add(" Open Source ", this.mOpenSourcePanel);
+		this.tabbedPane.add(" TCP Fuzzing ", this.mFuzzingPanel);
+		this.tabbedPane.add(" TCP Sniffing ", this.mSniffingPanel);
 		// tabbedPane.add(" Generators ", mDefinitionsPanel);
 		// tabbedPane.add(" System ", mSystemLogger);
-		tabbedPane.setSelectedComponent(mWebDirectoriesPanel);
-		pane.add(tabbedPane);
+		this.tabbedPane.setSelectedComponent(this.mWebDirectoriesPanel);
+		pane.add(this.tabbedPane);
 		// The image icon
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		this.setIconImage(ImageCreator.FRAME_IMG.getImage());
 		
-    setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-    setLocation(100, 100);
-    setSize(900, 550);
-    setResizable(false);
-    setVisible(true);
+    this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+    this.setLocation(100, 100);
+    this.setSize(900, 550);
+    this.setResizable(false);
+    this.setVisible(true);
     
-		log("System Launch, Welcome!");
+		this.log("System Launch, Welcome!");
 	}
 
 	/**
@@ -167,10 +181,10 @@ public class JBRFrame extends JFrame {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
-		JMenuItem i1 = new JMenuItem("Cut");
-		JMenuItem i2 = new JMenuItem("Copy");
-		JMenuItem i3 = new JMenuItem("Paste");
-		JMenuItem i4 = new JMenuItem("Select All");
+		final JMenuItem i1 = new JMenuItem("Cut");
+		final JMenuItem i2 = new JMenuItem("Copy");
+		final JMenuItem i3 = new JMenuItem("Paste");
+		final JMenuItem i4 = new JMenuItem("Select All");
 
 		i1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
 				ActionEvent.CTRL_MASK));
@@ -192,19 +206,19 @@ public class JBRFrame extends JFrame {
 		}
 
 		i1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				area.cut();
 			}
 		});
 
 		i2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				area.copy();
 			}
 		});
 
 		i3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				if(area.isEditable()) {
 					area.paste();
 				}
@@ -212,21 +226,23 @@ public class JBRFrame extends JFrame {
 		});
 
 		i4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				area.selectAll();
 			}
 		});
 
 		area.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				checkForTriggerEvent(e);
+			@Override
+			public void mousePressed(final MouseEvent e) {
+				this.checkForTriggerEvent(e);
 			}
 
-			public void mouseReleased(MouseEvent e) {
-				checkForTriggerEvent(e);
+			@Override
+			public void mouseReleased(final MouseEvent e) {
+				this.checkForTriggerEvent(e);
 			}
 
-			private void checkForTriggerEvent(MouseEvent e) {
+			private void checkForTriggerEvent(final MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					area.requestFocus();
 					popmenu.show(e.getComponent(), e.getX(), e.getY());
@@ -242,7 +258,7 @@ public class JBRFrame extends JFrame {
 	 * @return JBroFuzz
 	 */
 	public JBroFuzz getJBroFuzz() {
-		return mJBroFuzz;
+		return this.mJBroFuzz;
 	}
 
 	/**
@@ -252,7 +268,7 @@ public class JBRFrame extends JFrame {
 	 * @return JTabbedPane
 	 */
 	public JTabbedPane getTabbedPane() {
-		return tabbedPane;
+		return this.tabbedPane;
 	}
 
 	/**
@@ -261,24 +277,24 @@ public class JBRFrame extends JFrame {
 	 *
 	 * @param n int
 	 */
-	public void setTabHide(int n) {
-		if (n == GENERATORS_PANEL_ID) {
-			tabbedPane.remove(mDefinitionsPanel);
+	public void setTabHide(final int n) {
+		if (n == JBRFrame.GENERATORS_PANEL_ID) {
+			this.tabbedPane.remove(this.mDefinitionsPanel);
 		}
-		if (n == TCP_FUZZING_PANEL_ID) {
-			tabbedPane.remove(mFuzzingPanel);
+		if (n == JBRFrame.TCP_FUZZING_PANEL_ID) {
+			this.tabbedPane.remove(this.mFuzzingPanel);
 		}
-		if (n == TCP_SNIFFING_PANEL_ID) {
-			tabbedPane.remove(mSniffingPanel);
+		if (n == JBRFrame.TCP_SNIFFING_PANEL_ID) {
+			this.tabbedPane.remove(this.mSniffingPanel);
 		}
-		if (n == SYSTEM_PANEL_ID) {
-			tabbedPane.remove(mSystemLogger);
+		if (n == JBRFrame.SYSTEM_PANEL_ID) {
+			this.tabbedPane.remove(this.mSystemLogger);
 		}
-		if (n == WEB_DIRECTORIES_PANEL_ID) {
-			tabbedPane.remove(mWebDirectoriesPanel);
+		if (n == JBRFrame.WEB_DIRECTORIES_PANEL_ID) {
+			this.tabbedPane.remove(this.mWebDirectoriesPanel);
 		}
-		if (n == OPEN_SOURCE_ID) {
-			tabbedPane.remove(mOpenSourcePanel);
+		if (n == JBRFrame.OPEN_SOURCE_ID) {
+			this.tabbedPane.remove(this.mOpenSourcePanel);
 		}
 	}
 
@@ -288,24 +304,24 @@ public class JBRFrame extends JFrame {
 	 *
 	 * @param n int
 	 */
-	public void setTabShow(int n) {
-		if (n == GENERATORS_PANEL_ID) {
-			tabbedPane.addTab(" Generators ", mDefinitionsPanel);
+	public void setTabShow(final int n) {
+		if (n == JBRFrame.GENERATORS_PANEL_ID) {
+			this.tabbedPane.addTab(" Generators ", this.mDefinitionsPanel);
 		}
-		if (n == TCP_FUZZING_PANEL_ID) {
-			tabbedPane.addTab(" TCP Fuzzing ", mFuzzingPanel);
+		if (n == JBRFrame.TCP_FUZZING_PANEL_ID) {
+			this.tabbedPane.addTab(" TCP Fuzzing ", this.mFuzzingPanel);
 		}
-		if (n == TCP_SNIFFING_PANEL_ID) {
-			tabbedPane.addTab(" TCP Sniffing ", mSniffingPanel);
+		if (n == JBRFrame.TCP_SNIFFING_PANEL_ID) {
+			this.tabbedPane.addTab(" TCP Sniffing ", this.mSniffingPanel);
 		}
-		if (n == SYSTEM_PANEL_ID) {
-			tabbedPane.addTab(" System ", mSystemLogger);
+		if (n == JBRFrame.SYSTEM_PANEL_ID) {
+			this.tabbedPane.addTab(" System ", this.mSystemLogger);
 		}
-		if (n == WEB_DIRECTORIES_PANEL_ID) {
-			tabbedPane.addTab(" Web Directories ", mWebDirectoriesPanel);
+		if (n == JBRFrame.WEB_DIRECTORIES_PANEL_ID) {
+			this.tabbedPane.addTab(" Web Directories ", this.mWebDirectoriesPanel);
 		}
-		if (n == OPEN_SOURCE_ID) {
-			tabbedPane.addTab(" Open Source ", mOpenSourcePanel);
+		if (n == JBRFrame.OPEN_SOURCE_ID) {
+			this.tabbedPane.addTab(" Open Source ", this.mOpenSourcePanel);
 		}
 	}
 
@@ -316,7 +332,7 @@ public class JBRFrame extends JFrame {
 	 * @return mSniffingPanel
 	 */
 	public TCPSniffing getTCPSniffingPanel() {
-		return mSniffingPanel;
+		return this.mSniffingPanel;
 	}
 
 	/**
@@ -326,7 +342,7 @@ public class JBRFrame extends JFrame {
 	 * @return mDefinitionsPanel
 	 */
 	public Generators getDefinitionsPanel() {
-		return mDefinitionsPanel;
+		return this.mDefinitionsPanel;
 	}
 
 	/**
@@ -336,7 +352,7 @@ public class JBRFrame extends JFrame {
 	 * @return mMenuBar
 	 */
 	public JBRMenuBar getFrameMenuBar() {
-		return mMenuBar;
+		return this.mMenuBar;
 	}
 
 	/**
@@ -345,7 +361,7 @@ public class JBRFrame extends JFrame {
 	 * @return WebDirectoriesPanel
 	 */
 	public WebDirectories getWebDirectoriesPanel() {
-		return mWebDirectoriesPanel;
+		return this.mWebDirectoriesPanel;
 	}
 
 	/**
@@ -355,7 +371,7 @@ public class JBRFrame extends JFrame {
 	 * @return mFuzzingPanel
 	 */
 	public TCPFuzzing getFuzzingPanel() {
-		return mFuzzingPanel;
+		return this.mFuzzingPanel;
 	}
 
 	/**
@@ -365,7 +381,7 @@ public class JBRFrame extends JFrame {
 	 * @return
 	 */
 	public OpenSource getOpenSourcePanel() {
-		return mOpenSourcePanel;
+		return this.mOpenSourcePanel;
 	}
 
 	/**
@@ -376,7 +392,7 @@ public class JBRFrame extends JFrame {
 	public void log(final String str) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				mSystemLogger.addLoggingEvent(str);
+				JBRFrame.this.mSystemLogger.addLoggingEvent(str);
 			}
 		});
 	}

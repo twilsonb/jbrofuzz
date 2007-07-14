@@ -25,9 +25,14 @@
  */
 package org.owasp.jbrofuzz.pub;
 
-import java.util.regex.*;
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.owasp.jbrofuzz.ui.JBRFrame;
 
@@ -40,65 +45,62 @@ import org.owasp.jbrofuzz.ui.JBRFrame;
  * @version 0.6
  */
 public class GRequestIterator {
-	//The  frame window that the request iterator can be referenced from
-	private JBRFrame mFrameWindow;
 	// The output obtained
 	private StringBuffer output;
 
-	public GRequestIterator(JBRFrame mFrameWindow, String domain) {
-		this.mFrameWindow = mFrameWindow;
-		output = new StringBuffer();
+	public GRequestIterator(final JBRFrame mFrameWindow, final String domain) {
+		this.output = new StringBuffer();
 		int counter = 1;
 		BufferedReader bin = null;
 
 		while(counter <= 5) {
 			try {
 				// URL request = new URL("http://www.google.com");
-				String urlRequest = "http://www.google.com/search?q=%40" + domain + "&hl=en&lr=&ie=UTF-8&start=" + counter + "0&sa=N";				
-				URL request = new URL(urlRequest);
-				URLConnection connection = request.openConnection();
+				final String urlRequest = "http://www.google.com/search?q=%40" + domain + "&hl=en&lr=&ie=UTF-8&start=" + counter + "0&sa=N";				
+				final URL request = new URL(urlRequest);
+				final URLConnection connection = request.openConnection();
 				connection.setRequestProperty("User-Agent","Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");				
 				connection.connect();
 
 				bin = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				String line=null;
 				while ((line=bin.readLine()) != null) {
-					Pattern p = Pattern.compile("([\\w\\.\\-\\%\\']+)@[\\S]+");
-					Matcher m = p.matcher(line);
+					final Pattern p = Pattern.compile("([\\w\\.\\-\\%\\']+)@[\\S]+");
+					final Matcher m = p.matcher(line);
 					while (m.find()) {
-						String email = sanitise(m.group());
-						output.append(email + " \n");
+						final String email = this.sanitise(m.group());
+						this.output.append(email + " \n");
 					}
 				}
 				bin.close();
 			}
-			catch(MalformedURLException e) {
+			catch(final MalformedURLException e) {
 				mFrameWindow.log("Open Source Tab: A malformed URL exception occured");
 			}
-			catch(IOException e) {
+			catch(final IOException e) {
 				mFrameWindow.log("Open Source Tab: An IO exception occured");
 			}
 			if (bin != null) {
-				try {bin.close();} catch (IOException ex) {}
+				try {bin.close();} catch (final IOException ex) {}
 			}
 
-			mFrameWindow.getOpenSourcePanel().appendOutputText(output.toString());
+			mFrameWindow.getOpenSourcePanel().appendOutputText(this.output.toString());
 			mFrameWindow.getOpenSourcePanel().setProgressBar(counter);
 			counter++;
 		} // while loop
 	}
 
 	public String getOutput() {
-		return output.toString();
+		return this.output.toString();
 	}
 
 	private String sanitise(String in) {
 		boolean tagFound = false;
 		while(!tagFound) {
 			tagFound = true;
-			int str = in.indexOf('<');
+			final int str = in.indexOf('<');
 			if(str > 0) {
-				int end = in.indexOf('>', str);
+				final int end = in.indexOf('>', str);
 				if(end > 0) {
 					in = in.substring(0, str) + in.substring(end + 1);
 					tagFound = false;

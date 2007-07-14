@@ -25,22 +25,35 @@
  */
 package org.owasp.jbrofuzz.ui.panels;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
-import javax.swing.*;
-import javax.swing.event.*;
-
-import com.Ostermiller.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker3;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.snif.tcp.*;
+import org.owasp.jbrofuzz.snif.tcp.ConnectionListener;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.SniffingTableModel;
-import org.owasp.jbrofuzz.ui.util.*;
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
-import org.owasp.jbrofuzz.version.*;
+
+import com.Ostermiller.util.Browser;
 
 /**
  * <p>The Sniffing Panel User Interface based on the instance 
@@ -54,7 +67,11 @@ import org.owasp.jbrofuzz.version.*;
  */
 public class TCPSniffing extends JPanel {
 
-  private final JTextField rHostText, rPortText, lHostText, lPortText;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2185868982471609733L;
+	private final JTextField rHostText, rPortText, lHostText, lPortText;
   // The buttons to start and stop the listener, as well as launch a browser
   private final JButton startButton, stopButton, browserButton;
   //
@@ -82,19 +99,19 @@ public class TCPSniffing extends JPanel {
    *
    * @param m MainWindow
    */
-  public TCPSniffing(JBRFrame m) {
+  public TCPSniffing(final JBRFrame m) {
     super();
-    setLayout(null);
+    this.setLayout(null);
     this.m = m;
     // Set the counter to zero
-    counter = 0;
-    session = 0;
+    this.counter = 0;
+    this.session = 0;
     // Define the JPanels
-    JPanel rHostPanel = new JPanel();
-    JPanel rPortPanel = new JPanel();
-    JPanel lHostPanel = new JPanel();
-    JPanel lPortPanel = new JPanel();
-    listPanel = new JPanel();
+    final JPanel rHostPanel = new JPanel();
+    final JPanel rPortPanel = new JPanel();
+    final JPanel lHostPanel = new JPanel();
+    final JPanel lPortPanel = new JPanel();
+    this.listPanel = new JPanel();
     // Set the borders
     rHostPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Remote Host "),
@@ -106,7 +123,7 @@ public class TCPSniffing extends JPanel {
                          BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     lPortPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-    listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+    this.listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" List of Requests "),
                         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     // Set the bounds
@@ -114,140 +131,142 @@ public class TCPSniffing extends JPanel {
     rPortPanel.setBounds(230, 20, 60, 60);
     lHostPanel.setBounds(300, 20, 220, 60);
     lPortPanel.setBounds(520, 20, 60, 60);
-    listPanel.setBounds(10, 90, 870, 360);
+    this.listPanel.setBounds(10, 90, 870, 360);
     // Setup the remote host text
-    rHostText = new JTextField();
-    rHostText.setEditable(true);
-    rHostText.setFont(new Font("Verdana", Font.BOLD, 12));
-    rHostText.setMargin(new Insets(1, 1, 1, 1));
-    getFrameWindow().popup(rHostText);
-    rHostText.setPreferredSize(new Dimension(200, 20));
-    rHostPanel.add(rHostText);
+    this.rHostText = new JTextField();
+    this.rHostText.setEditable(true);
+    this.rHostText.setFont(new Font("Verdana", Font.BOLD, 12));
+    this.rHostText.setMargin(new Insets(1, 1, 1, 1));
+    this.getFrameWindow().popup(this.rHostText);
+    this.rHostText.setPreferredSize(new Dimension(200, 20));
+    rHostPanel.add(this.rHostText);
     // Setup the remote host port
-    rPortText = new JFormattedTextField();
-    rPortText.setEditable(true);
-    rPortText.setFont(new Font("Verdana", Font.BOLD, 12));
+    this.rPortText = new JFormattedTextField();
+    this.rPortText.setEditable(true);
+    this.rPortText.setFont(new Font("Verdana", Font.BOLD, 12));
     // rPortText.setLineWrap(false);
     // rPortText.setWrapStyleWord(true);
-    rPortText.setMargin(new Insets(1, 1, 1, 1));
-    getFrameWindow().popup(rPortText);
-    rPortText.setPreferredSize(new Dimension(50, 20));
-    rPortPanel.add(rPortText);
+    this.rPortText.setMargin(new Insets(1, 1, 1, 1));
+    this.getFrameWindow().popup(this.rPortText);
+    this.rPortText.setPreferredSize(new Dimension(50, 20));
+    rPortPanel.add(this.rPortText);
     // Setup the local host text
-    lHostText = new JTextField();
-    lHostText.setEditable(true);
-    lHostText.setFont(new Font("Verdana", Font.BOLD, 12));
+    this.lHostText = new JTextField();
+    this.lHostText.setEditable(true);
+    this.lHostText.setFont(new Font("Verdana", Font.BOLD, 12));
     // lHostText.setLineWrap(false);
     // lHostText.setWrapStyleWord(true);
-    lHostText.setMargin(new Insets(1, 1, 1, 1));
-    getFrameWindow().popup(lHostText);
-    lHostText.setPreferredSize(new Dimension(200, 20));
-    lHostPanel.add(lHostText);
+    this.lHostText.setMargin(new Insets(1, 1, 1, 1));
+    this.getFrameWindow().popup(this.lHostText);
+    this.lHostText.setPreferredSize(new Dimension(200, 20));
+    lHostPanel.add(this.lHostText);
     // Setup the local port text
-    lPortText = new JFormattedTextField();
-    lPortText.setEditable(true);
-    lPortText.setFont(new Font("Verdana", Font.BOLD, 12));
+    this.lPortText = new JFormattedTextField();
+    this.lPortText.setEditable(true);
+    this.lPortText.setFont(new Font("Verdana", Font.BOLD, 12));
     //lPortText.setLineWrap(false);
     // lPortText.setWrapStyleWord(true);
-    lPortText.setMargin(new Insets(1, 1, 1, 1));
-    getFrameWindow().popup(lPortText);
-    lPortText.setPreferredSize(new Dimension(50, 20));
-    lPortPanel.add(lPortText);
+    this.lPortText.setMargin(new Insets(1, 1, 1, 1));
+    this.getFrameWindow().popup(this.lPortText);
+    this.lPortText.setPreferredSize(new Dimension(50, 20));
+    lPortPanel.add(this.lPortText);
     // The table of list of requests text
-    tableModel = new SniffingTableModel();
+    this.tableModel = new SniffingTableModel();
 
-    sniffingTable = new JTable();
-    sniffingTable.setModel(tableModel);
-    sniffingTable.setFont(new Font("Monospaced", Font.BOLD, 12));
-    sniffingTable.setBackground(Color.black);
-    sniffingTable.setForeground(Color.white);
-    sniffingTable.setSurrendersFocusOnKeystroke(true);
-    sniffingTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    this.sniffingTable = new JTable();
+    this.sniffingTable.setModel(this.tableModel);
+    this.sniffingTable.setFont(new Font("Monospaced", Font.BOLD, 12));
+    this.sniffingTable.setBackground(Color.black);
+    this.sniffingTable.setForeground(Color.white);
+    this.sniffingTable.setSurrendersFocusOnKeystroke(true);
+    this.sniffingTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-    JScrollPane listTextScrollPane = new JScrollPane(sniffingTable);
+    final JScrollPane listTextScrollPane = new JScrollPane(this.sniffingTable);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
     listTextScrollPane.setPreferredSize(new Dimension(850, 320));
     listTextScrollPane.setWheelScrollingEnabled(true);
-    listPanel.add(listTextScrollPane);
+    this.listPanel.add(listTextScrollPane);
     // Add the action listener for each row
-    ListSelectionModel rowSM = sniffingTable.getSelectionModel();
+    final ListSelectionModel rowSM = this.sniffingTable.getSelectionModel();
 
     rowSM.addListSelectionListener(new ListSelectionListener() {
-      public void valueChanged(ListSelectionEvent e) {
+      public void valueChanged(final ListSelectionEvent e) {
         //Ignore extra messages
         if (e.getValueIsAdjusting()) {
           return;
         }
-        ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+        final ListSelectionModel lsm = (ListSelectionModel) e.getSource();
         if (lsm.isSelectionEmpty()) {
           // No rows selected
         }
         else {
-          int selectedRow = lsm.getMinSelectionIndex();
-          String s = tableModel.getValueAt(selectedRow);
-          vew = new WindowViewer(getFrameWindow(), s, WindowViewer.VIEW_SNIFFING_PANEL);
+          final int selectedRow = lsm.getMinSelectionIndex();
+          final String s = TCPSniffing.this.tableModel.getValueAt(selectedRow);
+          TCPSniffing.this.vew = new WindowViewer(TCPSniffing.this.getFrameWindow(), s, WindowViewer.VIEW_SNIFFING_PANEL);
         }
       }
     }); // ListSelectionListener
 
     // The start, stop buttons
-    startButton = new JButton("Start", ImageCreator.START_IMG);
-    startButton.setBounds(590, 33, 90, 40);
-    startButton.setEnabled(true);
-    startButton.setToolTipText("Start Sniffing between Local and Remote Host");
-    stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
-    stopButton.setEnabled(false);
-    stopButton.setBounds(690, 33, 90, 40);
-    stopButton.setToolTipText("Stop Sniffing");
-    browserButton = new JButton("Bro", ImageCreator.PAUSE_IMG);
-    browserButton.setBounds(790, 33, 80, 40);
-    browserButton.setEnabled(true);
-    browserButton.setToolTipText("Open in external browser");
+    this.startButton = new JButton("Start", ImageCreator.START_IMG);
+    this.startButton.setBounds(590, 33, 90, 40);
+    this.startButton.setEnabled(true);
+    this.startButton.setToolTipText("Start Sniffing between Local and Remote Host");
+    this.stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
+    this.stopButton.setEnabled(false);
+    this.stopButton.setBounds(690, 33, 90, 40);
+    this.stopButton.setToolTipText("Stop Sniffing");
+    this.browserButton = new JButton("Bro", ImageCreator.PAUSE_IMG);
+    this.browserButton.setBounds(790, 33, 80, 40);
+    this.browserButton.setEnabled(true);
+    this.browserButton.setToolTipText("Open in external browser");
     // The action listener for the start button
-    startButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+    this.startButton.addActionListener(new ActionListener() {
+      public void actionPerformed(final ActionEvent e) {
         // Worker, working...
-        worker = new SwingWorker3() {
-          public Object construct() {
-            buttonStart();
+        TCPSniffing.this.worker = new SwingWorker3() {
+          @Override
+					public Object construct() {
+            TCPSniffing.this.buttonStart();
             return "start-window-return";
           }
 
-          public void finished() {
+          @Override
+					public void finished() {
           }
         };
-        worker.start();
+        TCPSniffing.this.worker.start();
       }
     });
     // The action listener for the stop button
-    stopButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        buttonStop();
+    this.stopButton.addActionListener(new ActionListener() {
+      public void actionPerformed(final ActionEvent e) {
+        TCPSniffing.this.buttonStop();
       }
     });
     // The action listener for the browser button
-    browserButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-      	buttonBro();
+    this.browserButton.addActionListener(new ActionListener() {
+      public void actionPerformed(final ActionEvent e) {
+      	TCPSniffing.this.buttonBro();
       }
     });
 
     // Add the panels
-    add(rHostPanel);
-    add(rPortPanel);
-    add(lHostPanel);
-    add(lPortPanel);
-    add(startButton);
-    add(stopButton);
-    add(browserButton);
-    add(listPanel);
+    this.add(rHostPanel);
+    this.add(rPortPanel);
+    this.add(lHostPanel);
+    this.add(lPortPanel);
+    this.add(this.startButton);
+    this.add(this.stopButton);
+    this.add(this.browserButton);
+    this.add(this.listPanel);
 
     // Some default values
-    rHostText.setText("www.sourceforge.net");
-    rPortText.setText("80");
-    lHostText.setText("127.0.0.1");
-    lPortText.setText("6161");
+    this.rHostText.setText("www.sourceforge.net");
+    this.rPortText.setText("80");
+    this.lHostText.setText("127.0.0.1");
+    this.lPortText.setText("6161");
   }
 
   /**
@@ -256,7 +275,7 @@ public class TCPSniffing extends JPanel {
    * @return String
    */
   public String getRemotePortText() {
-    return rPortText.getText();
+    return this.rPortText.getText();
   }
 
   /**
@@ -264,7 +283,7 @@ public class TCPSniffing extends JPanel {
    * @return String
    */
   public String getLocalPortText() {
-    return lPortText.getText();
+    return this.lPortText.getText();
   }
 
   /**
@@ -275,28 +294,28 @@ public class TCPSniffing extends JPanel {
    * @return String
    */
   public String getLocalHostText() {
-    String text = lHostText.getText();
+    String text = this.lHostText.getText();
     int len = text.length();
 
     if (text.startsWith("ftp://")) {
       text = text.substring(6, len);
       len = text.length();
-      lHostText.setText(text);
+      this.lHostText.setText(text);
     }
     if (text.startsWith("http://")) {
       text = text.substring(7, len);
       len = text.length();
-      lHostText.setText(text);
+      this.lHostText.setText(text);
     }
     if (text.startsWith("https://")) {
       text = text.substring(8, len);
       len = text.length();
-      lHostText.setText(text);
+      this.lHostText.setText(text);
     }
     if (text.endsWith("/")) {
       text = text.substring(0, len - 1);
       // If another if statement is included, update the len variable here
-      lHostText.setText(text);
+      this.lHostText.setText(text);
     }
     return text;
   }
@@ -309,28 +328,28 @@ public class TCPSniffing extends JPanel {
    * @return String
    */
   public String getRemoteHostText() {
-    String text = rHostText.getText();
+    String text = this.rHostText.getText();
     int len = text.length();
 
     if (text.startsWith("ftp://")) {
       text = text.substring(6, len);
       len = text.length();
-      rHostText.setText(text);
+      this.rHostText.setText(text);
     }
     if (text.startsWith("http://")) {
       text = text.substring(7, len);
       len = text.length();
-      rHostText.setText(text);
+      this.rHostText.setText(text);
     }
     if (text.startsWith("https://")) {
       text = text.substring(8, len);
       len = text.length();
-      rHostText.setText(text);
+      this.rHostText.setText(text);
     }
     if (text.endsWith("/")) {
       text = text.substring(0, len - 1);
       // If another if statement is included, update the len variable here
-      rHostText.setText(text);
+      this.rHostText.setText(text);
     }
     return text;
   }
@@ -340,7 +359,7 @@ public class TCPSniffing extends JPanel {
    * @return boolean
    */
   public boolean getStopStatus() {
-    return stopPressed;
+    return this.stopPressed;
   }
 
   /**
@@ -351,11 +370,11 @@ public class TCPSniffing extends JPanel {
 
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        tableModel.addEmptyRow();
-        int totalRows = tableModel.getRowCount();
-        tableModel.setValueAt(s, totalRows - 1, 0);
+        TCPSniffing.this.tableModel.addEmptyRow();
+        final int totalRows = TCPSniffing.this.tableModel.getRowCount();
+        TCPSniffing.this.tableModel.setValueAt(s, totalRows - 1, 0);
         // Set the last row to be visible
-        sniffingTable.scrollRectToVisible(sniffingTable.getCellRect(sniffingTable.
+        TCPSniffing.this.sniffingTable.scrollRectToVisible(TCPSniffing.this.sniffingTable.getCellRect(TCPSniffing.this.sniffingTable.
           getRowCount(), 0, true));
       }
     });
@@ -367,7 +386,7 @@ public class TCPSniffing extends JPanel {
    * @return MainWindow
    */
   public JBRFrame getFrameWindow() {
-    return m;
+    return this.m;
   }
 
   /**
@@ -375,7 +394,7 @@ public class TCPSniffing extends JPanel {
    * @return JBroFuzz
    */
   public JBroFuzz getJBroFuzz() {
-    return m.getJBroFuzz();
+    return this.m.getJBroFuzz();
   }
 
 
@@ -387,33 +406,33 @@ public class TCPSniffing extends JPanel {
    * @return String
    */
   public String getCounter() {
-    if (counter < 0) {
-      counter = 1;
+    if (this.counter < 0) {
+      this.counter = 1;
     }
-    if (session < 0) {
-      session = 1;
+    if (this.session < 0) {
+      this.session = 1;
     }
-    if (session > 10) {
-      session = 1;
+    if (this.session > 10) {
+      this.session = 1;
     }
-    String s = "" + session;
-    if (counter < 100000) {
+    String s = "" + this.session;
+    if (this.counter < 100000) {
       s += "0";
     }
-    if (counter < 10000) {
+    if (this.counter < 10000) {
       s += "0";
     }
-    if (counter < 1000) {
+    if (this.counter < 1000) {
       s += "0";
     }
-    if (counter < 100) {
+    if (this.counter < 100) {
       s += "0";
     }
-    if (counter < 10) {
+    if (this.counter < 10) {
       s += "0";
     }
-    s += "" + counter;
-    counter++;
+    s += "" + this.counter;
+    this.counter++;
     return s;
   }
 
@@ -421,61 +440,61 @@ public class TCPSniffing extends JPanel {
    * Method for hitting the stop button.
    */
   public void buttonStop() {
-    if (!stopButton.isEnabled()) {
+    if (!this.stopButton.isEnabled()) {
       return;
     }
-    stopButton.setEnabled(false);
-    startButton.setEnabled(true);
-    if (reflector != null) {
-      reflector.stopConnection();
+    this.stopButton.setEnabled(false);
+    this.startButton.setEnabled(true);
+    if (this.reflector != null) {
+      this.reflector.stopConnection();
     }
 
-    rHostText.setEditable(true);
-    rPortText.setEditable(true);
-    lHostText.setEditable(true);
-    lPortText.setEditable(true);
+    this.rHostText.setEditable(true);
+    this.rPortText.setEditable(true);
+    this.lHostText.setEditable(true);
+    this.lPortText.setEditable(true);
 
-    rHostText.setBackground(Color.white);
-    rPortText.setBackground(Color.white);
-    lHostText.setBackground(Color.white);
-    lPortText.setBackground(Color.white);
+    this.rHostText.setBackground(Color.white);
+    this.rPortText.setBackground(Color.white);
+    this.lHostText.setBackground(Color.white);
+    this.lPortText.setBackground(Color.white);
 
-    rHostText.setForeground(Color.black);
-    rPortText.setForeground(Color.black);
-    lHostText.setForeground(Color.black);
-    lPortText.setForeground(Color.black);
+    this.rHostText.setForeground(Color.black);
+    this.rPortText.setForeground(Color.black);
+    this.lHostText.setForeground(Color.black);
+    this.lPortText.setForeground(Color.black);
 
     // Update the border of the output panel
-    if (counter == 0) {
-      listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+    if (this.counter == 0) {
+      this.listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
         createTitledBorder(" List of Requests " + "[Last log was empty] "),
         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     }
     else {
-      listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+      this.listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
         createTitledBorder(" List of Requests " + "[Last log was .\\" +
-                           getJBroFuzz().getFormat().getDate() + "\\" + session + "*.txt] "),
+                           this.getJBroFuzz().getFormat().getDate() + "\\" + this.session + "*.txt] "),
         BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     }
   }
   
   public void buttonBro() {
     Browser.init();
-    StringBuffer url = new StringBuffer();
-    if (getRemotePortText().equals("443")) {
+    final StringBuffer url = new StringBuffer();
+    if (this.getRemotePortText().equals("443")) {
       url.append("https://");
     }
     else {
       url.append("http://");
     }
-    url.append(getLocalHostText());
+    url.append(this.getLocalHostText());
     url.append(":");
-    url.append(getLocalPortText());
+    url.append(this.getLocalPortText());
     try {
       Browser.displayURL(url.toString());
     }
-    catch (IOException ex) {
-      getFrameWindow().log("Could not launch link in external browser");
+    catch (final IOException ex) {
+      this.getFrameWindow().log("Could not launch link in external browser");
     }
   }
 
@@ -483,42 +502,42 @@ public class TCPSniffing extends JPanel {
    * Method for hitting the start button.
    */
   public void buttonStart() {
-    if (!startButton.isEnabled()) {
+    if (!this.startButton.isEnabled()) {
       return;
     }
-    startButton.setEnabled(false);
-    stopButton.setEnabled(true);
-    session++;
+    this.startButton.setEnabled(false);
+    this.stopButton.setEnabled(true);
+    this.session++;
 
-    rHostText.setEditable(false);
-    rPortText.setEditable(false);
-    lHostText.setEditable(false);
-    lPortText.setEditable(false);
+    this.rHostText.setEditable(false);
+    this.rPortText.setEditable(false);
+    this.lHostText.setEditable(false);
+    this.lPortText.setEditable(false);
 
-    rHostText.setBackground(Color.black);
-    rPortText.setBackground(Color.black);
-    lHostText.setBackground(Color.black);
-    lPortText.setBackground(Color.black);
+    this.rHostText.setBackground(Color.black);
+    this.rPortText.setBackground(Color.black);
+    this.lHostText.setBackground(Color.black);
+    this.lPortText.setBackground(Color.black);
 
-    rHostText.setForeground(Color.white);
-    rPortText.setForeground(Color.white);
-    lHostText.setForeground(Color.white);
-    lPortText.setForeground(Color.white);
+    this.rHostText.setForeground(Color.white);
+    this.rPortText.setForeground(Color.white);
+    this.lHostText.setForeground(Color.white);
+    this.lPortText.setForeground(Color.white);
 
-    final String rh = getRemoteHostText();
-    final String rp = getRemotePortText();
-    final String lh = getLocalHostText();
-    final String lp = getLocalPortText();
+    final String rh = this.getRemoteHostText();
+    final String rp = this.getRemotePortText();
+    final String lh = this.getLocalHostText();
+    final String lp = this.getLocalPortText();
 
     // Update the border of the output panel
-    listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+    this.listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" List of Requests " + "[Logging in folder .\\" +
-      		getJBroFuzz().getFormat().getDate() + "\\" + session + "*.txt]  [" + rh + ":" +
+      		this.getJBroFuzz().getFormat().getDate() + "\\" + this.session + "*.txt]  [" + rh + ":" +
                          rp + " <=> " + lh + ":" + lp + "] "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-    reflector = new ConnectionListener(this, rh, rp, lh, lp);
-    reflector.start();
-    stopPressed = false;
+    this.reflector = new ConnectionListener(this, rh, rp, lh, lp);
+    this.reflector.start();
+    this.stopPressed = false;
   }
 }

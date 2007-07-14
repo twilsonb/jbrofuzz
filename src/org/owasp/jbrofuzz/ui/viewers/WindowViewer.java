@@ -25,12 +25,19 @@
  */
 package org.owasp.jbrofuzz.ui.viewers;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
-import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 
@@ -45,8 +52,10 @@ import org.owasp.jbrofuzz.ui.util.ImageCreator;
  */
 public class WindowViewer extends JFrame {
 
-	// The name of the request which will be displayed
-	private String name;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8855212505709053158L;
 
 	/**
 	 * <p>Constant used for specifying within which directory to look for the 
@@ -69,45 +78,44 @@ public class WindowViewer extends JFrame {
 	 * @param m FrameWindow
 	 * @param name String
 	 */
-	public WindowViewer(JBRFrame m, String name, int typeOfPanel) {
+	public WindowViewer(final JBRFrame m, final String name, final int typeOfPanel) {
 		super();
-		this.name = name;
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		this.setIconImage(ImageCreator.FRAME_IMG.getImage());
 
-		String[] input = name.split(" ");
-		String number = input[0] + ".html";
-		setTitle("Window Viewer " + number);
+		final String[] input = name.split(" ");
+		final String number = input[0] + ".html";
+		this.setTitle("Window Viewer " + number);
 
 		// The container pane
-		Container pane = getContentPane();
+		final Container pane = this.getContentPane();
 		pane.setLayout(null);
 		// Define the JPanel
-		JPanel listPanel = new JPanel();
+		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
 				createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		// Set the bounds
 		listPanel.setBounds(10, 10, 520, 450);
 		// The text area
-		JTextArea listTextArea = new JTextArea();
+		final JTextArea listTextArea = new JTextArea();
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
 		listTextArea.setLineWrap(false);
 		listTextArea.setWrapStyleWord(false);
 		m.popup(listTextArea);
 
-		JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
+		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
 		listTextScrollPane.setHorizontalScrollBarPolicy(30);
 		listTextScrollPane.setPreferredSize(new Dimension(500, 410));
 		listPanel.add(listTextScrollPane);
 
-		add(listPanel);
+		this.add(listPanel);
 
 		StringBuffer text = new StringBuffer();
-		if(typeOfPanel == VIEW_SNIFFING_PANEL) {
+		if(typeOfPanel == WindowViewer.VIEW_SNIFFING_PANEL) {
 			text = FileHandler.readSnifFile( number );
 		}
-		if(typeOfPanel == VIEW_FUZZING_PANEL) {
+		if(typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
 			text = FileHandler.readFuzzFile( number );
 		}
 		//Find the header
@@ -126,22 +134,23 @@ public class WindowViewer extends JFrame {
 		listTextArea.setText(text.toString());
 
 		// Global Frame Issues
-		setLocation(200, 200);
-		setSize(550, 500);
-		setResizable(false);
+		this.setLocation(200, 200);
+		this.setSize(550, 500);
+		this.setResizable(false);
 		// Don't show the frame unless there is content
 		if (listTextArea.getText().length() < 1) {
-			setVisible(false);
+			this.setVisible(false);
 		}
 		else {
-			setVisible(true);
+			this.setVisible(true);
 		}
-		setDefaultCloseOperation(2);
+		this.setDefaultCloseOperation(2);
 
 		listTextArea.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent ke) {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
-					dispose();
+					WindowViewer.this.dispose();
 				}
 			}
 		});

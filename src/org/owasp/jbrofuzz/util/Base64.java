@@ -47,7 +47,7 @@ public class Base64 {
 
     final StringBuffer encoded = new StringBuffer();
     for (int i = 0; i < raw.length; i += 3) {
-      encoded.append(encodeBlock(raw, i));
+      encoded.append(Base64.encodeBlock(raw, i));
     }
     return encoded.toString();
   }
@@ -64,14 +64,14 @@ public class Base64 {
       pad++;
     }
     final int length = base64.length() * 6 / 8 - pad;
-    byte[] raw = new byte[length];
+    final byte[] raw = new byte[length];
     int rawIndex = 0;
     for (int i = 0; i < base64.length(); i += 4) {
-      final int block = (getValue(base64.charAt(i)) << 18) +
-                        (getValue(base64.charAt(i + 1)) << 12) +
-                        (getValue(base64.charAt(i + 2)) << 6) +
-                        (getValue(base64.charAt(i + 3)));
-      for (int j = 0; j < 3 && rawIndex + j < raw.length; j++) {
+      final int block = (Base64.getValue(base64.charAt(i)) << 18) +
+                        (Base64.getValue(base64.charAt(i + 1)) << 12) +
+                        (Base64.getValue(base64.charAt(i + 2)) << 6) +
+                        (Base64.getValue(base64.charAt(i + 3)));
+      for (int j = 0; (j < 3) && (rawIndex + j < raw.length); j++) {
         raw[rawIndex + j] = (byte) ((block >> (8 * (2 - j))) & 0xff);
       }
       rawIndex += 3;
@@ -88,10 +88,10 @@ public class Base64 {
       final int neuter = (b < 0) ? b + 256 : b;
       block += neuter << (8 * (2 - i));
     }
-    char[] base64 = new char[4];
+    final char[] base64 = new char[4];
     for (int i = 0; i < 4; i++) {
       final int sixbit = (block >>> (6 * (3 - i))) & 0x3f;
-      base64[i] = getChar(sixbit);
+      base64[i] = Base64.getChar(sixbit);
     }
     if (slack < 1) {
       base64[2] = '=';
@@ -103,13 +103,13 @@ public class Base64 {
   }
 
   private static char getChar(final int sixBit) {
-    if (sixBit >= 0 && sixBit <= 25) {
+    if ((sixBit >= 0) && (sixBit <= 25)) {
       return (char) ('A' + sixBit);
     }
-    if (sixBit >= 26 && sixBit <= 51) {
+    if ((sixBit >= 26) && (sixBit <= 51)) {
       return (char) ('a' + (sixBit - 26));
     }
-    if (sixBit >= 52 && sixBit <= 61) {
+    if ((sixBit >= 52) && (sixBit <= 61)) {
       return (char) ('0' + (sixBit - 52));
     }
     if (sixBit == 62) {
@@ -122,13 +122,13 @@ public class Base64 {
   }
 
   private static int getValue(final char c) {
-    if (c >= 'A' && c <= 'Z') {
+    if ((c >= 'A') && (c <= 'Z')) {
       return c - 'A';
     }
-    if (c >= 'a' && c <= 'z') {
+    if ((c >= 'a') && (c <= 'z')) {
       return c - 'a' + 26;
     }
-    if (c >= '0' && c <= '9') {
+    if ((c >= '0') && (c <= '9')) {
       return c - '0' + 52;
     }
     if (c == '+') {

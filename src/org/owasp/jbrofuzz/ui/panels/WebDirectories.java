@@ -25,21 +25,43 @@
  */
 package org.owasp.jbrofuzz.ui.panels;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
-import javax.swing.*;
-import javax.swing.table.*;
-
-import com.Ostermiller.util.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker3;
+import javax.swing.table.TableColumn;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.dir.DRequestIterator;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.WebDirectoriesModel;
-import org.owasp.jbrofuzz.ui.util.*;
-import org.owasp.jbrofuzz.fuzz.dir.*;
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import org.owasp.jbrofuzz.ui.util.TableSorter;
+
+import com.Ostermiller.util.Browser;
 /**
  * <p>The web directory panel that is attached to the main frame.</p>
  *
@@ -48,7 +70,12 @@ import org.owasp.jbrofuzz.fuzz.dir.*;
  */
 public class WebDirectories extends JPanel implements KeyListener {
 
-  // The frame that the sniffing panel is attached
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1291872530751555718L;
+
+	// The frame that the sniffing panel is attached
   private JBRFrame m;
 
   // The text areas used in their corresponding panels
@@ -94,115 +121,117 @@ public class WebDirectories extends JPanel implements KeyListener {
    *
    * @param m FrameWindow
    */
-  public WebDirectories(JBRFrame m) {
+  public WebDirectories(final JBRFrame m) {
     super(null, true);
     this.m = m;
-    session = 0;
+    this.session = 0;
     
 
     
     // Define the directory JPanel
-    directoryPanel = new JPanel();
-    directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+    this.directoryPanel = new JPanel();
+    this.directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Total Directories to test: "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-    directoryPanel.setBounds(630, 20, 230, 430);
-    add(directoryPanel);
+    this.directoryPanel.setBounds(630, 20, 230, 430);
+    this.add(this.directoryPanel);
 
     // Define the target JPanel
-    JPanel targetPanel = new JPanel();
+    final JPanel targetPanel = new JPanel();
     targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Target URI [HTTP/HTTPS] "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     targetPanel.setBounds(10, 20, 500, 60);
-    add(targetPanel);
+    this.add(targetPanel);
 
     // Define the port JPanel
-    JPanel portPanel = new JPanel();
+    final JPanel portPanel = new JPanel();
     portPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     portPanel.setBounds(510, 20, 60, 60);
-    add(portPanel);
+    this.add(portPanel);
 
     // Define the output JPanel
-    outputPanel = new JPanel();
-    outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+    this.outputPanel = new JPanel();
+    this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-    outputPanel.setBounds(10, 150, 610, 300);
-    add(outputPanel);
+    this.outputPanel.setBounds(10, 150, 610, 300);
+    this.add(this.outputPanel);
 
     // Define the target text area
-    targetText = new JTextField(); 
-    targetText.setEditable(true);
-    targetText.setVisible(true);
-    targetText.setFont(new Font("Verdana", Font.BOLD, 12));
-    targetText.setMargin(new Insets(1, 1, 1, 1));
-    targetText.setBackground(Color.WHITE);
-    targetText.setForeground(Color.BLACK);
-    targetText.setPreferredSize(new Dimension(480, 20));
-    getFrameWindow().popup(targetText);
-    targetPanel.add(targetText);
+    this.targetText = new JTextField(); 
+    this.targetText.setEditable(true);
+    this.targetText.setVisible(true);
+    this.targetText.setFont(new Font("Verdana", Font.BOLD, 12));
+    this.targetText.setMargin(new Insets(1, 1, 1, 1));
+    this.targetText.setBackground(Color.WHITE);
+    this.targetText.setForeground(Color.BLACK);
+    this.targetText.setPreferredSize(new Dimension(480, 20));
+    this.getFrameWindow().popup(this.targetText);
+    targetPanel.add(this.targetText);
 
     // Define the port text area
-    portText = new JFormattedTextField();
-    portText.setEditable(true);
-    portText.setVisible(true);
-    portText.setFont(new Font("Verdana", Font.BOLD, 12));
-    portText.setMargin(new Insets(1, 1, 1, 1));
-    portText.setBackground(Color.WHITE);
-    portText.setForeground(Color.BLACK);
-    getFrameWindow().popup(portText);
-    portText.setPreferredSize(new Dimension(50, 20));
-    portPanel.add(portText);
+    this.portText = new JFormattedTextField();
+    this.portText.setEditable(true);
+    this.portText.setVisible(true);
+    this.portText.setFont(new Font("Verdana", Font.BOLD, 12));
+    this.portText.setMargin(new Insets(1, 1, 1, 1));
+    this.portText.setBackground(Color.WHITE);
+    this.portText.setForeground(Color.BLACK);
+    this.getFrameWindow().popup(this.portText);
+    this.portText.setPreferredSize(new Dimension(50, 20));
+    portPanel.add(this.portText);
   
     // Define the directory text area
-    directoryText = new JTextArea(1, 1);
-    directoryText.setEditable(true);
-    directoryText.setVisible(true);
-    directoryText.setFont(new Font("Verdana", Font.BOLD, 12));
-    directoryText.setLineWrap(false);
-    directoryText.setWrapStyleWord(true);
-    directoryText.setMargin(new Insets(1, 1, 1, 1));
-    directoryText.setBackground(Color.WHITE);
-    directoryText.setForeground(Color.BLACK);
-    directoryText.addKeyListener(this);
-    getFrameWindow().popup(directoryText);
-    JScrollPane directoryScrollPane = new JScrollPane(directoryText);
+    this.directoryText = new JTextArea(1, 1);
+    this.directoryText.setEditable(true);
+    this.directoryText.setVisible(true);
+    this.directoryText.setFont(new Font("Verdana", Font.BOLD, 12));
+    this.directoryText.setLineWrap(false);
+    this.directoryText.setWrapStyleWord(true);
+    this.directoryText.setMargin(new Insets(1, 1, 1, 1));
+    this.directoryText.setBackground(Color.WHITE);
+    this.directoryText.setForeground(Color.BLACK);
+    this.directoryText.addKeyListener(this);
+    this.getFrameWindow().popup(this.directoryText);
+    final JScrollPane directoryScrollPane = new JScrollPane(this.directoryText);
     directoryScrollPane.setVerticalScrollBarPolicy(20);
     directoryScrollPane.setHorizontalScrollBarPolicy(30);
     directoryScrollPane.setPreferredSize(new Dimension(210, 390));
-    directoryPanel.add(directoryScrollPane);
+    this.directoryPanel.add(directoryScrollPane);
 
     // The add generator button
-    startButton = new JButton("Start", ImageCreator.START_IMG);
-    startButton.setBounds(420, 95, 90, 40);
-    startButton.setToolTipText("Start Fuzzing through the Directories List");
-    add(startButton);
-    startButton.addActionListener(new ActionListener() {
+    this.startButton = new JButton("Start", ImageCreator.START_IMG);
+    this.startButton.setBounds(420, 95, 90, 40);
+    this.startButton.setToolTipText("Start Fuzzing through the Directories List");
+    this.add(this.startButton);
+    this.startButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
 
-        SwingWorker3 worker = new SwingWorker3() {
-          public Object construct() {
-            buttonStart();
+        final SwingWorker3 worker = new SwingWorker3() {
+          @Override
+					public Object construct() {
+            WebDirectories.this.buttonStart();
             return "start-window-return";
           }
 
-          public void finished() {
-            buttonStop();
+          @Override
+					public void finished() {
+            WebDirectories.this.buttonStop();
           }
         };
         worker.start();
       }
     });
 
-    stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
-    stopButton.setBounds(520, 95, 90, 40);
-    stopButton.setToolTipText("Stop Fuzzing through the Directories List");
-    add(stopButton);
-    stopButton.addActionListener(new ActionListener() {
+    this.stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
+    this.stopButton.setBounds(520, 95, 90, 40);
+    this.stopButton.setToolTipText("Stop Fuzzing through the Directories List");
+    this.add(this.stopButton);
+    this.stopButton.addActionListener(new ActionListener() {
       public void actionPerformed(final ActionEvent e) {
-        buttonStop();
+        WebDirectories.this.buttonStop();
       }
     });
 /*
@@ -216,26 +245,26 @@ public class WebDirectories extends JPanel implements KeyListener {
         }
       });
     */
-    responseTableModel = new WebDirectoriesModel();
-    sorter = new TableSorter(responseTableModel);
-    responseTable = new JTable(sorter);
+    this.responseTableModel = new WebDirectoriesModel();
+    this.sorter = new TableSorter(this.responseTableModel);
+    this.responseTable = new JTable(this.sorter);
 
 
-    responseTable.getTableHeader().setToolTipText(
+    this.responseTable.getTableHeader().setToolTipText(
       "Click to specify sorting; Control-Click to specify secondary sorting");
-    popup(responseTable);
-    sorter.setTableHeader(responseTable.getTableHeader());
-    responseTable.setFont(new Font("Monospaced", Font.BOLD, 12));
-    responseTable.setBackground(Color.black);
-    responseTable.setForeground(Color.white);
-    responseTable.setSurrendersFocusOnKeystroke(true);
-    responseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    responseTable.setColumnSelectionAllowed(false);
-    responseTable.setRowSelectionAllowed(true);
+    this.popup(this.responseTable);
+    this.sorter.setTableHeader(this.responseTable.getTableHeader());
+    this.responseTable.setFont(new Font("Monospaced", Font.BOLD, 12));
+    this.responseTable.setBackground(Color.black);
+    this.responseTable.setForeground(Color.white);
+    this.responseTable.setSurrendersFocusOnKeystroke(true);
+    this.responseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    this.responseTable.setColumnSelectionAllowed(false);
+    this.responseTable.setRowSelectionAllowed(true);
     // Set the column widths
     TableColumn column = null;
-    for (int i = 0; i < responseTableModel.getColumnCount(); i++) {
-      column = responseTable.getColumnModel().getColumn(i);
+    for (int i = 0; i < this.responseTableModel.getColumnCount(); i++) {
+      column = this.responseTable.getColumnModel().getColumn(i);
       if (i == 0) {
         column.setPreferredWidth(30);
       }
@@ -257,46 +286,46 @@ public class WebDirectories extends JPanel implements KeyListener {
 
     }
 
-    JScrollPane listTextScrollPane = new JScrollPane(responseTable);
+    final JScrollPane listTextScrollPane = new JScrollPane(this.responseTable);
     listTextScrollPane.setVerticalScrollBarPolicy(20);
     listTextScrollPane.setHorizontalScrollBarPolicy(31);
     listTextScrollPane.setPreferredSize(new Dimension(590, 260));
     listTextScrollPane.setWheelScrollingEnabled(true);
-    outputPanel.add(listTextScrollPane);
+    this.outputPanel.add(listTextScrollPane);
 
-    progressBar = new JProgressBar(0);
-    progressBar.setValue(0);
-    progressBar.setStringPainted(true);
-    progressBar.setMinimum(0);
-    progressBar.setMaximum(100);
-    progressBar.setPreferredSize(new Dimension(310, 20));
-    JPanel progressPanel = new JPanel();
+    this.progressBar = new JProgressBar(0);
+    this.progressBar.setValue(0);
+    this.progressBar.setStringPainted(true);
+    this.progressBar.setMinimum(0);
+    this.progressBar.setMaximum(100);
+    this.progressBar.setPreferredSize(new Dimension(310, 20));
+    final JPanel progressPanel = new JPanel();
     progressPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Progress "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
     progressPanel.setBounds(10, 85, 330, 60);
-    progressPanel.add(progressBar);
-    add(progressPanel);
+    progressPanel.add(this.progressBar);
+    this.add(progressPanel);
 
-    startButton.setEnabled(true);
-    stopButton.setEnabled(false);
+    this.startButton.setEnabled(true);
+    this.stopButton.setEnabled(false);
 
 
-    targetText.setText("http://localhost");
-    portText.setText("80");
+    this.targetText.setText("http://localhost");
+    this.portText.setText("80");
   }
 
   /**
    * Set the text content of the directories jtextarea.
    * @param s StringBuffer
    */
-  public void setDirectoriesText(StringBuffer s) {
-    directoryText.setText(s.toString());
-    directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+  public void setDirectoriesText(final StringBuffer s) {
+    this.directoryText.setText(s.toString());
+    this.directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Total Directories to test: " +
-                         directoryText.getLineCount() + " "),
+                         this.directoryText.getLineCount() + " "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-    directoryText.setCaretPosition(0);
+    this.directoryText.setCaretPosition(0);
   }
 
   /**
@@ -305,13 +334,15 @@ public class WebDirectories extends JPanel implements KeyListener {
    */
   public void setProgressBar(final int percent) {
     if ((percent >= 0) && (percent <= 100)) {
-      SwingWorker3 progressWorker = new SwingWorker3() {
-        public Object construct() {
-          progressBar.setValue(percent);
+      final SwingWorker3 progressWorker = new SwingWorker3() {
+        @Override
+				public Object construct() {
+          WebDirectories.this.progressBar.setValue(percent);
           return "progress-update-return";
         }
 
-        public void finished() {
+        @Override
+				public void finished() {
         }
       };
       progressWorker.start();
@@ -325,7 +356,7 @@ public class WebDirectories extends JPanel implements KeyListener {
    * @return Window
    */
   public JBRFrame getFrameWindow() {
-    return m;
+    return this.m;
   }
 
   /**
@@ -333,68 +364,68 @@ public class WebDirectories extends JPanel implements KeyListener {
    * @return JBroFuzz
    */
   public JBroFuzz getJBroFuzz() {
-    return m.getJBroFuzz();
+    return this.m.getJBroFuzz();
   }
   
   /**
    * Method triggered when the start button is pressed.
    */
   public void buttonStart() {
-    if (!startButton.isEnabled()) {
+    if (!this.startButton.isEnabled()) {
       return;
     }
     // Increment the session number
-    session++;
-    session %= 100;
+    this.session++;
+    this.session %= 100;
     // Update the panel, indicating directory
-    outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+    this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Output " + "[Logging in file \\web-dir\\" +
-      		getJBroFuzz().getFormat().getDate() + "\\" + getSessionNumber() + ".csv]  "),
+      		this.getJBroFuzz().getFormat().getDate() + "\\" + this.getSessionNumber() + ".csv]  "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
     // UI and Colors
-    startButton.setEnabled(false);
-    stopButton.setEnabled(true);
-    targetText.setEditable(false);
-    targetText.setBackground(Color.BLACK);
-    targetText.setForeground(Color.WHITE);
-    portText.setEditable(false);
-    portText.setBackground(Color.BLACK);
-    portText.setForeground(Color.WHITE);
+    this.startButton.setEnabled(false);
+    this.stopButton.setEnabled(true);
+    this.targetText.setEditable(false);
+    this.targetText.setBackground(Color.BLACK);
+    this.targetText.setForeground(Color.WHITE);
+    this.portText.setEditable(false);
+    this.portText.setBackground(Color.BLACK);
+    this.portText.setForeground(Color.WHITE);
 
-    String uri = targetText.getText();
+    String uri = this.targetText.getText();
     // Add a trailing / if one is not there
     if (!uri.endsWith("/")) {
       uri += "/";
     }
-    String dirs = directoryText.getText();
-    String port = portText.getText();
+    final String dirs = this.directoryText.getText();
+    final String port = this.portText.getText();
 
-    responseTableModel.removeAllRows();
+    this.responseTableModel.removeAllRows();
 
-    cesg = new DRequestIterator(getFrameWindow(), uri, dirs, port);
-    cesg.run();
+    this.cesg = new DRequestIterator(this.getFrameWindow(), uri, dirs, port);
+    this.cesg.run();
   }
 
   /**
    * <p>Method for stopping the request iterator.</p>
    */
   public void buttonStop() {
-    if (!stopButton.isEnabled()) {
+    if (!this.stopButton.isEnabled()) {
       return;
     }
 
     // UI and Colors
-    stopButton.setEnabled(false);
-    startButton.setEnabled(true);
-    targetText.setEditable(true);
-    targetText.setBackground(Color.WHITE);
-    targetText.setForeground(Color.BLACK);
-    portText.setEditable(true);
-    portText.setBackground(Color.WHITE);
-    portText.setForeground(Color.BLACK);
+    this.stopButton.setEnabled(false);
+    this.startButton.setEnabled(true);
+    this.targetText.setEditable(true);
+    this.targetText.setBackground(Color.WHITE);
+    this.targetText.setForeground(Color.BLACK);
+    this.portText.setEditable(true);
+    this.portText.setBackground(Color.WHITE);
+    this.portText.setForeground(Color.BLACK);
 
-    cesg.stop();
+    this.cesg.stop();
   }
 
   /**
@@ -407,22 +438,22 @@ public class WebDirectories extends JPanel implements KeyListener {
 
     final String[] inputArray = s.split("\n");
     if (inputArray.length != 6) {
-      StringBuffer error = new StringBuffer("Web Directory Error! Cannot fit " +
+      final StringBuffer error = new StringBuffer("Web Directory Error! Cannot fit " +
                                             inputArray.length +
                                             " columns into 6.");
       if (inputArray.length > 1) {
         error.append(" First column was " + inputArray[0]);
       }
-      m.log(error.toString());
+      this.m.log(error.toString());
     }
     else {
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
-          responseTableModel.addRow(inputArray[0], inputArray[1], inputArray[2],
+          WebDirectories.this.responseTableModel.addRow(inputArray[0], inputArray[1], inputArray[2],
                                     inputArray[3], inputArray[4], inputArray[5]);
           // Set the last row to be visible
-          responseTable.scrollRectToVisible(responseTable.getCellRect(
-            responseTable.getRowCount() - 1, 0, true));
+          WebDirectories.this.responseTable.scrollRectToVisible(WebDirectories.this.responseTable.getCellRect(
+            WebDirectories.this.responseTable.getRowCount() - 1, 0, true));
         }
       });
 
@@ -433,10 +464,10 @@ public class WebDirectories extends JPanel implements KeyListener {
    * Handle the key typed event from the text field.
    * @param ke KeyEvent
    */
-  public void keyTyped(KeyEvent ke) {
-    directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+  public void keyTyped(final KeyEvent ke) {
+    this.directoryPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
       createTitledBorder(" Total Directories to test: " +
-                         directoryText.getLineCount() + " "),
+                         this.directoryText.getLineCount() + " "),
       BorderFactory.createEmptyBorder(1, 1, 1, 1)));
   }
 
@@ -445,7 +476,7 @@ public class WebDirectories extends JPanel implements KeyListener {
    *
    * @param e KeyEvent
    */
-  public void keyPressed(KeyEvent e) {
+  public void keyPressed(final KeyEvent e) {
     // System.out.println(directoryText.getLineCount() );
   }
 
@@ -453,7 +484,7 @@ public class WebDirectories extends JPanel implements KeyListener {
    * Handle the key released event from the text field.
    * @param e KeyEvent
    */
-  public void keyReleased(KeyEvent e) {
+  public void keyReleased(final KeyEvent e) {
     // System.out.println(directoryText.getLineCount() );
   }
 
@@ -465,9 +496,9 @@ public class WebDirectories extends JPanel implements KeyListener {
 
     final JPopupMenu popmenu = new JPopupMenu();
 
-    JMenuItem i2 = new JMenuItem("Copy");
-    JMenuItem i4 = new JMenuItem("Select All");
-    JMenuItem i5 = new JMenuItem("Open in Browser");
+    final JMenuItem i2 = new JMenuItem("Copy");
+    final JMenuItem i4 = new JMenuItem("Select All");
+    final JMenuItem i5 = new JMenuItem("Open in Browser");
 
     i2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
                                              ActionEvent.CTRL_MASK));
@@ -481,51 +512,53 @@ public class WebDirectories extends JPanel implements KeyListener {
     popmenu.add(i5);
 
     i2.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(final ActionEvent e) {
         area.removeRowSelectionInterval(0, area.getRowCount() - 1);
-        int[] a = area.getSelectedRows();
-        StringBuffer s = new StringBuffer();
-        for (int i = 0; i < a.length; i++) {
-          TableSorter tb = (TableSorter) area.getModel();
-          WebDirectoriesModel wm = (WebDirectoriesModel) tb.getTableModel();
-          String row = wm.getRow(a[i]);
+        final int[] a = area.getSelectedRows();
+        final StringBuffer s = new StringBuffer();
+        for (final int element : a) {
+          final TableSorter tb = (TableSorter) area.getModel();
+          final WebDirectoriesModel wm = (WebDirectoriesModel) tb.getTableModel();
+          final String row = wm.getRow(element);
           s.append(row);
         }
-        JTextArea myTempArea = new JTextArea(s.toString());
+        final JTextArea myTempArea = new JTextArea(s.toString());
         myTempArea.copy();
       }
     });
 
     i4.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(final ActionEvent e) {
         area.selectAll();
       }
     });
 
     i5.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
+      public void actionPerformed(final ActionEvent e) {
         Browser.init();
         final String url = (String) area.getValueAt(area.getSelectedRow(),
           1 % area.getColumnCount());
         try {
           Browser.displayURL(url);
         }
-        catch (IOException ex) {
-          getFrameWindow().log("Could not launch link in external browser");
+        catch (final IOException ex) {
+          WebDirectories.this.getFrameWindow().log("Could not launch link in external browser");
         }
       }
     });
 
     area.addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent e) {
-        checkForTriggerEvent(e);
+      @Override
+			public void mousePressed(final MouseEvent e) {
+        this.checkForTriggerEvent(e);
       }
 
-      public void mouseReleased(MouseEvent e) {
-        checkForTriggerEvent(e);
+      @Override
+			public void mouseReleased(final MouseEvent e) {
+        this.checkForTriggerEvent(e);
       }
 
-      private void checkForTriggerEvent(MouseEvent e) {
+      private void checkForTriggerEvent(final MouseEvent e) {
         if (e.isPopupTrigger()) {
           area.requestFocus();
           popmenu.show(e.getComponent(), e.getX(), e.getY());
@@ -542,10 +575,10 @@ public class WebDirectories extends JPanel implements KeyListener {
    */
   public String getSessionNumber() {
     String s = "";
-    if (session < 10) {
+    if (this.session < 10) {
       s += "0";
     }
-    s += session;
+    s += this.session;
     return s;
   }
   

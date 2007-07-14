@@ -25,16 +25,6 @@
  */
 package org.owasp.jbrofuzz.ui.menu;
 
-import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.*;
-
-import java.io.IOException;
-import java.net.*;
-
-import org.owasp.jbrofuzz.ui.util.*;
-import org.owasp.jbrofuzz.version.*;
 /**
  * <p>The about box used in the FrameWindow.</p>
  * 

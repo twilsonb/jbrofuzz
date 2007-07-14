@@ -25,20 +25,10 @@
  */
 package org.owasp.jbrofuzz.ui.viewers;
 
-import java.awt.event.*;
-
-import javax.swing.*;
-
-import org.owasp.jbrofuzz.io.*;
-import org.owasp.jbrofuzz.ui.JBRFrame;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-
 import java.awt.BorderLayout;
-import java.awt.Button;
-import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Properties;
+
+import javax.swing.JFrame;
 
 import jcckit.GraphicsPlotCanvas;
 import jcckit.data.DataCurve;
@@ -46,6 +36,9 @@ import jcckit.data.DataPlot;
 import jcckit.data.DataPoint;
 import jcckit.util.ConfigParameters;
 import jcckit.util.PropertiesBasedConfigData;
+
+import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.ui.util.ImageCreator;
 /**
  * <p>Class extending a JFrame for displaying fuzzed results in a linear 
  * graph.</p>
@@ -56,8 +49,10 @@ import jcckit.util.PropertiesBasedConfigData;
  * @since 0.6
  */
 public class WindowPlotter extends JFrame {
-	// The name of the JFrame displayed as a title
-	private String name;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5604856799032027536L;
 
 	// The x size of the frame
 	private static final int x = 750;
@@ -69,41 +64,40 @@ public class WindowPlotter extends JFrame {
 
 	private DataPlot _dataPlot;
 
-	public WindowPlotter(String name) {
+	public WindowPlotter(final String name) {
 		super(name);
-		this.name = name;
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		this.setIconImage(ImageCreator.FRAME_IMG.getImage());
 		
-		y_data = FileHandler.getFuzzDirFileHashes();
-		x_data = FileHandler.getFuzzDirFileNames();
+		this.y_data = FileHandler.getFuzzDirFileHashes();
+		this.x_data = FileHandler.getFuzzDirFileNames();
 
-		normaliseData();
+		this.normaliseData();
 
-		GraphicsPlotCanvas plotCanvas = createPlotCanvas();
+		final GraphicsPlotCanvas plotCanvas = this.createPlotCanvas();
 
-		_dataPlot = new DataPlot();
-		_dataPlot.addElement(new DataCurve(""));
-		plotCanvas.connect(_dataPlot);
-		setLayout(new BorderLayout());
-		add(plotCanvas.getGraphicsCanvas(), BorderLayout.CENTER);
+		this._dataPlot = new DataPlot();
+		this._dataPlot.addElement(new DataCurve(""));
+		plotCanvas.connect(this._dataPlot);
+		this.setLayout(new BorderLayout());
+		this.add(plotCanvas.getGraphicsCanvas(), BorderLayout.CENTER);
 		// Global frame issues
-		setLocation(180, 140);
-		setSize(x, y);
-		setResizable(false);
-		setVisible(true);
-		setDefaultCloseOperation(2);
+		this.setLocation(180, 140);
+		this.setSize(WindowPlotter.x, WindowPlotter.y);
+		this.setResizable(false);
+		this.setVisible(true);
+		this.setDefaultCloseOperation(2);
 
-		drawData();
+		this.drawData();
 	}
 
 	private GraphicsPlotCanvas createPlotCanvas() {
-		int xMin = 0;
-		int xMax = y_data.length + 1;
-		int yMin = 0;
-		int yMax = 1000;
+		final int xMin = 0;
+		final int xMax = this.y_data.length + 1;
+		final int yMin = 0;
+		final int yMax = 1000;
 
-		Properties props = new Properties();
-		ConfigParameters config
+		final Properties props = new Properties();
+		final ConfigParameters config
 		= new ConfigParameters(new PropertiesBasedConfigData(props));
 		props.put("foreground", "0xffffff");
 		props.put("background", "0");
@@ -130,13 +124,13 @@ public class WindowPlotter extends JFrame {
 		props.put("plot/curveFactory/curve/symbolFactory/className", "jcckit.plot.CircleSymbolFactory");
 		props.put("plot/curveFactory/curve/symbolFactory/size", "0.015");
 		
-		StringBuffer xAxisMap = new StringBuffer();
-		for(int i=0; i < x_data.length; i++) {
+		final StringBuffer xAxisMap = new StringBuffer();
+		for(int i=0; i < this.x_data.length; i++) {
 			if(i == 0) {
 				xAxisMap.append("0=0;");
 			} else {
 				if(xAxisMap.length() < 100000) {
-					xAxisMap.append((i+1) + "=" + x_data[i] + ";");
+					xAxisMap.append((i+1) + "=" + this.x_data[i] + ";");
 				}
 			}
 		}
@@ -146,20 +140,20 @@ public class WindowPlotter extends JFrame {
 	}
 
 	private void drawData() {
-		DataCurve curve = new DataCurve("");
-		for (int i = 0; i < y_data.length; i++) {
+		final DataCurve curve = new DataCurve("");
+		for (int i = 0; i < this.y_data.length; i++) {
 			curve.addElement(new DataPoint(i, 0));
-			int x = i + 1;
-			int y = y_data[i];
+			final int x = i + 1;
+			final int y = this.y_data[i];
 			curve.replaceElementAt(i, new DataPoint(x, y));
 		}
-		_dataPlot.replaceElementAt(0, curve);
+		this._dataPlot.replaceElementAt(0, curve);
 	}
 
 	private void normaliseData() {
-		int norm = y_data[0];
-		for(int i = 0; i < y_data.length; i++) {
-			y_data[i] = Math.abs((y_data[i] - norm + 10) % 1000);
+		final int norm = this.y_data[0];
+		for(int i = 0; i < this.y_data.length; i++) {
+			this.y_data[i] = Math.abs((this.y_data[i] - norm + 10) % 1000);
 		}
 	}
 
