@@ -91,7 +91,7 @@ public class DetectAndRepair extends JDialog {
 						DetectAndRepair.this.startCheck();
 						return "check-repair-return";
 					}
-
+					
 					@Override
 					public void finished() {
 						DetectAndRepair.this.finishCheck();
@@ -136,7 +136,7 @@ public class DetectAndRepair extends JDialog {
 		this.close.setEnabled(false);
 
 		final StringBuffer output = new StringBuffer();
-		output.append("<HTML>&nbsp;&nbsp;&nbsp;Checking for necessary files...&nbsp;&nbsp;<BR>");
+		output.append("<HTML>&nbsp;&nbsp;&nbsp;Checking for the files that should have come with the distribution...&nbsp;&nbsp;<BR>");
 		this.mainLabel.setText(output.toString() + "</HTML>");
 		
 		output.append("<BR>&nbsp;&nbsp;&nbsp;Checking file&nbsp;" + JBRFormat.FILE_GEN + "...&nbsp;&nbsp;");
@@ -167,18 +167,8 @@ public class DetectAndRepair extends JDialog {
 			return;
 		}
 		this.close.setEnabled(true);
-
 		this.startStop.setText("Finish");
-		this.startStop.removeAll();
-		this.startStop.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						DetectAndRepair.this.startStop.setEnabled(false);
-					}
-				});       
-			}
-		});	
+		this.startStop.setEnabled(false);
 	}
 
 	private void stopCheck() {

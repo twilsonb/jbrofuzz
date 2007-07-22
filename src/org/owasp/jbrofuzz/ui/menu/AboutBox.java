@@ -31,6 +31,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.swing.JButton;
@@ -84,7 +85,7 @@ public class AboutBox extends JDialog {
 		this.setFont(new Font ("SansSerif", Font.PLAIN, 12));
 		
 		final URL licenseURL = ClassLoader.getSystemClassLoader().getResource("LICENSE/gpl-license.txt");
-		final URL	disclaimerURL = ClassLoader.getSystemClassLoader().getResource("LICENSE/NOTICE.txt");
+		final URL disclaimerURL = ClassLoader.getSystemClassLoader().getResource("LICENSE/NOTICE.txt");
 
 		// The about editor label
 		final JLabel about = new JLabel (JBRFormat.ABOUTTEXT, ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);

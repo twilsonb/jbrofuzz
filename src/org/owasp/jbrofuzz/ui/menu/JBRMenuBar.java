@@ -585,7 +585,29 @@ public class JBRMenuBar extends JMenuBar {
 
 			}
 		});
-		
+		faq.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						new JBRFaq(JBRMenuBar.this.getFrameWindow());
+					}
+				});
+			}
+		});
+
+
+		topics.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						new JBRHelp(JBRMenuBar.this.getFrameWindow());
+					}
+				});
+			}
+		});
+
 		website.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
