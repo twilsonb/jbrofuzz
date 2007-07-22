@@ -175,7 +175,7 @@ public class CheckForUpdates extends JDialog {
 						output.append("<B>No</B><BR><BR>&nbsp;&nbsp;&nbsp;You are using the latest version of JBroFuzz");
 						output.append("<BR>&nbsp;&nbsp;&nbsp;There is no need to update");
 					} else {
-						output.append("<B>Yes</B><BR><BR>&nbsp;&nbsp;&nbsp;You are using a older version of JBroFuzz");
+						output.append("<B>Yes</B><BR><BR>&nbsp;&nbsp;&nbsp;You are using an older version of JBroFuzz");
 						output.append("<BR>&nbsp;&nbsp;&nbsp;The " + version);
 						this.newVersionExists = true;
 						
