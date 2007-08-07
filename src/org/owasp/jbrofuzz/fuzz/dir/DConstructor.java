@@ -30,29 +30,32 @@ import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.version.JBRFormat;
 
 /**
- * Class used for constructing the contents of the text displayed within the
- * web directories panel. This text is displayed within the "Total 
- * directories to test" Panel.</p>
- * The necessity of this class lies within having the
- * ability to report errors to the main system panel in the event of 
- * not finding the right file to load.</p>
- *
+ * Class used for constructing the contents of the text displayed within the web
+ * directories panel. This text is displayed within the "Total directories to
+ * test" Panel.
+ * </p>
+ * The necessity of this class lies within having the ability to report errors
+ * to the main system panel in the event of not finding the right file to load.
+ * </p>
+ * 
  * @author subere (at) uncon org
  * @version 0.6
  */
 public class DConstructor {
-  /**
-   * The main constructor reading the contents of the web directory file, if
-   * one is present and setting the text within the panel.
-   *
-   * @param mJBroFuzz JBroFuzz
-   */
-  public DConstructor(final JBroFuzz mJBroFuzz) {
+	/**
+	 * The main constructor reading the contents of the web directory file, if one
+	 * is present and setting the text within the panel.
+	 * 
+	 * @param mJBroFuzz
+	 *          JBroFuzz
+	 */
+	public DConstructor(final JBroFuzz mJBroFuzz) {
 
-    final StringBuffer dirTextBuffer = FileHandler.readDirectories(JBRFormat.FILE_DIR);
+		final StringBuffer dirTextBuffer = FileHandler
+				.readDirectories(JBRFormat.FILE_DIR);
 
-    mJBroFuzz.getWindow().getWebDirectoriesPanel().setDirectoriesText(
-      dirTextBuffer);
+		mJBroFuzz.getWindow().getWebDirectoriesPanel().setDirectoriesText(
+				dirTextBuffer);
 
-  }
+	}
 }

@@ -28,194 +28,209 @@ package org.owasp.jbrofuzz.ui.tablemodels;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
+
+class ResponseOutput {
+	protected String id;
+	protected String uri;
+	protected String statusCode;
+	protected String statusText;
+	protected String comments;
+	protected String scripts;
+
+	public ResponseOutput(final String id, final String uri,
+			final String statusCode, final String statusText, final String comments,
+			final String scripts) {
+
+		this.id = id;
+		this.uri = uri;
+		this.statusCode = statusCode;
+		this.statusText = statusText;
+		this.comments = comments;
+		this.scripts = scripts;
+	}
+
+	public String getComments() {
+		return this.comments;
+	}
+
+	public String getID() {
+		return this.id;
+	}
+
+	public String getScripts() {
+		return this.scripts;
+	}
+
+	public String getStatusCode() {
+		return this.statusCode;
+	}
+
+	public String getStatusText() {
+		return this.statusText;
+	}
+
+	public String getURI() {
+		return this.uri;
+	}
+}
+
 /**
- * <p>The Table Model for the Web Directories return table.</p>
- * <p>This table model is used for replies for the web directories.</p>
+ * <p>
+ * The Table Model for the Web Directories return table.
+ * </p>
+ * <p>
+ * This table model is used for replies for the web directories.
+ * </p>
  * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
 public class WebDirectoriesModel extends AbstractTableModel {
 
-  private static final long serialVersionUID = 185093L;
-  /**
-   * <p>The String used to separate columns when a toString representation of
-   * a set number of columns or rows is required. This is typically used in
-   * method getRow() that returns a String.</p>
-   */
-  public static final String STRING_SEPARATOR = ",";
+	private static final long serialVersionUID = 185093L;
+	/**
+	 * <p>
+	 * The String used to separate columns when a toString representation of a set
+	 * number of columns or rows is required. This is typically used in method
+	 * getRow() that returns a String.
+	 * </p>
+	 */
+	public static final String STRING_SEPARATOR = ",";
 
-  // The names of the columns within the table of generators
-  private static final String[] COLUMNNAMES = {
-                                              "No", "URI", "Code",
-                                              "Status Text", "Comments",
-                                              "Scripts"};
-  // The vector of ResponseOutputs
-  private Vector dataVector;
+	// The names of the columns within the table of generators
+	private static final String[] COLUMNNAMES = { "No", "URI", "Code",
+			"Status Text", "Comments", "Scripts" };
+	// The vector of ResponseOutputs
+	private Vector dataVector;
 
-  /**
-   * Default constructor for this web directory model. This is to be attached
-   * to a JTable.
-   */
-  public WebDirectoriesModel() {
-    this.dataVector = new Vector();
-  }
+	/**
+	 * Default constructor for this web directory model. This is to be attached to
+	 * a JTable.
+	 */
+	public WebDirectoriesModel() {
+		this.dataVector = new Vector();
+	}
 
-  /**
-   * Method for obtaining the String name of a given column.
-   *
-   * @param column int
-   * @return String
-   */
-  @Override
+	/**
+	 * Add a row to the table model.
+	 * 
+	 * @param id
+	 *          String
+	 * @param uri
+	 *          String
+	 * @param statusCode
+	 *          String
+	 * @param statusText
+	 *          String
+	 * @param comments
+	 *          String
+	 * @param scripts
+	 *          String
+	 */
+	public void addRow(final String id, final String uri,
+			final String statusCode, final String statusText, final String comments,
+			final String scripts) {
+
+		final ResponseOutput response = new ResponseOutput(id, uri, statusCode,
+				statusText, comments, scripts);
+		this.dataVector.add(response);
+		this.fireTableRowsInserted(0, this.dataVector.size() - 1);
+	}
+
+	/**
+	 * Return the total number of columns
+	 * 
+	 * @return int
+	 */
+	public int getColumnCount() {
+		return WebDirectoriesModel.COLUMNNAMES.length;
+	}
+
+	/**
+	 * Method for obtaining the String name of a given column.
+	 * 
+	 * @param column
+	 *          int
+	 * @return String
+	 */
+	@Override
 	public String getColumnName(final int column) {
-    String out = "";
-    if ((column > -1) && (column < WebDirectoriesModel.COLUMNNAMES.length)) {
-      out = WebDirectoriesModel.COLUMNNAMES[column];
-    }
-    return out;
-  }
+		String out = "";
+		if ((column > -1) && (column < WebDirectoriesModel.COLUMNNAMES.length)) {
+			out = WebDirectoriesModel.COLUMNNAMES[column];
+		}
+		return out;
+	}
 
-  /**
-   * Method for returning a particular value within the existing table model.
-   *
-   * @param row int
-   * @param column int
-   * @return Object
-   */
-  public Object getValueAt(final int row, final int column) {
-    if ((row < 0) || (row > this.dataVector.size() - 1)) {
-      return "";
-    }
-    else {
-      final ResponseOutput record = (ResponseOutput) this.dataVector.get(row);
-      switch (column) {
-        case 0:
-          return record.getID();
-        case 1:
-          return record.getURI();
-        case 2:
-          return record.getStatusCode();
-        case 3:
-          return record.getStatusText();
-        case 4:
-          return record.getComments();
-        case 5:
-          return record.getScripts();
-        default:
-          return "";
-      }
-    }
-  }
+	/**
+	 * Return a given row in String format using the stated separator
+	 * 
+	 * @param row
+	 *          int
+	 * @return String
+	 */
+	public String getRow(final int row) {
+		final StringBuffer output = new StringBuffer();
+		if ((row > -1) && (row < this.dataVector.size())) {
+			for (int i = 0; i < WebDirectoriesModel.COLUMNNAMES.length; i++) {
+				output.append(this.getValueAt(row, i));
+				if (i < WebDirectoriesModel.COLUMNNAMES.length - 1) {
+					output.append(WebDirectoriesModel.STRING_SEPARATOR);
+				}
+			}
+			output.append("\n");
+		}
+		return output.toString();
+	}
 
-  /**
-   * Return the total number of rows
-   *
-   * @return int
-   */
-  public int getRowCount() {
-    return this.dataVector.size();
-  }
+	/**
+	 * Return the total number of rows
+	 * 
+	 * @return int
+	 */
+	public int getRowCount() {
+		return this.dataVector.size();
+	}
 
-  /**
-   * Return the total number of columns
-   *
-   * @return int
-   */
-  public int getColumnCount() {
-    return WebDirectoriesModel.COLUMNNAMES.length;
-  }
+	/**
+	 * Method for returning a particular value within the existing table model.
+	 * 
+	 * @param row
+	 *          int
+	 * @param column
+	 *          int
+	 * @return Object
+	 */
+	public Object getValueAt(final int row, final int column) {
+		if ((row < 0) || (row > this.dataVector.size() - 1)) {
+			return "";
+		} else {
+			final ResponseOutput record = (ResponseOutput) this.dataVector.get(row);
+			switch (column) {
+			case 0:
+				return record.getID();
+			case 1:
+				return record.getURI();
+			case 2:
+				return record.getStatusCode();
+			case 3:
+				return record.getStatusText();
+			case 4:
+				return record.getComments();
+			case 5:
+				return record.getScripts();
+			default:
+				return "";
+			}
+		}
+	}
 
-  /**
-   * Return a given row in String format using the stated separator
-   *
-   * @param row int
-   * @return String
-   */
-  public String getRow(final int row) {
-    final StringBuffer output = new StringBuffer();
-    if ((row > -1) && (row < this.dataVector.size())) {
-      for (int i = 0; i < WebDirectoriesModel.COLUMNNAMES.length; i++) {
-        output.append(this.getValueAt(row, i));
-        if (i < WebDirectoriesModel.COLUMNNAMES.length - 1) {
-          output.append(WebDirectoriesModel.STRING_SEPARATOR);
-        }
-      }
-      output.append("\n");
-    }
-    return output.toString();
-  }
+	/**
+	 * Remove all the rows within the given table model.
+	 */
+	public void removeAllRows() {
+		this.dataVector.removeAllElements();
 
-  /**
-   * Add a row to the table model.
-   *
-   * @param id String
-   * @param uri String
-   * @param statusCode String
-   * @param statusText String
-   * @param comments String
-   * @param scripts String
-   */
-  public void addRow(final String id, final String uri, final String statusCode,
-                     final String statusText, final String comments, final String scripts) {
-
-    final ResponseOutput response = new ResponseOutput(id, uri, statusCode,
-                                                 statusText, comments, scripts);
-    this.dataVector.add(response);
-    this.fireTableRowsInserted(0, this.dataVector.size() - 1);
-  }
-
-  /**
-   * Remove all the rows within the given table model.
-   */
-  public void removeAllRows() {
-    this.dataVector.removeAllElements();
-
-    this.fireTableRowsDeleted(0, 1);
-  }
-}
-
-
-class ResponseOutput {
-  protected String id;
-  protected String uri;
-  protected String statusCode;
-  protected String statusText;
-  protected String comments;
-  protected String scripts;
-
-  public ResponseOutput(final String id, final String uri, final String statusCode,
-                        final String statusText, final String comments, final String scripts) {
-
-    this.id = id;
-    this.uri = uri;
-    this.statusCode = statusCode;
-    this.statusText = statusText;
-    this.comments = comments;
-    this.scripts = scripts;
-  }
-
-  public String getID() {
-    return this.id;
-  }
-
-  public String getURI() {
-    return this.uri;
-  }
-
-  public String getStatusCode() {
-    return this.statusCode;
-  }
-
-  public String getStatusText() {
-    return this.statusText;
-  }
-
-  public String getComments() {
-    return this.comments;
-  }
-
-  public String getScripts() {
-    return this.scripts;
-  }
+		this.fireTableRowsDeleted(0, 1);
+	}
 }

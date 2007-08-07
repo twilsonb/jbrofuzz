@@ -51,6 +51,26 @@ import org.owasp.jbrofuzz.version.JBRFormat;
  */
 public class JBroFuzz {
 
+	/**
+	 * <p>
+	 * The main method instantiating the constructor.
+	 * </p>
+	 * 
+	 * @param args
+	 *          String[]
+	 */
+	public static void main(final String[] args) {
+
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+
+				new JBroFuzz();
+
+			}
+		});
+
+	}
+
 	private FileHandler mHandler;
 
 	private JBRFormat mFormat;
@@ -70,19 +90,6 @@ public class JBroFuzz {
 		this.mWindow = new JBRFrame(this);
 		// Singleton File Handler
 		this.mHandler = FileHandler.s(this.mWindow, this.mFormat);
-
-	}
-
-	/**
-	 * <p>
-	 * Return the main window, thus allowing access to various GUI components.
-	 * </p>
-	 * 
-	 * @return mWindow JBRFrame
-	 */
-	public JBRFrame getWindow() {
-
-		return this.mWindow;
 
 	}
 
@@ -116,21 +123,14 @@ public class JBroFuzz {
 
 	/**
 	 * <p>
-	 * The main method instantiating the constructor.
+	 * Return the main window, thus allowing access to various GUI components.
 	 * </p>
 	 * 
-	 * @param args
-	 *          String[]
+	 * @return mWindow JBRFrame
 	 */
-	public static void main(final String[] args) {
+	public JBRFrame getWindow() {
 
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-
-				new JBroFuzz();
-
-			}
-		});
+		return this.mWindow;
 
 	}
 }

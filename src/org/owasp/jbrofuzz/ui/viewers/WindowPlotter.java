@@ -39,11 +39,15 @@ import jcckit.util.PropertiesBasedConfigData;
 
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
+
 /**
- * <p>Class extending a JFrame for displaying fuzzed results in a linear 
- * graph.</p>
- * <p>This class launched a JFrame inside the "TCP Fuzzing" Panel.</p>
- *
+ * <p>
+ * Class extending a JFrame for displaying fuzzed results in a linear graph.
+ * </p>
+ * <p>
+ * This class launched a JFrame inside the "TCP Fuzzing" Panel.
+ * </p>
+ * 
  * @author subere (at) uncon org
  * @version 0.6
  * @since 0.6
@@ -59,15 +63,15 @@ public class WindowPlotter extends JFrame {
 	// The y size of the frame
 	private static final int y = 450;
 
-	private int [] y_data = null;
-	private String [] x_data = null;
+	private int[] y_data = null;
+	private String[] x_data = null;
 
 	private DataPlot _dataPlot;
 
 	public WindowPlotter(final String name) {
 		super(name);
 		this.setIconImage(ImageCreator.FRAME_IMG.getImage());
-		
+
 		this.y_data = FileHandler.getFuzzDirFileHashes();
 		this.x_data = FileHandler.getFuzzDirFileNames();
 
@@ -97,45 +101,58 @@ public class WindowPlotter extends JFrame {
 		final int yMax = 1000;
 
 		final Properties props = new Properties();
-		final ConfigParameters config
-		= new ConfigParameters(new PropertiesBasedConfigData(props));
+		final ConfigParameters config = new ConfigParameters(
+				new PropertiesBasedConfigData(props));
 		props.put("foreground", "0xffffff");
 		props.put("background", "0");
 
 		props.put("plot/legendVisible", "false");
 		props.put("plot/coordinateSystem/xAxis/minimum", "" + xMin);
 		props.put("plot/coordinateSystem/xAxis/maximum", "" + xMax);
-		props.put("plot/coordinateSystem/xAxis/axisLabel", "Fuzzing Instance File Generated");
+		props.put("plot/coordinateSystem/xAxis/axisLabel",
+				"Fuzzing Instance File Generated");
 
 		props.put("plot/coordinateSystem/yAxis/minimum", "" + yMin);
 		props.put("plot/coordinateSystem/yAxis/maximum", "" + yMax);
-		props.put("plot/coordinateSystem/yAxis/axisLabel", "Normalised Fuzzing Hash Value [0 - 1000]");
+		props.put("plot/coordinateSystem/yAxis/axisLabel",
+				"Normalised Fuzzing Hash Value [0 - 1000]");
 
 		props.put("plot/curveFactory/definitions", "curve");
 		props.put("plot/curveFactory/curve/withLine", "true");
 
-		props.put("plot/initialHintForNextCurve/className", "jcckit.plot.PositionHint");
+		props.put("plot/initialHintForNextCurve/className",
+				"jcckit.plot.PositionHint");
 		props.put("plot/initialHintForNextCurve/position", "0 0.1");
 
-		props.put("plot/curveFactory/curve/initialHintForNextPoint/className", "jcckit.plot.ShapeAttributesHint");
-		props.put("plot/curveFactory/curve/initialHintForNextPoint/initialAttributes/fillColor", "0x00090");
-		props.put("plot/curveFactory/curve/initialHintForNextPoint/fillColorHSBIncrement", "0.0 0.0 0.018");
+		props.put("plot/curveFactory/curve/initialHintForNextPoint/className",
+				"jcckit.plot.ShapeAttributesHint");
+		props
+				.put(
+						"plot/curveFactory/curve/initialHintForNextPoint/initialAttributes/fillColor",
+						"0x00090");
+		props
+				.put(
+						"plot/curveFactory/curve/initialHintForNextPoint/fillColorHSBIncrement",
+						"0.0 0.0 0.018");
 		props.put("plot/curveFactory/curve/withLine", "true");
-		props.put("plot/curveFactory/curve/symbolFactory/className", "jcckit.plot.CircleSymbolFactory");
+		props.put("plot/curveFactory/curve/symbolFactory/className",
+				"jcckit.plot.CircleSymbolFactory");
 		props.put("plot/curveFactory/curve/symbolFactory/size", "0.015");
-		
+
 		final StringBuffer xAxisMap = new StringBuffer();
-		for(int i=0; i < this.x_data.length; i++) {
-			if(i == 0) {
+		for (int i = 0; i < this.x_data.length; i++) {
+			if (i == 0) {
 				xAxisMap.append("0=0;");
 			} else {
-				if(xAxisMap.length() < 100000) {
-					xAxisMap.append((i+1) + "=" + this.x_data[i] + ";");
+				if (xAxisMap.length() < 100000) {
+					xAxisMap.append((i + 1) + "=" + this.x_data[i] + ";");
 				}
 			}
 		}
-		props.put("plot/coordinateSystem/xAxis/ticLabelFormat/className", "jcckit.plot.TicLabelMap");
-		props.put("plot/coordinateSystem/xAxis/ticLabelFormat/map", xAxisMap.toString());
+		props.put("plot/coordinateSystem/xAxis/ticLabelFormat/className",
+				"jcckit.plot.TicLabelMap");
+		props.put("plot/coordinateSystem/xAxis/ticLabelFormat/map", xAxisMap
+				.toString());
 		return new GraphicsPlotCanvas(config);
 	}
 
@@ -152,9 +169,9 @@ public class WindowPlotter extends JFrame {
 
 	private void normaliseData() {
 		final int norm = this.y_data[0];
-		for(int i = 0; i < this.y_data.length; i++) {
+		for (int i = 0; i < this.y_data.length; i++) {
 			this.y_data[i] = Math.abs((this.y_data[i] - norm + 10) % 1000);
 		}
 	}
 
-}	// Frame class
+} // Frame class

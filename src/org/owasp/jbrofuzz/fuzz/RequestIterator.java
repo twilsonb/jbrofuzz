@@ -33,23 +33,32 @@ import org.owasp.jbrofuzz.fuzz.tcp.Connection;
 import org.owasp.jbrofuzz.fuzz.tcp.Generator;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.version.JBRFormat;
+
 /**
- * <p>The request generator instantiates the correct generator,
- * holding the complete set of requests. This class runs through all the
- * requests that a generator has to make holding the complete request being
- * made.</p>
- *
- * <p>For each generator value, through the use of the run method, a socket
- * gets created according through a Connection object that gets created.</p>
- *
- * <p>Effectively, a request generator generates connections when run by means
- * of establishing sockets though the Connection class.</p>
- *
+ * <p>
+ * The request generator instantiates the correct generator, holding the
+ * complete set of requests. This class runs through all the requests that a
+ * generator has to make holding the complete request being made.
+ * </p>
+ * 
+ * <p>
+ * For each generator value, through the use of the run method, a socket gets
+ * created according through a Connection object that gets created.
+ * </p>
+ * 
+ * <p>
+ * Effectively, a request generator generates connections when run by means of
+ * establishing sockets though the Connection class.
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
 public class RequestIterator {
 
+	// Format the current time in a nice iso 8601 format.
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd HH-mm-ss-SSS");
 	private JBroFuzz mJBroFuzz;
 	// The request being made on the socket
 	private StringBuffer request;
@@ -66,49 +75,49 @@ public class RequestIterator {
 	private String type;
 	// The boolean checking if stop has been pressed
 	private boolean generatorStopped;
-//Format the current time in a nice iso 8601 format.
-  private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
-    "yyyy-MM-dd HH-mm-ss-SSS");
+
 	/**
-	 * The main constructor passing a jbrofuzz object, the string to be sent,
-	 * the start location wihtin that String were the fuzzing point begins from
-	 * and the finish location and the type of fuzzing.
-	 * @param mJBroFuzz JBroFuzz
-	 * @param request String
-	 * @param start int
-	 * @param finish int
-	 * @param type int
+	 * The main constructor passing a jbrofuzz object, the string to be sent, the
+	 * start location wihtin that String were the fuzzing point begins from and
+	 * the finish location and the type of fuzzing.
+	 * 
+	 * @param mJBroFuzz
+	 *          JBroFuzz
+	 * @param request
+	 *          String
+	 * @param start
+	 *          int
+	 * @param finish
+	 *          int
+	 * @param type
+	 *          int
 	 */
-	public RequestIterator(final JBroFuzz mJBroFuzz, 
-			final StringBuffer request, 
-			final int start,
-			final int finish, 
-			final String type) {
+	public RequestIterator(final JBroFuzz mJBroFuzz, final StringBuffer request,
+			final int start, final int finish, final String type) {
 
 		this.mJBroFuzz = mJBroFuzz;
 		this.request = request;
 		this.type = type;
 		this.start = start;
 		this.finish = finish;
-		
+
 		this.maxValue = 0;
 		this.currentValue = 0;
 		this.generatorStopped = false;
-		
+
 		this.mTConstructor = new TConstructor(this.getJBroFuzz());
-		
+
 		// Check start and finish to positive and also within length
 		final int strlength = request.length();
-		if ((start < 0) || (finish < 0) || (start > strlength) ||
-				(finish > strlength)) {
+		if ((start < 0) || (finish < 0) || (start > strlength)
+				|| (finish > strlength)) {
 			this.len = 0;
-		}
-		else {
+		} else {
 			this.len = finish - start;
 		}
 		// Check for a minimum length of 1 between start and finish
 		if (this.len > 0) {
-			
+
 			this.maxValue = this.mTConstructor.getGeneratorLength(type);
 			// For a recursive generator, generate the corresponding maximum value
 			final char genType = this.mTConstructor.getGeneratorType(type);
@@ -119,7 +128,16 @@ public class RequestIterator {
 				}
 			}
 		} // if this.len > 0
-		
+
+	}
+
+	/**
+	 * Return the main constructor object.
+	 * 
+	 * @return JBroFuzz
+	 */
+	public JBroFuzz getJBroFuzz() {
+		return this.mJBroFuzz;
 	}
 
 	/**
@@ -139,7 +157,8 @@ public class RequestIterator {
 			// Check to see if the generator is recursive
 			if (genType == Generator.RECURSIVE) {
 				final int radix = this.mTConstructor.getGeneratorLength(this.type);
-				blank_count = Long.toString(this.currentValue, radix).length() - this.len;
+				blank_count = Long.toString(this.currentValue, radix).length()
+						- this.len;
 				while (blank_count < 0) {
 					fuzzedValue.append("0");
 					blank_count++;
@@ -161,7 +180,8 @@ public class RequestIterator {
 			// Check to see if the generator is replasive
 			if (genType == Generator.REPLASIVE) {
 				final int v = (int) this.currentValue;
-				final StringBuffer b = this.mTConstructor.getGeneratorElement(this.type, v);
+				final StringBuffer b = this.mTConstructor.getGeneratorElement(
+						this.type, v);
 				fuzzedValue.append(b);
 			}
 
@@ -169,68 +189,68 @@ public class RequestIterator {
 			// Append the end of the string
 			fuzzedValue.append(this.request.substring(this.finish));
 		}
-		return fuzzedValue;		
+		return fuzzedValue;
 	}
 
 	/**
-	 * <p>Method responsible for doing all the work. This method runs through a
+	 * <p>
+	 * Method responsible for doing all the work. This method runs through a
 	 * number of instances creating a connection and getting the reply for each
-	 * one.</p>
-	 * <p>While looping through the total number of connections, it checks to see
+	 * one.
+	 * </p>
+	 * <p>
+	 * While looping through the total number of connections, it checks to see
 	 * also if the fuzzing has been stopped by the user. This is checked through
-	 * the generatorStopped boolean that can be accesses from the main GUI.</p>
-	 *
+	 * the generatorStopped boolean that can be accesses from the main GUI.
+	 * </p>
+	 * 
 	 */
 	public void run() {
-		final String target = this.mJBroFuzz.getWindow().getFuzzingPanel().getTargetText();
-		final String port = this.mJBroFuzz.getWindow().getFuzzingPanel().getPortText();
+		final String target = this.mJBroFuzz.getWindow().getFuzzingPanel()
+				.getTargetText();
+		final String port = this.mJBroFuzz.getWindow().getFuzzingPanel()
+				.getPortText();
 		StringBuffer stout = this.getNext();
-		
-		if(stout.toString().equalsIgnoreCase("")) {
+
+		if (stout.toString().equalsIgnoreCase("")) {
 			stout = this.request;
 		}
 
-		while ( (! stout.toString().equalsIgnoreCase("")) && (! this.generatorStopped) ) {
+		while ((!stout.toString().equalsIgnoreCase("")) && (!this.generatorStopped)) {
 
 			final Date currentTime = new Date();
-			final String filename = this.mJBroFuzz.getWindow().getFuzzingPanel().getCounter(true);
+			final String filename = this.mJBroFuzz.getWindow().getFuzzingPanel()
+					.getCounter(true);
 
 			this.mJBroFuzz.getWindow().getFuzzingPanel().addRowInOuputTable(
-					filename + "          " + 
-					target + ":" + port + "          " + 
-					this.type + "          " + 
-					RequestIterator.dateFormat.format(currentTime) + "          " + 
-					this.currentValue + "/" + this.maxValue);
-			
-			FileHandler.writeFuzzFile("[{" + this.currentValue + "/" + this.maxValue + "}, " 
-															+ filename + " " + RequestIterator.dateFormat.format(currentTime) + "] "
-															+ "<!-- \r\n" + target + " : " + port + "\r\n"
-															+ stout + "\r\n",  
-															filename) ;
+					filename + "          " + target + ":" + port + "          "
+							+ this.type + "          "
+							+ RequestIterator.dateFormat.format(currentTime) + "          "
+							+ this.currentValue + "/" + this.maxValue);
+
+			FileHandler.writeFuzzFile("[{" + this.currentValue + "/" + this.maxValue
+					+ "}, " + filename + " "
+					+ RequestIterator.dateFormat.format(currentTime) + "] " + "<!-- \r\n"
+					+ target + " : " + port + "\r\n" + stout + "\r\n", filename);
 
 			final Connection con = new Connection(target, port, stout);
 
 			final String s = con.getReply();
-			FileHandler.writeFuzzFile(JBRFormat.LINE_SEPARATOR + "\r\n" + s, filename);
-			
+			FileHandler
+					.writeFuzzFile(JBRFormat.LINE_SEPARATOR + "\r\n" + s, filename);
+
 			stout = this.getNext();
 		}
-}
+	}
 
-/**
- * <p>Stop the generator. This operation is achieved by setting the boolean
- * being checked in the loop of getNext to true. As a result, the current
- * fuzzing request completes and no more requests are executed.</p>
- */
-public void stop() {
-	this.generatorStopped = true;
-}
-
-/**
- * Return the main constructor object.
- * @return JBroFuzz
- */
-public JBroFuzz getJBroFuzz() {
-	return this.mJBroFuzz;
-}
+	/**
+	 * <p>
+	 * Stop the generator. This operation is achieved by setting the boolean being
+	 * checked in the loop of getNext to true. As a result, the current fuzzing
+	 * request completes and no more requests are executed.
+	 * </p>
+	 */
+	public void stop() {
+		this.generatorStopped = true;
+	}
 }

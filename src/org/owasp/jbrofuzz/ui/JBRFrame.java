@@ -50,13 +50,16 @@ import org.owasp.jbrofuzz.ui.panels.TCPSniffing;
 import org.owasp.jbrofuzz.ui.panels.WebDirectories;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBRFormat;
+
 /**
- * <p>The main window of JBroFuzz responsible for the graphical
- * user interface.</p>
- * <p>This window holds all the Panels that are attached inside the 
- * TabbedPane
- * occupying the entire frame.</p>
- *
+ * <p>
+ * The main window of JBroFuzz responsible for the graphical user interface.
+ * </p>
+ * <p>
+ * This window holds all the Panels that are attached inside the TabbedPane
+ * occupying the entire frame.
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
@@ -66,33 +69,6 @@ public class JBRFrame extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -8877330557328054872L;
-
-	// The main Object behind it all...
-	private final JBroFuzz mJBroFuzz;
-
-	// The main menu bar attached to this window frame...
-	private final JBRMenuBar mMenuBar;
-
-	// The tabbed pane holding the different views
-	private JTabbedPane tabbedPane;
-
-	// The web directories panel
-	private final WebDirectories mWebDirectoriesPanel;
-
-	// The main sniffing panel
-	private final TCPSniffing mSniffingPanel;
-
-	// The main definitions panel
-	private final Generators mDefinitionsPanel;
-
-	// The main fuzzing panel
-	private final TCPFuzzing mFuzzingPanel;
-
-	// The system logger panel
-	private final SystemLogger mSystemLogger;
-
-	// The open source panel
-	private final OpenSource mOpenSourcePanel;
 
 	/**
 	 * Unique int identifier for the Web Directory Panel
@@ -124,11 +100,41 @@ public class JBRFrame extends JFrame {
 	 */
 	public static final int OPEN_SOURCE_ID = 127;
 
+	// The main Object behind it all...
+	private final JBroFuzz mJBroFuzz;
+
+	// The main menu bar attached to this window frame...
+	private final JBRMenuBar mMenuBar;
+
+	// The tabbed pane holding the different views
+	private JTabbedPane tabbedPane;
+
+	// The web directories panel
+	private final WebDirectories mWebDirectoriesPanel;
+
+	// The main sniffing panel
+	private final TCPSniffing mSniffingPanel;
+
+	// The main definitions panel
+	private final Generators mDefinitionsPanel;
+
+	// The main fuzzing panel
+	private final TCPFuzzing mFuzzingPanel;
+
+	// The system logger panel
+	private final SystemLogger mSystemLogger;
+
+	// The open source panel
+	private final OpenSource mOpenSourcePanel;
+
 	/**
-	 * <p>The constuctor of the main window launched in JBroFuzz. This class
-	 * should be instantiated as a singleton and never again.</p>
-	 *
-	 * @param mJBroFuzz JBroFuzz
+	 * <p>
+	 * The constuctor of the main window launched in JBroFuzz. This class should
+	 * be instantiated as a singleton and never again.
+	 * </p>
+	 * 
+	 * @param mJBroFuzz
+	 *          JBroFuzz
 	 */
 	public JBRFrame(final JBroFuzz mJBroFuzz) {
 		// The frame
@@ -158,24 +164,135 @@ public class JBRFrame extends JFrame {
 		this.tabbedPane.add(" TCP Sniffing ", this.mSniffingPanel);
 		// tabbedPane.add(" Generators ", mDefinitionsPanel);
 		// tabbedPane.add(" System ", mSystemLogger);
-		this.tabbedPane.setSelectedComponent(this.mWebDirectoriesPanel);
+		this.tabbedPane.setSelectedComponent(this.mFuzzingPanel);
 		pane.add(this.tabbedPane);
 		// The image icon
 		this.setIconImage(ImageCreator.FRAME_IMG.getImage());
-		
-    this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-    this.setLocation(100, 100);
-    this.setSize(900, 550);
-    this.setResizable(false);
-    this.setVisible(true);
-    
+
+		this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+		this.setLocation(100, 100);
+		this.setSize(900, 550);
+		this.setResizable(false);
+		this.setVisible(true);
+
 		this.log("System Launch, Welcome!");
 	}
 
 	/**
+	 * <p>
+	 * Method returning the m definitions panel that is being instantiated through
+	 * the m window.
+	 * </p>
+	 * 
+	 * @return mDefinitionsPanel
+	 */
+	public Generators getDefinitionsPanel() {
+		return this.mDefinitionsPanel;
+	}
+
+	/**
+	 * <p>
+	 * Method for returning the m menu bar that is being instantiated through the
+	 * m window.
+	 * </p>
+	 * 
+	 * @return mMenuBar
+	 */
+	public JBRMenuBar getFrameMenuBar() {
+		return this.mMenuBar;
+	}
+
+	/**
+	 * <p>
+	 * Method for returning the fuzzing panel that is being instantiated through
+	 * this frame window.
+	 * </p>
+	 * 
+	 * @return mFuzzingPanel
+	 */
+	public TCPFuzzing getFuzzingPanel() {
+		return this.mFuzzingPanel;
+	}
+
+	/**
+	 * <p>
+	 * Access the m object that is responsible for launching an instance of this
+	 * class.
+	 * </p>
+	 * 
+	 * @return JBroFuzz
+	 */
+	public JBroFuzz getJBroFuzz() {
+		return this.mJBroFuzz;
+	}
+
+	/**
+	 * <p>
+	 * Method for returning the open source panel that is being instantiated
+	 * through this frame window.
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public OpenSource getOpenSourcePanel() {
+		return this.mOpenSourcePanel;
+	}
+
+	/**
+	 * <p>
+	 * Method for accessing the Tabbed Pane within the current Frame Window.
+	 * </p>
+	 * 
+	 * @return JTabbedPane
+	 */
+	public JTabbedPane getTabbedPane() {
+		return this.tabbedPane;
+	}
+
+	/**
+	 * <p>
+	 * Method returning the m sniffing panel that is being instantiated through
+	 * the m window.
+	 * </p>
+	 * 
+	 * @return mSniffingPanel
+	 */
+	public TCPSniffing getTCPSniffingPanel() {
+		return this.mSniffingPanel;
+	}
+
+	/**
+	 * <p>
+	 * Method for returning the web directoires panel that is being used.
+	 * </p>
+	 * 
+	 * @return WebDirectoriesPanel
+	 */
+	public WebDirectories getWebDirectoriesPanel() {
+		return this.mWebDirectoriesPanel;
+	}
+
+	/**
+	 * <p>
+	 * Method for logging values within the system event log.
+	 * </p>
+	 * 
+	 * @param str
+	 *          String
+	 */
+	public void log(final String str) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				JBRFrame.this.mSystemLogger.addLoggingEvent(str);
+			}
+		});
+	}
+
+	/**
 	 * Method for setting up the right click copy paste cut and select all menu.
-	 *
-	 * @param area JTextArea
+	 * 
+	 * @param area
+	 *          JTextArea
 	 */
 	public void popup(final JTextComponent area) {
 
@@ -201,7 +318,7 @@ public class JBRFrame extends JFrame {
 		popmenu.addSeparator();
 		popmenu.add(i4);
 
-		if(!area.isEditable()) {
+		if (!area.isEditable()) {
 			i3.setEnabled(false);
 		}
 
@@ -219,7 +336,7 @@ public class JBRFrame extends JFrame {
 
 		i3.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				if(area.isEditable()) {
+				if (area.isEditable()) {
 					area.paste();
 				}
 			}
@@ -232,6 +349,13 @@ public class JBRFrame extends JFrame {
 		});
 
 		area.addMouseListener(new MouseAdapter() {
+			private void checkForTriggerEvent(final MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					area.requestFocus();
+					popmenu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+
 			@Override
 			public void mousePressed(final MouseEvent e) {
 				this.checkForTriggerEvent(e);
@@ -241,41 +365,15 @@ public class JBRFrame extends JFrame {
 			public void mouseReleased(final MouseEvent e) {
 				this.checkForTriggerEvent(e);
 			}
-
-			private void checkForTriggerEvent(final MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					area.requestFocus();
-					popmenu.show(e.getComponent(), e.getX(), e.getY());
-				}
-			}
 		});
 	}
 
 	/**
-	 * <p>Access the m object that is responsible for launching an instance of
-	 * this class.</p>
-	 *
-	 * @return JBroFuzz
-	 */
-	public JBroFuzz getJBroFuzz() {
-		return this.mJBroFuzz;
-	}
-
-	/**
-	 * <p>Method for accessing the Tabbed Pane within the current Frame Window.
-	 * </p>
-	 *
-	 * @return JTabbedPane
-	 */
-	public JTabbedPane getTabbedPane() {
-		return this.tabbedPane;
-	}
-
-	/**
-	 * Set which tab to hide based on the int n of ID values. These are taken
-	 * from the FrameWindow.
-	 *
-	 * @param n int
+	 * Set which tab to hide based on the int n of ID values. These are taken from
+	 * the FrameWindow.
+	 * 
+	 * @param n
+	 *          int
 	 */
 	public void setTabHide(final int n) {
 		if (n == JBRFrame.GENERATORS_PANEL_ID) {
@@ -299,10 +397,11 @@ public class JBRFrame extends JFrame {
 	}
 
 	/**
-	 * Set which tab to show based on the int n of ID values. These are taken
-	 * from the FrameWindow.
-	 *
-	 * @param n int
+	 * Set which tab to show based on the int n of ID values. These are taken from
+	 * the FrameWindow.
+	 * 
+	 * @param n
+	 *          int
 	 */
 	public void setTabShow(final int n) {
 		if (n == JBRFrame.GENERATORS_PANEL_ID) {
@@ -325,76 +424,4 @@ public class JBRFrame extends JFrame {
 		}
 	}
 
-	/**
-	 * <p>Method returning the m sniffing panel that is being instantiated
-	 * through the m window.</p>
-	 *
-	 * @return mSniffingPanel
-	 */
-	public TCPSniffing getTCPSniffingPanel() {
-		return this.mSniffingPanel;
-	}
-
-	/**
-	 * <p>Method returning the m definitions panel that is being instantiated
-	 * through the m window.</p>
-	 *
-	 * @return mDefinitionsPanel
-	 */
-	public Generators getDefinitionsPanel() {
-		return this.mDefinitionsPanel;
-	}
-
-	/**
-	 * <p>Method for returning the m menu bar that is being instantiated
-	 * through the m window.</p>
-	 *
-	 * @return mMenuBar
-	 */
-	public JBRMenuBar getFrameMenuBar() {
-		return this.mMenuBar;
-	}
-
-	/**
-	 * <p>Method for returning the web directoires panel that is being used.</p>
-	 *
-	 * @return WebDirectoriesPanel
-	 */
-	public WebDirectories getWebDirectoriesPanel() {
-		return this.mWebDirectoriesPanel;
-	}
-
-	/**
-	 * <p>Method for returning the fuzzing panel that is being instantiated
-	 * through this frame window.</p>
-	 *
-	 * @return mFuzzingPanel
-	 */
-	public TCPFuzzing getFuzzingPanel() {
-		return this.mFuzzingPanel;
-	}
-
-	/**
-	 * <p>Method for returning the open source panel that is being instantiated
-	 * through this frame window.</p>
-	 * 
-	 * @return
-	 */
-	public OpenSource getOpenSourcePanel() {
-		return this.mOpenSourcePanel;
-	}
-
-	/**
-	 * <p>Method for logging values within the system event log.</p>
-	 *
-	 * @param str String
-	 */
-	public void log(final String str) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				JBRFrame.this.mSystemLogger.addLoggingEvent(str);
-			}
-		});
-	}
-	
 }

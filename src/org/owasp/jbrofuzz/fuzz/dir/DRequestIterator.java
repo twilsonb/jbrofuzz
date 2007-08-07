@@ -47,17 +47,22 @@ import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.version.JBRFormat;
 import org.owasp.jbrofuzz.version.JBRTime;
+
 /**
- * <p>Class for generating the recursive directory requests.</p>
- * <p>Once the object is instantiated, the run method should be 
- * used to run through the requests.</p>
- *
+ * <p>
+ * Class for generating the recursive directory requests.
+ * </p>
+ * <p>
+ * Once the object is instantiated, the run method should be used to run through
+ * the requests.
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
 public class DRequestIterator {
 
-	// The  frame window that the request iterator
+	// The frame window that the request iterator
 	private JBRFrame m;
 	// The original url string
 	private String url;
@@ -73,16 +78,22 @@ public class DRequestIterator {
 	private int port;
 
 	/**
-	 * <p>Constructor for creating a web directory request iterator that iterates
-	 * through the directory listing.</p>
-	 *
-	 * @param m FrameWindow
-	 * @param url String
-	 * @param directories String
-	 * @param port int
+	 * <p>
+	 * Constructor for creating a web directory request iterator that iterates
+	 * through the directory listing.
+	 * </p>
+	 * 
+	 * @param m
+	 *          FrameWindow
+	 * @param url
+	 *          String
+	 * @param directories
+	 *          String
+	 * @param port
+	 *          int
 	 */
-	public DRequestIterator(final JBRFrame m, final String url, final String directories,
-			final String port) {
+	public DRequestIterator(final JBRFrame m, final String url,
+			final String directories, final String port) {
 		this.m = m;
 		this.url = url;
 		this.port = 0;
@@ -94,8 +105,7 @@ public class DRequestIterator {
 		// Check the port
 		try {
 			this.port = Integer.parseInt(port);
-		}
-		catch (final NumberFormatException e1) {
+		} catch (final NumberFormatException e1) {
 			this.port = 0;
 			m.log("Web Directories Panel: Specify a valid port: \"" + port + "\"");
 		}
@@ -109,18 +119,25 @@ public class DRequestIterator {
 			// For https, allow self-signed certificates
 			if (this.url.startsWith("https://")) {
 				final Protocol easyhttps = new Protocol("https",
-						new EasySSLProtocolSocketFactory(),
-						this.port);
+						new EasySSLProtocolSocketFactory(), this.port);
 				Protocol.registerProtocol("https", easyhttps);
 			}
 			// For http, just show affection
 			if (this.url.startsWith("http://")) {
 				final Protocol easyhttp = new Protocol("http",
-						new DefaultProtocolSocketFactory(),
-						this.port);
+						new DefaultProtocolSocketFactory(), this.port);
 				Protocol.registerProtocol("http", easyhttp);
 			}
 		}
+	}
+
+	/**
+	 * Check to see if the current Request Iterator is stopped.
+	 * 
+	 * @return boolean
+	 */
+	public boolean isStopped() {
+		return this.stopped;
 	}
 
 	/**
@@ -146,10 +163,10 @@ public class DRequestIterator {
 			String currentURI = "";
 			try {
 				currentURI = this.url + URIUtil.encodePath(this.directories[this.i]);
-			}
-			catch (final URIException ex) {
+			} catch (final URIException ex) {
 				currentURI = "";
-				this.m.log("Could not encode the URI: " + this.url + this.directories[this.i]);
+				this.m.log("Could not encode the URI: " + this.url
+						+ this.directories[this.i]);
 			}
 
 			// Checks...
@@ -194,8 +211,7 @@ public class DRequestIterator {
 					String results = null;
 					try {
 						results = new String(allbytes, method.getResponseCharSet());
-					}
-					catch (final UnsupportedEncodingException ex1) {
+					} catch (final UnsupportedEncodingException ex1) {
 						this.m.log("Web Directories: Unsupported Character Encoding");
 						results = "";
 					}
@@ -203,15 +219,13 @@ public class DRequestIterator {
 					// Check for comments
 					if (results.contains("<!--")) {
 						this.responses[this.i] += "Yes\n";
-					}
-					else {
+					} else {
 						this.responses[this.i] += "No\n";
 					}
 					// Check for scripts
 					if ((results.contains("<script")) || (results.contains("<SCRIPT"))) {
 						this.responses[this.i] += "Yes\n";
-					}
-					else {
+					} else {
 						this.responses[this.i] += "No\n";
 					}
 				}
@@ -220,8 +234,7 @@ public class DRequestIterator {
 					this.responses[this.i] += "No\n";
 					this.responses[this.i] += "No\n";
 				}
-			}
-			catch (final HttpException e) {
+			} catch (final HttpException e) {
 				this.responses[this.i] = this.i + "\n";
 				this.responses[this.i] += currentURI + "\n";
 				this.responses[this.i] += "000" + "\n";
@@ -230,12 +243,12 @@ public class DRequestIterator {
 				this.responses[this.i] += " \n";
 				// Bomb out...
 				final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-				boolean continueOnError = prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR, false);
+				boolean continueOnError = prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR,
+						false);
 				if (!continueOnError) {
 					this.stop();
-				}        
-			}
-			catch (final IOException e) {
+				}
+			} catch (final IOException e) {
 				this.responses[this.i] = this.i + "\n";
 				this.responses[this.i] += currentURI + "\n";
 				this.responses[this.i] += "000" + "\n";
@@ -244,12 +257,12 @@ public class DRequestIterator {
 				this.responses[this.i] += " \n";
 				// Bomb out...
 				final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-				boolean continueOnError = prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR, false);
+				boolean continueOnError = prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR,
+						false);
 				if (!continueOnError) {
 					this.stop();
 				}
-			}
-			finally {
+			} finally {
 				method.releaseConnection();
 			}
 			// Add a row to the displaying table
@@ -263,11 +276,11 @@ public class DRequestIterator {
 				outToFile.append("," + element);
 			}
 			// Write the file
-			FileHandler.writeWebDirFile(this.m.getWebDirectoriesPanel().getSessionNumber(),
-					outToFile.toString());
+			FileHandler.writeWebDirFile(this.m.getWebDirectoriesPanel()
+					.getSessionNumber(), outToFile.toString());
 			// Update the progress bar
-			final double percentage = 100 * ((double) (this.i + 1)) /
-			(this.directories.length);
+			final double percentage = 100 * ((double) (this.i + 1))
+					/ (this.directories.length);
 			this.m.getWebDirectoriesPanel().setProgressBar((int) percentage);
 		}
 	}
@@ -277,13 +290,5 @@ public class DRequestIterator {
 	 */
 	public void stop() {
 		this.stopped = true;
-	}
-
-	/**
-	 * Check to see if the current Request Iterator is stopped.
-	 * @return boolean
-	 */
-	public boolean isStopped() {
-		return this.stopped;
 	}
 }

@@ -36,79 +36,87 @@ import javax.swing.JTextArea;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 
 /**
- * <p>The definitions panel holding a description of the generators 
- * loaded.</p>
+ * <p>
+ * The definitions panel holding a description of the generators loaded.
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
 public class Generators extends JPanel {
-  /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5848591307104017542L;
 	// The frame that the sniffing panel is attached
-  private JBRFrame m;
-  // The JTable that holds all the data
-  private JTextArea listTextArea;
-  /**
-   * Constructor for the Definitions Panel of the represented as a tab. Only a
-   * single instance of this class is constructed.
-   *
-   * @param m FrameWindow
-   */
-  public Generators(final JBRFrame m) {
-    super();
-    this.setLayout(null);
-    /*
-         setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Generators "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-     */
-    this.m = m;
-    // Define the JPanel
-    final JPanel listPanel = new JPanel();
+	private JBRFrame m;
+	// The JTable that holds all the data
+	private JTextArea listTextArea;
 
-    listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Fuzzing Generators "),
-                        BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-    // Set the bounds
-    listPanel.setBounds(10, 80, 870, 370);
+	/**
+	 * Constructor for the Definitions Panel of the represented as a tab. Only a
+	 * single instance of this class is constructed.
+	 * 
+	 * @param m
+	 *          FrameWindow
+	 */
+	public Generators(final JBRFrame m) {
+		super();
+		this.setLayout(null);
+		/*
+		 * setBorder(BorderFactory.createCompoundBorder(BorderFactory.
+		 * createTitledBorder(" Generators "), BorderFactory.createEmptyBorder(1, 1,
+		 * 1, 1)));
+		 */
+		this.m = m;
+		// Define the JPanel
+		final JPanel listPanel = new JPanel();
 
-    this.listTextArea = new JTextArea();
-    this.listTextArea.setFont(new Font("Verdana", Font.PLAIN, 13));
-    this.listTextArea.setEditable(false);
-    this.listTextArea.setLineWrap(true);
-    this.listTextArea.setWrapStyleWord(true);
-    this.getFrameWindow().popup(this.listTextArea);
+		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Fuzzing Generators "), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
+		// Set the bounds
+		listPanel.setBounds(10, 80, 870, 370);
 
-    final JScrollPane listTextScrollPane = new JScrollPane(this.listTextArea);
-    listTextScrollPane.setVerticalScrollBarPolicy(20);
-    listTextScrollPane.setHorizontalScrollBarPolicy(31);
-    listTextScrollPane.setPreferredSize(new Dimension(850, 330));
-    listPanel.add(listTextScrollPane);
+		this.listTextArea = new JTextArea();
+		this.listTextArea.setFont(new Font("Verdana", Font.PLAIN, 13));
+		this.listTextArea.setEditable(false);
+		this.listTextArea.setLineWrap(true);
+		this.listTextArea.setWrapStyleWord(true);
+		this.getFrameWindow().popup(this.listTextArea);
 
-    this.add(listPanel);
-    this.listTextArea.setCaretPosition(0);
-  }
+		final JScrollPane listTextScrollPane = new JScrollPane(this.listTextArea);
+		listTextScrollPane.setVerticalScrollBarPolicy(20);
+		listTextScrollPane.setHorizontalScrollBarPolicy(31);
+		listTextScrollPane.setPreferredSize(new Dimension(850, 330));
+		listPanel.add(listTextScrollPane);
 
-  /**
-   * <p>Method for returning the main window frame that this tab is attached on.
-   * </p>
-   *
-   * @return Window
-   */
-  public JBRFrame getFrameWindow() {
-    return this.m;
-  }
+		this.add(listPanel);
+		this.listTextArea.setCaretPosition(0);
+	}
 
-  /**
-   * <p>Method for setting the text within the JTextArea displayed as part of
-   * this panel. This method simply appends any string given adding a new
-   * line (\n) to the end of it.</p>
-   *
-   * @param str String
-   */
-  public void setDefinitionsText(final String str) {
-    this.listTextArea.append(str + "\n");
-  }
+	/**
+	 * <p>
+	 * Method for returning the main window frame that this tab is attached on.
+	 * </p>
+	 * 
+	 * @return Window
+	 */
+	public JBRFrame getFrameWindow() {
+		return this.m;
+	}
+
+	/**
+	 * <p>
+	 * Method for setting the text within the JTextArea displayed as part of this
+	 * panel. This method simply appends any string given adding a new line (\n)
+	 * to the end of it.
+	 * </p>
+	 * 
+	 * @param str
+	 *          String
+	 */
+	public void setDefinitionsText(final String str) {
+		this.listTextArea.append(str + "\n");
+	}
 }

@@ -32,154 +32,148 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.owasp.jbrofuzz.JBroFuzz;
+
 /**
- * <p>The class responsible for launching a proxy between the two
- * Sockets. This class uses the Agent class in order to achieve
- * this.</p>
+ * <p>
+ * The class responsible for launching a proxy between the two Sockets. This
+ * class uses the Agent class in order to achieve this.
+ * </p>
  * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
 class Connection implements Runnable, AgentMonitor {
 
-  private int destPort = -1;
-  private Socket srcSocket = null;
-  private Socket destSocket = null;
-  private InputStream srcIn = null;
-  private OutputStream srcOut = null;
-  private OutputStream destOut = null;
-  private ConnectionMonitor cm = null;
-  private String destHost = null;
-  private InputStream destIn = null;
-  private boolean connectionClosed = false;
-  private Agent fromSrcToDest = null;
-  private Agent fromDestToSrc = null;
+	private int destPort = -1;
+	private Socket srcSocket = null;
+	private Socket destSocket = null;
+	private InputStream srcIn = null;
+	private OutputStream srcOut = null;
+	private OutputStream destOut = null;
+	private ConnectionMonitor cm = null;
+	private String destHost = null;
+	private InputStream destIn = null;
+	private boolean connectionClosed = false;
+	private Agent fromSrcToDest = null;
+	private Agent fromDestToSrc = null;
 
-  //
-  private JBroFuzz mJBroFuzz;
+	//
+	private JBroFuzz mJBroFuzz;
 
-  public Connection(final JBroFuzz mJBroFuzz, final Socket s, final ConnectionMonitor cm,
-                    final String destHost, final int destPort) {
+	public Connection(final JBroFuzz mJBroFuzz, final Socket s,
+			final ConnectionMonitor cm, final String destHost, final int destPort) {
 
-    this.mJBroFuzz = mJBroFuzz;
-    this.srcSocket = s;
-    this.cm = cm;
-    this.destHost = destHost;
-    this.destPort = destPort;
+		this.mJBroFuzz = mJBroFuzz;
+		this.srcSocket = s;
+		this.cm = cm;
+		this.destHost = destHost;
+		this.destPort = destPort;
 
-    cm.attemptingConnection(this);
+		cm.attemptingConnection(this);
 
-    try {
-      // Establish read/write for the socket
+		try {
+			// Establish read/write for the socket
 
-      this.srcIn = s.getInputStream();
-      this.srcOut = s.getOutputStream();
+			this.srcIn = s.getInputStream();
+			this.srcOut = s.getOutputStream();
 
-      // Start ourself, so there's no delay in getting back
-      // to the server to listen for new connections
+			// Start ourself, so there's no delay in getting back
+			// to the server to listen for new connections
 
-      final Thread t = new Thread(this);
-      t.start();
-    }
-    catch (final IOException e) {
-      cm.connectionError(this, "" + e);
-    }
-  }
+			final Thread t = new Thread(this);
+			t.start();
+		} catch (final IOException e) {
+			cm.connectionError(this, "" + e);
+		}
+	}
 
-  public void run() {
-    if (!this.connectToDest()) {
-      this.closeSrc();
-    }
-    else {
-      // Ok, we're all ready ... since we've gotten this far,
-      // add ourselves into the connection list
+	public synchronized void agentHasDied(final Agent a) {
+		// When one agent dies, so will the other ... if the
+		// connection is already closed then we have already been
+		// visited by the first agent ... just return
 
-      this.cm.addConnection(this);
+		if (this.connectionClosed) {
+			return;
+		}
+		this.closeSrc();
+		this.closeDest();
 
-      // Create our two agents
-      this.fromSrcToDest = new Agent(this.mJBroFuzz, this.srcIn, this.destOut, this,
-                                "{Local Host => Remote Host}");
-      this.fromDestToSrc = new Agent(this.mJBroFuzz, this.destIn, this.srcOut, this,
-                                "{Remote Host => Local Host}");
+		this.cm.removeConnection(this);
+		this.connectionClosed = true;
+	}
 
-      // No need for our thread to continue, we'll be notified if
-      // either of our agents dies
-    }
-  }
+	private void closeDest() {
+		try {
+			this.destIn.close();
+			this.destOut.close();
+			this.destSocket.close();
+		} catch (final IOException ex) {
+		}
+	}
 
-  public synchronized void agentHasDied(final Agent a) {
-    // When one agent dies, so will the other ... if the
-    // connection is already closed then we have already been
-    // visited by the first agent ... just return
+	private void closeSrc() {
 
-    if (this.connectionClosed) {
-      return;
-    }
-    this.closeSrc();
-    this.closeDest();
+		try {
+			this.srcIn.close();
+			this.srcOut.close();
+			this.srcSocket.close();
+		} catch (final IOException ex) {
+		}
 
-    this.cm.removeConnection(this);
-    this.connectionClosed = true;
-  }
+	}
 
-  private boolean connectToDest() {
-    // Ok, we've got the host name and port to which we wish to
-    // connect, try to establish a connection
+	private boolean connectToDest() {
+		// Ok, we've got the host name and port to which we wish to
+		// connect, try to establish a connection
 
-    try {
-      this.destSocket = new Socket(this.destHost, this.destPort);
-      this.destIn = this.destSocket.getInputStream();
-      this.destOut = this.destSocket.getOutputStream();
-    }
-    catch (final UnknownHostException ex) {
-      this.cm.connectionError(this,
-                         "connect error: " + this.destHost + "/" + this.destPort + " " +
-                         ex);
-      return false;
+		try {
+			this.destSocket = new Socket(this.destHost, this.destPort);
+			this.destIn = this.destSocket.getInputStream();
+			this.destOut = this.destSocket.getOutputStream();
+		} catch (final UnknownHostException ex) {
+			this.cm.connectionError(this, "connect error: " + this.destHost + "/"
+					+ this.destPort + " " + ex);
+			return false;
 
-    }
-    catch (final IOException ex) {
-      this.cm.connectionError(this,
-                         "connect error: " + this.destHost + "/" + this.destPort + " " +
-                         ex);
-      return false;
+		} catch (final IOException ex) {
+			this.cm.connectionError(this, "connect error: " + this.destHost + "/"
+					+ this.destPort + " " + ex);
+			return false;
 
-    }
-    return true;
+		}
+		return true;
 
-  }
+	}
 
-  private void closeSrc() {
+	public String getDestHost() {
+		return this.destSocket.getInetAddress().toString();
+	}
 
-    try {
-      this.srcIn.close();
-      this.srcOut.close();
-      this.srcSocket.close();
-    }
-    catch (final IOException ex) {
-    }
+	public int getDestPort() {
+		return this.destPort;
+	}
 
-  }
+	public String getSrcHost() {
+		return this.srcSocket.getInetAddress().toString();
+	}
 
-  private void closeDest() {
-    try {
-      this.destIn.close();
-      this.destOut.close();
-      this.destSocket.close();
-    }
-    catch (final IOException ex) {
-    }
-  }
+	public void run() {
+		if (!this.connectToDest()) {
+			this.closeSrc();
+		} else {
+			// Ok, we're all ready ... since we've gotten this far,
+			// add ourselves into the connection list
 
-  public String getSrcHost() {
-    return this.srcSocket.getInetAddress().toString();
-  }
+			this.cm.addConnection(this);
 
-  public String getDestHost() {
-    return this.destSocket.getInetAddress().toString();
-  }
+			// Create our two agents
+			this.fromSrcToDest = new Agent(this.mJBroFuzz, this.srcIn, this.destOut,
+					this, "{Local Host => Remote Host}");
+			this.fromDestToSrc = new Agent(this.mJBroFuzz, this.destIn, this.srcOut,
+					this, "{Remote Host => Local Host}");
 
-  public int getDestPort() {
-    return this.destPort;
-  }
+			// No need for our thread to continue, we'll be notified if
+			// either of our agents dies
+		}
+	}
 }

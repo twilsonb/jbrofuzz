@@ -37,9 +37,13 @@ import java.util.regex.Pattern;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 
 /**
- * <p>Class for looking domain addresses by making google requests.</p>
- * <p>This class makes a total of 5 requests to google using the domain
- * passed to the constructor.</p>
+ * <p>
+ * Class for looking domain addresses by making google requests.
+ * </p>
+ * <p>
+ * This class makes a total of 5 requests to google using the domain passed to
+ * the constructor.
+ * </p>
  * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
@@ -53,18 +57,21 @@ public class GRequestIterator {
 		int counter = 1;
 		BufferedReader bin = null;
 
-		while(counter <= 5) {
+		while (counter <= 5) {
 			try {
 				// URL request = new URL("http://www.google.com");
-				final String urlRequest = "http://www.google.com/search?q=%40" + domain + "&hl=en&lr=&ie=UTF-8&start=" + counter + "0&sa=N";				
+				final String urlRequest = "http://www.google.com/search?q=%40" + domain
+						+ "&hl=en&lr=&ie=UTF-8&start=" + counter + "0&sa=N";
 				final URL request = new URL(urlRequest);
 				final URLConnection connection = request.openConnection();
-				connection.setRequestProperty("User-Agent","Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");				
+				connection.setRequestProperty("User-Agent",
+						"Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
 				connection.connect();
 
-				bin = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				String line=null;
-				while ((line=bin.readLine()) != null) {
+				bin = new BufferedReader(new InputStreamReader(connection
+						.getInputStream()));
+				String line = null;
+				while ((line = bin.readLine()) != null) {
 					final Pattern p = Pattern.compile("([\\w\\.\\-\\%\\']+)@[\\S]+");
 					final Matcher m = p.matcher(line);
 					while (m.find()) {
@@ -73,18 +80,20 @@ public class GRequestIterator {
 					}
 				}
 				bin.close();
-			}
-			catch(final MalformedURLException e) {
+			} catch (final MalformedURLException e) {
 				mFrameWindow.log("Open Source Tab: A malformed URL exception occured");
-			}
-			catch(final IOException e) {
+			} catch (final IOException e) {
 				mFrameWindow.log("Open Source Tab: An IO exception occured");
 			}
 			if (bin != null) {
-				try {bin.close();} catch (final IOException ex) {}
+				try {
+					bin.close();
+				} catch (final IOException ex) {
+				}
 			}
 
-			mFrameWindow.getOpenSourcePanel().appendOutputText(this.output.toString());
+			mFrameWindow.getOpenSourcePanel()
+					.appendOutputText(this.output.toString());
 			mFrameWindow.getOpenSourcePanel().setProgressBar(counter);
 			counter++;
 		} // while loop
@@ -96,12 +105,12 @@ public class GRequestIterator {
 
 	private String sanitise(String in) {
 		boolean tagFound = false;
-		while(!tagFound) {
+		while (!tagFound) {
 			tagFound = true;
 			final int str = in.indexOf('<');
-			if(str > 0) {
+			if (str > 0) {
 				final int end = in.indexOf('>', str);
-				if(end > 0) {
+				if (end > 0) {
 					in = in.substring(0, str) + in.substring(end + 1);
 					tagFound = false;
 				}

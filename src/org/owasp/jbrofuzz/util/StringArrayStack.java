@@ -26,60 +26,63 @@
 package org.owasp.jbrofuzz.util;
 
 /**
- * <p>Implementation of a String Stack Array operating in true 
- * FILO style.</p>
- *
+ * <p>
+ * Implementation of a String Stack Array operating in true FILO style.
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @since 0.5
  * @version 0.6
  */
 public class StringArrayStack {
 
-  // The array of elements
-  private String filo[];
-  // The pointer used
-  private int pointer;
+	// The array of elements
+	private String filo[];
+	// The pointer used
+	private int pointer;
 
-  /**
-   * Constructor for the FILO stack array, passing as argument the capacity.
-   *
-   * @param capacity int
-   */
-  public StringArrayStack(final int capacity) {
-    this.filo = new String[capacity];
-    this.pointer = -1;
-  }
+	/**
+	 * Constructor for the FILO stack array, passing as argument the capacity.
+	 * 
+	 * @param capacity
+	 *          int
+	 */
+	public StringArrayStack(final int capacity) {
+		this.filo = new String[capacity];
+		this.pointer = -1;
+	}
 
-  /**
-   * Method for checking if the String Stack Array is empty.
-   *
-   * @return boolean
-   */
-  public boolean isEmpty() {
-    return this.pointer == -1;
-  }
+	/**
+	 * Method for checking if the String Stack Array is empty.
+	 * 
+	 * @return boolean
+	 */
+	public boolean isEmpty() {
+		return this.pointer == -1;
+	}
 
-  /**
-   * Method for adding an element to the Stack Array. This will be a push
-   * action.
-   *
-   * @param element String
-   */
-  public void push(final String element) {
-    if (this.pointer + 1 < this.filo.length) {
-      this.filo[++this.pointer] = element;
-    }
-  }
+	/**
+	 * Method for popping an element from the Stack Array
+	 * 
+	 * @return String
+	 */
+	public String pop() {
+		if (this.isEmpty()) {
+			return "";
+		}
+		return this.filo[this.pointer--];
+	}
 
-  /**
-   * Method for popping an element from the Stack Array
-   *
-   * @return String
-   */
-  public String pop() {
-    if (this.isEmpty()) {
-      return "";
-    }
-    return this.filo[this.pointer--];
-  }
+	/**
+	 * Method for adding an element to the Stack Array. This will be a push
+	 * action.
+	 * 
+	 * @param element
+	 *          String
+	 */
+	public void push(final String element) {
+		if (this.pointer + 1 < this.filo.length) {
+			this.filo[++this.pointer] = element;
+		}
+	}
 }

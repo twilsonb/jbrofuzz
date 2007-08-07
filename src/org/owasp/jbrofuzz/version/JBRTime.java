@@ -1,5 +1,5 @@
 /**
- * JBRTime.java 0.6
+ * JBRTime.java 0.7
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -29,88 +29,99 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
 /**
- * <p>This class gives back the current date and time in a 
- * number of predefined
- * formats.</p>
- * <p>All available public methods are static.</p>
- *
+ * <p>
+ * This class gives back the current date and time in a number of predefined
+ * formats.
+ * </p>
+ * <p>
+ * All available public methods are static.
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
 public class JBRTime {
 
-  private static Date currentDate;
-  private static Date currentTime;
+	private static Date currentDate;
+	private static Date currentTime;
 
-  /**
-   * Gives the date in yyyy.MM.dd format
-   *
-   * @return String
-   */
-  public static String dateToday() {
-    JBRTime.currentDate = new Date();
-    final SimpleDateFormat justDate = new SimpleDateFormat("dd.MM.yyyy",
-      new Locale("en"));
-    return justDate.format(JBRTime.currentDate);
-  }
+	/**
+	 * Gives date in yyyy.MM.dd.HH:mm:ss format
+	 * 
+	 * @return String
+	 */
+	public static String dateAndTime() {
+		JBRTime.currentTime = new Date();
+		final SimpleDateFormat dateTime = new SimpleDateFormat(
+				"dd.MM.yyyy HH:mm:ss", new Locale("en"));
+		return dateTime.format(JBRTime.currentTime);
+	}
 
-  /**
-   * Gives date in yyyy.MM.dd.HH:mm:ss format
-   * @return String
-   */
-  public static String dateAndTime() {
-    JBRTime.currentTime = new Date();
-    final SimpleDateFormat dateTime = new SimpleDateFormat(
-      "dd.MM.yyyy HH:mm:ss", new Locale("en"));
-    return dateTime.format(JBRTime.currentTime);
-  }
+	/**
+	 * Returns a date object that represents todays date and the time in HH:mm
+	 * that we pass as a parameter
+	 * 
+	 * @param hoursMinutes
+	 *          String
+	 * @return Date
+	 */
+	public static Date dateTimeAt(final String hoursMinutes) {
+		final String usingToday = JBRTime.dateToday() + "." + hoursMinutes;
+		final SimpleDateFormat converter = new SimpleDateFormat("dd.MM.yyyy.HH:mm",
+				new Locale("en"));
+		final ParsePosition pos = new ParsePosition(0);
+		return converter.parse(usingToday, pos);
+	}
 
-  /**
-   * Returns a date object that represents todays date and the time in HH:mm
-   * that we pass as a parameter
-   *
-   * @param hoursMinutes String
-   * @return Date
-   */
-  public static Date dateTimeAt(final String hoursMinutes) {
-    final String usingToday = JBRTime.dateToday() + "." + hoursMinutes;
-    final SimpleDateFormat converter = new SimpleDateFormat("dd.MM.yyyy.HH:mm",
-      new Locale("en"));
-    final ParsePosition pos = new ParsePosition(0);
-    return converter.parse(usingToday, pos);
-  }
+	/**
+	 * Gives the date in yyyy.MM.dd format
+	 * 
+	 * @return String
+	 */
+	public static String dateToday() {
+		JBRTime.currentDate = new Date();
+		final SimpleDateFormat justDate = new SimpleDateFormat("dd.MM.yyyy",
+				new Locale("en"));
+		return justDate.format(JBRTime.currentDate);
+	}
 
-  /**
-   * We give a long number and get back a Date object
-   * @param date long
-   * @return Date
-   */
-  public static Date getUsingLong(final long date) {
-    return new Date(date);
-  }
+	/**
+	 * Given a Date, returns the long number representing it.
+	 * 
+	 * @param dateTime
+	 *          Date
+	 * @return long
+	 */
+	public static long getUsingDate(final Date dateTime) {
+		long relativeTime;
+		relativeTime = dateTime.getTime();
+		return relativeTime;
+	}
 
-  /**
-   * Given a Date, returns the long number representing it.
-   *
-   * @param dateTime Date
-   * @return long
-   */
-  public static long getUsingDate(final Date dateTime) {
-    long relativeTime;
-    relativeTime = dateTime.getTime();
-    return relativeTime;
-  }
+	/**
+	 * We give a long number and get back a Date object
+	 * 
+	 * @param date
+	 *          long
+	 * @return Date
+	 */
+	public static Date getUsingLong(final long date) {
+		return new Date(date);
+	}
 
-  /**
-   * Returns a formated string(HH:mm:ss) when given the date as a long number
-   * @param date long
-   * @return String
-   */
-  public static String hourMinSec(final long date) {
-    final Date temp = JBRTime.getUsingLong(date);
-    final SimpleDateFormat dateTime = new SimpleDateFormat("HH:mm:ss",
-      new Locale("en"));
-    return dateTime.format(temp);
-  }
+	/**
+	 * Returns a formated string(HH:mm:ss) when given the date as a long number
+	 * 
+	 * @param date
+	 *          long
+	 * @return String
+	 */
+	public static String hourMinSec(final long date) {
+		final Date temp = JBRTime.getUsingLong(date);
+		final SimpleDateFormat dateTime = new SimpleDateFormat("HH:mm:ss",
+				new Locale("en"));
+		return dateTime.format(temp);
+	}
 }

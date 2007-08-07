@@ -35,17 +35,21 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.text.Document;
+import javax.swing.text.StyledEditorKit;
 
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import org.owasp.jbrofuzz.ui.util.NonWrappingTextPane;
+import org.owasp.jbrofuzz.ui.util.TextHighlighter;
 
 /**
- * <p>Class extending a JFrame for displaying the contents of 
- * each TCP sniffing
- * request/reply that has been made.</p>
- *
+ * <p>
+ * Class extending a JFrame for displaying the contents of each TCP sniffing
+ * request/reply that has been made.
+ * </p>
+ * 
  * @author subere (at) uncon org
  * @version 0.6
  * @since 0.2
@@ -58,25 +62,33 @@ public class WindowViewer extends JFrame {
 	private static final long serialVersionUID = 8855212505709053158L;
 
 	/**
-	 * <p>Constant used for specifying within which directory to look for the 
+	 * <p>
+	 * Constant used for specifying within which directory to look for the
 	 * corresponding file. Using this value will point to the sniffing directory
-	 * used for the corresponding session.</p>
+	 * used for the corresponding session.
+	 * </p>
 	 */
 
 	public static final int VIEW_SNIFFING_PANEL = 1;
 	/**
-	 * <p>Constant used for specifying wihtin which directory to look for the
+	 * <p>
+	 * Constant used for specifying wihtin which directory to look for the
 	 * corresponding file. Using this value will point to the fuzzing directory
-	 * used for the correspondng session.</p>
+	 * used for the correspondng session.
+	 * </p>
 	 */
 	public static final int VIEW_FUZZING_PANEL = 2;
 
 	/**
-	 * <p>The window viewer that gets launched for each request within 
-	 * the corresponding panel.</p>
+	 * <p>
+	 * The window viewer that gets launched for each request within the
+	 * corresponding panel.
+	 * </p>
 	 * 
-	 * @param m FrameWindow
-	 * @param name String
+	 * @param m
+	 *          FrameWindow
+	 * @param name
+	 *          String
 	 */
 	public WindowViewer(final JBRFrame m, final String name, final int typeOfPanel) {
 		super();
@@ -91,17 +103,28 @@ public class WindowViewer extends JFrame {
 		pane.setLayout(null);
 		// Define the JPanel
 		final JPanel listPanel = new JPanel();
-		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-				createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		// Set the bounds
 		listPanel.setBounds(10, 10, 520, 450);
 		// The text area
-		final JTextArea listTextArea = new JTextArea();
+		final NonWrappingTextPane listTextArea = new NonWrappingTextPane();
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
-		listTextArea.setLineWrap(false);
-		listTextArea.setWrapStyleWord(false);
+		// listTextArea.setLineWrap(false);
+		// listTextArea.setWrapStyleWord(false);
 		m.popup(listTextArea);
+		listTextArea.setEditorKit(new StyledEditorKit() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -6885612347033981164L;
+
+			@Override
+			public Document createDefaultDocument() {
+				return new TextHighlighter();
+			}
+		});
 
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
@@ -112,13 +135,13 @@ public class WindowViewer extends JFrame {
 		this.add(listPanel);
 
 		StringBuffer text = new StringBuffer();
-		if(typeOfPanel == WindowViewer.VIEW_SNIFFING_PANEL) {
-			text = FileHandler.readSnifFile( number );
+		if (typeOfPanel == WindowViewer.VIEW_SNIFFING_PANEL) {
+			text = FileHandler.readSnifFile(number);
 		}
-		if(typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
-			text = FileHandler.readFuzzFile( number );
+		if (typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
+			text = FileHandler.readFuzzFile(number);
 		}
-		//Find the header
+		// Find the header
 		int headerEnd = text.indexOf("]");
 		if ((headerEnd < 0)) {
 			headerEnd = 0;
@@ -128,8 +151,9 @@ public class WindowViewer extends JFrame {
 			header = text.substring(0, headerEnd + 1);
 			text.delete(0, headerEnd + 2);
 		}
-		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-				createTitledBorder(header), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(header), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
 
 		listTextArea.setText(text.toString());
 
@@ -140,8 +164,7 @@ public class WindowViewer extends JFrame {
 		// Don't show the frame unless there is content
 		if (listTextArea.getText().length() < 1) {
 			this.setVisible(false);
-		}
-		else {
+		} else {
 			this.setVisible(true);
 		}
 		this.setDefaultCloseOperation(2);
