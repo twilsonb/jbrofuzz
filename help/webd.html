@@ -7,11 +7,98 @@
 <body bgcolor="#ffffff">
 <h3><font face="Verdana">Web Directories 
 Tab&nbsp;</font></h3>
-<p><font face="Verdana" size="2">JBroFuzz 
-is a stateless network protocol fuzzer that emerged from the needs of 
-penetration testing. JBroFuzz's design emphasizes simplicity and ease-of-use. We 
-are attempting to get you to cover the basics in terms of penetration testing 
-for web applications by&nbsp; means of creating malformed data and having the 
-network protocol in question consume the data.</font> </p>
+<p><font face="Verdana" size="2"> 
+            
+         
+              
+     The web directories tab allows you to 
+perform directory enumeration against a web server.</font> </p>
+<hr>
+<p>
+<table cellspacing="0" cellpadding="6" width="100%" align="center" border="0">
+  <tbody>
+  <tr>
+      <td bgcolor="#c0c0c0">
+      <h3>How to use</h3>
+      <ul>
+        <li><font face="Verdana"><font 
+        size=2><strong>Type the target 
+        URI&nbsp;</strong>e.g. http://www.mydomain.com/test</font></font>
+        <ul>
+          <li><font face="Verdana"><font 
+          size=2>You can select <strong>http</strong>, as 
+          well as&nbsp;<strong>https</strong>&nbsp;</font></font></li></ul>
+        <li><font face="Verdana"><font 
+        size=2><strong>Type the port 
+        number&nbsp;</strong>e.g. port 80, 443 or any other port </font></font>
+        <li><font face="Verdana"><font 
+        size=2><strong>Specify the 
+        directory names&nbsp;</strong>a default list of 58658 is loaded 
+        </font></font>
+        <li><font face="Verdana">
+<font 
+        size=2><strong>Select 
+        "Start"</strong>
+</font></font></li></ul>
+<h3 >   
+      <hr>
+      What to expect</h3>
+<p >
+<font face="Verdana" size="2" 
+      >While the process is running, you can sort the 
+      results by the</font>
+<font face="Verdana" size="2" 
+      >corresponding header column.</font>
+      <ul>
+        <li>
+<div >   <font face="Verdana" size="2">To sort by response 
+        code (e.g. 200, 404, 302), click on the Code row inside the Output table 
+        </font></div></li></ul>
+<h3 >   
+      <hr>
+      Advanced options</h3>
+<p >   <font face="Verdana" size="2">While enumerating 
+      directories, an error might occur. This is often due to a server failing 
+      to respond for a short period of time, TCP collisions, etc. </font>
+<p >   <font face="Verdana" size="2">You can set system 
+      preferences to stop or continue upon the occurence of an error. This 
+      option is located in:</font>
+<ul >
+<li><font face="Verdana">
+<font 
+        size=2><strong 
+        > 
+            
+         
+              
+            
+      Preferences</strong> </font>  
+</font>
+        <ul>
+<li><font face="Verdana">
+<font 
+          size=2>Fuzzing </font>  
+</font>
+          <ul>
+<li><font face="Verdana" 
+            size=2>Directories:&nbsp;While&nbsp;fuzzing if an error occurs, 
+            Continue</font>&nbsp;</li></ul></li></ul></li>
+</ul></td>
+    <td><font face="Verdana" size="2" 
+      >&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; </font></td>
+    <td valign="top" width="200" bgcolor="#8080ff" v V>
+      <h3>Directory Enumeration:</h3><font face="Verdana" 
+      size=2>
+      <p><font face="Verdana" size="2">The 
+      process of identifying existing directories on a web server.</font></p>
+      <p>&nbsp;</p>
+      <p><font face="Verdana" size="2" 
+      >This is achieved by recursively 
+      requesting&nbsp;directory names from a given list.</font></p>
+      <p>&nbsp;</p>
+      <p>Typical findings include the discovery of an 
+      administrator interface (e.g. /admin) as well as directories that are not 
+      linked to the web site.</font> </p></td></tr></tbody></table></p>
+<hr>
 </body>
 </html>

@@ -32,139 +32,145 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
 /**
- * Description: The class responsible for making the connection for the
- * purposes of fuzzing through the corresponding socket.
- *
- * <p>This class gets used to establish each sequencial connection 
- * being made on a given address, port and for a given request.</p>
- *
+ * Description: The class responsible for making the connection for the purposes
+ * of fuzzing through the corresponding socket.
+ * 
+ * <p>
+ * This class gets used to establish each sequencial connection being made on a
+ * given address, port and for a given request.
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  * @since 0.1
  */
 public class Connection {
 
-  private String reply;
-  private StringBuffer conMessage;
-  private Socket socket;
-  private InputStream in_stream;
-  private OutputStream out_stream;
-  // The maximum size for the socket I/O
-  private final static int SEND_BUF_SIZE = 256 * 1024;
-  private final static int RECV_BUF_SIZE = 256 * 1024;
-  /**
-   * <p>Implement a connection to a particular address, on a given port,
-   * specifying the message to be transmitted.</p>
-   *
-   * @param address String
-   * @param port String
-   * @param message String
-   */
-  public Connection(final String address, final String port, final StringBuffer message) {
+	// The maximum size for the socket I/O
+	private final static int SEND_BUF_SIZE = 256 * 1024;
+	private final static int RECV_BUF_SIZE = 256 * 1024;
+	private String reply;
+	private StringBuffer conMessage;
+	private Socket socket;
+	private InputStream in_stream;
+	private OutputStream out_stream;
 
-    final String conAddress = address;
-    this.conMessage = message;
-    int conPort = 0;
-    final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
+	/**
+	 * <p>
+	 * Implement a connection to a particular address, on a given port, specifying
+	 * the message to be transmitted.
+	 * </p>
+	 * 
+	 * @param address
+	 *          String
+	 * @param port
+	 *          String
+	 * @param message
+	 *          String
+	 */
+	public Connection(final String address, final String port,
+			final StringBuffer message) {
 
-    // Check the connection port value
-    try {
-      conPort = Integer.parseInt(port);
-    }
-    catch (final NumberFormatException e1) {
-      conPort = 0;
-    }
-    if (!((conPort > 0) && (conPort < 65536))) {
-      this.reply = "Port has to be within range (0,65536)\n";
-      return;
-    }
-    // Create the Socket to the specified address and port
-    try {
-      this.socket = new Socket();
-      this.socket.bind(null);
-      this.socket.connect(new InetSocketAddress(conAddress, conPort), 5000);
+		final String conAddress = address;
+		this.conMessage = message;
+		int conPort = 0;
+		final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
 
-      this.socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
-      this.socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-      this.socket.setSoTimeout(30000);
-    }
-    catch (final UnknownHostException e) {
-      this.reply = "The IP address of the host could not be determined : " +
-              e.getMessage() + "\n";
-    }
-    catch (final IOException e) {
-      this.reply = "An IO Error occured when creating the socket : " + e.getMessage() +
-              "\n";
-    }
-    // Assign the input stream
-    try {
-      this.in_stream = this.socket.getInputStream();
-    }
-    catch (final IOException e) {
-      this.reply = "An IO Error occured when creating the input stream : " +
-              e.getMessage() + "\n";
-    }
-    // Assign the output stream
-    try {
-      this.out_stream = this.socket.getOutputStream();
-    }
-    catch (final IOException e) {
-      this.reply = "An IO Error occured when creating the output stream : " +
-              e.getMessage() + "\n";
-    }
-    // Write to the output stream
-    try {
-      this.out_stream.write(this.conMessage.toString().getBytes());
-    }
-    catch (final IOException e) {
-      this.reply =
-        "An IO Error occured when attempting to write to the output stream : " +
-        e.getMessage() + "\n";
-    }
-    // Really don't like catching null pointer exceptions...
-    catch (final NullPointerException e) {
-      this.reply = "The output stream is null : " + e.getMessage();
-      return;
-    }
-    try {
-      final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      int got;
-      while ((got = this.in_stream.read(recv)) > -1) {
-        baos.write(recv, 0, got);
-      }
-      final byte[] allbytes = baos.toByteArray();
+		// Check the connection port value
+		try {
+			conPort = Integer.parseInt(port);
+		} catch (final NumberFormatException e1) {
+			conPort = 0;
+		}
+		if (!((conPort > 0) && (conPort < 65536))) {
+			this.reply = "Port has to be within range (0,65536)\n";
+			return;
+		}
+		// Create the Socket to the specified address and port
+		try {
+			this.socket = new Socket();
+			this.socket.bind(null);
+			this.socket.connect(new InetSocketAddress(conAddress, conPort), 5000);
 
-      this.reply = new String(allbytes);
-    }
-    catch (final IOException e) {
+			this.socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+			this.socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
+			this.socket.setSoTimeout(30000);
+		} catch (final UnknownHostException e) {
+			this.reply = "The IP address of the host could not be determined : "
+					+ e.getMessage() + "\n";
+		} catch (final IOException e) {
+			this.reply = "An IO Error occured when creating the socket : "
+					+ e.getMessage() + "\n";
+		}
+		// Assign the input stream
+		try {
+			this.in_stream = this.socket.getInputStream();
+		} catch (final IOException e) {
+			this.reply = "An IO Error occured when creating the input stream : "
+					+ e.getMessage() + "\n";
+		}
+		// Assign the output stream
+		try {
+			this.out_stream = this.socket.getOutputStream();
+		} catch (final IOException e) {
+			this.reply = "An IO Error occured when creating the output stream : "
+					+ e.getMessage() + "\n";
+		}
+		// Write to the output stream
+		try {
+			this.out_stream.write(this.conMessage.toString().getBytes());
+		} catch (final IOException e) {
+			this.reply = "An IO Error occured when attempting to write to the output stream : "
+					+ e.getMessage() + "\n";
+		}
+		// Really don't like catching null pointer exceptions...
+		catch (final NullPointerException e) {
+			this.reply = "The output stream is null : " + e.getMessage();
+			return;
+		}
+		try {
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			int got;
+			while ((got = this.in_stream.read(recv)) > -1) {
+				baos.write(recv, 0, got);
+			}
+			final byte[] allbytes = baos.toByteArray();
 
-    }
-    // Close the socket
-    try {
-      this.socket.close();
-    }
-    catch (final IOException e) {
-      this.reply = "An IO Error occured when attempting to close the socket : " +
-              e.getMessage() + "\n";
-    }
-  }
+			this.reply = new String(allbytes);
+		} catch (final IOException e) {
 
-  /**
-   * <p>Return the reply from the Connection that has been made, based on the
-   * message that has been transmitted during construction.</p>
-   *
-   * @return String
-   */
-  public String getReply() {
-    return this.reply;
-  }
+		}
+		// Close the socket
+		try {
+			this.socket.close();
+		} catch (final IOException e) {
+			this.reply = "An IO Error occured when attempting to close the socket : "
+					+ e.getMessage() + "\n";
+		}
+	}
 
-  /**
-   * <p>Return the message request sent on the Socket.</p>
-   * @return StringBuffer
-   */
-  public StringBuffer getMessage() {
-    return this.conMessage;
-  }
+	/**
+	 * <p>
+	 * Return the message request sent on the Socket.
+	 * </p>
+	 * 
+	 * @return StringBuffer
+	 */
+	public StringBuffer getMessage() {
+		return this.conMessage;
+	}
+
+	/**
+	 * <p>
+	 * Return the reply from the Connection that has been made, based on the
+	 * message that has been transmitted during construction.
+	 * </p>
+	 * 
+	 * @return String
+	 */
+	public String getReply() {
+		return this.reply;
+	}
 }

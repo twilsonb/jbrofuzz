@@ -5,12 +5,104 @@
 <title></title>
 </head>
 <body bgcolor="#ffffff">
-<h3><font face="Verdana">TCP Sniffing Tab&nbsp;</font></h3>
-<p><font face="Verdana" size="2">JBroFuzz 
-is a stateless network protocol fuzzer that emerged from the needs of 
-penetration testing. JBroFuzz's design emphasizes simplicity and ease-of-use. We 
-are attempting to get you to cover the basics in terms of penetration testing 
-for web applications by&nbsp; means of creating malformed data and having the 
-network protocol in question consume the data.</font> </p>
+<h3><font face="Verdana">TCP 
+SniffingTab&nbsp;</font></h3>
+<p><font face="Verdana" size="2">This tab 
+allows you to act as a TCP proxy between two particular locations. </font></p>
+<p><font face="Verdana" size="2">A TCP proxy 
+acts as a "man-in-the-middle" relaying all traffic. With this functionality 
+available in the sniffing tab, you can assess how vulnerable a particular 
+application or protocol is vulnerable to this type of attack. </font></p>
+<p><font face="Verdana" size="2">This is 
+achieved by examining the information flowing between the two particular 
+locations.</font></p>
+<hr>
+
+<p>
+<table cellspacing="0" cellpadding="6" width="100%" align="center" border="0">
+  <tbody>
+  <tr>
+    <td bgcolor="#c0c0c0">
+      <h3>How to use&nbsp;&nbsp;</h3>
+      <p><font face="Verdana" size="2">The 
+      following information is required in order to start a TCP sniffing 
+      session:</font></p>
+      <ul>
+        <li><strong><font face="Verdana" 
+        size=2>Remote Host (either IP Address, or resolvable 
+        DNS name)</font>&nbsp;</strong> 
+        <li><strong><font face="Verdana" 
+        size=2>Remote Port (1-65535)</font></strong> 
+        </li><strong><font face="Verdana" size="2">
+        <li><strong><font face="Verdana" 
+        size=2>Local Host (either IP Address, or resolvable 
+        DNS name)</font>&nbsp;</strong> 
+        <li><strong><font face="Verdana" 
+        size=2>Local Port (1-65535)</font></strong> 
+        </font></strong></li></ul>
+      <p><font face="Verdana" size="2" 
+      >Supplying the above information and selecting "Start" 
+      will enable you to snif any traffic flowing between the remote and local 
+      host.</font></p>
+      <p><font face="Verdana" size="2"><em>For 
+      this, you would have to generate some traffic on the corresponding local 
+      host and port connection.</em></font></p>
+      <h3>
+      <hr>
+      </h3>
+      <h3>What to expect</h3>
+      <p><font face="Verdana" size="2">A list 
+      of rows will begin to be populated in the Output panel. Each file contains 
+      the data travelling between the remote host and local host.</font> 
+      <p><font face="Verdana" size="2">Use 
+      your mouse to select a row in order to display the contents of the 
+      data.</font> 
+      <h3>
+      <hr>
+      </h3>
+      <h3>Advanced options</h3>
+      <p><font face="Verdana" size="2">You can 
+      launch your browser, with the corresponding proxy settings in 
+      place.</font></p>
+      <ul>
+        <li>
+        <div><font face="Verdana" size="2" 
+        >Select "Bro" to&nbsp;launch your 
+        browser&nbsp;</font></div></li></ul></td>
+    <td><font face="Verdana" size="2" 
+      >&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; </font></td>
+    <td valign="top" width="200" bgcolor="#8080ff" V v>
+      <h3>Logging &amp; Saving:</h3><font face="Verdana" size="2" 
+      >
+      <p><font face="Verdana" size="2">All 
+      TCP&nbsp;sniffing session data is saved within the directory:</font></p>
+      <ul>
+        <li>
+        <div>jbrofuzz</div></li>
+        <ul>
+          <li>
+          <div>sniffing</div></li></ul></ul>
+      <p>Within this directory a session directory matching 
+      the date and time of launch of jbrofuzz is created. A typical format of 
+      this is:</p>
+      <p>&nbsp;</p>
+      <p>/203 2007-07-22 00-05-15/</p>
+      <p>&nbsp;</p>
+      <p>Data&nbsp;is saved in a file of increasing number. A 
+      typical format of this is:</p>
+      <p>&nbsp;</p>
+      <p>01-000001.html</p><font face="Times New Roman" 
+      size=3>
+      <h3>&nbsp;</h3>
+      <h3>Launching your browser with "Bro":</h3><font 
+      face=Verdana size=2>
+      <p><font face="Verdana" size="2">This 
+      function aims to allow you to simply launch your web browser, targeting 
+      the host in question.</font></p>
+      <p><font face="Verdana" size="2" 
+      ></font>&nbsp;</p>
+      <p><font face="Verdana" size="2" 
+      ></font>&nbsp;</p></font></font></font></td></tr></tbody></table></p>
+<hr>
 </body>
 </html>

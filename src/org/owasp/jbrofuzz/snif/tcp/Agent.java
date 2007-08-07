@@ -35,193 +35,202 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.io.FileHandler;
 
 /**
- * <p>The Agent class implements the grouping necessary for the 
- * ConnectionListener to function correctly.</p>
- *
+ * <p>
+ * The Agent class implements the grouping necessary for the ConnectionListener
+ * to function correctly.
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
 class Agent implements Runnable {
 
-  private InputStream inStream = null;
-  private OutputStream outStream = null;
-  private AgentMonitor agentMonitor = null;
-  private byte buffer[] = null;
-  private static final int BUFFER_SIZE = 65534;
-  private String name = null;
-  // The jbrofuzz object attached to this agent
-  private JBroFuzz mJBroFuzz;
+	private static final int BUFFER_SIZE = 65534;
+	// Format the current time in a nice iso 8601 format.
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd HH-mm-ss-SSS");
 
-  // Format the current time in a nice iso 8601 format.
-  private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
-    "yyyy-MM-dd HH-mm-ss-SSS");
+	/**
+	 * <p>
+	 * Method to pre-append zeros to a hexadecimal string.
+	 * </p>
+	 * 
+	 * @param input
+	 *          String
+	 * @param length
+	 *          int
+	 * @return String
+	 */
+	private static String hexPad(final String input, final int length) {
+		final StringBuffer buffer = new StringBuffer(length);
+		buffer.append(input);
+		for (int j = input.length(); j < length; j++) {
+			buffer.append('0');
+		}
+		return buffer.toString();
+	}
 
-  public Agent(final JBroFuzz mJBroFuzz, final InputStream inStream, final OutputStream outStream,
-               final AgentMonitor agentMonitor, final String name) {
+	private InputStream inStream = null;
+	private OutputStream outStream = null;
+	private AgentMonitor agentMonitor = null;
+	private byte buffer[] = null;
 
-    this.mJBroFuzz = mJBroFuzz;
+	private String name = null;
 
-    this.name = name;
-    this.outStream = outStream;
-    this.inStream = inStream;
-    this.agentMonitor = agentMonitor;
+	// The jbrofuzz object attached to this agent
+	private JBroFuzz mJBroFuzz;
 
-    this.buffer = new byte[Agent.BUFFER_SIZE];
+	public Agent(final JBroFuzz mJBroFuzz, final InputStream inStream,
+			final OutputStream outStream, final AgentMonitor agentMonitor,
+			final String name) {
 
-    final Thread t = new Thread(this);
-    t.start();
-  }
+		this.mJBroFuzz = mJBroFuzz;
 
-  public void run() {
-    try {
-      int bytesRead = 0;
+		this.name = name;
+		this.outStream = outStream;
+		this.inStream = inStream;
+		this.agentMonitor = agentMonitor;
 
-      while (true) {
-        // While there are bytes in the input stream, read them
-        if ((bytesRead = this.inStream.read(this.buffer, 0, Agent.BUFFER_SIZE)) == -1) {
-          break;
-        }
-        // Log the incoming/outgoing packets
-        this.log(this.buffer, bytesRead);
-        // Write out to the output stream
-        this.outStream.write(this.buffer, 0, bytesRead);
-      }
-    }
-    catch (final IOException e) {
-      // mJBroFuzz.getFrameWindow().log("TCPAgent: " + e.getMessage());
-    }
-    //
-    this.agentMonitor.agentHasDied(this);
-  }
+		this.buffer = new byte[Agent.BUFFER_SIZE];
 
-  private void log(final byte buffer[], final int nBytes) {
-    synchronized (System.out) {
-      final Date currentTime = new Date();
-      final String fileNumber = this.mJBroFuzz.getWindow().getTCPSniffingPanel().
-                                getCounter();
+		final Thread t = new Thread(this);
+		t.start();
+	}
 
-      FileHandler.writeSnifFile(fileNumber,
-                                "[" + this.name + ", (" + nBytes + " bytes) " +
-                                Agent.dateFormat.format(currentTime) + "]");
+	private void log(final byte buffer[], final int nBytes) {
+		synchronized (System.out) {
+			final Date currentTime = new Date();
+			final String fileNumber = this.mJBroFuzz.getWindow()
+					.getTCPSniffingPanel().getCounter();
 
-      final StringBuffer row = new StringBuffer(100);
-      row.append(fileNumber);
-      row.append("          ");
-      row.append(this.name);
-      if (nBytes < 100000) {
-        row.append(' ');
-      }
-      if (nBytes < 10000) {
-        row.append(' ');
-      }
-      if (nBytes < 1000) {
-        row.append(' ');
-      }
-      if (nBytes < 100) {
-        row.append(' ');
-      }
-      if (nBytes < 10) {
-        row.append(' ');
-      }
-      row.append("          (");
-      row.append(nBytes);
-      row.append(" bytes)          ");
-      row.append(Agent.dateFormat.format(currentTime));
-      // Append a row in the table
-      this.mJBroFuzz.getWindow().getTCPSniffingPanel().addRow(row.toString());
-      // formatted string
-      final StringBuffer sb = new StringBuffer(nBytes);
-      // formatted binary string
-      final StringBuffer pb = new StringBuffer(4 * nBytes);
-      // hex buffer string
-      final StringBuffer hb = new StringBuffer();
-      // text buffer string
-      final StringBuffer tb = new StringBuffer();
+			FileHandler.writeSnifFile(fileNumber, "[" + this.name + ", (" + nBytes
+					+ " bytes) " + Agent.dateFormat.format(currentTime) + "]");
 
-      // line position counter
-      int line_counter = 0;
-      // byte counter
-      int byte_counter = 0;
-      // binary character counter
-      float bin_counter = 0;
+			final StringBuffer row = new StringBuffer(100);
+			row.append(fileNumber);
+			row.append("          ");
+			row.append(this.name);
+			if (nBytes < 100000) {
+				row.append(' ');
+			}
+			if (nBytes < 10000) {
+				row.append(' ');
+			}
+			if (nBytes < 1000) {
+				row.append(' ');
+			}
+			if (nBytes < 100) {
+				row.append(' ');
+			}
+			if (nBytes < 10) {
+				row.append(' ');
+			}
+			row.append("          (");
+			row.append(nBytes);
+			row.append(" bytes)          ");
+			row.append(Agent.dateFormat.format(currentTime));
+			// Append a row in the table
+			this.mJBroFuzz.getWindow().getTCPSniffingPanel().addRow(row.toString());
+			// formatted string
+			final StringBuffer sb = new StringBuffer(nBytes);
+			// formatted binary string
+			final StringBuffer pb = new StringBuffer(4 * nBytes);
+			// hex buffer string
+			final StringBuffer hb = new StringBuffer();
+			// text buffer string
+			final StringBuffer tb = new StringBuffer();
 
-      for (int i = 0; i < nBytes; i++) {
-        // 32 bit Unicode to 16 bit ASCII
-        final int value = (buffer[i] & 0xFF);
-        if ((value == '\r') || (value == '\n') || (value == '\t') ||
-            ((value >= ' ') && (value <= '~'))) {
-          sb.append((char) value); // text character
-        }
-        else {
-          sb.append("[");
-          sb.append(Agent.hexPad(Integer.toHexString(value), 2));
-          sb.append("]");
-          bin_counter++;
-        }
+			// line position counter
+			int line_counter = 0;
+			// byte counter
+			int byte_counter = 0;
+			// binary character counter
+			float bin_counter = 0;
 
-        if ((value >= ' ') && (value <= '~')) {
-          tb.append((char) value); // "printable" character
-        }
-        else {
-          tb.append('.'); // non-printable
-        }
+			for (int i = 0; i < nBytes; i++) {
+				// 32 bit Unicode to 16 bit ASCII
+				final int value = (buffer[i] & 0xFF);
+				if ((value == '\r') || (value == '\n') || (value == '\t')
+						|| ((value >= ' ') && (value <= '~'))) {
+					sb.append((char) value); // text character
+				} else {
+					sb.append("[");
+					sb.append(Agent.hexPad(Integer.toHexString(value), 2));
+					sb.append("]");
+					bin_counter++;
+				}
 
-        hb.append(Agent.hexPad(Integer.toHexString(value), 2));
-        if ((line_counter == 3) || (line_counter == 7) || (line_counter == 11)) { // for readability, space every 4 chars
-          hb.append(' ');
-          tb.append(' ');
-        }
+				if ((value >= ' ') && (value <= '~')) {
+					tb.append((char) value); // "printable" character
+				} else {
+					tb.append('.'); // non-printable
+				}
 
-        if (line_counter == 15) { // 16 characters per line
-          pb.append(Agent.hexPad(Integer.toHexString(byte_counter), 4));
-          pb.append(":  ");
-          pb.append(hb);
-          pb.append("    ");
-          pb.append(tb);
-          pb.append("\n");
-          line_counter = 0;
-          byte_counter += 16;
+				hb.append(Agent.hexPad(Integer.toHexString(value), 2));
+				if ((line_counter == 3) || (line_counter == 7) || (line_counter == 11)) { // for
+					// readability,
+					// space
+					// every
+					// 4
+					// chars
+					hb.append(' ');
+					tb.append(' ');
+				}
 
-          // hb = new StringBuffer();
-          hb.setLength(0);
-          // tb = new StringBuffer();
-          tb.setLength(0);
-        }
-        else {
-          line_counter++;
-        }
-      }
-      for (int i = hb.length(); i < 35; i++) {
-        hb.append(' '); // pad to length of other lines
-      }
-      pb.append(Agent.hexPad(Integer.toHexString(byte_counter), 4));
-      pb.append(":  ");
-      pb.append(hb);
-      pb.append("    ");
-      pb.append(tb);
-      pb.append("\n");
-      // If less than 5% binary?
-      if ((bin_counter / nBytes) < .05) {
-        FileHandler.writeSnifFile(fileNumber, sb.toString());
-      }
-      else {
-        FileHandler.writeSnifFile(fileNumber, pb.toString());
-      }
-    }
-  }
+				if (line_counter == 15) { // 16 characters per line
+					pb.append(Agent.hexPad(Integer.toHexString(byte_counter), 4));
+					pb.append(":  ");
+					pb.append(hb);
+					pb.append("    ");
+					pb.append(tb);
+					pb.append("\n");
+					line_counter = 0;
+					byte_counter += 16;
 
-  /**
-   * <p>Method to pre-append zeros to a hexadecimal string.</p>
-   * @param input String
-   * @param length int
-   * @return String
-   */
-  private static String hexPad(final String input, final int length) {
-    final StringBuffer buffer = new StringBuffer(length);
-    buffer.append(input);
-    for (int j = input.length(); j < length; j++) {
-      buffer.append('0');
-    }
-    return buffer.toString();
-  }
+					// hb = new StringBuffer();
+					hb.setLength(0);
+					// tb = new StringBuffer();
+					tb.setLength(0);
+				} else {
+					line_counter++;
+				}
+			}
+			for (int i = hb.length(); i < 35; i++) {
+				hb.append(' '); // pad to length of other lines
+			}
+			pb.append(Agent.hexPad(Integer.toHexString(byte_counter), 4));
+			pb.append(":  ");
+			pb.append(hb);
+			pb.append("    ");
+			pb.append(tb);
+			pb.append("\n");
+			// If less than 5% binary?
+			if ((bin_counter / nBytes) < .05) {
+				FileHandler.writeSnifFile(fileNumber, sb.toString());
+			} else {
+				FileHandler.writeSnifFile(fileNumber, pb.toString());
+			}
+		}
+	}
+
+	public void run() {
+		try {
+			int bytesRead = 0;
+
+			while (true) {
+				// While there are bytes in the input stream, read them
+				if ((bytesRead = this.inStream.read(this.buffer, 0, Agent.BUFFER_SIZE)) == -1) {
+					break;
+				}
+				// Log the incoming/outgoing packets
+				this.log(this.buffer, bytesRead);
+				// Write out to the output stream
+				this.outStream.write(this.buffer, 0, bytesRead);
+			}
+		} catch (final IOException e) {
+			// mJBroFuzz.getFrameWindow().log("TCPAgent: " + e.getMessage());
+		}
+		//
+		this.agentMonitor.agentHasDied(this);
+	}
 }

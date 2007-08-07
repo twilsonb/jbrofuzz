@@ -47,13 +47,18 @@ import org.owasp.jbrofuzz.pub.GRequestIterator;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBRFormat;
+
 /**
- * <p>The main "Open Source" panel, displayed within the Main Frame Window.</p>
+ * <p>
+ * The main "Open Source" panel, displayed within the Main Frame Window.
+ * </p>
  * 
- * <p>This panel performs all TCP related fuzzing operations, including the
+ * <p>
+ * This panel performs all TCP related fuzzing operations, including the
  * addition and removal of generators, reporting back the results into the
- * current window, as well as writting them to file.</p>
- *
+ * current window, as well as writting them to file.
+ * </p>
+ * 
  * @author subere (at) uncon org
  * @version 0.6
  */
@@ -63,29 +68,29 @@ public class OpenSource extends JPanel {
 	 */
 	private static final long serialVersionUID = -5881754154644327656L;
 	// The frame that the open source panel is attached to
-	private JBRFrame mFrameWindow; 
+	private JBRFrame mFrameWindow;
 	// The target field
 	private final JTextField domain;
 	// The output field
 	private final JTextArea output;
-	// The output panel 
+	// The output panel
 	private JPanel outputPanel;
-	//The JButtons
+	// The JButtons
 	private final JButton check, stop;
 	// The swing worker used when the button "fuzz" is pressed
 	private SwingWorker3 worker;
-  // The progress bar for the site
-  private JProgressBar progressBar;
+	// The progress bar for the site
+	private JProgressBar progressBar;
 
 	public OpenSource(final JBRFrame mFrameWindow) {
 		super();
 		this.setLayout(null);
 		this.mFrameWindow = mFrameWindow;
 
-		//  The domain panel
+		// The domain panel
 		final JPanel domainPanel = new JPanel();
-		domainPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-				createTitledBorder(" Fully Qualified Domain Name [FQDN] "),
+		domainPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Fully Qualified Domain Name [FQDN] "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 		this.domain = new JTextField();
@@ -105,9 +110,9 @@ public class OpenSource extends JPanel {
 
 		// The output panel
 		this.outputPanel = new JPanel();
-		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-				createTitledBorder(" Output "),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Output "), BorderFactory.createEmptyBorder(5, 5,
+				5, 5)));
 
 		this.output = new JTextArea();
 
@@ -165,34 +170,34 @@ public class OpenSource extends JPanel {
 					public void run() {
 						OpenSource.this.checkStopButton();
 					}
-				});       
+				});
 			}
 		});
-		
+
 		// The progress bar
-    this.progressBar = new JProgressBar(0);
-    this.progressBar.setValue(0);
-    this.progressBar.setStringPainted(true);
-    this.progressBar.setMinimum(0);
-    this.progressBar.setMaximum(5);
-    this.progressBar.setPreferredSize(new Dimension(310, 20));
-    final JPanel progressPanel = new JPanel();
-    progressPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-      createTitledBorder(" Progress "),
-      BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-    progressPanel.setBounds(520, 20, 330, 60);
-    progressPanel.add(this.progressBar);
-    this.add(progressPanel);		
-    
-    // The info field
+		this.progressBar = new JProgressBar(0);
+		this.progressBar.setValue(0);
+		this.progressBar.setStringPainted(true);
+		this.progressBar.setMinimum(0);
+		this.progressBar.setMaximum(5);
+		this.progressBar.setPreferredSize(new Dimension(310, 20));
+		final JPanel progressPanel = new JPanel();
+		progressPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Progress "), BorderFactory.createEmptyBorder(1,
+				1, 1, 1)));
+		progressPanel.setBounds(520, 20, 330, 60);
+		progressPanel.add(this.progressBar);
+		this.add(progressPanel);
+
+		// The info field
 		// The output panel
 		final JPanel infoPanel = new JPanel();
-		infoPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-				createTitledBorder(" Readme "),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		infoPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Readme "), BorderFactory.createEmptyBorder(5, 5,
+				5, 5)));
 
 		final JTextArea info = new JTextArea();
-		
+
 		info.setText(JBRFormat.OPEN_SOURCE_README);
 		info.setCaretPosition(0);
 		info.setEditable(false);
@@ -215,16 +220,19 @@ public class OpenSource extends JPanel {
 		this.add(infoPanel);
 	}
 
-	/**
-	 * Access the main frame window in which this panel is attached to.
-	 * @return FrameWindow
-	 */
-	public JBRFrame getFrameWindow() {
-		return this.mFrameWindow;
+	public void appendOutputText(final String t) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				OpenSource.this.output.append(t);
+				OpenSource.this.output.setCaretPosition(OpenSource.this.output
+						.getText().length());
+			}
+		});
 	}
 
 	/**
-	 * <p>Method trigered when the fuzz button is pressed in the current panel.
+	 * <p>
+	 * Method trigered when the fuzz button is pressed in the current panel.
 	 * </p>
 	 */
 	public void checkStartButton() {
@@ -243,24 +251,25 @@ public class OpenSource extends JPanel {
 		// Check to see if a message is present
 		final String dm = this.getDomainText();
 		if ("".equals(dm)) {
-			JOptionPane.showMessageDialog(this,
-					"The domain field is blank.\n" + "Specify a domain\n",
-					"Empty Domain Field",
+			JOptionPane.showMessageDialog(this, "The domain field is blank.\n"
+					+ "Specify a domain\n", "Empty Domain Field",
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		// Update the border of the output panel
-		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-				createTitledBorder(" Output Checking domain: " + dm + " "),
+		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Output Checking domain: " + dm + " "),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-		this.output.setText("");    
+		this.output.setText("");
 		final GRequestIterator req = new GRequestIterator(this.mFrameWindow, dm);
 		this.output.setText(req.getOutput());
 	}
 
 	/**
-	 * <p>Method trigered when attempting to stop any online check taking place.</p>
+	 * <p>
+	 * Method trigered when attempting to stop any online check taking place.
+	 * </p>
 	 */
 	public void checkStopButton() {
 		if (!this.stop.isEnabled()) {
@@ -272,109 +281,110 @@ public class OpenSource extends JPanel {
 		this.domain.setEditable(true);
 		this.domain.setBackground(Color.WHITE);
 		this.domain.setForeground(Color.BLACK);
-		if(this.output.getText().length() == 0) {
+		if (this.output.getText().length() == 0) {
 			this.output.setBackground(Color.WHITE);
 			this.output.setForeground(Color.BLACK);
-		}
-		else {
+		} else {
 			this.output.setCaretPosition(this.output.getText().length());
 		}
-	}  
-
-	public void appendOutputText(final String t) {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-    		OpenSource.this.output.append(t);
-    		OpenSource.this.output.setCaretPosition(OpenSource.this.output.getText().length());
-      }
-    });
 	}
-	
-  /**
-   * Set the progress bar on the display to a value between 0 and 100.
-   * @param percent int
-   */
-  public void setProgressBar(final int percent) {
-    if ((percent >= 0) && (percent <= 5)) {
-      final SwingWorker3 progressWorker = new SwingWorker3() {
-        @Override
+
+	public String getDomainText() {
+		String text = this.domain.getText();
+		int len = text.length();
+
+		if (text.startsWith("@")) {
+			text = text.substring(1, len);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.startsWith("[")) {
+			text = text.substring(1, len);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.startsWith(" ")) {
+			text = text.substring(1, len);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.startsWith("\"")) {
+			text = text.substring(1, len);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.startsWith("<")) {
+			text = text.substring(1, len);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.startsWith("http://")) {
+			text = text.substring(7, len);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.startsWith("https://")) {
+			text = text.substring(8, len);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.endsWith("\"")) {
+			text = text.substring(0, len - 1);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.endsWith(">")) {
+			text = text.substring(0, len - 1);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.endsWith(" ")) {
+			text = text.substring(0, len - 1);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.endsWith("]")) {
+			text = text.substring(0, len - 1);
+			len = text.length();
+			this.domain.setText(text);
+		}
+		if (text.endsWith("/")) {
+			text = text.substring(0, len - 1);
+			// If another if statement is included, update the len variable here
+			this.domain.setText(text);
+		}
+		return text;
+	}
+
+	/**
+	 * Access the main frame window in which this panel is attached to.
+	 * 
+	 * @return FrameWindow
+	 */
+	public JBRFrame getFrameWindow() {
+		return this.mFrameWindow;
+	}
+
+	/**
+	 * Set the progress bar on the display to a value between 0 and 100.
+	 * 
+	 * @param percent
+	 *          int
+	 */
+	public void setProgressBar(final int percent) {
+		if ((percent >= 0) && (percent <= 5)) {
+			final SwingWorker3 progressWorker = new SwingWorker3() {
+				@Override
 				public Object construct() {
-          OpenSource.this.progressBar.setValue(percent);
-          return "progress-four-update-return";
-        }
+					OpenSource.this.progressBar.setValue(percent);
+					return "progress-four-update-return";
+				}
 
-        @Override
+				@Override
 				public void finished() {
-        }
-      };
-      progressWorker.start();
-    }
-  }
-  
-  public String getDomainText() {
-    String text = this.domain.getText();
-    int len = text.length();
-
-    if (text.startsWith("@")) {
-      text = text.substring(1, len);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.startsWith("[")) {
-      text = text.substring(1, len);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.startsWith(" ")) {
-      text = text.substring(1, len);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.startsWith("\"")) {
-      text = text.substring(1, len);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.startsWith("<")) {
-      text = text.substring(1, len);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.startsWith("http://")) {
-      text = text.substring(7, len);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.startsWith("https://")) {
-      text = text.substring(8, len);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.endsWith("\"")) {
-      text = text.substring(0, len - 1);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.endsWith(">")) {
-      text = text.substring(0, len - 1);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.endsWith(" ")) {
-      text = text.substring(0, len - 1);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.endsWith("]")) {
-      text = text.substring(0, len - 1);
-      len = text.length();
-      this.domain.setText(text);
-    }
-    if (text.endsWith("/")) {
-      text = text.substring(0, len - 1);
-      // If another if statement is included, update the len variable here
-      this.domain.setText(text);
-    }
-    return text;
-  }  
+				}
+			};
+			progressWorker.start();
+		}
+	}
 }

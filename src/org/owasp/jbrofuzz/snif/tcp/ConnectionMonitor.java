@@ -26,24 +26,26 @@
 package org.owasp.jbrofuzz.snif.tcp;
 
 /**
- * <p>The interface to the TCPConnectionMonitor requiring
- * attemptingConnection, addingConnection, removingConnection 
- * and connectionError
- * to be implemented.</p>
- *
- * <p>Company: </p>
- *
+ * <p>
+ * The interface to the TCPConnectionMonitor requiring attemptingConnection,
+ * addingConnection, removingConnection and connectionError to be implemented.
+ * </p>
+ * 
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
 public interface ConnectionMonitor {
 
-  public void addConnection(Connection c);
+	public void addConnection(Connection c);
 
-  public void removeConnection(Connection c);
+	public void attemptingConnection(Connection c);
 
-  public void attemptingConnection(Connection c);
+	public void connectionError(Connection c, String errMsg);
 
-  public void connectionError(Connection c, String errMsg);
+	public void removeConnection(Connection c);
 
 }
