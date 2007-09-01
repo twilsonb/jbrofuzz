@@ -48,6 +48,7 @@ import org.owasp.jbrofuzz.ui.panels.SystemLogger;
 import org.owasp.jbrofuzz.ui.panels.TCPFuzzing;
 import org.owasp.jbrofuzz.ui.panels.TCPSniffing;
 import org.owasp.jbrofuzz.ui.panels.WebDirectories;
+import org.owasp.jbrofuzz.ui.panels.HTTPFuzzing;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBRFormat;
 
@@ -99,6 +100,11 @@ public class JBRFrame extends JFrame {
 	 * Unique int identifier for the Open Source Panel
 	 */
 	public static final int OPEN_SOURCE_ID = 127;
+	
+	/**
+	 * Unique int identifier for the HTTP Fuzzing Panel
+	 */
+	public static final int HTTP_FUZZING_PANEL_ID = 128;
 
 	// The main Object behind it all...
 	private final JBroFuzz mJBroFuzz;
@@ -126,6 +132,9 @@ public class JBRFrame extends JFrame {
 
 	// The open source panel
 	private final OpenSource mOpenSourcePanel;
+	
+	// The HTTP fuzzing panel
+	private final HTTPFuzzing mHTTPFuzzingPanel;
 
 	/**
 	 * <p>
@@ -153,18 +162,22 @@ public class JBRFrame extends JFrame {
 		this.mDefinitionsPanel = new Generators(this);
 		this.mSystemLogger = new SystemLogger(this);
 		this.mOpenSourcePanel = new OpenSource(this);
+		this.mHTTPFuzzingPanel = new HTTPFuzzing(this);
 		// The tabbed pane, 3 is for bottom orientation
 		this.tabbedPane = new JTabbedPane(3);
 		// tabbedPane.setPreferredSize(new Dimension(588,368));
 		this.tabbedPane.setBounds(0, 0, 895, 500);
 		// Do not change the names!!!
+		this.tabbedPane.add("HTTP Fuzzing", this.mHTTPFuzzingPanel);
 		this.tabbedPane.add(" Web Directories ", this.mWebDirectoriesPanel);
 		this.tabbedPane.add(" Open Source ", this.mOpenSourcePanel);
 		this.tabbedPane.add(" TCP Fuzzing ", this.mFuzzingPanel);
 		this.tabbedPane.add(" TCP Sniffing ", this.mSniffingPanel);
+		this.tabbedPane.add(" Generators ", this.mDefinitionsPanel);
+		
 		// tabbedPane.add(" Generators ", mDefinitionsPanel);
 		// tabbedPane.add(" System ", mSystemLogger);
-		this.tabbedPane.setSelectedComponent(this.mFuzzingPanel);
+		this.tabbedPane.setSelectedComponent(this.mDefinitionsPanel);
 		pane.add(this.tabbedPane);
 		// The image icon
 		this.setIconImage(ImageCreator.FRAME_IMG.getImage());

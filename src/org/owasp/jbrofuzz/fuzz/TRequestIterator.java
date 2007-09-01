@@ -54,7 +54,7 @@ import org.owasp.jbrofuzz.version.JBRFormat;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class RequestIterator {
+public class TRequestIterator {
 
 	// Format the current time in a nice iso 8601 format.
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -92,7 +92,7 @@ public class RequestIterator {
 	 * @param type
 	 *          int
 	 */
-	public RequestIterator(final JBroFuzz mJBroFuzz, final StringBuffer request,
+	public TRequestIterator(final JBroFuzz mJBroFuzz, final StringBuffer request,
 			final int start, final int finish, final String type) {
 
 		this.mJBroFuzz = mJBroFuzz;
@@ -225,12 +225,12 @@ public class RequestIterator {
 			this.mJBroFuzz.getWindow().getFuzzingPanel().addRowInOuputTable(
 					filename + "          " + target + ":" + port + "          "
 							+ this.type + "          "
-							+ RequestIterator.dateFormat.format(currentTime) + "          "
+							+ TRequestIterator.dateFormat.format(currentTime) + "          "
 							+ this.currentValue + "/" + this.maxValue);
 
 			FileHandler.writeFuzzFile("[{" + this.currentValue + "/" + this.maxValue
 					+ "}, " + filename + " "
-					+ RequestIterator.dateFormat.format(currentTime) + "] " + "<!-- \r\n"
+					+ TRequestIterator.dateFormat.format(currentTime) + "] " + "<!-- \r\n"
 					+ target + " : " + port + "\r\n" + stout + "\r\n", filename);
 
 			final Connection con = new Connection(target, port, stout);

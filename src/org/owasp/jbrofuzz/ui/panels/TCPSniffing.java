@@ -49,7 +49,7 @@ import javax.swing.event.ListSelectionListener;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.snif.tcp.ConnectionListener;
 import org.owasp.jbrofuzz.ui.JBRFrame;
-import org.owasp.jbrofuzz.ui.tablemodels.SniffingTableModel;
+import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 
@@ -85,7 +85,7 @@ public class TCPSniffing extends JPanel {
 	// The frame that the sniffing panel is attached
 	private JBRFrame m;
 	// The table model
-	private SniffingTableModel tableModel;
+	private SingleRowTableModel tableModel;
 	// The boolean if stop has been pressed
 	private boolean stopPressed;
 	// The TCP Connection listener
@@ -176,7 +176,7 @@ public class TCPSniffing extends JPanel {
 		this.lPortText.setPreferredSize(new Dimension(50, 20));
 		lPortPanel.add(this.lPortText);
 		// The table of list of requests text
-		this.tableModel = new SniffingTableModel();
+		this.tableModel = new SingleRowTableModel(" Requests / Replies ");
 
 		this.sniffingTable = new JTable();
 		this.sniffingTable.setModel(this.tableModel);

@@ -38,22 +38,24 @@ import javax.swing.table.AbstractTableModel;
  * </p>
  * 
  * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @version 0.8
  */
-public class SniffingTableModel extends AbstractTableModel {
+public class SingleRowTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 188923L;
 	private String[] columnNames;
 
-	private ArrayList dataVector;
+	private ArrayList<String> dataVector;
 
 	/**
 	 * Main Constructor for the Table Model
+	 * 
+	 * @param columnName String
 	 */
-	public SniffingTableModel() {
+	public SingleRowTableModel(String columnName) {
 		this.columnNames = new String[1];
-		this.columnNames[0] = "Requests / Replies";
-		this.dataVector = new ArrayList();
+		this.columnNames[0] = columnName;
+		this.dataVector = new ArrayList<String>();
 	}
 
 	/**
@@ -90,7 +92,7 @@ public class SniffingTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public String getColumnName(final int column) {
-		return this.columnNames[column];
+		return this.columnNames[0];
 	}
 
 	/**
@@ -187,6 +189,19 @@ public class SniffingTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
 		this.dataVector.set(row, value.toString());
-		this.fireTableCellUpdated(row, column);
+		this.fireTableCellUpdated(row, 0);
+	}
+	
+	public void setData(String [] values) {
+		this.fireTableRowsDeleted(0, getRowCount());
+		this.dataVector.clear();
+		this.dataVector.ensureCapacity(values.length);
+		for(int i = 0; i < values.length; i++) {
+			this.dataVector.add(values[i]);
+			this.addEmptyRow();
+			this.setValueAt(values[i], i, 0);
+			this.fireTableCellUpdated(i, 0);
+		}
+		
 	}
 }

@@ -80,7 +80,13 @@ public class TextHighlighter extends DefaultStyledDocument {
 		this.keywords.put("Set-Cookie", Color.darkGray);
 		this.keywords.put("Server", Color.darkGray);
 		this.keywords.put("Date", Color.darkGray);
-
+		this.keywords.put("Host", Color.darkGray);
+		this.keywords.put("Connection", Color.darkGray);
+		this.keywords.put("Cookie", Color.darkGray);
+		this.keywords.put("Content-Length", Color.darkGray);
+		this.keywords.put("Content-type", Color.darkGray);
+		this.keywords.put("Location", Color.darkGray);
+		
 		this.keywords.put("Windows", Color.gray);
 		this.keywords.put("Mozilla", Color.gray);
 		this.keywords.put("Firefox", Color.gray);

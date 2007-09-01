@@ -73,6 +73,9 @@ public class FileHandler {
 
 	// The fuzz directory of operation
 	private static File fuzzDirectory;
+	
+	// The http fuzz directory of operation
+	private static File httpFuzzDirectory;
 
 	// The snif directory of operation
 	private static File snifDirectory;
@@ -89,6 +92,8 @@ public class FileHandler {
 	private static final int SNIF_FILE = 1;
 
 	private static final int WEBD_FILE = 2;
+	
+	private static final int HTTP_FILE = 3;
 
 	// The date from the version
 	private static String runningDate;
@@ -127,6 +132,28 @@ public class FileHandler {
 
 	private static void createFile(final String fileName, final String content,
 			final int fileType) {
+
+
+		if (fileType == FileHandler.HTTP_FILE) {
+			try {
+				if (FileHandler.errors < 3) {
+					FileHandler.currentFile = new File(FileHandler.httpFuzzDirectory,
+							fileName);
+					if (!FileHandler.currentFile.exists()) {
+						boolean success = FileHandler.currentFile.createNewFile();
+						if (!success) {
+							FileHandler.g.log("Failed to create file");
+						}
+					}
+					FileHandler.appendFile(FileHandler.currentFile, content);
+				}
+			} catch (final IOException e) {
+				FileHandler.g.log("Cannot Create File" + "\n" + fileName
+						+ " A File Error Occured");
+				FileHandler.errors++;
+			}
+
+		}
 
 		if (fileType == FileHandler.FUZZ_FILE) {
 			try {
@@ -494,6 +521,60 @@ public class FileHandler {
 		}
 		return out;
 	}
+	
+	/**
+	 * <p>
+	 * Method for reading fuzz files that have been generated within a fuzzing
+	 * session. Typically, the contents of the file are returned within the
+	 * StringBuffer. In the event of an error, the StringBuffer returned is set to
+	 * "".
+	 * </p>
+	 * 
+	 * @param fileName
+	 *          String
+	 * @return StringBuffer
+	 */
+	public static StringBuffer readHTTPFuzzFile(final String fileName) {
+		final StringBuffer out = new StringBuffer();
+		File file;
+		try {
+			file = new File(FileHandler.httpFuzzDirectory, fileName);
+		} catch (final NullPointerException e) {
+			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Find Location"
+					+ "\n" + fileName + "\nA File Read Error Occured",
+					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			return new StringBuffer("");
+		}
+		BufferedReader bufRead = null;
+		try {
+			final FileReader input = new FileReader(file);
+			bufRead = new BufferedReader(input);
+			String line;
+			line = bufRead.readLine();
+			while (line != null) {
+				out.append(line + "\n");
+				line = bufRead.readLine();
+			}
+			bufRead.close();
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Find Location"
+					+ "\n" + fileName + "\nAn Array Error Occured",
+					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			return new StringBuffer("");
+
+		} catch (final IOException e) {
+			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Read Location"
+					+ "\n" + fileName + "\nA File Read Error Occured",
+					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			return new StringBuffer("");
+		} finally {
+			try {
+				bufRead.close();
+			} catch (final IOException ex) {
+			}
+		}
+		return out;
+	}
 
 	/**
 	 * <p>
@@ -736,6 +817,30 @@ public class FileHandler {
 		// Actually create the file
 		FileHandler.createFile(name + ".html", content, FileHandler.FUZZ_FILE);
 	}
+	
+	/**
+	 * <p>
+	 * Method for writting a new fuzz file within the created fuzzing directory.
+	 * The content of the file is specified as a String input to the method. The
+	 * location where this file is saved is within the directory jbrofuzz\
+	 * fuzzing\[session date]\ .
+	 * </p>
+	 * <p>
+	 * The two long values being passed are responsible for the file name.
+	 * </p>
+	 * <p>
+	 * If the file exists, the content is simply appended to the end of the file.
+	 * </p>
+	 * 
+	 * @param content
+	 *          String
+	 * @param name
+	 *          String
+	 */
+	public static void writeHTTPFuzzFile(final String content, final String name) {
+		// Actually create the file
+		FileHandler.createFile(name + ".html", content, FileHandler.FUZZ_FILE);
+	}
 
 	/**
 	 * <p>
@@ -795,7 +900,7 @@ public class FileHandler {
 
 		// Create the necessary directory with the corresponding timestamp
 		FileHandler.fuzzDirectory = new File(baseDir + File.separator + "jbrofuzz"
-				+ File.separator + "fuzzing" + File.separator + FileHandler.runningDate);
+				+ File.separator + "fuzzing-tcp" + File.separator + FileHandler.runningDate);
 
 		FileHandler.snifDirectory = new File(baseDir + File.separator + "jbrofuzz"
 				+ File.separator + "sniffing" + File.separator
@@ -803,6 +908,10 @@ public class FileHandler {
 
 		FileHandler.webEnumDirectory = new File(baseDir + File.separator
 				+ "jbrofuzz" + File.separator + "web-dir" + File.separator
+				+ FileHandler.runningDate);
+		
+		FileHandler.httpFuzzDirectory = new File(baseDir + File.separator
+				+ "jbrofuzz" + File.separator + "fuzzing-http" + File.separator
 				+ FileHandler.runningDate);
 
 		int failedDirCounter = 0;
@@ -831,8 +940,16 @@ public class FileHandler {
 				failedDirCounter++;
 			}
 		}
+		
+		if (!FileHandler.httpFuzzDirectory.exists()) {
+			boolean success = FileHandler.httpFuzzDirectory.mkdirs();
+			if (!success) {
+				g.log("Failed to create \"fuzzing-http\" directory");
+				failedDirCounter++;
+			}
+		}
 
-		if (failedDirCounter >= 3) {
+		if (failedDirCounter >= 4) {
 			g
 					.log("\tToo many directories could not be created! Are you launching me through your browser?");
 			g.log("\tTry \"java -jar jbrofuzz-" + JBRFormat.VERSION

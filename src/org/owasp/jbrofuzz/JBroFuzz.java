@@ -1,5 +1,5 @@
 /**
- * JBroFuzz.java 0.6
+ * JBroFuzz.java 0.8
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -28,6 +28,7 @@ package org.owasp.jbrofuzz;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.core.Database;
 
 /**
  * <p>
@@ -47,7 +48,7 @@ import org.owasp.jbrofuzz.version.JBRFormat;
  * </p>
  * 
  * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @version 0.8
  */
 public class JBroFuzz {
 
@@ -76,6 +77,8 @@ public class JBroFuzz {
 	private JBRFormat mFormat;
 
 	private JBRFrame mWindow;
+	
+	private Database mDatabase;
 
 	/**
 	 * <p>
@@ -87,7 +90,9 @@ public class JBroFuzz {
 	public JBroFuzz() {
 
 		this.mFormat = new JBRFormat(this);
+		this.mDatabase = new Database(this);
 		this.mWindow = new JBRFrame(this);
+		
 		// Singleton File Handler
 		this.mHandler = FileHandler.s(this.mWindow, this.mFormat);
 
@@ -132,5 +137,17 @@ public class JBroFuzz {
 
 		return this.mWindow;
 
+	}
+	
+	/**
+	 * <p>
+	 * Return the main database of exploits loaded, thus giving access to 
+	 * generators, etc.
+	 * </p>
+	 * 
+	 * @return Database
+	 */
+	public Database getDatabase() {
+		return this.mDatabase;
 	}
 }

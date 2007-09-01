@@ -25,15 +25,15 @@
  */
 package org.owasp.jbrofuzz.ui.panels;
 
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
+import javax.swing.event.*;
 
 import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.ui.tablemodels.*;
+import org.owasp.jbrofuzz.ui.util.NonWrappingTextPane;
 
 /**
  * <p>
@@ -47,12 +47,20 @@ public class Generators extends JPanel {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5848591307104017542L;
+	private static final long serialVersionUID = -5848291307114027542L;
 	// The frame that the sniffing panel is attached
 	private JBRFrame m;
-	// The JTable that holds all the data
-	private JTextArea listTextArea;
-
+	// The JPanels carrying the components
+	private JPanel category, name, view;
+	// The JTables carrying the data
+	private JTable categoryTable, nameTable;
+	// The Table Models with a single column
+	private SingleRowTableModel categoryTableModel, nameTableModel;
+	// The non-wrapping text pane
+	private NonWrappingTextPane viewTextArea;
+	// The JLabel holding any comments
+	private JLabel commentLabel;
+	
 	/**
 	 * Constructor for the Definitions Panel of the represented as a tab. Only a
 	 * single instance of this class is constructed.
@@ -63,36 +71,92 @@ public class Generators extends JPanel {
 	public Generators(final JBRFrame m) {
 		super();
 		this.setLayout(null);
-		/*
-		 * setBorder(BorderFactory.createCompoundBorder(BorderFactory.
-		 * createTitledBorder(" Generators "), BorderFactory.createEmptyBorder(1, 1,
-		 * 1, 1)));
-		 */
 		this.m = m;
-		// Define the JPanel
-		final JPanel listPanel = new JPanel();
-
-		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Fuzzing Generators "), BorderFactory
+		
+		// Category
+		
+		category = new JPanel();
+		category.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Exploit Category "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
-		// Set the bounds
-		listPanel.setBounds(10, 80, 870, 370);
+		category.setBounds(10, 20, 220, 430);
+		this.add(category);
+		
+		categoryTableModel = new SingleRowTableModel("Category");
+		
+		categoryTable = new JTable();
+		categoryTable.setModel(categoryTableModel);
+		categoryTableModel.setData(this.m.getJBroFuzz().getDatabase().getCategories());
+		categoryTable.setFont(new Font("Verdana", Font.PLAIN, 14));
+		categoryTable.setRowHeight(30);
+		categoryTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		categoryTable.getSelectionModel().addListSelectionListener(new RowListener());
+		
+		final JScrollPane categoryTableScrollPane = new JScrollPane(categoryTable);
+		categoryTableScrollPane.setVerticalScrollBarPolicy(20);
+		categoryTableScrollPane.setHorizontalScrollBarPolicy(31);
+		categoryTableScrollPane.setPreferredSize(new Dimension(200, 390));
+		category.add(categoryTableScrollPane);
+		
+		// Name 
+		
+		name = new JPanel();
+		name.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Exploit Name "), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
+		name.setBounds(235, 100, 220, 350);
+		this.add(name);
+		
+		nameTableModel = new SingleRowTableModel("Name");
+		
+		nameTable = new JTable();
+		nameTable.setModel(nameTableModel);
+		nameTableModel.setData(this.m.getJBroFuzz().getDatabase().getNames());
+		nameTable.setFont(new Font("Verdana", Font.PLAIN, 14));
+		nameTable.setRowHeight(30);
 
-		this.listTextArea = new JTextArea();
-		this.listTextArea.setFont(new Font("Verdana", Font.PLAIN, 13));
-		this.listTextArea.setEditable(false);
-		this.listTextArea.setLineWrap(true);
-		this.listTextArea.setWrapStyleWord(true);
-		this.getFrameWindow().popup(this.listTextArea);
+		final JScrollPane nameTextAreaTextScrollPane = new JScrollPane(nameTable);
+		nameTextAreaTextScrollPane.setVerticalScrollBarPolicy(20);
+		nameTextAreaTextScrollPane.setHorizontalScrollBarPolicy(31);
+		nameTextAreaTextScrollPane.setPreferredSize(new Dimension(200, 310));
+		name.add(nameTextAreaTextScrollPane);
+		
+		// View
+		
+		view = new JPanel();
+		// view.setLayout(null);
+		view.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Exploit Information "), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
+		view.setBounds(460, 150, 420, 300);
+		this.add(view);	
+		
+		this.viewTextArea = new NonWrappingTextPane();
 
-		final JScrollPane listTextScrollPane = new JScrollPane(this.listTextArea);
-		listTextScrollPane.setVerticalScrollBarPolicy(20);
-		listTextScrollPane.setHorizontalScrollBarPolicy(31);
-		listTextScrollPane.setPreferredSize(new Dimension(850, 330));
-		listPanel.add(listTextScrollPane);
-
-		this.add(listPanel);
-		this.listTextArea.setCaretPosition(0);
+		this.viewTextArea.putClientProperty("charset", "UTF-8");
+		this.viewTextArea.setEditable(true);
+		this.viewTextArea.setVisible(true);
+		this.viewTextArea.setFont(new Font("Verdana", Font.PLAIN, 12));
+		this.viewTextArea.setMargin(new Insets(1, 1, 1, 1));
+		this.viewTextArea.setBackground(Color.WHITE);
+		this.viewTextArea.setForeground(Color.BLACK);
+		
+		final JScrollPane viewTextScrollPane = new JScrollPane(viewTextArea);
+		viewTextScrollPane.setVerticalScrollBarPolicy(20);
+		viewTextScrollPane.setHorizontalScrollBarPolicy(30);
+		viewTextScrollPane.setPreferredSize(new Dimension(400, 100));
+		view.add(viewTextScrollPane);
+		
+		commentLabel = new JLabel("Comment goes here");
+		commentLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Comment "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		
+		final JScrollPane commentLabelScrollPane = new JScrollPane(commentLabel);
+		commentLabelScrollPane.setVerticalScrollBarPolicy(20);
+		commentLabelScrollPane.setHorizontalScrollBarPolicy(30);
+		commentLabelScrollPane.setPreferredSize(new Dimension(400, 150));
+		view.add(commentLabelScrollPane);
 	}
 
 	/**
@@ -105,18 +169,17 @@ public class Generators extends JPanel {
 	public JBRFrame getFrameWindow() {
 		return this.m;
 	}
+	
+	private class RowListener implements ListSelectionListener {
+    public void valueChanged(ListSelectionEvent event) {
+        if (event.getValueIsAdjusting()) {
+            return;
+        }
+        for (int c : categoryTable.getSelectedRows()) {
+          System.out.println(String.format(" %d", c));
+      }
+    }
+}
 
-	/**
-	 * <p>
-	 * Method for setting the text within the JTextArea displayed as part of this
-	 * panel. This method simply appends any string given adding a new line (\n)
-	 * to the end of it.
-	 * </p>
-	 * 
-	 * @param str
-	 *          String
-	 */
-	public void setDefinitionsText(final String str) {
-		this.listTextArea.append(str + "\n");
-	}
+
 }
