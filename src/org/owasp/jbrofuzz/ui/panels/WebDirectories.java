@@ -238,14 +238,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 				WebDirectories.this.buttonStop();
 			}
 		});
-		/*
-		 * errorCheckBox = new JCheckBox("Continue on Error", false);
-		 * errorCheckBox.setBounds(370, 120, 140, 20);
-		 * errorCheckBox.setToolTipText("Continue attempting to Fuzz, even if an
-		 * error occurs"); add(errorCheckBox); errorCheckBox.addActionListener(new
-		 * ActionListener() { public void actionPerformed(final ActionEvent e) {
-		 * checkbox = (!checkbox); } });
-		 */
+		
 		this.responseTableModel = new WebDirectoriesModel();
 		this.sorter = new TableSorter(this.responseTableModel);
 		this.responseTable = new JTable(this.sorter);

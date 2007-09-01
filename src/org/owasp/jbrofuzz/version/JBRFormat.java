@@ -70,6 +70,12 @@ public class JBRFormat {
 	 * from which JBroFuzz gets launched.
 	 */
 	public static final String FILE_DIR = "jbrofuzz-directories";
+	
+	/**
+	 * The GNU Citizen DB file name, expected to be read from within the directory
+	 * from which JBroFuzz gets launched.
+	 */
+	public static final String FILE_GNU = "jbrofuzz-xssdb";
 
 	/**
 	 * The line distinguisher found in a file
@@ -105,6 +111,13 @@ public class JBRFormat {
 	public static final String DEFAULT_DIRS = "images\n" + ".svn\n" + "fuzz\n"
 			+ "rss\n" + "live\n";
 
+	/**
+	 * <p>
+	 * The list of default generators used if a file is not found to load the XSS DB from.
+	 * </p>
+	 */
+	public static final String DEFAULT_GNU = "";
+	
 	/**
 	 * <p>
 	 * The list of generators used if a file is not found to load the generators
@@ -204,6 +217,14 @@ public class JBRFormat {
 			+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n<-new-line->"
 			+ "Accept-Language: en-gb,en;q=0.5\r\n<-new-line->"
 			+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n\r\n<-new-line->";
+	
+	public static final String REQUEST_HTTP = "Host: localhost\n" 
+		+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.6) Gecko/20070725\n"
+		+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n"
+		+ "Accept-Language: en-gb,en;q=0.5\n"
+		+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n"
+		+ "Keep-Alive: 300\n"
+		+ "Proxy-Connection: keep-alive\n";
 
 	/**
 	 * Return the code name of the current version, based on the version number.

@@ -132,13 +132,13 @@ public class TConstructor {
 				}
 			}
 		}
-
+/*
 		mJBroFuzz.getWindow().getDefinitionsPanel().setDefinitionsText(
 				this.getAllGeneratorNames() + "\n\n");
 
 		mJBroFuzz.getWindow().getDefinitionsPanel().setDefinitionsText(
 				this.getAllGenerators());
-
+*/
 	}
 
 	/**

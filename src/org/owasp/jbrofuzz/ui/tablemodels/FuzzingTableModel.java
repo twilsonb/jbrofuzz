@@ -29,7 +29,7 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.owasp.jbrofuzz.ui.panels.TCPFuzzing;
+import org.owasp.jbrofuzz.ui.JBRFrame;;
 
 /**
  * <p>
@@ -62,7 +62,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	// The vector of data
 	private Vector dataVector;
 	// The panel that the model is attached to
-	private TCPFuzzing fPanel;
+	private JBRFrame fPanel;
 
 	/**
 	 * <p>
@@ -72,7 +72,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 * @param fPanel
 	 *          FuzzingPanel
 	 */
-	public FuzzingTableModel(final TCPFuzzing fPanel) {
+	public FuzzingTableModel(final JBRFrame fPanel) {
 		this.fPanel = fPanel;
 		this.dataVector = new Vector();
 	}
@@ -264,7 +264,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 			record.setEnd(((Integer) value).intValue());
 			break;
 		default:
-			this.fPanel.getFrameWindow().log("TCP Fuzzing Panel: Invalid index ");
+			fPanel.log("TCP Fuzzing Panel: Invalid index ");
 		}
 		this.fireTableCellUpdated(row, column);
 	}

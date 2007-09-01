@@ -70,6 +70,7 @@ public class WindowViewer extends JFrame {
 	 */
 
 	public static final int VIEW_SNIFFING_PANEL = 1;
+	
 	/**
 	 * <p>
 	 * Constant used for specifying wihtin which directory to look for the
@@ -78,17 +79,23 @@ public class WindowViewer extends JFrame {
 	 * </p>
 	 */
 	public static final int VIEW_FUZZING_PANEL = 2;
-
+	
 	/**
 	 * <p>
-	 * The window viewer that gets launched for each request within the
-	 * corresponding panel.
+	 * Constant used for specifying within which directory to loof for the 
+	 * corresponding file. Using this value will point to the http fuzzing directory
+	 * used for the corresponding session.
 	 * </p>
+	 */
+	public static final int VIEW_HTTP_FUZZING_PANEL = 3;
+	
+	/**
+	 * <p>The window viewer that gets launched for each request within the
+	 * corresponding panel.</p>
 	 * 
 	 * @param m
-	 *          FrameWindow
 	 * @param name
-	 *          String
+	 * @param typeOfPanel
 	 */
 	public WindowViewer(final JBRFrame m, final String name, final int typeOfPanel) {
 		super();
@@ -111,8 +118,6 @@ public class WindowViewer extends JFrame {
 		final NonWrappingTextPane listTextArea = new NonWrappingTextPane();
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
-		// listTextArea.setLineWrap(false);
-		// listTextArea.setWrapStyleWord(false);
 		m.popup(listTextArea);
 		listTextArea.setEditorKit(new StyledEditorKit() {
 			/**
@@ -141,6 +146,10 @@ public class WindowViewer extends JFrame {
 		if (typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
 			text = FileHandler.readFuzzFile(number);
 		}
+		if (typeOfPanel == WindowViewer.VIEW_HTTP_FUZZING_PANEL) {
+			text = FileHandler.readHTTPFuzzFile(number);
+		}
+		
 		// Find the header
 		int headerEnd = text.indexOf("]");
 		if ((headerEnd < 0)) {
@@ -149,8 +158,9 @@ public class WindowViewer extends JFrame {
 		String header = "";
 		if (headerEnd != 0) {
 			header = text.substring(0, headerEnd + 1);
-			text.delete(0, headerEnd + 2);
+			text.delete(0, headerEnd + 1);
 		}
+		
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(header), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
