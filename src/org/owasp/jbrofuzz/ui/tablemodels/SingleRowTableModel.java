@@ -42,7 +42,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class SingleRowTableModel extends AbstractTableModel {
 
-	private static final long serialVersionUID = 188923L;
+	private static final long serialVersionUID = 188456456483L;
 	private String[] columnNames;
 
 	private ArrayList<String> dataVector;
@@ -66,8 +66,9 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 */
 	public void addEmptyRow() {
 		this.dataVector.add("");
-		this.fireTableRowsInserted(this.dataVector.size() - 1, this.dataVector
-				.size() - 1);
+		this.dataVector.trimToSize();
+		this.fireTableRowsInserted(this.dataVector.size(), this.dataVector
+				.size());
 	}
 
 	/**
@@ -116,7 +117,10 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 * @return String
 	 */
 	public String getValueAt(final int row) {
-		return (String) this.dataVector.get(row);
+		if ((row > -1) && (row < this.dataVector.size())) {
+			return this.dataVector.get(row);
+		}
+		return "";
 	}
 
 	/**
@@ -131,7 +135,7 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
-		return this.dataVector.get(row);
+		return this.getValueAt(row);
 	}
 
 	/**
@@ -192,16 +196,35 @@ public class SingleRowTableModel extends AbstractTableModel {
 		this.fireTableCellUpdated(row, 0);
 	}
 	
+	/**
+	 * <p>Method for setting, from scratch all the data within the model.</p>
+	 * 
+	 * @param values
+	 */
 	public void setData(String [] values) {
 		this.fireTableRowsDeleted(0, getRowCount());
 		this.dataVector.clear();
-		this.dataVector.ensureCapacity(values.length);
 		for(int i = 0; i < values.length; i++) {
 			this.dataVector.add(values[i]);
-			this.addEmptyRow();
-			this.setValueAt(values[i], i, 0);
-			this.fireTableCellUpdated(i, 0);
+			this.dataVector.trimToSize();
+			this.fireTableRowsInserted(this.dataVector.size(), this.dataVector
+					.size());
+			
 		}
-		
 	}
+	
+	/**
+	 * Return a given row in String format using the stated separator
+	 * 
+	 * @param row
+	 *          int
+	 * @return String
+	 */
+	public String getRow(final int row) {
+		if ((row > -1) && (row < this.dataVector.size())) {
+			return this.getValueAt(row);
+		}
+		return "";
+	}
+
 }

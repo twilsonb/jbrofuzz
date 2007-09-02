@@ -329,12 +329,14 @@ public class TableSorter extends AbstractTableModel {
 
 	private static final Directive EMPTY_DIRECTIVE = new Directive(-1,
 			TableSorter.NOT_SORTED);
+	
 	public static final Comparator COMPARABLE_COMPARATOR = new Comparator() {
 
 		public int compare(Object o1, Object o2) {
 			return ((Comparable) o1).compareTo(o2);
 		}
 	};
+	
 	public static final Comparator LEXICAL_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {
 			return o1.toString().compareTo(o2.toString());
@@ -456,7 +458,12 @@ public class TableSorter extends AbstractTableModel {
 		return this.tableModel;
 	}
 
-	public Object getValueAt(final int row, final int column) {
+	public Object getValueAt(int row, int column) {
+		if(row < 0)
+			row = 0;
+		if(column < 0)
+			column = 0;
+		
 		return this.tableModel.getValueAt(this.modelIndex(row), column);
 	}
 

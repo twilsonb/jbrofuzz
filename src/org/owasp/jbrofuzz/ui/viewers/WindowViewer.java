@@ -56,10 +56,7 @@ import org.owasp.jbrofuzz.ui.util.TextHighlighter;
  */
 public class WindowViewer extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8855212505709053158L;
+	private static final long serialVersionUID = 8855212512349053158L;
 
 	/**
 	 * <p>
@@ -82,7 +79,7 @@ public class WindowViewer extends JFrame {
 	
 	/**
 	 * <p>
-	 * Constant used for specifying within which directory to loof for the 
+	 * Constant used for specifying within which directory to look for the 
 	 * corresponding file. Using this value will point to the http fuzzing directory
 	 * used for the corresponding session.
 	 * </p>

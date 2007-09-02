@@ -54,15 +54,22 @@ import org.owasp.jbrofuzz.version.JBRFormat;
 import com.Ostermiller.util.Browser;
 
 class CopyAction extends TextAction {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 3537862376041160965L;
-
+	
+	/**
+	 * <p>Main constructor for the copy action as part of a text action.</p>
+	 *
+	 */
 	public CopyAction() {
 		super("Copy");
 	}
 
+	/**
+	 * <p>Method orchistrating the action performing while copying.</p>
+	 * 
+	 * @param evt ActionEvent
+	 */
 	public void actionPerformed(final ActionEvent evt) {
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -744,15 +751,22 @@ public class JBRMenuBar extends JMenuBar {
 }
 
 class PasteAction extends TextAction {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 2787026188563573773L;
 
+	/**
+	 * <p>Constuctor for pasting as part of a text action.</p>
+	 *
+	 */
 	public PasteAction() {
 		super("Paste");
 	}
 
+	/**
+	 * <p>Method orchistrating the action performed during a paste action.</p>
+	 * 
+	 * @param evt ActionEvent
+	 */
 	public void actionPerformed(final ActionEvent evt) {
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -771,15 +785,22 @@ class PasteAction extends TextAction {
 }
 
 class SelectAllAction extends TextAction {
+	
+	private static final long serialVersionUID = -3252406791511769338L;
+	
 	/**
-	 * 
+	 * <p>Constructor for the select all text action.</p>
+	 *
 	 */
-	private static final long serialVersionUID = -3252406791580769338L;
-
 	public SelectAllAction() {
 		super("Select All");
 	}
 
+	/**
+	 * <p>Method orchistrating the action performed when selecting all.</p>
+	 * 
+	 * @param evt ActionEvent
+	 */
 	public void actionPerformed(final ActionEvent evt) {
 
 		SwingUtilities.invokeLater(new Runnable() {
