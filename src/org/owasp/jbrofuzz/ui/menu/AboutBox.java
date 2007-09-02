@@ -62,10 +62,10 @@ public class AboutBox extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = -7515292150164781290L;
-	public static int ABOUT = 0;
-	public static int LICENSE = 1;
-	public static int DISCLAIMER = 2;
-	public static int ACKNOWLEDGEMENTS = 3;
+	public static final int ABOUT = 0;
+	public static final int LICENSE = 1;
+	public static final int DISCLAIMER = 2;
+	public static final int ACKNOWLEDGEMENTS = 3;
 
 	// Dimensions of the about box
 	private static final int x = 400;

@@ -251,7 +251,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 		this.responseTable.setBackground(Color.black);
 		this.responseTable.setForeground(Color.white);
 		this.responseTable.setSurrendersFocusOnKeystroke(true);
-		this.responseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		// this.responseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.responseTable.setColumnSelectionAllowed(false);
 		this.responseTable.setRowSelectionAllowed(true);
 		// Set the column widths
@@ -505,6 +505,25 @@ public class WebDirectories extends JPanel implements KeyListener {
 
 		i2.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
+				// Copy
+				StringBuffer selectionBuffer = new StringBuffer();
+				int[] selection = area.getSelectedRows();
+				for(int element : selection) {
+					for(int i = 0; i < area.getRowCount(); i++) {
+						selectionBuffer.append(area.getModel().getValueAt(element, i));
+						if(i < area.getRowCount() - 1) {
+							selectionBuffer.append(",");
+						}
+					}
+					selectionBuffer.append("\n");
+				}
+				final JTextArea myTempArea = new JTextArea();
+				myTempArea.setText(selectionBuffer.toString());
+				myTempArea.selectAll();
+				myTempArea.copy();
+				area.removeRowSelectionInterval(0, area.getRowCount() - 1);
+				
+				/*
 				area.removeRowSelectionInterval(0, area.getRowCount() - 1);
 				final int[] a = area.getSelectedRows();
 				final StringBuffer s = new StringBuffer();
@@ -516,7 +535,9 @@ public class WebDirectories extends JPanel implements KeyListener {
 					s.append(row);
 				}
 				final JTextArea myTempArea = new JTextArea(s.toString());
+				myTempArea.selectAll();
 				myTempArea.copy();
+				*/
 			}
 		});
 
