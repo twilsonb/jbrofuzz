@@ -80,6 +80,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import org.apache.commons.lang.builder.*;
 /**
  * <p>
  * This class needs some more work and javadoc is not the only section!
@@ -214,17 +215,19 @@ public class TableSorter extends AbstractTableModel {
 		}
 
 		@Override
-		public boolean equals(final Object o) {
+		public boolean equals(Object o) {
 			boolean check = false;
-			if (this.compareTo(o) == 0) {
+			if ( o != null ) {
+				if( o.hashCode() == Row.class.hashCode())
 				check = true;
 			}
 			return check;
+			
 		}
 
 		@Override
 		public int hashCode() {
-			return this.modelIndex;
+			return new HashCodeBuilder(67,97).append(modelIndex).toHashCode();
 		}
 	}
 

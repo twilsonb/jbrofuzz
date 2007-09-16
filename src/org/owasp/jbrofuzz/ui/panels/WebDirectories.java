@@ -243,8 +243,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 		this.sorter = new TableSorter(this.responseTableModel);
 		this.responseTable = new JTable(this.sorter);
 
-		this.responseTable.getTableHeader().setToolTipText(
-				"Click to specify sorting; Control-Click to specify secondary sorting");
+		this.responseTable.getTableHeader().setToolTipText("Click to sort by row");
 		this.popup(this.responseTable);
 		this.sorter.setTableHeader(this.responseTable.getTableHeader());
 		this.responseTable.setFont(new Font("Monospaced", Font.BOLD, 12));

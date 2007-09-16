@@ -329,7 +329,7 @@ public class JBRMenuBar extends JMenuBar {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						JBRMenuBar.this.getFrameWindow().dispose();
+						JBRMenuBar.this.getFrameWindow().exitProcedure();
 					}
 				});
 			}

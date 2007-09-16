@@ -64,6 +64,7 @@ import org.owasp.jbrofuzz.ui.util.TextHighlighter;
 import org.owasp.jbrofuzz.ui.viewers.WindowPlotter;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.ui.menu.*;
 
 /**
  * <p>
@@ -518,6 +519,7 @@ public class HTTPFuzzing extends JPanel {
 					HTTPFuzzing.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
 			selectedText = "";
 		}
+		
 		// If no text has been selected, prompt the user to select some text
 		if (selectedText == null) {
 			JOptionPane.showMessageDialog(this,
@@ -534,20 +536,24 @@ public class HTTPFuzzing extends JPanel {
 			final String[] generatorArray = generators.split(", ");
 
 			// Then prompt the user for the type of fuzzer
-			String selectedValue = (String) JOptionPane.showInputDialog(this,
+			String selectedValue = ""; 
+			/*(String) JOptionPane.showInputDialog(this,
 					"Select the type of fuzzing generator:", HTTPFuzzing.ADDGENSTRING,
 					JOptionPane.INFORMATION_MESSAGE, null, generatorArray,
 					generatorArray[0]);
-			// And finally add the generator
-			if ((selectedValue != null)) {
-				if (selectedValue.length() > 3) {
-					selectedValue = selectedValue.substring(0, 3);
-				} else {
-					selectedValue = "   ";
-				}
-				this.mFuzzingTableModel.addRow(selectedValue, sPoint, fPoint);
-			}
+			*/
+			new GeneratorDialog(this.m, sPoint, fPoint);
 		}
+	}
+	
+	/**
+	 * <p>Method for adding a value 
+	 * @param value
+	 * @param start
+	 * @param end
+	 */
+	public void generatorAddRow(String value, int start, int end) {
+		this.mFuzzingTableModel.addRow(value, start, end);
 	}
 
 	/**

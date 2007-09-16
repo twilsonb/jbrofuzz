@@ -63,33 +63,66 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @version 0.8
  */
 public class TCPSniffing extends JPanel {
+
+	private class SniffingRowListener implements ListSelectionListener {
+		/**
+		 * <p>
+		 * Method for the category table selection row.
+		 * </p>
+		 * 
+		 * @param event
+		 *          ListSelectionEvent
+		 */
+		public void valueChanged(final ListSelectionEvent event) {
+			if (event.getValueIsAdjusting()) {
+				return;
+			}
+			final int c = TCPSniffing.this.sniffingTable.getSelectedRow();
+			final String value = (String) TCPSniffing.this.tableModel
+					.getValueAt(c, 0);
+			TCPSniffing.this.vew = new WindowViewer(
+					TCPSniffing.this.getFrameWindow(), value,
+					WindowViewer.VIEW_SNIFFING_PANEL);
+		}
+	}
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2185868982471609733L;
+
 	private final JTextField rHostText, rPortText, lHostText, lPortText;
+
 	// The buttons to start and stop the listener, as well as launch a browser
 	private final JButton startButton, stopButton, browserButton;
+
 	//
 	private final JTable sniffingTable;
+
 	//
 	private JPanel listPanel;
+
 	// A counter for the number of times start has been clicked
 	private int counter, session;
+
 	// The swing worker used when the button "start" is pressed
 	private SwingWorker3 worker;
+
 	// The frame that the sniffing panel is attached
 	private JBRFrame m;
+
 	// The table model
 	private SingleRowTableModel tableModel;
+
 	// The boolean if stop has been pressed
 	private boolean stopPressed;
+
 	// The TCP Connection listener
 	private ConnectionListener reflector;
+
 	// The window viewer frame
 	private WindowViewer vew;
 
@@ -175,6 +208,7 @@ public class TCPSniffing extends JPanel {
 		this.getFrameWindow().popup(this.lPortText);
 		this.lPortText.setPreferredSize(new Dimension(50, 20));
 		lPortPanel.add(this.lPortText);
+		
 		// The table of list of requests text
 		this.tableModel = new SingleRowTableModel(" Requests / Replies ");
 
@@ -185,6 +219,8 @@ public class TCPSniffing extends JPanel {
 		this.sniffingTable.setForeground(Color.white);
 		this.sniffingTable.setSurrendersFocusOnKeystroke(true);
 		this.sniffingTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.sniffingTable.getSelectionModel().addListSelectionListener(
+				new SniffingRowListener());
 
 		final JScrollPane listTextScrollPane = new JScrollPane(this.sniffingTable);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
@@ -192,28 +228,9 @@ public class TCPSniffing extends JPanel {
 		listTextScrollPane.setPreferredSize(new Dimension(850, 320));
 		listTextScrollPane.setWheelScrollingEnabled(true);
 		this.listPanel.add(listTextScrollPane);
-		// Add the action listener for each row
-		final ListSelectionModel rowSM = this.sniffingTable.getSelectionModel();
-
-		rowSM.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(final ListSelectionEvent e) {
-				// Ignore extra messages
-				if (e.getValueIsAdjusting()) {
-					return;
-				}
-				final ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-				if (lsm.isSelectionEmpty()) {
-					// No rows selected
-				} else {
-					final int selectedRow = lsm.getMinSelectionIndex();
-					final String s = TCPSniffing.this.tableModel.getValueAt(selectedRow);
-					TCPSniffing.this.vew = new WindowViewer(TCPSniffing.this
-							.getFrameWindow(), s, WindowViewer.VIEW_SNIFFING_PANEL);
-				}
-			}
-		}); // ListSelectionListener
 
 		// The start, stop buttons
+
 		this.startButton = new JButton("Start", ImageCreator.START_IMG);
 		this.startButton.setBounds(590, 33, 90, 40);
 		this.startButton.setEnabled(true);
@@ -227,7 +244,9 @@ public class TCPSniffing extends JPanel {
 		this.browserButton.setBounds(790, 33, 80, 40);
 		this.browserButton.setEnabled(true);
 		this.browserButton.setToolTipText("Open in external browser");
+		
 		// The action listener for the start button
+		
 		this.startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// Worker, working...
@@ -556,4 +575,5 @@ public class TCPSniffing extends JPanel {
 	public boolean getStopStatus() {
 		return this.stopPressed;
 	}
+
 }
