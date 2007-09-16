@@ -67,6 +67,8 @@
       </fileset>
       <zipfileset src="${lib.dir}/commons-codec-1.3.jar" />
       <zipfileset src="${lib.dir}/commons-httpclient-3.0.1.jar" />
+      <zipfileset src="${lib.dir}/commons-lang-2.3.jar" />
+      <zipfileset src="${lib.dir}/commons-io-1.3.2.jar" />
       <zipfileset src="${lib.dir}/commons-logging-1.1.jar" />
       <zipfileset src="${lib.dir}/junit-4.1.jar" />
       <zipfileset src="${lib.dir}/junit-4.1-src.jar" />

@@ -33,6 +33,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
+import org.apache.commons.io.IOUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 
 import org.owasp.jbrofuzz.version.JBRFormat;
@@ -95,13 +96,9 @@ public class Database {
 				System.out.println("Directories file (inside jar): "
 						+ fileURL.toString() + " could not be found");
 				// }
-			} finally {
-				try {
-					if (in != null) {
-						in.close();
-					}
-				} catch (final IOException ex) {
-				}
+			} 
+			finally {
+				IOUtils.closeQuietly( in );
 			}
 		}
 		// Parse the contents of the StringBuffer to the exploits array

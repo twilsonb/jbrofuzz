@@ -31,6 +31,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -168,21 +170,28 @@ public class JBRFrame extends JFrame {
 		// tabbedPane.setPreferredSize(new Dimension(588,368));
 		this.tabbedPane.setBounds(0, 0, 895, 500);
 		// Do not change the names!!!
-		this.tabbedPane.add("HTTP Fuzzing", this.mHTTPFuzzingPanel);
+		this.tabbedPane.add("HTTP/S Fuzzing", this.mHTTPFuzzingPanel);
+		this.tabbedPane.add(" Generators ", this.mDefinitionsPanel);
 		this.tabbedPane.add(" Web Directories ", this.mWebDirectoriesPanel);
 		this.tabbedPane.add(" Open Source ", this.mOpenSourcePanel);
 		this.tabbedPane.add(" TCP Fuzzing ", this.mFuzzingPanel);
 		this.tabbedPane.add(" TCP Sniffing ", this.mSniffingPanel);
-		this.tabbedPane.add(" Generators ", this.mDefinitionsPanel);
+		
 		
 		// tabbedPane.add(" Generators ", mDefinitionsPanel);
 		// tabbedPane.add(" System ", mSystemLogger);
-		this.tabbedPane.setSelectedComponent(this.mDefinitionsPanel);
+		this.tabbedPane.setSelectedComponent(this.mHTTPFuzzingPanel);
 		pane.add(this.tabbedPane);
 		// The image icon
 		this.setIconImage(ImageCreator.FRAME_IMG.getImage());
 
-		this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				exitProcedure();
+			}
+		});
+
 		this.setLocation(100, 100);
 		this.setSize(900, 550);
 		this.setResizable(false);
@@ -225,6 +234,18 @@ public class JBRFrame extends JFrame {
 	 */
 	public TCPFuzzing getFuzzingPanel() {
 		return this.mFuzzingPanel;
+	}
+	
+	/**
+	 * <p>
+	 * Method for returning the HTTP fuzzing panel that is being instantiated through
+	 * this frame window.
+	 * </p>
+	 * 
+	 * @return mHTTPFuzzingPanel
+	 */
+	public HTTPFuzzing getHTTPFuzzingPanel() {
+		return this.mHTTPFuzzingPanel;
 	}
 
 	/**
@@ -435,6 +456,17 @@ public class JBRFrame extends JFrame {
 		if (n == JBRFrame.OPEN_SOURCE_ID) {
 			this.tabbedPane.addTab(" Open Source ", this.mOpenSourcePanel);
 		}
+	}
+	
+	/**
+	 * <p>
+	 * Method for exiting the entire application.
+	 * </p>
+	 *
+	 */
+	public void exitProcedure() {
+		this.getJBroFuzz().getHandler().deleteEmptryDirectories();
+		this.dispose();
 	}
 
 }

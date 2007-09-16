@@ -163,11 +163,16 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 
 		try {
 			this.server.close();
-		} catch (final IOException ex1) {
-		} finally {
+		} 
+		catch (final IOException ex1) {
+		} 
+		finally {
 			try {
-				this.server.close();
-			} catch (final IOException ex2) {
+				if(this.server != null) {
+					this.server.close();
+				}
+			} 
+			catch (final IOException ex2) {
 			}
 		}
 

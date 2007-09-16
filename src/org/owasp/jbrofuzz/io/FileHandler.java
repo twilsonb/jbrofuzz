@@ -1,5 +1,5 @@
 /**
- * FileHandler.java 0.6
+ * FileHandler.java 0.8
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -43,6 +43,8 @@ import org.owasp.jbrofuzz.fuzz.TConstructor;
 import org.owasp.jbrofuzz.fuzz.dir.DConstructor;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.version.JBRFormat;
+
+import org.apache.commons.io.*;
 
 /**
  * <p>
@@ -99,7 +101,7 @@ public class FileHandler {
 	private static String runningDate;
 
 	//
-	// Private method ofr appending data to a file, given the name and content
+	// Private method for appending data to a file, given the name and content
 	//
 	private static void appendFile(final File fileName, final String content) {
 		final String file = fileName.toString();
@@ -121,17 +123,13 @@ public class FileHandler {
 					+ "A File Write Error Occured");
 			FileHandler.errors++;
 		} finally {
-			try {
-				if (output != null) {
-					output.close();
-				}
-			} catch (final IOException ex) {
-			}
+			IOUtils.closeQuietly( output );
 		}
 	}
 
-	private static void createFile(final String fileName, final String content,
-			final int fileType) {
+	private static void createFile(final String fileName, 
+																 final String content,
+																 final int fileType) {
 
 
 		if (fileType == FileHandler.HTTP_FILE) {
@@ -217,6 +215,13 @@ public class FileHandler {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Method for returning the fuzzing directory canonical path.
+	 * </p>
+	 * 
+	 * @return String
+	 */
 	public static String getFuzzDirCanonicalPath() {
 		try {
 			return FileHandler.fuzzDirectory.getCanonicalPath();
@@ -280,10 +285,7 @@ public class FileHandler {
 						+ "\n" + folderFiles[i].getName() + "\nA File Read Error Occured",
 						"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
 			} finally {
-				try {
-					bufRead.close();
-				} catch (final IOException ex) {
-				}
+				IOUtils.closeQuietly( bufRead );
 			}
 		}
 		return hashValue;
@@ -325,12 +327,19 @@ public class FileHandler {
 	 * the current session.
 	 * </p>
 	 * 
-	 * @return
+	 * @return String
 	 */
 	public static String getFuzzDirName() {
 		return "/" + FileHandler.fuzzDirectory.getName() + "/";
 	}
 
+	/**
+	 * <p>
+	 * Method for returning the canonical path of the snif directory.
+	 * </p>
+	 * 
+	 * @return String
+	 */
 	public static String getSnifDirCanonicalPath() {
 		try {
 			return FileHandler.snifDirectory.getCanonicalPath();
@@ -339,6 +348,13 @@ public class FileHandler {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Method for returning the canonical path of the web-dir directory.
+	 * </p>
+	 * 
+	 * @return String
+	 */
 	public static String getWebDirCanonicalPath() {
 		try {
 			return FileHandler.webEnumDirectory.getCanonicalPath();
@@ -390,12 +406,7 @@ public class FileHandler {
 						+ " could not be found");
 			}
 		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-			} catch (final IOException ex) {
-			}
+			IOUtils.closeQuietly( in );
 		}
 		// Check the file size
 		file.trimToSize();
@@ -432,12 +443,7 @@ public class FileHandler {
 							+ fileURL.toString() + " could not be found");
 				}
 			} finally {
-				try {
-					if (in != null) {
-						in.close();
-					}
-				} catch (final IOException ex) {
-				}
+				IOUtils.closeQuietly( in );
 			}
 		}
 		// Check the file size
@@ -514,10 +520,7 @@ public class FileHandler {
 					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
 			return new StringBuffer("");
 		} finally {
-			try {
-				bufRead.close();
-			} catch (final IOException ex) {
-			}
+			IOUtils.closeQuietly( bufRead );
 		}
 		return out;
 	}
@@ -568,10 +571,7 @@ public class FileHandler {
 					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
 			return new StringBuffer("");
 		} finally {
-			try {
-				bufRead.close();
-			} catch (final IOException ex) {
-			}
+			IOUtils.closeQuietly( bufRead );
 		}
 		return out;
 	}
@@ -608,7 +608,7 @@ public class FileHandler {
 		final int maxLineLength = 256;
 
 		int line_counter = 0;
-		final Vector file = new Vector();
+		final Vector<String> file = new Vector<String>();
 		BufferedReader in = null;
 		int len = 0;
 		// First, attempt to read the file from the same directory
@@ -633,12 +633,7 @@ public class FileHandler {
 						+ " could not be found");
 			}
 		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-			} catch (final IOException ex) {
-			}
+			IOUtils.closeQuietly( in );
 		}
 		// Check the file size
 		file.trimToSize();
@@ -676,12 +671,7 @@ public class FileHandler {
 							+ fileURL.toString() + " could not be found");
 				}
 			} finally {
-				try {
-					if (in != null) {
-						in.close();
-					}
-				} catch (final IOException ex) {
-				}
+				IOUtils.closeQuietly( in );
 			}
 		}
 		// Check the file size
@@ -768,10 +758,7 @@ public class FileHandler {
 					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
 			return new StringBuffer("");
 		} finally {
-			try {
-				bufRead.close();
-			} catch (final IOException ex) {
-			}
+			IOUtils.closeQuietly( bufRead );
 		}
 		return out;
 	}
@@ -793,6 +780,7 @@ public class FileHandler {
 		}
 		return FileHandler.singletonFileHandlerObject;
 	}
+
 
 	/**
 	 * <p>
@@ -889,7 +877,7 @@ public class FileHandler {
 	//
 	// Private Constructor due to the use of a singleton architecture
 	//
-	private FileHandler(final JBRFrame g, final JBRFormat f) {
+	public FileHandler(final JBRFrame g, final JBRFormat f) {
 
 		FileHandler.g = g;
 		FileHandler.f = f;
@@ -975,6 +963,55 @@ public class FileHandler {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
+	}
+	
+	/**
+	 * <p>
+	 * Method for deleting the empty directories at the end of a session.
+	 * </p>
+	 * 
+	 * @return int the number of dirs deleted
+	 */
+	public int deleteEmptryDirectories() {
+		int count = 0;
+		
+		if(FileUtils.sizeOfDirectory(fuzzDirectory) == 0L) {
+			try {
+				FileUtils.deleteDirectory(fuzzDirectory);
+				count++;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+		if(FileUtils.sizeOfDirectory(httpFuzzDirectory) == 0L) {
+			try {
+				FileUtils.deleteDirectory(httpFuzzDirectory);
+				count++;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+		if(FileUtils.sizeOfDirectory(snifDirectory) == 0L) {
+			try {
+				FileUtils.deleteDirectory(snifDirectory);
+				count++;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+		if(FileUtils.sizeOfDirectory(webEnumDirectory) == 0L) {
+			try {
+				FileUtils.deleteDirectory(webEnumDirectory);
+				count++;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+		return count;
 	}
 
 }
