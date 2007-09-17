@@ -106,21 +106,21 @@ public class Database {
 		exploits = ExcelCSVParser.parse(fileContents.toString());
 
 		for (int i = 0; i < exploits.length; i++) {
-      for (int j = 1; j < exploits[i].length; j++) {
-      	int count = 10;
-      	while((exploits[i][j].startsWith(" ")) && (count > -1)) {
-      		exploits[i][j] = exploits[i][j].substring(1);
-      		count--;
-    		}
-    		while((exploits[i][j].endsWith(" ")) && (count > -1)) {
-    			exploits[i][j] = exploits[i][j].substring(0, (exploits[i][j].length() - 1));
-    			count--;
-    		}
-      }
+			for (int j = 1; j < exploits[i].length; j++) {
+				int count = 10;
+				while((exploits[i][j].startsWith(" ")) && (count > -1)) {
+					exploits[i][j] = exploits[i][j].substring(1);
+					count--;
+				}
+				while((exploits[i][j].endsWith(" ")) && (count > -1)) {
+					exploits[i][j] = exploits[i][j].substring(0, (exploits[i][j].length() - 1));
+					count--;
+				}
+			}
 		}
 
 	} // constructor
-	
+
 	/**
 	 * <p>Get the complete number of exploits, as the number of rows within the database.</p>
 	 * 
@@ -152,27 +152,27 @@ public class Database {
 	 * @return String[]
 	 */
 	public String[] getAllCategories() {
-		
+
 		ArrayList<String> uniqueCategories = new ArrayList<String>();
-		
+
 		// Loop through the exploit categories
 		for (int i=1; i<exploits.length; i++){
 			String[] categoriesLine = exploits[i][3].split(",");
-			
+
 			// Loop through the exploit category names found for that exploit
 			for(String categoryItemonLine : categoriesLine) {
-				
+
 				// Remove any trailing or leading white spaces, up to 10
 				int count = 10;
-      	while((categoryItemonLine.startsWith(" ")) && (count > -1)) {
-      		categoryItemonLine = categoryItemonLine.substring(1);
-      		count--;
-    		}
-    		while((categoryItemonLine.endsWith(" ")) && (count > -1)) {
-    			categoryItemonLine = categoryItemonLine.substring(0, (categoryItemonLine.length() - 1));
-    			count--;
-    		}
-				
+				while((categoryItemonLine.startsWith(" ")) && (count > -1)) {
+					categoryItemonLine = categoryItemonLine.substring(1);
+					count--;
+				}
+				while((categoryItemonLine.endsWith(" ")) && (count > -1)) {
+					categoryItemonLine = categoryItemonLine.substring(0, (categoryItemonLine.length() - 1));
+					count--;
+				}
+
 				// 
 				boolean catFound = false;
 				for(String uniqueCategory : uniqueCategories) {
@@ -203,14 +203,18 @@ public class Database {
 		for (int i=1; i<exploits.length; i++){
 			String[] categoriesLine = exploits[i][3].split(",");
 			for(String categoryItemonLine : categoriesLine) {
-				
-				while(categoryItemonLine.startsWith(" ")) {
+
+				//			 Remove any trailing or leading white spaces, up to 10
+				int count = 10;
+				while((categoryItemonLine.startsWith(" ")) && (count > -1)) {
 					categoryItemonLine = categoryItemonLine.substring(1);
+					count--;
 				}
-				while(categoryItemonLine.endsWith(" ")) {
+				while((categoryItemonLine.endsWith(" ")) && (count > -1)) {
 					categoryItemonLine = categoryItemonLine.substring(0, (categoryItemonLine.length() - 1));
+					count--;
 				}
-				
+
 				if(categoryItemonLine.equalsIgnoreCase(category)) {
 
 					boolean nameExists = false;
@@ -232,7 +236,7 @@ public class Database {
 		String [] outputCategories = new String[uniqueCategories.size()];
 		return uniqueCategories.toArray(outputCategories);
 	}
-	
+
 	/**
 	 * <p>Method for returning the actual exploit code, as a String
 	 * for the given exploit name. If the name does not exist, an empty
@@ -250,7 +254,7 @@ public class Database {
 		}
 		return output;
 	}
-	
+
 	/**
 	 * <p>Method for returning the comment for the given exploit name. 
 	 * If the name does not exist an empty String is returned.</p>
@@ -264,7 +268,7 @@ public class Database {
 			if((name.equalsIgnoreCase(exploits[i][0])) && (!exploits[i][0].isEmpty())) {
 				output.append("ID: " + i + "\n\n" + exploits[i][1] + "\n\nAuthor: ");
 				if(exploits[i].length > 3) {
-				 output.append(exploits[i][4] + "\n\nURL: ");
+					output.append(exploits[i][4] + "\n\nURL: ");
 				}
 				if(exploits[i].length > 4) {
 					output.append(exploits[i][5]);
@@ -273,7 +277,7 @@ public class Database {
 		}
 		return output.toString();
 	}
-	
+
 	/**
 	 * <p>Method returning the main JBroFuzz object used by the constructor.</p>
 	 * 
@@ -281,5 +285,66 @@ public class Database {
 	 */
 	public JBroFuzz getJBroFuzz() {
 		return this.mJBroFuzz;
+	}
+
+	/**
+	 * <p>Method returns the categories found in which a particular exploit belongs to.
+	 * If no categories are found, all categories are returned.</p>
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public String[] getCategories(String name) {
+		ArrayList<String> uniqueCategories = new ArrayList<String>();
+		boolean nameFound = false;
+		// Loop through the exploit categories
+		for (int i=1; i<exploits.length; i++){
+
+			if(name.equalsIgnoreCase(exploits[i][0])) {
+				nameFound = true;
+				String[] categoriesLine = exploits[i][3].split(",");
+
+				// Loop through the exploit category names found for that exploit
+				for(String categoryItemonLine : categoriesLine) {
+
+					// Remove any trailing or leading white spaces, up to 10
+					int count = 10;
+					while((categoryItemonLine.startsWith(" ")) && (count > -1)) {
+						categoryItemonLine = categoryItemonLine.substring(1);
+						count--;
+					}
+					while((categoryItemonLine.endsWith(" ")) && (count > -1)) {
+						categoryItemonLine = categoryItemonLine.substring(0, (categoryItemonLine.length() - 1));
+						count--;
+					}
+
+					// 
+					boolean catFound = false;
+					for(String uniqueCategory : uniqueCategories) {
+						if( categoryItemonLine.equals(uniqueCategory) && !categoryItemonLine.isEmpty() ) {
+							catFound = true;
+						}
+					}
+					if((!catFound) ) {
+						uniqueCategories.add(categoryItemonLine);
+					}
+				}
+			}// If name found
+		}
+		
+		if(nameFound) {
+			uniqueCategories.trimToSize();
+			String [] outputCategories = new String[uniqueCategories.size()];
+			/*
+			for(String asdf : uniqueCategories.toArray(outputCategories)) {
+				System.out.println(asdf);
+			}
+			*/
+			return uniqueCategories.toArray(outputCategories);
+		}
+		else {
+			// System.out.println("Name NOT in Database class");
+			return getAllCategories();
+		}
 	}
 }

@@ -170,7 +170,7 @@ public class JBRFrame extends JFrame {
 		// tabbedPane.setPreferredSize(new Dimension(588,368));
 		this.tabbedPane.setBounds(0, 0, 895, 500);
 		// Do not change the names!!!
-		this.tabbedPane.add("HTTP/S Fuzzing", this.mHTTPFuzzingPanel);
+		this.tabbedPane.add(" HTTP/S Fuzzing ", this.mHTTPFuzzingPanel);
 		this.tabbedPane.add(" Generators ", this.mDefinitionsPanel);
 		this.tabbedPane.add(" Web Directories ", this.mWebDirectoriesPanel);
 		this.tabbedPane.add(" Open Source ", this.mOpenSourcePanel);
@@ -440,21 +440,31 @@ public class JBRFrame extends JFrame {
 	public void setTabShow(final int n) {
 		if (n == JBRFrame.GENERATORS_PANEL_ID) {
 			this.tabbedPane.addTab(" Generators ", this.mDefinitionsPanel);
+			this.tabbedPane.setSelectedComponent(this.mDefinitionsPanel);
 		}
 		if (n == JBRFrame.TCP_FUZZING_PANEL_ID) {
 			this.tabbedPane.addTab(" TCP Fuzzing ", this.mFuzzingPanel);
+			this.tabbedPane.setSelectedComponent(this.mFuzzingPanel);
 		}
 		if (n == JBRFrame.TCP_SNIFFING_PANEL_ID) {
 			this.tabbedPane.addTab(" TCP Sniffing ", this.mSniffingPanel);
+			this.tabbedPane.setSelectedComponent(this.mSniffingPanel);
 		}
 		if (n == JBRFrame.SYSTEM_PANEL_ID) {
 			this.tabbedPane.addTab(" System ", this.mSystemLogger);
+			this.tabbedPane.setSelectedComponent(this.mSystemLogger);
 		}
 		if (n == JBRFrame.WEB_DIRECTORIES_PANEL_ID) {
 			this.tabbedPane.addTab(" Web Directories ", this.mWebDirectoriesPanel);
+			this.tabbedPane.setSelectedComponent(this.mWebDirectoriesPanel);
 		}
 		if (n == JBRFrame.OPEN_SOURCE_ID) {
 			this.tabbedPane.addTab(" Open Source ", this.mOpenSourcePanel);
+			this.tabbedPane.setSelectedComponent(this.mOpenSourcePanel);
+		}
+		if (n == JBRFrame.HTTP_FUZZING_PANEL_ID) {
+			this.tabbedPane.addTab(" HTTP/S Fuzzing ", this.mHTTPFuzzingPanel);
+			this.tabbedPane.setSelectedComponent(this.mHTTPFuzzingPanel);
 		}
 	}
 	

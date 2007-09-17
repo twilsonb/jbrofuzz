@@ -49,7 +49,7 @@ import org.owasp.jbrofuzz.ui.viewers.ExploitViewer;
  */
 public class GeneratorDialog extends JDialog {
 
-	private static final long serialVersionUID = -9083413577221108159L;
+	private static final long serialVersionUID = -1083415577221148132L;
 	// Dimensions of the generator dialog box
 	private static final int x = 650;
 	private static final int y = 400;
@@ -71,18 +71,29 @@ public class GeneratorDialog extends JDialog {
 	private TableSorter categoryTableSorter, nameTableSorter;
 	// The start and finish of the request
 	private int start, end;
+	// The last category accessed
+	private String lastCategory;
 	
+	/**
+	 * <p>
+	 * Method for constructing a Generator Dialog and then passing the
+	 * selection to the HTTP Fuzzing panel generator table.
+	 * </p>
+	 * 
+	 * @param parent
+	 * @param start
+	 * @param end
+	 */
 	public GeneratorDialog(final JBRFrame parent, int start, int end) {
 		
 		super(parent, " Payload Selector ", true);
-		// this.setLayout(new BorderLayout());
 		this.setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		this.setLayout(null);
 		this.m = parent;
 		this.start = start;
 		this.end = end;
-		
+		lastCategory = "";
 		// Category
 
 		category = new JPanel();
@@ -98,10 +109,10 @@ public class GeneratorDialog extends JDialog {
 		categoryTable = new JTable(categoryTableSorter);
 		categoryTable.setName("Category");
 
-		this.categoryTable.getTableHeader().setToolTipText("Click to sort by row");
-		// this.popup(this.categoryTable);
+		this.categoryTable.getTableHeader().setToolTipText("Click to sort by category");
+		this.popup(this.categoryTable);
 		categoryTableSorter.setTableHeader(this.categoryTable.getTableHeader());
-
+		categoryTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		categoryTableModel.setData(this.m.getJBroFuzz().getDatabase().getAllCategories());
 		categoryTableSorter.setTableModel(categoryTableModel);
 		categoryTableSorter.fireTableDataChanged();
@@ -113,8 +124,8 @@ public class GeneratorDialog extends JDialog {
 		categoryTable.addMouseListener(new MouseAdapter(){
 	     public void mouseClicked(MouseEvent e){
 	      if (e.getClickCount() == 2){
-	      	String exploit = (String) categoryTable.getModel().getValueAt(categoryTable.getSelectedRow(), 0);
-					new ExploitViewer(m, exploit, ExploitViewer.VIEW_CATEGORY);
+	      	// String exploit = (String) categoryTable.getModel().getValueAt(categoryTable.getSelectedRow(), 0);
+					// new ExploitViewer(m, exploit, ExploitViewer.VIEW_CATEGORY);
 	         }
 	      }
 	     } );
@@ -139,11 +150,9 @@ public class GeneratorDialog extends JDialog {
 		nameTable = new JTable(nameTableSorter);
 		nameTable.setName("Name");
 
-		this.nameTable.getTableHeader().setToolTipText(
-		"Click to specify sorting; Control-Click to specify secondary sorting");
-		// this.popup(this.nameTable);
+		this.nameTable.getTableHeader().setToolTipText("Click to sort by name");
 		nameTableSorter.setTableHeader(this.nameTable.getTableHeader());
-
+		this.popup(nameTable);
 		nameTable.setFont(new Font("Verdana", Font.BOLD, 14));
 		nameTable.setRowHeight(30);
 		nameTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -153,8 +162,8 @@ public class GeneratorDialog extends JDialog {
 		nameTable.addMouseListener(new MouseAdapter(){
 	     public void mouseClicked(MouseEvent e){
 	      if (e.getClickCount() == 2){
-	      	String exploit = (String) nameTable.getModel().getValueAt(nameTable.getSelectedRow(), 0);
-					new ExploitViewer(m, exploit, ExploitViewer.VIEW_EXPLOIT);
+	      	// String exploit = (String) nameTable.getModel().getValueAt(nameTable.getSelectedRow(), 0);
+					// new ExploitViewer(m, exploit, ExploitViewer.VIEW_EXPLOIT);
 	         }
 	      }
 	     } );
@@ -232,6 +241,7 @@ public class GeneratorDialog extends JDialog {
 			}
 			int c = categoryTable.getSelectedRow();
 			String value = (String) categoryTableSorter.getValueAt(c, 0);
+			lastCategory = value;
 			// System.out.println(value);
 			nameTableModel.setData(m.getJBroFuzz().getDatabase().getNames(value));
 			nameTableSorter.setTableModel(nameTableModel);
@@ -256,6 +266,86 @@ public class GeneratorDialog extends JDialog {
 			// commentTextArea.setText(m.getJBroFuzz().getDatabase().getComment(value));
 			// commentTextArea.setCaretPosition(0);
 		}
+	}
+	
+	
+	/**
+	 * <p>
+	 * Method for setting up the right click copy, select all and properties menu.
+	 * </p>
+	 * 
+	 * @param area
+	 *          JTextArea
+	 */
+	private void popup(final JTable area) {
+
+		final JPopupMenu popmenu = new JPopupMenu();
+
+		final JMenuItem i2 = new JMenuItem("Show in Generators Tab");
+
+		// i2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+
+		popmenu.addSeparator();
+		popmenu.add(i2);
+		popmenu.addSeparator();
+
+		i2.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				//			 Show in Generators Tab
+				
+				if(area.getName().equalsIgnoreCase("Name")) {
+					int c = nameTable.getSelectedRow();
+					nameTable.getSelectionModel().setSelectionInterval(c, c);
+					String name = (String) nameTableSorter.getValueAt(c, 0);
+					
+					// int d = categoryTable.getSelectedRow();
+					// String category = (String) categoryTableSorter.getValueAt(d, 0);
+					
+					GeneratorDialog.this.dispose();
+					
+					m.setTabShow(JBRFrame.GENERATORS_PANEL_ID);
+					m.getDefinitionsPanel().setNameDisplayed(name, lastCategory);
+				}
+				
+				if(area.getName().equalsIgnoreCase("Category")) {
+					int c = categoryTable.getSelectedRow();
+					categoryTable.getSelectionModel().setSelectionInterval(c, c);
+					String value = (String) categoryTableSorter.getValueAt(c, 0);
+					
+					GeneratorDialog.this.dispose();
+					
+					m.setTabShow(JBRFrame.GENERATORS_PANEL_ID);
+					m.getDefinitionsPanel().setCategoryDisplayed(value);
+				}
+				
+			}
+		});
+
+		area.addMouseListener(new MouseAdapter() {
+			private void checkForTriggerEvent(final MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					area.requestFocus();
+					
+					JTable myTable = (JTable)e.getSource();
+					int c = myTable.rowAtPoint(new Point(e.getX(), e.getY()));
+					myTable.getSelectionModel().setAnchorSelectionIndex(c);
+					myTable.setRowSelectionInterval(c, c);
+					myTable.getSelectionModel().setSelectionInterval(c, c);
+					
+					popmenu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+
+			@Override
+			public void mousePressed(final MouseEvent e) {
+				this.checkForTriggerEvent(e);
+			}
+
+			@Override
+			public void mouseReleased(final MouseEvent e) {
+				this.checkForTriggerEvent(e);
+			}
+		});
 	}
 
 
