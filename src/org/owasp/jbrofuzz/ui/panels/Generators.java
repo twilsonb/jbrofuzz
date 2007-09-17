@@ -105,13 +105,13 @@ public class Generators extends JPanel {
 		categoryTable.setBackground(Color.BLACK);
 		categoryTable.setForeground(Color.WHITE);
 		categoryTable.addMouseListener(new MouseAdapter(){
-	     public void mouseClicked(MouseEvent e){
-	      if (e.getClickCount() == 2){
-	      	String exploit = (String) categoryTable.getModel().getValueAt(categoryTable.getSelectedRow(), 0);
+			public void mouseClicked(MouseEvent e){
+				if (e.getClickCount() == 2){
+					String exploit = (String) categoryTable.getModel().getValueAt(categoryTable.getSelectedRow(), 0);
 					new ExploitViewer(m, exploit, ExploitViewer.VIEW_CATEGORY);
-	         }
-	      }
-	     } );
+				}
+			}
+		} );
 		final JScrollPane categoryTableScrollPane = new JScrollPane(categoryTable);
 		categoryTableScrollPane.setVerticalScrollBarPolicy(20);
 		categoryTableScrollPane.setHorizontalScrollBarPolicy(30);
@@ -145,14 +145,14 @@ public class Generators extends JPanel {
 		nameTable.setBackground(Color.BLACK);
 		nameTable.setForeground(Color.WHITE);
 		nameTable.addMouseListener(new MouseAdapter(){
-	     public void mouseClicked(MouseEvent e){
-	      if (e.getClickCount() == 2){
-	      	String exploit = (String) nameTable.getModel().getValueAt(nameTable.getSelectedRow(), 0);
+			public void mouseClicked(MouseEvent e){
+				if (e.getClickCount() == 2){
+					String exploit = (String) nameTable.getModel().getValueAt(nameTable.getSelectedRow(), 0);
 					new ExploitViewer(m, exploit, ExploitViewer.VIEW_EXPLOIT);
-	         }
-	      }
-	     } );
-		
+				}
+			}
+		} );
+
 		final JScrollPane nameTextAreaTextScrollPane = new JScrollPane(nameTable);
 		nameTextAreaTextScrollPane.setVerticalScrollBarPolicy(20);
 		nameTextAreaTextScrollPane.setHorizontalScrollBarPolicy(30);
@@ -204,9 +204,9 @@ public class Generators extends JPanel {
 		commentLabelScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		commentLabelScrollPane.setPreferredSize(new Dimension(400, 150));
 		view.add(commentLabelScrollPane);
-		
+
 		// The about button
-		
+
 		JButton infoButton = new JButton("About");
 		infoButton.setBounds(800, 33, 70, 40);
 		infoButton.setEnabled(true);
@@ -228,6 +228,56 @@ public class Generators extends JPanel {
 	 */
 	public JBRFrame getFrameWindow() {
 		return this.m;
+	}
+	
+	/**
+	 * <p>
+	 * Method for setting the given category name to be diplayed
+	 * </p>
+	 * 
+	 * @param category
+	 */
+	public void setCategoryDisplayed(String category) {
+		int c = 0;
+		String[] allRows = categoryTableModel.getAllRows();
+		
+		for(int i = 0; i < allRows.length; i++) {
+			if(allRows[i].equalsIgnoreCase(category)) {
+				c = i;
+			}
+		}
+
+		categoryTable.getSelectionModel().setSelectionInterval(c, c);
+	}
+
+	/**
+	 * <p>
+	 * Method for setting the given name and category name to be displayed
+	 * </p>
+	 * 
+	 * @param name
+	 * @param category
+	 */
+	public void setNameDisplayed(String name, String category) {
+		
+		int c = 0;
+		String[] allRows = categoryTableModel.getAllRows();
+		for(int i = 0; i < allRows.length; i++) {
+			if(allRows[i].equalsIgnoreCase(category)) {
+				c = i;
+			}
+		}
+		categoryTable.getSelectionModel().setSelectionInterval(c, c);
+		
+		int d = 0; 
+		String[] allNames = nameTableModel.getAllRows();
+		for(int j = 0; j < allNames.length; j++) {
+			if(allNames[j].equalsIgnoreCase(name)) {
+				d = j;
+			}
+		}
+		nameTable.getSelectionModel().setSelectionInterval(d, d);
+	
 	}
 
 	private class CategoryRowListener implements ListSelectionListener {
@@ -261,7 +311,7 @@ public class Generators extends JPanel {
 			String value = (String) nameTableSorter.getValueAt(c, 0);
 			viewTextArea.setText(m.getJBroFuzz().getDatabase().getExploit(value));
 			viewTextArea.setCaretPosition(0);
-			
+
 			commentTextArea.setText(m.getJBroFuzz().getDatabase().getComment(value));
 			commentTextArea.setCaretPosition(0);
 		}

@@ -520,30 +520,28 @@ public class HTTPFuzzing extends JPanel {
 			selectedText = "";
 		}
 		
-		// If no text has been selected, prompt the user to select some text
-		if (selectedText == null) {
-			JOptionPane.showMessageDialog(this,
-					"Select (highlight) a text range \nfrom the Request field",
-					HTTPFuzzing.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
-		}
-		// Else find out the location of where the text has been selected
-		else {
-			final int sPoint = this.message.getSelectionStart();
-			final int fPoint = this.message.getSelectionEnd();
+		// If no text has been selected, select the first point position
+		int sPoint = 0;
+		int fPoint = 0;
+		if (selectedText != null) {
 
+			  sPoint = this.message.getSelectionStart();
+			  fPoint = this.message.getSelectionEnd();
+		}
+			/*
 			final TConstructor mTConstructor = new TConstructor(this.getJBroFuzz());
 			final String generators = mTConstructor.getAllGeneratorNamesAndComments();
 			final String[] generatorArray = generators.split(", ");
 
 			// Then prompt the user for the type of fuzzer
 			String selectedValue = ""; 
-			/*(String) JOptionPane.showInputDialog(this,
+			(String) JOptionPane.showInputDialog(this,
 					"Select the type of fuzzing generator:", HTTPFuzzing.ADDGENSTRING,
 					JOptionPane.INFORMATION_MESSAGE, null, generatorArray,
 					generatorArray[0]);
 			*/
 			new GeneratorDialog(this.m, sPoint, fPoint);
-		}
+		
 	}
 	
 	/**

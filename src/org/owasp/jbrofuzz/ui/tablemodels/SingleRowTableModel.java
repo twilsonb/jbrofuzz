@@ -226,5 +226,16 @@ public class SingleRowTableModel extends AbstractTableModel {
 		}
 		return "";
 	}
+	
+	/**
+	 * Return all rows as a string array
+	 * 
+	 * @return String[]
+	 */
+	public String[] getAllRows() {
+		dataVector.trimToSize();
+		String [] outputCategories = new String[dataVector.size()];
+		return dataVector.toArray(outputCategories);
+	}
 
 }
