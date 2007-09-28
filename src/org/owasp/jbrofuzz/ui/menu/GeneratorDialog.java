@@ -38,6 +38,7 @@ import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
 import org.owasp.jbrofuzz.ui.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.ui.util.TableSorter;
 import org.owasp.jbrofuzz.ui.viewers.ExploitViewer;
+import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 
 /**
  * <p>
@@ -108,7 +109,8 @@ public class GeneratorDialog extends JDialog {
 
 		categoryTable = new JTable(categoryTableSorter);
 		categoryTable.setName("Category");
-
+		categoryTable.setToolTipText("Double click to Add the Exploit Category");
+		
 		this.categoryTable.getTableHeader().setToolTipText("Click to sort by category");
 		this.popup(this.categoryTable);
 		categoryTableSorter.setTableHeader(this.categoryTable.getTableHeader());
@@ -122,13 +124,24 @@ public class GeneratorDialog extends JDialog {
 		categoryTable.setBackground(Color.BLACK);
 		categoryTable.setForeground(Color.WHITE);
 		categoryTable.addMouseListener(new MouseAdapter(){
-	     public void mouseClicked(MouseEvent e){
-	      if (e.getClickCount() == 2){
-	      	// String exploit = (String) categoryTable.getModel().getValueAt(categoryTable.getSelectedRow(), 0);
-					// new ExploitViewer(m, exploit, ExploitViewer.VIEW_CATEGORY);
-	         }
-	      }
-	     } );
+			public void mouseClicked(MouseEvent e){
+				if (e.getClickCount() == 2){
+					int c = categoryTable.getSelectedRow();
+					String value = (String) categoryTableSorter.getValueAt(c, 0);
+					m.getHTTPFuzzingPanel().generatorAddRow(value, GeneratorDialog.this.start, GeneratorDialog.this.end );
+					GeneratorDialog.this.dispose();
+				}
+			}
+		} );
+		categoryTable.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+					GeneratorDialog.this.dispose();
+				}
+			}
+		});
+		
 		final JScrollPane categoryTableScrollPane = new JScrollPane(categoryTable);
 		categoryTableScrollPane.setVerticalScrollBarPolicy(20);
 		categoryTableScrollPane.setHorizontalScrollBarPolicy(30);
@@ -167,20 +180,31 @@ public class GeneratorDialog extends JDialog {
 	         }
 	      }
 	     } );
+		nameTable.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+					GeneratorDialog.this.dispose();
+				}
+			}
+		});
 		
 		final JScrollPane nameTextAreaTextScrollPane = new JScrollPane(nameTable);
 		nameTextAreaTextScrollPane.setVerticalScrollBarPolicy(20);
 		nameTextAreaTextScrollPane.setHorizontalScrollBarPolicy(30);
 		nameTextAreaTextScrollPane.setPreferredSize(new Dimension(200, y - 190));
 		name.add(nameTextAreaTextScrollPane);
-
+		
+		
 		// View
+		
 		
 		view = new JPanel();
 		view.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Exploit Information "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 		view.setBounds(460, 20, 170, 200);
+		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
 		this.add(view);	
 
 		this.viewTextArea = new NonWrappingTextPane();
@@ -195,33 +219,56 @@ public class GeneratorDialog extends JDialog {
 		this.viewTextArea.setBackground(Color.WHITE);
 		this.viewTextArea.setForeground(Color.BLACK);
 		parent.popup(viewTextArea);
-
+		viewTextArea.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+					GeneratorDialog.this.dispose();
+				}
+			}
+		});
 		final JScrollPane viewTextScrollPane = new JScrollPane(viewTextArea);
 		viewTextScrollPane.setVerticalScrollBarPolicy(20);
 		viewTextScrollPane.setHorizontalScrollBarPolicy(30);
 		viewTextScrollPane.setPreferredSize(new Dimension(150, 100));
 		view.add(viewTextScrollPane);	
 		
+		JLabel infoPanel = new JLabel("<html><h6 align=\"left\">For further information<br>on each exploit, view <br>the Generators Tab</h6></html>");
+		infoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		view.add(infoPanel);
 		
 		// Bottom button
-		this.ok = new JButton("OK");
-		this.ok.setBounds(GeneratorDialog.x - 100, GeneratorDialog.y - 100, 60, 20);
+		this.ok = new JButton("Add Exploit Category");
+		this.ok.setBounds(460, 305, 160, 40);
 
 		this.ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						m.getHTTPFuzzingPanel().generatorAddRow("", GeneratorDialog.this.start, GeneratorDialog.this.end );
+						int c = categoryTable.getSelectedRow();
+						String value = (String) categoryTableSorter.getValueAt(c, 0);
+						m.getHTTPFuzzingPanel().generatorAddRow(value, GeneratorDialog.this.start, GeneratorDialog.this.end );
 						GeneratorDialog.this.dispose();
 						
 					}
 				});
 			}
 		});
-
+		this.ok.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+					GeneratorDialog.this.dispose();
+				}
+			}
+		});
+		this.ok.setEnabled(false);
+		this.ok.setToolTipText("The selected category will be added to the fuzzing list");
 		this.getContentPane().add(ok);
-
+		
+		
 		// Global frame issues
+		
 		this.setLocation(Math.abs((parent.getWidth() / 2) - (GeneratorDialog.x / 2 - 100)),
 				Math.abs((parent.getHeight() / 2) - (GeneratorDialog.y / 2) + 100));
 		this.setSize(GeneratorDialog.x, GeneratorDialog.y);
@@ -238,6 +285,9 @@ public class GeneratorDialog extends JDialog {
 		public void valueChanged(ListSelectionEvent event) {
 			if (event.getValueIsAdjusting()) {
 				return;
+			}
+			if (!ok.isEnabled()) {
+				ok.setEnabled(true);
 			}
 			int c = categoryTable.getSelectedRow();
 			String value = (String) categoryTableSorter.getValueAt(c, 0);

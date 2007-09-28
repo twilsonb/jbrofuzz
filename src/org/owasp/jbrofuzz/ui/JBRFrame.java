@@ -266,7 +266,7 @@ public class JBRFrame extends JFrame {
 	 * through this frame window.
 	 * </p>
 	 * 
-	 * @return
+	 * @return OpenSource
 	 */
 	public OpenSource getOpenSourcePanel() {
 		return this.mOpenSourcePanel;
@@ -427,6 +427,9 @@ public class JBRFrame extends JFrame {
 		}
 		if (n == JBRFrame.OPEN_SOURCE_ID) {
 			this.tabbedPane.remove(this.mOpenSourcePanel);
+		}
+		if (n == JBRFrame.HTTP_FUZZING_PANEL_ID) {
+			this.tabbedPane.remove(this.mHTTPFuzzingPanel);
 		}
 	}
 
