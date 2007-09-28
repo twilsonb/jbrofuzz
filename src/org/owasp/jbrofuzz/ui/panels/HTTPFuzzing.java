@@ -25,7 +25,7 @@
  */
 package org.owasp.jbrofuzz.ui.panels;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -43,17 +43,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.SwingWorker3;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
+import javax.swing.table.*;
 import javax.swing.text.Document;
 import javax.swing.text.StyledEditorKit;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.TRequestIterator;
-import org.owasp.jbrofuzz.fuzz.TConstructor;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.FuzzingTableModel;
@@ -107,13 +106,13 @@ public class HTTPFuzzing extends JPanel {
 	private FuzzingTableModel mFuzzingTableModel;
 	// The JButtons
 	private final JButton buttonAddGen, buttonRemGen, buttonFuzzStart,
-			buttonFuzzStop, buttonPlot;
+	buttonFuzzStop, buttonPlot;
 	// The swing worker used when the button "fuzz" is pressed
 	private SwingWorker3 worker;
 	// A counter for the number of times fuzz has been clicked
 	private int counter, session;
 	// The request iterator performing all the fuzzing
-	private TRequestIterator mRIterator;
+	// private TRequestIterator mRIterator;
 
 	/**
 	 * This constructor is used for the "HTTP Fuzzing Panel" that resides under the
@@ -134,7 +133,7 @@ public class HTTPFuzzing extends JPanel {
 		final JPanel targetPanel = new JPanel();
 		targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Target URI [HTTP/HTTPS] "), BorderFactory.createEmptyBorder(1, 1,
-				1, 1)));
+						1, 1)));
 
 		this.target = new JTextField();
 		this.target.setEditable(true);
@@ -152,9 +151,10 @@ public class HTTPFuzzing extends JPanel {
 		this.add(targetPanel);
 		// The port panel
 		final JPanel portPanel = new JPanel();
-		portPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1,
-				1)));
+		portPanel.setBorder(BorderFactory
+				.createCompoundBorder(BorderFactory
+						.createTitledBorder(" Port "), 
+						BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 		this.port = new JFormattedTextField();
 
@@ -171,12 +171,12 @@ public class HTTPFuzzing extends JPanel {
 
 		portPanel.setBounds(510, 20, 60, 60);
 		this.add(portPanel);
-		
+
 		// The message panel
 		final JPanel requestPanel = new JPanel();
 		requestPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Request [Header/Body] "), BorderFactory.createEmptyBorder(5, 5,
-				5, 5)));
+						5, 5)));
 
 		this.message = new NonWrappingTextPane();
 
@@ -232,17 +232,14 @@ public class HTTPFuzzing extends JPanel {
 		// The generator panel
 		final JPanel generatorPanel = new JPanel();
 		generatorPanel.setLayout(null);
-
 		generatorPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Added Generators Table"), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
-		/*
-		 * Fuzzing Table Model
-		 */
+		
 		this.mFuzzingTableModel = new FuzzingTableModel(HTTPFuzzing.this.getFrameWindow());
 		this.generatorTable = new JTable();
-		this.generatorTable.setBackground(Color.WHITE);
-		this.generatorTable.setForeground(Color.BLACK);
+		this.generatorTable.setBackground(Color.black);
+		this.generatorTable.setForeground(Color.white);
 
 		this.generatorTable.setModel(this.mFuzzingTableModel);
 		// Set the column widths
@@ -250,19 +247,26 @@ public class HTTPFuzzing extends JPanel {
 		for (int i = 0; i < this.mFuzzingTableModel.getColumnCount(); i++) {
 			column = this.generatorTable.getColumnModel().getColumn(i);
 			if (i == 0) {
-				column.setPreferredWidth(100);
-			} else {
-				column.setPreferredWidth(50);
+				column.setPreferredWidth(130);
+			} 
+			else {
+				column.setPreferredWidth(40);
+				column.setCellRenderer(new DefaultTableCellRenderer(){
+					public Component getTableCellRendererComponent(JTable tblDataTable, Object value, boolean isSelected, boolean hasFocus, int row, int column){
+						JLabel ret= (JLabel) super.getTableCellRendererComponent(tblDataTable,value,isSelected,hasFocus,row,column);
+						ret.setHorizontalAlignment(SwingConstants.RIGHT);
+						return ret;
+					}
+				});
 			}
 		}
-		this.generatorTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		this.generatorTable.setFont(new Font("Verdana", Font.BOLD, 12));
 
 		final JScrollPane generatorScrollPane = new JScrollPane(this.generatorTable);
-		generatorScrollPane.setVerticalScrollBarPolicy(20);
-
 		generatorScrollPane.setPreferredSize(new Dimension(180, 100));
-
-		generatorScrollPane.setBounds(15, 25, 180, 100);
+		generatorScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		generatorScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		generatorScrollPane.setBounds(15, 25, 200, 120);
 		this.buttonRemGen.setBounds(235, 60, 40, 20);
 		this.buttonAddGen.setBounds(235, 25, 40, 20);
 
@@ -366,7 +370,7 @@ public class HTTPFuzzing extends JPanel {
 				} else {
 					final int selectedRow = lsm.getMinSelectionIndex();
 					final String s = HTTPFuzzing.this.outputTableModel
-							.getValueAt(selectedRow);
+					.getValueAt(selectedRow);
 					new WindowViewer(HTTPFuzzing.this.getFrameWindow(), s,
 							WindowViewer.VIEW_FUZZING_PANEL);
 				}
@@ -395,8 +399,8 @@ public class HTTPFuzzing extends JPanel {
 				HTTPFuzzing.this.outputTableModel.setValueAt(s, totalRows - 1, 0);
 				// Set the last row to be visible
 				HTTPFuzzing.this.outputTable
-						.scrollRectToVisible(HTTPFuzzing.this.outputTable.getCellRect(
-								HTTPFuzzing.this.outputTable.getRowCount(), 0, true));
+				.scrollRectToVisible(HTTPFuzzing.this.outputTable.getCellRect(
+						HTTPFuzzing.this.outputTable.getRowCount(), 0, true));
 			}
 		});
 
@@ -429,9 +433,11 @@ public class HTTPFuzzing extends JPanel {
 	 * </p>
 	 */
 	public void fuzzStartButton() {
+		
 		if (!this.buttonFuzzStart.isEnabled()) {
 			return;
 		}
+		
 		// UI and Colors
 		this.buttonFuzzStart.setEnabled(false);
 		this.buttonFuzzStop.setEnabled(true);
@@ -442,6 +448,7 @@ public class HTTPFuzzing extends JPanel {
 		this.port.setEditable(false);
 		this.port.setBackground(Color.BLACK);
 		this.port.setForeground(Color.WHITE);
+		
 		// Check to see if a message is present
 		if ("".equals(this.message.getText())) {
 			JOptionPane.showMessageDialog(this, "The request field is blank.\n"
@@ -457,22 +464,21 @@ public class HTTPFuzzing extends JPanel {
 				.createTitledBorder(" Responses  "
 						+ "Logging in folder (" + this.getJBroFuzz().getFormat().getDate() +
 						") Session " + this.session), BorderFactory.createEmptyBorder(5, 5,
-				5, 5)));
+								5, 5)));
 
 		final int rows = this.generatorTable.getRowCount();
 		if (rows < 1) {
 			final StringBuffer sbuf = new StringBuffer(this.getMessageText());
-			this.mRIterator = new TRequestIterator(this.getJBroFuzz(), sbuf, 0, 0,
-					"ZER");
-			this.mRIterator.run();
+			// this.mRIterator = new TRequestIterator(this.getJBroFuzz(), sbuf, 0, 0, "ZER");
+			// this.mRIterator.run();
 		} else {
 			for (int i = 0; i < rows; i++) {
 				final String generator = (String) this.mFuzzingTableModel.getValueAt(i,
 						0);
 				final int start = ((Integer) this.mFuzzingTableModel.getValueAt(i, 1))
-						.intValue();
+				.intValue();
 				final int end = ((Integer) this.mFuzzingTableModel.getValueAt(i, 2))
-						.intValue();
+				.intValue();
 
 				final StringBuffer sbuf = new StringBuffer(this.getMessageText());
 				//this.mRIterator = new RequestIterator(this.getJBroFuzz(), sbuf, start,
@@ -491,7 +497,7 @@ public class HTTPFuzzing extends JPanel {
 		if (!this.buttonFuzzStop.isEnabled()) {
 			return;
 		}
-		this.mRIterator.stop();
+		// this.mRIterator.stop();
 		// UI and Colors
 		this.buttonFuzzStart.setEnabled(true);
 		this.buttonFuzzStop.setEnabled(false);
@@ -519,31 +525,19 @@ public class HTTPFuzzing extends JPanel {
 					HTTPFuzzing.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
 			selectedText = "";
 		}
-		
+
 		// If no text has been selected, select the first point position
-		int sPoint = 0;
-		int fPoint = 0;
-		if (selectedText != null) {
-
-			  sPoint = this.message.getSelectionStart();
-			  fPoint = this.message.getSelectionEnd();
-		}
-			/*
-			final TConstructor mTConstructor = new TConstructor(this.getJBroFuzz());
-			final String generators = mTConstructor.getAllGeneratorNamesAndComments();
-			final String[] generatorArray = generators.split(", ");
-
-			// Then prompt the user for the type of fuzzer
-			String selectedValue = ""; 
-			(String) JOptionPane.showInputDialog(this,
-					"Select the type of fuzzing generator:", HTTPFuzzing.ADDGENSTRING,
-					JOptionPane.INFORMATION_MESSAGE, null, generatorArray,
-					generatorArray[0]);
-			*/
-			new GeneratorDialog(this.m, sPoint, fPoint);
+		int sPoint = this.message.getCaretPosition();
+		int fPoint = this.message.getCaretPosition();
 		
+		if (selectedText != null) {
+			sPoint = this.message.getSelectionStart();
+			fPoint = this.message.getSelectionEnd();
+		}
+		// Call the Generator Dialog that add a row in the generator table
+		new GeneratorDialog(this.m, sPoint, fPoint);
 	}
-	
+
 	/**
 	 * <p>Method for adding a value 
 	 * @param value
@@ -576,7 +570,7 @@ public class HTTPFuzzing extends JPanel {
 
 		if (selectedFuzzPoint != null) {
 			final String[] splitString = selectedFuzzPoint
-					.split(FuzzingTableModel.STRING_SEPARATOR);
+			.split(FuzzingTableModel.STRING_SEPARATOR);
 			this.mFuzzingTableModel.removeRow(splitString[0], Integer
 					.parseInt(splitString[1]), Integer.parseInt(splitString[2]));
 		}
@@ -649,7 +643,7 @@ public class HTTPFuzzing extends JPanel {
 	 * @return JBroFuzz
 	 */
 	public JBroFuzz getJBroFuzz() {
-		
+
 		return this.m.getJBroFuzz();
 	}
 
@@ -662,9 +656,9 @@ public class HTTPFuzzing extends JPanel {
 	 * @return String
 	 */
 	public String getMessageText() {
-		
+
 		return this.message.getText();
-	
+
 	}
 
 	/**
@@ -676,9 +670,9 @@ public class HTTPFuzzing extends JPanel {
 	 * @return String
 	 */
 	public String getPortText() {
-		
+
 		return this.port.getText();
-		
+
 	}
 
 	/**
@@ -688,9 +682,9 @@ public class HTTPFuzzing extends JPanel {
 	 * @return String
 	 */
 	public String getTargetText() {
-		
+
 		return this.target.getText();
-		
+
 	}
 
 	/**
@@ -700,9 +694,9 @@ public class HTTPFuzzing extends JPanel {
 	 *          boolean
 	 */
 	public void setFuzzStartButtonEnable(final boolean b) {
-		
+
 		this.buttonFuzzStart.setEnabled(b);
-		
+
 	}
 
 	/**
@@ -712,9 +706,9 @@ public class HTTPFuzzing extends JPanel {
 	 *          boolean
 	 */
 	public void setFuzzStopButtonEnable(final boolean b) {
-		
+
 		this.buttonFuzzStop.setEnabled(b);
-		
+
 	}
 
 	/**
@@ -725,9 +719,9 @@ public class HTTPFuzzing extends JPanel {
 	 * @param input
 	 */
 	public void setMessageText(String input) {
-		
+
 		this.message.setText(input);
-		
+
 	}
 
 }

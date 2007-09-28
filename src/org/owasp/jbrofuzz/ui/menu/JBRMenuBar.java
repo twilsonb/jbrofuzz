@@ -124,7 +124,7 @@ public class JBRMenuBar extends JMenuBar {
 	// Used under the Panel JMenu as items
 	private JMenuItem showAll, hideAll, start, bro, stop, add, remove;
 	// Used under the view JMenu as items
-	private JCheckBoxMenuItem directories, fuzzing, sniffing, generators,
+	private JCheckBoxMenuItem directories, fuzzing, sniffing, generators, httpFuzzing,
 			opensource, system;
 
 	/**
@@ -185,6 +185,7 @@ public class JBRMenuBar extends JMenuBar {
 		// View
 		final JMenu showHide = new JMenu("Show/Hide");
 
+		this.httpFuzzing = new JCheckBoxMenuItem("HTTP/S Fuzzing", true);
 		this.directories = new JCheckBoxMenuItem("Web Directories", true);
 		this.fuzzing = new JCheckBoxMenuItem("TCP Fuzzing", true);
 		this.sniffing = new JCheckBoxMenuItem("TCP Sniffing", true);
@@ -195,6 +196,7 @@ public class JBRMenuBar extends JMenuBar {
 		this.showAll = new JMenuItem("Show All");
 		this.hideAll = new JMenuItem("Hide All");
 
+		showHide.add(this.httpFuzzing);
 		showHide.add(this.directories);
 		showHide.add(this.fuzzing);
 		showHide.add(this.sniffing);
@@ -214,7 +216,7 @@ public class JBRMenuBar extends JMenuBar {
 				.getInstalledLookAndFeels();
 		final ButtonGroup group = new ButtonGroup();
 
-		for (int i = 0; i < Math.min(installedFeels.length, 5); i++) {
+		for (int i = 0; i < Math.min(installedFeels.length, 7); i++) {
 			final JRadioButtonMenuItem rb = new JRadioButtonMenuItem(
 					installedFeels[i].getName());
 			group.add(rb);
@@ -335,6 +337,24 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
+		this.httpFuzzing.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						if (!JBRMenuBar.this.httpFuzzing.getState()) {
+							JBRMenuBar.this.getFrameWindow().setTabHide(
+									JBRFrame.HTTP_FUZZING_PANEL_ID);
+						} else {
+							JBRMenuBar.this.getFrameWindow().setTabShow(
+									JBRFrame.HTTP_FUZZING_PANEL_ID);
+						}
+					}
+				});
+			}
+		});
+
+
 		this.directories.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
@@ -446,9 +466,15 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
+						
 						JBRMenuBar.this.getFrameWindow().setTabShow(
 								JBRFrame.WEB_DIRECTORIES_PANEL_ID);
 						JBRMenuBar.this.directories.setState(true);
+						
+						JBRMenuBar.this.getFrameWindow().setTabShow(
+								JBRFrame.HTTP_FUZZING_PANEL_ID);
+						JBRMenuBar.this.httpFuzzing.setState(true);
+						
 						JBRMenuBar.this.getFrameWindow().setTabShow(
 								JBRFrame.TCP_FUZZING_PANEL_ID);
 						JBRMenuBar.this.fuzzing.setState(true);
@@ -492,6 +518,11 @@ public class JBRMenuBar extends JMenuBar {
 						JBRMenuBar.this.system.setState(false);
 						JBRMenuBar.this.getFrameWindow()
 								.setTabHide(JBRFrame.OPEN_SOURCE_ID);
+						
+						JBRMenuBar.this.getFrameWindow().setTabHide(
+								JBRFrame.HTTP_FUZZING_PANEL_ID);
+						JBRMenuBar.this.httpFuzzing.setState(false);
+						
 						JBRMenuBar.this.opensource.setState(false);
 					}
 				});
@@ -527,6 +558,10 @@ public class JBRMenuBar extends JMenuBar {
 									JBRMenuBar.this.getFrameWindow().getOpenSourcePanel()
 											.checkStartButton();
 								}
+								if (s.equals(" HTTP/S Fuzzing ")) {
+									JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
+											.fuzzStartButton();
+								}
 								return "start-menu-bar-return";
 							}
 
@@ -538,6 +573,10 @@ public class JBRMenuBar extends JMenuBar {
 										.getTitleAt(currentTab);
 								if (s.equals(" TCP Fuzzing ")) {
 									JBRMenuBar.this.getFrameWindow().getFuzzingPanel()
+											.fuzzStopButton();
+								}
+								if (s.equals(" HTTP/S Fuzzing ")) {
+									JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
 											.fuzzStopButton();
 								}
 								if (s.equals(" Web Directories ")) {
@@ -582,6 +621,10 @@ public class JBRMenuBar extends JMenuBar {
 							JBRMenuBar.this.getFrameWindow().getOpenSourcePanel()
 									.checkStopButton();
 						}
+						if (s.equals(" HTTP/S Fuzzing ")) {
+							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
+									.fuzzStopButton();
+						}
 					}
 				});
 
@@ -604,6 +647,10 @@ public class JBRMenuBar extends JMenuBar {
 							JBRMenuBar.this.getFrameWindow().getTCPSniffingPanel()
 									.buttonBro();
 						}
+						if (s.equals(" HTTP/S Fuzzing ")) {
+							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
+									.fuzzBroButton();
+						}
 					}
 				});
 			}
@@ -621,6 +668,9 @@ public class JBRMenuBar extends JMenuBar {
 						if (s.equals(" TCP Fuzzing ")) {
 							JBRMenuBar.this.getFrameWindow().getFuzzingPanel()
 									.generatorAddButton();
+						}
+						if (s.equals(" HTTP/S Fuzzing ")) {
+							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel().generatorAddButton();
 						}
 					}
 				});
@@ -663,6 +713,10 @@ public class JBRMenuBar extends JMenuBar {
 								.getTitleAt(currentTab);
 						if (s.equals(" TCP Fuzzing ")) {
 							JBRMenuBar.this.getFrameWindow().getFuzzingPanel()
+									.generatorRemoveButton();
+						}
+						if (s.equals(" HTTP/S Fuzzing ")) {
+							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
 									.generatorRemoveButton();
 						}
 					}

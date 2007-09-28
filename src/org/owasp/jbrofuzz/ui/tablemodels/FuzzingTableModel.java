@@ -58,9 +58,9 @@ public class FuzzingTableModel extends AbstractTableModel {
 	private static final int INDEX_END = 2;
 
 	// The names of the columns within the table of generators
-	private static final String[] COLUMNNAMES = { "Generator", "Start", "End" };
+	private static final String[] COLUMNNAMES = { "Category", "Start", "End" };
 	// The vector of data
-	private Vector dataVector;
+	private Vector<Generator> dataVector;
 	// The panel that the model is attached to
 	private JBRFrame fPanel;
 
@@ -74,7 +74,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 */
 	public FuzzingTableModel(final JBRFrame fPanel) {
 		this.fPanel = fPanel;
-		this.dataVector = new Vector();
+		this.dataVector = new Vector<Generator>();
 	}
 
 	/**
@@ -276,9 +276,11 @@ class Generator {
 	protected Integer end;
 
 	public Generator(final String generator, final int start, final int end) {
+		
+		this.start = Integer.valueOf(start);
+		this.end = Integer.valueOf(end);
 		this.type = generator;
-		this.start = new Integer(start);
-		this.end = new Integer(end);
+		
 	}
 
 	public int getEnd() {
@@ -294,14 +296,14 @@ class Generator {
 	}
 
 	public void setEnd(final int end) {
-		this.end = new Integer(end);
+		this.end = Integer.valueOf(end);
 	}
 
 	public void setStart(final int start) {
-		this.start = new Integer(start);
+		this.start = Integer.valueOf(start);
 	}
 
-	public void setType(final String type) {
-		this.type = type;
+	public void setType(final String generator) {
+		this.type = generator;
 	}
 }
