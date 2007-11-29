@@ -71,7 +71,7 @@ import com.Ostermiller.util.Browser;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class WebDirectories extends JPanel implements KeyListener {
+public class WebDirectories extends JBRPanel implements KeyListener {
 
 	/**
 	 * 
@@ -79,7 +79,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 	private static final long serialVersionUID = -1291872530751555718L;
 
 	// The frame that the sniffing panel is attached
-	private JBRFrame m;
+	// private JBRFrame m;
 
 	// The text areas used in their corresponding panels
 	private JTextArea directoryText;
@@ -126,8 +126,8 @@ public class WebDirectories extends JPanel implements KeyListener {
 	 *          FrameWindow
 	 */
 	public WebDirectories(final JBRFrame m) {
-		super(null, true);
-		this.m = m;
+		super(m);
+		// this.m = m;
 		this.session = 0;
 
 		// Define the directory JPanel
@@ -171,7 +171,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 		this.targetText.setBackground(Color.WHITE);
 		this.targetText.setForeground(Color.BLACK);
 		this.targetText.setPreferredSize(new Dimension(480, 20));
-		this.getFrameWindow().popup(this.targetText);
+		getFrame().popup(this.targetText);
 		targetPanel.add(this.targetText);
 
 		// Define the port text area
@@ -182,7 +182,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 		this.portText.setMargin(new Insets(1, 1, 1, 1));
 		this.portText.setBackground(Color.WHITE);
 		this.portText.setForeground(Color.BLACK);
-		this.getFrameWindow().popup(this.portText);
+		getFrame().popup(this.portText);
 		this.portText.setPreferredSize(new Dimension(50, 20));
 		portPanel.add(this.portText);
 
@@ -197,7 +197,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 		this.directoryText.setBackground(Color.WHITE);
 		this.directoryText.setForeground(Color.BLACK);
 		this.directoryText.addKeyListener(this);
-		this.getFrameWindow().popup(this.directoryText);
+		getFrame().popup(this.directoryText);
 		final JScrollPane directoryScrollPane = new JScrollPane(this.directoryText);
 		directoryScrollPane.setVerticalScrollBarPolicy(20);
 		directoryScrollPane.setHorizontalScrollBarPolicy(30);
@@ -325,7 +325,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 			if (inputArray.length > 1) {
 				error.append(" First column was " + inputArray[0]);
 			}
-			this.m.log(error.toString());
+			getFrame().log(error.toString());
 		} else {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
@@ -357,7 +357,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 		// Update the panel, indicating directory
 		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output " + "[Logging in file \\web-dir\\"
-						+ this.getJBroFuzz().getFormat().getDate() + "\\"
+						+ getFrame().getJBroFuzz().getFormat().getDate() + "\\"
 						+ this.getSessionNumber() + ".csv]  "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 
@@ -381,7 +381,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 
 		this.responseTableModel.removeAllRows();
 
-		this.cesg = new DRequestIterator(this.getFrameWindow(), uri, dirs, port);
+		this.cesg = new DRequestIterator(getFrame(), uri, dirs, port);
 		this.cesg.run();
 	}
 
@@ -406,27 +406,6 @@ public class WebDirectories extends JPanel implements KeyListener {
 		this.portText.setForeground(Color.BLACK);
 
 		this.cesg.stop();
-	}
-
-	/**
-	 * <p>
-	 * Method for returning the main window frame that this tab is attached on.
-	 * </p>
-	 * 
-	 * @return Window
-	 */
-	public JBRFrame getFrameWindow() {
-		return this.m;
-	}
-
-	/**
-	 * Access the main object that launches and is responsible for the
-	 * application.
-	 * 
-	 * @return JBroFuzz
-	 */
-	public JBroFuzz getJBroFuzz() {
-		return this.m.getJBroFuzz();
 	}
 
 	/**
@@ -554,7 +533,7 @@ public class WebDirectories extends JPanel implements KeyListener {
 				try {
 					Browser.displayURL(url);
 				} catch (final IOException ex) {
-					WebDirectories.this.getFrameWindow().log(
+					getFrame().log(
 							"Could not launch link in external browser");
 				}
 			}

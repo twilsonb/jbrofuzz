@@ -78,7 +78,7 @@ import org.owasp.jbrofuzz.version.JBRFormat;
  * @author subere (at) uncon org
  * @version 0.6
  */
-public class TCPFuzzing extends JPanel {
+public class TCPFuzzing extends JBRPanel {
 	/**
 	 * 
 	 */
@@ -103,7 +103,7 @@ public class TCPFuzzing extends JPanel {
 	}
 
 	// The frame that the sniffing panel is attached
-	private final JBRFrame m;
+	// private final JBRFrame m;
 	// The JPanels
 	private final JPanel outputPanel;
 	// The JTextField
@@ -138,10 +138,10 @@ public class TCPFuzzing extends JPanel {
 	 *          FrameWindow
 	 */
 	public TCPFuzzing(final JBRFrame m) {
-		super();
-		this.setLayout(null);
+		super(m);
+		// this.setLayout(null);
 
-		this.m = m;
+		// this.m = m;
 		this.counter = 1;
 		this.session = 0;
 
@@ -158,7 +158,7 @@ public class TCPFuzzing extends JPanel {
 		this.target.setMargin(new Insets(1, 1, 1, 1));
 		this.target.setBackground(Color.WHITE);
 		this.target.setForeground(Color.BLACK);
-		this.getFrameWindow().popup(this.target);
+		getFrame().popup(this.target);
 
 		this.target.setPreferredSize(new Dimension(480, 20));
 		targetPanel.add(this.target);
@@ -179,7 +179,7 @@ public class TCPFuzzing extends JPanel {
 		this.port.setMargin(new Insets(1, 1, 1, 1));
 		this.port.setBackground(Color.WHITE);
 		this.port.setForeground(Color.BLACK);
-		this.getFrameWindow().popup(this.port);
+		getFrame().popup(this.port);
 
 		this.port.setPreferredSize(new Dimension(50, 20));
 		portPanel.add(this.port);
@@ -214,7 +214,7 @@ public class TCPFuzzing extends JPanel {
 				return new TextHighlighter();
 			}
 		});
-		this.getFrameWindow().popup(this.message);
+		getFrame().popup(this.message);
 
 		final JScrollPane messageScrollPane = new JScrollPane(this.message);
 		messageScrollPane.setVerticalScrollBarPolicy(20);
@@ -253,7 +253,7 @@ public class TCPFuzzing extends JPanel {
 		/*
 		 * Fuzzing Table Model
 		 */
-		this.mFuzzingTableModel = new FuzzingTableModel(TCPFuzzing.this.getFrameWindow());
+		this.mFuzzingTableModel = new FuzzingTableModel(getFrame());
 		this.generatorTable = new JTable();
 		this.generatorTable.setBackground(Color.WHITE);
 		this.generatorTable.setForeground(Color.BLACK);
@@ -381,7 +381,7 @@ public class TCPFuzzing extends JPanel {
 					final int selectedRow = lsm.getMinSelectionIndex();
 					final String s = TCPFuzzing.this.outputTableModel
 							.getValueAt(selectedRow);
-					new WindowViewer(TCPFuzzing.this.getFrameWindow(), s,
+					new WindowViewer(getFrame(), s,
 							WindowViewer.VIEW_FUZZING_PANEL);
 				}
 			}
@@ -456,7 +456,7 @@ public class TCPFuzzing extends JPanel {
 		// Update the border of the output panel
 		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output (Last 1000 Lines)  "
-						+ "Logging in folder (" + this.getJBroFuzz().getFormat().getDate() +
+						+ "Logging in folder (" + getFrame().getJBroFuzz().getFormat().getDate() +
 						// getJBroFuzz().getVersion().getDate() +
 						") Session " + this.session), BorderFactory.createEmptyBorder(5, 5,
 				5, 5)));
@@ -464,7 +464,7 @@ public class TCPFuzzing extends JPanel {
 		final int rows = this.generatorTable.getRowCount();
 		if (rows < 1) {
 			final StringBuffer sbuf = new StringBuffer(this.getMessageText());
-			this.mRIterator = new TRequestIterator(this.getJBroFuzz(), sbuf, 0, 0,
+			this.mRIterator = new TRequestIterator(getFrame().getJBroFuzz(), sbuf, 0, 0,
 					"ZER");
 			this.mRIterator.run();
 		} else {
@@ -477,7 +477,7 @@ public class TCPFuzzing extends JPanel {
 						.intValue();
 
 				final StringBuffer sbuf = new StringBuffer(this.getMessageText());
-				this.mRIterator = new TRequestIterator(this.getJBroFuzz(), sbuf, start,
+				this.mRIterator = new TRequestIterator(getFrame().getJBroFuzz(), sbuf, start,
 						end, generator);
 				this.mRIterator.run();
 			}
@@ -532,7 +532,7 @@ public class TCPFuzzing extends JPanel {
 			final int sPoint = this.message.getSelectionStart();
 			final int fPoint = this.message.getSelectionEnd();
 
-			final TConstructor mTConstructor = new TConstructor(this.getJBroFuzz());
+			final TConstructor mTConstructor = new TConstructor(getFrame().getJBroFuzz());
 			final String generators = mTConstructor.getAllGeneratorNamesAndComments();
 			final String[] generatorArray = generators.split(", ");
 
@@ -630,25 +630,6 @@ public class TCPFuzzing extends JPanel {
 		}
 
 		return s;
-	}
-
-	/**
-	 * Access the main frame window in which this panel is attached to.
-	 * 
-	 * @return FrameWindow
-	 */
-	public JBRFrame getFrameWindow() {
-		return this.m;
-	}
-
-	/**
-	 * Access the main object that launches and is responsible for the
-	 * application.
-	 * 
-	 * @return JBroFuzz
-	 */
-	public JBroFuzz getJBroFuzz() {
-		return this.m.getJBroFuzz();
 	}
 
 	/**

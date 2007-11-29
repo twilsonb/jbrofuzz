@@ -192,7 +192,7 @@ public class HTTPRequestIterator {
 					new DefaultHttpMethodRetryHandler(1, false));
 			method.setFollowRedirects(true);
 			method.setDoAuthentication(true);
-
+			/*
 			try {
 				this.responses[this.i] = this.i + "\n";
 				this.responses[this.i] += currentURI + "\n";
@@ -271,23 +271,24 @@ public class HTTPRequestIterator {
 			} finally {
 				method.releaseConnection();
 			}
+			*/
 			// Add a row to the displaying table
-			this.m.getWebDirectoriesPanel().addRow(this.responses[this.i]);
+			// this.m.getWebDirectoriesPanel().addRow(this.responses[this.i]);
 			// Create a String to be written to file
-			final StringBuffer outToFile = new StringBuffer();
-			outToFile.append(JBRTime.dateAndTime());
+			// final StringBuffer outToFile = new StringBuffer();
+			// outToFile.append(JBRTime.dateAndTime());
 			// String outToFile = Time.dateAndTime();
-			final String[] tempArray = this.responses[this.i].split("\n");
-			for (final String element : tempArray) {
-				outToFile.append("," + element);
-			}
+			// final String[] tempArray = this.responses[this.i].split("\n");
+			// for (final String element : tempArray) {
+			// 	outToFile.append("," + element);
+			// }
 			// Write the file
-			FileHandler.writeWebDirFile(this.m.getWebDirectoriesPanel()
-					.getSessionNumber(), outToFile.toString());
+			// FileHandler.writeWebDirFile(this.m.getWebDirectoriesPanel()
+			// 		.getSessionNumber(), outToFile.toString());
 			// Update the progress bar
-			final double percentage = 100 * ((double) (this.i + 1))
-					/ (this.directories.length);
-			this.m.getWebDirectoriesPanel().setProgressBar((int) percentage);
+			// final double percentage = 100 * ((double) (this.i + 1))
+			// 		/ (this.directories.length);
+			// this.m.getWebDirectoriesPanel().setProgressBar((int) percentage);
 		}
 	}
 

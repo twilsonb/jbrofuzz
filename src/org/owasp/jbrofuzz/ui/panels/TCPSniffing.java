@@ -65,7 +65,7 @@ import com.Ostermiller.util.Browser;
  * @author subere (at) uncon (dot) org
  * @version 0.8
  */
-public class TCPSniffing extends JPanel {
+public class TCPSniffing extends JBRPanel {
 
 	private class SniffingRowListener implements ListSelectionListener {
 		/**
@@ -84,7 +84,7 @@ public class TCPSniffing extends JPanel {
 			final String value = (String) TCPSniffing.this.tableModel
 					.getValueAt(c, 0);
 			TCPSniffing.this.vew = new WindowViewer(
-					TCPSniffing.this.getFrameWindow(), value,
+					getFrame(), value,
 					WindowViewer.VIEW_SNIFFING_PANEL);
 		}
 	}
@@ -112,7 +112,7 @@ public class TCPSniffing extends JPanel {
 	private SwingWorker3 worker;
 
 	// The frame that the sniffing panel is attached
-	private JBRFrame m;
+	// private JBRFrame m;
 
 	// The table model
 	private SingleRowTableModel tableModel;
@@ -136,9 +136,9 @@ public class TCPSniffing extends JPanel {
 	 *          MainWindow
 	 */
 	public TCPSniffing(final JBRFrame m) {
-		super();
-		this.setLayout(null);
-		this.m = m;
+		super(m );
+		// this.setLayout(null);
+		// this.m = m;
 		// Set the counter to zero
 		this.counter = 0;
 		this.session = 0;
@@ -175,7 +175,7 @@ public class TCPSniffing extends JPanel {
 		this.rHostText.setEditable(true);
 		this.rHostText.setFont(new Font("Verdana", Font.BOLD, 12));
 		this.rHostText.setMargin(new Insets(1, 1, 1, 1));
-		this.getFrameWindow().popup(this.rHostText);
+		getFrame().popup(this.rHostText);
 		this.rHostText.setPreferredSize(new Dimension(200, 20));
 		rHostPanel.add(this.rHostText);
 		// Setup the remote host port
@@ -185,7 +185,7 @@ public class TCPSniffing extends JPanel {
 		// rPortText.setLineWrap(false);
 		// rPortText.setWrapStyleWord(true);
 		this.rPortText.setMargin(new Insets(1, 1, 1, 1));
-		this.getFrameWindow().popup(this.rPortText);
+		getFrame().popup(this.rPortText);
 		this.rPortText.setPreferredSize(new Dimension(50, 20));
 		rPortPanel.add(this.rPortText);
 		// Setup the local host text
@@ -195,7 +195,7 @@ public class TCPSniffing extends JPanel {
 		// lHostText.setLineWrap(false);
 		// lHostText.setWrapStyleWord(true);
 		this.lHostText.setMargin(new Insets(1, 1, 1, 1));
-		this.getFrameWindow().popup(this.lHostText);
+		getFrame().popup(this.lHostText);
 		this.lHostText.setPreferredSize(new Dimension(200, 20));
 		lHostPanel.add(this.lHostText);
 		// Setup the local port text
@@ -205,7 +205,7 @@ public class TCPSniffing extends JPanel {
 		// lPortText.setLineWrap(false);
 		// lPortText.setWrapStyleWord(true);
 		this.lPortText.setMargin(new Insets(1, 1, 1, 1));
-		this.getFrameWindow().popup(this.lPortText);
+		getFrame().popup(this.lPortText);
 		this.lPortText.setPreferredSize(new Dimension(50, 20));
 		lPortPanel.add(this.lPortText);
 		
@@ -330,7 +330,7 @@ public class TCPSniffing extends JPanel {
 		try {
 			Browser.displayURL(url.toString());
 		} catch (final IOException ex) {
-			this.getFrameWindow().log("Could not launch link in external browser");
+			getFrame().log("Could not launch link in external browser");
 		}
 	}
 
@@ -368,7 +368,7 @@ public class TCPSniffing extends JPanel {
 		// Update the border of the output panel
 		this.listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" List of Requests " + "[Logging in folder .\\"
-						+ this.getJBroFuzz().getFormat().getDate() + "\\" + this.session
+						+ getFrame().getJBroFuzz().getFormat().getDate() + "\\" + this.session
 						+ "*.txt]  [" + rh + ":" + rp + " <=> " + lh + ":" + lp + "] "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
@@ -413,7 +413,7 @@ public class TCPSniffing extends JPanel {
 		} else {
 			this.listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 					.createTitledBorder(" List of Requests " + "[Last log was .\\"
-							+ this.getJBroFuzz().getFormat().getDate() + "\\" + this.session
+							+ getFrame().getJBroFuzz().getFormat().getDate() + "\\" + this.session
 							+ "*.txt] "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		}
 	}
@@ -456,27 +456,6 @@ public class TCPSniffing extends JPanel {
 		s += "" + this.counter;
 		this.counter++;
 		return s;
-	}
-
-	/**
-	 * <p>
-	 * Method for returning the MainWindow attached to the current Sniffing Panel.
-	 * </p>
-	 * 
-	 * @return MainWindow
-	 */
-	public JBRFrame getFrameWindow() {
-		return this.m;
-	}
-
-	/**
-	 * Access the main object that launches and is responsible for the
-	 * application.
-	 * 
-	 * @return JBroFuzz
-	 */
-	public JBroFuzz getJBroFuzz() {
-		return this.m.getJBroFuzz();
 	}
 
 	/**

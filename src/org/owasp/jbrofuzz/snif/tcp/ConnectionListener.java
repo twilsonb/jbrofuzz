@@ -95,8 +95,8 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 			this.server = new ServerSocket(this.localPort);
 			this.server.setReuseAddress(false);
 		} catch (final IOException e) {
-			mn.getFrameWindow().log("ServerSocket IOException..." + e.getMessage());
-			mn.getFrameWindow().getTCPSniffingPanel().buttonStop();
+			mn.getFrame().log("ServerSocket IOException..." + e.getMessage());
+			mn.getFrame().getTCPSniffingPanel().buttonStop();
 		}
 	}
 
@@ -153,7 +153,7 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 		while (!this.connectionStopped) {
 			try {
 				final Socket clientSocket = this.server.accept();
-				this.con = new Connection(this.mn.getFrameWindow().getJBroFuzz(),
+				this.con = new Connection(this.mn.getFrame().getJBroFuzz(),
 						clientSocket, this, this.remoteAddress, this.remotePort);
 			} catch (final IOException ex) {
 				this.connectionStopped = true;

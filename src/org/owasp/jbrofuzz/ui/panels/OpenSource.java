@@ -62,13 +62,13 @@ import org.owasp.jbrofuzz.version.JBRFormat;
  * @author subere (at) uncon org
  * @version 0.6
  */
-public class OpenSource extends JPanel {
+public class OpenSource extends JBRPanel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5881754154644327656L;
 	// The frame that the open source panel is attached to
-	private JBRFrame mFrameWindow;
+	// private JBRFrame mFrameWindow;
 	// The target field
 	private final JTextField domain;
 	// The output field
@@ -82,10 +82,10 @@ public class OpenSource extends JPanel {
 	// The progress bar for the site
 	private JProgressBar progressBar;
 
-	public OpenSource(final JBRFrame mFrameWindow) {
-		super();
-		this.setLayout(null);
-		this.mFrameWindow = mFrameWindow;
+	public OpenSource(final JBRFrame m) {
+		super(m);
+		// this.setLayout(null);
+		// this.mFrameWindow = mFrameWindow;
 
 		// The domain panel
 		final JPanel domainPanel = new JPanel();
@@ -100,7 +100,7 @@ public class OpenSource extends JPanel {
 		this.domain.setMargin(new Insets(1, 1, 1, 1));
 		this.domain.setBackground(Color.WHITE);
 		this.domain.setForeground(Color.BLACK);
-		this.getFrameWindow().popup(this.domain);
+		getFrame().popup(this.domain);
 
 		this.domain.setPreferredSize(new Dimension(480, 20));
 		domainPanel.add(this.domain);
@@ -124,7 +124,7 @@ public class OpenSource extends JPanel {
 		this.output.setMargin(new Insets(1, 1, 1, 1));
 		this.output.setBackground(Color.WHITE);
 		this.output.setForeground(Color.BLACK);
-		this.getFrameWindow().popup(this.output);
+		getFrame().popup(this.output);
 
 		final JScrollPane outputScrollPane = new JScrollPane(this.output);
 		outputScrollPane.setVerticalScrollBarPolicy(20);
@@ -208,7 +208,7 @@ public class OpenSource extends JPanel {
 		info.setMargin(new Insets(1, 1, 1, 1));
 		info.setBackground(Color.WHITE);
 		info.setForeground(Color.BLACK);
-		this.getFrameWindow().popup(info);
+		getFrame().popup(info);
 
 		final JScrollPane infoScrollPane = new JScrollPane(info);
 		infoScrollPane.setVerticalScrollBarPolicy(20);
@@ -262,7 +262,7 @@ public class OpenSource extends JPanel {
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		this.output.setText("");
-		final GRequestIterator req = new GRequestIterator(this.mFrameWindow, dm);
+		final GRequestIterator req = new GRequestIterator(getFrame(), dm);
 		this.output.setText(req.getOutput());
 	}
 
@@ -354,15 +354,6 @@ public class OpenSource extends JPanel {
 			this.domain.setText(text);
 		}
 		return text;
-	}
-
-	/**
-	 * Access the main frame window in which this panel is attached to.
-	 * 
-	 * @return FrameWindow
-	 */
-	public JBRFrame getFrameWindow() {
-		return this.mFrameWindow;
 	}
 
 	/**

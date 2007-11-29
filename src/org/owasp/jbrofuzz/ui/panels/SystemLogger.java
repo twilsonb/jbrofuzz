@@ -49,14 +49,14 @@ import org.owasp.jbrofuzz.version.JBRTime;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class SystemLogger extends JPanel {
+public class SystemLogger extends JBRPanel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1771587308148328608L;
 	// The frame that the sniffing panel is attached
-	private JBRFrame m;
+	// private JBRFrame m;
 	// The JTable that holds all the data
 	private JTextArea listTextArea;
 	// The info button
@@ -72,9 +72,9 @@ public class SystemLogger extends JPanel {
 	 *          FrameWindow
 	 */
 	public SystemLogger(final JBRFrame m) {
-		super();
-		this.setLayout(null);
-		this.m = m;
+		super(m);
+		// this.setLayout(null);
+		// this.m = m;
 		this.lineCount = 0;
 		// Define the JPanel
 		final JPanel listPanel = new JPanel();
@@ -92,7 +92,7 @@ public class SystemLogger extends JPanel {
 		this.listTextArea.setWrapStyleWord(true);
 		this.listTextArea.setBackground(Color.WHITE);
 		this.listTextArea.setForeground(Color.BLACK);
-		this.getFrameWindow().popup(this.listTextArea);
+		getFrame().popup(this.listTextArea);
 
 		final JScrollPane listTextScrollPane = new JScrollPane(this.listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
@@ -167,28 +167,17 @@ public class SystemLogger extends JPanel {
 		this.listTextArea.append("[" + JBRTime.dateAndTime() + "] " + str + "\n");
 		// Fix the disappearing tab problem
 		int tab = -1;
-		final int totalTabs = this.getFrameWindow().getTabbedPane()
+		final int totalTabs = getFrame().getTabbedPane()
 				.getComponentCount();
 		for (int i = 0; i < totalTabs; i++) {
-			final String title = this.getFrameWindow().getTabbedPane().getTitleAt(i);
+			final String title = getFrame().getTabbedPane().getTitleAt(i);
 			if (title.startsWith(" System")) {
 				tab = i;
 			}
 		}
 		if ((tab > -1)) {
-			this.getFrameWindow().getTabbedPane().setTitleAt(tab,
+			getFrame().getTabbedPane().setTitleAt(tab,
 					" System (" + this.lineCount + ")");
 		}
-	}
-
-	/**
-	 * <p>
-	 * Method for returning the main window frame that this tab is attached on.
-	 * </p>
-	 * 
-	 * @return FrameWindow
-	 */
-	public JBRFrame getFrameWindow() {
-		return this.m;
 	}
 }
