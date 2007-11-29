@@ -45,13 +45,13 @@ import org.owasp.jbrofuzz.ui.menu.AboutBox;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class Generators extends JPanel {
+public class Generators extends JBRPanel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5848191307114097542L;
 	// The frame that the sniffing panel is attached
-	private JBRFrame m;
+	// private JBRFrame m;
 	// The JPanels carrying the components
 	private JPanel category, name, view;
 	// The JTables carrying the data
@@ -73,9 +73,9 @@ public class Generators extends JPanel {
 	 *          FrameWindow
 	 */
 	public Generators(final JBRFrame m) {
-		super();
-		this.setLayout(null);
-		this.m = m;
+		super(m);
+		// this.setLayout(null);
+		// this.m = m;
 
 		// Category
 
@@ -96,7 +96,7 @@ public class Generators extends JPanel {
 		this.popup(this.categoryTable);
 		categoryTableSorter.setTableHeader(this.categoryTable.getTableHeader());
 
-		categoryTableModel.setData(this.m.getJBroFuzz().getDatabase().getAllCategories());
+		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllCategories());
 		categoryTableSorter.setTableModel(categoryTableModel);
 		categoryTableSorter.fireTableDataChanged();
 		categoryTable.setFont(new Font("Verdana", Font.BOLD, 14));
@@ -213,21 +213,10 @@ public class Generators extends JPanel {
 		// The action listener for the info button
 		infoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				new AboutBox(getFrameWindow(), AboutBox.ACKNOWLEDGEMENTS);
+				new AboutBox(getFrame(), AboutBox.ACKNOWLEDGEMENTS);
 			}
 		});
 		this.add(infoButton);
-	}
-
-	/**
-	 * <p>
-	 * Method for returning the main window frame that this tab is attached on.
-	 * </p>
-	 * 
-	 * @return Window
-	 */
-	public JBRFrame getFrameWindow() {
-		return this.m;
 	}
 	
 	/**
@@ -292,7 +281,7 @@ public class Generators extends JPanel {
 			int c = categoryTable.getSelectedRow();
 			String value = (String) categoryTableSorter.getValueAt(c, 0);
 			// System.out.println(value);
-			nameTableModel.setData(m.getJBroFuzz().getDatabase().getNames(value));
+			nameTableModel.setData(getFrame().getJBroFuzz().getDatabase().getNames(value));
 			nameTableSorter.setTableModel(nameTableModel);
 			nameTableSorter.fireTableDataChanged();
 		}
@@ -309,10 +298,10 @@ public class Generators extends JPanel {
 			}
 			int c = nameTable.getSelectedRow();
 			String value = (String) nameTableSorter.getValueAt(c, 0);
-			viewTextArea.setText(m.getJBroFuzz().getDatabase().getExploit(value));
+			viewTextArea.setText(getFrame().getJBroFuzz().getDatabase().getExploit(value));
 			viewTextArea.setCaretPosition(0);
 
-			commentTextArea.setText(m.getJBroFuzz().getDatabase().getComment(value));
+			commentTextArea.setText(getFrame().getJBroFuzz().getDatabase().getComment(value));
 			commentTextArea.setCaretPosition(0);
 		}
 	}
@@ -373,11 +362,11 @@ public class Generators extends JPanel {
 				String tableName = area.getName();
 				if(tableName.equalsIgnoreCase("Name")) {
 					String exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
-					new ExploitViewer(m, exploit, ExploitViewer.VIEW_EXPLOIT);
+					new ExploitViewer(getFrame(), exploit, ExploitViewer.VIEW_EXPLOIT);
 				}
 				if(tableName.equalsIgnoreCase("Category")) {
 					String exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
-					new ExploitViewer(m, exploit, ExploitViewer.VIEW_CATEGORY);	
+					new ExploitViewer(getFrame(), exploit, ExploitViewer.VIEW_CATEGORY);	
 				}
 			}
 		});

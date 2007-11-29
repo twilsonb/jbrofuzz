@@ -78,7 +78,7 @@ import org.owasp.jbrofuzz.ui.menu.*;
  * @author subere (at) uncon org
  * @version 0.7
  */
-public class HTTPFuzzing extends JPanel {
+public class HTTPFuzzing extends JBRPanel {
 	/**
 	 * 
 	 */
@@ -87,7 +87,7 @@ public class HTTPFuzzing extends JPanel {
 	private static final String ADDGENSTRING = "Add Generator";
 
 	// The frame that the sniffing panel is attached
-	private final JBRFrame m;
+	// private final JBRFrame m;
 	// The JPanels
 	private final JPanel outputPanel;
 	// The JTextField
@@ -122,10 +122,10 @@ public class HTTPFuzzing extends JPanel {
 	 *          FrameWindow
 	 */
 	public HTTPFuzzing(final JBRFrame m) {
-		super();
-		this.setLayout(null);
+		super(m);
+		// this.setLayout(null);
 
-		this.m = m;
+		// this.m = m;
 		this.counter = 1;
 		this.session = 0;
 
@@ -142,7 +142,7 @@ public class HTTPFuzzing extends JPanel {
 		this.target.setMargin(new Insets(1, 1, 1, 1));
 		this.target.setBackground(Color.WHITE);
 		this.target.setForeground(Color.BLACK);
-		this.getFrameWindow().popup(this.target);
+		getFrame().popup(this.target);
 
 		this.target.setPreferredSize(new Dimension(480, 20));
 		targetPanel.add(this.target);
@@ -164,7 +164,7 @@ public class HTTPFuzzing extends JPanel {
 		this.port.setMargin(new Insets(1, 1, 1, 1));
 		this.port.setBackground(Color.WHITE);
 		this.port.setForeground(Color.BLACK);
-		this.getFrameWindow().popup(this.port);
+		getFrame().popup(this.port);
 
 		this.port.setPreferredSize(new Dimension(50, 20));
 		portPanel.add(this.port);
@@ -200,7 +200,7 @@ public class HTTPFuzzing extends JPanel {
 				return new TextHighlighter();
 			}
 		});
-		this.getFrameWindow().popup(this.message);
+		getFrame().popup(this.message);
 
 		final JScrollPane messageScrollPane = new JScrollPane(this.message);
 		messageScrollPane.setVerticalScrollBarPolicy(20);
@@ -236,7 +236,7 @@ public class HTTPFuzzing extends JPanel {
 				.createTitledBorder(" Added Generators Table"), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
 		
-		this.mFuzzingTableModel = new FuzzingTableModel(HTTPFuzzing.this.getFrameWindow());
+		this.mFuzzingTableModel = new FuzzingTableModel(getFrame());
 		this.generatorTable = new JTable();
 		this.generatorTable.setBackground(Color.black);
 		this.generatorTable.setForeground(Color.white);
@@ -371,7 +371,7 @@ public class HTTPFuzzing extends JPanel {
 					final int selectedRow = lsm.getMinSelectionIndex();
 					final String s = HTTPFuzzing.this.outputTableModel
 					.getValueAt(selectedRow);
-					new WindowViewer(HTTPFuzzing.this.getFrameWindow(), s,
+					new WindowViewer(getFrame(), s,
 							WindowViewer.VIEW_FUZZING_PANEL);
 				}
 			}
@@ -462,7 +462,7 @@ public class HTTPFuzzing extends JPanel {
 		// Update the border of the output panel
 		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Responses  "
-						+ "Logging in folder (" + this.getJBroFuzz().getFormat().getDate() +
+						+ "Logging in folder (" + getFrame().getJBroFuzz().getFormat().getDate() +
 						") Session " + this.session), BorderFactory.createEmptyBorder(5, 5,
 								5, 5)));
 
@@ -535,7 +535,7 @@ public class HTTPFuzzing extends JPanel {
 			fPoint = this.message.getSelectionEnd();
 		}
 		// Call the Generator Dialog that add a row in the generator table
-		new GeneratorDialog(this.m, sPoint, fPoint);
+		new GeneratorDialog(getFrame(), sPoint, fPoint);
 	}
 
 	/**
@@ -625,26 +625,6 @@ public class HTTPFuzzing extends JPanel {
 		}
 
 		return s;
-	}
-
-	/**
-	 * Access the main frame window in which this panel is attached to.
-	 * 
-	 * @return FrameWindow
-	 */
-	public JBRFrame getFrameWindow() {
-		return this.m;
-	}
-
-	/**
-	 * Access the main object that launches and is responsible for the
-	 * application.
-	 * 
-	 * @return JBroFuzz
-	 */
-	public JBroFuzz getJBroFuzz() {
-
-		return this.m.getJBroFuzz();
 	}
 
 	/**
