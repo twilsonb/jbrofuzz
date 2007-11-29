@@ -29,6 +29,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.prefs.Preferences;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
@@ -46,7 +49,6 @@ import org.apache.commons.httpclient.util.URIUtil;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.version.JBRFormat;
-import org.owasp.jbrofuzz.version.JBRTime;
 
 /**
  * <p>
@@ -269,7 +271,12 @@ public class DRequestIterator {
 			this.m.getWebDirectoriesPanel().addRow(this.responses[this.i]);
 			// Create a String to be written to file
 			final StringBuffer outToFile = new StringBuffer();
-			outToFile.append(JBRTime.dateAndTime());
+			
+			Date currentTime = new Date();
+			final SimpleDateFormat dateTime = new SimpleDateFormat(
+					"dd.MM.yyyy HH:mm:ss", new Locale("en"));
+			outToFile.append(dateTime.format(currentTime));
+			
 			// String outToFile = Time.dateAndTime();
 			final String[] tempArray = this.responses[this.i].split("\n");
 			for (final String element : tempArray) {

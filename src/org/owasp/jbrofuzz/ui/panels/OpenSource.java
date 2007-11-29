@@ -145,13 +145,13 @@ public class OpenSource extends JBRPanel {
 				OpenSource.this.worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
-						OpenSource.this.checkStartButton();
+						OpenSource.this.start();
 						return "start-window-return";
 					}
 
 					@Override
 					public void finished() {
-						OpenSource.this.checkStopButton();
+						OpenSource.this.stop();
 					}
 				};
 				OpenSource.this.worker.start();
@@ -168,7 +168,7 @@ public class OpenSource extends JBRPanel {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						OpenSource.this.checkStopButton();
+						OpenSource.this.stop();
 					}
 				});
 			}
@@ -235,7 +235,7 @@ public class OpenSource extends JBRPanel {
 	 * Method trigered when the fuzz button is pressed in the current panel.
 	 * </p>
 	 */
-	public void checkStartButton() {
+	public void start() {
 		if (!this.check.isEnabled()) {
 			return;
 		}
@@ -271,7 +271,7 @@ public class OpenSource extends JBRPanel {
 	 * Method trigered when attempting to stop any online check taking place.
 	 * </p>
 	 */
-	public void checkStopButton() {
+	public void stop() {
 		if (!this.stop.isEnabled()) {
 			return;
 		}

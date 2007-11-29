@@ -50,12 +50,12 @@ import org.owasp.jbrofuzz.JBroFuzz;
 public class JBRFormat {
 
 	/**
-	 * The preferences used for selecting on whether or not to continue uppon an
-	 * error occuring while in the fuzzing directories tab.
+	 * The preferences used for selecting on whether or not to continue upon an
+	 * error occurring while in the fuzzing directories tab.
 	 */
 	public static final String PREF_FUZZ_DIR_ERR = "fuzz.dir.error.continue";
 	/**
-	 * The website used via means of the selecting "JBroFuzz Website on the About
+	 * The web site used via means of the selecting "JBroFuzz Website on the About
 	 * menu.
 	 */
 	public static final String URL_WEBSITE = "http://www.owasp.org/index.php/Category:OWASP_JBroFuzz";

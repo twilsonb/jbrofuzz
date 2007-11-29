@@ -51,9 +51,6 @@ import javax.swing.table.*;
 import javax.swing.text.Document;
 import javax.swing.text.StyledEditorKit;
 
-import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.TRequestIterator;
-import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.FuzzingTableModel;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
@@ -86,8 +83,6 @@ public class HTTPFuzzing extends JBRPanel {
 	// Just a string that is being used a lot
 	private static final String ADDGENSTRING = "Add Generator";
 
-	// The frame that the sniffing panel is attached
-	// private final JBRFrame m;
 	// The JPanels
 	private final JPanel outputPanel;
 	// The JTextField
@@ -96,7 +91,7 @@ public class HTTPFuzzing extends JBRPanel {
 	private final JFormattedTextField port;
 	// The JTextArea
 	private final NonWrappingTextPane message;
-	// The JTable were results are outputed
+	// The JTable were results are output
 	private JTable outputTable;
 	// And the table model that goes with it
 	private SingleRowTableModel outputTableModel;
@@ -111,9 +106,7 @@ public class HTTPFuzzing extends JBRPanel {
 	private SwingWorker3 worker;
 	// A counter for the number of times fuzz has been clicked
 	private int counter, session;
-	// The request iterator performing all the fuzzing
-	// private TRequestIterator mRIterator;
-
+	
 	/**
 	 * This constructor is used for the "HTTP Fuzzing Panel" that resides under the
 	 * FrameWindow, within the corresponding tabbed panel.
@@ -216,7 +209,7 @@ public class HTTPFuzzing extends JBRPanel {
 		this.buttonAddGen.setToolTipText("Add a Generator");
 		this.buttonAddGen.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				HTTPFuzzing.this.generatorAddButton();
+				HTTPFuzzing.this.add();
 			}
 		});
 
@@ -225,7 +218,7 @@ public class HTTPFuzzing extends JBRPanel {
 		this.buttonRemGen.setToolTipText("Remove a Generator");
 		this.buttonRemGen.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				HTTPFuzzing.this.generatorRemoveButton();
+				HTTPFuzzing.this.remove();
 			}
 		});
 
@@ -286,13 +279,13 @@ public class HTTPFuzzing extends JBRPanel {
 				HTTPFuzzing.this.worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
-						HTTPFuzzing.this.fuzzStartButton();
+						HTTPFuzzing.this.start();
 						return "start-window-return";
 					}
 
 					@Override
 					public void finished() {
-						HTTPFuzzing.this.fuzzStopButton();
+						HTTPFuzzing.this.stop();
 					}
 				};
 				HTTPFuzzing.this.worker.start();
@@ -307,7 +300,7 @@ public class HTTPFuzzing extends JBRPanel {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						HTTPFuzzing.this.fuzzStopButton();
+						HTTPFuzzing.this.stop();
 					}
 				});
 			}
@@ -416,7 +409,7 @@ public class HTTPFuzzing extends JBRPanel {
 		if (!this.buttonPlot.isEnabled()) {
 			return;
 		}
-		final WindowPlotter wd = new WindowPlotter(FileHandler.getFuzzDirName());
+		final WindowPlotter wd = new WindowPlotter("...");
 		wd.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
@@ -432,7 +425,7 @@ public class HTTPFuzzing extends JBRPanel {
 	 * Method trigered when the fuzz button is pressed in the current panel.
 	 * </p>
 	 */
-	public void fuzzStartButton() {
+	public void start() {
 		
 		if (!this.buttonFuzzStart.isEnabled()) {
 			return;
@@ -493,7 +486,7 @@ public class HTTPFuzzing extends JBRPanel {
 	 * Method trigered when attempting to stop any fuzzing taking place.
 	 * </p>
 	 */
-	public void fuzzStopButton() {
+	public void stop() {
 		if (!this.buttonFuzzStop.isEnabled()) {
 			return;
 		}
@@ -514,7 +507,7 @@ public class HTTPFuzzing extends JBRPanel {
 	 * Method for adding a generator.
 	 * </p>
 	 */
-	public void generatorAddButton() {
+	public void add() {
 		// Check to see what text has been selected
 		String selectedText;
 		try {
@@ -554,7 +547,7 @@ public class HTTPFuzzing extends JBRPanel {
 	 * from the corresponding table model of the generator table.
 	 * </p>
 	 */
-	public void generatorRemoveButton() {
+	public void remove() {
 		final int rows = this.generatorTable.getRowCount();
 		if (rows < 1) {
 			return;
@@ -673,7 +666,7 @@ public class HTTPFuzzing extends JBRPanel {
 	 * @param b
 	 *          boolean
 	 */
-	public void setFuzzStartButtonEnable(final boolean b) {
+	private void setFuzzStartButtonEnable(final boolean b) {
 
 		this.buttonFuzzStart.setEnabled(b);
 
@@ -685,7 +678,7 @@ public class HTTPFuzzing extends JBRPanel {
 	 * @param b
 	 *          boolean
 	 */
-	public void setFuzzStopButtonEnable(final boolean b) {
+	private void setFuzzStopButtonEnable(final boolean b) {
 
 		this.buttonFuzzStop.setEnabled(b);
 

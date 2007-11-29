@@ -544,23 +544,23 @@ public class JBRMenuBar extends JMenuBar {
 										.getTitleAt(currentTab);
 								if (s.equals(" TCP Fuzzing ")) {
 									JBRMenuBar.this.getFrameWindow().getFuzzingPanel()
-											.fuzzStartButton();
+											.start();
 								}
 								if (s.equals(" TCP Sniffing ")) {
 									JBRMenuBar.this.getFrameWindow().getTCPSniffingPanel()
-											.buttonStart();
+											.start();
 								}
 								if (s.equals(" Web Directories ")) {
 									JBRMenuBar.this.getFrameWindow().getWebDirectoriesPanel()
-											.buttonStart();
+											.start();
 								}
 								if (s.equals(" Open Source ")) {
 									JBRMenuBar.this.getFrameWindow().getOpenSourcePanel()
-											.checkStartButton();
+											.start();
 								}
 								if (s.equals(" HTTP/S Fuzzing ")) {
 									JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
-											.fuzzStartButton();
+											.start();
 								}
 								return "start-menu-bar-return";
 							}
@@ -573,19 +573,19 @@ public class JBRMenuBar extends JMenuBar {
 										.getTitleAt(currentTab);
 								if (s.equals(" TCP Fuzzing ")) {
 									JBRMenuBar.this.getFrameWindow().getFuzzingPanel()
-											.fuzzStopButton();
+											.stop();
 								}
 								if (s.equals(" HTTP/S Fuzzing ")) {
 									JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
-											.fuzzStopButton();
+											.stop();
 								}
 								if (s.equals(" Web Directories ")) {
 									JBRMenuBar.this.getFrameWindow().getWebDirectoriesPanel()
-											.buttonStop();
+											.stop();
 								}
 								if (s.equals(" Open Source ")) {
 									JBRMenuBar.this.getFrameWindow().getOpenSourcePanel()
-											.checkStopButton();
+											.stop();
 								}
 							}
 						};
@@ -607,23 +607,23 @@ public class JBRMenuBar extends JMenuBar {
 								.getTitleAt(currentTab);
 						if (s.equals(" TCP Fuzzing ")) {
 							JBRMenuBar.this.getFrameWindow().getFuzzingPanel()
-									.fuzzStopButton();
+									.stop();
 						}
 						if (s.equals(" TCP Sniffing ")) {
 							JBRMenuBar.this.getFrameWindow().getTCPSniffingPanel()
-									.buttonStop();
+									.stop();
 						}
 						if (s.equals(" Web Directories ")) {
 							JBRMenuBar.this.getFrameWindow().getWebDirectoriesPanel()
-									.buttonStop();
+									.stop();
 						}
 						if (s.equals(" Open Source ")) {
 							JBRMenuBar.this.getFrameWindow().getOpenSourcePanel()
-									.checkStopButton();
+									.stop();
 						}
 						if (s.equals(" HTTP/S Fuzzing ")) {
 							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
-									.fuzzStopButton();
+									.stop();
 						}
 					}
 				});
@@ -645,7 +645,7 @@ public class JBRMenuBar extends JMenuBar {
 						}
 						if (s.equals(" TCP Sniffing ")) {
 							JBRMenuBar.this.getFrameWindow().getTCPSniffingPanel()
-									.buttonBro();
+									.bro();
 						}
 						if (s.equals(" HTTP/S Fuzzing ")) {
 							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
@@ -667,10 +667,10 @@ public class JBRMenuBar extends JMenuBar {
 								.getTitleAt(currentTab);
 						if (s.equals(" TCP Fuzzing ")) {
 							JBRMenuBar.this.getFrameWindow().getFuzzingPanel()
-									.generatorAddButton();
+									.add();
 						}
 						if (s.equals(" HTTP/S Fuzzing ")) {
-							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel().generatorAddButton();
+							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel().add();
 						}
 					}
 				});
@@ -713,11 +713,11 @@ public class JBRMenuBar extends JMenuBar {
 								.getTitleAt(currentTab);
 						if (s.equals(" TCP Fuzzing ")) {
 							JBRMenuBar.this.getFrameWindow().getFuzzingPanel()
-									.generatorRemoveButton();
+									.remove();
 						}
 						if (s.equals(" HTTP/S Fuzzing ")) {
 							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
-									.generatorRemoveButton();
+									.remove();
 						}
 					}
 				});

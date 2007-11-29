@@ -230,7 +230,7 @@ public class TCPFuzzing extends JBRPanel {
 		this.buttonAddGen.setToolTipText("Add a Generator");
 		this.buttonAddGen.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				TCPFuzzing.this.generatorAddButton();
+				TCPFuzzing.this.add();
 			}
 		});
 
@@ -239,7 +239,7 @@ public class TCPFuzzing extends JBRPanel {
 		this.buttonRemGen.setToolTipText("Remove a Generator");
 		this.buttonRemGen.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				TCPFuzzing.this.generatorRemoveButton();
+				TCPFuzzing.this.remove();
 			}
 		});
 
@@ -296,13 +296,13 @@ public class TCPFuzzing extends JBRPanel {
 				TCPFuzzing.this.worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
-						TCPFuzzing.this.fuzzStartButton();
+						TCPFuzzing.this.start();
 						return "start-window-return";
 					}
 
 					@Override
 					public void finished() {
-						TCPFuzzing.this.fuzzStopButton();
+						TCPFuzzing.this.stop();
 					}
 				};
 				TCPFuzzing.this.worker.start();
@@ -317,7 +317,7 @@ public class TCPFuzzing extends JBRPanel {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						TCPFuzzing.this.fuzzStopButton();
+						TCPFuzzing.this.stop();
 					}
 				});
 			}
@@ -413,7 +413,7 @@ public class TCPFuzzing extends JBRPanel {
 		if (!this.buttonPlot.isEnabled()) {
 			return;
 		}
-		final WindowPlotter wd = new WindowPlotter(FileHandler.getFuzzDirName());
+		final WindowPlotter wd = new WindowPlotter(FileHandler.getName(FileHandler.DIR_TCPF));
 		wd.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
@@ -429,7 +429,7 @@ public class TCPFuzzing extends JBRPanel {
 	 * Method trigered when the fuzz button is pressed in the current panel.
 	 * </p>
 	 */
-	public void fuzzStartButton() {
+	public void start() {
 		if (!this.buttonFuzzStart.isEnabled()) {
 			return;
 		}
@@ -489,7 +489,7 @@ public class TCPFuzzing extends JBRPanel {
 	 * Method trigered when attempting to stop any fuzzing taking place.
 	 * </p>
 	 */
-	public void fuzzStopButton() {
+	public void stop() {
 		if (!this.buttonFuzzStop.isEnabled()) {
 			return;
 		}
@@ -510,7 +510,7 @@ public class TCPFuzzing extends JBRPanel {
 	 * Method for adding a generator.
 	 * </p>
 	 */
-	public void generatorAddButton() {
+	public void add() {
 		// Check to see what text has been selected
 		String selectedText;
 		try {
@@ -559,7 +559,7 @@ public class TCPFuzzing extends JBRPanel {
 	 * from the corresponding table model of the generator table.
 	 * </p>
 	 */
-	public void generatorRemoveButton() {
+	public void remove() {
 		final int rows = this.generatorTable.getRowCount();
 		if (rows < 1) {
 			return;
@@ -700,7 +700,7 @@ public class TCPFuzzing extends JBRPanel {
 	 * @param b
 	 *          boolean
 	 */
-	public void setFuzzStartButtonEnable(final boolean b) {
+	private void setFuzzStartButtonEnable(final boolean b) {
 		this.buttonFuzzStart.setEnabled(b);
 	}
 
@@ -710,7 +710,7 @@ public class TCPFuzzing extends JBRPanel {
 	 * @param b
 	 *          boolean
 	 */
-	public void setFuzzStopButtonEnable(final boolean b) {
+	private void setFuzzStopButtonEnable(final boolean b) {
 		this.buttonFuzzStop.setEnabled(b);
 	}
 

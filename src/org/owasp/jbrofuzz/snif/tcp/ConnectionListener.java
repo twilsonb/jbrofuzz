@@ -96,7 +96,7 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 			this.server.setReuseAddress(false);
 		} catch (final IOException e) {
 			mn.getFrame().log("ServerSocket IOException..." + e.getMessage());
-			mn.getFrame().getTCPSniffingPanel().buttonStop();
+			mn.getFrame().getTCPSniffingPanel().stop();
 		}
 	}
 

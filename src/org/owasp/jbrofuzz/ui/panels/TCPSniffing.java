@@ -253,7 +253,7 @@ public class TCPSniffing extends JBRPanel {
 				TCPSniffing.this.worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
-						TCPSniffing.this.buttonStart();
+						TCPSniffing.this.start();
 						return "start-window-return";
 					}
 
@@ -267,13 +267,13 @@ public class TCPSniffing extends JBRPanel {
 		// The action listener for the stop button
 		this.stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				TCPSniffing.this.buttonStop();
+				TCPSniffing.this.stop();
 			}
 		});
 		// The action listener for the browser button
 		this.browserButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				TCPSniffing.this.buttonBro();
+				TCPSniffing.this.bro();
 			}
 		});
 
@@ -316,7 +316,7 @@ public class TCPSniffing extends JBRPanel {
 		});
 	}
 
-	public void buttonBro() {
+	public void bro() {
 		Browser.init();
 		final StringBuffer url = new StringBuffer();
 		if (this.getRemotePortText().equals("443")) {
@@ -337,7 +337,7 @@ public class TCPSniffing extends JBRPanel {
 	/**
 	 * Method for hitting the start button.
 	 */
-	public void buttonStart() {
+	public void start() {
 		if (!this.startButton.isEnabled()) {
 			return;
 		}
@@ -380,7 +380,7 @@ public class TCPSniffing extends JBRPanel {
 	/**
 	 * Method for hitting the stop button.
 	 */
-	public void buttonStop() {
+	public void stop() {
 		if (!this.stopButton.isEnabled()) {
 			return;
 		}
@@ -542,17 +542,6 @@ public class TCPSniffing extends JBRPanel {
 	 */
 	public String getRemotePortText() {
 		return this.rPortText.getText();
-	}
-
-	/**
-	 * <p>
-	 * Return the status of whether or not the stop button has been pressed.
-	 * </p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean getStopStatus() {
-		return this.stopPressed;
 	}
 
 }

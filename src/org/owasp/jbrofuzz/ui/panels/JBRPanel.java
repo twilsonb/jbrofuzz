@@ -25,9 +25,7 @@
  */
 package org.owasp.jbrofuzz.ui.panels;
 
-import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
 
 import org.owasp.jbrofuzz.ui.*;
 /**
@@ -38,7 +36,7 @@ import org.owasp.jbrofuzz.ui.*;
  * @author subere (at) uncon (dot) org
  * @version 0.8
  */
-public class JBRPanel extends JPanel {
+public abstract class JBRPanel extends JPanel {
 
 	private JBRFrame frame;
 	
@@ -51,4 +49,6 @@ public class JBRPanel extends JPanel {
 	public JBRFrame getFrame() {
 		return this.frame;
 	}
+	
+	
 }
