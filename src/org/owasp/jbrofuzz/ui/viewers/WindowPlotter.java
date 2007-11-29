@@ -73,7 +73,7 @@ public class WindowPlotter extends JFrame {
 		this.setIconImage(ImageCreator.FRAME_IMG.getImage());
 
 		this.y_data = FileHandler.getFuzzDirFileHashes();
-		this.x_data = FileHandler.getFuzzDirFileNames();
+		this.x_data = FileHandler.getFileList();
 
 		this.normaliseData();
 

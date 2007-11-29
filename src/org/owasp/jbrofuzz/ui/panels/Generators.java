@@ -74,9 +74,7 @@ public class Generators extends JBRPanel {
 	 */
 	public Generators(final JBRFrame m) {
 		super(m);
-		// this.setLayout(null);
-		// this.m = m;
-
+		
 		// Category
 
 		category = new JPanel();
@@ -314,7 +312,7 @@ public class Generators extends JBRPanel {
 	 * @param area
 	 *          JTextArea
 	 */
-	private void popup(final JTable area) {
+	protected void popup(final JTable area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 

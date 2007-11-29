@@ -149,7 +149,7 @@ public class JBRFrame extends JFrame {
 	 */
 	public JBRFrame(final JBroFuzz mJBroFuzz) {
 		// The frame
-		super("Java Bro Fuzzer " + JBRFormat.VERSION);
+		super("JBroFuzz " + JBRFormat.VERSION);
 		this.mJBroFuzz = mJBroFuzz;
 		// The menu bar
 		this.mMenuBar = new JBRMenuBar(this);

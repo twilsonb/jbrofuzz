@@ -8,7 +8,9 @@
   <property name="doc.dir" value="doc" />
   <property name="lic.dir" value="licenses" />
   <property name="hlp.dir" value="help" />
-  
+
+  <property name="version.num" value="0.8" />
+
   <patternset id="dest.exclude">
     <exclude name="Temporary_Files/" />
     <exclude name="Generated Source/" />
@@ -48,7 +50,7 @@
 
   <target depends="resource,compile" name="archive">
     <echo>Creating .jar File</echo>
-    <jar compress="true" destfile="${jar.dir}/${app.name}-${DSTAMP}.jar">
+    <jar compress="true" destfile="${jar.dir}/${app.name}-${version.num}-${DSTAMP}.jar">
       <fileset dir="${class.dir}">
         <patternset refid="dest.exclude" />
         <include name="**/*.*" />
@@ -71,11 +73,12 @@
       <zipfileset src="${lib.dir}/commons-io-1.3.2.jar" />
       <zipfileset src="${lib.dir}/commons-logging-1.1.jar" />
       <zipfileset src="${lib.dir}/junit-4.1.jar" />
-      <!-- zipfileset src="${lib.dir}/junit-4.1-src.jar" /-->
       <zipfileset src="${lib.dir}/ostermillerutils_1_06_00.jar" />
       <zipfileset src="${lib.dir}/jcckit.jar" />
       <manifest>
+      	<attribute name="Implementation-Version" value="${version.num}" />
         <attribute name="Main-Class" value="org.owasp.jbrofuzz.JBroFuzz" />
+      	<attribute name="Build-By" value="subere (at) uncon (dot) org" />
       </manifest>
     </jar>
   </target>

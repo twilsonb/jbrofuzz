@@ -42,7 +42,7 @@ import org.owasp.jbrofuzz.ui.JBRFrame;;
  */
 public class FuzzingTableModel extends AbstractTableModel {
 
-	private static final long serialVersionUID = 1021L;
+	private static final long serialVersionUID = 1012351L;
 
 	/**
 	 * <p>

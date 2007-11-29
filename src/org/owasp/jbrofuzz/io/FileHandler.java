@@ -47,15 +47,14 @@ import org.owasp.jbrofuzz.version.JBRFormat;
 import org.apache.commons.io.*;
 
 /**
- * <p>
- * Class responsible for all File Creation. This class holds the file read and
- * create methods.
- * </p>
- * <p>
- * At runtime, three directories are created inside to the fuzzing, sniffing and
- * web-dir directories. The names of these directories are identical and
- * correspond to a timestamp value.
- * </p>
+ * <p>Class responsible for all file handling activities.</p>
+ * 
+ * <p>At runtime, a number of directories are created within the directory
+ * from which JBroFuzz is launched.</p>
+ * 
+ * <p>Any empty directories are removed when the application is 
+ * closed down.</p>
+ * 
  * 
  * @author subere (at) uncon (dot) org
  * @version 0.6
@@ -75,7 +74,7 @@ public class FileHandler {
 
 	// The fuzz directory of operation
 	private static File fuzzDirectory;
-	
+
 	// The http fuzz directory of operation
 	private static File httpFuzzDirectory;
 
@@ -94,8 +93,13 @@ public class FileHandler {
 	private static final int SNIF_FILE = 1;
 
 	private static final int WEBD_FILE = 2;
-	
+
 	private static final int HTTP_FILE = 3;
+
+	public static final int DIR_HTTP = 10;
+	public static final int DIR_SNIF = 11;
+	public static final int DIR_WEBD = 12;
+	public static final int DIR_TCPF = 13;
 
 	// The date from the version
 	private static String runningDate;
@@ -128,8 +132,8 @@ public class FileHandler {
 	}
 
 	private static void createFile(final String fileName, 
-																 final String content,
-																 final int fileType) {
+			final String content,
+			final int fileType) {
 
 
 		if (fileType == FileHandler.HTTP_FILE) {
@@ -217,21 +221,6 @@ public class FileHandler {
 
 	/**
 	 * <p>
-	 * Method for returning the fuzzing directory canonical path.
-	 * </p>
-	 * 
-	 * @return String
-	 */
-	public static String getFuzzDirCanonicalPath() {
-		try {
-			return FileHandler.fuzzDirectory.getCanonicalPath();
-		} catch (final IOException e) {
-			return "";
-		}
-	}
-
-	/**
-	 * <p>
 	 * Method for returning an integer array of hashes for each file found inside
 	 * the session fuzz directory created at runtime.
 	 * </p>
@@ -309,7 +298,7 @@ public class FileHandler {
 	 * @return String[] hashValue
 	 * @since 0.6
 	 */
-	public static String[] getFuzzDirFileNames() {
+	public static String[] getFileList() {
 
 		final File[] folderFiles = FileHandler.fuzzDirectory.listFiles();
 		final String[] hashValue = new String[folderFiles.length];
@@ -322,43 +311,45 @@ public class FileHandler {
 	}
 
 	/**
-	 * <p>
-	 * Method for returning the name, as a String of the fuzzing directory used in
-	 * the current session.
-	 * </p>
+	 * <p>Method for returning the name of the directory specified.</p>
+	 * <p>If the directory number is unknown, an empty String is returned.</p>
 	 * 
-	 * @return String
+	 * @param directory
+	 * @return
 	 */
-	public static String getFuzzDirName() {
-		return "/" + FileHandler.fuzzDirectory.getName() + "/";
-	}
+	public static String getName(final int directory) {
 
-	/**
-	 * <p>
-	 * Method for returning the canonical path of the snif directory.
-	 * </p>
-	 * 
-	 * @return String
-	 */
-	public static String getSnifDirCanonicalPath() {
-		try {
-			return FileHandler.snifDirectory.getCanonicalPath();
-		} catch (final IOException e) {
-			return "";
+		switch(directory) {
+		case DIR_HTTP: return FileHandler.httpFuzzDirectory.getName();
+		case DIR_TCPF: return FileHandler.fuzzDirectory.getName();
+		case DIR_WEBD: return FileHandler.webEnumDirectory.getName();
+		case DIR_SNIF: return FileHandler.snifDirectory.getName();
+		default: return "";
 		}
+
 	}
 
+
+
+
 	/**
-	 * <p>
-	 * Method for returning the canonical path of the web-dir directory.
-	 * </p>
+	 * <p>Method for returning the canonical path of a directory specified.</p>
+	 * <p>If the directory number is unknown, an empty String is returned.</p>
 	 * 
-	 * @return String
+	 * @param directory
+	 * @return 
 	 */
-	public static String getWebDirCanonicalPath() {
+	public static String getCanonicalPath(final int directory) {
 		try {
-			return FileHandler.webEnumDirectory.getCanonicalPath();
-		} catch (final IOException e) {
+			switch(directory) {
+			case DIR_HTTP: return FileHandler.httpFuzzDirectory.getCanonicalPath();
+			case DIR_TCPF: return FileHandler.fuzzDirectory.getCanonicalPath();
+			case DIR_WEBD: return FileHandler.webEnumDirectory.getCanonicalPath();
+			case DIR_SNIF: return FileHandler.snifDirectory.getCanonicalPath();
+			default: return "";
+			}
+		}
+		catch(final IOException e1) {
 			return "";
 		}
 	}
@@ -524,7 +515,7 @@ public class FileHandler {
 		}
 		return out;
 	}
-	
+
 	/**
 	 * <p>
 	 * Method for reading fuzz files that have been generated within a fuzzing
@@ -805,7 +796,7 @@ public class FileHandler {
 		// Actually create the file
 		FileHandler.createFile(name + ".html", content, FileHandler.FUZZ_FILE);
 	}
-	
+
 	/**
 	 * <p>
 	 * Method for writting a new fuzz file within the created fuzzing directory.
@@ -897,7 +888,7 @@ public class FileHandler {
 		FileHandler.webEnumDirectory = new File(baseDir + File.separator
 				+ "jbrofuzz" + File.separator + "web-dir" + File.separator
 				+ FileHandler.runningDate);
-		
+
 		FileHandler.httpFuzzDirectory = new File(baseDir + File.separator
 				+ "jbrofuzz" + File.separator + "fuzzing-http" + File.separator
 				+ FileHandler.runningDate);
@@ -928,7 +919,7 @@ public class FileHandler {
 				failedDirCounter++;
 			}
 		}
-		
+
 		if (!FileHandler.httpFuzzDirectory.exists()) {
 			boolean success = FileHandler.httpFuzzDirectory.mkdirs();
 			if (!success) {
@@ -939,7 +930,7 @@ public class FileHandler {
 
 		if (failedDirCounter >= 4) {
 			g
-					.log("\tToo many directories could not be created! Are you launching me through your browser?");
+			.log("\tToo many directories could not be created! Are you launching me through your browser?");
 			g.log("\tTry \"java -jar jbrofuzz-" + JBRFormat.VERSION
 					+ ".jar\" on command line...");
 			failedDirCounter = 0;
@@ -964,7 +955,7 @@ public class FileHandler {
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
 	}
-	
+
 	/**
 	 * <p>
 	 * Method for deleting the empty directories at the end of a session.
@@ -974,7 +965,7 @@ public class FileHandler {
 	 */
 	public int deleteEmptryDirectories() {
 		int count = 0;
-		
+
 		if(FileUtils.sizeOfDirectory(fuzzDirectory) == 0L) {
 			try {
 				FileUtils.deleteDirectory(fuzzDirectory);
@@ -1011,6 +1002,66 @@ public class FileHandler {
 				// e.printStackTrace();
 			}
 		}
+
+		final String baseDir = System.getProperty("user.dir");
+
+		if(FileUtils.sizeOfDirectory(new File(baseDir + File.separator + "jbrofuzz"
+				+ File.separator + "fuzzing-tcp" + File.separator)) == 0L) {
+			try {
+				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
+						+ File.separator + "fuzzing-tcp" + File.separator));
+				count++;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+		if(FileUtils.sizeOfDirectory(new File(baseDir + File.separator + "jbrofuzz"
+				+ File.separator + "sniffing" + File.separator)) == 0L) {
+			try {
+				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
+						+ File.separator + "sniffing" + File.separator));
+				count++;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+		if(FileUtils.sizeOfDirectory(new File(baseDir + File.separator + "jbrofuzz"
+				+ File.separator + "web-dir" + File.separator)) == 0L) {
+			try {
+				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
+						+ File.separator + "web-dir" + File.separator));
+				count++;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+		if(FileUtils.sizeOfDirectory(new File(baseDir + File.separator + "jbrofuzz"
+				+ File.separator + "fuzzing-http" + File.separator)) == 0L) {
+			try {
+				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
+						+ File.separator + "fuzzing-http" + File.separator));
+				count++;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+
+		if(FileUtils.sizeOfDirectory(new File(baseDir + File.separator + "jbrofuzz"
+				+ File.separator)) == 0L) {
+			try {
+				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
+						+ File.separator));
+				count++;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+
 		return count;
 	}
 

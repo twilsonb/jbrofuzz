@@ -25,29 +25,21 @@
  */
 package org.owasp.jbrofuzz.fuzz;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.prefs.Preferences;
-
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.URIException;
+
 import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.util.URIUtil;
+
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.io.FileHandler;
+
 import org.owasp.jbrofuzz.ui.*;
-import org.owasp.jbrofuzz.version.JBRFormat;
-import org.owasp.jbrofuzz.version.JBRTime;
+
+
 
 /**
  * <p>
@@ -60,7 +52,7 @@ import org.owasp.jbrofuzz.version.JBRTime;
  * @version 0.8
  */
 public class HTTPRequestIterator {
-	
+
 	// The main object for JBroFuzz
 	private JBroFuzz mJBroFuzz;
 	// The main url read from the GUI
@@ -75,8 +67,8 @@ public class HTTPRequestIterator {
 	private String category;
 	// The beginning an end of the location that is fuzzing will occur
 	private int start, end;
-	
-	
+
+
 	/**
 	 * <p>
 	 * Constructor for the HTTP Request Iterator, responsible for constructing
@@ -86,10 +78,10 @@ public class HTTPRequestIterator {
 	 * @param mJBroFuzz
 	 */
 	public HTTPRequestIterator(final JBroFuzz mJBroFuzz, 
-														 String category, 
-														 int start, 
-														 int end) {
-		
+			String category, 
+			int start, 
+			int end) {
+
 		this.mJBroFuzz = mJBroFuzz;
 		JBRFrame mainWindow = this.mJBroFuzz.getWindow();
 		this.url = mainWindow.getHTTPFuzzingPanel().getTargetText();
@@ -98,8 +90,8 @@ public class HTTPRequestIterator {
 		this.category = category;
 		this.start = start;
 		this.end = end;
-		
-		
+
+
 		//	 Check the port
 		String pt = mainWindow.getHTTPFuzzingPanel().getPortText();
 		try {
@@ -113,7 +105,7 @@ public class HTTPRequestIterator {
 			this.port = 0;
 			mainWindow.log("HTTP Fuzzing Panel: Port has to be between [1 - 65535]");
 		}
-		
+
 		// Establish the protocols, if the port is valid
 		if (this.port != 0) {
 
@@ -123,18 +115,18 @@ public class HTTPRequestIterator {
 						new EasySSLProtocolSocketFactory(), this.port);
 				Protocol.registerProtocol("https", easyhttps);
 			}
-			
+
 			// For http, just show affection
 			if (this.url.startsWith("http://")) {
 				final Protocol easyhttp = new Protocol("http",
 						new DefaultProtocolSocketFactory(), this.port);
 				Protocol.registerProtocol("http", easyhttp);
 			}
-			
+
 		} // If port != 0
-		
+
 	} // Constructor
-	
+
 	/**
 	 * <p>
 	 * Method used for running the request iterator once it has been initialised.
@@ -144,7 +136,7 @@ public class HTTPRequestIterator {
 	 * </p>
 	 */
 	public void run() {
-		
+
 		// Check for a valid URL and port
 		if (this.url.equalsIgnoreCase("")) {
 			return;
@@ -155,11 +147,11 @@ public class HTTPRequestIterator {
 		if ((this.port < 1) || (this.port > 65536)) {
 			return;
 		}
-		
+
 		// Main for loop iterating through the exploits
 		String [] exploitArray = this.mJBroFuzz.getDatabase().getNames(this.category);
 		for (this.i = 0; this.i < exploitArray.length; this.i++) {
-			
+
 			if (this.stopped) {
 				return;
 			}
@@ -173,8 +165,8 @@ public class HTTPRequestIterator {
 				this.m.log("Could not encode the URI: " + this.url
 						+ this.directories[this.i]);
 			}
-			*/
-			
+			 */
+
 			// Checks...
 			if (this.url.equalsIgnoreCase("")) {
 				return;
@@ -271,7 +263,7 @@ public class HTTPRequestIterator {
 			} finally {
 				method.releaseConnection();
 			}
-			*/
+			 */
 			// Add a row to the displaying table
 			// this.m.getWebDirectoriesPanel().addRow(this.responses[this.i]);
 			// Create a String to be written to file

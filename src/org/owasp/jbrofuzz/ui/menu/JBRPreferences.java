@@ -195,7 +195,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		header.add(Box.createRigidArea(new Dimension(0, 10)));
 
 		final JLabel fourthBox = new JLabel("<html>"
-				+ FileHandler.getWebDirCanonicalPath() + "</html>");
+				+ FileHandler.getCanonicalPath(FileHandler.DIR_WEBD) + "</html>");
 		fourthBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Web Enum Directory (where data is saved) "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
@@ -231,7 +231,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		header.add(Box.createRigidArea(new Dimension(0, 10)));
 
 		final JLabel secondBox = new JLabel("<html>"
-				+ FileHandler.getFuzzDirCanonicalPath() + "</html>");
+				+ FileHandler.getCanonicalPath(FileHandler.DIR_TCPF) + "</html>");
 		secondBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Fuzzing Directory (where data is saved) "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
@@ -260,7 +260,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		header.add(Box.createRigidArea(new Dimension(0, 10)));
 
 		final JLabel thirdBox = new JLabel("<html>"
-				+ FileHandler.getSnifDirCanonicalPath() + "</html>");
+				+ FileHandler.getCanonicalPath(FileHandler.DIR_SNIF) + "</html>");
 		thirdBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Sniffing Directory (where data is saved) "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));

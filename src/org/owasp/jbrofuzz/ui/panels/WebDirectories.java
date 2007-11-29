@@ -49,12 +49,10 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker3;
 import javax.swing.table.TableColumn;
 
-import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.dir.DRequestIterator;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.WebDirectoriesModel;
@@ -78,9 +76,6 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 	 */
 	private static final long serialVersionUID = -1291872530751555718L;
 
-	// The frame that the sniffing panel is attached
-	// private JBRFrame m;
-
 	// The text areas used in their corresponding panels
 	private JTextArea directoryText;
 
@@ -91,16 +86,10 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 	// The JButtons present in the user interface
 	private final JButton startButton, stopButton;
 
-	// The JCheckBox to continue if an error occurs
-	// private final JCheckBox errorCheckBox;
-
-	// The preferences boolean checkbox
-	// private boolean checkbox;
-
-	// The jtable holding all the responses
+	// The JTable holding all the responses
 	private JTable responseTable;
 
-	// The correspondng table model
+	// The corresponding table model
 	private WebDirectoriesModel responseTableModel;
 
 	// The request iterator to loop through the directories
@@ -216,13 +205,13 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 				final SwingWorker3 worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
-						WebDirectories.this.buttonStart();
+						WebDirectories.this.start();
 						return "start-window-return";
 					}
 
 					@Override
 					public void finished() {
-						WebDirectories.this.buttonStop();
+						WebDirectories.this.stop();
 					}
 				};
 				worker.start();
@@ -235,7 +224,7 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 		this.add(this.stopButton);
 		this.stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				WebDirectories.this.buttonStop();
+				WebDirectories.this.stop();
 			}
 		});
 		
@@ -347,7 +336,7 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 	/**
 	 * Method triggered when the start button is pressed.
 	 */
-	public void buttonStart() {
+	public void start() {
 		if (!this.startButton.isEnabled()) {
 			return;
 		}
@@ -390,7 +379,7 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 	 * Method for stopping the request iterator.
 	 * </p>
 	 */
-	public void buttonStop() {
+	public void stop() {
 		if (!this.stopButton.isEnabled()) {
 			return;
 		}

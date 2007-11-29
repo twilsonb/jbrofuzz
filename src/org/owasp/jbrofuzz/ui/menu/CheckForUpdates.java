@@ -39,6 +39,7 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -93,6 +94,9 @@ public class CheckForUpdates extends JDialog {
 				"<HTML>Select \"Check\" to connect to the JBroFuzz website and check for a newer version</HTML>",
 				ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
 
+		this.mainLabel.setIconTextGap(20);
+		this.mainLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 5));
+		
 		this.getContentPane().add(this.mainLabel, BorderLayout.CENTER);
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,

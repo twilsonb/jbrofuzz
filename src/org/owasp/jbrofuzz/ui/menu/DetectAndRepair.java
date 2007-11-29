@@ -1,5 +1,5 @@
 /**
- * DetectAndRepair.java 0.7
+ * DetectAndRepair.java 0.8
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -26,17 +26,20 @@
 package org.owasp.jbrofuzz.ui.menu;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker3;
@@ -51,7 +54,7 @@ import org.owasp.jbrofuzz.version.JBRFormat;
  * </p>
  * 
  * @author subere (at) uncon org
- * @version 0.7
+ * @version 0.8
  */
 public class DetectAndRepair extends JDialog {
 
@@ -74,11 +77,13 @@ public class DetectAndRepair extends JDialog {
 		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		this.setLayout(new BorderLayout());
-		this.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		this.setFont(new Font("SansSerif", Font.PLAIN, 10));
 
 		this.mainLabel = new JLabel(
 				"<HTML>Select \"Detect\" to run a diagnostic check on JBroFuzz</HTML>",
 				ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
+		this.mainLabel.setIconTextGap(20);
+		this.mainLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 5));
 
 		this.getContentPane().add(this.mainLabel, BorderLayout.CENTER);
 
@@ -88,7 +93,7 @@ public class DetectAndRepair extends JDialog {
 		// Bottom buttons
 		this.startStop = new JButton("Detect");
 		this.startStop
-				.setToolTipText("Detect any potential problems with JBroFuzz");
+		.setToolTipText("Detect any potential problems with JBroFuzz");
 
 		this.startStop.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -129,7 +134,7 @@ public class DetectAndRepair extends JDialog {
 		// Global frame issues
 		this.setLocation(Math.abs((parent.getWidth() / 2)
 				- (DetectAndRepair.x / 2 - 100)), Math.abs((parent.getHeight() / 2)
-				- (DetectAndRepair.y / 2) + 100));
+						- (DetectAndRepair.y / 2) + 100));
 		this.setSize(DetectAndRepair.x, DetectAndRepair.y);
 		this.setResizable(false);
 		this.setVisible(true);
@@ -153,12 +158,12 @@ public class DetectAndRepair extends JDialog {
 		this.close.setEnabled(false);
 
 		final StringBuffer output = new StringBuffer();
-		output
-				.append("<HTML>Checking for the files that should have come with the distribution...&nbsp;&nbsp;<BR>");
+		output.append("<HTML>Checking for the files that should have come with the distribution...&nbsp;&nbsp;<BR>");
 		this.mainLabel.setText(output.toString() + "</HTML>");
 
 		int check = 0;
 
+		
 		output.append("<BR>&nbsp;&nbsp;&nbsp;Checking file&nbsp;"
 				+ JBRFormat.FILE_GEN + "...&nbsp;&nbsp;");
 		this.mainLabel.setText(output.toString() + "</HTML>");
@@ -184,21 +189,25 @@ public class DetectAndRepair extends JDialog {
 			output.append("<B>Failure</B><BR>");
 			check++;
 		}
-
+		
 		// Display action, according to success or failure
 		if (check == 0) {
 			output
-					.append("<BR>Both files were found within the directory that JBroFuzz was launched.<BR>");
+			.append("<BR>Both files were found within the directory that JBroFuzz was launched.<BR>");
+			/*
 			output
-					.append("<BR>You can modify these files appropriately, to load your own data.<BR>");
+			.append("<BR>You can modify these files appropriately, to load your own data.<BR>");
 			output
-					.append("<BR>The application would have to be restarted to load the data from file.<BR>");
+			.append("<BR>The application would have to be restarted to load the data from file.<BR>");
+			*/
 		} else {
 			output
-					.append("<BR>The corresponding files were not found within the directory that JBroFuzz was launched.<BR>");
+			.append("<BR>The corresponding files were not found within the directory that JBroFuzz was launched.<BR>");
+			/*
 			output
-					.append("<BR>This limits your ability to modify these files in order to load your own data.<BR>");
+			.append("<BR>This limits your ability to modify these files in order to load your own data.<BR>");
 			output.append("<BR>The application will still run normally.<BR>");
+			*/
 		}
 		this.mainLabel.setText(output.toString() + "</HTML>");
 	}

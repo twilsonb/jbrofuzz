@@ -30,6 +30,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -38,7 +41,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.owasp.jbrofuzz.ui.JBRFrame;
-import org.owasp.jbrofuzz.version.JBRTime;
 
 /**
  * <p>
@@ -163,8 +165,13 @@ public class SystemLogger extends JBRPanel {
 	 *          String
 	 */
 	public void addLoggingEvent(final String str) {
+		
+		Date currentTime = new Date();
+		final SimpleDateFormat dateTime = new SimpleDateFormat(
+				"dd.MM.yyyy HH:mm:ss", new Locale("en"));
+		
 		this.lineCount++;
-		this.listTextArea.append("[" + JBRTime.dateAndTime() + "] " + str + "\n");
+		this.listTextArea.append("[" + dateTime.format(currentTime) + "] " + str + "\n");
 		// Fix the disappearing tab problem
 		int tab = -1;
 		final int totalTabs = getFrame().getTabbedPane()
