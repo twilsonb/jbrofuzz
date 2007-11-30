@@ -455,30 +455,10 @@ public class HTTPFuzzing extends JBRPanel {
 		// Update the border of the output panel
 		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Responses  "
-						+ "Logging in folder (" + getFrame().getJBroFuzz().getFormat().getDate() +
+						+ "Logging in folder (" + getFrame().getJBroFuzz().getFormat().DATE +
 						") Session " + this.session), BorderFactory.createEmptyBorder(5, 5,
 								5, 5)));
-
-		final int rows = this.generatorTable.getRowCount();
-		if (rows < 1) {
-			final StringBuffer sbuf = new StringBuffer(this.getMessageText());
-			// this.mRIterator = new TRequestIterator(this.getJBroFuzz(), sbuf, 0, 0, "ZER");
-			// this.mRIterator.run();
-		} else {
-			for (int i = 0; i < rows; i++) {
-				final String generator = (String) this.mFuzzingTableModel.getValueAt(i,
-						0);
-				final int start = ((Integer) this.mFuzzingTableModel.getValueAt(i, 1))
-				.intValue();
-				final int end = ((Integer) this.mFuzzingTableModel.getValueAt(i, 2))
-				.intValue();
-
-				final StringBuffer sbuf = new StringBuffer(this.getMessageText());
-				//this.mRIterator = new RequestIterator(this.getJBroFuzz(), sbuf, start,
-				// 		end, generator);
-				// this.mRIterator.run();
-			}
-		}
+		
 	}
 
 	/**
@@ -657,30 +637,6 @@ public class HTTPFuzzing extends JBRPanel {
 	public String getTargetText() {
 
 		return this.target.getText();
-
-	}
-
-	/**
-	 * Set the button enable status of the Fuzz! button
-	 * 
-	 * @param b
-	 *          boolean
-	 */
-	private void setFuzzStartButtonEnable(final boolean b) {
-
-		this.buttonFuzzStart.setEnabled(b);
-
-	}
-
-	/**
-	 * Set the button enable status of the Stop button
-	 * 
-	 * @param b
-	 *          boolean
-	 */
-	private void setFuzzStopButtonEnable(final boolean b) {
-
-		this.buttonFuzzStop.setEnabled(b);
 
 	}
 

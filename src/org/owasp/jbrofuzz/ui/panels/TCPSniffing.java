@@ -46,12 +46,12 @@ import javax.swing.SwingWorker3;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.snif.tcp.ConnectionListener;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
 import com.Ostermiller.util.Browser;
 
@@ -368,7 +368,7 @@ public class TCPSniffing extends JBRPanel {
 		// Update the border of the output panel
 		this.listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" List of Requests " + "[Logging in folder .\\"
-						+ getFrame().getJBroFuzz().getFormat().getDate() + "\\" + this.session
+						+ JBRFormat.DATE + "\\" + this.session
 						+ "*.txt]  [" + rh + ":" + rp + " <=> " + lh + ":" + lp + "] "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
@@ -413,7 +413,7 @@ public class TCPSniffing extends JBRPanel {
 		} else {
 			this.listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 					.createTitledBorder(" List of Requests " + "[Last log was .\\"
-							+ getFrame().getJBroFuzz().getFormat().getDate() + "\\" + this.session
+							+ JBRFormat.DATE + "\\" + this.session
 							+ "*.txt] "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		}
 	}

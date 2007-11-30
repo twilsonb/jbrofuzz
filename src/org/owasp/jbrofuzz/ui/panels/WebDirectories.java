@@ -58,6 +58,7 @@ import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.WebDirectoriesModel;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.ui.util.TableSorter;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
 import com.Ostermiller.util.Browser;
 
@@ -346,7 +347,7 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 		// Update the panel, indicating directory
 		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output " + "[Logging in file \\web-dir\\"
-						+ getFrame().getJBroFuzz().getFormat().getDate() + "\\"
+						+ JBRFormat.DATE + "\\"
 						+ this.getSessionNumber() + ".csv]  "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 

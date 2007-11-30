@@ -45,7 +45,7 @@ import org.owasp.jbrofuzz.version.JBRFormat;
  */
 public class TConstructor {
 	final private JBroFuzz mJBroFuzz;
-	private ArrayList generators;
+	private ArrayList<Generator> generators;
 
 	/**
 	 * <p>
@@ -58,7 +58,7 @@ public class TConstructor {
 	 */
 	public TConstructor(final JBroFuzz mJBroFuzz) {
 		this.mJBroFuzz = mJBroFuzz;
-		this.generators = new ArrayList();
+		this.generators = new ArrayList<Generator>();
 
 		final StringBuffer fileContents = FileHandler
 				.readGenerators(JBRFormat.FILE_GEN);

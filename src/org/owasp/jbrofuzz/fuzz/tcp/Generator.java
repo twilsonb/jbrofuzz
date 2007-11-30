@@ -124,7 +124,7 @@ public class Generator {
 	private char type;
 
 	// The alphabet of the generator
-	private ArrayList alphabet;
+	private ArrayList<StringBuffer> alphabet;
 	// The total number of elements within the alphabet
 	private int alphabetSize;
 	// The total additions that have been made to the alphabet
@@ -170,7 +170,7 @@ public class Generator {
 		this.category = category;
 		this.totalAdds = 0;
 
-		this.alphabet = new ArrayList(alphabetSize);
+		this.alphabet = new ArrayList<StringBuffer>(alphabetSize);
 	}
 
 	/**
