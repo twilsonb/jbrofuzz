@@ -77,7 +77,7 @@ public class SystemLogger extends JBRPanel {
 		super(m);
 		// this.setLayout(null);
 		// this.m = m;
-		this.lineCount = 0;
+		lineCount = 0;
 		// Define the JPanel
 		final JPanel listPanel = new JPanel();
 
@@ -87,26 +87,26 @@ public class SystemLogger extends JBRPanel {
 		// Set the bounds
 		listPanel.setBounds(10, 90, 870, 360);
 
-		this.listTextArea = new JTextArea();
-		this.listTextArea.setFont(new Font("Verdana", Font.PLAIN, 10));
-		this.listTextArea.setEditable(false);
-		this.listTextArea.setLineWrap(true);
-		this.listTextArea.setWrapStyleWord(true);
-		this.listTextArea.setBackground(Color.WHITE);
-		this.listTextArea.setForeground(Color.BLACK);
-		getFrame().popup(this.listTextArea);
+		listTextArea = new JTextArea();
+		listTextArea.setFont(new Font("Verdana", Font.PLAIN, 10));
+		listTextArea.setEditable(false);
+		listTextArea.setLineWrap(true);
+		listTextArea.setWrapStyleWord(true);
+		listTextArea.setBackground(Color.WHITE);
+		listTextArea.setForeground(Color.BLACK);
+		getFrame().popup(listTextArea);
 
-		final JScrollPane listTextScrollPane = new JScrollPane(this.listTextArea);
+		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
 		listTextScrollPane.setHorizontalScrollBarPolicy(31);
 		listTextScrollPane.setPreferredSize(new Dimension(850, 320));
 		listPanel.add(listTextScrollPane);
 
-		this.infoButton = new JButton("Info");
-		this.infoButton.setBounds(800, 33, 70, 40);
-		this.infoButton.setEnabled(true);
+		infoButton = new JButton("Info");
+		infoButton.setBounds(800, 33, 70, 40);
+		infoButton.setEnabled(true);
 		// The action listener for the info button
-		this.infoButton.addActionListener(new ActionListener() {
+		infoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				final String systemInfo = "[System Info Start]\r\n" + "  [Java]\r\n"
 						+ "    Vendor:  "
@@ -150,8 +150,8 @@ public class SystemLogger extends JBRPanel {
 			}
 		});
 		this.add(listPanel);
-		this.add(this.infoButton);
-		this.listTextArea.setCaretPosition(0);
+		this.add(infoButton);
+		listTextArea.setCaretPosition(0);
 	}
 
 	/**
@@ -166,12 +166,12 @@ public class SystemLogger extends JBRPanel {
 	 */
 	public void addLoggingEvent(final String str) {
 		
-		Date currentTime = new Date();
+		final Date currentTime = new Date();
 		final SimpleDateFormat dateTime = new SimpleDateFormat(
 				"dd.MM.yyyy HH:mm:ss", new Locale("en"));
 		
-		this.lineCount++;
-		this.listTextArea.append("[" + dateTime.format(currentTime) + "] " + str + "\n");
+		lineCount++;
+		listTextArea.append("[" + dateTime.format(currentTime) + "] " + str + "\n");
 		// Fix the disappearing tab problem
 		int tab = -1;
 		final int totalTabs = getFrame().getTabbedPane()
@@ -184,7 +184,7 @@ public class SystemLogger extends JBRPanel {
 		}
 		if ((tab > -1)) {
 			getFrame().getTabbedPane().setTitleAt(tab,
-					" System (" + this.lineCount + ")");
+					" System (" + lineCount + ")");
 		}
 	}
 }

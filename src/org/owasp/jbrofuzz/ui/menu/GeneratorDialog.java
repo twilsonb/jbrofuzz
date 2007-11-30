@@ -84,13 +84,13 @@ public class GeneratorDialog extends JDialog {
 	 * @param start
 	 * @param end
 	 */
-	public GeneratorDialog(final JBRFrame parent, int start, int end) {
+	public GeneratorDialog(final JBRFrame parent, final int start, final int end) {
 		
 		super(parent, " Payload Selector ", true);
-		this.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-		this.setLayout(null);
-		this.m = parent;
+		setLayout(null);
+		m = parent;
 		this.start = start;
 		this.end = end;
 		lastCategory = "";
@@ -110,11 +110,11 @@ public class GeneratorDialog extends JDialog {
 		categoryTable.setName("Category");
 		categoryTable.setToolTipText("Double click to Add the Exploit Category");
 		
-		this.categoryTable.getTableHeader().setToolTipText("Click to sort by category");
-		this.popup(this.categoryTable);
-		categoryTableSorter.setTableHeader(this.categoryTable.getTableHeader());
+		categoryTable.getTableHeader().setToolTipText("Click to sort by category");
+		popup(categoryTable);
+		categoryTableSorter.setTableHeader(categoryTable.getTableHeader());
 		categoryTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		categoryTableModel.setData(this.m.getJBroFuzz().getDatabase().getAllCategories());
+		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllCategories());
 		categoryTableSorter.setTableModel(categoryTableModel);
 		categoryTableSorter.fireTableDataChanged();
 		categoryTable.setFont(new Font("Verdana", Font.BOLD, 14));
@@ -123,10 +123,11 @@ public class GeneratorDialog extends JDialog {
 		categoryTable.setBackground(Color.BLACK);
 		categoryTable.setForeground(Color.WHITE);
 		categoryTable.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent e){
+			@Override
+			public void mouseClicked(final MouseEvent e){
 				if (e.getClickCount() == 2){
-					int c = categoryTable.getSelectedRow();
-					String value = (String) categoryTableSorter.getValueAt(c, 0);
+					final int c = categoryTable.getSelectedRow();
+					final String value = (String) categoryTableSorter.getValueAt(c, 0);
 					m.getHTTPFuzzingPanel().generatorAddRow(value, GeneratorDialog.this.start, GeneratorDialog.this.end );
 					GeneratorDialog.this.dispose();
 				}
@@ -162,9 +163,9 @@ public class GeneratorDialog extends JDialog {
 		nameTable = new JTable(nameTableSorter);
 		nameTable.setName("Name");
 
-		this.nameTable.getTableHeader().setToolTipText("Click to sort by name");
-		nameTableSorter.setTableHeader(this.nameTable.getTableHeader());
-		this.popup(nameTable);
+		nameTable.getTableHeader().setToolTipText("Click to sort by name");
+		nameTableSorter.setTableHeader(nameTable.getTableHeader());
+		popup(nameTable);
 		nameTable.setFont(new Font("Verdana", Font.BOLD, 14));
 		nameTable.setRowHeight(30);
 		nameTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -172,7 +173,8 @@ public class GeneratorDialog extends JDialog {
 		nameTable.setBackground(Color.BLACK);
 		nameTable.setForeground(Color.WHITE);
 		nameTable.addMouseListener(new MouseAdapter(){
-	     public void mouseClicked(MouseEvent e){
+	     @Override
+			public void mouseClicked(final MouseEvent e){
 	      if (e.getClickCount() == 2){
 	      	// String exploit = (String) nameTable.getModel().getValueAt(nameTable.getSelectedRow(), 0);
 					// new ExploitViewer(m, exploit, ExploitViewer.VIEW_EXPLOIT);
@@ -206,17 +208,17 @@ public class GeneratorDialog extends JDialog {
 		view.setLayout(new BoxLayout(view, BoxLayout.Y_AXIS));
 		this.add(view);	
 
-		this.viewTextArea = new NonWrappingTextPane();
-		this.viewTextArea.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+		viewTextArea = new NonWrappingTextPane();
+		viewTextArea.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Payload "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		this.viewTextArea.putClientProperty("charset", "UTF-8");
-		this.viewTextArea.setEditable(false);
-		this.viewTextArea.setVisible(true);
-		this.viewTextArea.setFont(new Font("Verdana", Font.BOLD, 14));
-		this.viewTextArea.setMargin(new Insets(1, 1, 1, 1));
-		this.viewTextArea.setBackground(Color.WHITE);
-		this.viewTextArea.setForeground(Color.BLACK);
+		viewTextArea.putClientProperty("charset", "UTF-8");
+		viewTextArea.setEditable(false);
+		viewTextArea.setVisible(true);
+		viewTextArea.setFont(new Font("Verdana", Font.BOLD, 14));
+		viewTextArea.setMargin(new Insets(1, 1, 1, 1));
+		viewTextArea.setBackground(Color.WHITE);
+		viewTextArea.setForeground(Color.BLACK);
 		parent.popup(viewTextArea);
 		viewTextArea.addKeyListener(new KeyAdapter() {
 			@Override
@@ -232,20 +234,20 @@ public class GeneratorDialog extends JDialog {
 		viewTextScrollPane.setPreferredSize(new Dimension(150, 100));
 		view.add(viewTextScrollPane);	
 		
-		JLabel infoPanel = new JLabel("<html><h6 align=\"left\">For further information<br>on each exploit, view <br>the Generators Tab</h6></html>");
+		final JLabel infoPanel = new JLabel("<html><h6 align=\"left\">For further information<br>on each exploit, view <br>the Generators Tab</h6></html>");
 		infoPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		view.add(infoPanel);
 		
 		// Bottom button
-		this.ok = new JButton("Add Exploit Category");
-		this.ok.setBounds(460, 305, 160, 40);
+		ok = new JButton("Add Exploit Category");
+		ok.setBounds(460, 305, 160, 40);
 
-		this.ok.addActionListener(new ActionListener() {
+		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						int c = categoryTable.getSelectedRow();
-						String value = (String) categoryTableSorter.getValueAt(c, 0);
+						final int c = categoryTable.getSelectedRow();
+						final String value = (String) categoryTableSorter.getValueAt(c, 0);
 						m.getHTTPFuzzingPanel().generatorAddRow(value, GeneratorDialog.this.start, GeneratorDialog.this.end );
 						GeneratorDialog.this.dispose();
 						
@@ -253,7 +255,7 @@ public class GeneratorDialog extends JDialog {
 				});
 			}
 		});
-		this.ok.addKeyListener(new KeyAdapter() {
+		ok.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
@@ -261,9 +263,9 @@ public class GeneratorDialog extends JDialog {
 				}
 			}
 		});
-		this.ok.setEnabled(false);
-		this.ok.setToolTipText("The selected category will be added to the fuzzing list");
-		this.getContentPane().add(ok);
+		ok.setEnabled(false);
+		ok.setToolTipText("The selected category will be added to the fuzzing list");
+		getContentPane().add(ok);
 		
 		
 		// Global frame issues
@@ -271,8 +273,8 @@ public class GeneratorDialog extends JDialog {
 		this.setLocation(Math.abs((parent.getWidth() / 2) - (GeneratorDialog.x / 2 - 100)),
 				Math.abs((parent.getHeight() / 2) - (GeneratorDialog.y / 2) + 100));
 		this.setSize(GeneratorDialog.x, GeneratorDialog.y);
-		this.setResizable(true);
-		this.setVisible(true);
+		setResizable(true);
+		setVisible(true);
 	}
 
 	
@@ -281,15 +283,15 @@ public class GeneratorDialog extends JDialog {
 		 * <p>Method for the category table selection row.</p>
 		 * @param event ListSelectionEvent
 		 */
-		public void valueChanged(ListSelectionEvent event) {
+		public void valueChanged(final ListSelectionEvent event) {
 			if (event.getValueIsAdjusting()) {
 				return;
 			}
 			if (!ok.isEnabled()) {
 				ok.setEnabled(true);
 			}
-			int c = categoryTable.getSelectedRow();
-			String value = (String) categoryTableSorter.getValueAt(c, 0);
+			final int c = categoryTable.getSelectedRow();
+			final String value = (String) categoryTableSorter.getValueAt(c, 0);
 			lastCategory = value;
 			// System.out.println(value);
 			nameTableModel.setData(m.getJBroFuzz().getDatabase().getNames(value));
@@ -303,12 +305,12 @@ public class GeneratorDialog extends JDialog {
 		 * <p>Method for the name table selection row.</p>
 		 * @param event ListSelectionEvent
 		 */
-		public void valueChanged(ListSelectionEvent event) {
+		public void valueChanged(final ListSelectionEvent event) {
 			if (event.getValueIsAdjusting()) {
 				return;
 			}
-			int c = nameTable.getSelectedRow();
-			String value = (String) nameTableSorter.getValueAt(c, 0);
+			final int c = nameTable.getSelectedRow();
+			final String value = (String) nameTableSorter.getValueAt(c, 0);
 			viewTextArea.setText(m.getJBroFuzz().getDatabase().getExploit(value));
 			viewTextArea.setCaretPosition(0);
 			
@@ -343,9 +345,9 @@ public class GeneratorDialog extends JDialog {
 				//			 Show in Generators Tab
 				
 				if(area.getName().equalsIgnoreCase("Name")) {
-					int c = nameTable.getSelectedRow();
+					final int c = nameTable.getSelectedRow();
 					nameTable.getSelectionModel().setSelectionInterval(c, c);
-					String name = (String) nameTableSorter.getValueAt(c, 0);
+					final String name = (String) nameTableSorter.getValueAt(c, 0);
 					
 					// int d = categoryTable.getSelectedRow();
 					// String category = (String) categoryTableSorter.getValueAt(d, 0);
@@ -357,9 +359,9 @@ public class GeneratorDialog extends JDialog {
 				}
 				
 				if(area.getName().equalsIgnoreCase("Category")) {
-					int c = categoryTable.getSelectedRow();
+					final int c = categoryTable.getSelectedRow();
 					categoryTable.getSelectionModel().setSelectionInterval(c, c);
-					String value = (String) categoryTableSorter.getValueAt(c, 0);
+					final String value = (String) categoryTableSorter.getValueAt(c, 0);
 					
 					GeneratorDialog.this.dispose();
 					
@@ -375,8 +377,8 @@ public class GeneratorDialog extends JDialog {
 				if (e.isPopupTrigger()) {
 					area.requestFocus();
 					
-					JTable myTable = (JTable)e.getSource();
-					int c = myTable.rowAtPoint(new Point(e.getX(), e.getY()));
+					final JTable myTable = (JTable)e.getSource();
+					final int c = myTable.rowAtPoint(new Point(e.getX(), e.getY()));
 					myTable.getSelectionModel().setAnchorSelectionIndex(c);
 					myTable.setRowSelectionInterval(c, c);
 					myTable.getSelectionModel().setSelectionInterval(c, c);
@@ -387,12 +389,12 @@ public class GeneratorDialog extends JDialog {
 
 			@Override
 			public void mousePressed(final MouseEvent e) {
-				this.checkForTriggerEvent(e);
+				checkForTriggerEvent(e);
 			}
 
 			@Override
 			public void mouseReleased(final MouseEvent e) {
-				this.checkForTriggerEvent(e);
+				checkForTriggerEvent(e);
 			}
 		});
 	}

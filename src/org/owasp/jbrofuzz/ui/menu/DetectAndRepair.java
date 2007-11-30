@@ -72,30 +72,30 @@ public class DetectAndRepair extends JDialog {
 
 	public DetectAndRepair(final JFrame parent) {
 		super(parent, " Detect And Repair ", true);
-		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-		this.setLayout(new BorderLayout());
-		this.setFont(new Font("SansSerif", Font.PLAIN, 10));
+		setLayout(new BorderLayout());
+		setFont(new Font("SansSerif", Font.PLAIN, 10));
 
-		this.mainLabel = new JLabel(
+		mainLabel = new JLabel(
 				"<HTML>Select \"Detect\" to run a diagnostic check on JBroFuzz</HTML>",
 				ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
-		this.mainLabel.setIconTextGap(20);
-		this.mainLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 5));
+		mainLabel.setIconTextGap(20);
+		mainLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 5));
 
-		this.getContentPane().add(this.mainLabel, BorderLayout.CENTER);
+		getContentPane().add(mainLabel, BorderLayout.CENTER);
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
 				15));
 
 		// Bottom buttons
-		this.startStop = new JButton("Detect");
-		this.startStop
+		startStop = new JButton("Detect");
+		startStop
 		.setToolTipText("Detect any potential problems with JBroFuzz");
 
-		this.startStop.addActionListener(new ActionListener() {
+		startStop.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				DetectAndRepair.this.worker = new SwingWorker3() {
+				worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
 						DetectAndRepair.this.startCheck();
@@ -107,15 +107,15 @@ public class DetectAndRepair extends JDialog {
 						DetectAndRepair.this.finishCheck();
 					}
 				};
-				DetectAndRepair.this.worker.start();
+				worker.start();
 			}
 		});
-		buttonPanel.add(this.startStop);
+		buttonPanel.add(startStop);
 
-		this.close = new JButton("Close");
-		this.close.setToolTipText("Close this window");
+		close = new JButton("Close");
+		close.setToolTipText("Close this window");
 
-		this.close.addActionListener(new ActionListener() {
+		close.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -125,46 +125,46 @@ public class DetectAndRepair extends JDialog {
 				});
 			}
 		});
-		buttonPanel.add(this.close);
+		buttonPanel.add(close);
 
-		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
 		this.setLocation(Math.abs((parent.getWidth() / 2)
 				- (DetectAndRepair.x / 2 - 100)), Math.abs((parent.getHeight() / 2)
 						- (DetectAndRepair.y / 2) + 100));
 		this.setSize(DetectAndRepair.x, DetectAndRepair.y);
-		this.setResizable(false);
-		this.setVisible(true);
+		setResizable(false);
+		setVisible(true);
 
 	}
 
 	private void finishCheck() {
-		if (!this.startStop.isEnabled()) {
+		if (!startStop.isEnabled()) {
 			return;
 		}
-		this.close.setEnabled(true);
-		this.startStop.setText("Finish");
-		this.startStop.setEnabled(false);
+		close.setEnabled(true);
+		startStop.setText("Finish");
+		startStop.setEnabled(false);
 	}
 
 	private void startCheck() {
-		if (!this.startStop.isEnabled()) {
+		if (!startStop.isEnabled()) {
 			return;
 		}
-		this.startStop.setText("Stop");
-		this.close.setEnabled(false);
+		startStop.setText("Stop");
+		close.setEnabled(false);
 
 		final StringBuffer output = new StringBuffer();
 		output.append("<HTML>Checking for the files that should have come with the distribution...&nbsp;&nbsp;<BR>");
-		this.mainLabel.setText(output.toString() + "</HTML>");
+		mainLabel.setText(output.toString() + "</HTML>");
 
 		int check = 0;
 
 		
 		output.append("<BR>&nbsp;&nbsp;&nbsp;Checking file&nbsp;"
 				+ JBRFormat.FILE_GEN + "...&nbsp;&nbsp;");
-		this.mainLabel.setText(output.toString() + "</HTML>");
+		mainLabel.setText(output.toString() + "</HTML>");
 		// Check for first file
 		final File gFile = new File(JBRFormat.FILE_GEN);
 		if (gFile.exists()) {
@@ -173,11 +173,11 @@ public class DetectAndRepair extends JDialog {
 			output.append("<B>Failure</B>");
 			check++;
 		}
-		this.mainLabel.setText(output.toString() + "</HTML>");
+		mainLabel.setText(output.toString() + "</HTML>");
 
 		output.append("<BR>&nbsp;&nbsp;&nbsp;Checking  file&nbsp;"
 				+ JBRFormat.FILE_DIR + "...&nbsp;&nbsp;");
-		this.mainLabel.setText(output.toString() + "</HTML>");
+		mainLabel.setText(output.toString() + "</HTML>");
 
 		// Check for second file
 		final File wFile = new File(JBRFormat.FILE_DIR);
@@ -207,14 +207,14 @@ public class DetectAndRepair extends JDialog {
 			output.append("<BR>The application will still run normally.<BR>");
 			*/
 		}
-		this.mainLabel.setText(output.toString() + "</HTML>");
+		mainLabel.setText(output.toString() + "</HTML>");
 	}
 
 	private void stopCheck() {
-		if (!this.startStop.isEnabled()) {
+		if (!startStop.isEnabled()) {
 			return;
 		}
-		this.close.setEnabled(true);
+		close.setEnabled(true);
 	}
 
 }

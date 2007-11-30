@@ -64,56 +64,53 @@ public class Database {
 
 		final int maxLines = 10000;
 		final int maxLineLength = 10000;
+
 		int line_counter = 0;
 		BufferedReader in = null;
-		int len = 0;
-		StringBuffer fileContents = new StringBuffer();
+
+		final StringBuffer fileContents = new StringBuffer();
 
 		// Attempt to read from the jar file
-		if (len <= 0) {
-			line_counter = 0;
+		final URL fileURL = ClassLoader.getSystemClassLoader().getResource(JBRFormat.FILE_GNU);
 
-			final URL fileURL = ClassLoader.getSystemClassLoader().getResource(
-					JBRFormat.FILE_GNU);
+		try {
+			final URLConnection connection = fileURL.openConnection();
+			connection.connect();
 
-			try {
-				final URLConnection connection = fileURL.openConnection();
-				connection.connect();
+			in = new BufferedReader(new InputStreamReader(connection
+					.getInputStream()));
+			String line = in.readLine();
+			line_counter++;
+			while ((line != null) && (line_counter < maxLines)) {
 
-				in = new BufferedReader(new InputStreamReader(connection
-						.getInputStream()));
-				String line = in.readLine();
-				line_counter++;
-				while ((line != null) && (line_counter < maxLines)) {
-					if (line.length() > maxLineLength) {
-						line = line.substring(0, maxLineLength);
-					}
-					fileContents.append(line + "\n");
-					line = in.readLine();
+				if (line.length() > maxLineLength) {
+					line = line.substring(0, maxLineLength);
 				}
-				in.close();
-			} catch (final IOException e1) {
-				System.out.println("Directories file (inside jar): "
-						+ fileURL.toString() + " could not be found");
-				// }
-			} 
-			finally {
-				IOUtils.closeQuietly( in );
+				fileContents.append(line + "\n");
+				line = in.readLine();
 			}
+			in.close();
+		} 
+		catch (final IOException e1) {
+			System.out.println("Directories file (inside jar): "
+					+ fileURL.toString() + " could not be found");
+		} 
+		finally {
+			IOUtils.closeQuietly( in );
 		}
 		// Parse the contents of the StringBuffer to the exploits array
 
 		exploits = ExcelCSVParser.parse(fileContents.toString());
 
-		for (int i = 0; i < exploits.length; i++) {
-			for (int j = 1; j < exploits[i].length; j++) {
+		for (final String[] element : exploits) {
+			for (int j = 1; j < element.length; j++) {
 				int count = 10;
-				while((exploits[i][j].startsWith(" ")) && (count > -1)) {
-					exploits[i][j] = exploits[i][j].substring(1);
+				while((element[j].startsWith(" ")) && (count > -1)) {
+					element[j] = element[j].substring(1);
 					count--;
 				}
-				while((exploits[i][j].endsWith(" ")) && (count > -1)) {
-					exploits[i][j] = exploits[i][j].substring(0, (exploits[i][j].length() - 1));
+				while((element[j].endsWith(" ")) && (count > -1)) {
+					element[j] = element[j].substring(0, (element[j].length() - 1));
 					count--;
 				}
 			}
@@ -137,10 +134,11 @@ public class Database {
 	 * @return String[]
 	 */
 	public String[] getAllNames() {
-		String[] output = new String[exploits.length];
+		final String[] output = new String[exploits.length];
 		for (int i=1; i<exploits.length; i++){
-			if(!exploits[i][0].isEmpty())
+			if(!exploits[i][0].isEmpty()) {
 				output[i] = exploits[i][0];
+			}
 		}
 		return output;
 	}
@@ -153,11 +151,11 @@ public class Database {
 	 */
 	public String[] getAllCategories() {
 
-		ArrayList<String> uniqueCategories = new ArrayList<String>();
+		final ArrayList<String> uniqueCategories = new ArrayList<String>();
 
 		// Loop through the exploit categories
 		for (int i=1; i<exploits.length; i++){
-			String[] categoriesLine = exploits[i][3].split(",");
+			final String[] categoriesLine = exploits[i][3].split(",");
 
 			// Loop through the exploit category names found for that exploit
 			for(String categoryItemonLine : categoriesLine) {
@@ -175,7 +173,7 @@ public class Database {
 
 				// 
 				boolean catFound = false;
-				for(String uniqueCategory : uniqueCategories) {
+				for(final String uniqueCategory : uniqueCategories) {
 					if( categoryItemonLine.equals(uniqueCategory) && !categoryItemonLine.isEmpty() ) {
 						catFound = true;
 					}
@@ -186,7 +184,7 @@ public class Database {
 			}
 		}
 		uniqueCategories.trimToSize();
-		String [] outputCategories = new String[uniqueCategories.size()];
+		final String [] outputCategories = new String[uniqueCategories.size()];
 		return uniqueCategories.toArray(outputCategories);
 	}
 
@@ -197,11 +195,11 @@ public class Database {
 	 * @param category
 	 * @return String[]
 	 */
-	public String[] getNames(String category) {
-		ArrayList<String> uniqueCategories = new ArrayList<String>();
+	public String[] getNames(final String category) {
+		final ArrayList<String> uniqueCategories = new ArrayList<String>();
 
 		for (int i=1; i<exploits.length; i++){
-			String[] categoriesLine = exploits[i][3].split(",");
+			final String[] categoriesLine = exploits[i][3].split(",");
 			for(String categoryItemonLine : categoriesLine) {
 
 				//			 Remove any trailing or leading white spaces, up to 10
@@ -218,9 +216,9 @@ public class Database {
 				if(categoryItemonLine.equalsIgnoreCase(category)) {
 
 					boolean nameExists = false;
-					for(String existingName : uniqueCategories) {
+					for(final String existingName : uniqueCategories) {
 
-						String currentName = exploits[i][0];
+						final String currentName = exploits[i][0];
 						if(existingName.equalsIgnoreCase(currentName)) {
 							nameExists = true;
 						}
@@ -233,7 +231,7 @@ public class Database {
 			}
 		}
 		uniqueCategories.trimToSize();
-		String [] outputCategories = new String[uniqueCategories.size()];
+		final String [] outputCategories = new String[uniqueCategories.size()];
 		return uniqueCategories.toArray(outputCategories);
 	}
 
@@ -245,7 +243,7 @@ public class Database {
 	 * @param name
 	 * @return String
 	 */
-	public String getExploit(String name) {
+	public String getExploit(final String name) {
 		String output = "";
 		for (int i=1; i<exploits.length; i++){
 			if((name.equalsIgnoreCase(exploits[i][0])) && (!exploits[i][0].isEmpty())) {
@@ -262,8 +260,8 @@ public class Database {
 	 * @param name
 	 * @return String
 	 */
-	public String getComment(String name) {
-		StringBuffer output = new StringBuffer();
+	public String getComment(final String name) {
+		final StringBuffer output = new StringBuffer();
 		for (int i=1; i<exploits.length; i++){
 			if((name.equalsIgnoreCase(exploits[i][0])) && (!exploits[i][0].isEmpty())) {
 				output.append("ID: " + i + "\n\n" + exploits[i][1] + "\n\nAuthor: ");
@@ -284,7 +282,7 @@ public class Database {
 	 * @return JBroFuzz
 	 */
 	public JBroFuzz getJBroFuzz() {
-		return this.mJBroFuzz;
+		return mJBroFuzz;
 	}
 
 	/**
@@ -294,15 +292,15 @@ public class Database {
 	 * @param name
 	 * @return
 	 */
-	public String[] getCategories(String name) {
-		ArrayList<String> uniqueCategories = new ArrayList<String>();
+	public String[] getCategories(final String name) {
+		final ArrayList<String> uniqueCategories = new ArrayList<String>();
 		boolean nameFound = false;
 		// Loop through the exploit categories
 		for (int i=1; i<exploits.length; i++){
 
 			if(name.equalsIgnoreCase(exploits[i][0])) {
 				nameFound = true;
-				String[] categoriesLine = exploits[i][3].split(",");
+				final String[] categoriesLine = exploits[i][3].split(",");
 
 				// Loop through the exploit category names found for that exploit
 				for(String categoryItemonLine : categoriesLine) {
@@ -320,7 +318,7 @@ public class Database {
 
 					// 
 					boolean catFound = false;
-					for(String uniqueCategory : uniqueCategories) {
+					for(final String uniqueCategory : uniqueCategories) {
 						if( categoryItemonLine.equals(uniqueCategory) && !categoryItemonLine.isEmpty() ) {
 							catFound = true;
 						}
@@ -331,15 +329,15 @@ public class Database {
 				}
 			}// If name found
 		}
-		
+
 		if(nameFound) {
 			uniqueCategories.trimToSize();
-			String [] outputCategories = new String[uniqueCategories.size()];
+			final String [] outputCategories = new String[uniqueCategories.size()];
 			/*
 			for(String asdf : uniqueCategories.toArray(outputCategories)) {
 				System.out.println(asdf);
 			}
-			*/
+			 */
 			return uniqueCategories.toArray(outputCategories);
 		}
 		else {

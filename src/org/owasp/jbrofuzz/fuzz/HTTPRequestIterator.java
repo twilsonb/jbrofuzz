@@ -65,10 +65,6 @@ public class HTTPRequestIterator {
 	private int i;
 	// The string corresponding to the fuzzing category
 	private String category;
-	// The beginning an end of the location that is fuzzing will occur
-	private int start, end;
-
-
 	/**
 	 * <p>
 	 * Constructor for the HTTP Request Iterator, responsible for constructing
@@ -78,48 +74,44 @@ public class HTTPRequestIterator {
 	 * @param mJBroFuzz
 	 */
 	public HTTPRequestIterator(final JBroFuzz mJBroFuzz, 
-			String category, 
-			int start, 
-			int end) {
+			final String category, 
+			final int start, 
+			final int end) {
 
 		this.mJBroFuzz = mJBroFuzz;
-		JBRFrame mainWindow = this.mJBroFuzz.getWindow();
-		this.url = mainWindow.getHTTPFuzzingPanel().getTargetText();
-		this.stopped = false;
-		this.port = 0;
+		final JBRFrame mainWindow = this.mJBroFuzz.getWindow();
+		url = mainWindow.getHTTPFuzzingPanel().getTargetText();
+		stopped = false;
+		port = 0;
 		this.category = category;
-		this.start = start;
-		this.end = end;
-
-
 		//	 Check the port
-		String pt = mainWindow.getHTTPFuzzingPanel().getPortText();
+		final String pt = mainWindow.getHTTPFuzzingPanel().getPortText();
 		try {
-			this.port = Integer.parseInt(pt);
+			port = Integer.parseInt(pt);
 		} 
 		catch (final NumberFormatException e1) {
-			this.port = 0;
+			port = 0;
 			mainWindow.log("HTTP Fuzzing Panel: Specify a valid port: \"" + port + "\"");
 		}
-		if ((this.port < 1) || (this.port > 65535)) {
-			this.port = 0;
+		if ((port < 1) || (port > 65535)) {
+			port = 0;
 			mainWindow.log("HTTP Fuzzing Panel: Port has to be between [1 - 65535]");
 		}
 
 		// Establish the protocols, if the port is valid
-		if (this.port != 0) {
+		if (port != 0) {
 
 			// For https, allow self-signed certificates
-			if (this.url.startsWith("https://")) {
+			if (url.startsWith("https://")) {
 				final Protocol easyhttps = new Protocol("https",
-						new EasySSLProtocolSocketFactory(), this.port);
+						new EasySSLProtocolSocketFactory(), port);
 				Protocol.registerProtocol("https", easyhttps);
 			}
 
 			// For http, just show affection
-			if (this.url.startsWith("http://")) {
+			if (url.startsWith("http://")) {
 				final Protocol easyhttp = new Protocol("http",
-						new DefaultProtocolSocketFactory(), this.port);
+						new DefaultProtocolSocketFactory(), port);
 				Protocol.registerProtocol("http", easyhttp);
 			}
 
@@ -138,21 +130,21 @@ public class HTTPRequestIterator {
 	public void run() {
 
 		// Check for a valid URL and port
-		if (this.url.equalsIgnoreCase("")) {
+		if (url.equalsIgnoreCase("")) {
 			return;
 		}
-		if (this.url.contains(" ")) {
+		if (url.contains(" ")) {
 			return;
 		}
-		if ((this.port < 1) || (this.port > 65536)) {
+		if ((port < 1) || (port > 65536)) {
 			return;
 		}
 
 		// Main for loop iterating through the exploits
-		String [] exploitArray = this.mJBroFuzz.getDatabase().getNames(this.category);
-		for (this.i = 0; this.i < exploitArray.length; this.i++) {
+		final String [] exploitArray = mJBroFuzz.getDatabase().getNames(category);
+		for (i = 0; i < exploitArray.length; i++) {
 
-			if (this.stopped) {
+			if (stopped) {
 				return;
 			}
 
@@ -168,10 +160,10 @@ public class HTTPRequestIterator {
 			 */
 
 			// Checks...
-			if (this.url.equalsIgnoreCase("")) {
+			if (url.equalsIgnoreCase("")) {
 				return;
 			}
-			if ((this.port <= 0) || (this.port > 65535)) {
+			if ((port <= 0) || (port > 65535)) {
 				return;
 			}
 
@@ -179,7 +171,7 @@ public class HTTPRequestIterator {
 			client.getParams().setParameter(HttpConnectionParams.CONNECTION_TIMEOUT,
 					Integer.valueOf(10000));
 
-			final GetMethod method = new GetMethod(this.url);
+			final GetMethod method = new GetMethod(url);
 			method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
 					new DefaultHttpMethodRetryHandler(1, false));
 			method.setFollowRedirects(true);
@@ -288,7 +280,7 @@ public class HTTPRequestIterator {
 	 * Stop the Request Iterator, if it currently running.
 	 */
 	public void stop() {
-		this.stopped = true;
+		stopped = true;
 	}	
 
 	/**
@@ -297,7 +289,7 @@ public class HTTPRequestIterator {
 	 * @return boolean
 	 */
 	public boolean isStopped() {
-		return this.stopped;
+		return stopped;
 	}
 
 	/**
@@ -308,6 +300,6 @@ public class HTTPRequestIterator {
 	 * @return JBroFuzz
 	 */
 	public JBroFuzz getJBroFuzz() {
-		return this.mJBroFuzz;
+		return mJBroFuzz;
 	}
 }

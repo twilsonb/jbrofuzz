@@ -78,9 +78,9 @@ public class EasyX509TrustManager implements X509TrustManager {
 		factory.init(keystore);
 		final TrustManager[] trustmanagers = factory.getTrustManagers();
 		if (trustmanagers.length == 0) {
-			throw new NoSuchAlgorithmException("no trust manager found");
+			throw new NoSuchAlgorithmException("no trust manager found"); //$NON-NLS-1$
 		}
-		this.standardTrustManager = (X509TrustManager) trustmanagers[0];
+		standardTrustManager = (X509TrustManager) trustmanagers[0];
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class EasyX509TrustManager implements X509TrustManager {
 	 */
 	public void checkClientTrusted(final X509Certificate[] certificates,
 			final String authType) throws CertificateException {
-		this.standardTrustManager.checkClientTrusted(certificates, authType);
+		standardTrustManager.checkClientTrusted(certificates, authType);
 	}
 
 	/**
@@ -99,16 +99,16 @@ public class EasyX509TrustManager implements X509TrustManager {
 	public void checkServerTrusted(final X509Certificate[] certificates,
 			final String authType) throws CertificateException {
 		if ((certificates != null) && EasyX509TrustManager.LOG.isDebugEnabled()) {
-			EasyX509TrustManager.LOG.debug("Server certificate chain:");
+			EasyX509TrustManager.LOG.debug("Server certificate chain:"); //$NON-NLS-1$
 			for (int i = 0; i < certificates.length; i++) {
-				EasyX509TrustManager.LOG.debug("X509Certificate[" + i + "]="
+				EasyX509TrustManager.LOG.debug("X509Certificate[" + i + "]=" //$NON-NLS-1$
 						+ certificates[i]);
 			}
 		}
 		if ((certificates != null) && (certificates.length == 1)) {
 			certificates[0].checkValidity();
 		} else {
-			this.standardTrustManager.checkServerTrusted(certificates, authType);
+			standardTrustManager.checkServerTrusted(certificates, authType);
 		}
 	}
 
@@ -116,6 +116,6 @@ public class EasyX509TrustManager implements X509TrustManager {
 	 * @see javax.net.ssl.X509TrustManager#getAcceptedIssuers()
 	 */
 	public X509Certificate[] getAcceptedIssuers() {
-		return this.standardTrustManager.getAcceptedIssuers();
+		return standardTrustManager.getAcceptedIssuers();
 	}
 }

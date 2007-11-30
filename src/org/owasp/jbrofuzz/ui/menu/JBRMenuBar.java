@@ -96,7 +96,7 @@ class CutAction extends TextAction {
 	}
 
 	public void actionPerformed(final ActionEvent evt) {
-		final JTextComponent text = this.getTextComponent(evt);
+		final JTextComponent text = getTextComponent(evt);
 		if (text != null) {
 			text.cut();
 			text.requestFocus();
@@ -136,26 +136,26 @@ public class JBRMenuBar extends JMenuBar {
 
 		this.mFrameWindow = mFrameWindow;
 
-		this.file = new JMenu("File");
-		this.edit = new JMenu("Edit");
-		this.view = new JMenu("View");
-		this.panel = new JMenu("Panel");
-		this.options = new JMenu("Options");
-		this.help = new JMenu("Help");
+		file = new JMenu("File");
+		edit = new JMenu("Edit");
+		view = new JMenu("View");
+		panel = new JMenu("Panel");
+		options = new JMenu("Options");
+		help = new JMenu("Help");
 
-		this.add(this.file);
-		this.add(this.edit);
-		this.add(this.view);
-		this.add(this.panel);
-		this.add(this.options);
-		this.add(this.help);
+		this.add(file);
+		this.add(edit);
+		this.add(view);
+		this.add(panel);
+		this.add(options);
+		this.add(help);
 
 		// File
 		final JMenuItem exit = new JMenuItem("Exit", ImageCreator.EXIT_IMG);
 		exit.setAccelerator(KeyStroke.getKeyStroke('1', Toolkit.getDefaultToolkit()
 				.getMenuShortcutKeyMask(), false));
 
-		this.file.add(exit);
+		file.add(exit);
 		// Edit
 		final Action cutAction = new CutAction();
 		final Action copyAction = new CopyAction();
@@ -176,39 +176,39 @@ public class JBRMenuBar extends JMenuBar {
 		selectAll.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
-		this.edit.add(cut);
-		this.edit.add(copy);
-		this.edit.add(paste);
-		this.edit.addSeparator();
-		this.edit.add(selectAll);
+		edit.add(cut);
+		edit.add(copy);
+		edit.add(paste);
+		edit.addSeparator();
+		edit.add(selectAll);
 
 		// View
 		final JMenu showHide = new JMenu("Show/Hide");
 
-		this.httpFuzzing = new JCheckBoxMenuItem("HTTP/S Fuzzing", true);
-		this.directories = new JCheckBoxMenuItem("Web Directories", true);
-		this.fuzzing = new JCheckBoxMenuItem("TCP Fuzzing", true);
-		this.sniffing = new JCheckBoxMenuItem("TCP Sniffing", true);
-		this.generators = new JCheckBoxMenuItem("Generators", false);
-		this.opensource = new JCheckBoxMenuItem("Open Source", true);
-		this.system = new JCheckBoxMenuItem("System", false);
+		httpFuzzing = new JCheckBoxMenuItem("HTTP/S Fuzzing", true);
+		directories = new JCheckBoxMenuItem("Web Directories", true);
+		fuzzing = new JCheckBoxMenuItem("TCP Fuzzing", true);
+		sniffing = new JCheckBoxMenuItem("TCP Sniffing", true);
+		generators = new JCheckBoxMenuItem("Generators", false);
+		opensource = new JCheckBoxMenuItem("Open Source", true);
+		system = new JCheckBoxMenuItem("System", false);
 
-		this.showAll = new JMenuItem("Show All");
-		this.hideAll = new JMenuItem("Hide All");
+		showAll = new JMenuItem("Show All");
+		hideAll = new JMenuItem("Hide All");
 
-		showHide.add(this.httpFuzzing);
-		showHide.add(this.directories);
-		showHide.add(this.fuzzing);
-		showHide.add(this.sniffing);
-		showHide.add(this.generators);
-		showHide.add(this.opensource);
-		showHide.add(this.system);
+		showHide.add(httpFuzzing);
+		showHide.add(directories);
+		showHide.add(fuzzing);
+		showHide.add(sniffing);
+		showHide.add(generators);
+		showHide.add(opensource);
+		showHide.add(system);
 
-		this.view.add(showHide);
-		this.view.addSeparator();
-		this.view.add(this.showAll);
-		this.view.add(this.hideAll);
-		this.view.addSeparator();
+		view.add(showHide);
+		view.addSeparator();
+		view.add(showAll);
+		view.add(hideAll);
+		view.addSeparator();
 
 		// -> Look and Feel
 		final JMenu lookAndFeel = new JMenu("Look and Feel");
@@ -263,32 +263,32 @@ public class JBRMenuBar extends JMenuBar {
 				}
 			});
 		}
-		this.view.add(lookAndFeel);
+		view.add(lookAndFeel);
 
 		// Panel
-		this.start = new JMenuItem("Start", ImageCreator.START_IMG);
-		this.bro = new JMenuItem("Bro", ImageCreator.PAUSE_IMG);
-		this.stop = new JMenuItem("Stop", ImageCreator.STOP_IMG);
-		this.add = new JMenuItem("Add", ImageCreator.ADD_IMG);
-		this.remove = new JMenuItem("Remove", ImageCreator.REMOVE_IMG);
+		start = new JMenuItem("Start", ImageCreator.START_IMG);
+		bro = new JMenuItem("Bro", ImageCreator.PAUSE_IMG);
+		stop = new JMenuItem("Stop", ImageCreator.STOP_IMG);
+		add = new JMenuItem("Add", ImageCreator.ADD_IMG);
+		remove = new JMenuItem("Remove", ImageCreator.REMOVE_IMG);
 
-		this.add.setAccelerator(KeyStroke.getKeyStroke('=', Toolkit
+		add.setAccelerator(KeyStroke.getKeyStroke('=', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-		this.remove.setAccelerator(KeyStroke.getKeyStroke('-', Toolkit
+		remove.setAccelerator(KeyStroke.getKeyStroke('-', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-		this.bro.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit
+		bro.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-		this.start.setAccelerator(KeyStroke.getKeyStroke('\n', Toolkit
+		start.setAccelerator(KeyStroke.getKeyStroke('\n', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-		this.stop.setAccelerator(KeyStroke.getKeyStroke('\b', Toolkit
+		stop.setAccelerator(KeyStroke.getKeyStroke('\b', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
-		this.panel.add(this.start);
-		this.panel.add(this.bro);
-		this.panel.add(this.stop);
-		this.panel.addSeparator();
-		this.panel.add(this.add);
-		this.panel.add(this.remove);
+		panel.add(start);
+		panel.add(bro);
+		panel.add(stop);
+		panel.addSeparator();
+		panel.add(add);
+		panel.add(remove);
 
 		// Options
 		final JMenuItem preferences = new JMenuItem("Preferences");
@@ -298,10 +298,10 @@ public class JBRMenuBar extends JMenuBar {
 		preferences.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
-		this.options.add(updates);
-		this.options.add(repair);
-		this.options.addSeparator();
-		this.options.add(preferences);
+		options.add(updates);
+		options.add(repair);
+		options.addSeparator();
+		options.add(preferences);
 
 		// Help
 		final JMenuItem topics = new JMenuItem("Topics", ImageCreator.TOPICS_IMG);
@@ -315,14 +315,14 @@ public class JBRMenuBar extends JMenuBar {
 		about.setAccelerator(KeyStroke.getKeyStroke('0', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
-		this.help.add(topics);
-		this.help.add(faq);
-		this.help.addSeparator();
+		help.add(topics);
+		help.add(faq);
+		help.addSeparator();
 		// help.add(tutorial);
-		this.help.add(website);
-		this.help.addSeparator();
-		this.help.add(disclaimer);
-		this.help.add(about);
+		help.add(website);
+		help.addSeparator();
+		help.add(disclaimer);
+		help.add(about);
 
 		//
 		// The action listeners for each component...
@@ -337,12 +337,12 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.httpFuzzing.addActionListener(new ActionListener() {
+		httpFuzzing.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!JBRMenuBar.this.httpFuzzing.getState()) {
+						if (!httpFuzzing.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
 									JBRFrame.HTTP_FUZZING_PANEL_ID);
 						} else {
@@ -355,12 +355,12 @@ public class JBRMenuBar extends JMenuBar {
 		});
 
 
-		this.directories.addActionListener(new ActionListener() {
+		directories.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!JBRMenuBar.this.directories.getState()) {
+						if (!directories.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
 									JBRFrame.WEB_DIRECTORIES_PANEL_ID);
 						} else {
@@ -372,12 +372,12 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.fuzzing.addActionListener(new ActionListener() {
+		fuzzing.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!JBRMenuBar.this.fuzzing.getState()) {
+						if (!fuzzing.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
 									JBRFrame.TCP_FUZZING_PANEL_ID);
 						} else {
@@ -389,12 +389,12 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.sniffing.addActionListener(new ActionListener() {
+		sniffing.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!JBRMenuBar.this.sniffing.getState()) {
+						if (!sniffing.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
 									JBRFrame.TCP_SNIFFING_PANEL_ID);
 						} else {
@@ -407,12 +407,12 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.generators.addActionListener(new ActionListener() {
+		generators.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!JBRMenuBar.this.generators.getState()) {
+						if (!generators.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
 									JBRFrame.GENERATORS_PANEL_ID);
 						} else {
@@ -425,12 +425,12 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.system.addActionListener(new ActionListener() {
+		system.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!JBRMenuBar.this.system.getState()) {
+						if (!system.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
 									JBRFrame.SYSTEM_PANEL_ID);
 						} else {
@@ -443,12 +443,12 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.opensource.addActionListener(new ActionListener() {
+		opensource.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!JBRMenuBar.this.opensource.getState()) {
+						if (!opensource.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
 									JBRFrame.OPEN_SOURCE_ID);
 						} else {
@@ -461,7 +461,7 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.showAll.addActionListener(new ActionListener() {
+		showAll.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
@@ -469,68 +469,68 @@ public class JBRMenuBar extends JMenuBar {
 						
 						JBRMenuBar.this.getFrameWindow().setTabShow(
 								JBRFrame.WEB_DIRECTORIES_PANEL_ID);
-						JBRMenuBar.this.directories.setState(true);
+						directories.setState(true);
 						
 						JBRMenuBar.this.getFrameWindow().setTabShow(
 								JBRFrame.HTTP_FUZZING_PANEL_ID);
-						JBRMenuBar.this.httpFuzzing.setState(true);
+						httpFuzzing.setState(true);
 						
 						JBRMenuBar.this.getFrameWindow().setTabShow(
 								JBRFrame.TCP_FUZZING_PANEL_ID);
-						JBRMenuBar.this.fuzzing.setState(true);
+						fuzzing.setState(true);
 						JBRMenuBar.this.getFrameWindow().setTabShow(
 								JBRFrame.TCP_SNIFFING_PANEL_ID);
-						JBRMenuBar.this.sniffing.setState(true);
+						sniffing.setState(true);
 						JBRMenuBar.this.getFrameWindow().setTabShow(
 								JBRFrame.GENERATORS_PANEL_ID);
-						JBRMenuBar.this.generators.setState(true);
+						generators.setState(true);
 						JBRMenuBar.this.getFrameWindow().setTabShow(
 								JBRFrame.SYSTEM_PANEL_ID);
-						JBRMenuBar.this.system.setState(true);
+						system.setState(true);
 						JBRMenuBar.this.getFrameWindow()
 								.setTabShow(JBRFrame.OPEN_SOURCE_ID);
-						JBRMenuBar.this.opensource.setState(true);
+						opensource.setState(true);
 					}
 				});
 
 			}
 		});
 
-		this.hideAll.addActionListener(new ActionListener() {
+		hideAll.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						JBRMenuBar.this.getFrameWindow().setTabHide(
 								JBRFrame.WEB_DIRECTORIES_PANEL_ID);
-						JBRMenuBar.this.directories.setState(false);
+						directories.setState(false);
 						JBRMenuBar.this.getFrameWindow().setTabHide(
 								JBRFrame.TCP_FUZZING_PANEL_ID);
-						JBRMenuBar.this.fuzzing.setState(false);
+						fuzzing.setState(false);
 						JBRMenuBar.this.getFrameWindow().setTabHide(
 								JBRFrame.TCP_SNIFFING_PANEL_ID);
-						JBRMenuBar.this.sniffing.setState(false);
+						sniffing.setState(false);
 						JBRMenuBar.this.getFrameWindow().setTabHide(
 								JBRFrame.GENERATORS_PANEL_ID);
-						JBRMenuBar.this.generators.setState(false);
+						generators.setState(false);
 						JBRMenuBar.this.getFrameWindow().setTabHide(
 								JBRFrame.SYSTEM_PANEL_ID);
-						JBRMenuBar.this.system.setState(false);
+						system.setState(false);
 						JBRMenuBar.this.getFrameWindow()
 								.setTabHide(JBRFrame.OPEN_SOURCE_ID);
 						
 						JBRMenuBar.this.getFrameWindow().setTabHide(
 								JBRFrame.HTTP_FUZZING_PANEL_ID);
-						JBRMenuBar.this.httpFuzzing.setState(false);
+						httpFuzzing.setState(false);
 						
-						JBRMenuBar.this.opensource.setState(false);
+						opensource.setState(false);
 					}
 				});
 
 			}
 		});
 
-		this.start.addActionListener(new ActionListener() {
+		start.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
@@ -596,7 +596,7 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.stop.addActionListener(new ActionListener() {
+		stop.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
@@ -631,7 +631,7 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.bro.addActionListener(new ActionListener() {
+		bro.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -656,7 +656,7 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.add.addActionListener(new ActionListener() {
+		add.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
@@ -702,7 +702,7 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		this.remove.addActionListener(new ActionListener() {
+		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
@@ -800,7 +800,7 @@ public class JBRMenuBar extends JMenuBar {
 	}
 
 	private JBRFrame getFrameWindow() {
-		return this.mFrameWindow;
+		return mFrameWindow;
 	}
 }
 

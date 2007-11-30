@@ -1,5 +1,5 @@
 /**
- * JBRFormat.java 0.6
+ * JBRFormat.java 0.8
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -210,14 +210,20 @@ public class JBRFormat {
 	/**
 	 * Formatting the date in ISO8601 standard format.
 	 */
-	public static String DATE = getDate();
+	public static final String DATE = getDate();
 
+	/**
+	 * The String displaying within the TCP Fuzzing Request text area
+	 */
 	public static final String REQUEST_TCP = "GET / HTTP/1.0\r\n<-new-line->"
 		+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n"
 		+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n<-new-line->"
 		+ "Accept-Language: en-gb,en;q=0.5\r\n<-new-line->"
 		+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n\r\n<-new-line->";
 
+	/**
+	 * The String displayed within the HTTP Fuzzing request area
+	 */
 	public static final String REQUEST_HTTP = "Host: localhost\n" 
 		+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.6) Gecko/20070725\n"
 		+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n"

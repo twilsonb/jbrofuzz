@@ -53,7 +53,7 @@ public class GRequestIterator {
 	private StringBuffer output;
 
 	public GRequestIterator(final JBRFrame mFrameWindow, final String domain) {
-		this.output = new StringBuffer();
+		output = new StringBuffer();
 		int counter = 1;
 		BufferedReader bin = null;
 
@@ -75,8 +75,8 @@ public class GRequestIterator {
 					final Pattern p = Pattern.compile("([\\w\\.\\-\\%\\']+)@[\\S]+");
 					final Matcher m = p.matcher(line);
 					while (m.find()) {
-						final String email = this.sanitise(m.group());
-						this.output.append(email + " \n");
+						final String email = sanitise(m.group());
+						output.append(email + " \n");
 					}
 				}
 				bin.close();
@@ -93,14 +93,14 @@ public class GRequestIterator {
 			}
 
 			mFrameWindow.getOpenSourcePanel()
-					.appendOutputText(this.output.toString());
+					.appendOutputText(output.toString());
 			mFrameWindow.getOpenSourcePanel().setProgressBar(counter);
 			counter++;
 		} // while loop
 	}
 
 	public String getOutput() {
-		return this.output.toString();
+		return output.toString();
 	}
 
 	private String sanitise(String in) {

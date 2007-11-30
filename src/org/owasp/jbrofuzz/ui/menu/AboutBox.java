@@ -83,10 +83,10 @@ public class AboutBox extends JDialog {
 	 */
 	public AboutBox(final JFrame parent, final int tab) {
 		super(parent, " About ", true);
-		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-		this.setLayout(new BorderLayout());
-		this.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		setLayout(new BorderLayout());
+		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		final URL licenseURL = ClassLoader.getSystemClassLoader().getResource(
 				"LICENSE/gpl-license.txt");
@@ -131,20 +131,20 @@ public class AboutBox extends JDialog {
 		ackScrollPane.setHorizontalScrollBarPolicy(30);
 
 		// The tabbed pane holding all the different tabs
-		this.tabbedPane = new JTabbedPane();
-		this.tabbedPane.add(about, " About ");
-		this.tabbedPane.add(lcsScrollPane, " License ");
-		this.tabbedPane.add(disclaimer, " Disclaimer ");
-		this.tabbedPane.add(ackScrollPane, " Acknoledgements ");
-		this.getContentPane().add(this.tabbedPane, BorderLayout.CENTER);
+		tabbedPane = new JTabbedPane();
+		tabbedPane.add(about, " About ");
+		tabbedPane.add(lcsScrollPane, " License ");
+		tabbedPane.add(disclaimer, " Disclaimer ");
+		tabbedPane.add(ackScrollPane, " Acknoledgements ");
+		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		// Set the tab to be displayed
-		this.setTab(tab);
+		setTab(tab);
 		// OK Button
-		this.ok = new JButton("OK");
+		ok = new JButton("OK");
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
 				15));
-		buttonPanel.add(this.ok);
-		this.ok.addActionListener(new ActionListener() {
+		buttonPanel.add(ok);
+		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -153,33 +153,33 @@ public class AboutBox extends JDialog {
 				});
 			}
 		});
-		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
 		this.setLocation(
 				Math.abs((parent.getWidth() / 2) - (AboutBox.x / 2 - 100)), Math
 						.abs((parent.getHeight() / 2) - (AboutBox.y / 2) + 100));
 		this.setSize(AboutBox.x, AboutBox.y);
-		this.setResizable(false);
-		this.setVisible(true);
+		setResizable(false);
+		setVisible(true);
 	}
 
 	private void setTab(final int tab) {
 		switch (tab) {
 		case 0:
-			this.tabbedPane.setSelectedIndex(AboutBox.ABOUT);
+			tabbedPane.setSelectedIndex(AboutBox.ABOUT);
 			break;
 		case 1:
-			this.tabbedPane.setSelectedIndex(AboutBox.LICENSE);
+			tabbedPane.setSelectedIndex(AboutBox.LICENSE);
 			break;
 		case 2:
-			this.tabbedPane.setSelectedIndex(AboutBox.DISCLAIMER);
+			tabbedPane.setSelectedIndex(AboutBox.DISCLAIMER);
 			break;
 		case 3:
-			this.tabbedPane.setSelectedIndex(AboutBox.ACKNOWLEDGEMENTS);
+			tabbedPane.setSelectedIndex(AboutBox.ACKNOWLEDGEMENTS);
 			break;
 		default:
-			this.tabbedPane.setSelectedIndex(0);
+			tabbedPane.setSelectedIndex(0);
 			break;
 		}
 	}

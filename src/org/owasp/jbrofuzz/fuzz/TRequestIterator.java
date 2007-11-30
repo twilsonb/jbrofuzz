@@ -101,30 +101,30 @@ public class TRequestIterator {
 		this.start = start;
 		this.finish = finish;
 
-		this.maxValue = 0;
-		this.currentValue = 0;
-		this.generatorStopped = false;
+		maxValue = 0;
+		currentValue = 0;
+		generatorStopped = false;
 
-		this.mTConstructor = new TConstructor(this.getJBroFuzz());
+		mTConstructor = new TConstructor(getJBroFuzz());
 
 		// Check start and finish to positive and also within length
 		final int strlength = request.length();
 		if ((start < 0) || (finish < 0) || (start > strlength)
 				|| (finish > strlength)) {
-			this.len = 0;
+			len = 0;
 		} else {
-			this.len = finish - start;
+			len = finish - start;
 		}
 		// Check for a minimum length of 1 between start and finish
-		if (this.len > 0) {
+		if (len > 0) {
 
-			this.maxValue = this.mTConstructor.getGeneratorLength(type);
+			maxValue = mTConstructor.getGeneratorLength(type);
 			// For a recursive generator, generate the corresponding maximum value
-			final char genType = this.mTConstructor.getGeneratorType(type);
+			final char genType = mTConstructor.getGeneratorType(type);
 			if (genType == Generator.RECURSIVE) {
-				final long baseValue = this.maxValue;
-				for (int i = 1; i < this.len; i++) {
-					this.maxValue *= baseValue;
+				final long baseValue = maxValue;
+				for (int i = 1; i < len; i++) {
+					maxValue *= baseValue;
 				}
 			}
 		} // if this.len > 0
@@ -137,7 +137,7 @@ public class TRequestIterator {
 	 * @return JBroFuzz
 	 */
 	public JBroFuzz getJBroFuzz() {
-		return this.mJBroFuzz;
+		return mJBroFuzz;
 	}
 
 	/**
@@ -148,46 +148,46 @@ public class TRequestIterator {
 	 */
 	private StringBuffer getNext() {
 		final StringBuffer fuzzedValue = new StringBuffer("");
-		if (this.currentValue < this.maxValue) {
+		if (currentValue < maxValue) {
 
-			fuzzedValue.append(this.request.substring(0, this.start));
+			fuzzedValue.append(request.substring(0, start));
 			int blank_count = 0;
-			final char genType = this.mTConstructor.getGeneratorType(this.type);
+			final char genType = mTConstructor.getGeneratorType(type);
 
 			// Check to see if the generator is recursive
 			if (genType == Generator.RECURSIVE) {
-				final int radix = this.mTConstructor.getGeneratorLength(this.type);
-				blank_count = Long.toString(this.currentValue, radix).length()
-						- this.len;
+				final int radix = mTConstructor.getGeneratorLength(type);
+				blank_count = Long.toString(currentValue, radix).length()
+						- len;
 				while (blank_count < 0) {
 					fuzzedValue.append("0");
 					blank_count++;
 				}
 				// Append the current value, depending on type
-				if (this.type.equals("DEC")) {
-					fuzzedValue.append("" + Long.toString(this.currentValue, 10));
+				if (type.equals("DEC")) {
+					fuzzedValue.append("" + Long.toString(currentValue, 10));
 				}
-				if (this.type.equals("HEX")) {
-					fuzzedValue.append("" + Long.toHexString(this.currentValue));
+				if (type.equals("HEX")) {
+					fuzzedValue.append("" + Long.toHexString(currentValue));
 				}
-				if (this.type.equals("OCT")) {
-					fuzzedValue.append("" + Long.toOctalString(this.currentValue));
+				if (type.equals("OCT")) {
+					fuzzedValue.append("" + Long.toOctalString(currentValue));
 				}
-				if (this.type.equals("BIN")) {
-					fuzzedValue.append("" + Long.toBinaryString(this.currentValue));
+				if (type.equals("BIN")) {
+					fuzzedValue.append("" + Long.toBinaryString(currentValue));
 				}
 			}
 			// Check to see if the generator is replasive
 			if (genType == Generator.REPLASIVE) {
-				final int v = (int) this.currentValue;
-				final StringBuffer b = this.mTConstructor.getGeneratorElement(
-						this.type, v);
+				final int v = (int) currentValue;
+				final StringBuffer b = mTConstructor.getGeneratorElement(
+						type, v);
 				fuzzedValue.append(b);
 			}
 
-			this.currentValue++;
+			currentValue++;
 			// Append the end of the string
-			fuzzedValue.append(this.request.substring(this.finish));
+			fuzzedValue.append(request.substring(finish));
 		}
 		return fuzzedValue;
 	}
@@ -206,29 +206,29 @@ public class TRequestIterator {
 	 * 
 	 */
 	public void run() {
-		final String target = this.mJBroFuzz.getWindow().getFuzzingPanel()
+		final String target = mJBroFuzz.getWindow().getFuzzingPanel()
 				.getTargetText();
-		final String port = this.mJBroFuzz.getWindow().getFuzzingPanel()
+		final String port = mJBroFuzz.getWindow().getFuzzingPanel()
 				.getPortText();
-		StringBuffer stout = this.getNext();
+		StringBuffer stout = getNext();
 
 		if (stout.toString().equalsIgnoreCase("")) {
-			stout = this.request;
+			stout = request;
 		}
 
-		while ((!stout.toString().equalsIgnoreCase("")) && (!this.generatorStopped)) {
+		while ((!stout.toString().equalsIgnoreCase("")) && (!generatorStopped)) {
 
 			final Date currentTime = new Date();
-			final String filename = this.mJBroFuzz.getWindow().getFuzzingPanel()
+			final String filename = mJBroFuzz.getWindow().getFuzzingPanel()
 					.getCounter(true);
 
-			this.mJBroFuzz.getWindow().getFuzzingPanel().addRowInOuputTable(
+			mJBroFuzz.getWindow().getFuzzingPanel().addRowInOuputTable(
 					filename + "          " + target + ":" + port + "          "
-							+ this.type + "          "
+							+ type + "          "
 							+ TRequestIterator.dateFormat.format(currentTime) + "          "
-							+ this.currentValue + "/" + this.maxValue);
+							+ currentValue + "/" + maxValue);
 
-			FileHandler.writeFuzzFile("[{" + this.currentValue + "/" + this.maxValue
+			FileHandler.writeFuzzFile("[{" + currentValue + "/" + maxValue
 					+ "}, " + filename + " "
 					+ TRequestIterator.dateFormat.format(currentTime) + "] " + "<!-- \r\n"
 					+ target + " : " + port + "\r\n" + stout + "\r\n", filename);
@@ -239,7 +239,7 @@ public class TRequestIterator {
 			FileHandler
 					.writeFuzzFile(JBRFormat.LINE_SEPARATOR + "\r\n" + s, filename);
 
-			stout = this.getNext();
+			stout = getNext();
 		}
 	}
 
@@ -251,6 +251,6 @@ public class TRequestIterator {
 	 * </p>
 	 */
 	public void stop() {
-		this.generatorStopped = true;
+		generatorStopped = true;
 	}
 }

@@ -49,7 +49,6 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 	private TCPSniffing mn;
 	private ServerSocket server = null;
 	private Vector connections = null;
-	private Connection con = null;
 	// Boolean to allow for termination
 	private boolean connectionStopped;
 
@@ -72,7 +71,7 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 		this.mn = mn;
 		this.remoteAddress = remoteAddress;
 		// Initial variables
-		this.connectionStopped = false;
+		connectionStopped = false;
 		try {
 			this.remotePort = Integer.parseInt(remotePort);
 		} catch (final NumberFormatException e1) {
@@ -91,9 +90,9 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 		}
 
 		try {
-			this.connections = new Vector();
-			this.server = new ServerSocket(this.localPort);
-			this.server.setReuseAddress(false);
+			connections = new Vector();
+			server = new ServerSocket(this.localPort);
+			server.setReuseAddress(false);
 		} catch (final IOException e) {
 			mn.getFrame().log("ServerSocket IOException..." + e.getMessage());
 			mn.getFrame().getTCPSniffingPanel().stop();
@@ -106,8 +105,8 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 		 * from: " + c.getSrcHost() + ":" + this.lPort + " " + "To : " +
 		 * c.getDestHost() + ":" + c.getDestPort() );
 		 */
-		synchronized (this.connections) {
-			this.connections.addElement(c);
+		synchronized (connections) {
+			connections.addElement(c);
 		}
 	}
 
@@ -126,11 +125,11 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 	}
 
 	public InetAddress getServerAddress() {
-		return this.server.getInetAddress();
+		return server.getInetAddress();
 	}
 
 	public int getServerPort() {
-		return this.server.getLocalPort();
+		return server.getLocalPort();
 	}
 
 	public void removeConnection(final Connection c) {
@@ -139,8 +138,8 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 		 * c.getSrcHost() + ":" + this.lPort + " " + "To : " + c.getDestHost() + ":" +
 		 * c.getDestPort() );
 		 */
-		synchronized (this.connections) {
-			this.connections.removeElement(c);
+		synchronized (connections) {
+			connections.removeElement(c);
 		}
 	}
 
@@ -150,26 +149,26 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 	@Override
 	public void run() {
 
-		while (!this.connectionStopped) {
+		while (!connectionStopped) {
 			try {
-				final Socket clientSocket = this.server.accept();
-				this.con = new Connection(this.mn.getFrame().getJBroFuzz(),
-						clientSocket, this, this.remoteAddress, this.remotePort);
+				final Socket clientSocket = server.accept();
+				new Connection(mn.getFrame().getJBroFuzz(),
+						clientSocket, this, remoteAddress, remotePort);
 			} catch (final IOException ex) {
-				this.connectionStopped = true;
+				connectionStopped = true;
 				break;
 			}
 		} // while loop
 
 		try {
-			this.server.close();
+			server.close();
 		} 
 		catch (final IOException ex1) {
 		} 
 		finally {
 			try {
-				if(this.server != null) {
-					this.server.close();
+				if(server != null) {
+					server.close();
 				}
 			} 
 			catch (final IOException ex2) {
@@ -180,9 +179,9 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 
 	public void stopConnection() {
 		try {
-			this.server.close();
+			server.close();
 		} catch (final Exception e) {
-			this.connectionStopped = true;
+			connectionStopped = true;
 		}
 	}
 }

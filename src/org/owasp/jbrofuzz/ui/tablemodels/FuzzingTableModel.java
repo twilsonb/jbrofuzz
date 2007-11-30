@@ -74,7 +74,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 */
 	public FuzzingTableModel(final JBRFrame fPanel) {
 		this.fPanel = fPanel;
-		this.dataVector = new Vector<Generator>();
+		dataVector = new Vector<Generator>();
 	}
 
 	/**
@@ -91,8 +91,8 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 */
 	public void addRow(final String generator, final int start, final int end) {
 		final Generator addingGenerator = new Generator(generator, start, end);
-		this.dataVector.add(addingGenerator);
-		this.fireTableRowsInserted(this.dataVector.size() - 1, this.dataVector
+		dataVector.add(addingGenerator);
+		fireTableRowsInserted(dataVector.size() - 1, dataVector
 				.size() - 1);
 	}
 
@@ -128,9 +128,9 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 */
 	public String getRow(final int row) {
 		final StringBuffer output = new StringBuffer();
-		if ((row > -1) && (row < this.dataVector.size())) {
+		if ((row > -1) && (row < dataVector.size())) {
 			for (int i = 0; i < FuzzingTableModel.COLUMNNAMES.length; i++) {
-				output.append(this.getValueAt(row, i)
+				output.append(getValueAt(row, i)
 						+ FuzzingTableModel.STRING_SEPARATOR);
 			}
 		}
@@ -143,7 +143,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getRowCount() {
-		return this.dataVector.size();
+		return dataVector.size();
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
-		final Generator record = (Generator) this.dataVector.get(row);
+		final Generator record = dataVector.get(row);
 		switch (column) {
 		case INDEX_GENERATOR:
 			return record.getType();
@@ -180,10 +180,10 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 * @return boolean
 	 */
 	public boolean hasEmptyRow() {
-		if (this.dataVector.size() == 0) {
+		if (dataVector.size() == 0) {
 			return false;
 		}
-		final Generator gen = (Generator) this.dataVector.get(this.dataVector
+		final Generator gen = dataVector.get(dataVector
 				.size() - 1);
 		if (gen.getType().trim().equalsIgnoreCase("") && (gen.getStart() == 0)
 				&& (gen.getEnd() == 0)) {
@@ -225,16 +225,16 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 */
 	public void removeRow(final String generator, final int start, final int end) {
 		int rowToRemove = -1;
-		for (int i = 0; i < this.dataVector.size(); i++) {
-			final Generator record = (Generator) this.dataVector.get(i);
+		for (int i = 0; i < dataVector.size(); i++) {
+			final Generator record = dataVector.get(i);
 			if (record.getType().equals(generator) && (record.getStart() == start)
 					&& (record.getEnd() == end)) {
 				rowToRemove = i;
 			}
 		}
 		if (rowToRemove > -1) {
-			this.dataVector.removeElementAt(rowToRemove);
-			this.fireTableRowsDeleted(0, rowToRemove);
+			dataVector.removeElementAt(rowToRemove);
+			fireTableRowsDeleted(0, rowToRemove);
 		}
 	}
 
@@ -252,7 +252,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
-		final Generator record = (Generator) this.dataVector.get(row);
+		final Generator record = dataVector.get(row);
 		switch (column) {
 		case INDEX_GENERATOR:
 			record.setType((String) value);
@@ -266,7 +266,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 		default:
 			fPanel.log("TCP Fuzzing Panel: Invalid index ");
 		}
-		this.fireTableCellUpdated(row, column);
+		fireTableCellUpdated(row, column);
 	}
 }
 
@@ -279,20 +279,20 @@ class Generator {
 		
 		this.start = Integer.valueOf(start);
 		this.end = Integer.valueOf(end);
-		this.type = generator;
+		type = generator;
 		
 	}
 
 	public int getEnd() {
-		return this.end.intValue();
+		return end.intValue();
 	}
 
 	public int getStart() {
-		return this.start.intValue();
+		return start.intValue();
 	}
 
 	public String getType() {
-		return this.type;
+		return type;
 	}
 
 	public void setEnd(final int end) {
@@ -304,6 +304,6 @@ class Generator {
 	}
 
 	public void setType(final String generator) {
-		this.type = generator;
+		type = generator;
 	}
 }

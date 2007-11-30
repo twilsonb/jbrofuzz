@@ -29,8 +29,8 @@ public class NonWrappingTextPane extends JTextPane {
 	// to preserve the full width of the text
 	@Override
 	public boolean getScrollableTracksViewportWidth() {
-		final Component parent = this.getParent();
-		final ComponentUI ui = this.getUI();
+		final Component parent = getParent();
+		final ComponentUI ui = getUI();
 
 		return parent != null ? (ui.getPreferredSize(this).width <= parent
 				.getSize().width) : true;

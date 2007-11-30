@@ -93,56 +93,56 @@ public class OpenSource extends JBRPanel {
 				.createTitledBorder(" Fully Qualified Domain Name [FQDN] "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-		this.domain = new JTextField();
-		this.domain.setEditable(true);
-		this.domain.setVisible(true);
-		this.domain.setFont(new Font("Verdana", Font.BOLD, 12));
-		this.domain.setMargin(new Insets(1, 1, 1, 1));
-		this.domain.setBackground(Color.WHITE);
-		this.domain.setForeground(Color.BLACK);
-		getFrame().popup(this.domain);
+		domain = new JTextField();
+		domain.setEditable(true);
+		domain.setVisible(true);
+		domain.setFont(new Font("Verdana", Font.BOLD, 12));
+		domain.setMargin(new Insets(1, 1, 1, 1));
+		domain.setBackground(Color.WHITE);
+		domain.setForeground(Color.BLACK);
+		getFrame().popup(domain);
 
-		this.domain.setPreferredSize(new Dimension(480, 20));
-		domainPanel.add(this.domain);
+		domain.setPreferredSize(new Dimension(480, 20));
+		domainPanel.add(domain);
 
 		domainPanel.setBounds(10, 20, 500, 60);
 		this.add(domainPanel);
 
 		// The output panel
-		this.outputPanel = new JPanel();
-		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+		outputPanel = new JPanel();
+		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output "), BorderFactory.createEmptyBorder(5, 5,
 				5, 5)));
 
-		this.output = new JTextArea();
+		output = new JTextArea();
 
-		this.output.setEditable(false);
-		this.output.setVisible(true);
-		this.output.setFont(new Font("Verdana", Font.BOLD, 12));
-		this.output.setLineWrap(false);
-		this.output.setWrapStyleWord(true);
-		this.output.setMargin(new Insets(1, 1, 1, 1));
-		this.output.setBackground(Color.WHITE);
-		this.output.setForeground(Color.BLACK);
-		getFrame().popup(this.output);
+		output.setEditable(false);
+		output.setVisible(true);
+		output.setFont(new Font("Verdana", Font.BOLD, 12));
+		output.setLineWrap(false);
+		output.setWrapStyleWord(true);
+		output.setMargin(new Insets(1, 1, 1, 1));
+		output.setBackground(Color.WHITE);
+		output.setForeground(Color.BLACK);
+		getFrame().popup(output);
 
-		final JScrollPane outputScrollPane = new JScrollPane(this.output);
+		final JScrollPane outputScrollPane = new JScrollPane(output);
 		outputScrollPane.setVerticalScrollBarPolicy(20);
 		outputScrollPane.setHorizontalScrollBarPolicy(30);
 		outputScrollPane.setPreferredSize(new Dimension(480, 160));
-		this.outputPanel.add(outputScrollPane);
+		outputPanel.add(outputScrollPane);
 
-		this.outputPanel.setBounds(10, 80, 500, 200);
-		this.add(this.outputPanel);
+		outputPanel.setBounds(10, 80, 500, 200);
+		this.add(outputPanel);
 
 		// The check button
-		this.check = new JButton("Check!", ImageCreator.START_IMG);
-		this.check.setBounds(540, 100, 90, 40);
-		this.check.setToolTipText("Start Checking!");
-		this.add(this.check);
-		this.check.addActionListener(new ActionListener() {
+		check = new JButton("Check!", ImageCreator.START_IMG);
+		check.setBounds(540, 100, 90, 40);
+		check.setToolTipText("Start Checking!");
+		this.add(check);
+		check.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				OpenSource.this.worker = new SwingWorker3() {
+				worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
 						OpenSource.this.start();
@@ -154,17 +154,17 @@ public class OpenSource extends JBRPanel {
 						OpenSource.this.stop();
 					}
 				};
-				OpenSource.this.worker.start();
+				worker.start();
 			}
 		});
 
 		// The stop button
-		this.stop = new JButton("Stop", ImageCreator.STOP_IMG);
-		this.stop.setEnabled(false);
-		this.stop.setToolTipText("Stop Checking");
-		this.stop.setBounds(640, 100, 90, 40);
-		this.add(this.stop);
-		this.stop.addActionListener(new ActionListener() {
+		stop = new JButton("Stop", ImageCreator.STOP_IMG);
+		stop.setEnabled(false);
+		stop.setToolTipText("Stop Checking");
+		stop.setBounds(640, 100, 90, 40);
+		this.add(stop);
+		stop.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -175,18 +175,18 @@ public class OpenSource extends JBRPanel {
 		});
 
 		// The progress bar
-		this.progressBar = new JProgressBar(0);
-		this.progressBar.setValue(0);
-		this.progressBar.setStringPainted(true);
-		this.progressBar.setMinimum(0);
-		this.progressBar.setMaximum(5);
-		this.progressBar.setPreferredSize(new Dimension(310, 20));
+		progressBar = new JProgressBar(0);
+		progressBar.setValue(0);
+		progressBar.setStringPainted(true);
+		progressBar.setMinimum(0);
+		progressBar.setMaximum(5);
+		progressBar.setPreferredSize(new Dimension(310, 20));
 		final JPanel progressPanel = new JPanel();
 		progressPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Progress "), BorderFactory.createEmptyBorder(1,
 				1, 1, 1)));
 		progressPanel.setBounds(520, 20, 330, 60);
-		progressPanel.add(this.progressBar);
+		progressPanel.add(progressBar);
 		this.add(progressPanel);
 
 		// The info field
@@ -223,8 +223,8 @@ public class OpenSource extends JBRPanel {
 	public void appendOutputText(final String t) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				OpenSource.this.output.append(t);
-				OpenSource.this.output.setCaretPosition(OpenSource.this.output
+				output.append(t);
+				output.setCaretPosition(output
 						.getText().length());
 			}
 		});
@@ -236,20 +236,20 @@ public class OpenSource extends JBRPanel {
 	 * </p>
 	 */
 	public void start() {
-		if (!this.check.isEnabled()) {
+		if (!check.isEnabled()) {
 			return;
 		}
 		// UI and Colors
-		this.check.setEnabled(false);
-		this.stop.setEnabled(true);
-		this.domain.setEditable(false);
-		this.domain.setBackground(Color.BLACK);
-		this.domain.setForeground(Color.WHITE);
-		this.output.setBackground(Color.BLACK);
-		this.output.setForeground(Color.WHITE);
-		this.progressBar.setValue(0);
+		check.setEnabled(false);
+		stop.setEnabled(true);
+		domain.setEditable(false);
+		domain.setBackground(Color.BLACK);
+		domain.setForeground(Color.WHITE);
+		output.setBackground(Color.BLACK);
+		output.setForeground(Color.WHITE);
+		progressBar.setValue(0);
 		// Check to see if a message is present
-		final String dm = this.getDomainText();
+		final String dm = getDomainText();
 		if ("".equals(dm)) {
 			JOptionPane.showMessageDialog(this, "The domain field is blank.\n"
 					+ "Specify a domain\n", "Empty Domain Field",
@@ -257,13 +257,13 @@ public class OpenSource extends JBRPanel {
 			return;
 		}
 		// Update the border of the output panel
-		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output Checking domain: " + dm + " "),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-		this.output.setText("");
+		output.setText("");
 		final GRequestIterator req = new GRequestIterator(getFrame(), dm);
-		this.output.setText(req.getOutput());
+		output.setText(req.getOutput());
 	}
 
 	/**
@@ -272,86 +272,86 @@ public class OpenSource extends JBRPanel {
 	 * </p>
 	 */
 	public void stop() {
-		if (!this.stop.isEnabled()) {
+		if (!stop.isEnabled()) {
 			return;
 		}
 		// UI and Colors
-		this.check.setEnabled(true);
-		this.stop.setEnabled(false);
-		this.domain.setEditable(true);
-		this.domain.setBackground(Color.WHITE);
-		this.domain.setForeground(Color.BLACK);
-		if (this.output.getText().length() == 0) {
-			this.output.setBackground(Color.WHITE);
-			this.output.setForeground(Color.BLACK);
+		check.setEnabled(true);
+		stop.setEnabled(false);
+		domain.setEditable(true);
+		domain.setBackground(Color.WHITE);
+		domain.setForeground(Color.BLACK);
+		if (output.getText().length() == 0) {
+			output.setBackground(Color.WHITE);
+			output.setForeground(Color.BLACK);
 		} else {
-			this.output.setCaretPosition(this.output.getText().length());
+			output.setCaretPosition(output.getText().length());
 		}
 	}
 
 	public String getDomainText() {
-		String text = this.domain.getText();
+		String text = domain.getText();
 		int len = text.length();
 
 		if (text.startsWith("@")) {
 			text = text.substring(1, len);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.startsWith("[")) {
 			text = text.substring(1, len);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.startsWith(" ")) {
 			text = text.substring(1, len);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.startsWith("\"")) {
 			text = text.substring(1, len);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.startsWith("<")) {
 			text = text.substring(1, len);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.startsWith("http://")) {
 			text = text.substring(7, len);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.startsWith("https://")) {
 			text = text.substring(8, len);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.endsWith("\"")) {
 			text = text.substring(0, len - 1);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.endsWith(">")) {
 			text = text.substring(0, len - 1);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.endsWith(" ")) {
 			text = text.substring(0, len - 1);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.endsWith("]")) {
 			text = text.substring(0, len - 1);
 			len = text.length();
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		if (text.endsWith("/")) {
 			text = text.substring(0, len - 1);
 			// If another if statement is included, update the len variable here
-			this.domain.setText(text);
+			domain.setText(text);
 		}
 		return text;
 	}
@@ -367,7 +367,7 @@ public class OpenSource extends JBRPanel {
 			final SwingWorker3 progressWorker = new SwingWorker3() {
 				@Override
 				public Object construct() {
-					OpenSource.this.progressBar.setValue(percent);
+					progressBar.setValue(percent);
 					return "progress-four-update-return";
 				}
 

@@ -100,9 +100,9 @@ public class DRequestIterator {
 		this.url = url;
 		this.port = 0;
 		this.directories = directories.split("\n");
-		this.responses = new String[directories.length()];
-		this.stopped = false;
-		this.i = 0;
+		responses = new String[directories.length()];
+		stopped = false;
+		i = 0;
 
 		// Check the port
 		try {
@@ -139,7 +139,7 @@ public class DRequestIterator {
 	 * @return boolean
 	 */
 	public boolean isStopped() {
-		return this.stopped;
+		return stopped;
 	}
 
 	/**
@@ -147,35 +147,35 @@ public class DRequestIterator {
 	 */
 	public void run() {
 		// Check for a valid URL
-		if (this.url.equalsIgnoreCase("")) {
+		if (url.equalsIgnoreCase("")) {
 			return;
 		}
-		if (this.url.contains(" ")) {
+		if (url.contains(" ")) {
 			return;
 		}
-		if ((this.port < 1) || (this.port > 65536)) {
+		if ((port < 1) || (port > 65536)) {
 			return;
 		}
 
-		for (this.i = 0; this.i < this.directories.length; this.i++) {
-			if (this.stopped) {
+		for (i = 0; i < directories.length; i++) {
+			if (stopped) {
 				return;
 			}
 
 			String currentURI = "";
 			try {
-				currentURI = this.url + URIUtil.encodePath(this.directories[this.i]);
+				currentURI = url + URIUtil.encodePath(directories[i]);
 			} catch (final URIException ex) {
 				currentURI = "";
-				this.m.log("Could not encode the URI: " + this.url
-						+ this.directories[this.i]);
+				m.log("Could not encode the URI: " + url
+						+ directories[i]);
 			}
 
 			// Checks...
 			if (currentURI.equalsIgnoreCase("")) {
 				return;
 			}
-			if ((this.port <= 0) || (this.port > 65535)) {
+			if ((port <= 0) || (port > 65535)) {
 				return;
 			}
 
@@ -190,14 +190,14 @@ public class DRequestIterator {
 			method.setDoAuthentication(true);
 
 			try {
-				this.responses[this.i] = this.i + "\n";
-				this.responses[this.i] += currentURI + "\n";
+				responses[i] = i + "\n";
+				responses[i] += currentURI + "\n";
 				int statusCode = 0;
 				//
 				statusCode = client.executeMethod(method);
 				//
-				this.responses[this.i] += statusCode + "\n";
-				this.responses[this.i] += method.getStatusText() + "\n";
+				responses[i] += statusCode + "\n";
+				responses[i] += method.getStatusText() + "\n";
 
 				if (statusCode == HttpStatus.SC_OK) {
 					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -214,81 +214,81 @@ public class DRequestIterator {
 					try {
 						results = new String(allbytes, method.getResponseCharSet());
 					} catch (final UnsupportedEncodingException ex1) {
-						this.m.log("Web Directories: Unsupported Character Encoding");
+						m.log("Web Directories: Unsupported Character Encoding");
 						results = "";
 					}
 
 					// Check for comments
 					if (results.contains("<!--")) {
-						this.responses[this.i] += "Yes\n";
+						responses[i] += "Yes\n";
 					} else {
-						this.responses[this.i] += "No\n";
+						responses[i] += "No\n";
 					}
 					// Check for scripts
 					if ((results.contains("<script")) || (results.contains("<SCRIPT"))) {
-						this.responses[this.i] += "Yes\n";
+						responses[i] += "Yes\n";
 					} else {
-						this.responses[this.i] += "No\n";
+						responses[i] += "No\n";
 					}
 				}
 				// If no ok response has come back just append comments and scripts
 				else {
-					this.responses[this.i] += "No\n";
-					this.responses[this.i] += "No\n";
+					responses[i] += "No\n";
+					responses[i] += "No\n";
 				}
 			} catch (final HttpException e) {
-				this.responses[this.i] = this.i + "\n";
-				this.responses[this.i] += currentURI + "\n";
-				this.responses[this.i] += "000" + "\n";
-				this.responses[this.i] += "Fatal protocol violation" + "\n";
-				this.responses[this.i] += " \n";
-				this.responses[this.i] += " \n";
+				responses[i] = i + "\n";
+				responses[i] += currentURI + "\n";
+				responses[i] += "000" + "\n";
+				responses[i] += "Fatal protocol violation" + "\n";
+				responses[i] += " \n";
+				responses[i] += " \n";
 				// Bomb out...
 				final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 				boolean continueOnError = prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR,
 						false);
 				if (!continueOnError) {
-					this.stop();
+					stop();
 				}
 			} catch (final IOException e) {
-				this.responses[this.i] = this.i + "\n";
-				this.responses[this.i] += currentURI + "\n";
-				this.responses[this.i] += "000" + "\n";
-				this.responses[this.i] += "Fatal transport error" + "\n";
-				this.responses[this.i] += " \n";
-				this.responses[this.i] += " \n";
+				responses[i] = i + "\n";
+				responses[i] += currentURI + "\n";
+				responses[i] += "000" + "\n";
+				responses[i] += "Fatal transport error" + "\n";
+				responses[i] += " \n";
+				responses[i] += " \n";
 				// Bomb out...
 				final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 				boolean continueOnError = prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR,
 						false);
 				if (!continueOnError) {
-					this.stop();
+					stop();
 				}
 			} finally {
 				method.releaseConnection();
 			}
 			// Add a row to the displaying table
-			this.m.getWebDirectoriesPanel().addRow(this.responses[this.i]);
+			m.getWebDirectoriesPanel().addRow(responses[i]);
 			// Create a String to be written to file
 			final StringBuffer outToFile = new StringBuffer();
 			
-			Date currentTime = new Date();
+			final Date currentTime = new Date();
 			final SimpleDateFormat dateTime = new SimpleDateFormat(
 					"dd.MM.yyyy HH:mm:ss", new Locale("en"));
 			outToFile.append(dateTime.format(currentTime));
 			
 			// String outToFile = Time.dateAndTime();
-			final String[] tempArray = this.responses[this.i].split("\n");
+			final String[] tempArray = responses[i].split("\n");
 			for (final String element : tempArray) {
 				outToFile.append("," + element);
 			}
 			// Write the file
-			FileHandler.writeWebDirFile(this.m.getWebDirectoriesPanel()
+			FileHandler.writeWebDirFile(m.getWebDirectoriesPanel()
 					.getSessionNumber(), outToFile.toString());
 			// Update the progress bar
-			final double percentage = 100 * ((double) (this.i + 1))
-					/ (this.directories.length);
-			this.m.getWebDirectoriesPanel().setProgressBar((int) percentage);
+			final double percentage = 100 * ((double) (i + 1))
+					/ (directories.length);
+			m.getWebDirectoriesPanel().setProgressBar((int) percentage);
 		}
 	}
 
@@ -296,6 +296,6 @@ public class DRequestIterator {
 	 * Stop the Request Iterator, if it currently running.
 	 */
 	public void stop() {
-		this.stopped = true;
+		stopped = true;
 	}
 }

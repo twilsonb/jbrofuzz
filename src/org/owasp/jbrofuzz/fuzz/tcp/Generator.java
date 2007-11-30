@@ -168,9 +168,9 @@ public class Generator {
 
 		this.alphabetSize = alphabetSize;
 		this.category = category;
-		this.totalAdds = 0;
+		totalAdds = 0;
 
-		this.alphabet = new ArrayList<StringBuffer>(alphabetSize);
+		alphabet = new ArrayList<StringBuffer>(alphabetSize);
 	}
 
 	/**
@@ -188,9 +188,9 @@ public class Generator {
 	 */
 	public boolean addAlphabetValue(final StringBuffer value) {
 		boolean output = false;
-		if (this.totalAdds < this.alphabetSize) {
-			this.alphabet.add(Generator.createStringBuffer(value));
-			this.totalAdds++;
+		if (totalAdds < alphabetSize) {
+			alphabet.add(Generator.createStringBuffer(value));
+			totalAdds++;
 			output = true;
 		}
 		return output;
@@ -205,7 +205,7 @@ public class Generator {
 	 * @return String
 	 */
 	public String getCategory() {
-		return this.category;
+		return category;
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class Generator {
 	 * @return String
 	 */
 	public String getComment() {
-		return this.comment;
+		return comment;
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class Generator {
 	 * @return String
 	 */
 	public StringBuffer getElement(final int position) {
-		return (StringBuffer) this.alphabet.get(position % this.alphabetSize);
+		return alphabet.get(position % alphabetSize);
 	}
 
 	/**
@@ -239,7 +239,7 @@ public class Generator {
 	 * @return String
 	 */
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	/**
@@ -251,7 +251,7 @@ public class Generator {
 	 * @return int
 	 */
 	public int getSize() {
-		return this.alphabetSize;
+		return alphabetSize;
 	}
 
 	/**
@@ -262,7 +262,7 @@ public class Generator {
 	 * @return int
 	 */
 	public char getType() {
-		return this.type;
+		return type;
 	}
 
 	/**
@@ -275,10 +275,10 @@ public class Generator {
 	public String getTypeAsString() {
 		String output = "Unknown";
 
-		if (this.type == Generator.RECURSIVE) {
+		if (type == Generator.RECURSIVE) {
 			output = "Recursive";
 		}
-		if (this.type == Generator.REPLASIVE) {
+		if (type == Generator.REPLASIVE) {
 			output = "Replasive";
 		}
 
