@@ -37,8 +37,7 @@ import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
 import org.owasp.jbrofuzz.ui.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.ui.util.TableSorter;
-import org.owasp.jbrofuzz.ui.viewers.ExploitViewer;
-import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
+
 
 /**
  * <p>

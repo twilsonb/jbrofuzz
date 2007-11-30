@@ -456,7 +456,7 @@ public class TCPFuzzing extends JBRPanel {
 		// Update the border of the output panel
 		this.outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output (Last 1000 Lines)  "
-						+ "Logging in folder (" + getFrame().getJBroFuzz().getFormat().getDate() +
+						+ "Logging in folder (" + JBRFormat.DATE +
 						// getJBroFuzz().getVersion().getDate() +
 						") Session " + this.session), BorderFactory.createEmptyBorder(5, 5,
 				5, 5)));
@@ -692,26 +692,6 @@ public class TCPFuzzing extends JBRPanel {
 			this.target.setText(text);
 		}
 		return text;
-	}
-
-	/**
-	 * Set the button enable status of the Fuzz! button
-	 * 
-	 * @param b
-	 *          boolean
-	 */
-	private void setFuzzStartButtonEnable(final boolean b) {
-		this.buttonFuzzStart.setEnabled(b);
-	}
-
-	/**
-	 * Set the button enable status of the Stop button
-	 * 
-	 * @param b
-	 *          boolean
-	 */
-	private void setFuzzStopButtonEnable(final boolean b) {
-		this.buttonFuzzStop.setEnabled(b);
 	}
 
 	/**

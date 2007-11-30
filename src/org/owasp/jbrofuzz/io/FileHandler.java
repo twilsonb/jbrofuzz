@@ -874,7 +874,7 @@ public class FileHandler {
 		FileHandler.f = f;
 
 		// Date and current directory
-		FileHandler.runningDate = FileHandler.f.getDate();
+		FileHandler.runningDate = FileHandler.f.DATE;
 		final String baseDir = System.getProperty("user.dir");
 
 		// Create the necessary directory with the corresponding timestamp

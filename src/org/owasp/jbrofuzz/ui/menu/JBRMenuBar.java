@@ -306,7 +306,7 @@ public class JBRMenuBar extends JMenuBar {
 		// Help
 		final JMenuItem topics = new JMenuItem("Topics", ImageCreator.TOPICS_IMG);
 		final JMenuItem faq = new JMenuItem("FAQ", ImageCreator.TOPICS_IMG);
-		final JMenuItem tutorial = new JMenuItem("Tutorial");
+		// final JMenuItem tutorial = new JMenuItem("Tutorial");
 		final JMenuItem website = new JMenuItem("JBroFuzz Website...");
 		final JMenuItem disclaimer = new JMenuItem("Disclaimer",
 				ImageCreator.DISCLAIMER_IMG);

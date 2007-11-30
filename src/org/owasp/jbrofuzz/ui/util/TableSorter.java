@@ -65,7 +65,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.Icon;
@@ -188,7 +187,7 @@ public class TableSorter extends AbstractTableModel {
 			final int row1 = this.modelIndex;
 			final int row2 = ((Row) o).modelIndex;
 
-			for (final Iterator it = TableSorter.this.sortingColumns.iterator(); it
+			for (final Iterator<Directive> it = TableSorter.this.sortingColumns.iterator(); it
 					.hasNext();) {
 				final Directive directive = (Directive) it.next();
 				final int column = directive.column;
@@ -358,7 +357,7 @@ public class TableSorter extends AbstractTableModel {
 
 	private final Map columnComparators = new HashMap();
 
-	private final List sortingColumns = new ArrayList();
+	private final ArrayList<Directive> sortingColumns = new ArrayList<Directive>();
 
 	public TableSorter() {
 		this.mouseListener = new MouseHandler();
@@ -386,20 +385,24 @@ public class TableSorter extends AbstractTableModel {
 		this.modelToView = null;
 	}
 
+	/*
 	@Override
 	public Class getColumnClass(final int column) {
 		return this.tableModel.getColumnClass(column);
 	}
-
+	*/
+	
 	public int getColumnCount() {
 		return (this.tableModel == null) ? 0 : this.tableModel.getColumnCount();
 	}
 
+	/*
 	@Override
 	public String getColumnName(final int column) {
 		return this.tableModel.getColumnName(column);
 	}
-
+	*/
+	
 	protected Comparator getComparator(final int column) {
 		final Class columnType = this.tableModel.getColumnClass(column);
 		final Comparator comparator = (Comparator) this.columnComparators
