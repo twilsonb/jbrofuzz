@@ -89,12 +89,12 @@ public class JBroFuzz {
 	 */
 	public JBroFuzz() {
 
-		this.mFormat = new JBRFormat(this);
-		this.mDatabase = new Database(this);
-		this.mWindow = new JBRFrame(this);
+		mFormat = new JBRFormat(this);
+		mDatabase = new Database(this);
+		mWindow = new JBRFrame(this);
 		
 		// Singleton File Handler
-		this.mHandler = FileHandler.s(this.mWindow, this.mFormat);
+		mHandler = FileHandler.s(mWindow);
 
 	}
 
@@ -108,7 +108,7 @@ public class JBroFuzz {
 	 */
 	public JBRFormat getFormat() {
 
-		return this.mFormat;
+		return mFormat;
 
 	}
 
@@ -122,7 +122,7 @@ public class JBroFuzz {
 	 */
 	public FileHandler getHandler() {
 
-		return this.mHandler;
+		return mHandler;
 
 	}
 
@@ -135,7 +135,7 @@ public class JBroFuzz {
 	 */
 	public JBRFrame getWindow() {
 
-		return this.mWindow;
+		return mWindow;
 
 	}
 	
@@ -148,6 +148,6 @@ public class JBroFuzz {
 	 * @return Database
 	 */
 	public Database getDatabase() {
-		return this.mDatabase;
+		return mDatabase;
 	}
 }

@@ -74,7 +74,7 @@ public class Connection {
 			final StringBuffer message) {
 
 		final String conAddress = address;
-		this.conMessage = message;
+		conMessage = message;
 		int conPort = 0;
 		final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
 
@@ -85,68 +85,68 @@ public class Connection {
 			conPort = 0;
 		}
 		if (!((conPort > 0) && (conPort < 65536))) {
-			this.reply = "Port has to be within range (0,65536)\n";
+			reply = "Port has to be within range (0,65536)\n";
 			return;
 		}
 		// Create the Socket to the specified address and port
 		try {
-			this.socket = new Socket();
-			this.socket.bind(null);
-			this.socket.connect(new InetSocketAddress(conAddress, conPort), 5000);
+			socket = new Socket();
+			socket.bind(null);
+			socket.connect(new InetSocketAddress(conAddress, conPort), 5000);
 
-			this.socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
-			this.socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-			this.socket.setSoTimeout(30000);
+			socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+			socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
+			socket.setSoTimeout(30000);
 		} catch (final UnknownHostException e) {
-			this.reply = "The IP address of the host could not be determined : "
+			reply = "The IP address of the host could not be determined : "
 					+ e.getMessage() + "\n";
 		} catch (final IOException e) {
-			this.reply = "An IO Error occured when creating the socket : "
+			reply = "An IO Error occured when creating the socket : "
 					+ e.getMessage() + "\n";
 		}
 		// Assign the input stream
 		try {
-			this.in_stream = this.socket.getInputStream();
+			in_stream = socket.getInputStream();
 		} catch (final IOException e) {
-			this.reply = "An IO Error occured when creating the input stream : "
+			reply = "An IO Error occured when creating the input stream : "
 					+ e.getMessage() + "\n";
 		}
 		// Assign the output stream
 		try {
-			this.out_stream = this.socket.getOutputStream();
+			out_stream = socket.getOutputStream();
 		} catch (final IOException e) {
-			this.reply = "An IO Error occured when creating the output stream : "
+			reply = "An IO Error occured when creating the output stream : "
 					+ e.getMessage() + "\n";
 		}
 		// Write to the output stream
 		try {
-			this.out_stream.write(this.conMessage.toString().getBytes());
+			out_stream.write(conMessage.toString().getBytes());
 		} catch (final IOException e) {
-			this.reply = "An IO Error occured when attempting to write to the output stream : "
+			reply = "An IO Error occured when attempting to write to the output stream : "
 					+ e.getMessage() + "\n";
 		}
 		// Really don't like catching null pointer exceptions...
 		catch (final NullPointerException e) {
-			this.reply = "The output stream is null : " + e.getMessage();
+			reply = "The output stream is null : " + e.getMessage();
 			return;
 		}
 		try {
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int got;
-			while ((got = this.in_stream.read(recv)) > -1) {
+			while ((got = in_stream.read(recv)) > -1) {
 				baos.write(recv, 0, got);
 			}
 			final byte[] allbytes = baos.toByteArray();
 
-			this.reply = new String(allbytes);
+			reply = new String(allbytes);
 		} catch (final IOException e) {
 
 		}
 		// Close the socket
 		try {
-			this.socket.close();
+			socket.close();
 		} catch (final IOException e) {
-			this.reply = "An IO Error occured when attempting to close the socket : "
+			reply = "An IO Error occured when attempting to close the socket : "
 					+ e.getMessage() + "\n";
 		}
 	}
@@ -159,7 +159,7 @@ public class Connection {
 	 * @return StringBuffer
 	 */
 	public StringBuffer getMessage() {
-		return this.conMessage;
+		return conMessage;
 	}
 
 	/**
@@ -171,6 +171,6 @@ public class Connection {
 	 * @return String
 	 */
 	public String getReply() {
-		return this.reply;
+		return reply;
 	}
 }

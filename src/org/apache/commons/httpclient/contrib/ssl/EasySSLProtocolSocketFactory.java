@@ -105,7 +105,7 @@ public class EasySSLProtocolSocketFactory implements
 
 	private static SSLContext createEasySSLContext() {
 		try {
-			final SSLContext context = SSLContext.getInstance("SSL");
+			final SSLContext context = SSLContext.getInstance("SSL"); //$NON-NLS-1$
 			context.init(null, new TrustManager[] { new EasyX509TrustManager(null) },
 					null);
 			return context;
@@ -130,7 +130,7 @@ public class EasySSLProtocolSocketFactory implements
 	public Socket createSocket(final Socket socket, final String host,
 			final int port, final boolean autoClose) throws IOException,
 			UnknownHostException {
-		return this.getSSLContext().getSocketFactory().createSocket(socket, host,
+		return getSSLContext().getSocketFactory().createSocket(socket, host,
 				port, autoClose);
 	}
 
@@ -139,7 +139,7 @@ public class EasySSLProtocolSocketFactory implements
 	 */
 	public Socket createSocket(final String host, final int port)
 			throws IOException, UnknownHostException {
-		return this.getSSLContext().getSocketFactory().createSocket(host, port);
+		return getSSLContext().getSocketFactory().createSocket(host, port);
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class EasySSLProtocolSocketFactory implements
 			final InetAddress clientHost, final int clientPort) throws IOException,
 			UnknownHostException {
 
-		return this.getSSLContext().getSocketFactory().createSocket(host, port,
+		return getSSLContext().getSocketFactory().createSocket(host, port,
 				clientHost, clientPort);
 	}
 
@@ -187,21 +187,20 @@ public class EasySSLProtocolSocketFactory implements
 			final HttpConnectionParams params) throws IOException,
 			UnknownHostException, ConnectTimeoutException {
 		if (params == null) {
-			throw new IllegalArgumentException("Parameters may not be null");
+			throw new IllegalArgumentException("Parameters may not be null"); //$NON-NLS-1$
 		}
 		final int timeout = params.getConnectionTimeout();
-		final SocketFactory socketfactory = this.getSSLContext().getSocketFactory();
+		final SocketFactory socketfactory = getSSLContext().getSocketFactory();
 		if (timeout == 0) {
 			return socketfactory.createSocket(host, port, localAddress, localPort);
-		} else {
-			final Socket socket = socketfactory.createSocket();
-			final SocketAddress localaddr = new InetSocketAddress(localAddress,
-					localPort);
-			final SocketAddress remoteaddr = new InetSocketAddress(host, port);
-			socket.bind(localaddr);
-			socket.connect(remoteaddr, timeout);
-			return socket;
 		}
+		final Socket socket = socketfactory.createSocket();
+		final SocketAddress localaddr = new InetSocketAddress(localAddress,
+				localPort);
+		final SocketAddress remoteaddr = new InetSocketAddress(host, port);
+		socket.bind(localaddr);
+		socket.connect(remoteaddr, timeout);
+		return socket;
 	}
 
 	@Override
@@ -211,10 +210,10 @@ public class EasySSLProtocolSocketFactory implements
 	}
 
 	private SSLContext getSSLContext() {
-		if (this.sslcontext == null) {
-			this.sslcontext = EasySSLProtocolSocketFactory.createEasySSLContext();
+		if (sslcontext == null) {
+			sslcontext = EasySSLProtocolSocketFactory.createEasySSLContext();
 		}
-		return this.sslcontext;
+		return sslcontext;
 	}
 
 	@Override

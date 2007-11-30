@@ -70,33 +70,33 @@ public class WindowPlotter extends JFrame {
 
 	public WindowPlotter(final String name) {
 		super(name);
-		this.setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
-		this.y_data = FileHandler.getFuzzDirFileHashes();
-		this.x_data = FileHandler.getFileList();
+		y_data = FileHandler.getFuzzDirFileHashes();
+		x_data = FileHandler.getFileList();
 
-		this.normaliseData();
+		normaliseData();
 
-		final GraphicsPlotCanvas plotCanvas = this.createPlotCanvas();
+		final GraphicsPlotCanvas plotCanvas = createPlotCanvas();
 
-		this._dataPlot = new DataPlot();
-		this._dataPlot.addElement(new DataCurve(""));
-		plotCanvas.connect(this._dataPlot);
-		this.setLayout(new BorderLayout());
+		_dataPlot = new DataPlot();
+		_dataPlot.addElement(new DataCurve(""));
+		plotCanvas.connect(_dataPlot);
+		setLayout(new BorderLayout());
 		this.add(plotCanvas.getGraphicsCanvas(), BorderLayout.CENTER);
 		// Global frame issues
 		this.setLocation(180, 140);
 		this.setSize(WindowPlotter.x, WindowPlotter.y);
-		this.setResizable(false);
-		this.setVisible(true);
-		this.setDefaultCloseOperation(2);
+		setResizable(false);
+		setVisible(true);
+		setDefaultCloseOperation(2);
 
-		this.drawData();
+		drawData();
 	}
 
 	private GraphicsPlotCanvas createPlotCanvas() {
 		final int xMin = 0;
-		final int xMax = this.y_data.length + 1;
+		final int xMax = y_data.length + 1;
 		final int yMin = 0;
 		final int yMax = 1000;
 
@@ -140,12 +140,12 @@ public class WindowPlotter extends JFrame {
 		props.put("plot/curveFactory/curve/symbolFactory/size", "0.015");
 
 		final StringBuffer xAxisMap = new StringBuffer();
-		for (int i = 0; i < this.x_data.length; i++) {
+		for (int i = 0; i < x_data.length; i++) {
 			if (i == 0) {
 				xAxisMap.append("0=0;");
 			} else {
 				if (xAxisMap.length() < 100000) {
-					xAxisMap.append((i + 1) + "=" + this.x_data[i] + ";");
+					xAxisMap.append((i + 1) + "=" + x_data[i] + ";");
 				}
 			}
 		}
@@ -158,19 +158,19 @@ public class WindowPlotter extends JFrame {
 
 	private void drawData() {
 		final DataCurve curve = new DataCurve("");
-		for (int i = 0; i < this.y_data.length; i++) {
+		for (int i = 0; i < y_data.length; i++) {
 			curve.addElement(new DataPoint(i, 0));
 			final int x = i + 1;
-			final int y = this.y_data[i];
+			final int y = y_data[i];
 			curve.replaceElementAt(i, new DataPoint(x, y));
 		}
-		this._dataPlot.replaceElementAt(0, curve);
+		_dataPlot.replaceElementAt(0, curve);
 	}
 
 	private void normaliseData() {
-		final int norm = this.y_data[0];
-		for (int i = 0; i < this.y_data.length; i++) {
-			this.y_data[i] = Math.abs((this.y_data[i] - norm + 10) % 1000);
+		final int norm = y_data[0];
+		for (int i = 0; i < y_data.length; i++) {
+			y_data[i] = Math.abs((y_data[i] - norm + 10) % 1000);
 		}
 	}
 

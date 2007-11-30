@@ -191,9 +191,9 @@ public class Protocol {
 		}
 
 		this.scheme = scheme;
-		this.socketFactory = factory;
+		socketFactory = factory;
 		this.defaultPort = defaultPort;
-		this.secure = false;
+		secure = false;
 	}
 
 	/**
@@ -221,9 +221,9 @@ public class Protocol {
 		}
 
 		this.scheme = scheme;
-		this.socketFactory = factory;
+		socketFactory = factory;
 		this.defaultPort = defaultPort;
-		this.secure = true;
+		secure = true;
 	}
 
 	/**
@@ -240,9 +240,9 @@ public class Protocol {
 
 			final Protocol p = (Protocol) obj;
 
-			return ((this.defaultPort == p.getDefaultPort())
-					&& this.scheme.equalsIgnoreCase(p.getScheme())
-					&& (this.secure == p.isSecure()) && this.socketFactory.equals(p
+			return ((defaultPort == p.getDefaultPort())
+					&& scheme.equalsIgnoreCase(p.getScheme())
+					&& (secure == p.isSecure()) && socketFactory.equals(p
 					.getSocketFactory()));
 
 		} else {
@@ -257,7 +257,7 @@ public class Protocol {
 	 * @return int
 	 */
 	public int getDefaultPort() {
-		return this.defaultPort;
+		return defaultPort;
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class Protocol {
 	 * @return The scheme
 	 */
 	public String getScheme() {
-		return this.scheme;
+		return scheme;
 	}
 
 	/**
@@ -276,7 +276,7 @@ public class Protocol {
 	 * @return SocketFactory
 	 */
 	public ProtocolSocketFactory getSocketFactory() {
-		return this.socketFactory;
+		return socketFactory;
 	}
 
 	/**
@@ -286,7 +286,7 @@ public class Protocol {
 	 */
 	@Override
 	public int hashCode() {
-		return this.scheme.hashCode();
+		return scheme.hashCode();
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class Protocol {
 	 * @return true if this protocol is secure
 	 */
 	public boolean isSecure() {
-		return this.secure;
+		return secure;
 	}
 
 	/**
@@ -308,7 +308,7 @@ public class Protocol {
 	 * @return the given port or the defaultPort
 	 */
 	public int resolvePort(final int port) {
-		return port <= 0 ? this.getDefaultPort() : port;
+		return port <= 0 ? getDefaultPort() : port;
 	}
 
 	/**
@@ -318,6 +318,6 @@ public class Protocol {
 	 */
 	@Override
 	public String toString() {
-		return this.scheme + ":" + this.defaultPort;
+		return scheme + ":" + defaultPort;
 	}
 }

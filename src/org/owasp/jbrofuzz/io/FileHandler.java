@@ -66,9 +66,6 @@ public class FileHandler {
 	// The main window frame gui
 	private static JBRFrame g;
 
-	// The main format object
-	private static JBRFormat f;
-
 	// The current file used for creation
 	private static File currentFile;
 
@@ -102,7 +99,7 @@ public class FileHandler {
 	public static final int DIR_TCPF = 13;
 
 	// The date from the version
-	private static String runningDate;
+	// private static String runningDate;
 
 	//
 	// Private method for appending data to a file, given the name and content
@@ -762,12 +759,11 @@ public class FileHandler {
 	 * 
 	 * @param g
 	 *          FrameWindow
-	 * @param f
 	 * @return FileHandler
 	 */
-	public static synchronized FileHandler s(final JBRFrame g, final JBRFormat f) {
+	public static synchronized FileHandler s(final JBRFrame g) {
 		if (FileHandler.singletonFileHandlerObject == null) {
-			FileHandler.singletonFileHandlerObject = new FileHandler(g, f);
+			FileHandler.singletonFileHandlerObject = new FileHandler(g);
 		}
 		return FileHandler.singletonFileHandlerObject;
 	}
@@ -868,30 +864,27 @@ public class FileHandler {
 	//
 	// Private Constructor due to the use of a singleton architecture
 	//
-	public FileHandler(final JBRFrame g, final JBRFormat f) {
+	public FileHandler(final JBRFrame g) {
 
 		FileHandler.g = g;
-		FileHandler.f = f;
 
-		// Date and current directory
-		FileHandler.runningDate = FileHandler.f.DATE;
 		final String baseDir = System.getProperty("user.dir");
 
 		// Create the necessary directory with the corresponding timestamp
 		FileHandler.fuzzDirectory = new File(baseDir + File.separator + "jbrofuzz"
-				+ File.separator + "fuzzing-tcp" + File.separator + FileHandler.runningDate);
+				+ File.separator + "fuzzing-tcp" + File.separator + JBRFormat.DATE);
 
 		FileHandler.snifDirectory = new File(baseDir + File.separator + "jbrofuzz"
 				+ File.separator + "sniffing" + File.separator
-				+ FileHandler.runningDate);
+				+ JBRFormat.DATE);
 
 		FileHandler.webEnumDirectory = new File(baseDir + File.separator
 				+ "jbrofuzz" + File.separator + "web-dir" + File.separator
-				+ FileHandler.runningDate);
+				+ JBRFormat.DATE);
 
 		FileHandler.httpFuzzDirectory = new File(baseDir + File.separator
 				+ "jbrofuzz" + File.separator + "fuzzing-http" + File.separator
-				+ FileHandler.runningDate);
+				+ JBRFormat.DATE);
 
 		int failedDirCounter = 0;
 
@@ -970,7 +963,7 @@ public class FileHandler {
 			try {
 				FileUtils.deleteDirectory(fuzzDirectory);
 				count++;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
@@ -979,7 +972,7 @@ public class FileHandler {
 			try {
 				FileUtils.deleteDirectory(httpFuzzDirectory);
 				count++;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
@@ -988,7 +981,7 @@ public class FileHandler {
 			try {
 				FileUtils.deleteDirectory(snifDirectory);
 				count++;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
@@ -997,7 +990,7 @@ public class FileHandler {
 			try {
 				FileUtils.deleteDirectory(webEnumDirectory);
 				count++;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
@@ -1011,7 +1004,7 @@ public class FileHandler {
 				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
 						+ File.separator + "fuzzing-tcp" + File.separator));
 				count++;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
@@ -1022,7 +1015,7 @@ public class FileHandler {
 				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
 						+ File.separator + "sniffing" + File.separator));
 				count++;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
@@ -1033,7 +1026,7 @@ public class FileHandler {
 				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
 						+ File.separator + "web-dir" + File.separator));
 				count++;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
@@ -1044,7 +1037,7 @@ public class FileHandler {
 				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
 						+ File.separator + "fuzzing-http" + File.separator));
 				count++;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
@@ -1056,7 +1049,7 @@ public class FileHandler {
 				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
 						+ File.separator));
 				count++;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}

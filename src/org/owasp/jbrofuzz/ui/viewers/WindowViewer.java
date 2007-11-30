@@ -96,14 +96,14 @@ public class WindowViewer extends JFrame {
 	 */
 	public WindowViewer(final JBRFrame m, final String name, final int typeOfPanel) {
 		super();
-		this.setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
 		final String[] input = name.split(" ");
 		final String number = input[0] + ".html";
-		this.setTitle("Window Viewer " + number);
+		setTitle("Window Viewer " + number);
 
 		// The container pane
-		final Container pane = this.getContentPane();
+		final Container pane = getContentPane();
 		pane.setLayout(null);
 		// Define the JPanel
 		final JPanel listPanel = new JPanel();
@@ -167,14 +167,14 @@ public class WindowViewer extends JFrame {
 		// Global Frame Issues
 		this.setLocation(200, 200);
 		this.setSize(550, 500);
-		this.setResizable(false);
+		setResizable(false);
 		// Don't show the frame unless there is content
 		if (listTextArea.getText().length() < 1) {
-			this.setVisible(false);
+			setVisible(false);
 		} else {
-			this.setVisible(true);
+			setVisible(true);
 		}
-		this.setDefaultCloseOperation(2);
+		setDefaultCloseOperation(2);
 
 		listTextArea.addKeyListener(new KeyAdapter() {
 			@Override

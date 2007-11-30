@@ -27,21 +27,21 @@ public abstract class SwingWorker3 {
 		private Thread thread;
 
 		ThreadVar(final Thread t) {
-			this.thread = t;
+			thread = t;
 		}
 
 		synchronized void clear() {
-			this.thread = null;
+			thread = null;
 		}
 
 		synchronized Thread get() {
-			return this.thread;
+			return thread;
 		}
 	}
 
 	private Object value;
 
-	private ThreadVar threadVar;
+	ThreadVar threadVar;
 
 	/**
 	 * <p>
@@ -61,7 +61,7 @@ public abstract class SwingWorker3 {
 				try {
 					SwingWorker3.this.setValue(SwingWorker3.this.construct());
 				} finally {
-					SwingWorker3.this.threadVar.clear();
+					threadVar.clear();
 				}
 
 				SwingUtilities.invokeLater(doFinished);
@@ -69,7 +69,7 @@ public abstract class SwingWorker3 {
 		};
 
 		final Thread t = new Thread(doConstruct);
-		this.threadVar = new ThreadVar(t);
+		threadVar = new ThreadVar(t);
 	}
 
 	/**
@@ -88,6 +88,7 @@ public abstract class SwingWorker3 {
 	 * </p>
 	 */
 	public void finished() {
+		// Nothing here
 	}
 
 	/**
@@ -101,9 +102,9 @@ public abstract class SwingWorker3 {
 	 */
 	public Object get() {
 		while (true) {
-			final Thread t = this.threadVar.get();
+			final Thread t = threadVar.get();
 			if (t == null) {
-				return this.getValue();
+				return getValue();
 			}
 			try {
 				t.join();
@@ -123,7 +124,7 @@ public abstract class SwingWorker3 {
 	 * @return Object
 	 */
 	protected synchronized Object getValue() {
-		return this.value;
+		return value;
 	}
 
 	/**
@@ -133,11 +134,11 @@ public abstract class SwingWorker3 {
 	 * </p>
 	 */
 	public void interrupt() {
-		final Thread t = this.threadVar.get();
+		final Thread t = threadVar.get();
 		if (t != null) {
 			t.interrupt();
 		}
-		this.threadVar.clear();
+		threadVar.clear();
 	}
 
 	/**
@@ -148,8 +149,8 @@ public abstract class SwingWorker3 {
 	 * @param x
 	 *          Object
 	 */
-	private synchronized void setValue(final Object x) {
-		this.value = x;
+	synchronized void setValue(final Object x) {
+		value = x;
 	}
 
 	/**
@@ -158,7 +159,7 @@ public abstract class SwingWorker3 {
 	 * </p>
 	 */
 	public void start() {
-		final Thread t = this.threadVar.get();
+		final Thread t = threadVar.get();
 		if (t != null) {
 			t.start();
 		}

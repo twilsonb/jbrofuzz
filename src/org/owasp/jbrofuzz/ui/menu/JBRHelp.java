@@ -74,8 +74,8 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 	public JBRHelp(final JFrame parent) {
 		super(parent, " Help Topics ", true);
-		this.setLayout(new BorderLayout());
-		this.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		setLayout(new BorderLayout());
+		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		final URL helpURL = ClassLoader.getSystemClassLoader().getResource(
 				"help/index.html");
@@ -94,22 +94,22 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode("Help Topics");
-		this.createNodes(top);
+		createNodes(top);
 
 		// Create a tree that allows one selection at a time.
-		this.tree = new JTree(top);
-		this.tree.getSelectionModel().setSelectionMode(
+		tree = new JTree(top);
+		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		// Listen for when the selection changes.
-		this.tree.addTreeSelectionListener(this);
+		tree.addTreeSelectionListener(this);
 
 		// Create the scroll pane and add the tree to it.
-		final JScrollPane treeView = new JScrollPane(this.tree);
+		final JScrollPane treeView = new JScrollPane(tree);
 
 		JEditorPane helpPane;
 		try {
 			helpPane = new JEditorPane(helpURL);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			helpPane = new JEditorPane();
 			helpPane.setText("Help file could not be located.");
 		}
@@ -119,7 +119,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		JEditorPane webdPane;
 		try {
 			webdPane = new JEditorPane(webdURL);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			webdPane = new JEditorPane();
 			webdPane.setText("Help file could not be located.");
 		}
@@ -129,7 +129,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		JEditorPane tcpfPane;
 		try {
 			tcpfPane = new JEditorPane(tcpfURL);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			tcpfPane = new JEditorPane();
 			tcpfPane.setText("Help file could not be located.");
 		}
@@ -139,7 +139,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		JEditorPane tcpsPane;
 		try {
 			tcpsPane = new JEditorPane(tcpsURL);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			tcpsPane = new JEditorPane();
 			tcpsPane.setText("Help file could not be located.");
 		}
@@ -149,7 +149,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		JEditorPane genePane;
 		try {
 			genePane = new JEditorPane(geneURL);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			genePane = new JEditorPane();
 			genePane.setText("Help file could not be located.");
 		}
@@ -159,7 +159,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		JEditorPane sysmPane;
 		try {
 			sysmPane = new JEditorPane(sysmURL);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			sysmPane = new JEditorPane();
 			sysmPane.setText("Help file could not be located.");
 		}
@@ -169,7 +169,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		JEditorPane osrcPane;
 		try {
 			osrcPane = new JEditorPane(osrcURL);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			osrcPane = new JEditorPane();
 			osrcPane.setText("Help file could not be located.");
 		}
@@ -177,29 +177,29 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		osrcScrPane = new JScrollPane(osrcPane);
 
 		// Create the top split pane, showing the treeView and the Preferences
-		this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		this.splitPane.setLeftComponent(treeView);
-		this.splitPane.setRightComponent(helpScrPane);
-		this.splitPane.setOneTouchExpandable(true);
-		this.splitPane.setDividerLocation(150);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		splitPane.setLeftComponent(treeView);
+		splitPane.setRightComponent(helpScrPane);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setDividerLocation(150);
 
 		final Dimension minimumSize = new Dimension(JBRHelp.x / 4, JBRHelp.y / 2);
 		helpScrPane.setMinimumSize(minimumSize);
 		treeView.setMinimumSize(minimumSize);
-		this.splitPane.setDividerLocation(100);
-		this.splitPane.setPreferredSize(new Dimension(JBRHelp.x, JBRHelp.y));
+		splitPane.setDividerLocation(100);
+		splitPane.setPreferredSize(new Dimension(JBRHelp.x, JBRHelp.y));
 
 		// Add the split pane to this panel
-		this.getContentPane().add(this.splitPane, BorderLayout.CENTER);
+		getContentPane().add(splitPane, BorderLayout.CENTER);
 
 		// Bottom button
-		this.ok = new JButton("Close");
+		ok = new JButton("Close");
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
 				15));
-		buttonPanel.add(this.ok);
+		buttonPanel.add(ok);
 
-		this.ok.addActionListener(new ActionListener() {
+		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -209,14 +209,14 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			}
 		});
 
-		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
 		this.setLocation(Math.abs((parent.getWidth() / 2) - (JBRHelp.x / 2 - 100)),
 				Math.abs((parent.getHeight() / 2) - (JBRHelp.y / 2) + 100));
 		this.setSize(JBRHelp.x, JBRHelp.y);
-		this.setResizable(true);
-		this.setVisible(true);
+		setResizable(true);
+		setVisible(true);
 	}
 
 	private void createNodes(final DefaultMutableTreeNode top) {
@@ -242,7 +242,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 	}
 
 	public void valueChanged(final TreeSelectionEvent e) {
-		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) this.tree
+		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 				.getLastSelectedPathComponent();
 
 		if (node == null) {
@@ -251,25 +251,25 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 		final String s = node.toString();
 		if (s.equalsIgnoreCase("Help Topics")) {
-			this.splitPane.setRightComponent(this.helpScrPane);
+			splitPane.setRightComponent(helpScrPane);
 		}
 		if (s.equalsIgnoreCase("Web Directories")) {
-			this.splitPane.setRightComponent(this.webdScrPane);
+			splitPane.setRightComponent(webdScrPane);
 		}
 		if (s.equalsIgnoreCase("TCP Fuzzing")) {
-			this.splitPane.setRightComponent(this.tcpfScrPane);
+			splitPane.setRightComponent(tcpfScrPane);
 		}
 		if (s.equalsIgnoreCase("TCP Sniffing")) {
-			this.splitPane.setRightComponent(this.tcpsScrPane);
+			splitPane.setRightComponent(tcpsScrPane);
 		}
 		if (s.equalsIgnoreCase("Generators")) {
-			this.splitPane.setRightComponent(this.geneScrPane);
+			splitPane.setRightComponent(geneScrPane);
 		}
 		if (s.equalsIgnoreCase("Open Source")) {
-			this.splitPane.setRightComponent(this.osrcScrPane);
+			splitPane.setRightComponent(osrcScrPane);
 		}
 		if (s.equalsIgnoreCase("System")) {
-			this.splitPane.setRightComponent(this.sysmScrPane);
+			splitPane.setRightComponent(sysmScrPane);
 		}
 
 	}

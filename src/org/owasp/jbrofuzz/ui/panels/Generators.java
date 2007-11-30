@@ -90,9 +90,9 @@ public class Generators extends JBRPanel {
 		categoryTable = new JTable(categoryTableSorter);
 		categoryTable.setName("Category");
 
-		this.categoryTable.getTableHeader().setToolTipText("Click to sort by row");
-		this.popup(this.categoryTable);
-		categoryTableSorter.setTableHeader(this.categoryTable.getTableHeader());
+		categoryTable.getTableHeader().setToolTipText("Click to sort by row");
+		popup(categoryTable);
+		categoryTableSorter.setTableHeader(categoryTable.getTableHeader());
 
 		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllCategories());
 		categoryTableSorter.setTableModel(categoryTableModel);
@@ -103,9 +103,10 @@ public class Generators extends JBRPanel {
 		categoryTable.setBackground(Color.BLACK);
 		categoryTable.setForeground(Color.WHITE);
 		categoryTable.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent e){
+			@Override
+			public void mouseClicked(final MouseEvent e){
 				if (e.getClickCount() == 2){
-					String exploit = (String) categoryTable.getModel().getValueAt(categoryTable.getSelectedRow(), 0);
+					final String exploit = (String) categoryTable.getModel().getValueAt(categoryTable.getSelectedRow(), 0);
 					new ExploitViewer(m, exploit, ExploitViewer.VIEW_CATEGORY);
 				}
 			}
@@ -131,10 +132,10 @@ public class Generators extends JBRPanel {
 		nameTable = new JTable(nameTableSorter);
 		nameTable.setName("Name");
 
-		this.nameTable.getTableHeader().setToolTipText(
+		nameTable.getTableHeader().setToolTipText(
 		"Click to specify sorting; Control-Click to specify secondary sorting");
-		this.popup(this.nameTable);
-		nameTableSorter.setTableHeader(this.nameTable.getTableHeader());
+		popup(nameTable);
+		nameTableSorter.setTableHeader(nameTable.getTableHeader());
 
 		nameTable.setFont(new Font("Verdana", Font.BOLD, 14));
 		nameTable.setRowHeight(30);
@@ -143,9 +144,10 @@ public class Generators extends JBRPanel {
 		nameTable.setBackground(Color.BLACK);
 		nameTable.setForeground(Color.WHITE);
 		nameTable.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent e){
+			@Override
+			public void mouseClicked(final MouseEvent e){
 				if (e.getClickCount() == 2){
-					String exploit = (String) nameTable.getModel().getValueAt(nameTable.getSelectedRow(), 0);
+					final String exploit = (String) nameTable.getModel().getValueAt(nameTable.getSelectedRow(), 0);
 					new ExploitViewer(m, exploit, ExploitViewer.VIEW_EXPLOIT);
 				}
 			}
@@ -166,17 +168,17 @@ public class Generators extends JBRPanel {
 		view.setBounds(460, 150, 420, 300);
 		this.add(view);	
 
-		this.viewTextArea = new NonWrappingTextPane();
-		this.viewTextArea.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+		viewTextArea = new NonWrappingTextPane();
+		viewTextArea.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Payload "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		this.viewTextArea.putClientProperty("charset", "UTF-8");
-		this.viewTextArea.setEditable(false);
-		this.viewTextArea.setVisible(true);
-		this.viewTextArea.setFont(new Font("Verdana", Font.BOLD, 14));
-		this.viewTextArea.setMargin(new Insets(1, 1, 1, 1));
-		this.viewTextArea.setBackground(Color.WHITE);
-		this.viewTextArea.setForeground(Color.BLACK);
+		viewTextArea.putClientProperty("charset", "UTF-8");
+		viewTextArea.setEditable(false);
+		viewTextArea.setVisible(true);
+		viewTextArea.setFont(new Font("Verdana", Font.BOLD, 14));
+		viewTextArea.setMargin(new Insets(1, 1, 1, 1));
+		viewTextArea.setBackground(Color.WHITE);
+		viewTextArea.setForeground(Color.BLACK);
 		m.popup(viewTextArea);
 
 		final JScrollPane viewTextScrollPane = new JScrollPane(viewTextArea);
@@ -198,14 +200,14 @@ public class Generators extends JBRPanel {
 		m.popup(commentTextArea);
 
 		final JScrollPane commentLabelScrollPane = new JScrollPane(commentTextArea);
-		commentLabelScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		commentLabelScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		commentLabelScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		commentLabelScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		commentLabelScrollPane.setPreferredSize(new Dimension(400, 150));
 		view.add(commentLabelScrollPane);
 
 		// The about button
 
-		JButton infoButton = new JButton("About");
+		final JButton infoButton = new JButton("About");
 		infoButton.setBounds(800, 33, 70, 40);
 		infoButton.setEnabled(true);
 		// The action listener for the info button
@@ -224,9 +226,9 @@ public class Generators extends JBRPanel {
 	 * 
 	 * @param category
 	 */
-	public void setCategoryDisplayed(String category) {
+	public void setCategoryDisplayed(final String category) {
 		int c = 0;
-		String[] allRows = categoryTableModel.getAllRows();
+		final String[] allRows = categoryTableModel.getAllRows();
 		
 		for(int i = 0; i < allRows.length; i++) {
 			if(allRows[i].equalsIgnoreCase(category)) {
@@ -245,10 +247,10 @@ public class Generators extends JBRPanel {
 	 * @param name
 	 * @param category
 	 */
-	public void setNameDisplayed(String name, String category) {
+	public void setNameDisplayed(final String name, final String category) {
 		
 		int c = 0;
-		String[] allRows = categoryTableModel.getAllRows();
+		final String[] allRows = categoryTableModel.getAllRows();
 		for(int i = 0; i < allRows.length; i++) {
 			if(allRows[i].equalsIgnoreCase(category)) {
 				c = i;
@@ -257,7 +259,7 @@ public class Generators extends JBRPanel {
 		categoryTable.getSelectionModel().setSelectionInterval(c, c);
 		
 		int d = 0; 
-		String[] allNames = nameTableModel.getAllRows();
+		final String[] allNames = nameTableModel.getAllRows();
 		for(int j = 0; j < allNames.length; j++) {
 			if(allNames[j].equalsIgnoreCase(name)) {
 				d = j;
@@ -272,12 +274,12 @@ public class Generators extends JBRPanel {
 		 * <p>Method for the category table selection row.</p>
 		 * @param event ListSelectionEvent
 		 */
-		public void valueChanged(ListSelectionEvent event) {
+		public void valueChanged(final ListSelectionEvent event) {
 			if (event.getValueIsAdjusting()) {
 				return;
 			}
-			int c = categoryTable.getSelectedRow();
-			String value = (String) categoryTableSorter.getValueAt(c, 0);
+			final int c = categoryTable.getSelectedRow();
+			final String value = (String) categoryTableSorter.getValueAt(c, 0);
 			// System.out.println(value);
 			nameTableModel.setData(getFrame().getJBroFuzz().getDatabase().getNames(value));
 			nameTableSorter.setTableModel(nameTableModel);
@@ -290,12 +292,12 @@ public class Generators extends JBRPanel {
 		 * <p>Method for the name table selection row.</p>
 		 * @param event ListSelectionEvent
 		 */
-		public void valueChanged(ListSelectionEvent event) {
+		public void valueChanged(final ListSelectionEvent event) {
 			if (event.getValueIsAdjusting()) {
 				return;
 			}
-			int c = nameTable.getSelectedRow();
-			String value = (String) nameTableSorter.getValueAt(c, 0);
+			final int c = nameTable.getSelectedRow();
+			final String value = (String) nameTableSorter.getValueAt(c, 0);
 			viewTextArea.setText(getFrame().getJBroFuzz().getDatabase().getExploit(value));
 			viewTextArea.setCaretPosition(0);
 
@@ -333,9 +335,9 @@ public class Generators extends JBRPanel {
 		i2.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// Copy
-				StringBuffer selectionBuffer = new StringBuffer();
-				int[] selection = area.getSelectedRows();
-				for(int element : selection) {
+				final StringBuffer selectionBuffer = new StringBuffer();
+				final int[] selection = area.getSelectedRows();
+				for(final int element : selection) {
 					selectionBuffer.append(area.getModel().getValueAt(element, 0));
 					selectionBuffer.append("\n");
 				}
@@ -357,13 +359,13 @@ public class Generators extends JBRPanel {
 		i5.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// Properties
-				String tableName = area.getName();
+				final String tableName = area.getName();
 				if(tableName.equalsIgnoreCase("Name")) {
-					String exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
+					final String exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
 					new ExploitViewer(getFrame(), exploit, ExploitViewer.VIEW_EXPLOIT);
 				}
 				if(tableName.equalsIgnoreCase("Category")) {
-					String exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
+					final String exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
 					new ExploitViewer(getFrame(), exploit, ExploitViewer.VIEW_CATEGORY);	
 				}
 			}
@@ -379,12 +381,12 @@ public class Generators extends JBRPanel {
 
 			@Override
 			public void mousePressed(final MouseEvent e) {
-				this.checkForTriggerEvent(e);
+				checkForTriggerEvent(e);
 			}
 
 			@Override
 			public void mouseReleased(final MouseEvent e) {
-				this.checkForTriggerEvent(e);
+				checkForTriggerEvent(e);
 			}
 		});
 	}

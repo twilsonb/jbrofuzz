@@ -52,10 +52,10 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 * 
 	 * @param columnName String
 	 */
-	public SingleRowTableModel(String columnName) {
-		this.columnNames = new String[1];
-		this.columnNames[0] = columnName;
-		this.dataVector = new ArrayList<String>();
+	public SingleRowTableModel(final String columnName) {
+		columnNames = new String[1];
+		columnNames[0] = columnName;
+		dataVector = new ArrayList<String>();
 	}
 
 	/**
@@ -65,9 +65,9 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 * </p>
 	 */
 	public void addEmptyRow() {
-		this.dataVector.add("");
-		this.dataVector.trimToSize();
-		this.fireTableRowsInserted(this.dataVector.size(), this.dataVector
+		dataVector.add("");
+		dataVector.trimToSize();
+		fireTableRowsInserted(dataVector.size(), dataVector
 				.size());
 	}
 
@@ -79,7 +79,7 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getColumnCount() {
-		return this.columnNames.length;
+		return columnNames.length;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public String getColumnName(final int column) {
-		return this.columnNames[0];
+		return columnNames[0];
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getRowCount() {
-		return this.dataVector.size();
+		return dataVector.size();
 	}
 
 	/**
@@ -117,8 +117,8 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 * @return String
 	 */
 	public String getValueAt(final int row) {
-		if ((row > -1) && (row < this.dataVector.size())) {
-			return this.dataVector.get(row);
+		if ((row > -1) && (row < dataVector.size())) {
+			return dataVector.get(row);
 		}
 		return "";
 	}
@@ -149,11 +149,11 @@ public class SingleRowTableModel extends AbstractTableModel {
 	public boolean hasEmptyRow() {
 		boolean returnValue = false;
 
-		if (this.dataVector.size() == 0) {
+		if (dataVector.size() == 0) {
 			returnValue = false;
 		} else {
-			final String record = (String) this.dataVector
-					.get(this.dataVector.size() - 1);
+			final String record = dataVector
+					.get(dataVector.size() - 1);
 			if ("".equals(record)) {
 				returnValue = true;
 			}
@@ -192,8 +192,8 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
-		this.dataVector.set(row, value.toString());
-		this.fireTableCellUpdated(row, 0);
+		dataVector.set(row, value.toString());
+		fireTableCellUpdated(row, 0);
 	}
 	
 	/**
@@ -201,13 +201,13 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 * 
 	 * @param values
 	 */
-	public void setData(String [] values) {
-		this.fireTableRowsDeleted(0, getRowCount());
-		this.dataVector.clear();
-		for(int i = 0; i < values.length; i++) {
-			this.dataVector.add(values[i]);
-			this.dataVector.trimToSize();
-			this.fireTableRowsInserted(this.dataVector.size(), this.dataVector
+	public void setData(final String [] values) {
+		fireTableRowsDeleted(0, getRowCount());
+		dataVector.clear();
+		for (final String element : values) {
+			dataVector.add(element);
+			dataVector.trimToSize();
+			fireTableRowsInserted(dataVector.size(), dataVector
 					.size());
 			
 		}
@@ -221,7 +221,7 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 * @return String
 	 */
 	public String getRow(final int row) {
-		if ((row > -1) && (row < this.dataVector.size())) {
+		if ((row > -1) && (row < dataVector.size())) {
 			return this.getValueAt(row);
 		}
 		return "";
@@ -234,7 +234,7 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 */
 	public String[] getAllRows() {
 		dataVector.trimToSize();
-		String [] outputCategories = new String[dataVector.size()];
+		final String [] outputCategories = new String[dataVector.size()];
 		return dataVector.toArray(outputCategories);
 	}
 

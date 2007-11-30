@@ -64,7 +64,7 @@ class Connection implements Runnable, AgentMonitor {
 			final ConnectionMonitor cm, final String destHost, final int destPort) {
 
 		this.mJBroFuzz = mJBroFuzz;
-		this.srcSocket = s;
+		srcSocket = s;
 		this.cm = cm;
 		this.destHost = destHost;
 		this.destPort = destPort;
@@ -74,8 +74,8 @@ class Connection implements Runnable, AgentMonitor {
 		try {
 			// Establish read/write for the socket
 
-			this.srcIn = s.getInputStream();
-			this.srcOut = s.getOutputStream();
+			srcIn = s.getInputStream();
+			srcOut = s.getOutputStream();
 
 			// Start ourself, so there's no delay in getting back
 			// to the server to listen for new connections
@@ -92,21 +92,21 @@ class Connection implements Runnable, AgentMonitor {
 		// connection is already closed then we have already been
 		// visited by the first agent ... just return
 
-		if (this.connectionClosed) {
+		if (connectionClosed) {
 			return;
 		}
-		this.closeSrc();
-		this.closeDest();
+		closeSrc();
+		closeDest();
 
-		this.cm.removeConnection(this);
-		this.connectionClosed = true;
+		cm.removeConnection(this);
+		connectionClosed = true;
 	}
 
 	private void closeDest() {
 		try {
-			this.destIn.close();
-			this.destOut.close();
-			this.destSocket.close();
+			destIn.close();
+			destOut.close();
+			destSocket.close();
 		} catch (final IOException ex) {
 		}
 	}
@@ -114,9 +114,9 @@ class Connection implements Runnable, AgentMonitor {
 	private void closeSrc() {
 
 		try {
-			this.srcIn.close();
-			this.srcOut.close();
-			this.srcSocket.close();
+			srcIn.close();
+			srcOut.close();
+			srcSocket.close();
 		} catch (final IOException ex) {
 		}
 
@@ -127,17 +127,17 @@ class Connection implements Runnable, AgentMonitor {
 		// connect, try to establish a connection
 
 		try {
-			this.destSocket = new Socket(this.destHost, this.destPort);
-			this.destIn = this.destSocket.getInputStream();
-			this.destOut = this.destSocket.getOutputStream();
+			destSocket = new Socket(destHost, destPort);
+			destIn = destSocket.getInputStream();
+			destOut = destSocket.getOutputStream();
 		} catch (final UnknownHostException ex) {
-			this.cm.connectionError(this, "connect error: " + this.destHost + "/"
-					+ this.destPort + " " + ex);
+			cm.connectionError(this, "connect error: " + destHost + "/"
+					+ destPort + " " + ex);
 			return false;
 
 		} catch (final IOException ex) {
-			this.cm.connectionError(this, "connect error: " + this.destHost + "/"
-					+ this.destPort + " " + ex);
+			cm.connectionError(this, "connect error: " + destHost + "/"
+					+ destPort + " " + ex);
 			return false;
 
 		}
@@ -146,30 +146,30 @@ class Connection implements Runnable, AgentMonitor {
 	}
 
 	public String getDestHost() {
-		return this.destSocket.getInetAddress().toString();
+		return destSocket.getInetAddress().toString();
 	}
 
 	public int getDestPort() {
-		return this.destPort;
+		return destPort;
 	}
 
 	public String getSrcHost() {
-		return this.srcSocket.getInetAddress().toString();
+		return srcSocket.getInetAddress().toString();
 	}
 
 	public void run() {
-		if (!this.connectToDest()) {
-			this.closeSrc();
+		if (!connectToDest()) {
+			closeSrc();
 		} else {
 			// Ok, we're all ready ... since we've gotten this far,
 			// add ourselves into the connection list
 
-			this.cm.addConnection(this);
+			cm.addConnection(this);
 
 			// Create our two agents
-			this.fromSrcToDest = new Agent(this.mJBroFuzz, this.srcIn, this.destOut,
+			fromSrcToDest = new Agent(mJBroFuzz, srcIn, destOut,
 					this, "{Local Host => Remote Host}");
-			this.fromDestToSrc = new Agent(this.mJBroFuzz, this.destIn, this.srcOut,
+			fromDestToSrc = new Agent(mJBroFuzz, destIn, srcOut,
 					this, "{Remote Host => Local Host}");
 
 			// No need for our thread to continue, we'll be notified if

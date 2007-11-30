@@ -25,6 +25,10 @@ import javax.swing.tree.TreeSelectionModel;
 
 public class JBRFaq extends JDialog implements TreeSelectionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4301858021356404678L;
 	// Dimensions of the about box
 	private static final int x = 650;
 	private static final int y = 400;
@@ -41,13 +45,13 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 	// The list of URLs
 	private URL[] faqURL;
 	// The total number of links present
-	private final int NO_LINKS = 11;
+	private static final int NO_LINKS = 11;
 
-	public JBRFaq(JFrame parent) {
+	public JBRFaq(final JFrame parent) {
 
 		super(parent, " Frequently Asked Questions ", true);
-		this.setLayout(new BorderLayout());
-		this.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		setLayout(new BorderLayout());
+		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		faqURL = new URL[NO_LINKS];
 		for (int i = 0; i < NO_LINKS; i++) {
@@ -62,21 +66,21 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode("FAQ");
-		this.createNodes(top);
+		createNodes(top);
 
 		// Create a tree that allows one selection at a time.
-		this.tree = new JTree(top);
-		this.tree.getSelectionModel().setSelectionMode(
+		tree = new JTree(top);
+		tree.getSelectionModel().setSelectionMode(
 				TreeSelectionModel.SINGLE_TREE_SELECTION);
 		// Listen for when the selection changes.
-		this.tree.addTreeSelectionListener(this);
+		tree.addTreeSelectionListener(this);
 
 		// Create the scroll pane and add the tree to it.
-		final JScrollPane treeView = new JScrollPane(this.tree);
+		final JScrollPane treeView = new JScrollPane(tree);
 
 		try {
 			faqEditorPane = new JEditorPane(faqURL[0]);
-		} catch (IOException e1) {
+		} catch (final IOException e1) {
 			faqEditorPane = new JEditorPane();
 			faqEditorPane
 					.setText("Frequently Asked Questions file could not be located.");
@@ -84,29 +88,29 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 		faqScrollPane = new JScrollPane(faqEditorPane);
 
 		// Create the top split pane, showing the treeView and the Preferences
-		this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		this.splitPane.setLeftComponent(treeView);
-		this.splitPane.setRightComponent(faqScrollPane);
-		this.splitPane.setOneTouchExpandable(true);
-		this.splitPane.setDividerLocation(150);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		splitPane.setLeftComponent(treeView);
+		splitPane.setRightComponent(faqScrollPane);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setDividerLocation(150);
 
 		final Dimension minimumSize = new Dimension(JBRFaq.x / 4, JBRFaq.y / 2);
 		faqScrollPane.setMinimumSize(minimumSize);
 		treeView.setMinimumSize(minimumSize);
-		this.splitPane.setDividerLocation(100);
-		this.splitPane.setPreferredSize(new Dimension(JBRFaq.x, JBRFaq.y));
+		splitPane.setDividerLocation(100);
+		splitPane.setPreferredSize(new Dimension(JBRFaq.x, JBRFaq.y));
 
 		// Add the split pane to this panel
-		this.getContentPane().add(this.splitPane, BorderLayout.CENTER);
+		getContentPane().add(splitPane, BorderLayout.CENTER);
 
 		// Bottom button
-		this.ok = new JButton("Close");
+		ok = new JButton("Close");
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
 				15));
-		buttonPanel.add(this.ok);
+		buttonPanel.add(ok);
 
-		this.ok.addActionListener(new ActionListener() {
+		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -116,14 +120,14 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 			}
 		});
 
-		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
 		this.setLocation(Math.abs((parent.getWidth() / 2) - (JBRFaq.x / 2 - 100)),
 				Math.abs((parent.getHeight() / 2) - (JBRFaq.y / 2) + 100));
 		this.setSize(JBRFaq.x, JBRFaq.y);
-		this.setResizable(true);
-		this.setVisible(true);
+		setResizable(true);
+		setVisible(true);
 	}
 
 	private void createNodes(final DefaultMutableTreeNode top) {
@@ -137,7 +141,7 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 	}
 
 	public void valueChanged(final TreeSelectionEvent e) {
-		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) this.tree
+		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 				.getLastSelectedPathComponent();
 
 		if (node == null) {
@@ -148,13 +152,13 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 		if (s.equalsIgnoreCase("Question 16")) {
 
 			try {
-				this.faqEditorPane.setPage(faqURL[9]);
-				this.faqScrollPane.setViewportView(faqEditorPane);
-			} catch (IOException e1) {
+				faqEditorPane.setPage(faqURL[9]);
+				faqScrollPane.setViewportView(faqEditorPane);
+			} catch (final IOException e1) {
 				// TODO Auto-generated catch block
 				// e1.printStackTrace();
 			}
-			this.splitPane.setRightComponent(this.faqScrollPane);
+			splitPane.setRightComponent(faqScrollPane);
 		}
 	}
 }

@@ -42,12 +42,12 @@ public abstract class JBRPanel extends JPanel {
 	
 	public JBRPanel(final JBRFrame frame) {
 		super();
-		this.setLayout(null);
+		setLayout(null);
 		this.frame = frame;
 	}
 	
 	public JBRFrame getFrame() {
-		return this.frame;
+		return frame;
 	}
 	
 	

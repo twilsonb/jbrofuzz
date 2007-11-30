@@ -83,32 +83,32 @@ public class CheckForUpdates extends JDialog {
 
 	public CheckForUpdates(final JFrame parent) {
 		super(parent, " Check For Updates ", true);
-		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-		this.setLayout(new BorderLayout());
-		this.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		setLayout(new BorderLayout());
+		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-		this.newVersionExists = false;
+		newVersionExists = false;
 
-		this.mainLabel = new JLabel(
+		mainLabel = new JLabel(
 				"<HTML>Select \"Check\" to connect to the JBroFuzz website and check for a newer version</HTML>",
 				ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
 
-		this.mainLabel.setIconTextGap(20);
-		this.mainLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 5));
+		mainLabel.setIconTextGap(20);
+		mainLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 5));
 		
-		this.getContentPane().add(this.mainLabel, BorderLayout.CENTER);
+		getContentPane().add(mainLabel, BorderLayout.CENTER);
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
 				15));
 
 		// Bottom buttons
-		this.startStop = new JButton("Check");
-		this.startStop.setToolTipText("Check online for a latest version");
+		startStop = new JButton("Check");
+		startStop.setToolTipText("Check online for a latest version");
 
-		this.startStop.addActionListener(new ActionListener() {
+		startStop.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				CheckForUpdates.this.worker = new SwingWorker3() {
+				worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
 						CheckForUpdates.this.startUpdate();
@@ -120,15 +120,15 @@ public class CheckForUpdates extends JDialog {
 						CheckForUpdates.this.finishUpdate();
 					}
 				};
-				CheckForUpdates.this.worker.start();
+				worker.start();
 			}
 		});
-		buttonPanel.add(this.startStop);
+		buttonPanel.add(startStop);
 
-		this.close = new JButton("Close");
-		this.close.setToolTipText("Close this window");
+		close = new JButton("Close");
+		close.setToolTipText("Close this window");
 
-		this.close.addActionListener(new ActionListener() {
+		close.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -138,29 +138,29 @@ public class CheckForUpdates extends JDialog {
 				});
 			}
 		});
-		buttonPanel.add(this.close);
+		buttonPanel.add(close);
 
-		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
 		this.setLocation(Math.abs((parent.getWidth() / 2)
 				- (CheckForUpdates.x / 2 - 100)), Math.abs((parent.getHeight() / 2)
 				- (CheckForUpdates.y / 2) + 100));
 		this.setSize(CheckForUpdates.x, CheckForUpdates.y);
-		this.setResizable(false);
-		this.setVisible(true);
+		setResizable(false);
+		setVisible(true);
 	}
 
 	public void finishUpdate() {
-		if (!this.startStop.isEnabled()) {
+		if (!startStop.isEnabled()) {
 			return;
 		}
-		this.close.setEnabled(true);
+		close.setEnabled(true);
 
-		if (this.newVersionExists) {
-			this.startStop.setText("Download");
-			this.startStop.removeAll();
-			this.startStop.addActionListener(new ActionListener() {
+		if (newVersionExists) {
+			startStop.setText("Download");
+			startStop.removeAll();
+			startStop.addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
@@ -168,7 +168,7 @@ public class CheckForUpdates extends JDialog {
 							try {
 								Browser.displayURL(JBRFormat.URL_WEBSITE);
 							} catch (final IOException ex) {
-								CheckForUpdates.this.mainLabel
+								mainLabel
 										.setText("<HTML><BR>&nbsp;&nbsp;&nbsp;An error occured while attempting to connect<BR><BR></HTML>");
 							}
 						}
@@ -176,14 +176,14 @@ public class CheckForUpdates extends JDialog {
 				}
 			});
 		} else {
-			this.startStop.setText("Finish");
-			this.startStop.removeAll();
-			this.startStop.addActionListener(new ActionListener() {
+			startStop.setText("Finish");
+			startStop.removeAll();
+			startStop.addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
-							CheckForUpdates.this.startStop.setEnabled(false);
-							CheckForUpdates.this.close.setEnabled(false);
+							startStop.setEnabled(false);
+							close.setEnabled(false);
 						}
 					});
 				}
@@ -192,11 +192,11 @@ public class CheckForUpdates extends JDialog {
 	}
 
 	public void startUpdate() {
-		if (!this.startStop.isEnabled()) {
+		if (!startStop.isEnabled()) {
 			return;
 		}
-		this.startStop.setText("Stop");
-		this.close.setEnabled(false);
+		startStop.setText("Stop");
+		close.setEnabled(false);
 
 		final StringBuffer output = new StringBuffer();
 		BufferedReader bin = null;
@@ -204,7 +204,7 @@ public class CheckForUpdates extends JDialog {
 		try {
 			output
 					.append("<HTML>&nbsp;&nbsp;&nbsp;Checking JBroFuzz Website...&nbsp;&nbsp;");
-			this.mainLabel.setText(output.toString() + "</HTML>");
+			mainLabel.setText(output.toString() + "</HTML>");
 
 			final URL request = new URL(JBRFormat.URL_WEBSITE);
 			final URLConnection connection = request.openConnection();
@@ -214,7 +214,7 @@ public class CheckForUpdates extends JDialog {
 
 			output
 					.append("<B>OK</B><BR>&nbsp;&nbsp;&nbsp;Identifying Current Version...&nbsp;&nbsp;");
-			this.mainLabel.setText(output.toString() + "</HTML>");
+			mainLabel.setText(output.toString() + "</HTML>");
 
 			bin = new BufferedReader(new InputStreamReader(connection
 					.getInputStream()));
@@ -235,42 +235,42 @@ public class CheckForUpdates extends JDialog {
 						output
 								.append("<B>Yes</B><BR><BR>&nbsp;&nbsp;&nbsp;You are using an older version of JBroFuzz");
 						output.append("<BR>&nbsp;&nbsp;&nbsp;The " + version);
-						this.newVersionExists = true;
+						newVersionExists = true;
 
 					}
-					this.mainLabel.setText(output.toString() + "</HTML>");
+					mainLabel.setText(output.toString() + "</HTML>");
 				}
 			}
 			bin.close();
 		} catch (final MalformedURLException e) {
-			this.mainLabel
+			mainLabel
 					.setText("<HTML><BR>&nbsp;&nbsp;&nbsp;An error occured while attempting to connect<BR><BR>The check for updates was unable to complete</HTML>");
-			this.startStop.setEnabled(false);
-			this.close.setEnabled(true);
+			startStop.setEnabled(false);
+			close.setEnabled(true);
 		} catch (final IOException e) {
-			this.mainLabel
+			mainLabel
 					.setText("<HTML><BR>&nbsp;&nbsp;&nbsp;An error occured while attempting to connect<BR><BR>The check for updates was unable to complete</HTML>");
-			this.startStop.setEnabled(false);
-			this.close.setEnabled(true);
+			startStop.setEnabled(false);
+			close.setEnabled(true);
 		}
 		if (bin != null) {
 			try {
 				bin.close();
-				this.startStop.setEnabled(false);
-				this.close.setEnabled(true);
+				startStop.setEnabled(false);
+				close.setEnabled(true);
 			} catch (final IOException ex) {
-				this.startStop.setEnabled(false);
-				this.close.setEnabled(true);
+				startStop.setEnabled(false);
+				close.setEnabled(true);
 			}
 		}
 
 	}
 
 	public void stopUpdate() {
-		if (!this.startStop.isEnabled()) {
+		if (!startStop.isEnabled()) {
 			return;
 		}
-		this.startStop.setText("Check");
-		this.close.setEnabled(true);
+		startStop.setText("Check");
+		close.setEnabled(true);
 	}
 }

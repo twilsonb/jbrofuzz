@@ -91,7 +91,7 @@ class Agent implements Runnable {
 		this.inStream = inStream;
 		this.agentMonitor = agentMonitor;
 
-		this.buffer = new byte[Agent.BUFFER_SIZE];
+		buffer = new byte[Agent.BUFFER_SIZE];
 
 		final Thread t = new Thread(this);
 		t.start();
@@ -100,16 +100,16 @@ class Agent implements Runnable {
 	private void log(final byte buffer[], final int nBytes) {
 		synchronized (System.out) {
 			final Date currentTime = new Date();
-			final String fileNumber = this.mJBroFuzz.getWindow()
+			final String fileNumber = mJBroFuzz.getWindow()
 					.getTCPSniffingPanel().getCounter();
 
-			FileHandler.writeSnifFile(fileNumber, "[" + this.name + ", (" + nBytes
+			FileHandler.writeSnifFile(fileNumber, "[" + name + ", (" + nBytes
 					+ " bytes) " + Agent.dateFormat.format(currentTime) + "]");
 
 			final StringBuffer row = new StringBuffer(100);
 			row.append(fileNumber);
 			row.append("          ");
-			row.append(this.name);
+			row.append(name);
 			if (nBytes < 100000) {
 				row.append(' ');
 			}
@@ -130,7 +130,7 @@ class Agent implements Runnable {
 			row.append(" bytes)          ");
 			row.append(Agent.dateFormat.format(currentTime));
 			// Append a row in the table
-			this.mJBroFuzz.getWindow().getTCPSniffingPanel().addRow(row.toString());
+			mJBroFuzz.getWindow().getTCPSniffingPanel().addRow(row.toString());
 			// formatted string
 			final StringBuffer sb = new StringBuffer(nBytes);
 			// formatted binary string
@@ -219,18 +219,18 @@ class Agent implements Runnable {
 
 			while (true) {
 				// While there are bytes in the input stream, read them
-				if ((bytesRead = this.inStream.read(this.buffer, 0, Agent.BUFFER_SIZE)) == -1) {
+				if ((bytesRead = inStream.read(buffer, 0, Agent.BUFFER_SIZE)) == -1) {
 					break;
 				}
 				// Log the incoming/outgoing packets
-				this.log(this.buffer, bytesRead);
+				log(buffer, bytesRead);
 				// Write out to the output stream
-				this.outStream.write(this.buffer, 0, bytesRead);
+				outStream.write(buffer, 0, bytesRead);
 			}
 		} catch (final IOException e) {
 			// mJBroFuzz.getFrameWindow().log("TCPAgent: " + e.getMessage());
 		}
 		//
-		this.agentMonitor.agentHasDied(this);
+		agentMonitor.agentHasDied(this);
 	}
 }

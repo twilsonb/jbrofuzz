@@ -50,27 +50,27 @@ class ResponseOutput {
 	}
 
 	public String getComments() {
-		return this.comments;
+		return comments;
 	}
 
 	public String getID() {
-		return this.id;
+		return id;
 	}
 
 	public String getScripts() {
-		return this.scripts;
+		return scripts;
 	}
 
 	public String getStatusCode() {
-		return this.statusCode;
+		return statusCode;
 	}
 
 	public String getStatusText() {
-		return this.statusText;
+		return statusText;
 	}
 
 	public String getURI() {
-		return this.uri;
+		return uri;
 	}
 }
 
@@ -108,7 +108,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
 	 * a JTable.
 	 */
 	public WebDirectoriesModel() {
-		this.dataVector = new Vector();
+		dataVector = new Vector();
 	}
 
 	/**
@@ -133,8 +133,8 @@ public class WebDirectoriesModel extends AbstractTableModel {
 
 		final ResponseOutput response = new ResponseOutput(id, uri, statusCode,
 				statusText, comments, scripts);
-		this.dataVector.add(response);
-		this.fireTableRowsInserted(0, this.dataVector.size() - 1);
+		dataVector.add(response);
+		fireTableRowsInserted(0, dataVector.size() - 1);
 	}
 
 	/**
@@ -171,9 +171,9 @@ public class WebDirectoriesModel extends AbstractTableModel {
 	 */
 	public String getRow(final int row) {
 		final StringBuffer output = new StringBuffer();
-		if ((row > -1) && (row < this.dataVector.size())) {
+		if ((row > -1) && (row < dataVector.size())) {
 			for (int i = 0; i < WebDirectoriesModel.COLUMNNAMES.length; i++) {
-				output.append(this.getValueAt(row, i));
+				output.append(getValueAt(row, i));
 				if (i < WebDirectoriesModel.COLUMNNAMES.length - 1) {
 					output.append(WebDirectoriesModel.STRING_SEPARATOR);
 				}
@@ -189,7 +189,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getRowCount() {
-		return this.dataVector.size();
+		return dataVector.size();
 	}
 
 	/**
@@ -202,10 +202,10 @@ public class WebDirectoriesModel extends AbstractTableModel {
 	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
-		if ((row < 0) || (row > this.dataVector.size() - 1)) {
+		if ((row < 0) || (row > dataVector.size() - 1)) {
 			return "";
 		} else {
-			final ResponseOutput record = (ResponseOutput) this.dataVector.get(row);
+			final ResponseOutput record = (ResponseOutput) dataVector.get(row);
 			switch (column) {
 			case 0:
 				return record.getID();
@@ -229,8 +229,8 @@ public class WebDirectoriesModel extends AbstractTableModel {
 	 * Remove all the rows within the given table model.
 	 */
 	public void removeAllRows() {
-		this.dataVector.removeAllElements();
+		dataVector.removeAllElements();
 
-		this.fireTableRowsDeleted(0, 1);
+		fireTableRowsDeleted(0, 1);
 	}
 }

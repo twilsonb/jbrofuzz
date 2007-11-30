@@ -63,70 +63,70 @@ public class TextHighlighter extends DefaultStyledDocument {
 
 		// rootElement = getDefaultRootElement();
 
-		this.keywords = new HashMap<String, Color>();
-		this.keywords.put("GET", Color.gray);
-		this.keywords.put("PUT", Color.gray);
-		this.keywords.put("HEAD", Color.gray);
-		this.keywords.put("TRACE", Color.gray);
+		keywords = new HashMap<String, Color>();
+		keywords.put("GET", Color.gray);
+		keywords.put("PUT", Color.gray);
+		keywords.put("HEAD", Color.gray);
+		keywords.put("TRACE", Color.gray);
 
-		this.keywords.put("Accept", Color.darkGray);
-		this.keywords.put("User-Agent", Color.darkGray);
-		this.keywords.put("Accept-Language", Color.darkGray);
-		this.keywords.put("Accept-Encoding", Color.darkGray);
-		this.keywords.put("Accept-Charset", Color.darkGray);
-		this.keywords.put("Keep-Alive", Color.darkGray);
-		this.keywords.put("Cache-Control", Color.darkGray);
-		this.keywords.put("Content-Type", Color.darkGray);
-		this.keywords.put("Set-Cookie", Color.darkGray);
-		this.keywords.put("Server", Color.darkGray);
-		this.keywords.put("Date", Color.darkGray);
-		this.keywords.put("Host", Color.darkGray);
-		this.keywords.put("Connection", Color.darkGray);
-		this.keywords.put("Cookie", Color.darkGray);
-		this.keywords.put("Content-Length", Color.darkGray);
-		this.keywords.put("Content-type", Color.darkGray);
-		this.keywords.put("Location", Color.darkGray);
+		keywords.put("Accept", Color.darkGray);
+		keywords.put("User-Agent", Color.darkGray);
+		keywords.put("Accept-Language", Color.darkGray);
+		keywords.put("Accept-Encoding", Color.darkGray);
+		keywords.put("Accept-Charset", Color.darkGray);
+		keywords.put("Keep-Alive", Color.darkGray);
+		keywords.put("Cache-Control", Color.darkGray);
+		keywords.put("Content-Type", Color.darkGray);
+		keywords.put("Set-Cookie", Color.darkGray);
+		keywords.put("Server", Color.darkGray);
+		keywords.put("Date", Color.darkGray);
+		keywords.put("Host", Color.darkGray);
+		keywords.put("Connection", Color.darkGray);
+		keywords.put("Cookie", Color.darkGray);
+		keywords.put("Content-Length", Color.darkGray);
+		keywords.put("Content-type", Color.darkGray);
+		keywords.put("Location", Color.darkGray);
 		
-		this.keywords.put("Windows", Color.gray);
-		this.keywords.put("Mozilla", Color.gray);
-		this.keywords.put("Firefox", Color.gray);
-		this.keywords.put("Internet", Color.gray);
+		keywords.put("Windows", Color.gray);
+		keywords.put("Mozilla", Color.gray);
+		keywords.put("Firefox", Color.gray);
+		keywords.put("Internet", Color.gray);
 
-		this.keywords.put("0", Color.blue);
-		this.keywords.put("1", Color.blue);
-		this.keywords.put("2", Color.blue);
-		this.keywords.put("3", Color.blue);
-		this.keywords.put("4", Color.blue);
-		this.keywords.put("5", Color.blue);
-		this.keywords.put("6", Color.blue);
-		this.keywords.put("7", Color.blue);
-		this.keywords.put("8", Color.blue);
-		this.keywords.put("9", Color.blue);
-		this.keywords.put(".", Color.blue);
+		keywords.put("0", Color.blue);
+		keywords.put("1", Color.blue);
+		keywords.put("2", Color.blue);
+		keywords.put("3", Color.blue);
+		keywords.put("4", Color.blue);
+		keywords.put("5", Color.blue);
+		keywords.put("6", Color.blue);
+		keywords.put("7", Color.blue);
+		keywords.put("8", Color.blue);
+		keywords.put("9", Color.blue);
+		keywords.put(".", Color.blue);
 
-		this.keywords.put("html", Color.magenta);
-		this.keywords.put("head", Color.magenta);
-		this.keywords.put("body", Color.magenta);
-		this.keywords.put("form", Color.magenta);
-		this.keywords.put("title", Color.magenta);
-		this.keywords.put("style", Color.magenta);
-		this.keywords.put("type", Color.magenta);
-		this.keywords.put("table", Color.magenta);
-		this.keywords.put("tr", Color.magenta);
-		this.keywords.put("td", Color.magenta);
-		this.keywords.put("li", Color.magenta);
-		this.keywords.put("ul", Color.magenta);
-		this.keywords.put("code", Color.magenta);
+		keywords.put("html", Color.magenta);
+		keywords.put("head", Color.magenta);
+		keywords.put("body", Color.magenta);
+		keywords.put("form", Color.magenta);
+		keywords.put("title", Color.magenta);
+		keywords.put("style", Color.magenta);
+		keywords.put("type", Color.magenta);
+		keywords.put("table", Color.magenta);
+		keywords.put("tr", Color.magenta);
+		keywords.put("td", Color.magenta);
+		keywords.put("li", Color.magenta);
+		keywords.put("ul", Color.magenta);
+		keywords.put("code", Color.magenta);
 
-		this.style = new SimpleAttributeSet();
+		style = new SimpleAttributeSet();
 	}
 
 	public void highlightString(final Color col, final int begin,
 			final int length, final boolean flag, final boolean bold) {
 
-		StyleConstants.setForeground(this.style, col);
-		StyleConstants.setBold(this.style, bold);
-		this.setCharacterAttributes(begin, length, this.style, flag);
+		StyleConstants.setForeground(style, col);
+		StyleConstants.setBold(style, bold);
+		setCharacterAttributes(begin, length, style, flag);
 
 	}
 
@@ -134,23 +134,23 @@ public class TextHighlighter extends DefaultStyledDocument {
 	public void insertString(final int offset, final String str,
 			final AttributeSet attr) throws BadLocationException {
 		super.insertString(offset, str, attr);
-		this.processChangedLines(offset, str.length());
+		processChangedLines(offset, str.length());
 	}
 
 	public void processChangedLines(final int offset, final int length)
 			throws BadLocationException {
-		final String text = this.getText(0, this.getLength());
-		this.highlightString(Color.black, 0, this.getLength(), true, false);
+		final String text = this.getText(0, getLength());
+		highlightString(Color.black, 0, getLength(), true, false);
 
-		final Set<String> keyw = this.keywords.keySet();
+		final Set<String> keyw = keywords.keySet();
 		for (final String keyword : keyw) {
-			final Color col = this.keywords.get(keyword);
+			final Color col = keywords.get(keyword);
 
 			final Pattern p = Pattern.compile("\\b" + keyword + "\\b");
 			final Matcher m = p.matcher(text);
 
 			while (m.find()) {
-				this.highlightString(col, m.start(), keyword.length(), true, true);
+				highlightString(col, m.start(), keyword.length(), true, true);
 			}
 		}
 		/*
@@ -178,6 +178,6 @@ public class TextHighlighter extends DefaultStyledDocument {
 	public void remove(final int offset, final int length)
 			throws BadLocationException {
 		super.remove(offset, length);
-		this.processChangedLines(offset, length);
+		processChangedLines(offset, length);
 	}
 }
