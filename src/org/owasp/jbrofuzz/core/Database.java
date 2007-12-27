@@ -136,7 +136,7 @@ public class Database {
 	public String[] getAllNames() {
 		final String[] output = new String[exploits.length];
 		for (int i=1; i<exploits.length; i++){
-			if(!exploits[i][0].isEmpty()) {
+			if(!exploits[i][0].equalsIgnoreCase("")) {
 				output[i] = exploits[i][0];
 			}
 		}
@@ -174,7 +174,7 @@ public class Database {
 				// 
 				boolean catFound = false;
 				for(final String uniqueCategory : uniqueCategories) {
-					if( categoryItemonLine.equals(uniqueCategory) && !categoryItemonLine.isEmpty() ) {
+					if( categoryItemonLine.equals(uniqueCategory) && !categoryItemonLine.equalsIgnoreCase("") ) {
 						catFound = true;
 					}
 				}
@@ -224,7 +224,7 @@ public class Database {
 						}
 					}
 
-					if((!nameExists) && (!exploits[i][0].isEmpty())) {
+					if((!nameExists) && (!exploits[i][0].equalsIgnoreCase(""))) {
 						uniqueCategories.add(exploits[i][0]);
 					}
 				}
@@ -246,7 +246,7 @@ public class Database {
 	public String getExploit(final String name) {
 		String output = "";
 		for (int i=1; i<exploits.length; i++){
-			if((name.equalsIgnoreCase(exploits[i][0])) && (!exploits[i][0].isEmpty())) {
+			if((name.equalsIgnoreCase(exploits[i][0])) && (!exploits[i][0].equalsIgnoreCase(""))) {
 				output = exploits[i][2];
 			}
 		}
@@ -263,7 +263,7 @@ public class Database {
 	public String getComment(final String name) {
 		final StringBuffer output = new StringBuffer();
 		for (int i=1; i<exploits.length; i++){
-			if((name.equalsIgnoreCase(exploits[i][0])) && (!exploits[i][0].isEmpty())) {
+			if((name.equalsIgnoreCase(exploits[i][0])) && (!exploits[i][0].equalsIgnoreCase(""))) {
 				output.append("ID: " + i + "\n\n" + exploits[i][1] + "\n\nAuthor: ");
 				if(exploits[i].length > 3) {
 					output.append(exploits[i][4] + "\n\nURL: ");
@@ -319,7 +319,7 @@ public class Database {
 					// 
 					boolean catFound = false;
 					for(final String uniqueCategory : uniqueCategories) {
-						if( categoryItemonLine.equals(uniqueCategory) && !categoryItemonLine.isEmpty() ) {
+						if( categoryItemonLine.equals(uniqueCategory) && !categoryItemonLine.equalsIgnoreCase("") ) {
 							catFound = true;
 						}
 					}
