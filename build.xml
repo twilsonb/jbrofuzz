@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="jbrofuzz" default="build" basedir=".">
-  <property name="app.name" value="jbrofuzz" />
-  <property name="lib.dir" value="lib" />
-  <property name="jar.dir" value="jar" />
-  <property name="src.dir" value="src" />
-  <property name="class.dir" value="bin" />
-  <property name="doc.dir" value="doc" />
-  <property name="lic.dir" value="licenses" />
-  <property name="hlp.dir" value="help" />
-
-  <property name="version.num" value="08" />
+	
+	<property name="app.name" value="jbrofuzz" />
+	<property name="lic.dir" value="licenses" />
+	
+	<property name="version.num" value="08" />
+	
+	<property name="hlp.dir" value="help" />
+	<property name="lib.dir" value="lib" />
+	<property name="jar.dir" value="jar" />
+	<property name="src.dir" value="src" />
+	<property name="cls.dir" value="bin" />
+	<property name="doc.dir" value="doc" />
 
   <patternset id="dest.exclude">
     <exclude name=".settings/" />
@@ -24,7 +26,7 @@
   <target name="init" description="Setup for Build">
     <tstamp />
     <echo>Checking Directories</echo>
-    <mkdir dir="${class.dir}" />
+    <mkdir dir="${cls.dir}" />
   	<mkdir dir="${hlp.dir}" />
     <mkdir dir="${jar.dir}" />
     <mkdir dir="${doc.dir}" />
@@ -32,12 +34,12 @@
 
   <target depends="init" name="compile" description="Compilation of Java">
     <echo>Compiling Java Files</echo>
-    <javac srcdir="${src.dir}" destdir="${class.dir}" debug="true" failonerror="true" classpathref="master-classpath" deprecation="true" source="1.5" target="1.5" />
+    <javac srcdir="${src.dir}" destdir="${cls.dir}" debug="true" failonerror="true" classpathref="master-classpath" deprecation="true" source="1.5" target="1.5" />
   </target>
 
   <target name="resource">
     <echo>Copying Resources</echo>
-    <copy todir="${class.dir}">
+    <copy todir="${cls.dir}">
       <fileset dir="${src.dir}">
         <include name="**/*.txt" />
       </fileset>
@@ -47,7 +49,7 @@
   <target depends="resource,compile" name="archive">
     <echo>Creating .jar File</echo>
     <jar compress="true" destfile="${jar.dir}/${app.name}-${version.num}-${DSTAMP}.jar">
-      <fileset dir="${class.dir}">
+      <fileset dir="${cls.dir}">
         <patternset refid="dest.exclude" />
         <include name="**/*.*" />
       </fileset>
@@ -79,12 +81,14 @@
     </jar>
   </target>
 
-  <target name="clean">
-    <delete verbose="true" file="${jar.dir}/*.jar" />
-    <delete verbose="true" failonerror="false" includeemptydirs="true">
-      <fileset dir="${class.dir}" />
-    </delete>
-  </target>
+	<target name="clean">
+		<delete verbose="true" failonerror="false" includeemptydirs="true">
+			<fileset dir="${cls.dir}" />
+			<fileset dir="${jar.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</delete>
+	</target>
 
   <target name="javadoc">
     <javadoc author="true" destdir="doc" package="true" version="true">
