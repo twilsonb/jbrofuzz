@@ -152,8 +152,7 @@ public class JBRMenuBar extends JMenuBar {
 
 		// File
 		final JMenuItem exit = new JMenuItem("Exit", ImageCreator.EXIT_IMG);
-		exit.setAccelerator(KeyStroke.getKeyStroke('1', Toolkit.getDefaultToolkit()
-				.getMenuShortcutKeyMask(), false));
+		exit.setAccelerator(KeyStroke.getKeyStroke('1', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
 		file.add(exit);
 		// Edit
@@ -167,14 +166,14 @@ public class JBRMenuBar extends JMenuBar {
 		final JMenuItem paste = new JMenuItem(pasteAction);
 		final JMenuItem selectAll = new JMenuItem(selectAllAction);
 
-		cut.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit()
-				.getMenuShortcutKeyMask(), false));
-		copy.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit()
-				.getMenuShortcutKeyMask(), false));
-		paste.setAccelerator(KeyStroke.getKeyStroke('V', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-		selectAll.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+		cut.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+		cut.setIcon(ImageCreator.IMG_CUT);
+		copy.setAccelerator(KeyStroke.getKeyStroke('C', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+		copy.setIcon(ImageCreator.IMG_COPY);
+		paste.setAccelerator(KeyStroke.getKeyStroke('V', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+		paste.setIcon(ImageCreator.IMG_PASTE);
+		selectAll.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+		selectAll.setIcon(ImageCreator.IMG_SELECTALL);
 
 		edit.add(cut);
 		edit.add(copy);
@@ -212,6 +211,7 @@ public class JBRMenuBar extends JMenuBar {
 
 		// -> Look and Feel
 		final JMenu lookAndFeel = new JMenu("Look and Feel");
+		lookAndFeel.setIcon(ImageCreator.LKF_IMG);
 		final UIManager.LookAndFeelInfo[] installedFeels = UIManager
 				.getInstalledLookAndFeels();
 		final ButtonGroup group = new ButtonGroup();
@@ -291,7 +291,7 @@ public class JBRMenuBar extends JMenuBar {
 		panel.add(remove);
 
 		// Options
-		final JMenuItem preferences = new JMenuItem("Preferences");
+		final JMenuItem preferences = new JMenuItem("Preferences", ImageCreator.IMG_PREFERENCES);
 		final JMenuItem updates = new JMenuItem("Check for Updates...");
 		final JMenuItem repair = new JMenuItem("Detect and Repair...");
 
@@ -310,7 +310,7 @@ public class JBRMenuBar extends JMenuBar {
 		final JMenuItem website = new JMenuItem("JBroFuzz Website...");
 		final JMenuItem disclaimer = new JMenuItem("Disclaimer",
 				ImageCreator.DISCLAIMER_IMG);
-		final JMenuItem about = new JMenuItem("About", ImageCreator.HELP_IMG);
+		final JMenuItem about = new JMenuItem("About", ImageCreator.IMG_HELP);
 
 		about.setAccelerator(KeyStroke.getKeyStroke('0', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
