@@ -25,11 +25,8 @@
  */
 package org.owasp.jbrofuzz.snif.tcp;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.io.*;
+import java.net.*;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 

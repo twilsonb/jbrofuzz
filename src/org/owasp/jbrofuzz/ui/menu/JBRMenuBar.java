@@ -41,7 +41,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker3;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.JTextComponent;
@@ -49,6 +48,7 @@ import javax.swing.text.TextAction;
 
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import org.owasp.jbrofuzz.util.SwingWorker3;
 import org.owasp.jbrofuzz.version.JBRFormat;
 
 import com.Ostermiller.util.Browser;
@@ -124,8 +124,7 @@ public class JBRMenuBar extends JMenuBar {
 	// Used under the Panel JMenu as items
 	private JMenuItem showAll, hideAll, start, bro, stop, add, remove;
 	// Used under the view JMenu as items
-	private JCheckBoxMenuItem directories, fuzzing, sniffing, generators, httpFuzzing,
-			opensource, system;
+	private JCheckBoxMenuItem directories, fuzzing, sniffing, generators, httpFuzzing, system;
 
 	/**
 	 * 
@@ -189,7 +188,6 @@ public class JBRMenuBar extends JMenuBar {
 		fuzzing = new JCheckBoxMenuItem("TCP Fuzzing", true);
 		sniffing = new JCheckBoxMenuItem("TCP Sniffing", true);
 		generators = new JCheckBoxMenuItem("Generators", false);
-		opensource = new JCheckBoxMenuItem("Open Source", true);
 		system = new JCheckBoxMenuItem("System", false);
 
 		showAll = new JMenuItem("Show All");
@@ -200,7 +198,6 @@ public class JBRMenuBar extends JMenuBar {
 		showHide.add(fuzzing);
 		showHide.add(sniffing);
 		showHide.add(generators);
-		showHide.add(opensource);
 		showHide.add(system);
 
 		view.add(showHide);
@@ -292,7 +289,7 @@ public class JBRMenuBar extends JMenuBar {
 
 		// Options
 		final JMenuItem preferences = new JMenuItem("Preferences", ImageCreator.IMG_PREFERENCES);
-		final JMenuItem updates = new JMenuItem("Check for Updates...");
+		final JMenuItem updates = new JMenuItem("Check for Updates...", ImageCreator.IMG_UPDATE);
 		final JMenuItem repair = new JMenuItem("Detect and Repair...");
 
 		preferences.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit
@@ -304,13 +301,13 @@ public class JBRMenuBar extends JMenuBar {
 		options.add(preferences);
 
 		// Help
-		final JMenuItem topics = new JMenuItem("Topics", ImageCreator.TOPICS_IMG);
-		final JMenuItem faq = new JMenuItem("FAQ", ImageCreator.TOPICS_IMG);
+		final JMenuItem topics = new JMenuItem("Topics", ImageCreator.IMG_TOPICS);
+		final JMenuItem faq = new JMenuItem("FAQ", ImageCreator.IMG_TOPICS);
 		// final JMenuItem tutorial = new JMenuItem("Tutorial");
 		final JMenuItem website = new JMenuItem("JBroFuzz Website...");
 		final JMenuItem disclaimer = new JMenuItem("Disclaimer",
 				ImageCreator.DISCLAIMER_IMG);
-		final JMenuItem about = new JMenuItem("About", ImageCreator.IMG_HELP);
+		final JMenuItem about = new JMenuItem("About", ImageCreator.IMG_ABOUT);
 
 		about.setAccelerator(KeyStroke.getKeyStroke('0', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
@@ -443,23 +440,6 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		opensource.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						if (!opensource.getState()) {
-							JBRMenuBar.this.getFrameWindow().setTabHide(
-									JBRFrame.OPEN_SOURCE_ID);
-						} else {
-							JBRMenuBar.this.getFrameWindow().setTabShow(
-									JBRFrame.OPEN_SOURCE_ID);
-						}
-					}
-				});
-
-			}
-		});
 
 		showAll.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -489,7 +469,6 @@ public class JBRMenuBar extends JMenuBar {
 						system.setState(true);
 						JBRMenuBar.this.getFrameWindow()
 								.setTabShow(JBRFrame.OPEN_SOURCE_ID);
-						opensource.setState(true);
 					}
 				});
 
@@ -518,12 +497,10 @@ public class JBRMenuBar extends JMenuBar {
 						system.setState(false);
 						JBRMenuBar.this.getFrameWindow()
 								.setTabHide(JBRFrame.OPEN_SOURCE_ID);
-						
 						JBRMenuBar.this.getFrameWindow().setTabHide(
 								JBRFrame.HTTP_FUZZING_PANEL_ID);
 						httpFuzzing.setState(false);
 						
-						opensource.setState(false);
 					}
 				});
 
@@ -554,13 +531,9 @@ public class JBRMenuBar extends JMenuBar {
 									JBRMenuBar.this.getFrameWindow().getWebDirectoriesPanel()
 											.start();
 								}
-								if (s.equals(" Open Source ")) {
-									JBRMenuBar.this.getFrameWindow().getOpenSourcePanel()
-											.start();
-								}
 								if (s.equals(" HTTP/S Fuzzing ")) {
-									JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
-											.start();
+									// JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
+										//	.start();
 								}
 								return "start-menu-bar-return";
 							}
@@ -576,15 +549,11 @@ public class JBRMenuBar extends JMenuBar {
 											.stop();
 								}
 								if (s.equals(" HTTP/S Fuzzing ")) {
-									JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
-											.stop();
+									// JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
+										//	.stop();
 								}
 								if (s.equals(" Web Directories ")) {
 									JBRMenuBar.this.getFrameWindow().getWebDirectoriesPanel()
-											.stop();
-								}
-								if (s.equals(" Open Source ")) {
-									JBRMenuBar.this.getFrameWindow().getOpenSourcePanel()
 											.stop();
 								}
 							}
@@ -617,13 +586,9 @@ public class JBRMenuBar extends JMenuBar {
 							JBRMenuBar.this.getFrameWindow().getWebDirectoriesPanel()
 									.stop();
 						}
-						if (s.equals(" Open Source ")) {
-							JBRMenuBar.this.getFrameWindow().getOpenSourcePanel()
-									.stop();
-						}
 						if (s.equals(" HTTP/S Fuzzing ")) {
-							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
-									.stop();
+							// JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
+							//		.stop();
 						}
 					}
 				});
@@ -648,8 +613,8 @@ public class JBRMenuBar extends JMenuBar {
 									.bro();
 						}
 						if (s.equals(" HTTP/S Fuzzing ")) {
-							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
-									.fuzzBroButton();
+							// JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
+									//.fuzzBroButton();
 						}
 					}
 				});
@@ -670,7 +635,7 @@ public class JBRMenuBar extends JMenuBar {
 									.add();
 						}
 						if (s.equals(" HTTP/S Fuzzing ")) {
-							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel().add();
+							// JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel().add();
 						}
 					}
 				});
@@ -716,8 +681,8 @@ public class JBRMenuBar extends JMenuBar {
 									.remove();
 						}
 						if (s.equals(" HTTP/S Fuzzing ")) {
-							JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
-									.remove();
+							//JBRMenuBar.this.getFrameWindow().getHTTPFuzzingPanel()
+							//		.remove();
 						}
 					}
 				});

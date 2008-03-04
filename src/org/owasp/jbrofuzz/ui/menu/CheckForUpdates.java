@@ -25,252 +25,288 @@
  */
 package org.owasp.jbrofuzz.ui.menu;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.*;
+import java.awt.*;
+import javax.swing.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker3;
-import javax.swing.WindowConstants;
+import java.awt.event.*;
+import java.util.regex.*;
 
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import com.Ostermiller.util.*;
 
-import com.Ostermiller.util.Browser;
+import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.params.*;
+import org.apache.commons.httpclient.methods.*;
 
-/**
- * <p>
- * The JPanel used for generating updates.
- * </p>
- * 
- * @author subere (at) uncon org
- * @version 0.7
- */
+import org.owasp.jbrofuzz.util.*;
+import org.owasp.jbrofuzz.ui.util.*;
+import org.owasp.jbrofuzz.version.*;
+import org.owasp.jbrofuzz.ui.*;
+
 public class CheckForUpdates extends JDialog {
+// Dimensions of the about box
+private static final int x = 400;
+private static final int y = 300;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5651438626206098934L;
-	// Dimensions of the about box
-	private static final int x = 400;
-	private static final int y = 300;
-	// The JPanels inside the main window
-	private JLabel mainLabel;
-	// The start/stop and close button
-	private JButton startStop, close;
-	// The Swing Worker used
-	private SwingWorker3 worker;
-	// The boolean checking for a new version
-	private boolean newVersionExists;
+// The JPanels inside the main window
+private JTextArea mainLabel;
 
-	public CheckForUpdates(final JFrame parent) {
-		super(parent, " Check For Updates ", true);
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+// The start/stop and close button
+private JButton startStop, close;
 
-		setLayout(new BorderLayout());
-		setFont(new Font("SansSerif", Font.PLAIN, 12));
+// The Swing Worker used
+private SwingWorker3 worker;
 
-		newVersionExists = false;
+// The boolean checking for a new version
+private boolean newVersionExists;
 
-		mainLabel = new JLabel(
-				"<HTML>Select \"Check\" to connect to the JBroFuzz website and check for a newer version</HTML>",
-				ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
+public CheckForUpdates(final JBRFrame parent) {
 
-		mainLabel.setIconTextGap(20);
-		mainLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 5));
-		
-		getContentPane().add(mainLabel, BorderLayout.CENTER);
+	super(parent, " Check For Updates ", true);
+	setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+	setLayout(new BorderLayout());
+	setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-		// Bottom buttons
-		startStop = new JButton("Check");
-		startStop.setToolTipText("Check online for a latest version");
+	final JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
+	final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
 
+	newVersionExists = false;
+
+	mainLabel = new JTextArea();
+	mainLabel.setFont(new Font("Monospaced", Font.PLAIN, 10));
+	mainLabel.setMargin(new Insets(1, 1, 1, 1));
+	mainLabel.setBackground(Color.BLACK);
+	mainLabel.setForeground(new Color(0, 128, 255));
+	mainLabel.setEditable(false);
+	mainLabel.setVisible(true);
+	parent.popup(mainLabel);
+
+	// Scroll Panels for the text area and image
+
+	final JLabel imageLabel = new JLabel(ImageCreator.OWASP_IMAGE);
+	final JScrollPane providersTableScrollPane = new JScrollPane(imageLabel);
+	providersTableScrollPane.setColumnHeader(null);
+	providersTableScrollPane.setVerticalScrollBarPolicy(20);
+	providersTableScrollPane.setHorizontalScrollBarPolicy(30);
+	imageLabel.setPreferredSize(new Dimension(100, y - 110));
+	centerPanel.add(imageLabel);
+
+	final JScrollPane providersTextScrollPane = new JScrollPane(mainLabel);
+	providersTextScrollPane.setVerticalScrollBarPolicy(20);
+	providersTextScrollPane.setHorizontalScrollBarPolicy(30);
+	providersTextScrollPane.setPreferredSize(new Dimension(x - 150, y - 110));
+	centerPanel.add(providersTextScrollPane);
+
+	// Bottom buttons
+
+	startStop = new JButton("Check");
+	close = new JButton("Close");
+
+	startStop.setToolTipText("Check online for a latest version");
+	close.setToolTipText("Close this window");
+
+	southPanel.add(startStop);
+	southPanel.add(close);
+
+	// Action Listeners
+
+	startStop.addActionListener(new ActionListener() {
+		public void actionPerformed(final ActionEvent e) {
+			worker = new SwingWorker3() {
+				@Override
+				public Object construct() {
+					CheckForUpdates.this.startUpdate();
+					return "check-update-return";
+				}
+
+				@Override
+				public void finished() {
+					CheckForUpdates.this.finishUpdate();
+				}
+			};
+			worker.start();
+		}
+	});
+
+	close.addActionListener(new ActionListener() {
+		public void actionPerformed(final ActionEvent e) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					CheckForUpdates.this.dispose();
+				}
+			});
+		}
+	});
+
+	// Add the panels to the dialog
+
+	getContentPane().add(centerPanel, BorderLayout.CENTER);
+	getContentPane().add(southPanel, BorderLayout.SOUTH);
+
+
+	// Global frame issues
+	this.setLocation(Math.abs((parent.getWidth() / 2)
+			- (CheckForUpdates.x / 2 - 100)), Math.abs((parent.getHeight() / 2)
+					- (CheckForUpdates.y / 2) + 100));
+	this.setSize(CheckForUpdates.x, CheckForUpdates.y);
+	setResizable(false);
+	setVisible(true);
+}
+
+public void finishUpdate() {
+	if (!startStop.isEnabled()) {
+		return;
+	}
+	close.setEnabled(true);
+
+	// Remove all action listeners from the start/stop button
+	ActionListener [] acArray = startStop.getActionListeners();
+	for(ActionListener listener : acArray) {
+		startStop.removeActionListener(listener);
+	}
+	
+	if (newVersionExists) {
+		startStop.setText("Download");
 		startStop.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				worker = new SwingWorker3() {
-					@Override
-					public Object construct() {
-						CheckForUpdates.this.startUpdate();
-						return "check-update-return";
-					}
-
-					@Override
-					public void finished() {
-						CheckForUpdates.this.finishUpdate();
-					}
-				};
-				worker.start();
-			}
-		});
-		buttonPanel.add(startStop);
-
-		close = new JButton("Close");
-		close.setToolTipText("Close this window");
-
-		close.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						CheckForUpdates.this.stopUpdate();
-						CheckForUpdates.this.dispose();
+						Browser.init();
+						try {
+							Browser.displayURL(JBRFormat.URL_WEBSITE);
+							startStop.setEnabled(false);
+							close.setEnabled(true);
+						} catch (final IOException ex) {
+							mainLabel.append("\nAn error occured while attempting to open the browser:\n\n" + JBRFormat.URL_WEBSITE);
+						}
 					}
 				});
 			}
 		});
-		buttonPanel.add(close);
-
-		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-
-		// Global frame issues
-		this.setLocation(Math.abs((parent.getWidth() / 2)
-				- (CheckForUpdates.x / 2 - 100)), Math.abs((parent.getHeight() / 2)
-				- (CheckForUpdates.y / 2) + 100));
-		this.setSize(CheckForUpdates.x, CheckForUpdates.y);
-		setResizable(false);
-		setVisible(true);
-	}
-
-	public void finishUpdate() {
-		if (!startStop.isEnabled()) {
-			return;
-		}
-		close.setEnabled(true);
-
-		if (newVersionExists) {
-			startStop.setText("Download");
-			startStop.removeAll();
-			startStop.addActionListener(new ActionListener() {
-				public void actionPerformed(final ActionEvent e) {
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							Browser.init();
-							try {
-								Browser.displayURL(JBRFormat.URL_WEBSITE);
-							} catch (final IOException ex) {
-								mainLabel
-										.setText("<HTML><BR>&nbsp;&nbsp;&nbsp;An error occured while attempting to connect<BR><BR></HTML>");
-							}
-						}
-					});
-				}
-			});
-		} else {
-			startStop.setText("Finish");
-			startStop.removeAll();
-			startStop.addActionListener(new ActionListener() {
-				public void actionPerformed(final ActionEvent e) {
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							startStop.setEnabled(false);
-							close.setEnabled(false);
-						}
-					});
-				}
-			});
-		}
-	}
-
-	public void startUpdate() {
-		if (!startStop.isEnabled()) {
-			return;
-		}
-		startStop.setText("Stop");
-		close.setEnabled(false);
-
-		final StringBuffer output = new StringBuffer();
-		BufferedReader bin = null;
-
-		try {
-			output
-					.append("<HTML>&nbsp;&nbsp;&nbsp;Checking JBroFuzz Website...&nbsp;&nbsp;");
-			mainLabel.setText(output.toString() + "</HTML>");
-
-			final URL request = new URL(JBRFormat.URL_WEBSITE);
-			final URLConnection connection = request.openConnection();
-			connection.setRequestProperty("User-Agent",
-					"Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
-			connection.connect();
-
-			output
-					.append("<B>OK</B><BR>&nbsp;&nbsp;&nbsp;Identifying Current Version...&nbsp;&nbsp;");
-			mainLabel.setText(output.toString() + "</HTML>");
-
-			bin = new BufferedReader(new InputStreamReader(connection
-					.getInputStream()));
-			String line = null;
-			while ((line = bin.readLine()) != null) {
-				final Pattern p = Pattern.compile("Current version is (\\d.\\d)");
-				final Matcher m = p.matcher(line);
-				if (m.find()) {
-					final String version = m.group();
-					output
-							.append("<B>OK</B><BR><BR>&nbsp;&nbsp;&nbsp;Is there a new version available?&nbsp;&nbsp;");
-					if (version.equalsIgnoreCase("Current version is "
-							+ JBRFormat.VERSION)) {
-						output
-								.append("<B>No</B><BR><BR>&nbsp;&nbsp;&nbsp;You are using the latest version of JBroFuzz");
-						output.append("<BR>&nbsp;&nbsp;&nbsp;There is no need to update");
-					} else {
-						output
-								.append("<B>Yes</B><BR><BR>&nbsp;&nbsp;&nbsp;You are using an older version of JBroFuzz");
-						output.append("<BR>&nbsp;&nbsp;&nbsp;The " + version);
-						newVersionExists = true;
-
+	} 
+	else {
+		startStop.setText("Finish");
+		startStop.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						startStop.setEnabled(false);
+						close.setEnabled(true);
 					}
-					mainLabel.setText(output.toString() + "</HTML>");
+				});
+			}
+		});
+	}
+}
+
+public void startUpdate() {
+
+	if (!startStop.isEnabled()) {
+		return;
+	}
+	
+	// Prior to beginning reset the button's action listener
+	startStop.setEnabled(true);
+	startStop.setText("Stop");
+	close.setEnabled(false);
+	
+	// Remove all action listeners 
+	ActionListener [] acArray = startStop.getActionListeners();
+	for(ActionListener listener : acArray) {
+		startStop.removeActionListener(listener);
+	}
+	
+	startStop.addActionListener(new ActionListener() {
+		public void actionPerformed(final ActionEvent e) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					startStop.setEnabled(false);
+					worker.interrupt();
+					close.setEnabled(true);
 				}
-			}
-			bin.close();
-		} catch (final MalformedURLException e) {
-			mainLabel
-					.setText("<HTML><BR>&nbsp;&nbsp;&nbsp;An error occured while attempting to connect<BR><BR>The check for updates was unable to complete</HTML>");
-			startStop.setEnabled(false);
-			close.setEnabled(true);
-		} catch (final IOException e) {
-			mainLabel
-					.setText("<HTML><BR>&nbsp;&nbsp;&nbsp;An error occured while attempting to connect<BR><BR>The check for updates was unable to complete</HTML>");
-			startStop.setEnabled(false);
-			close.setEnabled(true);
+			});
 		}
-		if (bin != null) {
+	});
+	
+	String response = "";
+
+	mainLabel.setText("Finding JBroFuzz Website...\t");
+
+	// Create an instance of HttpClient.
+	HttpClient client = new HttpClient();
+
+	// Create a method instance.
+	GetMethod method = new GetMethod(JBRFormat.URL_WEBSITE);
+
+	// Provide custom retry handler is necessary
+	method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
+
+	try {
+		// Execute the method.
+		int statusCode = client.executeMethod(method);
+
+		if (statusCode != HttpStatus.SC_OK) {
+			mainLabel.append("[FAIL]\n" + "Connection returned the following code: " + method.getStatusLine() + "\n");
+
+		}
+		else {
+			mainLabel.append("[ OK ]\n" + "Checking JBroFuzz Website...\t");
+			// Read the response body.
+			byte[] responseBody = method.getResponseBody();
+			response = new String(responseBody, "UTF-8");
+		}
+
+	} 
+	catch (HttpException e) {
+		mainLabel.append("[FAIL]\n" + "Fatal protocol violation: " + e.getMessage());
+
+	} 
+	catch (IOException e) {
+		mainLabel.append("[FAIL]\n" + "Fatal transport error: " + e.getMessage());
+	} 
+	finally {
+		// Release the connection.
+		method.releaseConnection();
+	}  
+	
+	if(!response.equalsIgnoreCase("")) {
+		mainLabel.append("[ OK ]\n" + "Checking for latest version...\t");
+		
+		final Pattern p1 = Pattern.compile("Current version is (\\d.\\d)");
+		final Matcher m1 = p1.matcher(response);
+		if (m1.find()) {
+			mainLabel.append("[ OK ]\n" + "Comparing version numbers...\t");	
+			final String webVersion = m1.group().substring(0,3);
+			
+			double current = 0.0;
+			double latest = 0.0;
+			
 			try {
-				bin.close();
-				startStop.setEnabled(false);
-				close.setEnabled(true);
-			} catch (final IOException ex) {
-				startStop.setEnabled(false);
-				close.setEnabled(true);
+				
+				current = Double.parseDouble(JBRFormat.VERSION);
+				latest = Double.parseDouble(webVersion);
+				
+				mainLabel.append("[ OK ]\n\nWebsite Version is: " + webVersion);
+				mainLabel.append("\nCurrent Version is: " + JBRFormat.VERSION + "\n\n");
+				
+			} 
+			catch (NumberFormatException e) {
+				mainLabel.append("[FAIL]\n");
+			}
+			
+			if(latest > current) {
+				mainLabel.append("\nJBroFuzz " + latest + " is available for download.");
+				newVersionExists = true;
+			}
+			else {
+				mainLabel.append("\nYou are running the latest version.");
 			}
 		}
-
-	}
-
-	public void stopUpdate() {
-		if (!startStop.isEnabled()) {
-			return;
+		else {
+			mainLabel.append("[FAIL]\n\n" + "Could not identify JBroFuzz version at:\n\n" + JBRFormat.URL_WEBSITE);
 		}
-		startStop.setText("Check");
-		close.setEnabled(true);
 	}
+}
+
 }

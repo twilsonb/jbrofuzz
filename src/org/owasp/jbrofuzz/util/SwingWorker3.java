@@ -1,7 +1,9 @@
 /**
  * SwingWorker3.java 0.6
  */
-package javax.swing;
+package org.owasp.jbrofuzz.util;
+
+import javax.swing.*;
 
 /**
  * This is the 3rd version of SwingWorker (also known as SwingWorker 3), an

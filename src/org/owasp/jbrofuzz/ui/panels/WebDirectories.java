@@ -50,7 +50,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker3;
 import javax.swing.table.TableColumn;
 
 import org.owasp.jbrofuzz.fuzz.dir.DRequestIterator;
@@ -58,6 +57,7 @@ import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.WebDirectoriesModel;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.ui.util.TableSorter;
+import org.owasp.jbrofuzz.util.SwingWorker3;
 import org.owasp.jbrofuzz.version.JBRFormat;
 
 import com.Ostermiller.util.Browser;

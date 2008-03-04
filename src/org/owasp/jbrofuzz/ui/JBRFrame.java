@@ -43,15 +43,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
-import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.ui.menu.JBRMenuBar;
-import org.owasp.jbrofuzz.ui.panels.Generators;
-import org.owasp.jbrofuzz.ui.panels.OpenSource;
-import org.owasp.jbrofuzz.ui.panels.SystemLogger;
-import org.owasp.jbrofuzz.ui.panels.TCPFuzzing;
-import org.owasp.jbrofuzz.ui.panels.TCPSniffing;
-import org.owasp.jbrofuzz.ui.panels.WebDirectories;
-import org.owasp.jbrofuzz.ui.panels.HTTPFuzzing;
+import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.ui.menu.*;
+import org.owasp.jbrofuzz.ui.panels.*;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBRFormat;
 
@@ -133,11 +127,8 @@ public class JBRFrame extends JFrame {
 	// The system logger panel
 	private final SystemLogger mSystemLogger;
 
-	// The open source panel
-	private final OpenSource mOpenSourcePanel;
-	
 	// The HTTP fuzzing panel
-	private final HTTPFuzzing mHTTPFuzzingPanel;
+	// private final HTTPFuzzing mHTTPFuzzingPanel;
 
 	/**
 	 * <p>
@@ -164,24 +155,22 @@ public class JBRFrame extends JFrame {
 		mSniffingPanel = new TCPSniffing(this);
 		mDefinitionsPanel = new Generators(this);
 		mSystemLogger = new SystemLogger(this);
-		mOpenSourcePanel = new OpenSource(this);
-		mHTTPFuzzingPanel = new HTTPFuzzing(this);
+		// mHTTPFuzzingPanel = new HTTPFuzzing(this);
 		// The tabbed pane, 3 is for bottom orientation
 		tabbedPane = new JTabbedPane(3);
 		// tabbedPane.setPreferredSize(new Dimension(588,368));
 		tabbedPane.setBounds(0, 0, 895, 500);
 		// Do not change the names!!!
-		tabbedPane.add(" HTTP/S Fuzzing ", mHTTPFuzzingPanel);
+		// tabbedPane.add(" HTTP/S Fuzzing ", mHTTPFuzzingPanel);
 		tabbedPane.add(" Generators ", mDefinitionsPanel);
 		tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
-		tabbedPane.add(" Open Source ", mOpenSourcePanel);
 		tabbedPane.add(" TCP Fuzzing ", mFuzzingPanel);
 		tabbedPane.add(" TCP Sniffing ", mSniffingPanel);
 		
 		
 		// tabbedPane.add(" Generators ", mDefinitionsPanel);
 		// tabbedPane.add(" System ", mSystemLogger);
-		tabbedPane.setSelectedComponent(mHTTPFuzzingPanel);
+		tabbedPane.setSelectedComponent(mFuzzingPanel);
 		pane.add(tabbedPane);
 		// The image icon
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
@@ -245,10 +234,11 @@ public class JBRFrame extends JFrame {
 	 * </p>
 	 * 
 	 * @return mHTTPFuzzingPanel
-	 */
+	 *
 	public HTTPFuzzing getHTTPFuzzingPanel() {
 		return mHTTPFuzzingPanel;
 	}
+	 */
 
 	/**
 	 * <p>
@@ -260,18 +250,6 @@ public class JBRFrame extends JFrame {
 	 */
 	public JBroFuzz getJBroFuzz() {
 		return mJBroFuzz;
-	}
-
-	/**
-	 * <p>
-	 * Method for returning the open source panel that is being instantiated
-	 * through this frame window.
-	 * </p>
-	 * 
-	 * @return OpenSource
-	 */
-	public OpenSource getOpenSourcePanel() {
-		return mOpenSourcePanel;
 	}
 
 	/**
@@ -427,11 +405,8 @@ public class JBRFrame extends JFrame {
 		if (n == JBRFrame.WEB_DIRECTORIES_PANEL_ID) {
 			tabbedPane.remove(mWebDirectoriesPanel);
 		}
-		if (n == JBRFrame.OPEN_SOURCE_ID) {
-			tabbedPane.remove(mOpenSourcePanel);
-		}
 		if (n == JBRFrame.HTTP_FUZZING_PANEL_ID) {
-			tabbedPane.remove(mHTTPFuzzingPanel);
+			// tabbedPane.remove(mHTTPFuzzingPanel);
 		}
 	}
 
@@ -463,13 +438,9 @@ public class JBRFrame extends JFrame {
 			tabbedPane.addTab(" Web Directories ", mWebDirectoriesPanel);
 			tabbedPane.setSelectedComponent(mWebDirectoriesPanel);
 		}
-		if (n == JBRFrame.OPEN_SOURCE_ID) {
-			tabbedPane.addTab(" Open Source ", mOpenSourcePanel);
-			tabbedPane.setSelectedComponent(mOpenSourcePanel);
-		}
 		if (n == JBRFrame.HTTP_FUZZING_PANEL_ID) {
-			tabbedPane.addTab(" HTTP/S Fuzzing ", mHTTPFuzzingPanel);
-			tabbedPane.setSelectedComponent(mHTTPFuzzingPanel);
+			// tabbedPane.addTab(" HTTP/S Fuzzing ", mHTTPFuzzingPanel);
+			// tabbedPane.setSelectedComponent(mHTTPFuzzingPanel);
 		}
 	}
 	
