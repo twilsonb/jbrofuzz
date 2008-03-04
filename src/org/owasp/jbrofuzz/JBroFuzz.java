@@ -28,7 +28,7 @@ package org.owasp.jbrofuzz;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.version.JBRFormat;
-import org.owasp.jbrofuzz.core.Database;
+import org.owasp.jbrofuzz.core.*;
 
 /**
  * <p>
@@ -90,12 +90,15 @@ public class JBroFuzz {
 	public JBroFuzz() {
 
 		mFormat = new JBRFormat(this);
-		mDatabase = new Database(this);
 		mWindow = new JBRFrame(this);
+		
+		
 		
 		// Singleton File Handler
 		mHandler = FileHandler.s(mWindow);
-
+		
+		mDatabase = new Database();
+		
 	}
 
 	/**

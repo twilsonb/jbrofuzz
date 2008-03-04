@@ -114,7 +114,7 @@ public class GeneratorDialog extends JDialog {
 		popup(categoryTable);
 		categoryTableSorter.setTableHeader(categoryTable.getTableHeader());
 		categoryTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllCategories());
+		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds());
 		categoryTableSorter.setTableModel(categoryTableModel);
 		categoryTableSorter.fireTableDataChanged();
 		categoryTable.setFont(new Font("Verdana", Font.BOLD, 14));
@@ -294,7 +294,7 @@ public class GeneratorDialog extends JDialog {
 			final String value = (String) categoryTableSorter.getValueAt(c, 0);
 			lastCategory = value;
 			// System.out.println(value);
-			nameTableModel.setData(m.getJBroFuzz().getDatabase().getNames(value));
+			// nameTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds(value));
 			nameTableSorter.setTableModel(nameTableModel);
 			nameTableSorter.fireTableDataChanged();
 		}
@@ -311,7 +311,7 @@ public class GeneratorDialog extends JDialog {
 			}
 			final int c = nameTable.getSelectedRow();
 			final String value = (String) nameTableSorter.getValueAt(c, 0);
-			viewTextArea.setText(m.getJBroFuzz().getDatabase().getExploit(value));
+			// viewTextArea.setText(m.getJBroFuzz().getDatabase().getExploit(value));
 			viewTextArea.setCaretPosition(0);
 			
 			// commentTextArea.setText(m.getJBroFuzz().getDatabase().getComment(value));
