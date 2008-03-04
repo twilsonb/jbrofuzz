@@ -94,7 +94,7 @@ public class Generators extends JBRPanel {
 		popup(categoryTable);
 		categoryTableSorter.setTableHeader(categoryTable.getTableHeader());
 
-		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllCategories());
+		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds());
 		categoryTableSorter.setTableModel(categoryTableModel);
 		categoryTableSorter.fireTableDataChanged();
 		categoryTable.setFont(new Font("Verdana", Font.BOLD, 14));
@@ -281,7 +281,7 @@ public class Generators extends JBRPanel {
 			final int c = categoryTable.getSelectedRow();
 			final String value = (String) categoryTableSorter.getValueAt(c, 0);
 			// System.out.println(value);
-			nameTableModel.setData(getFrame().getJBroFuzz().getDatabase().getNames(value));
+			nameTableModel.setData(getFrame().getJBroFuzz().getDatabase().getPayloads(value));
 			nameTableSorter.setTableModel(nameTableModel);
 			nameTableSorter.fireTableDataChanged();
 		}
@@ -298,10 +298,13 @@ public class Generators extends JBRPanel {
 			}
 			final int c = nameTable.getSelectedRow();
 			final String value = (String) nameTableSorter.getValueAt(c, 0);
-			viewTextArea.setText(getFrame().getJBroFuzz().getDatabase().getExploit(value));
+			/**
+			 * TODO
+			 */
+			// viewTextArea.setText(getFrame().getJBroFuzz().getDatabase().getExploit(value));
 			viewTextArea.setCaretPosition(0);
 
-			commentTextArea.setText(getFrame().getJBroFuzz().getDatabase().getComment(value));
+			// commentTextArea.setText(getFrame().getJBroFuzz().getDatabase().getComment(value));
 			commentTextArea.setCaretPosition(0);
 		}
 	}

@@ -1,4 +1,4 @@
-package jbrf.core;
+package org.owasp.jbrofuzz.core;
 
 import java.util.*;
 import java.math.*;
