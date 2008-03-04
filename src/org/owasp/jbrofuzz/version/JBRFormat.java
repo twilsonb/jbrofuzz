@@ -75,7 +75,7 @@ public class JBRFormat {
 	 * The GNU Citizen DB file name, expected to be read from within the directory
 	 * from which JBroFuzz gets launched.
 	 */
-	public static final String FILE_GNU = "jbrofuzz-xssdb.csv";
+	public static final String FILE_GNU = "generators.jbrofuzz";
 
 	/**
 	 * The line distinguisher found in a file
