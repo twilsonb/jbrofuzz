@@ -94,7 +94,7 @@ public class Generators extends JBRPanel {
 		popup(categoryTable);
 		categoryTableSorter.setTableHeader(categoryTable.getTableHeader());
 
-		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds());
+		// categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds());
 		categoryTableSorter.setTableModel(categoryTableModel);
 		categoryTableSorter.fireTableDataChanged();
 		categoryTable.setFont(new Font("Verdana", Font.BOLD, 14));
