@@ -31,27 +31,25 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.ui.*;
+import org.owasp.jbrofuzz.ui.util.*;
+import org.owasp.jbrofuzz.ui.menu.*;
+import org.owasp.jbrofuzz.ui.viewers.*;
 import org.owasp.jbrofuzz.ui.tablemodels.*;
-import org.owasp.jbrofuzz.ui.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.ui.util.TableSorter;
-import org.owasp.jbrofuzz.ui.viewers.ExploitViewer;
-import org.owasp.jbrofuzz.ui.menu.AboutBox;
+
+import org.apache.commons.lang.*;
+
 /**
  * <p>
  * The definitions panel holding a description of the generators loaded.
  * </p>
  * 
  * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @version 0.8
  */
 public class Generators extends JBRPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -5848191307114097542L;
-	// The frame that the sniffing panel is attached
-	// private JBRFrame m;
 	// The JPanels carrying the components
 	private JPanel category, name, view;
 	// The JTables carrying the data
@@ -79,12 +77,12 @@ public class Generators extends JBRPanel {
 
 		category = new JPanel();
 		category.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Exploit Category "), BorderFactory
+				.createTitledBorder(" Generators "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 		category.setBounds(10, 20, 220, 430);
 		this.add(category);
 
-		categoryTableModel = new SingleRowTableModel("Category");
+		categoryTableModel = new SingleRowTableModel("Ids");
 		categoryTableSorter = new TableSorter(categoryTableModel);
 
 		categoryTable = new JTable(categoryTableSorter);
@@ -94,12 +92,12 @@ public class Generators extends JBRPanel {
 		popup(categoryTable);
 		categoryTableSorter.setTableHeader(categoryTable.getTableHeader());
 
-		// categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds());
+		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds());
 		categoryTableSorter.setTableModel(categoryTableModel);
 		categoryTableSorter.fireTableDataChanged();
 		categoryTable.setFont(new Font("Verdana", Font.BOLD, 14));
 		categoryTable.setRowHeight(30);
-		categoryTable.getSelectionModel().addListSelectionListener(new CategoryRowListener());
+		categoryTable.getSelectionModel().addListSelectionListener(new IdsRowListener());
 		categoryTable.setBackground(Color.BLACK);
 		categoryTable.setForeground(Color.WHITE);
 		categoryTable.addMouseListener(new MouseAdapter(){
@@ -121,12 +119,12 @@ public class Generators extends JBRPanel {
 
 		name = new JPanel();
 		name.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Exploit Name "), BorderFactory
+				.createTitledBorder(" Payloads "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 		name.setBounds(235, 100, 220, 350);
 		this.add(name);
 
-		nameTableModel = new SingleRowTableModel("Name");
+		nameTableModel = new SingleRowTableModel("Id");
 		nameTableSorter = new TableSorter(nameTableModel);
 
 		nameTable = new JTable(nameTableSorter);
@@ -140,7 +138,7 @@ public class Generators extends JBRPanel {
 		nameTable.setFont(new Font("Verdana", Font.BOLD, 14));
 		nameTable.setRowHeight(30);
 		// nameTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		nameTable.getSelectionModel().addListSelectionListener(new NameRowListener());
+		nameTable.getSelectionModel().addListSelectionListener(new PayloadsRowListener());
 		nameTable.setBackground(Color.BLACK);
 		nameTable.setForeground(Color.WHITE);
 		nameTable.addMouseListener(new MouseAdapter(){
@@ -189,7 +187,7 @@ public class Generators extends JBRPanel {
 
 		commentTextArea = new JTextArea();
 		commentTextArea.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Comment "),
+				.createTitledBorder(" Further Information "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		commentTextArea.setEditable(false);
 		commentTextArea.setWrapStyleWord(true);
@@ -269,7 +267,7 @@ public class Generators extends JBRPanel {
 	
 	}
 
-	private class CategoryRowListener implements ListSelectionListener {
+	private class IdsRowListener implements ListSelectionListener {
 		/**
 		 * <p>Method for the category table selection row.</p>
 		 * @param event ListSelectionEvent
@@ -280,14 +278,20 @@ public class Generators extends JBRPanel {
 			}
 			final int c = categoryTable.getSelectedRow();
 			final String value = (String) categoryTableSorter.getValueAt(c, 0);
-			// System.out.println(value);
+			// nameTableSorter.setTableHeader(new JTableHeader());
 			nameTableModel.setData(getFrame().getJBroFuzz().getDatabase().getPayloads(value));
 			nameTableSorter.setTableModel(nameTableModel);
 			nameTableSorter.fireTableDataChanged();
+			
+			viewTextArea.setText("");
+			viewTextArea.setCaretPosition(0);
+
+			commentTextArea.setText("");
+			commentTextArea.setCaretPosition(0);
 		}
 	}
 
-	private class NameRowListener implements ListSelectionListener {
+	private class PayloadsRowListener implements ListSelectionListener {
 		/**
 		 * <p>Method for the name table selection row.</p>
 		 * @param event ListSelectionEvent
@@ -298,13 +302,16 @@ public class Generators extends JBRPanel {
 			}
 			final int c = nameTable.getSelectedRow();
 			final String value = (String) nameTableSorter.getValueAt(c, 0);
-			/**
-			 * TODO
-			 */
-			// viewTextArea.setText(getFrame().getJBroFuzz().getDatabase().getExploit(value));
+
+			
+			viewTextArea.setText(value);
 			viewTextArea.setCaretPosition(0);
 
-			// commentTextArea.setText(getFrame().getJBroFuzz().getDatabase().getComment(value));
+			commentTextArea.setText(
+					"\nLength:\t\t" + value.length() + "\n\n" + 
+					"Numeric:\t\t" + StringUtils.isNumeric(value) + "\n" +
+					"Alpha:\t\t" + StringUtils.isAlpha(value) + "\n" +
+					"Spaces:\t\t" + StringUtils.isWhitespace(value) + "\n" );
 			commentTextArea.setCaretPosition(0);
 		}
 	}

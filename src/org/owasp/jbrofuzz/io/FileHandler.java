@@ -39,7 +39,6 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import org.owasp.jbrofuzz.fuzz.TConstructor;
 import org.owasp.jbrofuzz.fuzz.dir.DConstructor;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.version.JBRFormat;
@@ -371,34 +370,7 @@ public class FileHandler {
 		final Vector<String> file = new Vector<String>();
 		BufferedReader in = null;
 		int len = 0;
-		// First, attempt to read the file from the same directory
-		try {
-			in = new BufferedReader(new FileReader(directoriesFile));
-			String line = in.readLine();
-			line_counter++;
-			// Check for max lines and line lengths
-			while ((line != null) && (line_counter < maxLines)) {
-				if (line.length() > maxLineLength) {
-					line = line.substring(0, maxLineLength);
-				}
-				if (!line.startsWith("#")) {
-					file.add(line);
-					line_counter++;
-				}
-				line = in.readLine();
-			}
-			in.close();
-		} catch (final IOException e1) {
-			if (FileHandler.g != null) {
-				FileHandler.g.log("Directories file: " + directoriesFile
-						+ " could not be found");
-			}
-		} finally {
-			IOUtils.closeQuietly( in );
-		}
-		// Check the file size
-		file.trimToSize();
-		len = file.size();
+		
 		// If reading from directory fails, attempt to read from the jar file
 		if (len <= 0) {
 			line_counter = 0;
@@ -564,129 +536,7 @@ public class FileHandler {
 		return out;
 	}
 
-	/**
-	 * <p>
-	 * Method for returning the contents of a generator file as a StringBuffer.
-	 * </p>
-	 * <p>
-	 * Comment lines starting with '#' will be ignored and not returned as
-	 * contents of the StringBuffer.
-	 * </p>
-	 * <p>
-	 * This method, initially looks for the file in the same directory as that in
-	 * which JBroFuzz has been run.
-	 * </p>
-	 * <p>
-	 * If this is unsuccessful, it attempts to load it from within the jar file.
-	 * </p>
-	 * <p>
-	 * If this is unsuccessful, it loads a default list from the Format file. This
-	 * list is a lot shorter than the complete list of generators, inside the two
-	 * files.
-	 * </p>
-	 * 
-	 * @param generatorFile
-	 *          String
-	 * @return StringBuffer
-	 */
-	public static StringBuffer readGenerators(final String generatorFile) {
-		// The maximum number of lines
-		final int maxLines = 1024;
-		// The maximum line length
-		final int maxLineLength = 256;
 
-		int line_counter = 0;
-		final Vector<String> file = new Vector<String>();
-		BufferedReader in = null;
-		int len = 0;
-		// First, attempt to read the file from the same directory
-		try {
-			in = new BufferedReader(new FileReader(generatorFile));
-			String line = in.readLine();
-			line_counter++;
-			while ((line != null) && (line_counter < maxLines)) {
-				if (line.length() > maxLineLength) {
-					line = line.substring(0, maxLineLength);
-				}
-				if (!line.startsWith("#")) {
-					file.add(line);
-					line_counter++;
-				}
-				line = in.readLine();
-			}
-			in.close();
-		} catch (final IOException e1) {
-			if (FileHandler.g != null) {
-				FileHandler.g.log("Generator file: " + generatorFile
-						+ " could not be found");
-			}
-		} finally {
-			IOUtils.closeQuietly( in );
-		}
-		// Check the file size
-		file.trimToSize();
-		len = file.size();
-
-		// If reading from directory fails, attempt to read from the jar file
-		if (len <= 0) {
-			line_counter = 0;
-
-			final URL fileURL = ClassLoader.getSystemClassLoader().getResource(
-					JBRFormat.FILE_GEN);
-
-			try {
-				final URLConnection connection = fileURL.openConnection();
-				connection.connect();
-
-				in = new BufferedReader(new InputStreamReader(connection
-						.getInputStream()));
-				String line = in.readLine();
-				line_counter++;
-				while ((line != null) && (line_counter < maxLines)) {
-					if (line.length() > maxLineLength) {
-						line = line.substring(0, maxLineLength);
-					}
-					if (!line.startsWith("#")) {
-						file.add(line);
-						line_counter++;
-					}
-					line = in.readLine();
-				}
-				in.close();
-			} catch (final IOException e1) {
-				if (FileHandler.g != null) {
-					FileHandler.g.log("Generator file (inside jar): "
-							+ fileURL.toString() + " could not be found");
-				}
-			} finally {
-				IOUtils.closeQuietly( in );
-			}
-		}
-		// Check the file size
-		file.trimToSize();
-		len = file.size();
-
-		// If reading from directory and jar fails define the generators from a
-		// default list
-		if (len <= 0) {
-			FileHandler.g.log("Loading default generator list");
-			final String[] defaultArray = JBRFormat.DEFAULT_GENS.split("\n");
-			len = defaultArray.length;
-			file.setSize(len);
-			for (int x = 0; x < len; x++) {
-				file.add(x, defaultArray[x]);
-			}
-		}
-
-		final StringBuffer output = new StringBuffer();
-		for (int x = 0; x < file.size(); x++) {
-			final String s = (String) file.elementAt(x);
-			if (s != null) {
-				output.append(s + "\n");
-			}
-		}
-		return output;
-	}
 
 	/**
 	 * <p>
@@ -931,7 +781,7 @@ public class FileHandler {
 
 		// Load the necessary files into the various panels of the application
 		new DConstructor(g.getJBroFuzz());
-		new TConstructor(g.getJBroFuzz());
+		
 	}
 
 	/**

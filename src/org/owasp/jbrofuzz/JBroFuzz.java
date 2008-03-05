@@ -89,6 +89,8 @@ public class JBroFuzz {
 	 */
 	public JBroFuzz() {
 
+		mDatabase = new Database();
+		
 		mFormat = new JBRFormat(this);
 		mWindow = new JBRFrame(this);
 		
@@ -97,7 +99,7 @@ public class JBroFuzz {
 		// Singleton File Handler
 		mHandler = FileHandler.s(mWindow);
 		
-		mDatabase = new Database();
+		
 		
 	}
 

@@ -66,8 +66,8 @@ public class Database {
 
 			final String line = fileInput[i];
 			if ( (!line.startsWith("#")) && (line.length() > 5)) {
-				// "P:ABC-DEF:"
-				if ((line.charAt(1) == ':') && (line.charAt(9) == ':')) {
+				// "P:ABC-DEF:" or "P:ABC-DEF-GHI:"
+				if ((line.charAt(1) == ':') && ( (line.charAt(9) == ':') || (line.charAt(13) == ':' ) )) {
 					final String[] firstLineArray = line.split(":");
 					// Check that there are four fields of : in the first line
 					if (firstLineArray.length == 4) {
