@@ -43,66 +43,17 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.TextAction;
+
 
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.util.SwingWorker3;
 import org.owasp.jbrofuzz.version.JBRFormat;
 
+import org.owasp.jbrofuzz.ui.actions.*;
 import com.Ostermiller.util.Browser;
 
-class CopyAction extends TextAction {
-	
-	private static final long serialVersionUID = 3537862376041160965L;
-	
-	/**
-	 * <p>Main constructor for the copy action as part of a text action.</p>
-	 *
-	 */
-	public CopyAction() {
-		super("Copy");
-	}
 
-	/**
-	 * <p>Method orchistrating the action performing while copying.</p>
-	 * 
-	 * @param evt ActionEvent
-	 */
-	public void actionPerformed(final ActionEvent evt) {
-
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				final JTextComponent text = CopyAction.this.getTextComponent(evt);
-				if (text != null) {
-					text.copy();
-					text.requestFocus();
-				}
-			}
-		});
-
-	}
-}
-
-class CutAction extends TextAction {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4536811278468856396L;
-
-	public CutAction() {
-		super("Cut");
-	}
-
-	public void actionPerformed(final ActionEvent evt) {
-		final JTextComponent text = getTextComponent(evt);
-		if (text != null) {
-			text.cut();
-			text.requestFocus();
-		}
-	}
-}
 
 /**
  * <p>
@@ -124,7 +75,7 @@ public class JBRMenuBar extends JMenuBar {
 	// Used under the Panel JMenu as items
 	private JMenuItem showAll, hideAll, start, bro, stop, add, remove;
 	// Used under the view JMenu as items
-	private JCheckBoxMenuItem directories, fuzzing, sniffing, generators, httpFuzzing, system;
+	private JCheckBoxMenuItem directories, fuzzing, sniffing, generators, system;
 
 	/**
 	 * 
@@ -155,15 +106,11 @@ public class JBRMenuBar extends JMenuBar {
 
 		file.add(exit);
 		// Edit
-		final Action cutAction = new CutAction();
-		final Action copyAction = new CopyAction();
-		final Action pasteAction = new PasteAction();
-		final Action selectAllAction = new SelectAllAction();
-
-		final JMenuItem cut = new JMenuItem(cutAction);
-		final JMenuItem copy = new JMenuItem(copyAction);
-		final JMenuItem paste = new JMenuItem(pasteAction);
-		final JMenuItem selectAll = new JMenuItem(selectAllAction);
+		
+		final JMenuItem cut = new JMenuItem(new CutAction());
+		final JMenuItem copy = new JMenuItem(new CopyAction());
+		final JMenuItem paste = new JMenuItem(new PasteAction());
+		final JMenuItem selectAll = new JMenuItem(new SelectAllAction());
 
 		cut.setAccelerator(KeyStroke.getKeyStroke('X', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 		cut.setIcon(ImageCreator.IMG_CUT);
@@ -183,17 +130,15 @@ public class JBRMenuBar extends JMenuBar {
 		// View
 		final JMenu showHide = new JMenu("Show/Hide");
 
-		httpFuzzing = new JCheckBoxMenuItem("HTTP/S Fuzzing", true);
-		directories = new JCheckBoxMenuItem("Web Directories", true);
-		fuzzing = new JCheckBoxMenuItem("TCP Fuzzing", true);
-		sniffing = new JCheckBoxMenuItem("TCP Sniffing", true);
-		generators = new JCheckBoxMenuItem("Generators", false);
-		system = new JCheckBoxMenuItem("System", false);
+		directories = new JCheckBoxMenuItem(" Web Directories ", true);
+		fuzzing = new JCheckBoxMenuItem(" Fuzzing ", true);
+		sniffing = new JCheckBoxMenuItem(" Sniffing ", true);
+		generators = new JCheckBoxMenuItem(" Generators ", false);
+		system = new JCheckBoxMenuItem(" System ", false);
 
 		showAll = new JMenuItem("Show All");
 		hideAll = new JMenuItem("Hide All");
 
-		showHide.add(httpFuzzing);
 		showHide.add(directories);
 		showHide.add(fuzzing);
 		showHide.add(sniffing);
@@ -334,22 +279,6 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		httpFuzzing.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						if (!httpFuzzing.getState()) {
-							JBRMenuBar.this.getFrameWindow().setTabHide(
-									JBRFrame.HTTP_FUZZING_PANEL_ID);
-						} else {
-							JBRMenuBar.this.getFrameWindow().setTabShow(
-									JBRFrame.HTTP_FUZZING_PANEL_ID);
-						}
-					}
-				});
-			}
-		});
 
 
 		directories.addActionListener(new ActionListener() {
@@ -451,9 +380,7 @@ public class JBRMenuBar extends JMenuBar {
 								JBRFrame.WEB_DIRECTORIES_PANEL_ID);
 						directories.setState(true);
 						
-						JBRMenuBar.this.getFrameWindow().setTabShow(
-								JBRFrame.HTTP_FUZZING_PANEL_ID);
-						httpFuzzing.setState(true);
+						
 						
 						JBRMenuBar.this.getFrameWindow().setTabShow(
 								JBRFrame.TCP_FUZZING_PANEL_ID);
@@ -497,9 +424,7 @@ public class JBRMenuBar extends JMenuBar {
 						system.setState(false);
 						JBRMenuBar.this.getFrameWindow()
 								.setTabHide(JBRFrame.OPEN_SOURCE_ID);
-						JBRMenuBar.this.getFrameWindow().setTabHide(
-								JBRFrame.HTTP_FUZZING_PANEL_ID);
-						httpFuzzing.setState(false);
+						
 						
 					}
 				});
@@ -769,68 +694,3 @@ public class JBRMenuBar extends JMenuBar {
 	}
 }
 
-class PasteAction extends TextAction {
-	
-	private static final long serialVersionUID = 2787026188563573773L;
-
-	/**
-	 * <p>Constuctor for pasting as part of a text action.</p>
-	 *
-	 */
-	public PasteAction() {
-		super("Paste");
-	}
-
-	/**
-	 * <p>Method orchistrating the action performed during a paste action.</p>
-	 * 
-	 * @param evt ActionEvent
-	 */
-	public void actionPerformed(final ActionEvent evt) {
-
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				final JTextComponent text = PasteAction.this.getTextComponent(evt);
-				if (text != null) {
-					if (text.isEditable()) {
-						text.paste();
-						text.requestFocus();
-					}
-				}
-			}
-		});
-
-	}
-}
-
-class SelectAllAction extends TextAction {
-	
-	private static final long serialVersionUID = -3252406791511769338L;
-	
-	/**
-	 * <p>Constructor for the select all text action.</p>
-	 *
-	 */
-	public SelectAllAction() {
-		super("Select All");
-	}
-
-	/**
-	 * <p>Method orchistrating the action performed when selecting all.</p>
-	 * 
-	 * @param evt ActionEvent
-	 */
-	public void actionPerformed(final ActionEvent evt) {
-
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				final JTextComponent text = SelectAllAction.this.getTextComponent(evt);
-				if (text != null) {
-					text.selectAll();
-					text.requestFocus();
-				}
-			}
-		});
-
-	}
-}

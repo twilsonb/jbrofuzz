@@ -51,7 +51,6 @@ import javax.swing.text.Document;
 import javax.swing.text.StyledEditorKit;
 
 import org.owasp.jbrofuzz.fuzz.TRequestIterator;
-import org.owasp.jbrofuzz.fuzz.TConstructor;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBRFrame;
 import org.owasp.jbrofuzz.ui.tablemodels.FuzzingTableModel;
@@ -531,8 +530,8 @@ public class TCPFuzzing extends JBRPanel {
 			final int sPoint = message.getSelectionStart();
 			final int fPoint = message.getSelectionEnd();
 
-			final TConstructor mTConstructor = new TConstructor(getFrame().getJBroFuzz());
-			final String generators = mTConstructor.getAllGeneratorNamesAndComments();
+			// final TConstructor mTConstructor = new TConstructor(getFrame().getJBroFuzz());
+			final String generators = ""; // mTConstructor.getAllGeneratorNamesAndComments();
 			final String[] generatorArray = generators.split(", ");
 
 			// Then prompt the user for the type of fuzzer

@@ -110,7 +110,7 @@ P:FSE-LOW:Format String Errors:19
 f(x)=%s x 123
 f(x)=%x x 255
 
-P:SQL-INJ:SQL Injection:12
+P:INJ-SQL:SQL Injection:12
 > Database | Injection Attacks
 a'
 ?
@@ -125,7 +125,7 @@ x' OR full_name LIKE '%Bob%
 23 OR 1=1
 '; exec master..xp_cmdshell 'ping 172.10.1.255'--
 
-P:XSS:Cross Site Scripting:12
+P:INJ-XSS:Cross Site Scripting:12
 > Cross Site Scripting
 <IMG SRC=javascript:alert('XSS')>
 <IMG SRC=JaVaScRiPt:alert('XSS')>
@@ -140,7 +140,7 @@ perl -e 'print "<SCR\0IPT>alert("XSS")</SCR\0IPT>";' > out
 <<SCRIPT>alert("XSS");//<</SCRIPT>
 <IFRAME SRC="javascript:alert('XSS');"></IFRAME>
 
-R:HEX-LOW:Hexadecimal Fuzz Type:16
+R:NUM-HEX-LOW:Hexadecimal Fuzz Type:16
 > Category String | Characters | Hex
 0
 1
@@ -159,7 +159,7 @@ d
 e
 f
 
-R:HEX-LOW:Hexadecimal Fuzz Type:16
+R:NUM-HEX-UPP:Hexadecimal Fuzz Type:16
 > Category String | Characters | Hex
 0
 1
@@ -178,7 +178,7 @@ D
 E
 F
 
-R:DEC-NUM:Decimal Fuzz Type:10
+R:NUM-DEC:Decimal Fuzz Type:10
 > Category String | Characters | Dec
 0
 1
@@ -191,7 +191,7 @@ R:DEC-NUM:Decimal Fuzz Type:10
 8
 9
 
-R:OCT-NUM:Octal Fuzz Type:8
+R:NUM-OCT:Octal Fuzz Type:8
 > Category String | Characters | Octal
 0
 1

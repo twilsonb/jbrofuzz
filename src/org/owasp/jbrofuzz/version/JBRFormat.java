@@ -50,6 +50,14 @@ import org.owasp.jbrofuzz.JBroFuzz;
 public class JBRFormat {
 
 	/**
+	 * <p>
+	 * The version of JBroFuzz in String format and always of the form "x.x" where
+	 * 'x' is a single digit in the range of [0-9].
+	 * </p>
+	 */
+	public static final String VERSION = "0.8";
+
+	/**
 	 * The preferences used for selecting on whether or not to continue upon an
 	 * error occurring while in the fuzzing directories tab.
 	 */
@@ -69,7 +77,7 @@ public class JBRFormat {
 	 * The directories file name, expected to be read from within the directory
 	 * from which JBroFuzz gets launched.
 	 */
-	public static final String FILE_DIR = "jbrofuzz-directories";
+	public static final String FILE_DIR = "directories.jbrofuzz";
 
 	/**
 	 * The GNU Citizen DB file name, expected to be read from within the directory
@@ -110,37 +118,6 @@ public class JBRFormat {
 	 */
 	public static final String DEFAULT_DIRS = "images\n" + ".svn\n" + "fuzz\n"
 	+ "rss\n" + "live\n";
-
-	/**
-	 * <p>
-	 * The list of default generators used if a file is not found to load the XSS DB from.
-	 * </p>
-	 */
-	public static final String DEFAULT_GNU = "";
-
-	/**
-	 * <p>
-	 * The list of generators used if a file is not found to load the generators
-	 * from.
-	 * </p>
-	 */
-	public static final String DEFAULT_GENS = "R:HEX:Hexadecimal Fuzz Type:16\n"
-		+ "> Category String | Characters | Hex\n" + "0\n" + "1\n" + "2\n"
-		+ "3\n" + "4\n" + "5\n" + "6\n" + "7\n" + "8\n" + "9\n" + "a\n" + "b\n"
-		+ "c\n" + "d\n" + "e\n" + "f\n" + "\n" + "R:DEC:Decimal Fuzz Type:10\n"
-		+ "> Category String | Characters | Dec\n" + "0\n" + "1\n" + "2\n"
-		+ "3\n" + "4\n" + "5\n" + "6\n" + "7\n" + "8\n" + "9\n" + "\n"
-		+ "R:OCT:Octal Fuzz Type:8\n"
-		+ "> Category String | Characters | Octal\n" + "0\n" + "1\n" + "2\n"
-		+ "3\n" + "4\n" + "5\n" + "6\n" + "7\n" + "\n";
-
-	/**
-	 * <p>
-	 * The version of JBroFuzz in String format and always of the form "x.x" where
-	 * 'x' is a single digit in the range of [0-9].
-	 * </p>
-	 */
-	public static final String VERSION = "0.8";
 
 	/**
 	 * <p>
@@ -187,50 +164,18 @@ public class JBRFormat {
 		+ "particular application or network protocol.<BR></HTML>";
 
 	/**
-	 * <p>
-	 * The readme text shown in the open source tab.
-	 * </p>
-	 */
-	public static final String OPEN_SOURCE_README = "Open Source Fuzzing\n\nUsage:\n\n"
-		+ "Valid formats are: “mydomain.com”, “myuni.ac.uk”, etc. "
-		+ "Do not include the ‘@’ symbol or any of the quotes \" "
-		+ "in the domain.\n\n"
-		+ "Description:\n\n"
-		+ "This tab allows you to harvest email addresses that are "
-		+ "in the public domain, given the Fully Qualified Domain "
-		+ "Name (FQDN) that is under scrutiny.\n\n"
-		+ "This is achieved by submitting a total of five (5) requests "
-		+ "to Google Web Search and Google Groups with the FQDN provided "
-		+ "and filtering through the responses.\n\n"
-		+ "Notes:\n\n"
-		+ "E-mail addresses returned are not limited to the domain "
-		+ "specified, but also include addresses which have been indexed "
-		+ "along side the domain in question.";
-
-	/**
 	 * Formatting the date in ISO8601 standard format.
 	 */
 	public static final String DATE = getDate();
 
 	/**
-	 * The String displaying within the TCP Fuzzing Request text area
+	 * The String displaying within the Fuzzing Request text area
 	 */
 	public static final String REQUEST_TCP = "GET / HTTP/1.0\r\n<-new-line->"
 		+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n"
 		+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n<-new-line->"
 		+ "Accept-Language: en-gb,en;q=0.5\r\n<-new-line->"
 		+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n\r\n<-new-line->";
-
-	/**
-	 * The String displayed within the HTTP Fuzzing request area
-	 */
-	public static final String REQUEST_HTTP = "Host: localhost\n" 
-		+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.6) Gecko/20070725\n"
-		+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n"
-		+ "Accept-Language: en-gb,en;q=0.5\n"
-		+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n"
-		+ "Keep-Alive: 300\n"
-		+ "Proxy-Connection: keep-alive\n";
 
 	/**
 	 * Return the code name of the current version, based on the version number.

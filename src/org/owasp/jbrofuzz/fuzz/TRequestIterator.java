@@ -64,8 +64,7 @@ public class TRequestIterator {
 	private StringBuffer request;
 	// The location within the request where fuzzing takes place
 	private int start, finish, len;
-	// The constructor holding all the fuzzer lists
-	private TConstructor mTConstructor;
+	
 	/*
 	 * As the generator generates fuzzing request, two variables holding the
 	 * currentValue of the generator and the maximum value of the generator.
@@ -105,7 +104,7 @@ public class TRequestIterator {
 		currentValue = 0;
 		generatorStopped = false;
 
-		mTConstructor = new TConstructor(getJBroFuzz());
+		
 
 		// Check start and finish to positive and also within length
 		final int strlength = request.length();
@@ -118,15 +117,7 @@ public class TRequestIterator {
 		// Check for a minimum length of 1 between start and finish
 		if (len > 0) {
 
-			maxValue = mTConstructor.getGeneratorLength(type);
-			// For a recursive generator, generate the corresponding maximum value
-			final char genType = mTConstructor.getGeneratorType(type);
-			if (genType == Generator.RECURSIVE) {
-				final long baseValue = maxValue;
-				for (int i = 1; i < len; i++) {
-					maxValue *= baseValue;
-				}
-			}
+		
 		} // if this.len > 0
 
 	}
@@ -140,57 +131,7 @@ public class TRequestIterator {
 		return mJBroFuzz;
 	}
 
-	/**
-	 * Get next string value. If no such value exists, return an empty
-	 * StringBuffer.
-	 * 
-	 * @return StringBuffer
-	 */
-	private StringBuffer getNext() {
-		final StringBuffer fuzzedValue = new StringBuffer("");
-		if (currentValue < maxValue) {
-
-			fuzzedValue.append(request.substring(0, start));
-			int blank_count = 0;
-			final char genType = mTConstructor.getGeneratorType(type);
-
-			// Check to see if the generator is recursive
-			if (genType == Generator.RECURSIVE) {
-				final int radix = mTConstructor.getGeneratorLength(type);
-				blank_count = Long.toString(currentValue, radix).length()
-						- len;
-				while (blank_count < 0) {
-					fuzzedValue.append("0");
-					blank_count++;
-				}
-				// Append the current value, depending on type
-				if (type.equals("DEC")) {
-					fuzzedValue.append("" + Long.toString(currentValue, 10));
-				}
-				if (type.equals("HEX")) {
-					fuzzedValue.append("" + Long.toHexString(currentValue));
-				}
-				if (type.equals("OCT")) {
-					fuzzedValue.append("" + Long.toOctalString(currentValue));
-				}
-				if (type.equals("BIN")) {
-					fuzzedValue.append("" + Long.toBinaryString(currentValue));
-				}
-			}
-			// Check to see if the generator is replasive
-			if (genType == Generator.REPLASIVE) {
-				final int v = (int) currentValue;
-				final StringBuffer b = mTConstructor.getGeneratorElement(
-						type, v);
-				fuzzedValue.append(b);
-			}
-
-			currentValue++;
-			// Append the end of the string
-			fuzzedValue.append(request.substring(finish));
-		}
-		return fuzzedValue;
-	}
+	
 
 	/**
 	 * <p>
@@ -210,7 +151,7 @@ public class TRequestIterator {
 				.getTargetText();
 		final String port = mJBroFuzz.getWindow().getFuzzingPanel()
 				.getPortText();
-		StringBuffer stout = getNext();
+		StringBuffer stout = new StringBuffer(""); // getNext();
 
 		if (stout.toString().equalsIgnoreCase("")) {
 			stout = request;
@@ -239,7 +180,7 @@ public class TRequestIterator {
 			FileHandler
 					.writeFuzzFile(JBRFormat.LINE_SEPARATOR + "\r\n" + s, filename);
 
-			stout = getNext();
+			// stout = getNext();
 		}
 	}
 
