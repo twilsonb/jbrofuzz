@@ -45,13 +45,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.owasp.jbrofuzz.snif.tcp.ConnectionListener;
-import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.snif.ConnectionListener;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
+import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.SwingWorker3;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.Format;
 
 import com.Ostermiller.util.Browser;
 
@@ -65,7 +65,7 @@ import com.Ostermiller.util.Browser;
  * @author subere (at) uncon (dot) org
  * @version 0.8
  */
-public class TCPSniffing extends JBRPanel {
+public class SniffingPanel extends JBroFuzzPanel {
 
 	private class SniffingRowListener implements ListSelectionListener {
 		/**
@@ -132,7 +132,7 @@ public class TCPSniffing extends JBRPanel {
 	 * @param m
 	 *          MainWindow
 	 */
-	public TCPSniffing(final JBRFrame m) {
+	public SniffingPanel(final JBroFuzzWindow m) {
 		super(m );
 		// this.setLayout(null);
 		// this.m = m;
@@ -250,7 +250,7 @@ public class TCPSniffing extends JBRPanel {
 				worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
-						TCPSniffing.this.start();
+						SniffingPanel.this.start();
 						return "start-window-return";
 					}
 
@@ -264,13 +264,13 @@ public class TCPSniffing extends JBRPanel {
 		// The action listener for the stop button
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				TCPSniffing.this.stop();
+				SniffingPanel.this.stop();
 			}
 		});
 		// The action listener for the browser button
 		browserButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				TCPSniffing.this.bro();
+				SniffingPanel.this.bro();
 			}
 		});
 
@@ -365,7 +365,7 @@ public class TCPSniffing extends JBRPanel {
 		// Update the border of the output panel
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" List of Requests " + "[Logging in folder .\\"
-						+ JBRFormat.DATE + "\\" + session
+						+ Format.DATE + "\\" + session
 						+ "*.txt]  [" + rh + ":" + rp + " <=> " + lh + ":" + lp + "] "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
@@ -409,7 +409,7 @@ public class TCPSniffing extends JBRPanel {
 		} else {
 			listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 					.createTitledBorder(" List of Requests " + "[Last log was .\\"
-							+ JBRFormat.DATE + "\\" + session
+							+ Format.DATE + "\\" + session
 							+ "*.txt] "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		}
 	}

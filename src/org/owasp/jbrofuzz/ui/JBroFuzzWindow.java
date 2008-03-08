@@ -46,8 +46,8 @@ import javax.swing.text.JTextComponent;
 import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.ui.menu.*;
 import org.owasp.jbrofuzz.ui.panels.*;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.Format;
 
 /**
  * <p>
@@ -61,7 +61,7 @@ import org.owasp.jbrofuzz.version.JBRFormat;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class JBRFrame extends JFrame {
+public class JBroFuzzWindow extends JFrame {
 
 	/**
 	 * 
@@ -74,34 +74,24 @@ public class JBRFrame extends JFrame {
 	public static final int WEB_DIRECTORIES_PANEL_ID = 121;
 
 	/**
-	 * Unique int identifier for the TCP Sniffing Panel
+	 * Unique int identifier for the Sniffing Panel
 	 */
-	public static final int TCP_SNIFFING_PANEL_ID = 123;
+	public static final int SNIFFING_PANEL_ID = 123;
 
 	/**
-	 * Unique int identifier for the TCP Fuzzing Panel
+	 * Unique int identifier for the Fuzzing Panel
 	 */
-	public static final int TCP_FUZZING_PANEL_ID = 124;
+	public static final int FUZZING_PANEL_ID = 124;
 
 	/**
 	 * Unique int identifier for the Generators Panel
 	 */
-	public static final int GENERATORS_PANEL_ID = 125;
+	public static final int PAYLOADS_PANEL_ID = 125;
 
 	/**
 	 * Unique int identifier for the System Panel
 	 */
 	public static final int SYSTEM_PANEL_ID = 126;
-
-	/**
-	 * Unique int identifier for the Open Source Panel
-	 */
-	public static final int OPEN_SOURCE_ID = 127;
-	
-	/**
-	 * Unique int identifier for the HTTP Fuzzing Panel
-	 */
-	public static final int HTTP_FUZZING_PANEL_ID = 128;
 
 	// The main Object behind it all...
 	private final JBroFuzz mJBroFuzz;
@@ -113,19 +103,19 @@ public class JBRFrame extends JFrame {
 	private JTabbedPane tabbedPane;
 
 	// The web directories panel
-	private final WebDirectories mWebDirectoriesPanel;
+	private final DirectoriesPanel mWebDirectoriesPanel;
 
 	// The main sniffing panel
-	private final TCPSniffing mSniffingPanel;
+	private final SniffingPanel mSniffingPanel;
 
 	// The main definitions panel
-	private final Generators mDefinitionsPanel;
+	private final PayloadsPanel mDefinitionsPanel;
 
 	// The main fuzzing panel
-	private final TCPFuzzing mFuzzingPanel;
+	private final FuzzingPanel mFuzzingPanel;
 
 	// The system logger panel
-	private final SystemLogger mSystemLogger;
+	private final SystemPanel mSystemLogger;
 
 	// The HTTP fuzzing panel
 	// private final HTTPFuzzing mHTTPFuzzingPanel;
@@ -139,9 +129,9 @@ public class JBRFrame extends JFrame {
 	 * @param mJBroFuzz
 	 *          JBroFuzz
 	 */
-	public JBRFrame(final JBroFuzz mJBroFuzz) {
+	public JBroFuzzWindow(final JBroFuzz mJBroFuzz) {
 		// The frame
-		super("JBroFuzz " + JBRFormat.VERSION);
+		super("JBroFuzz " + Format.VERSION);
 		this.mJBroFuzz = mJBroFuzz;
 		// The menu bar
 		mMenuBar = new JBRMenuBar(this);
@@ -150,11 +140,11 @@ public class JBRFrame extends JFrame {
 		final Container pane = getContentPane();
 		pane.setLayout(null);
 		// The tabbed panels
-		mWebDirectoriesPanel = new WebDirectories(this);
-		mFuzzingPanel = new TCPFuzzing(this);
-		mSniffingPanel = new TCPSniffing(this);
-		mDefinitionsPanel = new Generators(this);
-		mSystemLogger = new SystemLogger(this);
+		mWebDirectoriesPanel = new DirectoriesPanel(this);
+		mFuzzingPanel = new FuzzingPanel(this);
+		mSniffingPanel = new SniffingPanel(this);
+		mDefinitionsPanel = new PayloadsPanel(this);
+		mSystemLogger = new SystemPanel(this);
 		// mHTTPFuzzingPanel = new HTTPFuzzing(this);
 		// The tabbed pane, 3 is for bottom orientation
 		tabbedPane = new JTabbedPane(3);
@@ -162,13 +152,12 @@ public class JBRFrame extends JFrame {
 		tabbedPane.setBounds(0, 0, 895, 500);
 		// Do not change the names!!!
 		// tabbedPane.add(" HTTP/S Fuzzing ", mHTTPFuzzingPanel);
-		tabbedPane.add(" Generators ", mDefinitionsPanel);
+		tabbedPane.add(" Fuzzing ", mFuzzingPanel);
+		tabbedPane.add(" Sniffing ", mSniffingPanel);
+		tabbedPane.add(" Payloads ", mDefinitionsPanel);
 		tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
-		tabbedPane.add(" TCP Fuzzing ", mFuzzingPanel);
-		tabbedPane.add(" TCP Sniffing ", mSniffingPanel);
 		
-		
-		// tabbedPane.add(" Generators ", mDefinitionsPanel);
+		// tabbedPane.add(" Payloads ", mDefinitionsPanel);
 		// tabbedPane.add(" System ", mSystemLogger);
 		tabbedPane.setSelectedComponent(mFuzzingPanel);
 		pane.add(tabbedPane);
@@ -199,7 +188,7 @@ public class JBRFrame extends JFrame {
 	 * 
 	 * @return mDefinitionsPanel
 	 */
-	public Generators getDefinitionsPanel() {
+	public PayloadsPanel getDefinitionsPanel() {
 		return mDefinitionsPanel;
 	}
 
@@ -223,7 +212,7 @@ public class JBRFrame extends JFrame {
 	 * 
 	 * @return mFuzzingPanel
 	 */
-	public TCPFuzzing getFuzzingPanel() {
+	public FuzzingPanel getFuzzingPanel() {
 		return mFuzzingPanel;
 	}
 	
@@ -271,7 +260,7 @@ public class JBRFrame extends JFrame {
 	 * 
 	 * @return mSniffingPanel
 	 */
-	public TCPSniffing getTCPSniffingPanel() {
+	public SniffingPanel getTCPSniffingPanel() {
 		return mSniffingPanel;
 	}
 
@@ -282,7 +271,7 @@ public class JBRFrame extends JFrame {
 	 * 
 	 * @return WebDirectoriesPanel
 	 */
-	public WebDirectories getWebDirectoriesPanel() {
+	public DirectoriesPanel getWebDirectoriesPanel() {
 		return mWebDirectoriesPanel;
 	}
 
@@ -390,24 +379,22 @@ public class JBRFrame extends JFrame {
 	 *          int
 	 */
 	public void setTabHide(final int n) {
-		if (n == JBRFrame.GENERATORS_PANEL_ID) {
+		if (n == JBroFuzzWindow.PAYLOADS_PANEL_ID) {
 			tabbedPane.remove(mDefinitionsPanel);
 		}
-		if (n == JBRFrame.TCP_FUZZING_PANEL_ID) {
+		if (n == JBroFuzzWindow.FUZZING_PANEL_ID) {
 			tabbedPane.remove(mFuzzingPanel);
 		}
-		if (n == JBRFrame.TCP_SNIFFING_PANEL_ID) {
+		if (n == JBroFuzzWindow.SNIFFING_PANEL_ID) {
 			tabbedPane.remove(mSniffingPanel);
 		}
-		if (n == JBRFrame.SYSTEM_PANEL_ID) {
+		if (n == JBroFuzzWindow.SYSTEM_PANEL_ID) {
 			tabbedPane.remove(mSystemLogger);
 		}
-		if (n == JBRFrame.WEB_DIRECTORIES_PANEL_ID) {
+		if (n == JBroFuzzWindow.WEB_DIRECTORIES_PANEL_ID) {
 			tabbedPane.remove(mWebDirectoriesPanel);
 		}
-		if (n == JBRFrame.HTTP_FUZZING_PANEL_ID) {
-			// tabbedPane.remove(mHTTPFuzzingPanel);
-		}
+		
 	}
 
 	/**
@@ -418,30 +405,27 @@ public class JBRFrame extends JFrame {
 	 *          int
 	 */
 	public void setTabShow(final int n) {
-		if (n == JBRFrame.GENERATORS_PANEL_ID) {
-			tabbedPane.addTab(" Generators ", mDefinitionsPanel);
+		if (n == JBroFuzzWindow.PAYLOADS_PANEL_ID) {
+			tabbedPane.addTab(" Payloads ", mDefinitionsPanel);
 			tabbedPane.setSelectedComponent(mDefinitionsPanel);
 		}
-		if (n == JBRFrame.TCP_FUZZING_PANEL_ID) {
-			tabbedPane.addTab(" TCP Fuzzing ", mFuzzingPanel);
+		if (n == JBroFuzzWindow.FUZZING_PANEL_ID) {
+			tabbedPane.addTab(" Fuzzing ", mFuzzingPanel);
 			tabbedPane.setSelectedComponent(mFuzzingPanel);
 		}
-		if (n == JBRFrame.TCP_SNIFFING_PANEL_ID) {
-			tabbedPane.addTab(" TCP Sniffing ", mSniffingPanel);
+		if (n == JBroFuzzWindow.SNIFFING_PANEL_ID) {
+			tabbedPane.addTab(" Sniffing ", mSniffingPanel);
 			tabbedPane.setSelectedComponent(mSniffingPanel);
 		}
-		if (n == JBRFrame.SYSTEM_PANEL_ID) {
+		if (n == JBroFuzzWindow.SYSTEM_PANEL_ID) {
 			tabbedPane.addTab(" System ", mSystemLogger);
 			tabbedPane.setSelectedComponent(mSystemLogger);
 		}
-		if (n == JBRFrame.WEB_DIRECTORIES_PANEL_ID) {
+		if (n == JBroFuzzWindow.WEB_DIRECTORIES_PANEL_ID) {
 			tabbedPane.addTab(" Web Directories ", mWebDirectoriesPanel);
 			tabbedPane.setSelectedComponent(mWebDirectoriesPanel);
 		}
-		if (n == JBRFrame.HTTP_FUZZING_PANEL_ID) {
-			// tabbedPane.addTab(" HTTP/S Fuzzing ", mHTTPFuzzingPanel);
-			// tabbedPane.setSelectedComponent(mHTTPFuzzingPanel);
-		}
+		
 	}
 	
 	/**

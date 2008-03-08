@@ -29,10 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.tcp.Connection;
-import org.owasp.jbrofuzz.fuzz.tcp.Generator;
 import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.Format;
 
 /**
  * <p>
@@ -54,57 +52,131 @@ import org.owasp.jbrofuzz.version.JBRFormat;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class TRequestIterator {
+public class Connector {
 
-	// Format the current time in a nice iso 8601 format.
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
-			"yyyy-MM-dd HH-mm-ss-SSS");
-	private JBroFuzz mJBroFuzz;
-	// The request being made on the socket
-	private StringBuffer request;
-	// The location within the request where fuzzing takes place
-	private int start, finish, len;
+	// Format the current time in a nice ISO 8601 format.
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SSS");
+
+	private String host, port, message, payload; 
 	
-	/*
-	 * As the generator generates fuzzing request, two variables holding the
-	 * currentValue of the generator and the maximum value of the generator.
-	 */
-	private long currentValue, maxValue;
-	// The type of generator
-	private String type;
-	// The boolean checking if stop has been pressed
-	private boolean generatorStopped;
+	private int start, finish;
 
-	/**
-	 * The main constructor passing a jbrofuzz object, the string to be sent, the
-	 * start location wihtin that String were the fuzzing point begins from and
-	 * the finish location and the type of fuzzing.
-	 * 
-	 * @param mJBroFuzz
-	 *          JBroFuzz
-	 * @param request
-	 *          String
-	 * @param start
-	 *          int
-	 * @param finish
-	 *          int
-	 * @param type
-	 *          int
-	 */
-	public TRequestIterator(final JBroFuzz mJBroFuzz, final StringBuffer request,
-			final int start, final int finish, final String type) {
+	public Connector(String host, String port, String message, String payload,
+			int start, int finish) {
 
-		this.mJBroFuzz = mJBroFuzz;
-		this.request = request;
-		this.type = type;
+		this.host = host;
+		this.port = port;
+		this.message = message;
+		this.payload = payload;
 		this.start = start;
 		this.finish = finish;
-
-		maxValue = 0;
-		currentValue = 0;
-		generatorStopped = false;
-
 		
+		int selectedTextLength = 0;
+		
+		if( (this.start >= 0) && (this.finish > 0) ) {
+			
+		}
+		
+		// Connection con = new Connection(host, port, message);
+		
+		
+
+	}
+
+	/**
+	 * @return the host
+	 */
+	public String getHost() {
+		return host;
+	}
+
+	/**
+	 * @param host the host to set
+	 */
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	/**
+	 * @return the port
+	 */
+	public String getPort() {
+		return port;
+	}
+
+	/**
+	 * @param port the port to set
+	 */
+	public void setPort(String port) {
+		this.port = port;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * @return the fuzzer
+	 */
+	public String getPayload() {
+		return payload;
+	}
+
+	/**
+	 * @param fuzzer the fuzzer to set
+	 */
+	public void setPayload(String fuzzer) {
+		this.payload = fuzzer;
+	}
+
+	/**
+	 * @return the start
+	 */
+	public int getStart() {
+		return start;
+	}
+
+	/**
+	 * @param start the start to set
+	 */
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	/**
+	 * @return the finish
+	 */
+	public int getFinish() {
+		return finish;
+	}
+
+	/**
+	 * @param finish the finish to set
+	 */
+	public void setFinish(int finish) {
+		this.finish = finish;
+	}
+
+	/**
+	 * @return the dateFormat
+	 */
+	public static SimpleDateFormat getDateFormat() {
+		return dateFormat;
+	}
+	
+	/*
+	public Connector(String host, String port, String message, String fuzzer, int start, int finish) {
+
 
 		// Check start and finish to positive and also within length
 		final int strlength = request.length();
@@ -120,33 +192,9 @@ public class TRequestIterator {
 		
 		} // if this.len > 0
 
-	}
-
-	/**
-	 * Return the main constructor object.
-	 * 
-	 * @return JBroFuzz
-	 */
-	public JBroFuzz getJBroFuzz() {
-		return mJBroFuzz;
-	}
-
 	
 
-	/**
-	 * <p>
-	 * Method responsible for doing all the work. This method runs through a
-	 * number of instances creating a connection and getting the reply for each
-	 * one.
-	 * </p>
-	 * <p>
-	 * While looping through the total number of connections, it checks to see
-	 * also if the fuzzing has been stopped by the user. This is checked through
-	 * the generatorStopped boolean that can be accesses from the main GUI.
-	 * </p>
-	 * 
-	 */
-	public void run() {
+
 		final String target = mJBroFuzz.getWindow().getFuzzingPanel()
 				.getTargetText();
 		final String port = mJBroFuzz.getWindow().getFuzzingPanel()
@@ -157,7 +205,7 @@ public class TRequestIterator {
 			stout = request;
 		}
 
-		while ((!stout.toString().equalsIgnoreCase("")) && (!generatorStopped)) {
+		while ((!stout.toString().equalsIgnoreCase("")) && (!stopped)) {
 
 			final Date currentTime = new Date();
 			final String filename = mJBroFuzz.getWindow().getFuzzingPanel()
@@ -165,13 +213,13 @@ public class TRequestIterator {
 
 			mJBroFuzz.getWindow().getFuzzingPanel().addRowInOuputTable(
 					filename + "          " + target + ":" + port + "          "
-							+ type + "          "
-							+ TRequestIterator.dateFormat.format(currentTime) + "          "
+							+ id + "          "
+							+ Connector.dateFormat.format(currentTime) + "          "
 							+ currentValue + "/" + maxValue);
 
 			FileHandler.writeFuzzFile("[{" + currentValue + "/" + maxValue
 					+ "}, " + filename + " "
-					+ TRequestIterator.dateFormat.format(currentTime) + "] " + "<!-- \r\n"
+					+ Connector.dateFormat.format(currentTime) + "] " + "<!-- \r\n"
 					+ target + " : " + port + "\r\n" + stout + "\r\n", filename);
 
 			final Connection con = new Connection(target, port, stout);
@@ -180,18 +228,8 @@ public class TRequestIterator {
 			FileHandler
 					.writeFuzzFile(JBRFormat.LINE_SEPARATOR + "\r\n" + s, filename);
 
-			// stout = getNext();
 		}
-	}
 
-	/**
-	 * <p>
-	 * Stop the generator. This operation is achieved by setting the boolean being
-	 * checked in the loop of getNext to true. As a result, the current fuzzing
-	 * request completes and no more requests are executed.
-	 * </p>
-	 */
-	public void stop() {
-		generatorStopped = true;
 	}
+	*/
 }

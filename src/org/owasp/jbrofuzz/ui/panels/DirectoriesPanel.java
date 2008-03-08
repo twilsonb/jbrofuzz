@@ -52,13 +52,13 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
 
-import org.owasp.jbrofuzz.fuzz.dir.DRequestIterator;
-import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.dir.DRequestIterator;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.WebDirectoriesModel;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.ui.util.TableSorter;
+import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.SwingWorker3;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.util.TableSorter;
+import org.owasp.jbrofuzz.version.Format;
 
 import com.Ostermiller.util.Browser;
 
@@ -70,7 +70,7 @@ import com.Ostermiller.util.Browser;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class WebDirectories extends JBRPanel implements KeyListener {
+public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 
 	/**
 	 * 
@@ -115,7 +115,7 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 	 * @param m
 	 *          FrameWindow
 	 */
-	public WebDirectories(final JBRFrame m) {
+	public DirectoriesPanel(final JBroFuzzWindow m) {
 		super(m);
 		// this.m = m;
 		session = 0;
@@ -206,13 +206,13 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 				final SwingWorker3 worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
-						WebDirectories.this.start();
+						DirectoriesPanel.this.start();
 						return "start-window-return";
 					}
 
 					@Override
 					public void finished() {
-						WebDirectories.this.stop();
+						DirectoriesPanel.this.stop();
 					}
 				};
 				worker.start();
@@ -225,7 +225,7 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 		this.add(stopButton);
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				WebDirectories.this.stop();
+				DirectoriesPanel.this.stop();
 			}
 		});
 		
@@ -347,7 +347,7 @@ public class WebDirectories extends JBRPanel implements KeyListener {
 		// Update the panel, indicating directory
 		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output " + "[Logging in file \\web-dir\\"
-						+ JBRFormat.DATE + "\\"
+						+ Format.DATE + "\\"
 						+ getSessionNumber() + ".csv]  "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 

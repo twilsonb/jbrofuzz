@@ -32,10 +32,11 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import org.owasp.jbrofuzz.ui.*;
-import org.owasp.jbrofuzz.ui.util.*;
 import org.owasp.jbrofuzz.ui.menu.*;
 import org.owasp.jbrofuzz.ui.viewers.*;
 import org.owasp.jbrofuzz.ui.tablemodels.*;
+import org.owasp.jbrofuzz.util.NonWrappingTextPane;
+import org.owasp.jbrofuzz.util.TableSorter;
 
 import org.apache.commons.lang.*;
 
@@ -47,7 +48,7 @@ import org.apache.commons.lang.*;
  * @author subere (at) uncon (dot) org
  * @version 0.8
  */
-public class Generators extends JBRPanel {
+public class PayloadsPanel extends JBroFuzzPanel {
 
 	private static final long serialVersionUID = -5848191307114097542L;
 	// The JPanels carrying the components
@@ -70,7 +71,7 @@ public class Generators extends JBRPanel {
 	 * @param m
 	 *          FrameWindow
 	 */
-	public Generators(final JBRFrame m) {
+	public PayloadsPanel(final JBroFuzzWindow m) {
 		super(m);
 		
 		// Category
@@ -95,7 +96,7 @@ public class Generators extends JBRPanel {
 		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds());
 		categoryTableSorter.setTableModel(categoryTableModel);
 		categoryTableSorter.fireTableDataChanged();
-		categoryTable.setFont(new Font("Verdana", Font.BOLD, 14));
+		categoryTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
 		categoryTable.setRowHeight(30);
 		categoryTable.getSelectionModel().addListSelectionListener(new IdsRowListener());
 		categoryTable.setBackground(Color.BLACK);
@@ -135,7 +136,7 @@ public class Generators extends JBRPanel {
 		popup(nameTable);
 		nameTableSorter.setTableHeader(nameTable.getTableHeader());
 
-		nameTable.setFont(new Font("Verdana", Font.BOLD, 14));
+		nameTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
 		nameTable.setRowHeight(30);
 		// nameTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		nameTable.getSelectionModel().addListSelectionListener(new PayloadsRowListener());

@@ -29,7 +29,7 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.owasp.jbrofuzz.ui.JBRFrame;;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;;
 
 /**
  * <p>
@@ -62,7 +62,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	// The vector of data
 	private Vector<Generator> dataVector;
 	// The panel that the model is attached to
-	private JBRFrame fPanel;
+	private JBroFuzzWindow fPanel;
 
 	/**
 	 * <p>
@@ -72,7 +72,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 * @param fPanel
 	 *          FuzzingPanel
 	 */
-	public FuzzingTableModel(final JBRFrame fPanel) {
+	public FuzzingTableModel(final JBroFuzzWindow fPanel) {
 		this.fPanel = fPanel;
 		dataVector = new Vector<Generator>();
 	}

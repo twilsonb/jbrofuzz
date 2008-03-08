@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.snif.tcp;
+package org.owasp.jbrofuzz.snif;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -23,11 +23,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.ui.util;
+package org.owasp.jbrofuzz.util;
 
 import javax.swing.ImageIcon;
 
-import org.owasp.jbrofuzz.util.Base64;
 
 /**
  * <p>

@@ -29,25 +29,27 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 
-import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.apache.commons.lang.StringUtils;
 
-import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
-import org.owasp.jbrofuzz.ui.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.ui.util.TableSorter;
+import org.owasp.jbrofuzz.ui.*;
+import org.owasp.jbrofuzz.ui.panels.*;
+import org.owasp.jbrofuzz.ui.tablemodels.*;
+import org.owasp.jbrofuzz.util.NonWrappingTextPane;
+import org.owasp.jbrofuzz.util.TableSorter;
+
 
 
 /**
  * <p>
- * The about box used in the FrameWindow.
+ * The payloads dialog that appears when a user selects to add a payload.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.7
+ * @author subere@uncon.org
+ * @version 0.8
  */
-public class GeneratorDialog extends JDialog {
+public class PayloadsDialog extends JDialog {
 
 	private static final long serialVersionUID = -1083415577221148132L;
 	// Dimensions of the generator dialog box
@@ -56,7 +58,7 @@ public class GeneratorDialog extends JDialog {
 	// The buttons
 	private JButton ok;
 	// The frame that the sniffing panel is attached
-	private JBRFrame m;
+	private JBroFuzzWindow m;
 	// The JPanels carrying the components
 	private JPanel category, name, view;
 	// The JTables carrying the data
@@ -84,13 +86,13 @@ public class GeneratorDialog extends JDialog {
 	 * @param start
 	 * @param end
 	 */
-	public GeneratorDialog(final JBRFrame parent, final int start, final int end) {
+	public PayloadsDialog(final FuzzingPanel parent, final int start, final int end) {
 		
-		super(parent, " Payload Selector ", true);
+		super(parent.getFrame(), " Payload Selector ", true);
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		setLayout(null);
-		m = parent;
+		m = parent.getFrame();
 		this.start = start;
 		this.end = end;
 		lastCategory = "";
@@ -119,7 +121,7 @@ public class GeneratorDialog extends JDialog {
 		categoryTableSorter.fireTableDataChanged();
 		categoryTable.setFont(new Font("Verdana", Font.BOLD, 14));
 		categoryTable.setRowHeight(30);
-		categoryTable.getSelectionModel().addListSelectionListener(new CategoryRowListener());
+		categoryTable.getSelectionModel().addListSelectionListener(new IdsRowListener());
 		categoryTable.setBackground(Color.BLACK);
 		categoryTable.setForeground(Color.WHITE);
 		categoryTable.addMouseListener(new MouseAdapter(){
@@ -128,8 +130,8 @@ public class GeneratorDialog extends JDialog {
 				if (e.getClickCount() == 2){
 					final int c = categoryTable.getSelectedRow();
 					final String value = (String) categoryTableSorter.getValueAt(c, 0);
-					// m.getHTTPFuzzingPanel().generatorAddRow(value, GeneratorDialog.this.start, GeneratorDialog.this.end );
-					GeneratorDialog.this.dispose();
+					m.getFuzzingPanel().addPayload(value, start, end);
+					PayloadsDialog.this.dispose();
 				}
 			}
 		} );
@@ -137,7 +139,7 @@ public class GeneratorDialog extends JDialog {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
-					GeneratorDialog.this.dispose();
+					PayloadsDialog.this.dispose();
 				}
 			}
 		});
@@ -169,7 +171,7 @@ public class GeneratorDialog extends JDialog {
 		nameTable.setFont(new Font("Verdana", Font.BOLD, 14));
 		nameTable.setRowHeight(30);
 		nameTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		nameTable.getSelectionModel().addListSelectionListener(new NameRowListener());
+		nameTable.getSelectionModel().addListSelectionListener(new PayloadsRowListener());
 		nameTable.setBackground(Color.BLACK);
 		nameTable.setForeground(Color.WHITE);
 		nameTable.addMouseListener(new MouseAdapter(){
@@ -185,7 +187,7 @@ public class GeneratorDialog extends JDialog {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
-					GeneratorDialog.this.dispose();
+					PayloadsDialog.this.dispose();
 				}
 			}
 		});
@@ -219,12 +221,12 @@ public class GeneratorDialog extends JDialog {
 		viewTextArea.setMargin(new Insets(1, 1, 1, 1));
 		viewTextArea.setBackground(Color.WHITE);
 		viewTextArea.setForeground(Color.BLACK);
-		parent.popup(viewTextArea);
+		parent.getFrame().popup(viewTextArea);
 		viewTextArea.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
-					GeneratorDialog.this.dispose();
+					PayloadsDialog.this.dispose();
 				}
 			}
 		});
@@ -248,8 +250,8 @@ public class GeneratorDialog extends JDialog {
 					public void run() {
 						final int c = categoryTable.getSelectedRow();
 						final String value = (String) categoryTableSorter.getValueAt(c, 0);
-						// m.getHTTPFuzzingPanel().generatorAddRow(value, GeneratorDialog.this.start, GeneratorDialog.this.end );
-						GeneratorDialog.this.dispose();
+						m.getFuzzingPanel().addPayload(value, start, end);
+						PayloadsDialog.this.dispose();
 						
 					}
 				});
@@ -259,26 +261,26 @@ public class GeneratorDialog extends JDialog {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
-					GeneratorDialog.this.dispose();
+					PayloadsDialog.this.dispose();
 				}
 			}
 		});
-		ok.setEnabled(false);
+
 		ok.setToolTipText("The selected category will be added to the fuzzing list");
 		getContentPane().add(ok);
 		
 		
 		// Global frame issues
 		
-		this.setLocation(Math.abs((parent.getWidth() / 2) - (GeneratorDialog.x / 2 - 100)),
-				Math.abs((parent.getHeight() / 2) - (GeneratorDialog.y / 2) + 100));
-		this.setSize(GeneratorDialog.x, GeneratorDialog.y);
+		this.setLocation(Math.abs((parent.getWidth() / 2) - (PayloadsDialog.x / 2 - 100)),
+				Math.abs((parent.getHeight() / 2) - (PayloadsDialog.y / 2) + 100));
+		this.setSize(PayloadsDialog.x, PayloadsDialog.y);
 		setResizable(true);
 		setVisible(true);
 	}
 
 	
-	private class CategoryRowListener implements ListSelectionListener {
+	private class IdsRowListener implements ListSelectionListener {
 		/**
 		 * <p>Method for the category table selection row.</p>
 		 * @param event ListSelectionEvent
@@ -287,20 +289,22 @@ public class GeneratorDialog extends JDialog {
 			if (event.getValueIsAdjusting()) {
 				return;
 			}
-			if (!ok.isEnabled()) {
-				ok.setEnabled(true);
-			}
 			final int c = categoryTable.getSelectedRow();
 			final String value = (String) categoryTableSorter.getValueAt(c, 0);
-			lastCategory = value;
-			// System.out.println(value);
-			// nameTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds(value));
+			// nameTableSorter.setTableHeader(new JTableHeader());
+			nameTableModel.setData(m.getJBroFuzz().getDatabase().getPayloads(value));
 			nameTableSorter.setTableModel(nameTableModel);
 			nameTableSorter.fireTableDataChanged();
+			
+			viewTextArea.setText("");
+			viewTextArea.setCaretPosition(0);
+
+			// commentTextArea.setText("");
+			// commentTextArea.setCaretPosition(0);
 		}
 	}
 
-	private class NameRowListener implements ListSelectionListener {
+	private class PayloadsRowListener implements ListSelectionListener {
 		/**
 		 * <p>Method for the name table selection row.</p>
 		 * @param event ListSelectionEvent
@@ -311,11 +315,18 @@ public class GeneratorDialog extends JDialog {
 			}
 			final int c = nameTable.getSelectedRow();
 			final String value = (String) nameTableSorter.getValueAt(c, 0);
-			// viewTextArea.setText(m.getJBroFuzz().getDatabase().getExploit(value));
-			viewTextArea.setCaretPosition(0);
+
 			
-			// commentTextArea.setText(m.getJBroFuzz().getDatabase().getComment(value));
-			// commentTextArea.setCaretPosition(0);
+			viewTextArea.setText(value);
+			viewTextArea.setCaretPosition(0);
+			/*
+			commentTextArea.setText(
+					"\nLength:\t\t" + value.length() + "\n\n" + 
+					"Numeric:\t\t" + StringUtils.isNumeric(value) + "\n" +
+					"Alpha:\t\t" + StringUtils.isAlpha(value) + "\n" +
+					"Spaces:\t\t" + StringUtils.isWhitespace(value) + "\n" );
+			commentTextArea.setCaretPosition(0);
+			*/
 		}
 	}
 	
@@ -352,9 +363,9 @@ public class GeneratorDialog extends JDialog {
 					// int d = categoryTable.getSelectedRow();
 					// String category = (String) categoryTableSorter.getValueAt(d, 0);
 					
-					GeneratorDialog.this.dispose();
+					PayloadsDialog.this.dispose();
 					
-					m.setTabShow(JBRFrame.GENERATORS_PANEL_ID);
+					m.setTabShow(JBroFuzzWindow.PAYLOADS_PANEL_ID);
 					m.getDefinitionsPanel().setNameDisplayed(name, lastCategory);
 				}
 				
@@ -363,9 +374,9 @@ public class GeneratorDialog extends JDialog {
 					categoryTable.getSelectionModel().setSelectionInterval(c, c);
 					final String value = (String) categoryTableSorter.getValueAt(c, 0);
 					
-					GeneratorDialog.this.dispose();
+					PayloadsDialog.this.dispose();
 					
-					m.setTabShow(JBRFrame.GENERATORS_PANEL_ID);
+					m.setTabShow(JBroFuzzWindow.PAYLOADS_PANEL_ID);
 					m.getDefinitionsPanel().setCategoryDisplayed(value);
 				}
 				
