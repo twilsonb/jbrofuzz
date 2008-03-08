@@ -207,13 +207,6 @@ R:NUM-BIN:Binary Fuzz Type:2
 0
 1
 
-R:DNA-UPP:DNA Alphabet:4
-> Category Biology | Characters
-A
-T
-C
-G
-
 R:BFO-UPP:Buffer Overflows:17
 > Exploits | Buffer overflows
 A
@@ -233,3 +226,10 @@ f(x)=A x 8193
 f(x)=A x 16385
 f(x)=A x 32769
 f(x)=A x 65537
+
+R:DNA-UPP:DNA Alphabet:4
+> Category Biology | Characters
+A
+T
+C
+G
