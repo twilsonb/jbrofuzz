@@ -1,7 +1,7 @@
 /*
  * Testing to see if this approach would be usefull.
  */
-package org.owasp.jbrofuzz.ui.util;
+package org.owasp.jbrofuzz.util;
 
 import java.awt.Component;
 

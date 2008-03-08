@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.snif.tcp;
+package org.owasp.jbrofuzz.snif;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -31,7 +31,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
-import org.owasp.jbrofuzz.ui.panels.TCPSniffing;
+import org.owasp.jbrofuzz.ui.panels.SniffingPanel;
 
 /**
  * <p>
@@ -46,7 +46,7 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 
 	private String remoteAddress;
 	private int remotePort, localPort;
-	private TCPSniffing mn;
+	private SniffingPanel mn;
 	private ServerSocket server = null;
 	private Vector<Connection> connections = null;
 	// Boolean to allow for termination
@@ -66,7 +66,7 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 	 * @param localPort
 	 *          String
 	 */
-	public ConnectionListener(final TCPSniffing mn, final String remoteAddress,
+	public ConnectionListener(final SniffingPanel mn, final String remoteAddress,
 			final String remotePort, final String localAddress, final String localPort) {
 		this.mn = mn;
 		this.remoteAddress = remoteAddress;

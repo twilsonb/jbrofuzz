@@ -104,7 +104,7 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 		getContentPane().add(splitPane, BorderLayout.CENTER);
 
 		// Bottom button
-		ok = new JButton("Close");
+		ok = new JButton("  OK  ");
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
 				15));

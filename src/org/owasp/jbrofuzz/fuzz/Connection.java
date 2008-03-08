@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.owasp.jbrofuzz.fuzz.tcp;
+package org.owasp.jbrofuzz.fuzz;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class Connection {
 	private final static int SEND_BUF_SIZE = 256 * 1024;
 	private final static int RECV_BUF_SIZE = 256 * 1024;
 	private String reply;
-	private StringBuffer conMessage;
+	private String conMessage;
 	private Socket socket;
 	private InputStream in_stream;
 	private OutputStream out_stream;
@@ -71,7 +71,7 @@ public class Connection {
 	 *          String
 	 */
 	public Connection(final String address, final String port,
-			final StringBuffer message) {
+			final String message) {
 
 		final String conAddress = address;
 		conMessage = message;
@@ -120,7 +120,7 @@ public class Connection {
 		}
 		// Write to the output stream
 		try {
-			out_stream.write(conMessage.toString().getBytes());
+			out_stream.write(conMessage.getBytes());
 		} catch (final IOException e) {
 			reply = "An IO Error occured when attempting to write to the output stream : "
 					+ e.getMessage() + "\n";
@@ -158,7 +158,7 @@ public class Connection {
 	 * 
 	 * @return StringBuffer
 	 */
-	public StringBuffer getMessage() {
+	public String getMessage() {
 		return conMessage;
 	}
 

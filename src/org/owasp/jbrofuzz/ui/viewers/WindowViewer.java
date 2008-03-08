@@ -39,10 +39,10 @@ import javax.swing.text.Document;
 import javax.swing.text.StyledEditorKit;
 
 import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.ui.JBRFrame;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.ui.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.ui.util.TextHighlighter;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.util.NonWrappingTextPane;
+import org.owasp.jbrofuzz.util.TextHighlighter;
 
 /**
  * <p>
@@ -94,7 +94,7 @@ public class WindowViewer extends JFrame {
 	 * @param name
 	 * @param typeOfPanel
 	 */
-	public WindowViewer(final JBRFrame m, final String name, final int typeOfPanel) {
+	public WindowViewer(final JBroFuzzWindow m, final String name, final int typeOfPanel) {
 		super();
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 

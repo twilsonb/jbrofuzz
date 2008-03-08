@@ -52,7 +52,7 @@
  * @version 2.0 02/27/04
  *
  */
-package org.owasp.jbrofuzz.ui.util;
+package org.owasp.jbrofuzz.util;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -185,6 +185,10 @@ public class TableSorter extends AbstractTableModel {
 		}
 
 		public int compareTo(final Object o) {
+
+			// return CompareToBuilder.reflectionCompare(this, o);
+
+			
 			final int row1 = this.modelIndex;
 			final int row2 = ((Row) o).modelIndex;
 
@@ -212,22 +216,26 @@ public class TableSorter extends AbstractTableModel {
 				}
 			}
 			return 0;
+			 
 		}
 
 		@Override
 		public boolean equals(Object o) {
+
 			boolean check = false;
 			if ( o != null ) {
 				if( o.hashCode() == Row.class.hashCode())
-				check = true;
+					check = true;
 			}
 			return check;
-			
+
 		}
 
 		@Override
 		public int hashCode() {
+
 			return new HashCodeBuilder(67,97).append(modelIndex).toHashCode();
+
 		}
 	}
 
@@ -332,14 +340,14 @@ public class TableSorter extends AbstractTableModel {
 
 	private static final Directive EMPTY_DIRECTIVE = new Directive(-1,
 			TableSorter.NOT_SORTED);
-	
+
 	public static final Comparator COMPARABLE_COMPARATOR = new Comparator() {
 
 		public int compare(Object o1, Object o2) {
 			return ((Comparable) o1).compareTo(o2);
 		}
 	};
-	
+
 	public static final Comparator LEXICAL_COMPARATOR = new Comparator() {
 		public int compare(Object o1, Object o2) {
 			return o1.toString().compareTo(o2.toString());
@@ -403,7 +411,7 @@ public class TableSorter extends AbstractTableModel {
 	protected Comparator getComparator(final int column) {
 		final Class columnType = this.tableModel.getColumnClass(column);
 		final Comparator comparator = (Comparator) this.columnComparators
-				.get(columnType);
+		.get(columnType);
 		if (comparator != null) {
 			return comparator;
 		}
@@ -466,7 +474,7 @@ public class TableSorter extends AbstractTableModel {
 			row = 0;
 		if(column < 0)
 			column = 0;
-		
+
 		return this.tableModel.getValueAt(this.modelIndex(row), column);
 	}
 
@@ -523,10 +531,10 @@ public class TableSorter extends AbstractTableModel {
 		if (this.tableHeader != null) {
 			this.tableHeader.removeMouseListener(this.mouseListener);
 			final TableCellRenderer defaultRenderer = this.tableHeader
-					.getDefaultRenderer();
+			.getDefaultRenderer();
 			if (defaultRenderer instanceof SortableHeaderRenderer) {
 				this.tableHeader
-						.setDefaultRenderer(((SortableHeaderRenderer) defaultRenderer).tableCellRenderer);
+				.setDefaultRenderer(((SortableHeaderRenderer) defaultRenderer).tableCellRenderer);
 			}
 		}
 		this.tableHeader = tableHeader;

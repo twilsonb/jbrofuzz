@@ -45,8 +45,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.Format;
 
 /**
  * <p>
@@ -94,7 +94,7 @@ public class AboutBox extends JDialog {
 				"LICENSE/NOTICE.txt");
 
 		// The about editor label
-		final JLabel about = new JLabel(JBRFormat.ABOUTTEXT,
+		final JLabel about = new JLabel(Format.ABOUTTEXT,
 				ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
 
 		// The license editor pane
@@ -113,7 +113,7 @@ public class AboutBox extends JDialog {
 		lcsScrollPane.setHorizontalScrollBarPolicy(30);
 
 		// The disclaimer editor label
-		final JLabel disclaimer = new JLabel(JBRFormat.DISCLAIMER,
+		final JLabel disclaimer = new JLabel(Format.DISCLAIMER,
 				ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
 
 		// The acknoledgement editor pane
@@ -140,7 +140,7 @@ public class AboutBox extends JDialog {
 		// Set the tab to be displayed
 		setTab(tab);
 		// OK Button
-		ok = new JButton("OK");
+		ok = new JButton("  OK  ");
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
 				15));
 		buttonPanel.add(ok);

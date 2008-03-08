@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.owasp.jbrofuzz.ui.util;
+package org.owasp.jbrofuzz.util;
 
 import java.awt.Color;
 import java.util.HashMap;

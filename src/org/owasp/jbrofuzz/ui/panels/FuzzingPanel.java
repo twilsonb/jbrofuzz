@@ -50,18 +50,20 @@ import javax.swing.table.TableColumn;
 import javax.swing.text.Document;
 import javax.swing.text.StyledEditorKit;
 
-import org.owasp.jbrofuzz.fuzz.TRequestIterator;
+import org.owasp.jbrofuzz.fuzz.Connector;
 import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.FuzzingTableModel;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
-import org.owasp.jbrofuzz.ui.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.ui.util.TextHighlighter;
 import org.owasp.jbrofuzz.ui.viewers.WindowPlotter;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
+import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.SwingWorker3;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.util.TextHighlighter;
+import org.owasp.jbrofuzz.version.Format;
+
+import org.owasp.jbrofuzz.ui.menu.*;
 
 /**
  * <p>
@@ -73,10 +75,10 @@ import org.owasp.jbrofuzz.version.JBRFormat;
  * current window, as well as writting them to file.
  * </p>
  * 
- * @author subere (at) uncon org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 0.8
  */
-public class TCPFuzzing extends JBRPanel {
+public class FuzzingPanel extends JBroFuzzPanel {
 	/**
 	 * 
 	 */
@@ -110,7 +112,7 @@ public class TCPFuzzing extends JBRPanel {
 	private final JFormattedTextField port;
 	// The JTextArea
 	private final NonWrappingTextPane message;
-	// The JTable were results are outputed
+	// The JTable were results are outputted
 	private JTable outputTable;
 	// And the table model that goes with it
 	private SingleRowTableModel outputTableModel;
@@ -126,16 +128,16 @@ public class TCPFuzzing extends JBRPanel {
 	// A counter for the number of times fuzz has been clicked
 	private int counter, session;
 	// The request iterator performing all the fuzzing
-	private TRequestIterator mRIterator;
+	private Connector mRIterator;
 
 	/**
-	 * This constructor is used for the "TCP Fuzzing Panel" that resides under the
+	 * This constructor is used for the " Fuzzing " panel that resides under the
 	 * FrameWindow, within the corresponding tabbed panel.
 	 * 
 	 * @param m
 	 *          FrameWindow
 	 */
-	public TCPFuzzing(final JBRFrame m) {
+	public FuzzingPanel(final JBroFuzzWindow m) {
 		super(m);
 		// this.setLayout(null);
 
@@ -228,7 +230,7 @@ public class TCPFuzzing extends JBRPanel {
 		buttonAddGen.setToolTipText("Add a Generator");
 		buttonAddGen.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				TCPFuzzing.this.add();
+				FuzzingPanel.this.add();
 			}
 		});
 
@@ -237,7 +239,7 @@ public class TCPFuzzing extends JBRPanel {
 		buttonRemGen.setToolTipText("Remove a Generator");
 		buttonRemGen.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				TCPFuzzing.this.remove();
+				FuzzingPanel.this.remove();
 			}
 		});
 
@@ -286,7 +288,7 @@ public class TCPFuzzing extends JBRPanel {
 		this.add(generatorPanel);
 		// The fuzz buttons
 		buttonFuzzStart = new JButton("Fuzz!", ImageCreator.START_IMG);
-		buttonFuzzStart.setBounds(580, 230, 90, 40);
+		buttonFuzzStart.setBounds(580, 210, 90, 40);
 		buttonFuzzStart.setToolTipText("Start Fuzzing!");
 		this.add(buttonFuzzStart);
 		buttonFuzzStart.addActionListener(new ActionListener() {
@@ -294,13 +296,13 @@ public class TCPFuzzing extends JBRPanel {
 				worker = new SwingWorker3() {
 					@Override
 					public Object construct() {
-						TCPFuzzing.this.start();
+						FuzzingPanel.this.start();
 						return "start-window-return";
 					}
 
 					@Override
 					public void finished() {
-						TCPFuzzing.this.stop();
+						FuzzingPanel.this.stop();
 					}
 				};
 				worker.start();
@@ -309,13 +311,13 @@ public class TCPFuzzing extends JBRPanel {
 		buttonFuzzStop = new JButton("Stop", ImageCreator.STOP_IMG);
 		buttonFuzzStop.setEnabled(false);
 		buttonFuzzStop.setToolTipText("Stop Fuzzing");
-		buttonFuzzStop.setBounds(680, 230, 90, 40);
+		buttonFuzzStop.setBounds(680, 210, 90, 40);
 		this.add(buttonFuzzStop);
 		buttonFuzzStop.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						TCPFuzzing.this.stop();
+						FuzzingPanel.this.stop();
 					}
 				});
 			}
@@ -324,14 +326,14 @@ public class TCPFuzzing extends JBRPanel {
 		buttonPlot = new JButton("Bro", ImageCreator.PAUSE_IMG);
 		buttonPlot.setEnabled(false);
 		buttonPlot.setToolTipText("Plot Fuzzing Results");
-		buttonPlot.setBounds(780, 230, 80, 40);
+		buttonPlot.setBounds(780, 210, 80, 40);
 		this.add(buttonPlot);
 		buttonPlot.addActionListener(new ActionListener() {
 			// public void actionPerformed(final ActionEvent e) {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						TCPFuzzing.this.fuzzBroButton();
+						FuzzingPanel.this.fuzzBroButton();
 					}
 				});
 
@@ -388,7 +390,7 @@ public class TCPFuzzing extends JBRPanel {
 		// Some value defaults
 		target.setText("http://localhost");
 		port.setText("80");
-		setMessageText(JBRFormat.REQUEST_TCP);
+		setMessageText(Format.REQUEST_TCP);
 		message.setCaretPosition(0);
 	}
 
@@ -454,15 +456,16 @@ public class TCPFuzzing extends JBRPanel {
 		// Update the border of the output panel
 		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output (Last 1000 Lines)  "
-						+ "Logging in folder (" + JBRFormat.DATE +
+						+ "Logging in folder (" + Format.DATE +
 						// getJBroFuzz().getVersion().getDate() +
 						") Session " + session), BorderFactory.createEmptyBorder(5, 5,
 				5, 5)));
-
+		
+		/*
 		final int rows = generatorTable.getRowCount();
 		if (rows < 1) {
 			final StringBuffer sbuf = new StringBuffer(getMessageText());
-			mRIterator = new TRequestIterator(getFrame().getJBroFuzz(), sbuf, 0, 0,
+			mRIterator = new Connector(getFrame().getJBroFuzz(), sbuf, 0, 0,
 					"ZER");
 			mRIterator.run();
 		} else {
@@ -475,11 +478,12 @@ public class TCPFuzzing extends JBRPanel {
 						.intValue();
 
 				final StringBuffer sbuf = new StringBuffer(getMessageText());
-				mRIterator = new TRequestIterator(getFrame().getJBroFuzz(), sbuf, start,
+				mRIterator = new Connector(getFrame().getJBroFuzz(), sbuf, start,
 						end, generator);
 				mRIterator.run();
 			}
 		}
+		*/
 	}
 
 	/**
@@ -491,7 +495,7 @@ public class TCPFuzzing extends JBRPanel {
 		if (!buttonFuzzStop.isEnabled()) {
 			return;
 		}
-		mRIterator.stop();
+		// mRIterator.stop();
 		// UI and Colors
 		buttonFuzzStart.setEnabled(true);
 		buttonFuzzStop.setEnabled(false);
@@ -516,39 +520,29 @@ public class TCPFuzzing extends JBRPanel {
 		} catch (final IllegalArgumentException e) {
 			JOptionPane.showInputDialog(this,
 					"An exception was thrown while attempting to get the selected text",
-					TCPFuzzing.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
+					FuzzingPanel.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
 			selectedText = "";
 		}
 		// If no text has been selected, prompt the user to select some text
 		if (selectedText == null) {
 			JOptionPane.showMessageDialog(this,
 					"Select (highlight) a text range \nfrom the Request field",
-					TCPFuzzing.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
+					FuzzingPanel.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
 		}
 		// Else find out the location of where the text has been selected
 		else {
 			final int sPoint = message.getSelectionStart();
 			final int fPoint = message.getSelectionEnd();
 
-			// final TConstructor mTConstructor = new TConstructor(getFrame().getJBroFuzz());
-			final String generators = ""; // mTConstructor.getAllGeneratorNamesAndComments();
-			final String[] generatorArray = generators.split(", ");
-
-			// Then prompt the user for the type of fuzzer
-			String selectedValue = (String) JOptionPane.showInputDialog(this,
-					"Select the type of fuzzing generator:", TCPFuzzing.ADDGENSTRING,
-					JOptionPane.INFORMATION_MESSAGE, null, generatorArray,
-					generatorArray[0]);
-			// And finally add the generator
-			if ((selectedValue != null)) {
-				if (selectedValue.length() > 3) {
-					selectedValue = selectedValue.substring(0, 3);
-				} else {
-					selectedValue = "   ";
-				}
-				mFuzzingTableModel.addRow(selectedValue, sPoint, fPoint);
-			}
+			new PayloadsDialog(this, sPoint, fPoint);
+			
 		}
+	}
+	
+	public void addPayload(String Id, int start, int end) {
+		
+		mFuzzingTableModel.addRow(Id, start, end);
+		
 	}
 
 	/**

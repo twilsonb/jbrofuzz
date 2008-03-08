@@ -39,7 +39,6 @@ import org.apache.commons.httpclient.params.*;
 import org.apache.commons.httpclient.methods.*;
 
 import org.owasp.jbrofuzz.util.*;
-import org.owasp.jbrofuzz.ui.util.*;
 import org.owasp.jbrofuzz.version.*;
 import org.owasp.jbrofuzz.ui.*;
 
@@ -60,7 +59,7 @@ private SwingWorker3 worker;
 // The boolean checking for a new version
 private boolean newVersionExists;
 
-public CheckForUpdates(final JBRFrame parent) {
+public CheckForUpdates(final JBroFuzzWindow parent) {
 
 	super(parent, " Check For Updates ", true);
 	setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -174,11 +173,11 @@ public void finishUpdate() {
 					public void run() {
 						Browser.init();
 						try {
-							Browser.displayURL(JBRFormat.URL_WEBSITE);
+							Browser.displayURL(Format.URL_WEBSITE);
 							startStop.setEnabled(false);
 							close.setEnabled(true);
 						} catch (final IOException ex) {
-							mainLabel.append("\nAn error occured while attempting to open the browser:\n\n" + JBRFormat.URL_WEBSITE);
+							mainLabel.append("\nAn error occured while attempting to open the browser:\n\n" + Format.URL_WEBSITE);
 						}
 					}
 				});
@@ -237,7 +236,7 @@ public void startUpdate() {
 	HttpClient client = new HttpClient();
 
 	// Create a method instance.
-	GetMethod method = new GetMethod(JBRFormat.URL_WEBSITE);
+	GetMethod method = new GetMethod(Format.URL_WEBSITE);
 
 	// Provide custom retry handler is necessary
 	method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
@@ -277,34 +276,45 @@ public void startUpdate() {
 		final Matcher m1 = p1.matcher(response);
 		if (m1.find()) {
 			mainLabel.append("[ OK ]\n" + "Comparing version numbers...\t");	
-			final String webVersion = m1.group().substring(0,3);
+			final String webVersion = m1.group().substring(19,22);
 			
 			double current = 0.0;
 			double latest = 0.0;
 			
 			try {
 				
-				current = Double.parseDouble(JBRFormat.VERSION);
+				current = Double.parseDouble(Format.VERSION);
 				latest = Double.parseDouble(webVersion);
 				
 				mainLabel.append("[ OK ]\n\nWebsite Version is: " + webVersion);
-				mainLabel.append("\nCurrent Version is: " + JBRFormat.VERSION + "\n\n");
+				mainLabel.append("\nCurrent Version is: " + Format.VERSION + "\n\n");
 				
 			} 
 			catch (NumberFormatException e) {
 				mainLabel.append("[FAIL]\n");
 			}
 			
-			if(latest > current) {
-				mainLabel.append("\nJBroFuzz " + latest + " is available for download.");
-				newVersionExists = true;
+			if(latest != 0.0) {
+
+				if(latest > current) {
+					mainLabel.append("\nJBroFuzz " + latest + " is available for download.");
+					newVersionExists = true;
+				}
+				else if(latest < current) {
+					mainLabel.append("\nYou are running a newever version.");
+				}
+				else {
+					mainLabel.append("\nYou are running the latest version.");
+				}
+	
 			}
 			else {
-				mainLabel.append("\nYou are running the latest version.");
+				mainLabel.append("\n" + "Could not interpret JBroFuzz version\nnumbers.\n\nTo check manually, visit:\n\n" + Format.URL_WEBSITE);
 			}
+			
 		}
 		else {
-			mainLabel.append("[FAIL]\n\n" + "Could not identify JBroFuzz version at:\n\n" + JBRFormat.URL_WEBSITE);
+			mainLabel.append("[FAIL]\n\n" + "Could not identify JBroFuzz version at:\n\n" + Format.URL_WEBSITE);
 		}
 	}
 }

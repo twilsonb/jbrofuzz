@@ -38,7 +38,7 @@ import jcckit.util.ConfigParameters;
 import jcckit.util.PropertiesBasedConfigData;
 
 import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import org.owasp.jbrofuzz.util.ImageCreator;
 
 /**
  * <p>

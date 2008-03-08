@@ -45,10 +45,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 
-import org.owasp.jbrofuzz.ui.JBRFrame;
-import org.owasp.jbrofuzz.ui.util.ImageCreator;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.SwingWorker3;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.Format;
 
 import org.owasp.jbrofuzz.ui.actions.*;
 import com.Ostermiller.util.Browser;
@@ -69,20 +69,20 @@ public class JBRMenuBar extends JMenuBar {
 	 * 
 	 */
 	private static final long serialVersionUID = 519521993186395281L;
-	private final JBRFrame mFrameWindow;
+	private final JBroFuzzWindow mFrameWindow;
 	// The menu items
 	private final JMenu file, edit, view, panel, options, help;
 	// Used under the Panel JMenu as items
 	private JMenuItem showAll, hideAll, start, bro, stop, add, remove;
 	// Used under the view JMenu as items
-	private JCheckBoxMenuItem directories, fuzzing, sniffing, generators, system;
+	private JCheckBoxMenuItem directories, fuzzing, sniffing, Payloads, system;
 
 	/**
 	 * 
 	 * @param mFrameWindow
 	 *          FrameWindow
 	 */
-	public JBRMenuBar(final JBRFrame mFrameWindow) {
+	public JBRMenuBar(final JBroFuzzWindow mFrameWindow) {
 
 		this.mFrameWindow = mFrameWindow;
 
@@ -133,7 +133,7 @@ public class JBRMenuBar extends JMenuBar {
 		directories = new JCheckBoxMenuItem(" Web Directories ", true);
 		fuzzing = new JCheckBoxMenuItem(" Fuzzing ", true);
 		sniffing = new JCheckBoxMenuItem(" Sniffing ", true);
-		generators = new JCheckBoxMenuItem(" Generators ", false);
+		Payloads = new JCheckBoxMenuItem(" Payloads ", false);
 		system = new JCheckBoxMenuItem(" System ", false);
 
 		showAll = new JMenuItem("Show All");
@@ -142,7 +142,7 @@ public class JBRMenuBar extends JMenuBar {
 		showHide.add(directories);
 		showHide.add(fuzzing);
 		showHide.add(sniffing);
-		showHide.add(generators);
+		showHide.add(Payloads);
 		showHide.add(system);
 
 		view.add(showHide);
@@ -235,13 +235,11 @@ public class JBRMenuBar extends JMenuBar {
 		// Options
 		final JMenuItem preferences = new JMenuItem("Preferences", ImageCreator.IMG_PREFERENCES);
 		final JMenuItem updates = new JMenuItem("Check for Updates...", ImageCreator.IMG_UPDATE);
-		final JMenuItem repair = new JMenuItem("Detect and Repair...");
 
 		preferences.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
 		options.add(updates);
-		options.add(repair);
 		options.addSeparator();
 		options.add(preferences);
 
@@ -288,10 +286,10 @@ public class JBRMenuBar extends JMenuBar {
 					public void run() {
 						if (!directories.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
-									JBRFrame.WEB_DIRECTORIES_PANEL_ID);
+									JBroFuzzWindow.WEB_DIRECTORIES_PANEL_ID);
 						} else {
 							JBRMenuBar.this.getFrameWindow().setTabShow(
-									JBRFrame.WEB_DIRECTORIES_PANEL_ID);
+									JBroFuzzWindow.WEB_DIRECTORIES_PANEL_ID);
 						}
 					}
 				});
@@ -305,10 +303,10 @@ public class JBRMenuBar extends JMenuBar {
 					public void run() {
 						if (!fuzzing.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
-									JBRFrame.TCP_FUZZING_PANEL_ID);
+									JBroFuzzWindow.FUZZING_PANEL_ID);
 						} else {
 							JBRMenuBar.this.getFrameWindow().setTabShow(
-									JBRFrame.TCP_FUZZING_PANEL_ID);
+									JBroFuzzWindow.FUZZING_PANEL_ID);
 						}
 					}
 				});
@@ -322,10 +320,10 @@ public class JBRMenuBar extends JMenuBar {
 					public void run() {
 						if (!sniffing.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
-									JBRFrame.TCP_SNIFFING_PANEL_ID);
+									JBroFuzzWindow.SNIFFING_PANEL_ID);
 						} else {
 							JBRMenuBar.this.getFrameWindow().setTabShow(
-									JBRFrame.TCP_SNIFFING_PANEL_ID);
+									JBroFuzzWindow.SNIFFING_PANEL_ID);
 						}
 					}
 				});
@@ -333,17 +331,17 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		generators.addActionListener(new ActionListener() {
+		Payloads.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!generators.getState()) {
+						if (!Payloads.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
-									JBRFrame.GENERATORS_PANEL_ID);
+									JBroFuzzWindow.PAYLOADS_PANEL_ID);
 						} else {
 							JBRMenuBar.this.getFrameWindow().setTabShow(
-									JBRFrame.GENERATORS_PANEL_ID);
+									JBroFuzzWindow.PAYLOADS_PANEL_ID);
 						}
 					}
 				});
@@ -358,10 +356,10 @@ public class JBRMenuBar extends JMenuBar {
 					public void run() {
 						if (!system.getState()) {
 							JBRMenuBar.this.getFrameWindow().setTabHide(
-									JBRFrame.SYSTEM_PANEL_ID);
+									JBroFuzzWindow.SYSTEM_PANEL_ID);
 						} else {
 							JBRMenuBar.this.getFrameWindow().setTabShow(
-									JBRFrame.SYSTEM_PANEL_ID);
+									JBroFuzzWindow.SYSTEM_PANEL_ID);
 						}
 					}
 				});
@@ -377,25 +375,24 @@ public class JBRMenuBar extends JMenuBar {
 					public void run() {
 						
 						JBRMenuBar.this.getFrameWindow().setTabShow(
-								JBRFrame.WEB_DIRECTORIES_PANEL_ID);
+								JBroFuzzWindow.WEB_DIRECTORIES_PANEL_ID);
 						directories.setState(true);
 						
 						
 						
 						JBRMenuBar.this.getFrameWindow().setTabShow(
-								JBRFrame.TCP_FUZZING_PANEL_ID);
+								JBroFuzzWindow.FUZZING_PANEL_ID);
 						fuzzing.setState(true);
 						JBRMenuBar.this.getFrameWindow().setTabShow(
-								JBRFrame.TCP_SNIFFING_PANEL_ID);
+								JBroFuzzWindow.SNIFFING_PANEL_ID);
 						sniffing.setState(true);
 						JBRMenuBar.this.getFrameWindow().setTabShow(
-								JBRFrame.GENERATORS_PANEL_ID);
-						generators.setState(true);
+								JBroFuzzWindow.PAYLOADS_PANEL_ID);
+						Payloads.setState(true);
 						JBRMenuBar.this.getFrameWindow().setTabShow(
-								JBRFrame.SYSTEM_PANEL_ID);
+								JBroFuzzWindow.SYSTEM_PANEL_ID);
 						system.setState(true);
-						JBRMenuBar.this.getFrameWindow()
-								.setTabShow(JBRFrame.OPEN_SOURCE_ID);
+						
 					}
 				});
 
@@ -408,22 +405,20 @@ public class JBRMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						JBRMenuBar.this.getFrameWindow().setTabHide(
-								JBRFrame.WEB_DIRECTORIES_PANEL_ID);
+								JBroFuzzWindow.WEB_DIRECTORIES_PANEL_ID);
 						directories.setState(false);
 						JBRMenuBar.this.getFrameWindow().setTabHide(
-								JBRFrame.TCP_FUZZING_PANEL_ID);
+								JBroFuzzWindow.FUZZING_PANEL_ID);
 						fuzzing.setState(false);
 						JBRMenuBar.this.getFrameWindow().setTabHide(
-								JBRFrame.TCP_SNIFFING_PANEL_ID);
+								JBroFuzzWindow.SNIFFING_PANEL_ID);
 						sniffing.setState(false);
 						JBRMenuBar.this.getFrameWindow().setTabHide(
-								JBRFrame.GENERATORS_PANEL_ID);
-						generators.setState(false);
+								JBroFuzzWindow.PAYLOADS_PANEL_ID);
+						Payloads.setState(false);
 						JBRMenuBar.this.getFrameWindow().setTabHide(
-								JBRFrame.SYSTEM_PANEL_ID);
+								JBroFuzzWindow.SYSTEM_PANEL_ID);
 						system.setState(false);
-						JBRMenuBar.this.getFrameWindow()
-								.setTabHide(JBRFrame.OPEN_SOURCE_ID);
 						
 						
 					}
@@ -580,18 +575,6 @@ public class JBRMenuBar extends JMenuBar {
 			}
 		});
 
-		repair.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						new DetectAndRepair(JBRMenuBar.this.getFrameWindow());
-					}
-				});
-
-			}
-		});
-
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
@@ -655,7 +638,7 @@ public class JBRMenuBar extends JMenuBar {
 					public void run() {
 						Browser.init();
 						try {
-							Browser.displayURL(JBRFormat.URL_WEBSITE);
+							Browser.displayURL(Format.URL_WEBSITE);
 						} catch (final IOException ex) {
 							JBRMenuBar.this.getFrameWindow().log(
 									"Could not launch link in external browser");
@@ -689,7 +672,7 @@ public class JBRMenuBar extends JMenuBar {
 
 	}
 
-	private JBRFrame getFrameWindow() {
+	private JBroFuzzWindow getFrameWindow() {
 		return mFrameWindow;
 	}
 }

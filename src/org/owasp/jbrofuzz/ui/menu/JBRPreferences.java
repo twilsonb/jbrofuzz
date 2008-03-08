@@ -52,7 +52,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.Format;
 
 /**
  * <p>
@@ -147,7 +147,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		getContentPane().add(splitPane, BorderLayout.CENTER);
 
 		// Bottom button
-		ok = new JButton("OK");
+		ok = new JButton("  OK  ");
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
 				15));
@@ -202,7 +202,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		directories.add(fourthBox);
 		directories.add(Box.createRigidArea(new Dimension(0, 10)));
 
-		final boolean checkbox = prefs.getBoolean(JBRFormat.PREF_FUZZ_DIR_ERR,
+		final boolean checkbox = prefs.getBoolean(Format.PREF_FUZZ_DIR_ERR,
 				false);
 		final JCheckBox errorCheckBox = new JCheckBox(
 				" While Fuzzing, if an error occurs, Continue ", checkbox);
@@ -213,10 +213,10 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		errorCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (errorCheckBox.isSelected()) {
-					prefs.putBoolean(JBRFormat.PREF_FUZZ_DIR_ERR,
+					prefs.putBoolean(Format.PREF_FUZZ_DIR_ERR,
 							true);
 				} else {
-					prefs.putBoolean(JBRFormat.PREF_FUZZ_DIR_ERR,
+					prefs.putBoolean(Format.PREF_FUZZ_DIR_ERR,
 							false);
 				}
 			}

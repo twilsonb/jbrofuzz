@@ -47,7 +47,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class JBRFormat {
+public class Format {
 
 	/**
 	 * <p>
@@ -56,6 +56,11 @@ public class JBRFormat {
 	 * </p>
 	 */
 	public static final String VERSION = "0.8";
+
+	/**
+	 * <p> The year of the release.</p>
+	 */
+	public static final String YEAR = "2008";
 
 	/**
 	 * The preferences used for selecting on whether or not to continue upon an
@@ -125,7 +130,7 @@ public class JBRFormat {
 	 * variable.
 	 * </p>
 	 */
-	public static String CODENAME = getCodeName(JBRFormat.VERSION);;
+	public static String CODENAME = getCodeName(Format.VERSION);;
 
 	/**
 	 * <p>
@@ -138,7 +143,22 @@ public class JBRFormat {
 	 * The text, in html format, shown in the about box.
 	 * </p>
 	 */
-	public static final String ABOUTTEXT = "<HTML><B>Java Bro Fuzzer Version:  "
+	public static final String ABOUTTEXT =
+
+		"<HTML><B>JBroFuzz Version:  "
+		+ VERSION
+		+ "<BR>"
+		+ "Codename: "
+		+ Format.getCodeName(Format.VERSION)
+		+ "</B><BR><BR>"
+		+ "<B>Copyright &copy; " + YEAR + " subere@uncon.org</B><BR><BR>"
+		+ "Running Under  Java " + System.getProperty("java.version") + "<BR><BR>"
+		+ "<B>A stateless network protocol fuzzer <BR>"
+		+ "for web applications."
+		+ "</B><BR></HTML>";
+
+	/*
+		"<HTML><B>Java Bro Fuzzer Version:  "
 		+ JBRFormat.VERSION
 		+ "<BR>"
 		+ "Codename: "
@@ -146,22 +166,35 @@ public class JBRFormat {
 		+ "</B><BR><BR>"
 		+ "JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software "
 		+ "and you are welcome to redistribute it under the GNU GPL license<BR><BR>"
-		+ "<B>Copyright &copy;2007  subere (at) uncon org</B><BR><BR>"
+		+ "<B>Copyright &copy;" + YEAR  + " subere@uncon.org</B><BR><BR>"
 		+ "Running Under  Java " + System.getProperty("java.version")
 		+ "<BR></HTML>";
+	 */
 
 	/**
 	 * <p>
 	 * The text, in html format, shown in the disclaimer box.
 	 * </p>
 	 */
-	public static final String DISCLAIMER = "<HTML>"
+	public static final String DISCLAIMER =
+		"<HTML>This program generates a substantial amount " +
+		"of network traffic for the purpose of fuzzing " +
+		"web applications.<BR><BR>" +
+		"JBroFuzz has been developed with penetration " +
+		"testing in mind.<BR><BR>" +
+		"The author of JBroFuzz takes no " +
+		"legal or other responsibility for any problems that " +
+		"might occur <BR>while running this program.<BR></HTML>";
+
+	/*
+		"<HTML>"
 		+ "<B>You should only use this software to test the security of"
 		+ "your own network protocol application or those you are "
 		+ "authorised to do so.</B><BR><BR> The authors of JBroFuzz take no "
 		+ "legal or other responsibility for any problems that "
 		+ "might occur while running JBroFuzz on a "
 		+ "particular application or network protocol.<BR></HTML>";
+	 */
 
 	/**
 	 * Formatting the date in ISO8601 standard format.
@@ -253,7 +286,7 @@ public class JBRFormat {
 	private static final String getDate() {
 		final String DATE_FORMAT = "DDD yyyy-MM-dd HH-mm-ss";
 		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT, new Locale(
-				JBRFormat.ISO_LAN_CODE));
+				Format.ISO_LAN_CODE));
 		return SDF.format(new Date());
 	}
 
@@ -271,7 +304,7 @@ public class JBRFormat {
 		int errors = 0;
 		try {
 			String oSystem = System.getProperty("os.name");
-			oSystem = oSystem.toLowerCase(new Locale(JBRFormat.ISO_LAN_CODE));
+			oSystem = oSystem.toLowerCase(new Locale(Format.ISO_LAN_CODE));
 			if (oSystem.startsWith("windows")) {
 				UIManager
 				.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -298,10 +331,10 @@ public class JBRFormat {
 	 * @param mJBroFuzz
 	 *          JBroFuzz
 	 */
-	public JBRFormat(final JBroFuzz mJBroFuzz) {
+	public Format(final JBroFuzz mJBroFuzz) {
 
 		// Set the look and feel
-		JBRFormat.setLookAndFeel(mJBroFuzz);
+		Format.setLookAndFeel(mJBroFuzz);
 		// Set some preferences for the mac
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",

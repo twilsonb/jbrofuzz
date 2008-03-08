@@ -36,17 +36,17 @@ import org.owasp.jbrofuzz.ui.*;
  * @author subere (at) uncon (dot) org
  * @version 0.8
  */
-public abstract class JBRPanel extends JPanel {
+public abstract class JBroFuzzPanel extends JPanel {
 
-	private JBRFrame frame;
+	private JBroFuzzWindow frame;
 	
-	public JBRPanel(final JBRFrame frame) {
+	public JBroFuzzPanel(final JBroFuzzWindow frame) {
 		super();
 		setLayout(null);
 		this.frame = frame;
 	}
 	
-	public JBRFrame getFrame() {
+	public JBroFuzzWindow getFrame() {
 		return frame;
 	}
 	

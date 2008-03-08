@@ -39,9 +39,9 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import org.owasp.jbrofuzz.fuzz.dir.DConstructor;
-import org.owasp.jbrofuzz.ui.JBRFrame;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.dir.DConstructor;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.version.Format;
 
 import org.apache.commons.io.*;
 
@@ -63,7 +63,7 @@ public class FileHandler {
 	private static FileHandler singletonFileHandlerObject;
 
 	// The main window frame gui
-	private static JBRFrame g;
+	private static JBroFuzzWindow g;
 
 	// The current file used for creation
 	private static File currentFile;
@@ -248,7 +248,7 @@ public class FileHandler {
 				boolean passedResponse = false;
 				line = bufRead.readLine();
 				while (line != null) {
-					if (line.startsWith(JBRFormat.LINE_SEPARATOR)) {
+					if (line.startsWith(Format.LINE_SEPARATOR)) {
 						passedResponse = true;
 					}
 					if (passedResponse) {
@@ -376,7 +376,7 @@ public class FileHandler {
 			line_counter = 0;
 
 			final URL fileURL = ClassLoader.getSystemClassLoader().getResource(
-					JBRFormat.FILE_DIR);
+					Format.FILE_DIR);
 
 			try {
 				final URLConnection connection = fileURL.openConnection();
@@ -416,7 +416,7 @@ public class FileHandler {
 			if (FileHandler.g != null) {
 				FileHandler.g.log("Loading default directories list");
 			}
-			final String[] defaultArray = JBRFormat.DEFAULT_DIRS.split("\n");
+			final String[] defaultArray = Format.DEFAULT_DIRS.split("\n");
 			len = defaultArray.length;
 			file.setSize(len);
 			for (int x = 0; x < len; x++) {
@@ -611,7 +611,7 @@ public class FileHandler {
 	 *          FrameWindow
 	 * @return FileHandler
 	 */
-	public static synchronized FileHandler s(final JBRFrame g) {
+	public static synchronized FileHandler s(final JBroFuzzWindow g) {
 		if (FileHandler.singletonFileHandlerObject == null) {
 			FileHandler.singletonFileHandlerObject = new FileHandler(g);
 		}
@@ -714,7 +714,7 @@ public class FileHandler {
 	//
 	// Private Constructor due to the use of a singleton architecture
 	//
-	public FileHandler(final JBRFrame g) {
+	public FileHandler(final JBroFuzzWindow g) {
 
 		FileHandler.g = g;
 
@@ -722,19 +722,19 @@ public class FileHandler {
 
 		// Create the necessary directory with the corresponding timestamp
 		FileHandler.fuzzDirectory = new File(baseDir + File.separator + "jbrofuzz"
-				+ File.separator + "fuzzing-tcp" + File.separator + JBRFormat.DATE);
+				+ File.separator + "fuzzing-tcp" + File.separator + Format.DATE);
 
 		FileHandler.snifDirectory = new File(baseDir + File.separator + "jbrofuzz"
 				+ File.separator + "sniffing" + File.separator
-				+ JBRFormat.DATE);
+				+ Format.DATE);
 
 		FileHandler.webEnumDirectory = new File(baseDir + File.separator
 				+ "jbrofuzz" + File.separator + "web-dir" + File.separator
-				+ JBRFormat.DATE);
+				+ Format.DATE);
 
 		FileHandler.httpFuzzDirectory = new File(baseDir + File.separator
 				+ "jbrofuzz" + File.separator + "fuzzing-http" + File.separator
-				+ JBRFormat.DATE);
+				+ Format.DATE);
 
 		int failedDirCounter = 0;
 
@@ -774,7 +774,7 @@ public class FileHandler {
 		if (failedDirCounter >= 4) {
 			g
 			.log("\tToo many directories could not be created! Are you launching me through your browser?");
-			g.log("\tTry \"java -jar jbrofuzz-" + JBRFormat.VERSION
+			g.log("\tTry \"java -jar jbrofuzz-" + Format.VERSION
 					+ ".jar\" on command line...");
 			failedDirCounter = 0;
 		}

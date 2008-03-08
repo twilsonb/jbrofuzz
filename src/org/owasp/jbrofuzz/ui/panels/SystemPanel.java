@@ -40,7 +40,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.owasp.jbrofuzz.ui.JBRFrame;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 
 /**
  * <p>
@@ -51,7 +51,7 @@ import org.owasp.jbrofuzz.ui.JBRFrame;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class SystemLogger extends JBRPanel {
+public class SystemPanel extends JBroFuzzPanel {
 
 	/**
 	 * 
@@ -73,7 +73,7 @@ public class SystemLogger extends JBRPanel {
 	 * @param m
 	 *          FrameWindow
 	 */
-	public SystemLogger(final JBRFrame m) {
+	public SystemPanel(final JBroFuzzWindow m) {
 		super(m);
 		// this.setLayout(null);
 		// this.m = m;
@@ -144,7 +144,7 @@ public class SystemLogger extends JBRPanel {
 				final String[] info = systemInfo.split("\r\n");
 
 				for (final String element : info) {
-					SystemLogger.this.addLoggingEvent(element);
+					SystemPanel.this.addLoggingEvent(element);
 				}
 
 			}

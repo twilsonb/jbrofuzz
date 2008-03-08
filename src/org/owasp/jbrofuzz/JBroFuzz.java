@@ -26,8 +26,8 @@
 package org.owasp.jbrofuzz;
 
 import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.ui.JBRFrame;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.version.Format;
 import org.owasp.jbrofuzz.core.*;
 
 /**
@@ -74,9 +74,9 @@ public class JBroFuzz {
 
 	private FileHandler mHandler;
 
-	private JBRFormat mFormat;
+	private Format mFormat;
 
-	private JBRFrame mWindow;
+	private JBroFuzzWindow mWindow;
 	
 	private Database mDatabase;
 
@@ -91,8 +91,8 @@ public class JBroFuzz {
 
 		mDatabase = new Database();
 		
-		mFormat = new JBRFormat(this);
-		mWindow = new JBRFrame(this);
+		mFormat = new Format(this);
+		mWindow = new JBroFuzzWindow(this);
 		
 		
 		
@@ -111,7 +111,7 @@ public class JBroFuzz {
 	 * 
 	 * @return mFormat JBRFormat
 	 */
-	public JBRFormat getFormat() {
+	public Format getFormat() {
 
 		return mFormat;
 
@@ -138,7 +138,7 @@ public class JBroFuzz {
 	 * 
 	 * @return mWindow JBRFrame
 	 */
-	public JBRFrame getWindow() {
+	public JBroFuzzWindow getWindow() {
 
 		return mWindow;
 
