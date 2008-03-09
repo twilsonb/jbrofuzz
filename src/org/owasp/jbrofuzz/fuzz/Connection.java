@@ -42,8 +42,8 @@ import java.net.UnknownHostException;
  * given address, port and for a given request.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 0.8
  * @since 0.1
  */
 public class Connection {

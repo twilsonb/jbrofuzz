@@ -50,24 +50,28 @@ import javax.swing.table.TableColumn;
 import javax.swing.text.Document;
 import javax.swing.text.StyledEditorKit;
 
-import org.owasp.jbrofuzz.fuzz.Connector;
+import org.owasp.jbrofuzz.fuzz.MessageCreator;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.FuzzingTableModel;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
 import org.owasp.jbrofuzz.ui.viewers.WindowPlotter;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
-import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.util.SwingWorker3;
-import org.owasp.jbrofuzz.util.TextHighlighter;
+import org.owasp.jbrofuzz.util.*;
 import org.owasp.jbrofuzz.version.Format;
 
 import org.owasp.jbrofuzz.ui.menu.*;
+import org.owasp.jbrofuzz.ui.tablemodels.*;
+
+import org.owasp.jbrofuzz.core.*;
+import org.owasp.jbrofuzz.fuzz.*;
+
+import java.util.*;
+import java.text.*;
 
 /**
  * <p>
- * The main "TCP Fuzzing" panel, displayed within the Main Frame Window.
+ * The main "Fuzzing" panel, displayed within the Main Frame Window.
  * </p>
  * <p>
  * This panel performs all TCP related fuzzing operations, including the
@@ -115,7 +119,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	// The JTable were results are outputted
 	private JTable outputTable;
 	// And the table model that goes with it
-	private SingleRowTableModel outputTableModel;
+	private WebDirectoriesModel outputTableModel;
 	// The JTable of the generator
 	private JTable generatorTable;
 	// And the table model that goes with it
@@ -128,7 +132,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	// A counter for the number of times fuzz has been clicked
 	private int counter, session;
 	// The request iterator performing all the fuzzing
-	private Connector mRIterator;
+	private MessageCreator mRIterator;
 
 	/**
 	 * This constructor is used for the " Fuzzing " panel that resides under the
@@ -346,7 +350,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				.createTitledBorder(" Output "), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
 
-		outputTableModel = new SingleRowTableModel( " Output ");
+		outputTableModel = new WebDirectoriesModel();
 
 		outputTable = new JTable();
 		outputTable.setModel(outputTableModel);
@@ -379,8 +383,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 					// No rows selected
 				} else {
 					final int selectedRow = lsm.getMinSelectionIndex();
-					final String s = outputTableModel
-							.getValueAt(selectedRow);
+					final String s = (String) outputTableModel.getValueAt(selectedRow, 0);
+
 					new WindowViewer(getFrame(), s,
 							WindowViewer.VIEW_FUZZING_PANEL);
 				}
@@ -394,12 +398,12 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		message.setCaretPosition(0);
 	}
 
-	public void addRowInOuputTable(final String s) {
+	public void addRowInOuputTable(final String a, final String b, final String c, final String d, final String e, final String f) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				outputTableModel.addEmptyRow();
+				outputTableModel.addRow(a, b, c, d, e, f);
 				final int totalRows = outputTableModel.getRowCount();
-				outputTableModel.setValueAt(s, totalRows - 1, 0);
+				// outputTableModel.setValueAt(s, totalRows - 1, 0);
 				// Set the last row to be visible
 				outputTable
 						.scrollRectToVisible(outputTable.getCellRect(
@@ -430,9 +434,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * </p>
 	 */
 	public void start() {
+		
 		if (!buttonFuzzStart.isEnabled()) {
 			return;
 		}
+		
 		// UI and Colors
 		buttonFuzzStart.setEnabled(false);
 		buttonFuzzStop.setEnabled(true);
@@ -443,13 +449,16 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		port.setEditable(false);
 		port.setBackground(Color.BLACK);
 		port.setForeground(Color.WHITE);
-		// Check to see if a message is present
+		
+		/* Check to see if a message is present
 		if ("".equals(message.getText())) {
 			JOptionPane.showMessageDialog(this, "The request field is blank.\n"
 					+ "Specify a request\n", "Empty Request Field",
 					JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
+		*/
+		
 		// Increment the session and reset the counter
 		session++;
 		counter = 1;
@@ -461,29 +470,77 @@ public class FuzzingPanel extends JBroFuzzPanel {
 						") Session " + session), BorderFactory.createEmptyBorder(5, 5,
 				5, 5)));
 		
-		/*
+		
 		final int rows = generatorTable.getRowCount();
-		if (rows < 1) {
-			final StringBuffer sbuf = new StringBuffer(getMessageText());
-			mRIterator = new Connector(getFrame().getJBroFuzz(), sbuf, 0, 0,
-					"ZER");
-			mRIterator.run();
+		if (rows == 0) {
+			
+			Connection currentConnection = new Connection(this.getTargetText(), getPortText(), getMessageText());
+			
+			final Date now = new Date();
+			final SimpleDateFormat format = new SimpleDateFormat("H:mm:ss:SSS");
+			final String timestamp = format.format(now);
+			final String filename = getCounter(true);
+
+			addRowInOuputTable(filename, this.getTargetText() + ":" + getPortText(), timestamp, "", "1/1", "");
+
+			FileHandler.writeFuzzFile("[{" + 1 + "/" + 1
+					+ "}, " + filename + " "
+					+ timestamp + "] " + "<!-- \r\n"
+					+ this.getTargetText() + " : " + getPortText() + "\r\n" + currentConnection.getMessage() + "\r\n", filename);
+
+			
+
+			
+			FileHandler
+					.writeFuzzFile(Format.LINE_SEPARATOR + "\r\n" + currentConnection.getReply(), filename);
+
+
+
 		} else {
 			for (int i = 0; i < rows; i++) {
-				final String generator = (String) mFuzzingTableModel.getValueAt(i,
+				final String category = (String) mFuzzingTableModel.getValueAt(i,
 						0);
 				final int start = ((Integer) mFuzzingTableModel.getValueAt(i, 1))
 						.intValue();
 				final int end = ((Integer) mFuzzingTableModel.getValueAt(i, 2))
 						.intValue();
 
-				final StringBuffer sbuf = new StringBuffer(getMessageText());
-				mRIterator = new Connector(getFrame().getJBroFuzz(), sbuf, start,
-						end, generator);
-				mRIterator.run();
-			}
+				try {
+					for(Fuzzer f = new Fuzzer(category, Math.abs(end - start) ); f.hasNext();) {
+
+						MessageCreator currentMessage = new MessageCreator(getMessageText(), f.next(), start, end);
+						Connection currentConnection = new Connection(getTargetText(), getPortText(), currentMessage.getMessage());
+						
+						final Date now = new Date();
+						final SimpleDateFormat format = new SimpleDateFormat("H:mm:ss:SSS");
+						final String timestamp = format.format(now);
+						final String filename = getCounter(true);
+
+						addRowInOuputTable(filename, this.getTargetText() + ":" + getPortText(), timestamp, f.getName(), f.getCurrectValue() + "/" + f.getMaximumValue(), "");
+						
+
+						FileHandler.writeFuzzFile("[{" + f.getCurrectValue() + "/" + f.getMaximumValue()
+								+ "}, " + filename + " "
+								+ timestamp + "] " + "<!-- \r\n"
+								+ getTargetText() + " : " + getPortText() + "\r\n" + currentConnection.getMessage() + "\r\n", filename);
+
+						
+
+						
+						FileHandler
+								.writeFuzzFile(Format.LINE_SEPARATOR + "\r\n" + currentConnection.getReply(), filename);
+
+
+					}
+				} catch (NoSuchFuzzerException e) {
+
+					// System.out.println("Could not find fuzzer " + e.getMessage());
+					
+				}
+				
+			} 
 		}
-		*/
+		
 	}
 
 	/**

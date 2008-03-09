@@ -182,6 +182,8 @@ public class WebDirectoriesModel extends AbstractTableModel {
 		}
 		return output.toString();
 	}
+	
+	
 
 	/**
 	 * Return the total number of rows
