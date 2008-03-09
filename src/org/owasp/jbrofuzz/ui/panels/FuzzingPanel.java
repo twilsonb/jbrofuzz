@@ -53,8 +53,8 @@ import javax.swing.text.StyledEditorKit;
 import org.owasp.jbrofuzz.fuzz.MessageCreator;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.ui.tablemodels.FuzzingTableModel;
-import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
+import org.owasp.jbrofuzz.ui.tablemodels.ThreeColumnModel;
+import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.WindowPlotter;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 import org.owasp.jbrofuzz.util.*;
@@ -119,11 +119,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	// The JTable were results are outputted
 	private JTable outputTable;
 	// And the table model that goes with it
-	private WebDirectoriesModel outputTableModel;
+	private SixColumnModel outputTableModel;
 	// The JTable of the generator
 	private JTable generatorTable;
 	// And the table model that goes with it
-	private FuzzingTableModel mFuzzingTableModel;
+	private ThreeColumnModel mFuzzingTableModel;
 	// The JButtons
 	private final JButton buttonAddGen, buttonRemGen, buttonFuzzStart,
 			buttonFuzzStop, buttonPlot;
@@ -257,7 +257,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		/*
 		 * Fuzzing Table Model
 		 */
-		mFuzzingTableModel = new FuzzingTableModel(getFrame());
+		mFuzzingTableModel = new ThreeColumnModel(getFrame());
 		generatorTable = new JTable();
 		generatorTable.setBackground(Color.WHITE);
 		generatorTable.setForeground(Color.BLACK);
@@ -281,9 +281,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		generatorScrollPane.setPreferredSize(new Dimension(180, 100));
 
 		generatorScrollPane.setBounds(15, 25, 180, 100);
-		buttonRemGen.setBounds(235, 60, 40, 20);
-		buttonAddGen.setBounds(235, 25, 40, 20);
-
+		
+		buttonAddGen.setBounds(225, 35, 40, 30);
+		buttonRemGen.setBounds(225, 80, 40, 30);
+		
 		generatorPanel.add(generatorScrollPane);
 		generatorPanel.add(buttonRemGen);
 		generatorPanel.add(buttonAddGen);
@@ -350,8 +351,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				.createTitledBorder(" Output "), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
 
-		outputTableModel = new WebDirectoriesModel();
-
+		outputTableModel = new SixColumnModel();
+		outputTableModel.setColumnNames("Filename", "Current Request", "Location", "Timestamp", "Time Taken", "Response Size");
+		
 		outputTable = new JTable();
 		outputTable.setModel(outputTableModel);
 
@@ -580,20 +582,20 @@ public class FuzzingPanel extends JBroFuzzPanel {
 					FuzzingPanel.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
 			selectedText = "";
 		}
-		// If no text has been selected, prompt the user to select some text
+		/* If no text has been selected, prompt the user to select some text
 		if (selectedText == null) {
 			JOptionPane.showMessageDialog(this,
 					"Select (highlight) a text range \nfrom the Request field",
 					FuzzingPanel.ADDGENSTRING, JOptionPane.ERROR_MESSAGE);
 		}
+		*/
 		// Else find out the location of where the text has been selected
-		else {
 			final int sPoint = message.getSelectionStart();
 			final int fPoint = message.getSelectionEnd();
 
 			new PayloadsDialog(this, sPoint, fPoint);
 			
-		}
+		
 	}
 	
 	public void addPayload(String Id, int start, int end) {
@@ -624,7 +626,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		if (selectedFuzzPoint != null) {
 			final String[] splitString = selectedFuzzPoint
-					.split(FuzzingTableModel.STRING_SEPARATOR);
+					.split(ThreeColumnModel.STRING_SEPARATOR);
 			mFuzzingTableModel.removeRow(splitString[0], Integer
 					.parseInt(splitString[1]), Integer.parseInt(splitString[2]));
 		}

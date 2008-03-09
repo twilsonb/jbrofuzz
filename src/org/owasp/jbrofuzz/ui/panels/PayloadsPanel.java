@@ -56,7 +56,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	// The JTables carrying the data
 	private JTable categoryTable, nameTable;
 	// The Table Models with a single column
-	private SingleRowTableModel categoryTableModel, nameTableModel;
+	private SingleColumnModel categoryTableModel, nameTableModel;
 	// The non-wrapping text pane
 	private NonWrappingTextPane viewTextArea;
 	// The JLabel holding any comments
@@ -83,7 +83,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		category.setBounds(10, 20, 220, 430);
 		this.add(category);
 
-		categoryTableModel = new SingleRowTableModel("Ids");
+		categoryTableModel = new SingleColumnModel("Ids");
 		categoryTableSorter = new TableSorter(categoryTableModel);
 
 		categoryTable = new JTable(categoryTableSorter);
@@ -125,7 +125,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		name.setBounds(235, 100, 220, 350);
 		this.add(name);
 
-		nameTableModel = new SingleRowTableModel("Id");
+		nameTableModel = new SingleColumnModel("Id");
 		nameTableSorter = new TableSorter(nameTableModel);
 
 		nameTable = new JTable(nameTableSorter);

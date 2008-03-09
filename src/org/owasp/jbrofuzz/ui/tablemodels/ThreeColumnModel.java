@@ -40,7 +40,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;;
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class FuzzingTableModel extends AbstractTableModel {
+public class ThreeColumnModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1012351L;
 
@@ -72,7 +72,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 * @param fPanel
 	 *          FuzzingPanel
 	 */
-	public FuzzingTableModel(final JBroFuzzWindow fPanel) {
+	public ThreeColumnModel(final JBroFuzzWindow fPanel) {
 		this.fPanel = fPanel;
 		dataVector = new Vector<Generator>();
 	}
@@ -102,7 +102,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getColumnCount() {
-		return FuzzingTableModel.COLUMNNAMES.length;
+		return ThreeColumnModel.COLUMNNAMES.length;
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public String getColumnName(final int column) {
-		return FuzzingTableModel.COLUMNNAMES[column];
+		return ThreeColumnModel.COLUMNNAMES[column];
 	}
 
 	/**
@@ -129,9 +129,9 @@ public class FuzzingTableModel extends AbstractTableModel {
 	public String getRow(final int row) {
 		final StringBuffer output = new StringBuffer();
 		if ((row > -1) && (row < dataVector.size())) {
-			for (int i = 0; i < FuzzingTableModel.COLUMNNAMES.length; i++) {
+			for (int i = 0; i < ThreeColumnModel.COLUMNNAMES.length; i++) {
 				output.append(getValueAt(row, i)
-						+ FuzzingTableModel.STRING_SEPARATOR);
+						+ ThreeColumnModel.STRING_SEPARATOR);
 			}
 		}
 		return output.toString();
@@ -204,7 +204,7 @@ public class FuzzingTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public boolean isCellEditable(final int row, final int column) {
-		if (column == FuzzingTableModel.INDEX_GENERATOR) {
+		if (column == ThreeColumnModel.INDEX_GENERATOR) {
 			return true;
 		} else {
 			return false;
