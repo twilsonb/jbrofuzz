@@ -38,7 +38,7 @@ public class Fuzzer implements Iterator<String> {
 			}
 			else {
 				maxValue = new BigInteger("" + payloads.size());
-				maxValue = maxValue.pow(len);
+				maxValue = maxValue.pow(len < 0 ? 0 : len);
 			}
 			
 		}
@@ -113,6 +113,18 @@ public class Fuzzer implements Iterator<String> {
 	public void remove() {
 		
 		cValue = cValue.add(new BigInteger("1"));
+		
+	}
+	
+	public String getCurrectValue() {
+		
+		return cValue.toString();
+		
+	}
+	
+	public String getMaximumValue() {
+		
+		return maxValue.toString();
 		
 	}
 		

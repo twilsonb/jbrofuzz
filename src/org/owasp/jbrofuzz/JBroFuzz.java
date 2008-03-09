@@ -25,10 +25,12 @@
  */
 package org.owasp.jbrofuzz;
 
-import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.version.Format;
+import org.owasp.jbrofuzz.io.*;
+import org.owasp.jbrofuzz.ui.*;
+import org.owasp.jbrofuzz.version.*;
 import org.owasp.jbrofuzz.core.*;
+
+import org.owasp.jbrofuzz.fuzz.*;
 
 /**
  * <p>
@@ -88,7 +90,7 @@ public class JBroFuzz {
 	 * </p>
 	 */
 	public JBroFuzz() {
-
+		
 		mDatabase = new Database();
 		
 		mFormat = new Format(this);
@@ -99,7 +101,11 @@ public class JBroFuzz {
 		// Singleton File Handler
 		mHandler = FileHandler.s(mWindow);
 		
-		
+		/*
+		String a = null;
+		MessageCreator myMessage = new MessageCreator(a, "XSS", 1, 2);
+		System.out.println(myMessage.getMessage());
+		*/
 		
 	}
 
