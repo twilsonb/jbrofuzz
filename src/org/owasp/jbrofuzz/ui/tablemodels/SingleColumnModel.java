@@ -40,7 +40,7 @@ import javax.swing.table.AbstractTableModel;
  * @author subere (at) uncon (dot) org
  * @version 0.8
  */
-public class SingleRowTableModel extends AbstractTableModel {
+public class SingleColumnModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 188456456483L;
 	private String[] columnNames;
@@ -52,7 +52,7 @@ public class SingleRowTableModel extends AbstractTableModel {
 	 * 
 	 * @param columnName String
 	 */
-	public SingleRowTableModel(final String columnName) {
+	public SingleColumnModel(final String columnName) {
 		columnNames = new String[1];
 		columnNames[0] = columnName;
 		dataVector = new ArrayList<String>();

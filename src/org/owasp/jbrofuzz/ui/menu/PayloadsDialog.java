@@ -64,7 +64,7 @@ public class PayloadsDialog extends JDialog {
 	// The JTables carrying the data
 	private JTable categoryTable, nameTable;
 	// The Table Models with a single column
-	private SingleRowTableModel categoryTableModel, nameTableModel;
+	private SingleColumnModel categoryTableModel, nameTableModel;
 	// The non-wrapping text pane
 	private NonWrappingTextPane viewTextArea;
 	// The JLabel holding any comments
@@ -105,7 +105,7 @@ public class PayloadsDialog extends JDialog {
 		category.setBounds(10, 20, 220, y - 70);
 		this.add(category);
 
-		categoryTableModel = new SingleRowTableModel("Category");
+		categoryTableModel = new SingleColumnModel("Category");
 		categoryTableSorter = new TableSorter(categoryTableModel);
 
 		categoryTable = new JTable(categoryTableSorter);
@@ -159,7 +159,7 @@ public class PayloadsDialog extends JDialog {
 		name.setBounds(235, 20, 220, 250);
 		this.add(name);
 
-		nameTableModel = new SingleRowTableModel("Name");
+		nameTableModel = new SingleColumnModel("Name");
 		nameTableSorter = new TableSorter(nameTableModel);
 
 		nameTable = new JTable(nameTableSorter);

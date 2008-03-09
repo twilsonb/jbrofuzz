@@ -1,5 +1,5 @@
 /**
- * WebDirectoriesModel.java 0.6
+ * SixRowTableModel.java 0.8
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
@@ -30,62 +30,60 @@ import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 class ResponseOutput {
-	protected String id;
-	protected String uri;
-	protected String statusCode;
-	protected String statusText;
-	protected String comments;
-	protected String scripts;
+	
+	protected String one;
+	protected String two;
+	protected String three;
+	protected String four;
+	protected String five;
+	protected String six;
 
-	public ResponseOutput(final String id, final String uri,
-			final String statusCode, final String statusText, final String comments,
-			final String scripts) {
+	public ResponseOutput(
+			final String one, final String two, final String three, 
+			final String four, final String five, final String six) {
 
-		this.id = id;
-		this.uri = uri;
-		this.statusCode = statusCode;
-		this.statusText = statusText;
-		this.comments = comments;
-		this.scripts = scripts;
+		this.one = one;
+		this.two = two;
+		this.three = three;
+		this.four = four;
+		this.five = five;
+		this.six = six;
+		
 	}
 
-	public String getComments() {
-		return comments;
+	public String getFirst() {
+		return one;
 	}
 
-	public String getID() {
-		return id;
+	public String getSecond() {
+		return two;
+	}
+	
+	public String getThird() {
+		return three;
 	}
 
-	public String getScripts() {
-		return scripts;
+	public String getFourth() {
+		return four;
 	}
 
-	public String getStatusCode() {
-		return statusCode;
+	public String getFifth() {
+		return five;
+	}
+	
+	public String getSixth() {
+		return six;
 	}
 
-	public String getStatusText() {
-		return statusText;
-	}
-
-	public String getURI() {
-		return uri;
-	}
 }
 
 /**
- * <p>
- * The Table Model for the Web Directories return table.
- * </p>
- * <p>
- * This table model is used for replies for the web directories.
- * </p>
+ * <p>The Table Model for the output consisting of six fields.</p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 0.8
  */
-public class WebDirectoriesModel extends AbstractTableModel {
+public class SixColumnModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 185093L;
 	/**
@@ -98,17 +96,27 @@ public class WebDirectoriesModel extends AbstractTableModel {
 	public static final String STRING_SEPARATOR = ",";
 
 	// The names of the columns within the table of generators
-	private static final String[] COLUMNNAMES = { "No", "URI", "Code",
+	private static String[] COLUMNNAMES = { "No", "URI", "Code",
 			"Status Text", "Comments", "Scripts" };
 	// The vector of ResponseOutputs
-	private Vector dataVector;
+	private Vector<ResponseOutput> dataVector;
 
+	public void setColumnNames(String one, String two, String three, String four, String five, String six) {
+		COLUMNNAMES[0] = one;
+		COLUMNNAMES[1] = two;
+		COLUMNNAMES[2] = three;
+		COLUMNNAMES[3] = four;
+		COLUMNNAMES[4] = five;
+		COLUMNNAMES[5] = six;
+	}
 	/**
 	 * Default constructor for this web directory model. This is to be attached to
 	 * a JTable.
 	 */
-	public WebDirectoriesModel() {
-		dataVector = new Vector();
+	public SixColumnModel() {
+		
+		dataVector = new Vector<ResponseOutput>();
+		
 	}
 
 	/**
@@ -127,12 +135,11 @@ public class WebDirectoriesModel extends AbstractTableModel {
 	 * @param scripts
 	 *          String
 	 */
-	public void addRow(final String id, final String uri,
-			final String statusCode, final String statusText, final String comments,
-			final String scripts) {
+	public void addRow(
+			final String one, final String two, final String three, 
+			final String four, final String five, final String six) {
 
-		final ResponseOutput response = new ResponseOutput(id, uri, statusCode,
-				statusText, comments, scripts);
+		final ResponseOutput response = new ResponseOutput(one, two, three, four, five, six);
 		dataVector.add(response);
 		fireTableRowsInserted(0, dataVector.size() - 1);
 	}
@@ -143,7 +150,7 @@ public class WebDirectoriesModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getColumnCount() {
-		return WebDirectoriesModel.COLUMNNAMES.length;
+		return SixColumnModel.COLUMNNAMES.length;
 	}
 
 	/**
@@ -156,8 +163,8 @@ public class WebDirectoriesModel extends AbstractTableModel {
 	@Override
 	public String getColumnName(final int column) {
 		String out = "";
-		if ((column > -1) && (column < WebDirectoriesModel.COLUMNNAMES.length)) {
-			out = WebDirectoriesModel.COLUMNNAMES[column];
+		if ((column > -1) && (column < SixColumnModel.COLUMNNAMES.length)) {
+			out = SixColumnModel.COLUMNNAMES[column];
 		}
 		return out;
 	}
@@ -172,10 +179,10 @@ public class WebDirectoriesModel extends AbstractTableModel {
 	public String getRow(final int row) {
 		final StringBuffer output = new StringBuffer();
 		if ((row > -1) && (row < dataVector.size())) {
-			for (int i = 0; i < WebDirectoriesModel.COLUMNNAMES.length; i++) {
+			for (int i = 0; i < SixColumnModel.COLUMNNAMES.length; i++) {
 				output.append(getValueAt(row, i));
-				if (i < WebDirectoriesModel.COLUMNNAMES.length - 1) {
-					output.append(WebDirectoriesModel.STRING_SEPARATOR);
+				if (i < SixColumnModel.COLUMNNAMES.length - 1) {
+					output.append(SixColumnModel.STRING_SEPARATOR);
 				}
 			}
 			output.append("\n");
@@ -210,17 +217,17 @@ public class WebDirectoriesModel extends AbstractTableModel {
 			final ResponseOutput record = (ResponseOutput) dataVector.get(row);
 			switch (column) {
 			case 0:
-				return record.getID();
+				return record.getFirst();
 			case 1:
-				return record.getURI();
+				return record.getSecond();
 			case 2:
-				return record.getStatusCode();
+				return record.getThird();
 			case 3:
-				return record.getStatusText();
+				return record.getFourth();
 			case 4:
-				return record.getComments();
+				return record.getFifth();
 			case 5:
-				return record.getScripts();
+				return record.getSixth();
 			default:
 				return "";
 			}

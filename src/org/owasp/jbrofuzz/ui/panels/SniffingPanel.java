@@ -47,7 +47,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.owasp.jbrofuzz.snif.ConnectionListener;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.ui.tablemodels.SingleRowTableModel;
+import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.SwingWorker3;
@@ -115,7 +115,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 	// private JBRFrame m;
 
 	// The table model
-	private SingleRowTableModel tableModel;
+	private SingleColumnModel tableModel;
 
 	// The TCP Connection listener
 	private ConnectionListener reflector;
@@ -207,7 +207,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 		lPortPanel.add(lPortText);
 		
 		// The table of list of requests text
-		tableModel = new SingleRowTableModel(" Requests / Replies ");
+		tableModel = new SingleColumnModel(" Requests / Replies ");
 
 		sniffingTable = new JTable();
 		sniffingTable.setModel(tableModel);

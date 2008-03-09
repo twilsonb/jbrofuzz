@@ -54,7 +54,7 @@ import javax.swing.table.TableColumn;
 
 import org.owasp.jbrofuzz.dir.DRequestIterator;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.ui.tablemodels.WebDirectoriesModel;
+import org.owasp.jbrofuzz.ui.tablemodels.SixColumnModel;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.SwingWorker3;
 import org.owasp.jbrofuzz.util.TableSorter;
@@ -91,7 +91,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	private JTable responseTable;
 
 	// The corresponding table model
-	private WebDirectoriesModel responseTableModel;
+	private SixColumnModel responseTableModel;
 
 	// The request iterator to loop through the directories
 	private DRequestIterator cesg;
@@ -229,7 +229,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 			}
 		});
 		
-		responseTableModel = new WebDirectoriesModel();
+		responseTableModel = new SixColumnModel();
 		sorter = new TableSorter(responseTableModel);
 		responseTable = new JTable(sorter);
 
