@@ -166,7 +166,7 @@ public class MessageCreator {
 		
 		String test = stringReplace("\r\n", message, "\\r\\n\n"); 
 		
-		System.out.println(test);
+		// System.out.println(test);
 		
 		return message;
 		

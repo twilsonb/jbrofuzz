@@ -33,6 +33,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 
 import org.apache.commons.*;
+import org.apache.commons.lang.*;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -145,7 +146,7 @@ public class Connection {
 				sslSocket = (SSLSocket)sslsocketfactory.createSocket(host, port);
 				sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
 				sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-				sslSocket.setSoTimeout(30000);
+				// sslSocket.setSoTimeout(30000);
 				
 			} catch (UnknownHostException e) {
 				reply = "The IP address of the host could not be determined : "
@@ -216,7 +217,7 @@ public class Connection {
 
 				socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
 				socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-				socket.setSoTimeout(30000);
+				// socket.setSoTimeout(30000);
 			} catch (final UnknownHostException e) {
 				reply = "The IP address of the host could not be determined : "
 					+ e.getMessage() + "\n";
@@ -300,6 +301,18 @@ public class Connection {
 
 		return reply;
 
+	}
+	
+	public String getStatus() {
+		
+		String output = "   ";
+		
+		String value = reply.split(" ")[1];
+		if(StringUtils.isNumeric(value)) {
+			output = value;
+		}
+		
+		return output;
 	}
 
 	public int getPort() {
