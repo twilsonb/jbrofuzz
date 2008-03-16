@@ -27,7 +27,7 @@ data&nbsp;brakes.</font>
           
               
            
-           </p>
+      </p>
       <p><font face="Verdana" size="2">The term stateless simply implies that the 
       different requests/replies being generated do not depend on previous ones 
       made. </font></p></td></tr></table>        </p><font ><font 
@@ -45,8 +45,9 @@ border=0>
       <p><font face="Verdana" size="2">Say the file you want to run is named: 
       jbrofuzz-10.jar</font></p>
       <p><font size="2"><font face="Verdana">From the command line type the 
-      following:<br><strong>&gt;java -jar 
-      jbrofuzz.jar</strong></font></font></p>
+      following:<br>
+      <strong>&gt;java -jar 
+      jbrofuzz-10.jar</strong></font></font></p>
       <p><font face="Verdana" size="2">You 
       will need to have Java installed on your system. It's probably worth 
       checking: http://www.java.sun.com</font></p></td></tr></table>        
@@ -73,7 +74,7 @@ fuzz!</font>
           
               
            
-           </p>
+      </p>
       <p><font face="Verdana" size="2">Paraphrasing Chet's ending line speech, this 
       application tries to make fuzzing as simple and less time consuming as 
       possible. </font></p></td></tr></table>    
@@ -102,7 +103,7 @@ service.</font>
           
               
            
-           </p>
+      </p>
 <p><font face="Verdana" size="2">    
             Unfortunately, you 
       still have to know a bit about the network protocol 
@@ -113,7 +114,7 @@ perform.</font><font face="Verdana"
           
               
            
-           </p></td></tr></table></font></font>        
+      </p></td></tr></table></font></font>        
           
               
            
@@ -137,7 +138,7 @@ source.</font>
           
               
            
-           </p>
+      </p>
 <p><font face="Verdana" size="2">    
               
                 
@@ -148,7 +149,7 @@ size=2>&nbsp;</font>
           
               
            
-           </p></td></tr></table></font><font size="2"><font 
+      </p></td></tr></table></font><font size="2"><font 
 face=Verdana><font >     
             
               
@@ -178,7 +179,7 @@ users.</font>
           
               
            
-           </p>
+      </p>
 <p><font face="Verdana" size="2">You 
       will need to have Java installed on your system. It's probably worth 
       checking: http://www.java.sun.com    
@@ -191,7 +192,7 @@ users.</font>
           
               
            
-           </p></td></tr></table>        
+      </p></td></tr></table>        
           
               
            
@@ -217,7 +218,7 @@ later.</font>
           
               
            
-           </p></td></tr></table>      
+      </p></td></tr></table>      
         </font></font></font></p>
 <p><font size="2"><font face="Verdana"><font >
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
@@ -240,7 +241,7 @@ from:</font>
           
               
            
-           </p>
+      </p>
       <ul>
         <li>
 <div><font 
@@ -248,27 +249,27 @@ from:</font>
           
               
            
-           </div></li>
+          </div></li>
         <li>
 <div><font 
       size=2>sniffing</font>        
           
               
            
-           </div></li>
+          </div></li>
         <li>
 <div><font 
       size=2>web-dir</font>        
           
               
            
-           </div></li></ul>
+          </div></li></ul>
 <p><font size="2">Each one is used for the corresponding 
       tab.</font>        
           
               
            
-           </p></td></tr></table>             
+      </p></td></tr></table>             
 </font></font></font>        
           
               
@@ -317,49 +318,34 @@ browser.</font>
            
            </p>
 <p>
-<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
+</font></font></font>
+           <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
-  
-  <tr>
-    <td>
-      <p><strong><font face="Verdana" size="2">   Q: What is 
-      a generator?</font></strong></p></td></tr>
-  <tr>
-    <td>
-<p><font face="Verdana" size="2">    
-        A generator contains a particular character 
-      set which will be tested against the specified range of 
-      the request. As this might sound pretty Greek 
-      to most, here are some examples of 
-generators:</font>        
-          
-              
-           
+             <tr>
+               <td><p><font size="2" face="Verdana"><strong> Q: What is a generator?</strong></font></p></td>
+             </tr>
+             <tr>
+               <td><p><font face="Verdana" size="2"> A generator contains a particular character set which will be tested against the specified range of the request. As this might sound pretty Greek to most, here are some examples of generators:</font> <font face="Verdana" size="2"> Sending all requests of : 0000 to 1111 (binary generator over 4 characters) Sending all requests of : 00 to 99 (decimal generator over 2 characters).</font> </p>
+                   <p><font face="Verdana" size="2"> To get a better understanding of how generators work, view the tutorial demo that is available for download..</font> </p></td>
+             </tr>
+           </table>
+<p>&nbsp;</p>
+           <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
+border=0>
+             <tr>
+               <td><p><font size="2" face="Verdana"><strong> Q: What is a fuzzer?</strong></font></p></td>
+             </tr>
+             <tr>
+               <td><p><font face="Verdana" size="2"> A fuzzer is an object that iterates through a set of values grouped in a generator. The values attached in a fuzzer represent the payloads of the particular generator. </font> </p>
+                   <p><font face="Verdana" size="2"> To get a better understanding of how fuzzers work, unjar the latest version of JBroFuzz and look at the file generators.jbrofuzz . </font></p></td>
+             </tr>
+           </table>
+           <p><font 
+size=2><font face="Verdana"><font >
            </p>
-<p><font face="Verdana" size="2">    
-              
-      Sending all requests of : 0000 to 1111 (binary generator 
-      over 4 characters) Sending all requests of : 
-      00 to 99 (decimal generator over 2 
-characters).</font>        
-          
-              
-           
-           </p>
-<p><font face="Verdana" size="2">    
-              
-              To get 
-      a better understanding of how generators work, view 
-      the tutorial demo that is available for 
-download..</font>        
-          
-              
-           
-           </p></td></tr></table>        
-          
-              
-           
-           </p>
+           </font></font></font></p>
+           <font 
+size=2><font face="Verdana"><font >
 <p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
@@ -404,11 +390,9 @@ side.</font>
           
               
            
-           </p></td></tr></table>        
-          
-              
-           
-           </p>
+           </p></td></tr>
+</table>
+</p>
 <p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
@@ -428,11 +412,9 @@ No.</font>
           
               
            
-           </p></td></tr></table>        
-          
-              
-           
-           </p>
+           </p></td></tr>
+</table>
+</p>
 <p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
@@ -462,11 +444,9 @@ operational.</font>
           
               
            
-           </p></td></tr></table>        
-          
-              
-           
-           </p>
+           </p></td></tr>
+</table>
+</p>
 <p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
@@ -486,11 +466,9 @@ application.</font>
           
               
            
-           </p></td></tr></table>        
-          
-              
-           
-           </p>
+           </p></td></tr>
+</table>
+</p>
 <p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
@@ -547,8 +525,9 @@ going:</font>
           
               
            
-           </p></td></tr></table>          
-      </font></font></font><font size="2"><font 
+           </p></td></tr>
+</table>
+           </font></font></font><font size="2"><font 
 face=Verdana><font >         </font></font></font></p>
 </body>
 </html>
