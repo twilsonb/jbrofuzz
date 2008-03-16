@@ -46,7 +46,7 @@ public class Fuzzer implements Iterator<String> {
 			maxValue = new BigInteger("0");
 		}
 		
-		cValue = new BigInteger("1");
+		cValue = new BigInteger("0");
 		this.len = len;
 		
 	}

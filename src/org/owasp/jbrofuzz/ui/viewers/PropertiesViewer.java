@@ -43,13 +43,9 @@ import org.owasp.jbrofuzz.util.*;
  * @author subere (at) uncon (dot) org
  * @version 0.8
  */
-public class ExploitViewer extends JFrame {
+public class PropertiesViewer extends JFrame {
 
 	private static final long serialVersionUID = 2145212672855056458L;
-
-	public static final int VIEW_EXPLOIT = 0;
-
-	public static final int VIEW_CATEGORY = 1;
 
 	/**
 	 * <p>Main constructor for the exploit viewer window. This requires
@@ -57,12 +53,13 @@ public class ExploitViewer extends JFrame {
 	 * the exploit passed from the database.</p>
 	 * 
 	 * @param m
-	 * @param exploit
+	 * @param display
 	 * @param view
 	 */
-	public ExploitViewer(final JBroFuzzWindow m, final String exploit, final int view) {
+	public PropertiesViewer(final JBroFuzzWindow m, final String header, final String text) {
 		super();
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setTitle(header);
 
 		//	 The container pane
 		final Container pane = getContentPane();
@@ -92,43 +89,19 @@ public class ExploitViewer extends JFrame {
 		listPanel.add(listTextScrollPane);
 		this.add(listPanel);
 
-		// In the case we are dealing with an exploit
-		if(view == ExploitViewer.VIEW_EXPLOIT) {
-			setTitle("Detailed Exploit View");
-			listTextArea.append("Exploit Name: " + exploit + "\n\n");
-			// listTextArea.append("Payload:\n\n" + m.getJBroFuzz().getDatabase().getExploit(exploit) + "\n\n");
-			// listTextArea.append("Information:\n\n" + m.getJBroFuzz().getDatabase().getComment(exploit));
-			listTextArea.setCaretPosition(0);
+		listTextArea.setText(text);
+		listTextArea.setCaretPosition(0);
 
-			listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-					.createTitledBorder("Exploit: " + exploit), BorderFactory
-					.createEmptyBorder(1, 1, 1, 1)));
-		}
-		
-		// In the case we are dealing with a category of exploits
-		if(view == ExploitViewer.VIEW_CATEGORY) {
-			setTitle("Detailed Category of Exploits View");
-			listTextArea.append("Category Name: " + exploit + "\n\n");
-			
-			final String[] categoryExploits = {"", ""}; // m.getJBroFuzz().getDatabase().getAllIds(exploit);
-			
-			listTextArea.append("Total Number of Exploits in this Category: " + categoryExploits.length + "\n\n");
-			listTextArea.append("Exploits in this Category:\n\n");
-			for(final String cExploit : categoryExploits) {
-				listTextArea.append(" - " + cExploit + "\n");
-			}
-			
-			listTextArea.setCaretPosition(0);
-			listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-					.createTitledBorder("Category: " + exploit), BorderFactory
-					.createEmptyBorder(1, 1, 1, 1)));
-		}
+		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" " + header), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
+
 
 		//	 Global Frame Issues
 		this.setLocation(200, 200);
 		this.setSize(550, 300);
 		setResizable(false);
-		
+
 		// Don't show the frame unless there is content
 		if (listTextArea.getText().length() < 1) {
 			setVisible(false);
@@ -141,7 +114,7 @@ public class ExploitViewer extends JFrame {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
-					ExploitViewer.this.dispose();
+					PropertiesViewer.this.dispose();
 				}
 			}
 		});

@@ -62,6 +62,9 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 	// Dimensions of the about box
 	private static final int x = 650;
 	private static final int y = 400;
+	//
+	private static String FILE_NOT_FOUND = "Help file could not be located.";
+	
 	// The buttons
 	private JButton ok;
 	// The tree
@@ -111,7 +114,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			helpPane = new JEditorPane(helpURL);
 		} catch (final IOException e1) {
 			helpPane = new JEditorPane();
-			helpPane.setText("Help file could not be located.");
+			helpPane.setText(FILE_NOT_FOUND);
 		}
 		helpPane.setEditable(false);
 		helpScrPane = new JScrollPane(helpPane);
@@ -121,7 +124,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			webdPane = new JEditorPane(webdURL);
 		} catch (final IOException e1) {
 			webdPane = new JEditorPane();
-			webdPane.setText("Help file could not be located.");
+			webdPane.setText(FILE_NOT_FOUND);
 		}
 		webdPane.setEditable(false);
 		webdScrPane = new JScrollPane(webdPane);
@@ -131,7 +134,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			tcpfPane = new JEditorPane(tcpfURL);
 		} catch (final IOException e1) {
 			tcpfPane = new JEditorPane();
-			tcpfPane.setText("Help file could not be located.");
+			tcpfPane.setText(FILE_NOT_FOUND);
 		}
 		tcpfPane.setEditable(false);
 		tcpfScrPane = new JScrollPane(tcpfPane);
@@ -141,7 +144,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			tcpsPane = new JEditorPane(tcpsURL);
 		} catch (final IOException e1) {
 			tcpsPane = new JEditorPane();
-			tcpsPane.setText("Help file could not be located.");
+			tcpsPane.setText(FILE_NOT_FOUND);
 		}
 		tcpsPane.setEditable(false);
 		tcpsScrPane = new JScrollPane(tcpsPane);
@@ -151,7 +154,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			genePane = new JEditorPane(geneURL);
 		} catch (final IOException e1) {
 			genePane = new JEditorPane();
-			genePane.setText("Help file could not be located.");
+			genePane.setText(FILE_NOT_FOUND);
 		}
 		genePane.setEditable(false);
 		geneScrPane = new JScrollPane(genePane);
@@ -161,7 +164,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			sysmPane = new JEditorPane(sysmURL);
 		} catch (final IOException e1) {
 			sysmPane = new JEditorPane();
-			sysmPane.setText("Help file could not be located.");
+			sysmPane.setText(FILE_NOT_FOUND);
 		}
 		sysmPane.setEditable(false);
 		sysmScrPane = new JScrollPane(sysmPane);
@@ -171,7 +174,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			osrcPane = new JEditorPane(osrcURL);
 		} catch (final IOException e1) {
 			osrcPane = new JEditorPane();
-			osrcPane.setText("Help file could not be located.");
+			osrcPane.setText(FILE_NOT_FOUND);
 		}
 		osrcPane.setEditable(false);
 		osrcScrPane = new JScrollPane(osrcPane);
@@ -220,28 +223,28 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 	}
 
 	private void createNodes(final DefaultMutableTreeNode top) {
+		
 		DefaultMutableTreeNode leaf = null;
+
+		leaf = new DefaultMutableTreeNode("Fuzzing");
+		top.add(leaf);
+
+		leaf = new DefaultMutableTreeNode("Sniffing");
+		top.add(leaf);
+
+		leaf = new DefaultMutableTreeNode("Payloads");
+		top.add(leaf);
 
 		leaf = new DefaultMutableTreeNode("Web Directories");
 		top.add(leaf);
 
-		leaf = new DefaultMutableTreeNode("TCP Fuzzing");
-		top.add(leaf);
-
-		leaf = new DefaultMutableTreeNode("TCP Sniffing");
-		top.add(leaf);
-
-		leaf = new DefaultMutableTreeNode("Generators");
-		top.add(leaf);
-
-		leaf = new DefaultMutableTreeNode("Open Source");
-		top.add(leaf);
-
 		leaf = new DefaultMutableTreeNode("System");
 		top.add(leaf);
+		
 	}
 
 	public void valueChanged(final TreeSelectionEvent e) {
+		
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 				.getLastSelectedPathComponent();
 
@@ -256,17 +259,14 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		if (s.equalsIgnoreCase("Web Directories")) {
 			splitPane.setRightComponent(webdScrPane);
 		}
-		if (s.equalsIgnoreCase("TCP Fuzzing")) {
+		if (s.equalsIgnoreCase("Fuzzing")) {
 			splitPane.setRightComponent(tcpfScrPane);
 		}
-		if (s.equalsIgnoreCase("TCP Sniffing")) {
+		if (s.equalsIgnoreCase("Sniffing")) {
 			splitPane.setRightComponent(tcpsScrPane);
 		}
-		if (s.equalsIgnoreCase("Generators")) {
+		if (s.equalsIgnoreCase("Payloads")) {
 			splitPane.setRightComponent(geneScrPane);
-		}
-		if (s.equalsIgnoreCase("Open Source")) {
-			splitPane.setRightComponent(osrcScrPane);
 		}
 		if (s.equalsIgnoreCase("System")) {
 			splitPane.setRightComponent(sysmScrPane);

@@ -204,11 +204,11 @@ public class Format {
 	/**
 	 * The String displaying within the Fuzzing Request text area
 	 */
-	public static final String REQUEST_TCP = "GET / HTTP/1.0\r\n<-new-line->"
-		+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\r\n"
-		+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\r\n<-new-line->"
-		+ "Accept-Language: en-gb,en;q=0.5\r\n<-new-line->"
-		+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n\r\n<-new-line->";
+	public static final String REQUEST_TCP = "GET / HTTP/1.0\n"
+		+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\n"
+		+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n"
+		+ "Accept-Language: en-gb,en;q=0.5\n"
+		+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n\n";
 
 	/**
 	 * Return the code name of the current version, based on the version number.

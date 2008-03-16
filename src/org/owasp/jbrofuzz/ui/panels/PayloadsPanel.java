@@ -83,7 +83,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		category.setBounds(10, 20, 220, 430);
 		this.add(category);
 
-		categoryTableModel = new SingleColumnModel("Ids");
+		categoryTableModel = new SingleColumnModel(" Id ");
 		categoryTableSorter = new TableSorter(categoryTableModel);
 
 		categoryTable = new JTable(categoryTableSorter);
@@ -106,7 +106,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 			public void mouseClicked(final MouseEvent e){
 				if (e.getClickCount() == 2){
 					final String exploit = (String) categoryTable.getModel().getValueAt(categoryTable.getSelectedRow(), 0);
-					new ExploitViewer(m, exploit, ExploitViewer.VIEW_CATEGORY);
+					new PropertiesViewer(m, exploit, exploit);
 				}
 			}
 		} );
@@ -120,12 +120,12 @@ public class PayloadsPanel extends JBroFuzzPanel {
 
 		name = new JPanel();
 		name.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Payloads "), BorderFactory
+				.createTitledBorder(" Select a Category "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 		name.setBounds(235, 100, 220, 350);
 		this.add(name);
 
-		nameTableModel = new SingleColumnModel("Id");
+		nameTableModel = new SingleColumnModel(" Payload ");
 		nameTableSorter = new TableSorter(nameTableModel);
 
 		nameTable = new JTable(nameTableSorter);
@@ -147,7 +147,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 			public void mouseClicked(final MouseEvent e){
 				if (e.getClickCount() == 2){
 					final String exploit = (String) nameTable.getModel().getValueAt(nameTable.getSelectedRow(), 0);
-					new ExploitViewer(m, exploit, ExploitViewer.VIEW_EXPLOIT);
+					new PropertiesViewer(m, exploit, exploit);
 				}
 			}
 		} );
@@ -162,7 +162,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 
 		view = new JPanel();
 		view.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Exploit Information "), BorderFactory
+				.createTitledBorder(" Payload Information "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 		view.setBounds(460, 150, 420, 300);
 		this.add(view);	
@@ -188,7 +188,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 
 		commentTextArea = new JTextArea();
 		commentTextArea.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Further Information "),
+				.createTitledBorder(" Properties "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		commentTextArea.setEditable(false);
 		commentTextArea.setWrapStyleWord(true);
@@ -205,7 +205,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		view.add(commentLabelScrollPane);
 
 		// The about button
-
+		/*
 		final JButton infoButton = new JButton("About");
 		infoButton.setBounds(800, 33, 70, 40);
 		infoButton.setEnabled(true);
@@ -216,11 +216,12 @@ public class PayloadsPanel extends JBroFuzzPanel {
 			}
 		});
 		this.add(infoButton);
+		*/
 	}
 	
 	/**
 	 * <p>
-	 * Method for setting the given category name to be diplayed
+	 * Method for setting the given category name to be displayed
 	 * </p>
 	 * 
 	 * @param category
@@ -279,10 +280,15 @@ public class PayloadsPanel extends JBroFuzzPanel {
 			}
 			final int c = categoryTable.getSelectedRow();
 			final String value = (String) categoryTableSorter.getValueAt(c, 0);
-			// nameTableSorter.setTableHeader(new JTableHeader());
+			final String exploit = getFrame().getJBroFuzz().getDatabase().getName(value);
+			
 			nameTableModel.setData(getFrame().getJBroFuzz().getDatabase().getPayloads(value));
 			nameTableSorter.setTableModel(nameTableModel);
 			nameTableSorter.fireTableDataChanged();
+			
+			name.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+					.createTitledBorder(" " + exploit + " "), BorderFactory
+					.createEmptyBorder(1, 1, 1, 1)));
 			
 			viewTextArea.setText("");
 			viewTextArea.setCaretPosition(0);
@@ -302,17 +308,21 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				return;
 			}
 			final int c = nameTable.getSelectedRow();
-			final String value = (String) nameTableSorter.getValueAt(c, 0);
-
+			final String payload = (String) nameTableSorter.getValueAt(c, 0);
 			
-			viewTextArea.setText(value);
+			final int d = categoryTable.getSelectedRow();
+			final String category = (String) categoryTableSorter.getValueAt(d, 0);
+			
+			viewTextArea.setText(payload);
 			viewTextArea.setCaretPosition(0);
 
 			commentTextArea.setText(
-					"\nLength:\t\t" + value.length() + "\n\n" + 
-					"Numeric:\t\t" + StringUtils.isNumeric(value) + "\n" +
-					"Alpha:\t\t" + StringUtils.isAlpha(value) + "\n" +
-					"Spaces:\t\t" + StringUtils.isWhitespace(value) + "\n" );
+					"\nPayload belongs to Generator: " + getFrame().getJBroFuzz().getDatabase().getName(category) + "\n\n"
+					+ "Payload Number: " + (c + 1) + " of " + nameTable.getRowCount() + " \n" 
+					+ "Payload Length: " + payload.length() + "\n\n"
+					+ "Contains Spaces: " + StringUtils.isWhitespace(payload) + "\n" 
+					+ "Numeric Payload: " + StringUtils.isNumeric(payload) + "\n" 
+					+ "Alpha Payload: " + StringUtils.isAlpha(payload) + "\n" );
 			commentTextArea.setCaretPosition(0);
 		}
 	}
@@ -328,7 +338,8 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	protected void popup(final JTable area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
-
+		/*
+		final JMenuItem i1 = new JMenuItem()
 		final JMenuItem i2 = new JMenuItem("Copy");
 		final JMenuItem i4 = new JMenuItem("Select All");
 		final JMenuItem i5 = new JMenuItem("Properties");
@@ -337,11 +348,26 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				ActionEvent.CTRL_MASK));
 		i4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
 				ActionEvent.CTRL_MASK));
-
+		
 		popmenu.add(i2);
 		popmenu.add(i4);
 		popmenu.addSeparator();
 		popmenu.add(i5);
+		*/
+		final JMenuItem i1 = new JMenuItem("Cut");
+		final JMenuItem i2 = new JMenuItem("Copy");
+		final JMenuItem i3 = new JMenuItem("Paste");
+		final JMenuItem i4 = new JMenuItem("Select All");
+		
+		i1.setEnabled(false);
+		i2.setEnabled(true);
+		i3.setEnabled(false);
+		i4.setEnabled(false);
+		
+		popmenu.add(i1);
+		popmenu.add(i2);
+		popmenu.add(i3);
+		popmenu.add(i4);
 
 		i2.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -366,7 +392,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				area.selectAll();
 			}
 		});
-
+		/*
 		i5.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// Properties
@@ -381,7 +407,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				}
 			}
 		});
-
+		*/
 		area.addMouseListener(new MouseAdapter() {
 			private void checkForTriggerEvent(final MouseEvent e) {
 				if (e.isPopupTrigger()) {

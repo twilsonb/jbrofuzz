@@ -168,6 +168,12 @@ public class Database {
 		
 	}
 	
+	public String getName(String Id) {
+		
+		return generators.get(Id).getName();
+		
+	}
+	
 	public boolean containsGenerator(String Id) {
 		
 		return generators.containsKey(Id);

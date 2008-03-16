@@ -25,39 +25,18 @@
  */
 package org.owasp.jbrofuzz.ui.panels;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.table.TableColumn;
+import javax.swing.*;
+import javax.swing.table.*;
 
 import org.owasp.jbrofuzz.dir.DRequestIterator;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SixColumnModel;
-import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.util.SwingWorker3;
-import org.owasp.jbrofuzz.util.TableSorter;
+import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
+import org.owasp.jbrofuzz.util.*;
 import org.owasp.jbrofuzz.version.Format;
 
 import com.Ostermiller.util.Browser;
@@ -230,6 +209,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		});
 		
 		responseTableModel = new SixColumnModel();
+		responseTableModel.setColumnNames("No", "URI", "Code", "Status Text", "Comments", "Scripts" );
 		sorter = new TableSorter(responseTableModel);
 		responseTable = new JTable(sorter);
 
@@ -456,21 +436,43 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
+		final JMenuItem i0 = new JMenuItem("Open in Browser");
+		final JMenuItem i1 = new JMenuItem("Cut");
 		final JMenuItem i2 = new JMenuItem("Copy");
+		final JMenuItem i3 = new JMenuItem("Paste");
 		final JMenuItem i4 = new JMenuItem("Select All");
-		final JMenuItem i5 = new JMenuItem("Open in Browser");
-
-		i2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-				ActionEvent.CTRL_MASK));
-		i4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				ActionEvent.CTRL_MASK));
-
-		popmenu.add(i2);
+		final JMenuItem i5 = new JMenuItem("Properties");
+		
+		i0.setEnabled(true);
+		i1.setEnabled(false);
+		i2.setEnabled(true);
+		i3.setEnabled(false);
+		i4.setEnabled(true);
+		i5.setEnabled(true);
+		
+		popmenu.add(i0);
 		popmenu.addSeparator();
+		popmenu.add(i1);
+		popmenu.add(i2);
+		popmenu.add(i3);
 		popmenu.add(i4);
 		popmenu.addSeparator();
 		popmenu.add(i5);
 
+		i0.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				Browser.init();
+				final String url = (String) area.getValueAt(area.getSelectedRow(),
+						1 % area.getColumnCount());
+				try {
+					Browser.displayURL(url);
+				} catch (final IOException ex) {
+					getFrame().log(
+							"Could not launch link in external browser");
+				}
+			}
+		});
+		
 		i2.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// Copy
@@ -491,21 +493,6 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 				myTempArea.copy();
 				area.removeRowSelectionInterval(0, area.getRowCount() - 1);
 				
-				/*
-				area.removeRowSelectionInterval(0, area.getRowCount() - 1);
-				final int[] a = area.getSelectedRows();
-				final StringBuffer s = new StringBuffer();
-				for (final int element : a) {
-					final TableSorter tb = (TableSorter) area.getModel();
-					final WebDirectoriesModel wm = (WebDirectoriesModel) tb
-							.getTableModel();
-					final String row = wm.getRow(element);
-					s.append(row);
-				}
-				final JTextArea myTempArea = new JTextArea(s.toString());
-				myTempArea.selectAll();
-				myTempArea.copy();
-				*/
 			}
 		});
 
@@ -517,18 +504,26 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 
 		i5.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				Browser.init();
-				final String url = (String) area.getValueAt(area.getSelectedRow(),
-						1 % area.getColumnCount());
-				try {
-					Browser.displayURL(url);
-				} catch (final IOException ex) {
-					getFrame().log(
-							"Could not launch link in external browser");
+				
+				StringBuffer output = new StringBuffer();
+				
+				
+				for (int i = 0; i < area.getColumnCount(); i++) {
+					
+					// TableColumn column = area.getColumnModel().getColumn(i);
+					output.append(area.getColumnName(i) + ": ");
+					output.append(area.getModel().getValueAt(area.getSelectedRow(), i));
+					output.append("\n");
 				}
+				
+				
+				// final String exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
+				new PropertiesViewer(getFrame(), "Properties", output.toString());
+				
 			}
 		});
-
+		
+		
 		area.addMouseListener(new MouseAdapter() {
 			private void checkForTriggerEvent(final MouseEvent e) {
 				if (e.isPopupTrigger()) {

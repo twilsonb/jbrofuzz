@@ -132,11 +132,38 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 
 	private void createNodes(final DefaultMutableTreeNode top) {
 		DefaultMutableTreeNode node = null;
-
+		
+		/*
 		for (int i = 0; i < NO_LINKS; i++) {
 			node = new DefaultMutableTreeNode("Question " + (i + 1));
 			top.add(node);
 		}
+		*/
+		node = new DefaultMutableTreeNode("Name");
+		top.add(node);
+		
+		node = new DefaultMutableTreeNode("Running the jar");
+		top.add(node);
+
+		node = new DefaultMutableTreeNode("Latest version");
+		top.add(node);
+
+		node = new DefaultMutableTreeNode("Java requirements");
+		top.add(node);
+		
+		node = new DefaultMutableTreeNode("Directory problems");
+		top.add(node);
+
+		node = new DefaultMutableTreeNode("What is a Generator?");
+		top.add(node);
+		
+		node = new DefaultMutableTreeNode("What is a Fuzzer?");
+		top.add(node);
+
+		node = new DefaultMutableTreeNode("Sniffing problems");
+		top.add(node);
+
+
 
 	}
 

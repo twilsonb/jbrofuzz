@@ -1,7 +1,12 @@
-The Database within JBroFuzz is based on the XSSDB. Many 
-thanks to GNUCITIZEN (http://www.gnucitizen.org) for their 
-hard work in putting together XSSDB. In particular, .mario
-pdp (architect) as well as all the others.
+JBroFuzz is licensed under the GNU General Public License; 
+a copy should be included within this distribution; if not 
+you can find it at http://www.gnu.org/licenses/gpl.txt
+
+Some of the XSS generators included and their respective
+payloads come from XSSDB. Many thanks to GNUCITIZEN 
+(http://www.gnucitizen.org) for their hard work in 
+putting together XSSDB. In particular, .mario pdp 
+(architect) as well as all the others.
 
 This product includes software developed by The Apache 
 Software Foundation (http://www.apache.org).The commons 
@@ -22,6 +27,3 @@ licensed under the GNU Lesser General Public License; a copy
 should be included within this distribution; If not you can 
 find it at http://www.gnu.org/licenses/lgpl.txt
 
-JBroFuzz is licensed under the GNU General Public License; 
-a copy should be included within this distribution; if not 
-you can find it at http://www.gnu.org/licenses/gpl.txt

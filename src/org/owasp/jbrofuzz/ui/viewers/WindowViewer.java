@@ -77,14 +77,6 @@ public class WindowViewer extends JFrame {
 	 */
 	public static final int VIEW_FUZZING_PANEL = 2;
 	
-	/**
-	 * <p>
-	 * Constant used for specifying within which directory to look for the 
-	 * corresponding file. Using this value will point to the HTTP fuzzing directory
-	 * used for the corresponding session.
-	 * </p>
-	 */
-	public static final int VIEW_HTTP_FUZZING_PANEL = 3;
 	
 	/**
 	 * <p>The window viewer that gets launched for each request within the
@@ -98,19 +90,19 @@ public class WindowViewer extends JFrame {
 		super();
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
-		final String[] input = name.split(" ");
-		final String number = input[0] + ".html";
+		// final String[] input = name.split(" ");
+		final String number = name + ".html";
 		setTitle("Window Viewer " + number);
 
 		// The container pane
 		final Container pane = getContentPane();
-		pane.setLayout(null);
+		// pane.setLayout(null);
 		// Define the JPanel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		// Set the bounds
-		listPanel.setBounds(10, 10, 520, 450);
+		// listPanel.setBounds(10, 10, 520, 450);
 		// The text area
 		final NonWrappingTextPane listTextArea = new NonWrappingTextPane();
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -138,16 +130,14 @@ public class WindowViewer extends JFrame {
 
 		StringBuffer text = new StringBuffer();
 		if (typeOfPanel == WindowViewer.VIEW_SNIFFING_PANEL) {
-			text = FileHandler.readSnifFile(number);
+			text = m.getJBroFuzz().getHandler().readSnifFile(number);
 		}
 		if (typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
-			text = FileHandler.readFuzzFile(number);
-		}
-		if (typeOfPanel == WindowViewer.VIEW_HTTP_FUZZING_PANEL) {
-			text = FileHandler.readHTTPFuzzFile(number);
+			text = m.getJBroFuzz().getHandler().readFuzzFile(number);
 		}
 		
-		// Find the header
+		
+		/* Find the header
 		int headerEnd = text.indexOf("]");
 		if ((headerEnd < 0)) {
 			headerEnd = 0;
@@ -157,9 +147,10 @@ public class WindowViewer extends JFrame {
 			header = text.substring(0, headerEnd + 1);
 			text.delete(0, headerEnd + 1);
 		}
+		*/
 		
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(header), BorderFactory
+				.createTitledBorder(number), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 
 		listTextArea.setText(text.toString());

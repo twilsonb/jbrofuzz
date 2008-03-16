@@ -69,29 +69,36 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("HEAD", Color.gray);
 		keywords.put("TRACE", Color.gray);
 
-		keywords.put("Accept", Color.darkGray);
-		keywords.put("User-Agent", Color.darkGray);
-		keywords.put("Accept-Language", Color.darkGray);
-		keywords.put("Accept-Encoding", Color.darkGray);
-		keywords.put("Accept-Charset", Color.darkGray);
-		keywords.put("Keep-Alive", Color.darkGray);
-		keywords.put("Cache-Control", Color.darkGray);
-		keywords.put("Content-Type", Color.darkGray);
-		keywords.put("Set-Cookie", Color.darkGray);
-		keywords.put("Server", Color.darkGray);
-		keywords.put("Date", Color.darkGray);
-		keywords.put("Host", Color.darkGray);
-		keywords.put("Connection", Color.darkGray);
-		keywords.put("Cookie", Color.darkGray);
-		keywords.put("Content-Length", Color.darkGray);
-		keywords.put("Content-type", Color.darkGray);
-		keywords.put("Location", Color.darkGray);
+		keywords.put("Accept", Color.blue);
+		keywords.put("User-Agent", Color.blue);
+		keywords.put("Accept-Language", Color.blue);
+		keywords.put("Accept-Encoding", Color.blue);
+		keywords.put("Accept-Charset", Color.blue);
+		keywords.put("Keep-Alive", Color.blue);
+		keywords.put("Cache-Control", Color.blue);
+		keywords.put("Content-Type", Color.blue);
+		keywords.put("Set-Cookie", Color.blue);
+		keywords.put("Server", Color.blue);
+		keywords.put("Date", Color.blue);
+		keywords.put("Host", Color.blue);
+		keywords.put("Connection", Color.blue);
+		keywords.put("Cookie", Color.blue);
+		keywords.put("Content-Length", Color.blue);
+		keywords.put("Content-type", Color.blue);
+		keywords.put("Location", Color.blue);
+		keywords.put("Referer", Color.blue);
+		keywords.put("Cache-control", Color.blue);
+		keywords.put("Proxy-Connection", Color.blue);
+		keywords.put("Pragma", Color.blue);
+		keywords.put("Expires", Color.blue);
+		keywords.put("Proxy-Connection", Color.blue);
 		
 		keywords.put("Windows", Color.gray);
 		keywords.put("Mozilla", Color.gray);
 		keywords.put("Firefox", Color.gray);
 		keywords.put("Internet", Color.gray);
 
+		/*
 		keywords.put("0", Color.blue);
 		keywords.put("1", Color.blue);
 		keywords.put("2", Color.blue);
@@ -102,8 +109,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("7", Color.blue);
 		keywords.put("8", Color.blue);
 		keywords.put("9", Color.blue);
-		keywords.put(".", Color.blue);
-
+		*/
 		keywords.put("html", Color.magenta);
 		keywords.put("head", Color.magenta);
 		keywords.put("body", Color.magenta);
