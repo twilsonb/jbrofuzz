@@ -71,27 +71,27 @@ public class JBroFuzzWindow extends JFrame {
 	/**
 	 * Unique int identifier for the Web Directory Panel
 	 */
-	public static final int WEB_DIRECTORIES_PANEL_ID = 121;
+	public static final int ID_PANEL_WEB_DIRECTORIES = 121;
 
 	/**
 	 * Unique int identifier for the Sniffing Panel
 	 */
-	public static final int SNIFFING_PANEL_ID = 123;
+	public static final int ID_PANEL_SNIFFING = 123;
 
 	/**
 	 * Unique int identifier for the Fuzzing Panel
 	 */
-	public static final int FUZZING_PANEL_ID = 124;
+	public static final int ID_PANEL_FUZZING = 124;
 
 	/**
 	 * Unique int identifier for the Generators Panel
 	 */
-	public static final int PAYLOADS_PANEL_ID = 125;
+	public static final int ID_PANEL_PAYLOADS = 125;
 
 	/**
 	 * Unique int identifier for the System Panel
 	 */
-	public static final int SYSTEM_PANEL_ID = 126;
+	public static final int ID_PANEL_SYSTEM = 126;
 
 	// The main Object behind it all...
 	private final JBroFuzz mJBroFuzz;
@@ -117,12 +117,9 @@ public class JBroFuzzWindow extends JFrame {
 	// The system logger panel
 	private final SystemPanel mSystemLogger;
 
-	// The HTTP fuzzing panel
-	// private final HTTPFuzzing mHTTPFuzzingPanel;
-
 	/**
 	 * <p>
-	 * The constuctor of the main window launched in JBroFuzz. This class should
+	 * The constructor of the main window launched in JBroFuzz. This class should
 	 * be instantiated as a singleton and never again.
 	 * </p>
 	 * 
@@ -157,8 +154,6 @@ public class JBroFuzzWindow extends JFrame {
 		tabbedPane.add(" Payloads ", mDefinitionsPanel);
 		tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
 		
-		// tabbedPane.add(" Payloads ", mDefinitionsPanel);
-		// tabbedPane.add(" System ", mSystemLogger);
 		tabbedPane.setSelectedComponent(mFuzzingPanel);
 		pane.add(tabbedPane);
 		// The image icon
@@ -188,7 +183,7 @@ public class JBroFuzzWindow extends JFrame {
 	 * 
 	 * @return mDefinitionsPanel
 	 */
-	public PayloadsPanel getDefinitionsPanel() {
+	public PayloadsPanel getPanelPayloads() {
 		return mDefinitionsPanel;
 	}
 
@@ -212,22 +207,9 @@ public class JBroFuzzWindow extends JFrame {
 	 * 
 	 * @return mFuzzingPanel
 	 */
-	public FuzzingPanel getFuzzingPanel() {
+	public FuzzingPanel getPanelFuzzing() {
 		return mFuzzingPanel;
 	}
-	
-	/**
-	 * <p>
-	 * Method for returning the HTTP fuzzing panel that is being instantiated through
-	 * this frame window.
-	 * </p>
-	 * 
-	 * @return mHTTPFuzzingPanel
-	 *
-	public HTTPFuzzing getHTTPFuzzingPanel() {
-		return mHTTPFuzzingPanel;
-	}
-	 */
 
 	/**
 	 * <p>
@@ -260,7 +242,7 @@ public class JBroFuzzWindow extends JFrame {
 	 * 
 	 * @return mSniffingPanel
 	 */
-	public SniffingPanel getTCPSniffingPanel() {
+	public SniffingPanel getPanelSniffing() {
 		return mSniffingPanel;
 	}
 
@@ -271,7 +253,7 @@ public class JBroFuzzWindow extends JFrame {
 	 * 
 	 * @return WebDirectoriesPanel
 	 */
-	public DirectoriesPanel getWebDirectoriesPanel() {
+	public DirectoriesPanel getPanelWebDirectories() {
 		return mWebDirectoriesPanel;
 	}
 
@@ -379,19 +361,19 @@ public class JBroFuzzWindow extends JFrame {
 	 *          int
 	 */
 	public void setTabHide(final int n) {
-		if (n == JBroFuzzWindow.PAYLOADS_PANEL_ID) {
+		if (n == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
 			tabbedPane.remove(mDefinitionsPanel);
 		}
-		if (n == JBroFuzzWindow.FUZZING_PANEL_ID) {
+		if (n == JBroFuzzWindow.ID_PANEL_FUZZING) {
 			tabbedPane.remove(mFuzzingPanel);
 		}
-		if (n == JBroFuzzWindow.SNIFFING_PANEL_ID) {
+		if (n == JBroFuzzWindow.ID_PANEL_SNIFFING) {
 			tabbedPane.remove(mSniffingPanel);
 		}
-		if (n == JBroFuzzWindow.SYSTEM_PANEL_ID) {
+		if (n == JBroFuzzWindow.ID_PANEL_SYSTEM) {
 			tabbedPane.remove(mSystemLogger);
 		}
-		if (n == JBroFuzzWindow.WEB_DIRECTORIES_PANEL_ID) {
+		if (n == JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES) {
 			tabbedPane.remove(mWebDirectoriesPanel);
 		}
 		
@@ -405,23 +387,23 @@ public class JBroFuzzWindow extends JFrame {
 	 *          int
 	 */
 	public void setTabShow(final int n) {
-		if (n == JBroFuzzWindow.PAYLOADS_PANEL_ID) {
+		if (n == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
 			tabbedPane.addTab(" Payloads ", mDefinitionsPanel);
 			tabbedPane.setSelectedComponent(mDefinitionsPanel);
 		}
-		if (n == JBroFuzzWindow.FUZZING_PANEL_ID) {
+		if (n == JBroFuzzWindow.ID_PANEL_FUZZING) {
 			tabbedPane.addTab(" Fuzzing ", mFuzzingPanel);
 			tabbedPane.setSelectedComponent(mFuzzingPanel);
 		}
-		if (n == JBroFuzzWindow.SNIFFING_PANEL_ID) {
+		if (n == JBroFuzzWindow.ID_PANEL_SNIFFING) {
 			tabbedPane.addTab(" Sniffing ", mSniffingPanel);
 			tabbedPane.setSelectedComponent(mSniffingPanel);
 		}
-		if (n == JBroFuzzWindow.SYSTEM_PANEL_ID) {
+		if (n == JBroFuzzWindow.ID_PANEL_SYSTEM) {
 			tabbedPane.addTab(" System ", mSystemLogger);
 			tabbedPane.setSelectedComponent(mSystemLogger);
 		}
-		if (n == JBroFuzzWindow.WEB_DIRECTORIES_PANEL_ID) {
+		if (n == JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES) {
 			tabbedPane.addTab(" Web Directories ", mWebDirectoriesPanel);
 			tabbedPane.setSelectedComponent(mWebDirectoriesPanel);
 		}

@@ -25,22 +25,16 @@
  */
 package org.owasp.jbrofuzz.fuzz;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.*;
+
 /**
  * <p>
  * The message creator taking as input the 
  * </p>
  * 
- * <p>
- * For each generator value, through the use of the run method, a socket gets
- * created according through a Connection object that gets created.
- * </p>
  * 
- * <p>
- * Effectively, a request generator generates connections when run by means of
- * establishing sockets though the Connection class.
- * </p>
- * 
- * @author subere (at) uncon (dot) org
+ * @author subere@uncon.org
  * @version 0.8
  */
 public class MessageCreator {
@@ -52,11 +46,12 @@ public class MessageCreator {
 	public MessageCreator(String message, String payload, int start, int finish) {
 
 		if( (message == null) || (payload == null) || (start < 0) || (finish < 0) || (start > message.length()) || (finish > message.length()) ) {
-			
-			this.message = message == null ? "" : message;
+						
+			this.message = message == null ? "" : stringReplace("\n", message, "\r\n");
 			this.payload = payload == null ? "" : payload;
 			
 		}
+		// Message is a valid message
 		else {
 			
 			// Check if positive and less than the message length
@@ -83,92 +78,116 @@ public class MessageCreator {
 			messageBuffer.append(payload);
 			messageBuffer.append(message.substring(this.finish));
 			
-			this.message = messageBuffer.toString();
+			this.message = stringReplace("\n", messageBuffer.toString(), "\r\n"); 
+			
+			// By now we have the complete message with the payload in the right location
+			
+			if( (this.message.startsWith("GET") ) || (this.message.startsWith("HEAD")) ) {
+				if(!this.message.endsWith("\r\n\r\n")) {
+					this.message += "\r\n\r\n";
+				}
+			}
+			
+			if(this.message.startsWith("POST")) {
+				// Find the position of "\r\n\r\n"
+				int eoh = this.message.indexOf("\r\n\r\n");
+				// Provided an ending character sequence has been found
+				if(eoh != -1) {
+					// Find the location of the "Content-Length:"
+					int ctl = this.message.indexOf("Content-Length:");
+					// Provided a content length character sequence exists in the request
+					if(ctl != -1) {
+
+						int contentLength = 0;
+						String postValue = this.message.substring(eoh + "\r\n\r\n".length());
+						
+						// Find the next end of line
+						int neol = this.message.indexOf("\r\n", ctl);
+						if(neol != -1) {
+							// Retrieve the value until the next "\r\n" character
+							String contentLengthString = this.message.substring(ctl + "Content-Length:".length() , neol);
+							try {
+								contentLength = Integer.parseInt(contentLengthString);
+							} catch (NumberFormatException e) {
+								contentLength = 0;
+							}
+							
+							// If the content length is not the same as the postValue in bytes
+							if(contentLength != postValue.getBytes().length) {
+								
+								StringBuffer newMessageBuffer = new StringBuffer();
+								newMessageBuffer.append( this.message.substring(0, ctl + "Content-Length:".length()) );
+								try {
+									
+									newMessageBuffer.append( " " + postValue.getBytes("ISO-8859-1").length );
+									
+								} catch (UnsupportedEncodingException e) {
+									
+									newMessageBuffer.append( " " + postValue.getBytes().length );
+									
+								}
+								
+								// If the remaining header starts with "\r\n" then the "Content-Length was the last header line
+								String remainingHeader = this.message.substring(neol, eoh + "\r\n\r\n".length());								
+								if(remainingHeader.startsWith("\r\n")) {
+									newMessageBuffer.append("\r\n\r\n");
+								}
+								else {
+									newMessageBuffer.append(remainingHeader);
+								}
+								
+								newMessageBuffer.append(postValue);
+								// System.out.println("--------" + postValue + "------");
+
+								this.message = newMessageBuffer.toString();
+								
+							}
+						}
+
+					}
+					// The message does not contain the Content-Length line and this needs to be added
+					else {
+						// TODO Add the Content-Length line
+					}
+				}
+			}
+			
 		}
 
 
 	}
 
-
-
-	/*
-	public Connector(String host, String port, String message, String fuzzer, int start, int finish) {
-
-
-		// Check start and finish to positive and also within length
-		final int strlength = request.length();
-		if ((start < 0) || (finish < 0) || (start > strlength)
-				|| (finish > strlength)) {
-			len = 0;
-		} else {
-			len = finish - start;
-		}
-		// Check for a minimum length of 1 between start and finish
-		if (len > 0) {
-
-
-		} // if this.len > 0
-
-
-
-
-		final String target = mJBroFuzz.getWindow().getFuzzingPanel()
-				.getTargetText();
-		final String port = mJBroFuzz.getWindow().getFuzzingPanel()
-				.getPortText();
-		StringBuffer stout = new StringBuffer(""); // getNext();
-
-		if (stout.toString().equalsIgnoreCase("")) {
-			stout = request;
-		}
-
-		while ((!stout.toString().equalsIgnoreCase("")) && (!stopped)) {
-
-			final Date currentTime = new Date();
-			final String filename = mJBroFuzz.getWindow().getFuzzingPanel()
-					.getCounter(true);
-
-			mJBroFuzz.getWindow().getFuzzingPanel().addRowInOuputTable(
-					filename + "          " + target + ":" + port + "          "
-							+ id + "          "
-							+ Connector.dateFormat.format(currentTime) + "          "
-							+ currentValue + "/" + maxValue);
-
-			FileHandler.writeFuzzFile("[{" + currentValue + "/" + maxValue
-					+ "}, " + filename + " "
-					+ Connector.dateFormat.format(currentTime) + "] " + "<!-- \r\n"
-					+ target + " : " + port + "\r\n" + stout + "\r\n", filename);
-
-			final Connection con = new Connection(target, port, stout);
-
-			final String s = con.getReply();
-			FileHandler
-					.writeFuzzFile(JBRFormat.LINE_SEPARATOR + "\r\n" + s, filename);
-
-		}
-
-	}
-	 */
 
 	/**
 	 * @return the message
 	 */
 	public String getMessage() {
+		
+		
+		String test = stringReplace("\r\n", message, "\\r\\n\n"); 
+		
+		System.out.println(test);
+		
 		return message;
+		
 	}
 
 	/**
 	 * @param message the message to set
 	 */
 	public void setMessage(String message) {
+		
 		this.message = message;
+		
 	}
 
 	/**
 	 * @return the payload
 	 */
 	public String getPayload() {
+		
 		return payload;
+		
 	}
 
 	/**
@@ -204,6 +223,25 @@ public class MessageCreator {
 	 */
 	public void setFinish(int finish) {
 		this.finish = finish;
+	}
+
+	/**
+	 * 
+	 */
+	private static String stringReplace(final String toFind, final String original,
+			final String substitute) {
+		int found = 0;
+		int start = 0;
+		String returnString = original;
+		while (found != -1) {
+			found = returnString.indexOf(toFind, start);
+			if (found != -1) {
+				returnString = returnString.substring(0, found).concat(substitute)
+						.concat(returnString.substring(found + toFind.length()));
+			}
+			start = found + substitute.length();
+		}
+		return returnString;
 	}
 
 

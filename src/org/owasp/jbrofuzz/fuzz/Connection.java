@@ -25,13 +25,14 @@
  */
 package org.owasp.jbrofuzz.fuzz;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import javax.net.ssl.*;
+import javax.net.*;
+import java.net.*;
+import java.io.*;
+
+import java.nio.ByteBuffer;
+
+import org.apache.commons.*;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -48,12 +49,19 @@ import java.net.UnknownHostException;
  */
 public class Connection {
 
+	// The content length header text used for a POST request
+	private static final byte[] CONTENT_LENGTH = new String("Content-Length:").getBytes();
+
 	// The maximum size for the socket I/O
 	private final static int SEND_BUF_SIZE = 256 * 1024;
 	private final static int RECV_BUF_SIZE = 256 * 1024;
-	private String reply;
-	private String conMessage;
+
+	private String message;
 	private Socket socket;
+	private String reply;
+	private URL url = null;
+	private int port;
+
 	private InputStream in_stream;
 	private OutputStream out_stream;
 
@@ -70,84 +78,202 @@ public class Connection {
 	 * @param message
 	 *          String
 	 */
-	public Connection(final String address, final String port,
-			final String message) {
+	public Connection(final String urlString, final String message) {
 
-		final String conAddress = address;
-		conMessage = message;
-		int conPort = 0;
+		try {
+			url = new URL(urlString);
+		} catch (MalformedURLException e1) {
+			reply = "Malformed URL : "
+				+ e1.getMessage() + "\n";
+		}
+
+		String protocol = url == null ? "" : url.getProtocol();    // http
+		String host = url == null ? "" : url.getHost();            // localhost
+		port = url == null ? -1 : url.getPort();               // 443
+		String file = url == null ? "" : url.getFile();            // index.jsp
+		String ref = url == null ? "" : url.getRef();              // _top_
+
+		// Set default ports
+		//
+		if(protocol.equalsIgnoreCase("https") && (port == -1)) {
+			port = 443;
+		}
+		if(protocol.equalsIgnoreCase("http") && (port == -1)) {
+			port = 80;
+		}
+
+		this.message = message;
+
+		
 		final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
 
-		// Check the connection port value
+		// Create a trust manager that does not validate certificate chains
+		TrustManager[] trustAllCerts = new TrustManager[]{
+				new X509TrustManager() {
+					public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+						return null;
+					}
+					public void checkClientTrusted(
+							java.security.cert.X509Certificate[] certs, String authType) {
+					}
+					public void checkServerTrusted(
+							java.security.cert.X509Certificate[] certs, String authType) {
+					}
+				}
+		};
+
+		// Install the all-trusting trust manager
 		try {
-			conPort = Integer.parseInt(port);
-		} catch (final NumberFormatException e1) {
-			conPort = 0;
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		} catch (Exception e) {
+			System.out.println("Could not install all-trusting certificates... " + e.getMessage());
 		}
-		if (!((conPort > 0) && (conPort < 65536))) {
-			reply = "Port has to be within range (0,65536)\n";
-			return;
-		}
+
+
+		
+		
 		// Create the Socket to the specified address and port
-		try {
-			socket = new Socket();
-			socket.bind(null);
-			socket.connect(new InetSocketAddress(conAddress, conPort), 5000);
+		if(protocol.equalsIgnoreCase("https")) {
 
-			socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
-			socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-			socket.setSoTimeout(30000);
-		} catch (final UnknownHostException e) {
-			reply = "The IP address of the host could not be determined : "
+			// Creating Client Sockets
+			SSLSocketFactory sslsocketfactory = (SSLSocketFactory)SSLSocketFactory.getDefault();
+			SSLSocket sslSocket = null;
+			try {
+				
+				sslSocket = (SSLSocket)sslsocketfactory.createSocket(host, port);
+				sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+				sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
+				sslSocket.setSoTimeout(30000);
+				
+			} catch (UnknownHostException e) {
+				reply = "The IP address of the host could not be determined : "
 					+ e.getMessage() + "\n";
-		} catch (final IOException e) {
-			reply = "An IO Error occured when creating the socket : "
+			} catch (IOException e) {
+				reply = "An IO Error occured when creating the socket : "
 					+ e.getMessage() + "\n";
-		}
-		// Assign the input stream
-		try {
-			in_stream = socket.getInputStream();
-		} catch (final IOException e) {
-			reply = "An IO Error occured when creating the input stream : "
-					+ e.getMessage() + "\n";
-		}
-		// Assign the output stream
-		try {
-			out_stream = socket.getOutputStream();
-		} catch (final IOException e) {
-			reply = "An IO Error occured when creating the output stream : "
-					+ e.getMessage() + "\n";
-		}
-		// Write to the output stream
-		try {
-			out_stream.write(conMessage.getBytes());
-		} catch (final IOException e) {
-			reply = "An IO Error occured when attempting to write to the output stream : "
-					+ e.getMessage() + "\n";
-		}
-		// Really don't like catching null pointer exceptions...
-		catch (final NullPointerException e) {
-			reply = "The output stream is null : " + e.getMessage();
-			return;
-		}
-		try {
-			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			int got;
-			while ((got = in_stream.read(recv)) > -1) {
-				baos.write(recv, 0, got);
 			}
-			final byte[] allbytes = baos.toByteArray();
+			
+			// Assign the input stream
+			try {
+				in_stream = sslSocket.getInputStream();
+			} catch (final IOException e) {
+				reply = "An IO Error occured when creating the input stream : "
+					+ e.getMessage() + "\n";
+			}
+			// Assign the output stream
+			try {
+				out_stream = sslSocket.getOutputStream();
+			} catch (final IOException e) {
+				reply = "An IO Error occured when creating the output stream : "
+					+ e.getMessage() + "\n";
+			}
 
-			reply = new String(allbytes);
-		} catch (final IOException e) {
+			// Write to the output stream
+			try {
+				out_stream.write(this.message.getBytes());
+			} catch (final IOException e) {
+				reply = "An IO Error occured when attempting to write to the output stream : "
+					+ e.getMessage() + "\n";
+			}
+			// Really don't like catching null pointer exceptions...
+			catch (final NullPointerException e) {
+				reply = "The output stream is null : " + e.getMessage();
+				return;
+			}
+			// Read the input stream, once you have finished writing to the output
+			try {
+				final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				int got;
+				while ((got = in_stream.read(recv)) > -1) {
+					baos.write(recv, 0, got);
+
+				} // while loop
+
+				final byte[] allbytes = baos.toByteArray();
+				reply = new String(allbytes);
+
+			} catch (final IOException e) {
+
+			}
+			// Close the socket
+			try {
+				sslSocket.close();
+			} catch (final IOException e) {
+				reply = "An IO Error occured when attempting to close the socket : "
+					+ e.getMessage() + "\n";
+			}
+//-----
 
 		}
-		// Close the socket
-		try {
-			socket.close();
-		} catch (final IOException e) {
-			reply = "An IO Error occured when attempting to close the socket : "
+		// Protocol is http going over a normal socket
+		else {
+			try {
+				socket = new Socket();
+				socket.bind(null);
+				socket.connect(new InetSocketAddress(host, port), 5000);
+
+				socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+				socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
+				socket.setSoTimeout(30000);
+			} catch (final UnknownHostException e) {
+				reply = "The IP address of the host could not be determined : "
 					+ e.getMessage() + "\n";
+			} catch (final IOException e) {
+				reply = "An IO Error occured when creating the socket : "
+					+ e.getMessage() + "\n";
+			}
+
+			// Assign the input stream
+			try {
+				in_stream = socket.getInputStream();
+			} catch (final IOException e) {
+				reply = "An IO Error occured when creating the input stream : "
+					+ e.getMessage() + "\n";
+			}
+			// Assign the output stream
+			try {
+				out_stream = socket.getOutputStream();
+			} catch (final IOException e) {
+				reply = "An IO Error occured when creating the output stream : "
+					+ e.getMessage() + "\n";
+			}
+
+			// Write to the output stream
+			try {
+				out_stream.write(this.message.getBytes());
+			} catch (final IOException e) {
+				reply = "An IO Error occured when attempting to write to the output stream : "
+					+ e.getMessage() + "\n";
+			}
+			// Really don't like catching null pointer exceptions...
+			catch (final NullPointerException e) {
+				reply = "The output stream is null : " + e.getMessage();
+				return;
+			}
+			// Read the input stream, once you have finished writing to the output
+			try {
+				final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				int got;
+				while ((got = in_stream.read(recv)) > -1) {
+					baos.write(recv, 0, got);
+
+				} // while loop
+
+				final byte[] allbytes = baos.toByteArray();
+				reply = new String(allbytes);
+
+			} catch (final IOException e) {
+
+			}
+			// Close the socket
+			try {
+				socket.close();
+			} catch (final IOException e) {
+				reply = "An IO Error occured when attempting to close the socket : "
+					+ e.getMessage() + "\n";
+			}
 		}
 	}
 
@@ -159,7 +285,7 @@ public class Connection {
 	 * @return StringBuffer
 	 */
 	public String getMessage() {
-		return conMessage;
+		return this.message;
 	}
 
 	/**
@@ -171,6 +297,17 @@ public class Connection {
 	 * @return String
 	 */
 	public String getReply() {
+
 		return reply;
+
 	}
+
+	public int getPort() {
+
+		return port;
+
+	}
+
+
+
 }

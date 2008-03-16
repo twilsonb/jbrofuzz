@@ -2,6 +2,8 @@ package org.owasp.jbrofuzz.core;
 
 import java.util.*;
 
+import org.apache.commons.lang.*;
+
 public class Generator {
 	
 	private char type;
@@ -24,7 +26,7 @@ public class Generator {
 	
 		this.type = type;
 		this.id = id;
-		this.name = name;
+		this.name = StringUtils.trim(name);
 		this.categories = categories;
 		this.payloads = payloads;
 		

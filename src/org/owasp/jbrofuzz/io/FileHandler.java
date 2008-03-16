@@ -37,10 +37,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
-
 import org.owasp.jbrofuzz.dir.DConstructor;
-import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.version.Format;
 
 import org.apache.commons.io.*;
@@ -59,20 +57,15 @@ import org.apache.commons.io.*;
  * @version 0.6
  */
 public class FileHandler {
-	// The singleton object
-	private static FileHandler singletonFileHandlerObject;
 
 	// The main window frame gui
-	private static JBroFuzzWindow g;
+	private static JBroFuzz g;
 
 	// The current file used for creation
 	private static File currentFile;
 
 	// The fuzz directory of operation
 	private static File fuzzDirectory;
-
-	// The http fuzz directory of operation
-	private static File httpFuzzDirectory;
 
 	// The snif directory of operation
 	private static File snifDirectory;
@@ -116,10 +109,10 @@ public class FileHandler {
 				output.close();
 			}
 		} catch (final FileNotFoundException e) {
-			FileHandler.g.log("Cannot find " + file + "Unable to Update");
+			FileHandler.g.getWindow().log("Cannot find " + file + "Unable to Update");
 			FileHandler.errors++;
 		} catch (final IOException e) {
-			FileHandler.g.log("Cannot Save to File" + file
+			FileHandler.g.getWindow().log("Cannot Save to File" + file
 					+ "A File Write Error Occured");
 			FileHandler.errors++;
 		} finally {
@@ -132,27 +125,6 @@ public class FileHandler {
 			final int fileType) {
 
 
-		if (fileType == FileHandler.HTTP_FILE) {
-			try {
-				if (FileHandler.errors < 3) {
-					FileHandler.currentFile = new File(FileHandler.httpFuzzDirectory,
-							fileName);
-					if (!FileHandler.currentFile.exists()) {
-						boolean success = FileHandler.currentFile.createNewFile();
-						if (!success) {
-							FileHandler.g.log("Failed to create file");
-						}
-					}
-					FileHandler.appendFile(FileHandler.currentFile, content);
-				}
-			} catch (final IOException e) {
-				FileHandler.g.log("Cannot Create File" + "\n" + fileName
-						+ " A File Error Occured");
-				FileHandler.errors++;
-			}
-
-		}
-
 		if (fileType == FileHandler.FUZZ_FILE) {
 			try {
 				if (FileHandler.errors < 3) {
@@ -161,13 +133,13 @@ public class FileHandler {
 					if (!FileHandler.currentFile.exists()) {
 						boolean success = FileHandler.currentFile.createNewFile();
 						if (!success) {
-							FileHandler.g.log("Failed to create file");
+							FileHandler.g.getWindow().log("Failed to create file");
 						}
 					}
 					FileHandler.appendFile(FileHandler.currentFile, content);
 				}
 			} catch (final IOException e) {
-				FileHandler.g.log("Cannot Create File" + "\n" + fileName
+				FileHandler.g.getWindow().log("Cannot Create File" + "\n" + fileName
 						+ " A File Error Occured");
 				FileHandler.errors++;
 			}
@@ -182,13 +154,13 @@ public class FileHandler {
 					if (!FileHandler.currentFile.exists()) {
 						boolean success = FileHandler.currentFile.createNewFile();
 						if (!success) {
-							FileHandler.g.log("Failed to create file");
+							FileHandler.g.getWindow().log("Failed to create file");
 						}
 					}
 					FileHandler.appendFile(FileHandler.currentFile, content);
 				}
 			} catch (final IOException e) {
-				FileHandler.g.log("Cannot Create File" + "\n" + fileName
+				FileHandler.g.getWindow().log("Cannot Create File" + "\n" + fileName
 						+ " A File Error Occured");
 				FileHandler.errors++;
 			}
@@ -202,13 +174,13 @@ public class FileHandler {
 					if (!FileHandler.currentFile.exists()) {
 						boolean success = FileHandler.currentFile.createNewFile();
 						if (!success) {
-							FileHandler.g.log("Failed to create file");
+							FileHandler.g.getWindow().log("Failed to create file");
 						}
 					}
 					FileHandler.appendFile(FileHandler.currentFile, content);
 				}
 			} catch (final IOException e) {
-				FileHandler.g.log("Cannot Create File" + "\n" + fileName
+				FileHandler.g.getWindow().log("Cannot Create File" + "\n" + fileName
 						+ " A File Error Occured");
 				FileHandler.errors++;
 			}
@@ -262,13 +234,13 @@ public class FileHandler {
 				}
 				bufRead.close();
 			} catch (final ArrayIndexOutOfBoundsException e) {
-				JOptionPane.showMessageDialog(FileHandler.g, "Cannot Find Location"
-						+ "\n" + folderFiles[i].getName() + "\nAn Array Error Occured",
-						"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+				g.getWindow().log("Cannot Find Location"
+						+ "\n" + folderFiles[i].getName() + "\nAn Array Error Occured " + 
+						"JBroFuzz File Read Error");
 			} catch (final IOException e) {
-				JOptionPane.showMessageDialog(FileHandler.g, "Cannot Read Location"
-						+ "\n" + folderFiles[i].getName() + "\nA File Read Error Occured",
-						"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+				g.getWindow().log("Cannot Read Location"
+						+ "\n" + folderFiles[i].getName() + "\nA File Read Error Occured" +
+						"JBroFuzz File Read Error");
 			} finally {
 				IOUtils.closeQuietly( bufRead );
 			}
@@ -316,7 +288,6 @@ public class FileHandler {
 	public static String getName(final int directory) {
 
 		switch(directory) {
-		case DIR_HTTP: return FileHandler.httpFuzzDirectory.getName();
 		case DIR_TCPF: return FileHandler.fuzzDirectory.getName();
 		case DIR_WEBD: return FileHandler.webEnumDirectory.getName();
 		case DIR_SNIF: return FileHandler.snifDirectory.getName();
@@ -338,7 +309,6 @@ public class FileHandler {
 	public static String getCanonicalPath(final int directory) {
 		try {
 			switch(directory) {
-			case DIR_HTTP: return FileHandler.httpFuzzDirectory.getCanonicalPath();
 			case DIR_TCPF: return FileHandler.fuzzDirectory.getCanonicalPath();
 			case DIR_WEBD: return FileHandler.webEnumDirectory.getCanonicalPath();
 			case DIR_SNIF: return FileHandler.snifDirectory.getCanonicalPath();
@@ -399,7 +369,7 @@ public class FileHandler {
 				in.close();
 			} catch (final IOException e1) {
 				if (FileHandler.g != null) {
-					FileHandler.g.log("Directories file (inside jar): "
+					FileHandler.g.getWindow().log("Directories file (inside jar): "
 							+ fileURL.toString() + " could not be found");
 				}
 			} finally {
@@ -414,7 +384,7 @@ public class FileHandler {
 		// default list
 		if (len <= 0) {
 			if (FileHandler.g != null) {
-				FileHandler.g.log("Loading default directories list");
+				FileHandler.g.getWindow().log("Loading default directories list");
 			}
 			final String[] defaultArray = Format.DEFAULT_DIRS.split("\n");
 			len = defaultArray.length;
@@ -445,16 +415,16 @@ public class FileHandler {
 	 * @param fileName
 	 *          String
 	 * @return StringBuffer
-	 */
-	public static StringBuffer readFuzzFile(final String fileName) {
+	 *
+	public static StringBuffer readFuzzFile2(final String fileName) {
 		final StringBuffer out = new StringBuffer();
 		File file;
 		try {
 			file = new File(FileHandler.fuzzDirectory, fileName);
 		} catch (final NullPointerException e) {
-			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Find Location"
-					+ "\n" + fileName + "\nA File Read Error Occured",
-					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			g.getWindow().log("Cannot Find Location"
+					+ "\n" + fileName + "\nA File Read Error Occured " +
+					"JBroFuzz File Read Error");
 			return new StringBuffer("");
 		}
 		BufferedReader bufRead = null;
@@ -469,74 +439,55 @@ public class FileHandler {
 			}
 			bufRead.close();
 		} catch (final ArrayIndexOutOfBoundsException e) {
-			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Find Location"
-					+ "\n" + fileName + "\nAn Array Error Occured",
-					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			g.getWindow().log("Cannot Find Location"
+					+ "\n" + fileName + "\nAn Array Error Occured " +
+					"JBroFuzz File Read Error");
 			return new StringBuffer("");
 
 		} catch (final IOException e) {
-			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Read Location"
-					+ "\n" + fileName + "\nA File Read Error Occured",
-					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			g.getWindow().log("Cannot Read Location"
+					+ "\n" + fileName + "\nA File Read Error Occured " +
+					"JBroFuzz File Read Error");
 			return new StringBuffer("");
 		} finally {
 			IOUtils.closeQuietly( bufRead );
 		}
 		return out;
 	}
-
-	/**
-	 * <p>
-	 * Method for reading fuzz files that have been generated within a fuzzing
-	 * session. Typically, the contents of the file are returned within the
-	 * StringBuffer. In the event of an error, the StringBuffer returned is set to
-	 * "".
-	 * </p>
-	 * 
-	 * @param fileName
-	 *          String
-	 * @return StringBuffer
-	 */
-	public static StringBuffer readHTTPFuzzFile(final String fileName) {
-		final StringBuffer out = new StringBuffer();
-		File file;
+	*/
+	
+	public File getFuzzFile(String fileName) {
+	
+		return new File(FileHandler.fuzzDirectory, fileName);
+		
+	}
+	
+	public StringBuffer readFuzzFile(String fileName) {
+		StringBuffer out = new StringBuffer();
+		
+		File f = new File(FileHandler.fuzzDirectory, fileName);
 		try {
-			file = new File(FileHandler.httpFuzzDirectory, fileName);
-		} catch (final NullPointerException e) {
-			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Find Location"
-					+ "\n" + fileName + "\nA File Read Error Occured",
-					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
-			return new StringBuffer("");
+			out.append(FileUtils.readFileToString(f));
+		} catch (IOException e) {
+			g.getWindow().log("An error reading the fuzz file: " + fileName);
 		}
-		BufferedReader bufRead = null;
-		try {
-			final FileReader input = new FileReader(file);
-			bufRead = new BufferedReader(input);
-			String line;
-			line = bufRead.readLine();
-			while (line != null) {
-				out.append(line + "\n");
-				line = bufRead.readLine();
-			}
-			bufRead.close();
-		} catch (final ArrayIndexOutOfBoundsException e) {
-			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Find Location"
-					+ "\n" + fileName + "\nAn Array Error Occured",
-					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
-			return new StringBuffer("");
-
-		} catch (final IOException e) {
-			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Read Location"
-					+ "\n" + fileName + "\nA File Read Error Occured",
-					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
-			return new StringBuffer("");
-		} finally {
-			IOUtils.closeQuietly( bufRead );
-		}
+		
 		return out;
 	}
 
 
+	public StringBuffer readSnifFile(String fileName) {
+		StringBuffer out = new StringBuffer();
+		
+		File f = new File(FileHandler.snifDirectory, fileName);
+		try {
+			out.append(FileUtils.readFileToString(f));
+		} catch (IOException e) {
+			g.getWindow().log("An error reading the snif file: " + fileName);
+		}
+		
+		return out;
+	}
 
 	/**
 	 * <p>
@@ -561,16 +512,16 @@ public class FileHandler {
 	 *          String The name of the file, without any directory reference
 	 * @return StringBuffer The StringBuffer with the contents of the file
 	 * @since 0.7
-	 */
+	 *
 	public static StringBuffer readSnifFile(final String fileName) {
 		final StringBuffer out = new StringBuffer();
 		File file;
 		try {
 			file = new File(FileHandler.snifDirectory, fileName);
 		} catch (final NullPointerException e) {
-			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Find Location"
-					+ "\n" + fileName + "\nA File Read Error Occured",
-					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			g.getWindow().log("Cannot Find Location"
+					+ "\n" + fileName + "\nA File Read Error Occured " + 
+					"JBroFuzz File Read Error");
 			return new StringBuffer("");
 		}
 		BufferedReader bufRead = null;
@@ -585,39 +536,22 @@ public class FileHandler {
 			}
 			bufRead.close();
 		} catch (final ArrayIndexOutOfBoundsException e) {
-			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Find Location"
-					+ "\n" + fileName + "\nAn Array Error Occured",
-					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			g.getWindow().log("Cannot Find Location"
+					+ "\n" + fileName + "\nAn Array Error Occured " +
+					"JBroFuzz File Read Error");
 			return new StringBuffer("");
 
 		} catch (final IOException e) {
-			JOptionPane.showMessageDialog(FileHandler.g, "Cannot Read Location"
-					+ "\n" + fileName + "\nA File Read Error Occured",
-					"JBroFuzz File Read Error", JOptionPane.ERROR_MESSAGE);
+			g.getWindow().log("Cannot Read Location"
+					+ "\n" + fileName + "\nA File Read Error Occured " + 
+					"JBroFuzz File Read Error");
 			return new StringBuffer("");
 		} finally {
 			IOUtils.closeQuietly( bufRead );
 		}
 		return out;
 	}
-
-	/**
-	 * <p>
-	 * Singleton Constructor responsible for generating the necessary directories
-	 * and files for the correct operation of JBroFuzz.
-	 * </p>
-	 * 
-	 * @param g
-	 *          FrameWindow
-	 * @return FileHandler
-	 */
-	public static synchronized FileHandler s(final JBroFuzzWindow g) {
-		if (FileHandler.singletonFileHandlerObject == null) {
-			FileHandler.singletonFileHandlerObject = new FileHandler(g);
-		}
-		return FileHandler.singletonFileHandlerObject;
-	}
-
+	*/
 
 	/**
 	 * <p>
@@ -637,10 +571,25 @@ public class FileHandler {
 	 *          String
 	 * @param name
 	 *          String
-	 */
+	 *
 	public static void writeFuzzFile(final String content, final String name) {
 		// Actually create the file
 		FileHandler.createFile(name + ".html", content, FileHandler.FUZZ_FILE);
+	}
+	*/
+	
+	public void writeFuzzFile2(final String content, String name) {
+		
+		name += ".html";
+		
+		File f = new File(FileHandler.fuzzDirectory, name);
+		
+		try {
+			FileUtils.touch(f);
+			FileUtils.writeStringToFile(f, content);
+		} catch (IOException e) {
+			g.getWindow().log("Error writting fuzz file: " + name);
+		}
 	}
 
 	/**
@@ -714,7 +663,7 @@ public class FileHandler {
 	//
 	// Private Constructor due to the use of a singleton architecture
 	//
-	public FileHandler(final JBroFuzzWindow g) {
+	public FileHandler(final JBroFuzz g) {
 
 		FileHandler.g = g;
 
@@ -722,7 +671,7 @@ public class FileHandler {
 
 		// Create the necessary directory with the corresponding timestamp
 		FileHandler.fuzzDirectory = new File(baseDir + File.separator + "jbrofuzz"
-				+ File.separator + "fuzzing-tcp" + File.separator + Format.DATE);
+				+ File.separator + "fuzzing" + File.separator + Format.DATE);
 
 		FileHandler.snifDirectory = new File(baseDir + File.separator + "jbrofuzz"
 				+ File.separator + "sniffing" + File.separator
@@ -732,16 +681,12 @@ public class FileHandler {
 				+ "jbrofuzz" + File.separator + "web-dir" + File.separator
 				+ Format.DATE);
 
-		FileHandler.httpFuzzDirectory = new File(baseDir + File.separator
-				+ "jbrofuzz" + File.separator + "fuzzing-http" + File.separator
-				+ Format.DATE);
-
 		int failedDirCounter = 0;
 
 		if (!FileHandler.fuzzDirectory.exists()) {
 			boolean success = FileHandler.fuzzDirectory.mkdirs();
 			if (!success) {
-				g.log("Failed to create \"fuzzing\" directory");
+				g.getWindow().log("Failed to create \"fuzzing\" directory");
 				failedDirCounter++;
 			}
 		}
@@ -749,7 +694,7 @@ public class FileHandler {
 		if (!FileHandler.snifDirectory.exists()) {
 			boolean success = FileHandler.snifDirectory.mkdirs();
 			if (!success) {
-				g.log("Failed to create \"sniffing\" directory");
+				g.getWindow().log("Failed to create \"sniffing\" directory");
 				failedDirCounter++;
 			}
 
@@ -758,45 +703,23 @@ public class FileHandler {
 		if (!FileHandler.webEnumDirectory.exists()) {
 			boolean success = FileHandler.webEnumDirectory.mkdirs();
 			if (!success) {
-				g.log("Failed to create \"web-dir\" directory");
+				g.getWindow().log("Failed to create \"web-dir\" directory");
 				failedDirCounter++;
 			}
 		}
 
-		if (!FileHandler.httpFuzzDirectory.exists()) {
-			boolean success = FileHandler.httpFuzzDirectory.mkdirs();
-			if (!success) {
-				g.log("Failed to create \"fuzzing-http\" directory");
-				failedDirCounter++;
-			}
-		}
 
 		if (failedDirCounter >= 4) {
-			g
+			g.getWindow()
 			.log("\tToo many directories could not be created! Are you launching me through your browser?");
-			g.log("\tTry \"java -jar jbrofuzz-" + Format.VERSION
+			g.getWindow().log("\tTry \"java -jar jbrofuzz-" + Format.VERSION
 					+ ".jar\" on command line...");
 			failedDirCounter = 0;
 		}
 
 		// Load the necessary files into the various panels of the application
-		new DConstructor(g.getJBroFuzz());
+		new DConstructor(g );
 		
-	}
-
-	/**
-	 * <p>
-	 * This method overides the clone method of Object, so that not to support
-	 * cloning for this particular object. This is done to follow singleton best
-	 * practice implementation.
-	 * </p>
-	 * 
-	 * @return Object
-	 * @throws CloneNotSupportedException
-	 */
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		throw new CloneNotSupportedException();
 	}
 
 	/**
@@ -818,15 +741,7 @@ public class FileHandler {
 				// e.printStackTrace();
 			}
 		}
-		if(FileUtils.sizeOfDirectory(httpFuzzDirectory) == 0L) {
-			try {
-				FileUtils.deleteDirectory(httpFuzzDirectory);
-				count++;
-			} catch (final IOException e) {
-				// TODO Auto-generated catch block
-				// e.printStackTrace();
-			}
-		}
+
 		if(FileUtils.sizeOfDirectory(snifDirectory) == 0L) {
 			try {
 				FileUtils.deleteDirectory(snifDirectory);
@@ -849,10 +764,10 @@ public class FileHandler {
 		final String baseDir = System.getProperty("user.dir");
 
 		if(FileUtils.sizeOfDirectory(new File(baseDir + File.separator + "jbrofuzz"
-				+ File.separator + "fuzzing-tcp" + File.separator)) == 0L) {
+				+ File.separator + "fuzzing" + File.separator)) == 0L) {
 			try {
 				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
-						+ File.separator + "fuzzing-tcp" + File.separator));
+						+ File.separator + "fuzzing" + File.separator));
 				count++;
 			} catch (final IOException e) {
 				// TODO Auto-generated catch block
@@ -881,17 +796,7 @@ public class FileHandler {
 				// e.printStackTrace();
 			}
 		}
-		if(FileUtils.sizeOfDirectory(new File(baseDir + File.separator + "jbrofuzz"
-				+ File.separator + "fuzzing-http" + File.separator)) == 0L) {
-			try {
-				FileUtils.deleteDirectory(new File(baseDir + File.separator + "jbrofuzz"
-						+ File.separator + "fuzzing-http" + File.separator));
-				count++;
-			} catch (final IOException e) {
-				// TODO Auto-generated catch block
-				// e.printStackTrace();
-			}
-		}
+		
 
 		if(FileUtils.sizeOfDirectory(new File(baseDir + File.separator + "jbrofuzz"
 				+ File.separator)) == 0L) {

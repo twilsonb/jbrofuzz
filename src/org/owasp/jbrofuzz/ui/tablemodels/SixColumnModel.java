@@ -143,6 +143,17 @@ public class SixColumnModel extends AbstractTableModel {
 		dataVector.add(response);
 		fireTableRowsInserted(0, dataVector.size() - 1);
 	}
+	
+	public void updateLastRow(
+			final String one, final String two, final String three, 
+			final String four, final String five, final String six) {
+
+		final ResponseOutput response = new ResponseOutput(one, two, three, four, five, six);
+		
+		dataVector.setElementAt(response, dataVector.size() - 1);
+		fireTableRowsUpdated(0, dataVector.size() - 1);
+	}
+	
 
 	/**
 	 * Return the total number of columns

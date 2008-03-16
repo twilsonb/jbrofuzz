@@ -30,8 +30,6 @@ import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.version.*;
 import org.owasp.jbrofuzz.core.*;
 
-import org.owasp.jbrofuzz.fuzz.*;
-
 /**
  * <p>
  * Title: Java Bro Fuzzer
@@ -99,13 +97,15 @@ public class JBroFuzz {
 		
 		
 		// Singleton File Handler
-		mHandler = FileHandler.s(mWindow);
+		mHandler = new FileHandler(this);
 		
 		/*
 		String a = null;
 		MessageCreator myMessage = new MessageCreator(a, "XSS", 1, 2);
 		System.out.println(myMessage.getMessage());
 		*/
+		
+		
 		
 	}
 

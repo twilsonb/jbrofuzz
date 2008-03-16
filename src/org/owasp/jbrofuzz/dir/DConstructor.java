@@ -54,7 +54,7 @@ public class DConstructor {
 		final StringBuffer dirTextBuffer = FileHandler
 				.readDirectories(Format.FILE_DIR);
 
-		mJBroFuzz.getWindow().getWebDirectoriesPanel().setDirectoriesText(
+		mJBroFuzz.getWindow().getPanelWebDirectories().setDirectoriesText(
 				dirTextBuffer);
 
 	}

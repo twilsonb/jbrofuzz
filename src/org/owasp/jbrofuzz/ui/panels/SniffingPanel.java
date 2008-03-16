@@ -31,6 +31,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
@@ -66,28 +68,24 @@ import com.Ostermiller.util.Browser;
  * @version 0.8
  */
 public class SniffingPanel extends JBroFuzzPanel {
-
-	private class SniffingRowListener implements ListSelectionListener {
-		/**
-		 * <p>
-		 * Method for the category table selection row.
-		 * </p>
-		 * 
-		 * @param event
-		 *          ListSelectionEvent
-		 */
+	/*
+	private class SniffingRowListener {//  implements ListSelectionListener {
+		
 		public void valueChanged(final ListSelectionEvent event) {
+			
 			if (event.getValueIsAdjusting()) {
 				return;
 			}
 			final int c = sniffingTable.getSelectedRow();
-			final String value = (String) tableModel
-					.getValueAt(c, 0);
-			vew = new WindowViewer(
-					getFrame(), value,
+			final String [] value = ((String) tableModel
+					.getValueAt(c, 0)).split(" ");
+			new WindowViewer(
+					getFrame(), value[0],
 					WindowViewer.VIEW_SNIFFING_PANEL);
+			
 		}
-	}
+	
+} */
 
 	/**
 	 * 
@@ -119,9 +117,6 @@ public class SniffingPanel extends JBroFuzzPanel {
 
 	// The TCP Connection listener
 	private ConnectionListener reflector;
-
-	// The window viewer frame
-	private WindowViewer vew;
 
 	/**
 	 * <p>
@@ -216,9 +211,25 @@ public class SniffingPanel extends JBroFuzzPanel {
 		sniffingTable.setForeground(Color.white);
 		sniffingTable.setSurrendersFocusOnKeystroke(true);
 		sniffingTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		sniffingTable.getSelectionModel().addListSelectionListener(
-				new SniffingRowListener());
+		// sniffingTable.getSelectionModel().addListSelectionListener(
+		//		new SniffingRowListener());
+		sniffingTable.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mouseClicked(final MouseEvent e){
+				if (e.getClickCount() == 2){
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							
+							final int c = sniffingTable.getSelectedRow();
+							final String name = (String) sniffingTable.getModel().getValueAt(c, 0);
+							new WindowViewer(getFrame(), name.split(" ")[0], WindowViewer.VIEW_SNIFFING_PANEL);
 
+						}
+					});
+				}
+			}
+		} );
+		
 		final JScrollPane listTextScrollPane = new JScrollPane(sniffingTable);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
 		listTextScrollPane.setHorizontalScrollBarPolicy(31);

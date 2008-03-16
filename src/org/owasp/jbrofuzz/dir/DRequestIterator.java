@@ -268,7 +268,7 @@ public class DRequestIterator {
 				method.releaseConnection();
 			}
 			// Add a row to the displaying table
-			m.getWebDirectoriesPanel().addRow(responses[i]);
+			m.getPanelWebDirectories().addRow(responses[i]);
 			// Create a String to be written to file
 			final StringBuffer outToFile = new StringBuffer();
 			
@@ -283,12 +283,12 @@ public class DRequestIterator {
 				outToFile.append("," + element);
 			}
 			// Write the file
-			FileHandler.writeWebDirFile(m.getWebDirectoriesPanel()
+			FileHandler.writeWebDirFile(m.getPanelWebDirectories()
 					.getSessionNumber(), outToFile.toString());
 			// Update the progress bar
 			final double percentage = 100 * ((double) (i + 1))
 					/ (directories.length);
-			m.getWebDirectoriesPanel().setProgressBar((int) percentage);
+			m.getPanelWebDirectories().setProgressBar((int) percentage);
 		}
 	}
 
