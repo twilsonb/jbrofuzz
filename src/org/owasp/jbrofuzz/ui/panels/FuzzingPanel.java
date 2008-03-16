@@ -470,7 +470,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			
 			Connection con = new Connection(this.getTargetText(), currentMessage.getMessage());
 
-			outputTableModel.updateLastRow(filename, this.getTargetText() + ":" + con.getPort(), timestamp, "Finished", "1 / 1", con.getReply().getBytes().length + " bytes");
+			outputTableModel.updateLastRow(filename, this.getTargetText() + ":" + con.getPort(), timestamp, "Finished - " + con.getStatus(), "1 / 1", con.getReply().getBytes().length + " bytes");
 
 
 			this.getFrame().getJBroFuzz().getHandler().writeFuzzFile2(
@@ -514,7 +514,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 								+ con.getMessage() + "\r\n-->\r\n" 
 								+ con.getReply(), filename);
 						
-						outputTableModel.updateLastRow(filename, this.getTargetText() + ":" + con.getPort(), timestamp, "Finished", f.getCurrectValue() + "/" + f.getMaximumValue(), con.getReply().getBytes().length + " bytes");
+						outputTableModel.updateLastRow(filename, this.getTargetText() + ":" + con.getPort(), timestamp,  "Finished - " + con.getStatus(), f.getCurrectValue() + "/" + f.getMaximumValue(), con.getReply().getBytes().length + " bytes");
 
 
 

@@ -215,12 +215,13 @@ public class FileHandler {
 			BufferedReader bufRead = null;
 			try {
 				final FileReader input = new FileReader(folderFiles[i]);
+
 				bufRead = new BufferedReader(input);
 				String line;
 				boolean passedResponse = false;
 				line = bufRead.readLine();
 				while (line != null) {
-					if (line.startsWith(Format.LINE_SEPARATOR)) {
+					if (line.startsWith("-->")) {
 						passedResponse = true;
 					}
 					if (passedResponse) {
