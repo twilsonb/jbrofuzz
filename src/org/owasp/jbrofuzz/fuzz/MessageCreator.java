@@ -1,12 +1,12 @@
 /**
- * MessageCreator.java 0.8
+ * JBroFuzz 0.9
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon (dot) org
+ * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -166,7 +166,7 @@ public class MessageCreator {
 		
 		String test = stringReplace("\r\n", message, "\\r\\n\n"); 
 		
-		// System.out.println(test);
+		System.out.println(test);
 		
 		return message;
 		

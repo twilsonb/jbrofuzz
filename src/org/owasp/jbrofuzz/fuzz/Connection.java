@@ -1,12 +1,12 @@
 /**
- * Connection.java 0.6
+ * JBroFuzz 0.9
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon (dot) org
+ * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,14 +26,8 @@
 package org.owasp.jbrofuzz.fuzz;
 
 import javax.net.ssl.*;
-import javax.net.*;
 import java.net.*;
 import java.io.*;
-
-import java.nio.ByteBuffer;
-
-import org.apache.commons.*;
-import org.apache.commons.lang.*;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -146,7 +140,7 @@ public class Connection {
 				sslSocket = (SSLSocket)sslsocketfactory.createSocket(host, port);
 				sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
 				sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-				// sslSocket.setSoTimeout(30000);
+				sslSocket.setSoTimeout(30000);
 				
 			} catch (UnknownHostException e) {
 				reply = "The IP address of the host could not be determined : "
@@ -217,7 +211,7 @@ public class Connection {
 
 				socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
 				socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-				// socket.setSoTimeout(30000);
+				socket.setSoTimeout(30000);
 			} catch (final UnknownHostException e) {
 				reply = "The IP address of the host could not be determined : "
 					+ e.getMessage() + "\n";
@@ -301,18 +295,6 @@ public class Connection {
 
 		return reply;
 
-	}
-	
-	public String getStatus() {
-		
-		String output = "   ";
-		
-		String value = reply.split(" ")[1];
-		if(StringUtils.isNumeric(value)) {
-			output = value;
-		}
-		
-		return output;
 	}
 
 	public int getPort() {

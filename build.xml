@@ -6,6 +6,9 @@
 		<fileset dir="lib">
 			<include name="*.jar" />
 		</fileset>
+		<fileset dir="launch4j">
+			<include name="*.jar" />
+		</fileset>
 	</path>
 
 	<target name="init" description="Setup for Build">
@@ -22,7 +25,7 @@
 
 	<target depends="compile" name="archive">
 		<echo>Creating Java Archive</echo>
-		<jar compress="true" destfile="jar/${app.name}-${DSTAMP}.jar">
+		<jar compress="true" destfile="jar/${app.name}.jar">
 			<fileset dir="bin">
 				<include name="**/*.class" />
 			</fileset>
@@ -47,6 +50,12 @@
 			</manifest>
 		</jar>
 	</target>
+	
+	<target name="exe" depends="archive">
+		<echo>Creating Executable</echo>
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpathref="master-classpath" />
+		<launch4j configFile="./release/launch4j.xml" />
+	</target>
 
 	<target name="clean">
 		<delete verbose="true" failonerror="false" includeemptydirs="true">
@@ -55,6 +64,6 @@
 		</delete>
 	</target>
 
-	<target depends="clean,init,compile,archive" name="build" />
+	<target depends="clean,init,compile,archive,exe" name="build" />
 
 </project>

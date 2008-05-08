@@ -1,12 +1,12 @@
 /**
- * FileHandler.java 0.8
+ * JBroFuzz 0.9
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon (dot) org
+ * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -215,13 +215,12 @@ public class FileHandler {
 			BufferedReader bufRead = null;
 			try {
 				final FileReader input = new FileReader(folderFiles[i]);
-
 				bufRead = new BufferedReader(input);
 				String line;
 				boolean passedResponse = false;
 				line = bufRead.readLine();
 				while (line != null) {
-					if (line.startsWith("-->")) {
+					if (line.startsWith(Format.LINE_SEPARATOR)) {
 						passedResponse = true;
 					}
 					if (passedResponse) {

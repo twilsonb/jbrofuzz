@@ -1,12 +1,12 @@
 /**
- * FuzzingPanel.java 0.6
+ * JBroFuzz 0.9
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon (dot) org
+ * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -470,7 +470,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			
 			Connection con = new Connection(this.getTargetText(), currentMessage.getMessage());
 
-			outputTableModel.updateLastRow(filename, this.getTargetText() + ":" + con.getPort(), timestamp, "Finished - " + con.getStatus(), "1 / 1", con.getReply().getBytes().length + " bytes");
+			outputTableModel.updateLastRow(filename, this.getTargetText() + ":" + con.getPort(), timestamp, "Finished", "1 / 1", con.getReply().getBytes().length + " bytes");
 
 
 			this.getFrame().getJBroFuzz().getHandler().writeFuzzFile2(
@@ -514,7 +514,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 								+ con.getMessage() + "\r\n-->\r\n" 
 								+ con.getReply(), filename);
 						
-						outputTableModel.updateLastRow(filename, this.getTargetText() + ":" + con.getPort(), timestamp,  "Finished - " + con.getStatus(), f.getCurrectValue() + "/" + f.getMaximumValue(), con.getReply().getBytes().length + " bytes");
+						outputTableModel.updateLastRow(filename, this.getTargetText() + ":" + con.getPort(), timestamp, "Finished", f.getCurrectValue() + "/" + f.getMaximumValue(), con.getReply().getBytes().length + " bytes");
 
 
 
