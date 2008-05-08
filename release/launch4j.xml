@@ -1,7 +1,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>0</headerType>
-  <headerObjects>
+    <headerObjects>
     <file>w32api/crt2.o</file>
     <file>head/guihead.o</file>
     <file>head/head.o</file>
@@ -15,29 +15,24 @@
     <file>w32api/libadvapi32.a</file>
     <file>w32api/libshell32.a</file>
   </libs>
-  <jar>C:\root\code\jbrofuzz\jar\JBroFuzz-20080316.jar</jar>
-  <outfile>C:\root\code\jbrofuzz\jar\JBroFuzz-08.exe</outfile>
-  <errTitle></errTitle>
-  <jarArgs></jarArgs>
-  <chdir></chdir>
-  <customProcName>false</customProcName>
-  <stayAlive>false</stayAlive>
-  <icon>C:\root\code\jbrofuzz\release\icon.ico</icon>
+  <jar>../jar/JBroFuzz.jar</jar>
+  <outfile>../jar/JBroFuzz.exe</outfile>
+  <errTitle>JBroFuzz</errTitle>
+  <chdir>.</chdir>
+  <customProcName>true</customProcName>
+  <icon>icon.ico</icon>
   <jre>
-    <path>%PATH%</path>
     <minVersion>1.5.0</minVersion>
-    <maxVersion></maxVersion>
-    <initialHeapSize>64</initialHeapSize>
+	<initialHeapSize>64</initialHeapSize>
     <maxHeapSize>128</maxHeapSize>
-    <args></args>
   </jre>
   <splash>
-    <file>C:\root\code\jbrofuzz\release\splashscreen.bmp</file>
+    <file>splashscreen.bmp</file>
     <waitForWindow>true</waitForWindow>
-    <timeout>90</timeout>
+    <timeout>60</timeout>
     <timeoutErr>true</timeoutErr>
   </splash>
-  <versionInfo>
+    <versionInfo>
     <fileVersion>0.8.0.0</fileVersion>
     <txtFileVersion>0.8.0.0</txtFileVersion>
     <fileDescription>Java Bro Fuzzer</fileDescription>
@@ -47,6 +42,6 @@
     <productName>Java Bro Fuzzer</productName>
     <companyName></companyName>
     <internalName>JBroFuzz</internalName>
-    <originalFilename>JBroFuzz-08.exe</originalFilename>
+    <originalFilename>JBroFuzz.exe</originalFilename>
   </versionInfo>
 </launch4jConfig>
