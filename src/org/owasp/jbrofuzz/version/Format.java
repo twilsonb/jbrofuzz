@@ -1,12 +1,12 @@
 /**
- * JBRFormat.java 0.8
+ * JBroFuzz 0.9
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon (dot) org
+ * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,7 +55,7 @@ public class Format {
 	 * 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "0.8";
+	public static final String VERSION = "0.9";
 
 	/**
 	 * <p> The year of the release.</p>

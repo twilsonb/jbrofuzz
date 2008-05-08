@@ -1,12 +1,12 @@
 /**
- * WindowViewer.java 0.6
+ * JBroFuzz 0.9
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon org
+ * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,7 +38,6 @@ import javax.swing.JScrollPane;
 import javax.swing.text.Document;
 import javax.swing.text.StyledEditorKit;
 
-import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
@@ -50,8 +49,8 @@ import org.owasp.jbrofuzz.util.TextHighlighter;
  * request/reply that has been made.
  * </p>
  * 
- * @author subere (at) uncon org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 0.8
  * @since 0.2
  */
 public class WindowViewer extends JFrame {

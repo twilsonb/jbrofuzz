@@ -1,12 +1,12 @@
 /**
- * JBroFuzz.java 0.8
+ * JBroFuzz 0.9
  *
  * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
  * It allows for the identification of certain classes of security bugs, by
  * means of creating malformed data and having the network protocol in question
  * consume the data.
  *
- * Copyright (C) 2007 subere (at) uncon (dot) org
+ * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,7 +37,7 @@ import org.owasp.jbrofuzz.core.*;
  * 
  * <p>
  * Description: The central class launching the application. This class
- * instantiates a request iterator, a version, a main frame window and a file
+ * instantiates a database, a version, a main frame window and a file
  * handler. The order in which the last three are instantiated should not be
  * altered.
  * </p>
