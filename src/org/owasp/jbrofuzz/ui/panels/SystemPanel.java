@@ -56,7 +56,7 @@ public class SystemPanel extends JBroFuzzPanel {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1771587308148328608L;
+	// private static final long serialVersionUID = -1771587308148328608L;
 	// The frame that the sniffing panel is attached
 	// private JBRFrame m;
 	// The JTable that holds all the data

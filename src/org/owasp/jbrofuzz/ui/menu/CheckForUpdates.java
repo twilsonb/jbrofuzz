@@ -301,7 +301,7 @@ public void startUpdate() {
 					newVersionExists = true;
 				}
 				else if(latest < current) {
-					mainLabel.append("\nYou are running a newever version.");
+					mainLabel.append("\nYou are running a newer version.");
 				}
 				else {
 					mainLabel.append("\nYou are running the latest version.");

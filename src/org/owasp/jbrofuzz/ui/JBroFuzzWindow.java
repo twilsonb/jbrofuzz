@@ -60,8 +60,8 @@ import org.owasp.jbrofuzz.version.Format;
  * occupying the entire frame.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 0.9
  */
 public class JBroFuzzWindow extends JFrame {
 
@@ -118,6 +118,9 @@ public class JBroFuzzWindow extends JFrame {
 
 	// The system logger panel
 	private final SystemPanel mSystemLogger;
+	
+	// The toolbar of the window
+	private JBRToolBar mToolBar;
 
 	/**
 	 * <p>
@@ -132,32 +135,49 @@ public class JBroFuzzWindow extends JFrame {
 		// The frame
 		super("JBroFuzz " + Format.VERSION);
 		this.mJBroFuzz = mJBroFuzz;
+		
+		// The container pane
+		final Container pane = getContentPane();
+		pane.setLayout(new BorderLayout());
+		
 		// The menu bar
 		mMenuBar = new JBRMenuBar(this);
 		setJMenuBar(mMenuBar);
-		// The container pane
-		final Container pane = getContentPane();
-		pane.setLayout(null);
+		
+		// The tool bar
+		mToolBar = new JBRToolBar(this);
+		
+		
 		// The tabbed panels
 		mWebDirectoriesPanel = new DirectoriesPanel(this);
 		mFuzzingPanel = new FuzzingPanel(this);
 		mSniffingPanel = new SniffingPanel(this);
 		mDefinitionsPanel = new PayloadsPanel(this);
 		mSystemLogger = new SystemPanel(this);
-		// mHTTPFuzzingPanel = new HTTPFuzzing(this);
+		
+		mWebDirectoriesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		mFuzzingPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+		mSniffingPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		mDefinitionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		mSystemLogger.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		
 		// The tabbed pane, 3 is for bottom orientation
 		tabbedPane = new JTabbedPane(3);
+		tabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 		// tabbedPane.setPreferredSize(new Dimension(588,368));
-		tabbedPane.setBounds(0, 0, 895, 500);
+		// tabbedPane.setBounds(0, 0, 895, 500);
 		// Do not change the names!!!
-		// tabbedPane.add(" HTTP/S Fuzzing ", mHTTPFuzzingPanel);
 		tabbedPane.add(" Fuzzing ", mFuzzingPanel);
 		tabbedPane.add(" Sniffing ", mSniffingPanel);
 		tabbedPane.add(" Payloads ", mDefinitionsPanel);
 		tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
 		
 		tabbedPane.setSelectedComponent(mFuzzingPanel);
-		pane.add(tabbedPane);
+		
+		
+		pane.add(mToolBar, BorderLayout.PAGE_START);
+	    pane.add(tabbedPane, BorderLayout.CENTER);
+	    
 		// The image icon
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
@@ -168,10 +188,10 @@ public class JBroFuzzWindow extends JFrame {
 				exitProcedure();
 			}
 		});
-
-		this.setLocation(100, 100);
-		this.setSize(900, 550);
-		setResizable(false);
+	        
+		this.setLocation(50, 100);
+		this.setSize(950, 600);
+		setResizable(true);
 		setVisible(true);
 
 		log("System Launch, Welcome!");
@@ -199,6 +219,10 @@ public class JBroFuzzWindow extends JFrame {
 	 */
 	public JBRMenuBar getFrameMenuBar() {
 		return mMenuBar;
+	}
+	
+	public JBRToolBar getFrameToolBar() {
+		return mToolBar;
 	}
 
 	/**

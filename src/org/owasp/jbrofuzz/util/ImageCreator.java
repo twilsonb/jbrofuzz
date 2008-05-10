@@ -145,6 +145,28 @@ public class ImageCreator {
 		+ "FqoezsqpywAP+Kf7z3hPnbLA/n684yWyfzXD9RDvP9Q6xvOw8GQ0lTLh0/2n+71eL8LD+g7r"
 		+ "I+DvY1R7QR7p05bIN4EndiM75jnntfyoHbb3FXwGnBeLmc7wf31c9Qjsj8vvZ8bOei0dnYLv"
 		+ "DLOvqeOn4cy1ctUjtPJyMZWOkNJ9K5368JFifxP7P3WlcRVYxi88AAAAAElFTkSuQmCC";
+
+	private static final String OWASP_SMALL = 
+		"iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABGdBTUEAALGPC/xhBQAAAAlw"
+		+ "SFlzAAAScwAAEnMBjCK5BwAAAwRJREFUOE9NkllMk2kYhf8JMaMRiFSKsshSCliWMraVJRUs"
+		+ "i+OERMXRKiABd3AZEVAGa03FoKbuTToMoRqNlTpRQSEWFUokRI0jS4xXQmTMxCuu1AyYIoTH"
+		+ "vzUMnLsv33vek3Pe8wMihDnwPL+MfRF6nvYII/+OCFKpVNCmaoXQ8FDBx8dn7qggeMgzGHk3"
+		+ "gi5LhyJBwU9KJTEJGjTaHA4fqaa/vw/3uHvuOP+TOzs7kQRJ8JfKiFxZg27bXbb81k6ZsYsd"
+		+ "NR0odVUYjCf5/PETXye+epd4ye//eU9A4CL8lmpI3WSn8GALh+tdXGp6ya0Hb3jYPUR75zDV"
+		+ "p7vJ/WUzff2vmJycRJieniYjMwO/wAhU6+1sKGsR1To4deUZtuYB2lzD9L76wNW/Brn/6C2V"
+		+ "p7ooKS7F9cSFMPZ5jPh4BcuU5fhJ9SwO20t4nAHVaivFVW3UW3upu9TD8Qs9mC73crHpb+JS"
+		+ "dnLObEZobW1FmZRImLaR9Hwbabn1RMgqSVSbOXaumz21HWzce4cacxe2268xiEt0hQ70BQUI"
+		+ "FouF5YkqQlOtyHP/JOXXa2QVNlNS1U5UbB3BqoscqnvE2T+ec7rhBfuNj0nT30ajViM4HA7S"
+		+ "VmUhWWkhcpWVpJ8bxdBuEhV/EP+AfajSr5Bf3sKuYw85ZHpMftl9EvNuEaOIQRgaHqKiuorg"
+		+ "FAsRWiux2VYyNlxmvm8+cpWJnb87CZebyFlvo7jiAdnFDkI054mWRSJMTU3RP9hHoGK36OUm"
+		+ "a0ubiV1xlLVFN9CLyRfsv4e/pJx4TZ34b0ee3cC84GxCwoK/33n8v3FqDSbRq10MyMmBk12U"
+		+ "GZxsq2xj074WEtTVBMVVoFjTiDT5DL5+vuJ87WzDPM3JXLOZnCI72486KT3iZKOonLn1Ounr"
+		+ "Gli4TE+A8gw/LpQgk8twu92z5ImJCQYHBigqKUUas5XkvCaS8pqJyrQRkGxmQUiuqLjISxwd"
+		+ "HZ2t50zbPf5d3S5vATx31Kg1yMVUo6MjWbI0COMJo1dxBt8A83UbX+Xld0EAAAAASUVORK5C"
+		+ "YII=";
+
+	public static final ImageIcon OWASP_IMAGE_SML = new ImageIcon(Base64
+			.decode(ImageCreator.OWASP_SMALL));
 	/**
 	 * <p>
 	 * The owasp image being displayed in the about box. This image is originally
@@ -379,9 +401,9 @@ public class ImageCreator {
 		"2XwQKQCxAoAAwqVZAd1/2ABAAOHTXI/kggXYFAEEEC7NoOhpRGJjBQABxEhJxgAIICYGCgBA" +
 		"gAEAHtwgxMCFBqgAAAAASUVORK5CYII=";
 
-	
 
-	
+
+
 
 
 
@@ -404,7 +426,7 @@ public class ImageCreator {
 		"sSWyQoAAQre5EYldADVgItQFIFt1kBUDBBC6ZgFoYIHAeajGfCB+CbXZAFkxQACh" +
 		"OzsfB18ciD3Q/QcQQOiaDaFRtRBKG0LFQTbvQNcMEEDozgYFkD2UHQ/EB5H8/AUa" +
 		"BnAAEECMlKRtgACiKG0DBBBFmgECDADk8CgQHS3hUQAAAABJRU5ErkJggg==";
-	
+
 	private static final String TXT_HELP = 
 		"iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY" +
 		"AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA" +
@@ -439,7 +461,7 @@ public class ImageCreator {
 	public static final ImageIcon IMG_COPY = new ImageIcon(Base64.decode(copyImageText));
 	public static final ImageIcon IMG_PASTE = new ImageIcon(Base64.decode(pasteImageText));
 	public static final ImageIcon IMG_SELECTALL = new ImageIcon(Base64.decode(selectAllImageText));
-	
+
 	public static final ImageIcon IMG_LKF = new ImageIcon(Base64.decode(TXT_LKF));
 
 	public static final ImageIcon IMG_TOPICS = new ImageIcon(Base64.decode(ImageCreator.TXT_TOPICS));

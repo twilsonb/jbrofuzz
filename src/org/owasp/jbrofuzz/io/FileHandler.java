@@ -233,6 +233,7 @@ public class FileHandler {
 					line = bufRead.readLine();
 				}
 				bufRead.close();
+				// hashValue[i] = (i * 100) % 1000;
 			} catch (final ArrayIndexOutOfBoundsException e) {
 				g.getWindow().log("Cannot Find Location"
 						+ "\n" + folderFiles[i].getName() + "\nAn Array Error Occured " + 

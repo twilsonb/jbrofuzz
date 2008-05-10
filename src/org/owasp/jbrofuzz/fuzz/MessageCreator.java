@@ -26,16 +26,17 @@
 package org.owasp.jbrofuzz.fuzz;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.*;
 
 /**
  * <p>
- * The message creator taking as input the 
+ * The message creator taking as input the message displayed in the request field
+ * and performing some required manipulation. Examples include making sure that the 
+ * POST field has the length of the fuzzing request.
  * </p>
  * 
  * 
  * @author subere@uncon.org
- * @version 0.8
+ * @version 0.9
  */
 public class MessageCreator {
 
@@ -166,7 +167,7 @@ public class MessageCreator {
 		
 		String test = stringReplace("\r\n", message, "\\r\\n\n"); 
 		
-		System.out.println(test);
+		// System.out.println(test);
 		
 		return message;
 		
