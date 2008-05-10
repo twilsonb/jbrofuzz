@@ -495,12 +495,13 @@ public class TableSorter extends AbstractTableModel {
 	}
 
 	public Object getValueAt(int row, int column) {
-		if(row < 0)
-			row = 0;
-		if(column < 0)
-			column = 0;
-
-		return this.tableModel.getValueAt(this.modelIndex(row), column);
+		// synchronized (listenerList) {
+			if (row < 0 || row >= getRowCount())
+				row = 0;
+			if (column < 0 || column >= getColumnCount())
+				column = 0;
+			return this.tableModel.getValueAt(this.modelIndex(row), column);
+		// }
 	}
 
 	private Row[] getViewToModel() {

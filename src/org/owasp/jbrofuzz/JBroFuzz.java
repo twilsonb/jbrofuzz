@@ -102,7 +102,7 @@ public class JBroFuzz {
 		/*
 		String a = null;
 		MessageCreator myMessage = new MessageCreator(a, "XSS", 1, 2);
-		System.out.println(myMessage.getMessage());
+		// System.out.println(myMessage.getMessage());
 		*/
 		
 		

@@ -56,6 +56,7 @@ public class Connection {
 	private String reply;
 	private URL url = null;
 	private int port;
+	private String host, protocol, file, ref;
 
 	private InputStream in_stream;
 	private OutputStream out_stream;
@@ -82,11 +83,11 @@ public class Connection {
 				+ e1.getMessage() + "\n";
 		}
 
-		String protocol = url == null ? "" : url.getProtocol();    // http
-		String host = url == null ? "" : url.getHost();            // localhost
+		protocol = url == null ? "" : url.getProtocol();    // http
+		host = url == null ? "" : url.getHost();            // localhost
 		port = url == null ? -1 : url.getPort();               // 443
-		String file = url == null ? "" : url.getFile();            // index.jsp
-		String ref = url == null ? "" : url.getRef();              // _top_
+		file = url == null ? "" : url.getFile();            // index.jsp
+		ref = url == null ? "" : url.getRef();              // _top_
 
 		// Set default ports
 		//
@@ -301,6 +302,11 @@ public class Connection {
 
 		return port;
 
+	}
+	
+	public String getURL() {
+		
+		return protocol + "-" + host + ":" + port + file + ref;
 	}
 
 

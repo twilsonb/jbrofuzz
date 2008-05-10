@@ -55,7 +55,7 @@ public class Fuzzer implements Iterator<String> {
 		
 		if(generator != null) {
 			
-			System.out.println("Generator Found!");
+			// System.out.println("Generator Found!");
 			
 			payloads = this.generator.getPayloads();
 			if(this.generator.isReplasive()) {
