@@ -25,6 +25,7 @@
  */
 package org.owasp.jbrofuzz.fuzz;
 
+import org.apache.commons.lang.*;
 import javax.net.ssl.*;
 import java.net.*;
 import java.io.*;
@@ -74,13 +75,14 @@ public class Connection {
 	 * @param message
 	 *          String
 	 */
-	public Connection(final String urlString, final String message) {
+	public Connection(final String urlString, final String message) throws ConnectionException {
 
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e1) {
 			reply = "Malformed URL : "
 				+ e1.getMessage() + "\n";
+			throw new ConnectionException(reply);
 		}
 
 		protocol = url == null ? "" : url.getProtocol();    // http
@@ -100,7 +102,7 @@ public class Connection {
 
 		this.message = message;
 
-		
+
 		final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
 
 		// Create a trust manager that does not validate certificate chains
@@ -123,13 +125,16 @@ public class Connection {
 			SSLContext sc = SSLContext.getInstance("SSL");
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		} catch (Exception e) {
-			System.out.println("Could not install all-trusting certificates... " + e.getMessage());
+		} 
+		catch (Exception e) {
+			
+			throw new ConnectionException("Could not install all-trusting certificates... " + e.getMessage());
+			
 		}
 
 
-		
-		
+
+
 		// Create the Socket to the specified address and port
 		if(protocol.equalsIgnoreCase("https")) {
 
@@ -137,26 +142,32 @@ public class Connection {
 			SSLSocketFactory sslsocketfactory = (SSLSocketFactory)SSLSocketFactory.getDefault();
 			SSLSocket sslSocket = null;
 			try {
-				
+
 				sslSocket = (SSLSocket)sslsocketfactory.createSocket(host, port);
 				sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
 				sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
 				sslSocket.setSoTimeout(30000);
-				
+
 			} catch (UnknownHostException e) {
 				reply = "The IP address of the host could not be determined : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
+
 			} catch (IOException e) {
 				reply = "An IO Error occured when creating the socket : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
+
 			}
-			
+
 			// Assign the input stream
 			try {
 				in_stream = sslSocket.getInputStream();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the input stream : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
+
 			}
 			// Assign the output stream
 			try {
@@ -164,6 +175,8 @@ public class Connection {
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the output stream : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
+
 			}
 
 			// Write to the output stream
@@ -172,11 +185,13 @@ public class Connection {
 			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to write to the output stream : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
+
 			}
 			// Really don't like catching null pointer exceptions...
 			catch (final NullPointerException e) {
 				reply = "The output stream is null : " + e.getMessage();
-				return;
+				throw new ConnectionException(reply);
 			}
 			// Read the input stream, once you have finished writing to the output
 			try {
@@ -191,16 +206,22 @@ public class Connection {
 				reply = new String(allbytes);
 
 			} catch (final IOException e) {
+				
+				throw new ConnectionException("An IO Exception occured: " + e.getMessage());
 
 			}
 			// Close the socket
 			try {
 				sslSocket.close();
-			} catch (final IOException e) {
+			} 
+			catch (final IOException e) {
 				reply = "An IO Error occured when attempting to close the socket : "
 					+ e.getMessage() + "\n";
+				
+				throw new ConnectionException(reply);
+
 			}
-//-----
+//			-----
 
 		}
 		// Protocol is http going over a normal socket
@@ -216,9 +237,12 @@ public class Connection {
 			} catch (final UnknownHostException e) {
 				reply = "The IP address of the host could not be determined : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
+
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the socket : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
 			}
 
 			// Assign the input stream
@@ -227,6 +251,8 @@ public class Connection {
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the input stream : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
+
 			}
 			// Assign the output stream
 			try {
@@ -234,6 +260,8 @@ public class Connection {
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the output stream : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
+
 			}
 
 			// Write to the output stream
@@ -242,11 +270,13 @@ public class Connection {
 			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to write to the output stream : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
+
 			}
 			// Really don't like catching null pointer exceptions...
 			catch (final NullPointerException e) {
 				reply = "The output stream is null : " + e.getMessage();
-				return;
+				throw new ConnectionException(reply);
 			}
 			// Read the input stream, once you have finished writing to the output
 			try {
@@ -261,7 +291,7 @@ public class Connection {
 				reply = new String(allbytes);
 
 			} catch (final IOException e) {
-
+				throw new ConnectionException("An IO Exception occured: " + e.getMessage());
 			}
 			// Close the socket
 			try {
@@ -269,6 +299,7 @@ public class Connection {
 			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to close the socket : "
 					+ e.getMessage() + "\n";
+				throw new ConnectionException(reply);
 			}
 		}
 	}
@@ -280,8 +311,12 @@ public class Connection {
 	 * 
 	 * @return StringBuffer
 	 */
-	public String getMessage() {
-		return this.message;
+	public String getMessage() throws ConnectionException {
+		if(this.message.isEmpty()) {
+			throw new ConnectionException("The message is blank");
+		} else {
+			return this.message;
+		}
 	}
 
 	/**
@@ -292,9 +327,12 @@ public class Connection {
 	 * 
 	 * @return String
 	 */
-	public String getReply() {
-
+	public String getReply() throws ConnectionException {
+		if(this.reply.isEmpty()) {
+			throw new ConnectionException("The reply is blank");
+		} else {
 		return reply;
+		}
 
 	}
 
@@ -303,10 +341,23 @@ public class Connection {
 		return port;
 
 	}
-	
-	public String getURL() {
+
+	public String getStatus() throws ConnectionException {
+
+		String output = "---";
+
+		String value;
+		try {
+			value = reply.split(" ")[1];
+		} catch (Exception e) {
+			throw new ConnectionException("Could not obtain the status");
+		}
 		
-		return protocol + "-" + host + ":" + port + file + ref;
+		if(StringUtils.isNumeric(value)) {
+			output = value;
+		}
+
+		return output;
 	}
 
 

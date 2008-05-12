@@ -248,7 +248,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 		stopButton.setEnabled(false);
 		stopButton.setBounds(690, 33, 90, 40);
 		stopButton.setToolTipText("Stop Sniffing");
-		browserButton = new JButton("Bro", ImageCreator.PAUSE_IMG);
+		browserButton = new JButton("Browser");
 		browserButton.setBounds(790, 33, 80, 40);
 		browserButton.setEnabled(true);
 		browserButton.setToolTipText("Open in external browser");

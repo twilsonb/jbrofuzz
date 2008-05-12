@@ -153,7 +153,7 @@ public class WindowViewer extends JFrame {
 				.createEmptyBorder(1, 1, 1, 1)));
 
 		listTextArea.setText(text.toString());
-
+		listTextArea.setCaretPosition(0);
 		// Global Frame Issues
 		this.setLocation(200, 200);
 		this.setSize(550, 500);

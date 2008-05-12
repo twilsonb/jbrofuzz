@@ -42,7 +42,6 @@ import org.owasp.jbrofuzz.ui.panels.*;
 import org.owasp.jbrofuzz.ui.tablemodels.*;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.util.TableSorter;
 
 
 
@@ -75,7 +74,7 @@ public class PayloadsDialog extends JDialog {
 	// The JLabel holding any comments
 	// private JTextArea commentTextArea;
 	// The table sorters
-	private TableSorter categoryTableSorter, nameTableSorter;
+	// private TableSorter categoryTableSorter, nameTableSorter;
 	// The start and finish of the request
 	private int start, end;
 	// The last category accessed
@@ -111,19 +110,20 @@ public class PayloadsDialog extends JDialog {
 		this.add(category);
 
 		categoryTableModel = new SingleColumnModel(" Id ");
-		categoryTableSorter = new TableSorter(categoryTableModel);
+		// categoryTableSorter = new TableSorter(categoryTableModel);
 
-		categoryTable = new JTable(categoryTableSorter);
+		categoryTable = new JTable(categoryTableModel);
+		// categoryTable.setAutoCreateRowSorter(true);
 		categoryTable.setName("Category");
 		categoryTable.setToolTipText("Double click to Add the Payload Category");
 		
 		categoryTable.getTableHeader().setToolTipText("Click to sort by category");
 		popup(categoryTable);
-		categoryTableSorter.setTableHeader(categoryTable.getTableHeader());
+		// categoryTableSorter.setTableHeader(categoryTable.getTableHeader());
 		categoryTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds());
-		categoryTableSorter.setTableModel(categoryTableModel);
-		categoryTableSorter.fireTableDataChanged();
+		// categoryTableSorter.setTableModel(categoryTableModel);
+		// categoryTableSorter.fireTableDataChanged();
 		categoryTable.setFont(new Font("Verdana", Font.BOLD, 14));
 		categoryTable.setRowHeight(30);
 		categoryTable.getSelectionModel().addListSelectionListener(new IdsRowListener());
@@ -134,7 +134,7 @@ public class PayloadsDialog extends JDialog {
 			public void mouseClicked(final MouseEvent e){
 				if (e.getClickCount() == 2){
 					final int c = categoryTable.getSelectedRow();
-					final String value = (String) categoryTableSorter.getValueAt(c, 0);
+					final String value = (String) categoryTableModel.getValueAt(c, 0);
 					m.getPanelFuzzing().addPayload(value, start, end);
 					PayloadsDialog.this.dispose();
 				}
@@ -165,13 +165,14 @@ public class PayloadsDialog extends JDialog {
 		this.add(name);
 
 		nameTableModel = new SingleColumnModel(" Payload ");
-		nameTableSorter = new TableSorter(nameTableModel);
+		// nameTableSorter = new TableSorter(nameTableModel);
 
-		nameTable = new JTable(nameTableSorter);
+		nameTable = new JTable(nameTableModel);
+		// nameTable.setAutoCreateRowSorter(true);
 		nameTable.setName("Name");
 
 		nameTable.getTableHeader().setToolTipText("Click to sort by name");
-		nameTableSorter.setTableHeader(nameTable.getTableHeader());
+		// nameTableSorter.setTableHeader(nameTable.getTableHeader());
 		popup(nameTable);
 		nameTable.setFont(new Font("Verdana", Font.BOLD, 14));
 		nameTable.setRowHeight(30);
@@ -258,7 +259,7 @@ public class PayloadsDialog extends JDialog {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						final int c = categoryTable.getSelectedRow();
-						final String value = (String) categoryTableSorter.getValueAt(c, 0);
+						final String value = (String) categoryTableModel.getValueAt(c, 0);
 						m.getPanelFuzzing().addPayload(value, start, end);
 						PayloadsDialog.this.dispose();
 						
@@ -299,12 +300,12 @@ public class PayloadsDialog extends JDialog {
 				return;
 			}
 			final int c = categoryTable.getSelectedRow();
-			final String value = (String) categoryTableSorter.getValueAt(c, 0);
+			final String value = (String) categoryTableModel.getValueAt(c, 0);
 			final String exploit = m.getJBroFuzz().getDatabase().getName(value);
 
 			nameTableModel.setData(m.getJBroFuzz().getDatabase().getPayloads(value));
-			nameTableSorter.setTableModel(nameTableModel);
-			nameTableSorter.fireTableDataChanged();
+			// nameTableSorter.setTableModel(nameTableModel);
+			// nameTableSorter.fireTableDataChanged();
 			
 			name.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 					.createTitledBorder(" " + exploit + " "), BorderFactory
@@ -327,7 +328,7 @@ public class PayloadsDialog extends JDialog {
 				return;
 			}
 			final int c = nameTable.getSelectedRow();
-			final String value = (String) nameTableSorter.getValueAt(c, 0);
+			final String value = (String) nameTableModel.getValueAt(c, 0);
 
 			
 			viewTextArea.setText("" + value.length());
@@ -394,10 +395,10 @@ public class PayloadsDialog extends JDialog {
 					
 					final int c = nameTable.getSelectedRow();
 					nameTable.getSelectionModel().setSelectionInterval(c, c);
-					final String name = (String) nameTableSorter.getValueAt(c, 0);
+					final String name = (String) nameTableModel.getValueAt(c, 0);
 					
 					int d = categoryTable.getSelectedRow();
-					String category = (String) categoryTableSorter.getValueAt(d, 0);
+					String category = (String) categoryTableModel.getValueAt(d, 0);
 					
 					PayloadsDialog.this.dispose();
 					
@@ -411,7 +412,7 @@ public class PayloadsDialog extends JDialog {
 					
 					final int c = categoryTable.getSelectedRow();
 					categoryTable.getSelectionModel().setSelectionInterval(c, c);
-					final String value = (String) categoryTableSorter.getValueAt(c, 0);
+					final String value = (String) categoryTableModel.getValueAt(c, 0);
 					
 					PayloadsDialog.this.dispose();
 					

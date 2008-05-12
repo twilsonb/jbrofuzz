@@ -20,7 +20,7 @@
 
 	<target depends="init" name="compile" description="Compilation of Java">
 		<echo>Compiling Java Files</echo>
-		<javac srcdir="src" destdir="bin" debug="true" failonerror="true" classpathref="master-classpath" deprecation="true" source="1.5" target="1.5" />
+		<javac srcdir="src" destdir="bin" debug="true" failonerror="true" classpathref="master-classpath" deprecation="true" source="1.6" target="1.6" />
 	</target>
 
 	<target depends="compile" name="archive">
@@ -35,6 +35,7 @@
 			<fileset dir="">
 				<include name="help/*.html" />
 				<include name="LICENSE/*.txt" />
+				<include name="release/splashscreen.png" />
 			</fileset>
 			<zipfileset src="lib/commons-codec-1.3.jar" />
 			<zipfileset src="lib/commons-httpclient-3.1.jar" />
@@ -47,6 +48,7 @@
 			<manifest>
 				<attribute name="Main-Class" value="org.owasp.jbrofuzz.JBroFuzz" />
 				<attribute name="Build-By" value="subere@uncon.org" />
+				<attribute name="SplashScreen-Image" value="release/splashscreen.png" />
 			</manifest>
 		</jar>
 	</target>

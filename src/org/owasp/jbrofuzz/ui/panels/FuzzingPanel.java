@@ -35,6 +35,7 @@ import java.awt.event.*;
 import javax.swing.text.*;
 import javax.swing.table.*;
 
+import org.owasp.jbrofuzz.fuzz.ConnectionException;
 import org.owasp.jbrofuzz.fuzz.MessageCreator;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
@@ -99,7 +100,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	// The request iterator performing all the fuzzing
 	private MessageCreator mRIterator;
 	// The table sorter
-	private TableSorter sorter;
+	// private TableSorter sorter;
 	// The console
 	private JTextArea console;
 	// The frame window
@@ -348,7 +349,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		outputTableModel = new SixColumnModel();
 		outputTableModel.setColumnNames("No", "Target", "Timestamp", "Status", "Time Taken", "Response Size");
-		sorter = new TableSorter(outputTableModel);
+		// sorter = new TableSorter(outputTableModel);
 
 		outputTable = new JTable(outputTableModel);
 		outputTable.setAutoCreateRowSorter(true);
@@ -491,6 +492,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * </p>
 	 */
 	public void start() {
+		
+		Runtime.getRuntime().gc();
+		Runtime.getRuntime().runFinalization();
 
 		JButton startButton = getFrame().getFrameToolBar().start;
 		JButton stopButton = getFrame().getFrameToolBar().stop;
@@ -506,6 +510,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		target.setEditable(false);
 		target.setBackground(Color.BLACK);
 		target.setForeground(Color.WHITE);
+		console.setText("");
+		topRightPanel.setTitleAt(1, " Console ");
+		topRightPanel.setSelectedIndex(1);
+		consoleEvent = 0;
+		//topRightPanel.set
 		// port.setEditable(false);
 		// port.setBackground(Color.BLACK);
 		// port.setForeground(Color.WHITE);
@@ -546,23 +555,20 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			// message.setText(currentMessage.getMessage());
 			
 			this.toConsole(currentMessage.getMessage());
-			Connection con = new Connection(this.getTargetText(), currentMessage.getMessage());
-
-			int b_len = 0;
 			
 			try {
-				b_len = con.getReply().getBytes().length;
-			} catch (RuntimeException e) {
-				b_len = 0;
+				Connection con = new Connection(this.getTargetText(), currentMessage.getMessage());
+				outputTableModel.updateLastRow(filename, this.getTargetText(), timestamp, "Finished - " + con.getStatus(), "1 / 1", con.getReply().getBytes().length + " bytes");
+				this.getFrame().getJBroFuzz().getHandler().writeFuzzFile2("<!-- \r\n[ { 1 / 1 }, " + filename + " " + timestamp + "] " 
+																		+ "\r\n" + this.getTargetText() + " : " + con.getPort() + "\r\n" 
+																		+ con.getMessage() + "\r\n-->\r\n" 
+																		+ con.getReply(), filename);
+			} catch (ConnectionException e) {
+				outputTableModel.updateLastRow(filename, this.getTargetText(), timestamp, "Exception - " + e.getMessage(), "1 / 1", "0 bytes");
+				this.getFrame().getJBroFuzz().getHandler().writeFuzzFile2("<!-- \r\n[ { 1 / 1 }, " + filename + " " + timestamp + "] " 
+																		+ "\r\n" + this.getTargetText() + " : " + "\r\n" 
+																		+ e.getMessage() + "\r\n-->\r\n", filename);
 			}
-			outputTableModel.updateLastRow(filename, this.getTargetText(), timestamp, "Finished", "1 / 1", b_len + " bytes");
-
-
-			this.getFrame().getJBroFuzz().getHandler().writeFuzzFile2(
-					"<!-- \r\n[ { 1 / 1 }, " + filename + " " + timestamp + "] " 
-					+ "\r\n" + this.getTargetText() + " : " + con.getPort() + "\r\n" 
-					+ con.getMessage() + "\r\n-->\r\n" 
-					+ con.getReply(), filename);
 
 		} else {
 			for (int i = 0; i < rows; i++) {
@@ -594,32 +600,34 @@ public class FuzzingPanel extends JBroFuzzPanel {
 											.getRowCount(), 0, true));
 							// message.setText(currentMessage.getMessage());
 							this.toConsole(currentMessage.getMessage());
-							Connection con = new Connection(this
-									.getTargetText(), currentMessage
-									.getMessage());
-							this.getFrame().getJBroFuzz().getHandler()
-									.writeFuzzFile2(
-											"<!-- \r\n[ { "
-													+ f.getCurrectValue() + "/"
-													+ f.getMaximumValue()
-													+ " }, " + filename + " "
-													+ timestamp + "] " + "\r\n"
-													+ this.getTargetText()
-													+ " : " + con.getPort()
-													+ "\r\n" + con.getMessage()
-													+ "\r\n-->\r\n"
-													+ con.getReply(), filename);
-							int b_len = 0;
+							
 							try {
-								b_len = con.getReply().getBytes().length;
-							} catch (RuntimeException e) {
-								b_len = 0;
+								Connection con = new Connection(this.getTargetText(), currentMessage.getMessage());
+								
+								this.getFrame().getJBroFuzz().
+												getHandler().writeFuzzFile2("<!-- \r\n[ { " + f.getCurrectValue() + "/"
+														+ f.getMaximumValue() + " }, " + filename + " " + timestamp 
+														+ "] \r\n" + this.getTargetText() + " : " + con.getPort() + 
+														"\r\n" + con.getMessage() + "\r\n-->\r\n" + con.getReply(), filename);
+								
+								outputTableModel.updateLastRow(filename, this.getTargetText(), timestamp, 
+															   "Finished - " + con.getStatus(), f.getCurrectValue()
+															   + "/" + f.getMaximumValue(), con.getReply().getBytes().length + " bytes");
+							} catch (ConnectionException e) {
+								
+								this.getFrame().getJBroFuzz().
+								getHandler().writeFuzzFile2("<!-- \r\n[ { " + f.getCurrectValue() + "/"
+										+ f.getMaximumValue() + " }, " + filename + " " + timestamp 
+										+ "] \r\n" + this.getTargetText() + " : " + 
+										"\r\n" + e.getMessage() + "\r\n-->\r\n", filename);
+				
+								outputTableModel.updateLastRow(filename, this.getTargetText(), timestamp, 
+											   "Exception - " + e.getMessage(), f.getCurrectValue()
+											   + "/" + f.getMaximumValue(), "0 bytes");
 							}
-							outputTableModel.updateLastRow(filename, this
-									.getTargetText(), timestamp, "Finished", f
-									.getCurrectValue()
-									+ "/" + f.getMaximumValue(), b_len
-									+ " bytes");
+							
+							Runtime.getRuntime().gc();
+							Runtime.getRuntime().runFinalization();
 						}
 
 
@@ -641,6 +649,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * </p>
 	 */
 	public void stop() {
+		
+		Runtime.getRuntime().gc();
+		Runtime.getRuntime().runFinalization();
 		
 		JButton startButton = getFrame().getFrameToolBar().start;
 		JButton stopButton = getFrame().getFrameToolBar().stop;
@@ -689,6 +700,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		final int fPoint = message.getSelectionEnd();
 
 		new PayloadsDialog(this, sPoint, fPoint);
+		
+		Runtime.getRuntime().gc();
+		Runtime.getRuntime().runFinalization();
 
 
 	}

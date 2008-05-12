@@ -250,7 +250,7 @@ public class SixColumnModel extends AbstractTableModel {
 	 */
 	public void removeAllRows() {
 		dataVector.removeAllElements();
-
-		fireTableRowsDeleted(0, 1);
+		
+		fireTableRowsDeleted(0, this.getRowCount());
 	}
 }

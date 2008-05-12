@@ -3,13 +3,20 @@
 <head>
 <meta name="GENERATOR" content="PageBreeze HTML Editor">
 <title></title>
+    <style type="text/css">
+        .style1
+        {
+            font-family: Verdana;
+            font-size: x-small;
+        }
+    </style>
 </head>
 <body bgcolor="#ffffff">
 <h3><font face="Verdana">TCP Fuzzing 
 Tab&nbsp;</font></h3>
 <p><font face="Verdana" size="2">  
-             This 
-tab allows you to perform fuzzing operations over TCP. </font></p>
+             This tab allows you to perform fuzzing operations and is really the key 
+    tab within JBroFuzz. </font></p>
 <p><font face="Verdana" size="2">  
      A number of generators can be added to the 
 message request being submitted. This process is refered to as fuzzing.</font><font face="Verdana" size="2">  
@@ -24,38 +31,81 @@ are the&nbsp;generators available within the generators tab.&nbsp;These are&nbsp
   <tr>
 <td bgcolor="#c0c0c0">
 <h3>
-How to use&nbsp;(Basic)&nbsp;
-</h3>
-<p >
-<font face="Verdana" size="2">The 
-      following information 
-      is required in order to start a TCP fuzzing session:</font></p>
-<ul><li>
-<strong><font face="Verdana" size="2"> 
-            
-         
-              
-            
- Target (either 
-            
-         
-              
-            
- IP Address, or resolvable DNS name)</font>&nbsp; </strong>
-        <li><strong><font face="Verdana" 
-        size=2>    Port 
-        (1-65535)</font></strong>
-        <li><strong><font face="Verdana" size="2">Request 
-        (message transmitted)</font></strong></li></ul>
-        <p>
-<font face="Verdana" size="2">Supplying the above information and selecting "Fuzz" 
-      will sent a single request to the target in question, over the specified port, with the corresponding message supplied.</font></p>
+    HelloGoogle Tutorial</h3>
+                        <p class="style1">
+                            Similarly to HelloWorld examples used in programming, this section demonstrates 
+                            a HelloGoogle, i.e. how to send a single request to a google web server using 
+                            (in this case) JBroFuzz.</p>
+                        <ul>
+                            <li>
+                                <p class="style1">
+                                    In the URL Panel (top left section) replace <a href="http://localhost">
+                                    http://localhost</a> with <a href="http://www.google.com">http://www.google.com</a></p>
+                            </li>
+                            <li>
+                                <p class="style1">
+                                    From the Toolbar menu select &quot;<i>Fuzz</i>&quot; (labelled with a play icon)</p>
+                            </li>
+                        </ul>
+                        <p class="style1">
+                            That&#39;s it! What happened?</p>
+                        <p class="style1">
+                            A connection to <a href="http://www.google.com">www.google.com</a> has been 
+                            made, supplying as a request, the text in the request field.</p>
+                        <ul>
+                            <li>
+                                <p class="style1">
+                                    Double-click on the line added to the output panel to examine the request and 
+                                    response received</p>
+                            </li>
+                            <li>
+                                <p class="style1">
+                                    Repeat the same exercise, supplying as URL: <a href="https://www.gmail.com">
+                                    https://www.gmail.com</a>
+                                </p>
+                            </li>
+                        </ul>
+                        <h3>
+                            Fuzzing Workflow Process by Example</h3>
+                        <p>
+                            We have examined how a single request is sent to a web server over a standard 
+                            port. In order to perform a fuzzing operation, a generator needs to be added to 
+                            part of the request submitted. JBroFuzz will then iterate through all the 
+                            possible requests, submitting them sequentially to web server selected. </p>
+                        <p>
+                            Exercise: &quot;Examine which HTTP major protocol versions the URL
+                            <a href="https://www.cia.gov">https://www.cia.gov</a> supports</p>
+                        <ul>
+                            <li>In the URL Panel (top left section) type <a href="https://www.cia.gov">
+                                https://www.cia.gov</a> </li>
+                            <li>In the Request Panel (top left section) highlight using the mouse the number &#39;1&#39; 
+                                in the first line: &quot;GET / HTTP/1.0&quot;</li>
+                            <li>In the Toolbar, select the &quot;Add Generator&quot; button (labelled with a cross icon) 
+                                and double click on &quot;NUM-OCT&quot;</li>
+                            <li>In the Toolbar, select &quot;Fuzz&quot; (labelled with a play icon)</li>
+                        </ul>
+                        <p>
+                            What happened?</p>
+                        <p>
+                            We selected to add the number octal generator to the digit &#39;1&#39; that is part of 
+                            the first line of the request we are submitted to <a href="https://www.cia.gov">
+                            https://www.cia.gov</a> .</p>
+                        <p>
+                            Thus a total of 8 requests will be submitted to the web server, consecutively:</p>
+                        <ul>
+                            <li>&quot;GET / HTTP/0.0&quot;</li>
+                            <li>&quot;GET / HTTP/1.0&quot;</li>
+                            <li>....</li>
+                            <li>&quot;GET / HTTP/7.0&quot;</li>
+                        </ul>
+                        <p>
+                            NNotice that we get a response from cia.gov of size 31882 for the first request, 
+                            being &quot;GET / HTTP/0.0&quot; !!!</p>
 <h3>
-How to use&nbsp;(Advanced)&nbsp;
-</h3>
+    General How to Use</h3>
 <p >
 <font face="Verdana" size="2">In 
-      order to perform fuzzing over TCP, you will need to add one or more generators to the request being submitted:</font></p>
+      order to perform fuzzing over TCP, you will need to add one or more generators to the request being submitted:/font></p>
 <ul><li>
 <strong><font face="Verdana" size="2"> 
             
@@ -98,26 +148,26 @@ How to use&nbsp;(Advanced)&nbsp;
       <p><font face="Verdana" size="2">Use 
       your mouse to 
       select a row in order to display the contents of the 
-      request submitted and the reply received.</font> 
+      request submitted and the reply received.</font>  
       <h3>
       <hr>
       </h3>
-      <h3>Advanced options</h3>
+      <h3>Other Options</h3>
       <p><font face="Verdana" size="2"> 
         Once one or more requests have been submitted and 
       requests received, JBroFuzz gives you the option to plot the results 
-      obtains. </font></p>
+      obtains. /font></p>
       <ul>
         <li>
       <div><font face="Verdana" size="2"> 
                  
-           Select "Bro" to plot the results 
+           SSelect "Graph" to plot the results 
       obtains&nbsp; </font></div></li></ul>
 </td>
     <td><font face="Verdana" size="2" 
       >&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; </font></td>
     <td valign="top" width="200" bgcolor="#8080ff" V v>
-      <h3>Logging &amp; Saving:</h3><font face="Verdana" size="2" 
+      <h3>Logging &amp; Saving:/h3><font face="Verdana" size="2" 
       >
       <p><font face="Verdana" size="2" 
       >        

@@ -92,8 +92,8 @@ public class ThreeColumnModel extends AbstractTableModel {
 	public void addRow(final String generator, final int start, final int end) {
 		final Generator addingGenerator = new Generator(generator, start, end);
 		dataVector.add(addingGenerator);
-		fireTableRowsInserted(dataVector.size() - 1, dataVector
-				.size() - 1);
+		dataVector.trimToSize();
+		fireTableRowsInserted(dataVector.size(), dataVector.size());
 	}
 
 	/**

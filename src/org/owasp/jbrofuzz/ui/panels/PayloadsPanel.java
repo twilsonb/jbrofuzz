@@ -36,7 +36,6 @@ import org.owasp.jbrofuzz.ui.menu.*;
 import org.owasp.jbrofuzz.ui.viewers.*;
 import org.owasp.jbrofuzz.ui.tablemodels.*;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.util.TableSorter;
 
 import org.apache.commons.lang.*;
 
@@ -62,7 +61,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	// The JLabel holding any comments
 	private JTextArea commentTextArea;
 	// The table sorters
-	private TableSorter categoryTableSorter, nameTableSorter;
+	// private TableSorter categoryTableSorter, nameTableSorter;
 
 	/**
 	 * Constructor for the Definitions Panel of the represented as a tab. Only a
@@ -84,18 +83,20 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		this.add(category);
 
 		categoryTableModel = new SingleColumnModel(" Id ");
-		categoryTableSorter = new TableSorter(categoryTableModel);
+		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds());
 
-		categoryTable = new JTable(categoryTableSorter);
+		// categoryTableSorter = new TableSorter(categoryTableModel);
+
+		categoryTable = new JTable(categoryTableModel);
+		// categoryTable.setAutoCreateRowSorter(true);
 		categoryTable.setName("Category");
 
 		categoryTable.getTableHeader().setToolTipText("Click to sort by row");
 		popup(categoryTable);
-		categoryTableSorter.setTableHeader(categoryTable.getTableHeader());
+		// categoryTableSorter.setTableHeader(categoryTable.getTableHeader());
 
-		categoryTableModel.setData(m.getJBroFuzz().getDatabase().getAllIds());
-		categoryTableSorter.setTableModel(categoryTableModel);
-		categoryTableSorter.fireTableDataChanged();
+		// categoryTableSorter.setTableModel(categoryTableModel);
+		// categoryTableSorter.fireTableDataChanged();
 		categoryTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
 		categoryTable.setRowHeight(30);
 		categoryTable.getSelectionModel().addListSelectionListener(new IdsRowListener());
@@ -126,15 +127,16 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		this.add(name);
 
 		nameTableModel = new SingleColumnModel(" Payload ");
-		nameTableSorter = new TableSorter(nameTableModel);
+		// nameTableSorter = new TableSorter(nameTableModel);
 
-		nameTable = new JTable(nameTableSorter);
+		nameTable = new JTable(nameTableModel);
+		// nameTable.setAutoCreateRowSorter(true);
 		nameTable.setName("Name");
 
 		nameTable.getTableHeader().setToolTipText(
 		"Click to specify sorting; Control-Click to specify secondary sorting");
 		popup(nameTable);
-		nameTableSorter.setTableHeader(nameTable.getTableHeader());
+		// nameTableSorter.setTableHeader(nameTable.getTableHeader());
 
 		nameTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
 		nameTable.setRowHeight(30);
@@ -279,12 +281,16 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				return;
 			}
 			final int c = categoryTable.getSelectedRow();
-			final String value = (String) categoryTableSorter.getValueAt(c, 0);
+			final String value = (String) categoryTableModel.getValueAt(c, 0);
 			final String exploit = getFrame().getJBroFuzz().getDatabase().getName(value);
 			
+			// nameTable.setAutoCreateRowSorter(false);
+			// nameTable.setModel(null);
+			
 			nameTableModel.setData(getFrame().getJBroFuzz().getDatabase().getPayloads(value));
-			nameTableSorter.setTableModel(nameTableModel);
-			nameTableSorter.fireTableDataChanged();
+			
+			// nameTableSorter.setTableModel(nameTableModel);
+			// nameTableSorter.fireTableDataChanged();
 			
 			name.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 					.createTitledBorder(" " + exploit + " "), BorderFactory
@@ -308,10 +314,10 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				return;
 			}
 			final int c = nameTable.getSelectedRow();
-			final String payload = (String) nameTableSorter.getValueAt(c, 0);
+			final String payload = (String) nameTableModel.getValueAt(c, 0);
 			
 			final int d = categoryTable.getSelectedRow();
-			final String category = (String) categoryTableSorter.getValueAt(d, 0);
+			final String category = (String) categoryTableModel.getValueAt(d, 0);
 			
 			viewTextArea.setText(payload);
 			viewTextArea.setCaretPosition(0);

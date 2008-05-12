@@ -114,6 +114,19 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Pragma", Color.blue);
 		keywords.put("Expires", Color.blue);
 		keywords.put("Proxy-Connection", Color.blue);
+		keywords.put("X-AspNet-Version", Color.blue);
+		keywords.put("P3P", Color.blue);
+		keywords.put("P3p", Color.blue);
+		keywords.put("X-Powered-By", Color.blue);
+		keywords.put("X-Powered-by", Color.blue);
+		keywords.put("X-Cache-TTL", Color.blue);
+		keywords.put("X-Cached-Time", Color.blue);
+		keywords.put("Age", Color.blue);
+		keywords.put("Mime-Version", Color.blue);
+		keywords.put("Last-Modified", Color.blue);
+		keywords.put("Last-modified", Color.blue);
+		keywords.put("Content-length", Color.blue);
+		keywords.put("ETag", Color.blue);
 		
 		keywords.put("Windows", Color.gray);
 		keywords.put("Mozilla", Color.gray);
