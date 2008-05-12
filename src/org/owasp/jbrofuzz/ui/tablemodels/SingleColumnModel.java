@@ -204,11 +204,12 @@ public class SingleColumnModel extends AbstractTableModel {
 	public void setData(final String [] values) {
 		fireTableRowsDeleted(0, getRowCount());
 		dataVector.clear();
+		
 		for (final String element : values) {
+			
 			dataVector.add(element);
 			dataVector.trimToSize();
-			fireTableRowsInserted(dataVector.size(), dataVector
-					.size());
+			fireTableRowsInserted(dataVector.size(), dataVector.size());
 			
 		}
 	}

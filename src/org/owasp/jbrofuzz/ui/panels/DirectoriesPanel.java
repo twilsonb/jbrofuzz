@@ -85,7 +85,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	private JProgressBar progressBar;
 
 	// The table sorter
-	private TableSorter sorter;
+	// private TableSorter sorter;
 
 	/**
 	 * The constructor for the Web Directory Panel. This constructor spawns the
@@ -210,12 +210,13 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		
 		responseTableModel = new SixColumnModel();
 		responseTableModel.setColumnNames("No", "URI", "Code", "Status Text", "Comments", "Scripts" );
-		sorter = new TableSorter(responseTableModel);
-		responseTable = new JTable(sorter);
-
+		// sorter = new TableSorter(responseTableModel);
+		responseTable = new JTable(responseTableModel);
+		// responseTable.setAutoCreateRowSorter(true);
+		
 		responseTable.getTableHeader().setToolTipText("Click to sort by row");
 		popup(responseTable);
-		sorter.setTableHeader(responseTable.getTableHeader());
+		// sorter.setTableHeader(responseTable.getTableHeader());
 		responseTable.setFont(new Font("Monospaced", Font.BOLD, 12));
 		responseTable.setBackground(Color.black);
 		responseTable.setForeground(Color.white);

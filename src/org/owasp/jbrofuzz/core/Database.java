@@ -39,7 +39,7 @@ public class Database {
 	public Database() {
 
 		final int maxLines = 1024;
-		final int maxLineLength = 256;
+		final int maxLineLength = 512;
 		final int maxNumberOfPayloads = 32;
 
 		int line_counter = 0;

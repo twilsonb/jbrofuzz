@@ -27,20 +27,8 @@ package org.owasp.jbrofuzz.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.*;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JTabbedPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
@@ -174,13 +162,44 @@ public class JBroFuzzWindow extends JFrame {
 		
 		tabbedPane.setSelectedComponent(mFuzzingPanel);
 		
+		/*
+		// Close button on the tabs
+		ImageIcon closeButton = ImageCreator.EXIT_IMG;
+		// closeButton.setPreferredSize(new Dimension(ImageCreator.EXIT_IMG.getIconWidth(), ImageCreator.EXIT_IMG.getIconHeight()));
+		ActionListener al = new ActionListener () {
+			public void actionPerformed (ActionEvent ae)
+			{
+				JButton btn = (JButton) ae.getSource ();
+				String s1 = btn.getActionCommand ();
+				for (int i = 1; i < tabbedPane.getTabCount (); i++)
+				{
+					JPanel pnl = (JPanel) tabbedPane.getTabComponentAt (i);
+					btn = (JButton) pnl.getComponent (0);
+					String s2 = btn.getActionCommand ();
+					if (s1.equals (s2))
+					{
+						tabbedPane.removeTabAt (i);
+						break;
+					}
+				}
+			}
+		};
+		closeButton.addActionListener(al);
 		
+		JPanel pnl = new JPanel ();
+		pnl.setOpaque (false);
+		pnl.add (closeButton);
+		for(int i = 0; i < tabbedPane.getTabCount(); i++) {
+			tabbedPane.setTabComponentAt(i, pnl);
+		}
+		*/
 		pane.add(mToolBar, BorderLayout.PAGE_START);
 	    pane.add(tabbedPane, BorderLayout.CENTER);
 	    
-		// The image icon
+		// The image icon and min size
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
-
+		setMinimumSize (new Dimension (400, 300));
+		
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -188,7 +207,7 @@ public class JBroFuzzWindow extends JFrame {
 				exitProcedure();
 			}
 		});
-	        
+	     
 		this.setLocation(50, 100);
 		this.setSize(950, 600);
 		setResizable(true);
@@ -443,8 +462,15 @@ public class JBroFuzzWindow extends JFrame {
 	 *
 	 */
 	public void exitProcedure() {
+		
+		Runtime.getRuntime().gc();
+		Runtime.getRuntime().runFinalization();
+		
+		mFuzzingPanel.stop();
+		
 		getJBroFuzz().getHandler().deleteEmptryDirectories();
 		dispose();
+		
 	}
 
 }

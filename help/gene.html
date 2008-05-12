@@ -5,15 +5,15 @@
 <title></title>
 </head>
 <body bgcolor="#ffffff">
-<h3><font face="Verdana">Generators&nbsp;Tab&nbsp;</font></h3>
+<h3><font face="Verdana">Payloads Tab&nbsp;</font></h3>
 <p><font face="Verdana" size="2">The 
-generators tab provides a list of all generators that have been successfully 
+    payloads tab provides a list of all generators that have been successfully 
 loaded during start-up.</font> </p>
 <p><font face="Verdana" size="2"> 
             
   </font>&nbsp; </p>
 <p><font face="Verdana" size="2">Generators are used for fuzzing. By selecting part of the 
-message request in the "TCP Fuzzing" tab you 
+message request in the "<i>Fuzzing</i>" tab you 
 can add a generator to a specific range of the request, thus 
 fuzzing that range.</font> </p>
 <hr>
@@ -30,7 +30,7 @@ fuzzing that range.</font> </p>
         generators</strong> </font></font>
         <li><strong><font face="Verdana" size="2">The list 
         provided is available for use within the "Add Generator" functionality 
-        of the "TCP Fuzzing" tab</font></strong>&nbsp;</li></ul>
+        of the "Fuzzing" tab</font></strong>&nbsp;</li></ul>
       <h3>
       <hr>
       What to expect</h3>
@@ -41,7 +41,7 @@ fuzzing that range.</font> </p>
       <ul>
         <li>
         <div><font face="Verdana" size="2">        
-        Each generator has a three letter codename (e.g. INT, DEC) 
+        Each generator has 2 or 3 three letter codenames (e.g. INT-UPP, NUM-DEC) 
 </font></div>
         <li>
         <div><font face="Verdana" size="2">Each generator has a 
@@ -62,8 +62,10 @@ fuzzing that range.</font> </p>
       <h3>
       Advanced options</h3>
       <p><font face="Verdana" size="2">      
+          To access the payloads, unzip the JBroFuzz.jar file and view the file: 
+          &quot;generators.jbrofuzz&quot;.      
           You can specify you own generators to be loaded during startup, 
-      by modifying the jbrofuzz-generators file. </font>
+      by modifying the this file and then re-packaging JBroFuzz.jar . </font>
       <p><font face="Verdana" size="2">        
        The particular file format used within the file should be followed.</font> 
 

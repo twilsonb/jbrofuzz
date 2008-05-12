@@ -23,15 +23,21 @@ public class JBRToolBar extends JToolBar {
 		this.mFrameWindow = mFrameWindow;
 		
 		start = new JButton(ImageCreator.START_IMG);
+		start.setToolTipText("Fuzz");
 		stop = new JButton(ImageCreator.STOP_IMG);
+		stop.setToolTipText("Stop");
 		graph = new JButton(ImageCreator.PAUSE_IMG);
-		
+		graph.setToolTipText("Graph");
 		add = new JButton(ImageCreator.ADD_IMG);
+		add.setToolTipText("Add Generator");
 		remove = new JButton(ImageCreator.REMOVE_IMG);
-		
+		remove.setToolTipText("Remove Generator");
 		help = new JButton(ImageCreator.IMG_HELP);
+		help.setToolTipText("Help Topics");
 		about = new JButton(ImageCreator.IMG_ABOUT);
+		about.setToolTipText("About");
 		website = new JButton(ImageCreator.OWASP_IMAGE_SML);
+		website.setToolTipText("JBroFuzz Website");
 		
 		this.addSeparator(new Dimension(13,0));
 		add(start);
@@ -43,9 +49,10 @@ public class JBRToolBar extends JToolBar {
 		add(remove);
 		this.addSeparator(new Dimension(13, 0));
 		add(help);
-		add(about);
-		this.addSeparator(new Dimension(6, 0));
+		// this.addSeparator(new Dimension(6, 0));
 		add(website);
+		add(about);
+		
 		
 		this.setFloatable(true);
 		this.setRollover(true);
