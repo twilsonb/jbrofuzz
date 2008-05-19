@@ -404,7 +404,7 @@ public class PayloadsDialog extends JDialog {
 					
 					m.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
 					m.getPanelPayloads().setCategoryDisplayed(category);
-					m.getPanelPayloads().setNameDisplayed(name, category);
+					m.getPanelPayloads().setFuzzerDisplayed(name, category);
 					
 				}
 				

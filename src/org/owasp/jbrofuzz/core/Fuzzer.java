@@ -58,7 +58,7 @@ public class Fuzzer implements Iterator<String> {
 			// System.out.println("Generator Found!");
 			
 			payloads = this.generator.getPayloads();
-			if(this.generator.isReplasive()) {
+			if(this.generator.isReplacive()) {
 				maxValue = new BigInteger("" + payloads.size());
 			}
 			else {
@@ -103,7 +103,7 @@ public class Fuzzer implements Iterator<String> {
 		
 		StringBuffer output = new StringBuffer("");
 		
-		// Replasive Generator
+		// Replacive Generator
 		if(maxValue.compareTo(new BigInteger("" + payloads.size() )) == 0) {
 			
 			output.append(payloads.get( cValue.intValue() ));
