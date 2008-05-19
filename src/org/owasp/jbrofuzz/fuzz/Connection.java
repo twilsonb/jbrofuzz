@@ -40,7 +40,7 @@ import java.io.*;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 0.8
+ * @version 0.9
  * @since 0.1
  */
 public class Connection {

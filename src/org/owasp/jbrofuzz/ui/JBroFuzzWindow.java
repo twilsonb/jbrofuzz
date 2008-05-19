@@ -160,7 +160,7 @@ public class JBroFuzzWindow extends JFrame {
 		tabbedPane.add(" Payloads ", mDefinitionsPanel);
 		tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
 		
-		tabbedPane.setSelectedComponent(mFuzzingPanel);
+		tabbedPane.setSelectedComponent(mDefinitionsPanel);
 		
 		/*
 		// Close button on the tabs

@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz;
 
@@ -47,8 +45,8 @@ import org.owasp.jbrofuzz.core.*;
  * corresponding fields.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.8
+ * @author subere@uncon.org
+ * @version 1.0
  */
 public class JBroFuzz {
 
@@ -63,11 +61,13 @@ public class JBroFuzz {
 	public static void main(final String[] args) {
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			
 			public void run() {
 
 				new JBroFuzz();
 
 			}
+			
 		});
 
 	}
@@ -93,20 +93,9 @@ public class JBroFuzz {
 		
 		mFormat = new Format(this);
 		mWindow = new JBroFuzzWindow(this);
-		
-		
-		
-		// Singleton File Handler
+
 		mHandler = new FileHandler(this);
-		
-		/*
-		String a = null;
-		MessageCreator myMessage = new MessageCreator(a, "XSS", 1, 2);
-		// System.out.println(myMessage.getMessage());
-		*/
-		
-		
-		
+				
 	}
 
 	/**
@@ -159,6 +148,8 @@ public class JBroFuzz {
 	 * @return Database
 	 */
 	public Database getDatabase() {
+		
 		return mDatabase;
+		
 	}
 }

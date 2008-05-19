@@ -30,42 +30,56 @@ import java.util.*;
 import org.apache.commons.lang.*;
 
 public class Generator {
-	
+
 	private char type;
-	
+
 	private String id;
-	
+
 	private String name;
-		
+
 	private ArrayList<String> categories;
-	
+
 	private ArrayList<String> payloads;
-	
+
 	public Generator(char type, String id, String name) {
-		
+
 		this(type, id, name, new ArrayList<String>(), new ArrayList<String>());
 		
 	}
-	
+
 	public Generator(char type, String id, String name, ArrayList<String> categories, ArrayList<String> payloads) {
-	
+
 		this.type = type;
 		this.id = id;
 		this.name = StringUtils.trim(name);
 		this.categories = categories;
 		this.payloads = payloads;
-		
+
 	}
-	
+
 	public boolean isRecursive() {
 		if(type == 'R')
 			return true;
 		return false;
 	}
-	
-	public boolean isReplasive() {
+
+	public boolean isReplacive() {
 		if(type == 'P')
 			return true;
+		return false;
+	}
+	
+	public boolean isAMemberOfCategory(String category) {
+		
+		String[] categoriesArray = new String[categories.size()];
+		categories.toArray(categoriesArray);
+		
+		for(String s : categoriesArray) {
+			if(s.equalsIgnoreCase(category)) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 
@@ -103,7 +117,7 @@ public class Generator {
 	}
 
 	public void setCategories(ArrayList<String> categories) {
-		categories.trimToSize();
+		// categories.trimToSize();
 		this.categories = categories;
 	}
 
@@ -115,17 +129,24 @@ public class Generator {
 	public void setPayloads(ArrayList<String> payloads) {
 		this.payloads = payloads;
 	}
-	
-	
+
+
 	public void addPayload(String value) {
-		
+
 		payloads.add(calculatePayload(value));
 		payloads.trimToSize();
-		
+
 	}
 	
-	private static String calculatePayload(String param) {
+	public void addCategory(String value) {
 		
+		categories.add(value);
+		categories.trimToSize();
+		
+	}
+
+	private static String calculatePayload(String param) {
+
 		String beginning;
 		try {
 			beginning = param.substring(0, 5);

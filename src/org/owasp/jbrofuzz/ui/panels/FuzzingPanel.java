@@ -511,6 +511,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		target.setBackground(Color.BLACK);
 		target.setForeground(Color.WHITE);
 		console.setText("");
+		console.setBackground(Color.BLACK);
+		console.setForeground(Color.WHITE);
 		topRightPanel.setTitleAt(1, " Console ");
 		topRightPanel.setSelectedIndex(1);
 		consoleEvent = 0;
@@ -667,9 +669,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		target.setEditable(true);
 		target.setBackground(Color.WHITE);
 		target.setForeground(Color.BLACK);
-		// port.setEditable(true);
-		// port.setBackground(Color.WHITE);
-		// port.setForeground(Color.BLACK);
+		console.setBackground(Color.WHITE);
+		console.setForeground(Color.BLACK);
+		
 	}
 
 	/**

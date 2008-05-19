@@ -55,7 +55,7 @@ public class Format {
 	 * 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "0.9";
+	public static final String VERSION = "1.0";
 
 	/**
 	 * <p> The year of the release.</p>
@@ -281,6 +281,26 @@ public class Format {
 			return "Zeus ";
 		}
 		return "Zeus ";
+	}
+	
+	public int getMajorVersion() {
+
+		try {
+			return Integer.parseInt(VERSION.split("\\.")[0]);
+		} catch (Exception e) {
+			return 0;
+		}
+
+	}
+	
+	public int getMinorVersion() {
+
+		try {
+			return Integer.parseInt(VERSION.split("\\.")[1]);
+		} catch (Exception e) {
+			return 0;
+		}
+
 	}
 
 	private static final String getDate() {

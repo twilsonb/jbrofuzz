@@ -59,7 +59,7 @@ public class PropertiesViewer extends JFrame {
 	public PropertiesViewer(final JBroFuzzWindow m, final String header, final String text) {
 		super();
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
-		setTitle(header);
+		setTitle("JBroFuzz - " + header);
 
 		//	 The container pane
 		final Container pane = getContentPane();
@@ -93,7 +93,7 @@ public class PropertiesViewer extends JFrame {
 		listTextArea.setCaretPosition(0);
 
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" " + header), BorderFactory
+				.createTitledBorder(" " + header + " "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 
 

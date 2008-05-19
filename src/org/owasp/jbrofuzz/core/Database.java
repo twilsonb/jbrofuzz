@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,15 +19,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.core;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
-import org.apache.commons.io.*;
 import org.apache.commons.lang.*;
+import org.apache.commons.io.*;
+
+import java.util.*;
+import java.net.*;
+import java.io.*;
 
 public class Database {
 
@@ -41,6 +39,7 @@ public class Database {
 		final int maxLines = 1024;
 		final int maxLineLength = 512;
 		final int maxNumberOfPayloads = 32;
+		final int maxFuzzerNameLength = 25;
 
 		int line_counter = 0;
 		BufferedReader in = null;
@@ -85,7 +84,7 @@ public class Database {
 
 		for (int i = 0; i < len; i++) {
 
-			// the number of payloads identified for each category
+			// The number of payloads identified for each category
 			int numberOfPayloads = 0;
 
 
@@ -94,37 +93,55 @@ public class Database {
 				// "P:ABC-DEF:" or "P:ABC-DEF-GHI:"
 				if ((line.charAt(1) == ':') && ( (line.charAt(9) == ':') || (line.charAt(13) == ':' ) )) {
 					final String[] firstLineArray = line.split(":");
-					// Check that there are four fields of : in the first line
+					// Check that there are four fields separated by : in the first line
 					if (firstLineArray.length == 4) {
-						// Check that the name of the identifier is less than 24 characters
-						if ((firstLineArray[2].length() < 25) && (firstLineArray[2].length() > 0)) {
+						// Check that the name of the identifier is less than maxFuzzerNameLength
+						if ((firstLineArray[2].length() < maxFuzzerNameLength) && (firstLineArray[2].length() > 0)) {
 							// Check that the first character is either a P or an R
 							if (("P".equals(firstLineArray[0]))	|| ("R".equals(firstLineArray[0]))) {
+								
 								try {
 									numberOfPayloads = Integer.parseInt(firstLineArray[3]);
 								} catch (final NumberFormatException e) {
 									numberOfPayloads = 0;
 								}
+								
 							}
 						}
 					}
 				} // First line check
 
-				// If a positive number of payloads is aclaimed in the first line and the first line is ok
+				// If a positive number of payloads is claimed in the first line and the first line is ok
 				if ((numberOfPayloads > 0) && (numberOfPayloads <= maxNumberOfPayloads)) {
 					final String[] firstArray = line.split(":");
-					// final int generatorLength = Integer.parseInt(firstArray[3]);
+					
 					// Check that there remaining element in the generator Vector
 					if (i < len - numberOfPayloads - 1) {
+
 						// Check that the second line starts with a >
 						String line2 = fileInput[i + 1];
 						if (line2.startsWith(">")) {
 							line2 = line2.substring(1);
-							// Check to see that the Generator name is unique
-							// if (!isGeneratorNameUsed(firstArray[1])) {
-							
+
 							// Finally create the generator if all the checks pass
-							final Generator myGen = new Generator(firstArray[0].charAt(0), firstArray[1], StringUtils.rightPad(firstArray[2], 24));
+							final Generator myGen = new Generator(firstArray[0].charAt(0), firstArray[1], /*StringUtils.rightPad(*/ firstArray[2] /*, 24)*/);
+							
+							// If categories do exist in the second line
+							if(line2.contains("|")) {
+								
+								String [] categoriesArray = line2.split("\\|");
+								for(String currentCategory : categoriesArray) {
+									// System.out.println(currentCategory);
+									myGen.addCategory(StringUtils.stripStart(StringUtils.stripEnd(currentCategory, " "), " "));
+									
+								}
+							}
+							// If no categories have been specified, add a default category
+							else {
+								
+								myGen.addCategory("Default");
+								
+							}
 
 							// Add the values for each element
 							for (int j = 1; j <= numberOfPayloads; j++) {
@@ -136,7 +153,7 @@ public class Database {
 							}
 							// Finally add the generator to the Vector of generators
 							generators.put(firstArray[1], myGen);
-							//}
+							// }
 						}
 					}
 				}
@@ -163,6 +180,42 @@ public class Database {
 		return set.toArray(output);
 
 	}
+	
+	public String getIdFromName(String name) {
+		
+		String [] ids = getAllIds();
+		for(String id : ids) {
+			Generator g = generators.get(id);
+			// System.out.println("In getAllIds() input name is: -" + name + "- current name is: -" + g.getName() + "-");
+			if(name.equalsIgnoreCase(g.getName())) {
+				// System.out.println("Found Match! input -" + name + "- output is: -" + g.getName() + "-"); 
+				return id;
+			}
+		}
+		return "";
+	}
+	
+	/*
+	public String[] getNamesFromCategory(String category) {
+		
+		HashSet<String> o = new HashSet<String>();
+		
+		String [] ids = getAllIds();
+		for(String id : ids) {
+			Generator g = generators.get(id);
+			if(g.isAMemberOfCategory(category)) {
+				o.add(g.getName());
+			}
+			
+			
+		}
+
+		String [] uniqueNamesArray = new String[o.size()];
+		o.toArray(uniqueNamesArray);
+		
+		return uniqueNamesArray;
+	}
+	*/
 
 	public String[] getAllNames() {
 
@@ -175,16 +228,90 @@ public class Database {
 		for(String key : input) {
 			output.append(generators.get(key).getName() + "\n");
 		}
+		
 		return output.toString().split("\n");
+		
+	}
+	
+	/**
+	 * <p>Return all the unique categories found in all the Generators 
+	 * that are inside the database.<p>
+	 * 
+	 * @return String[] uniqueCategories
+	 */
+	public String[] getAllCategories() {
+				
+		HashSet<String> o = new HashSet<String>();
+		
+		String[] ids = getAllIds();
+		for(String id : ids) {
+			// System.out.println(id);
+			
+			// Generator g = generators.get(id);
+			// System.out.println("-----> " + g.getId() + ":" + g.getName());
+			
+			ArrayList<String> categoriesArrayList = generators.get(id).getCategories();
+			String [] categoriesArray = new String[categoriesArrayList.size()];
+			categoriesArrayList.toArray(categoriesArray);
+			
+			for(String cCategory : categoriesArray) {
+				// System.out.println(cCategory);
+				o.add(cCategory);
+			}
+			
+			
+			
+		}
+		
+		String [] uniqueCategoriesArray = new String[o.size()];
+		o.toArray(uniqueCategoriesArray);
+		
+		return uniqueCategoriesArray;
+		
+	}
+	
+	public String[] getGenerators(String category) {
+		
+		HashSet<String> o = new HashSet<String>();
+		String[] ids = getAllIds();
+		
+		for(String id : ids) {
+			
+			Generator g = generators.get(id);
+			if(g.isAMemberOfCategory(category)) {
+				o.add(g.getName());
+			}
+		}
+		
+		String [] uniqueCategoriesArray = new String[o.size()];
+		o.toArray(uniqueCategoriesArray);
+		
+		return uniqueCategoriesArray;
 	}
 
-	public String[] getPayloads(String Id) {
+	public String[] getPayloads(String id) {
 
-		Generator g = generators.get(Id);
+		if(containsGenerator(id)) {
+		Generator g = generators.get(id);
 		final String [] output = new String[g.size()];
 		return g.getPayloads().toArray(output);
+		}
+		else {
+			return new String[0];
+		}
 
-
+	}
+	
+	public int getSize(String id) {
+		
+		if(containsGenerator(id)) {
+		Generator g = generators.get(id);
+		return g.size();
+		}
+		else {
+			return 0;
+		}
+		
 	}
 	
 	public Generator getGenerator(String Id) {
@@ -193,9 +320,9 @@ public class Database {
 		
 	}
 	
-	public String getName(String Id) {
+	public String getName(String id) {
 		
-		return generators.get(Id).getName();
+		return generators.get(id).getName();
 		
 	}
 	
@@ -240,7 +367,7 @@ public class Database {
 		
 		String [] keys = this.getAllIds();
 		for(String key : keys) {
-			System.out.println(" " + key + "\t\t" + this.getGenerator(key).getId() + "\t\t" + this.getGenerator(key).getName() + "\t\t" + this.getGenerator(key).isReplasive());
+			System.out.println(" " + key + "\t\t" + this.getGenerator(key).getId() + "\t\t" + this.getGenerator(key).getName() + "\t\t" + this.getGenerator(key).isReplacive());
 		}
 		
 		
