@@ -237,11 +237,11 @@ public class FileHandler {
 			} catch (final ArrayIndexOutOfBoundsException e) {
 				g.getWindow().log("Cannot Find Location"
 						+ "\n" + folderFiles[i].getName() + "\nAn Array Error Occured " + 
-						"JBroFuzz File Read Error");
+				"JBroFuzz File Read Error");
 			} catch (final IOException e) {
 				g.getWindow().log("Cannot Read Location"
 						+ "\n" + folderFiles[i].getName() + "\nA File Read Error Occured" +
-						"JBroFuzz File Read Error");
+				"JBroFuzz File Read Error");
 			} finally {
 				IOUtils.closeQuietly( bufRead );
 			}
@@ -341,7 +341,7 @@ public class FileHandler {
 		final Vector<String> file = new Vector<String>();
 		BufferedReader in = null;
 		int len = 0;
-		
+
 		// If reading from directory fails, attempt to read from the jar file
 		if (len <= 0) {
 			line_counter = 0;
@@ -455,38 +455,53 @@ public class FileHandler {
 		}
 		return out;
 	}
-	*/
-	
+	 */
+
 	public File getFuzzFile(String fileName) {
-	
+
 		return new File(FileHandler.fuzzDirectory, fileName);
-		
+
 	}
-	
+
 	public StringBuffer readFuzzFile(String fileName) {
 		StringBuffer out = new StringBuffer();
-		
+
 		File f = new File(FileHandler.fuzzDirectory, fileName);
 		try {
 			out.append(FileUtils.readFileToString(f));
 		} catch (IOException e) {
 			g.getWindow().log("An error reading the fuzz file: " + fileName);
 		}
-		
+
 		return out;
+	}
+
+	public BufferedReader getBufferedReader(String filename, int filetype) {
+
+		try {
+			switch (filetype) {
+			case DIR_TCPF: return new BufferedReader(new FileReader(new File(FileHandler.fuzzDirectory, filename)));
+			case DIR_SNIF: return new BufferedReader(new FileReader(new File(FileHandler.snifDirectory, filename)));
+			default: return null; 
+			}			
+		} 
+		catch (FileNotFoundException e) {
+			g.getWindow().log("An error reading the fuzz file: " + filename);
+			return null;
+		}
 	}
 
 
 	public StringBuffer readSnifFile(String fileName) {
 		StringBuffer out = new StringBuffer();
-		
+
 		File f = new File(FileHandler.snifDirectory, fileName);
 		try {
 			out.append(FileUtils.readFileToString(f));
 		} catch (IOException e) {
 			g.getWindow().log("An error reading the snif file: " + fileName);
 		}
-		
+
 		return out;
 	}
 
@@ -552,7 +567,7 @@ public class FileHandler {
 		}
 		return out;
 	}
-	*/
+	 */
 
 	/**
 	 * <p>
@@ -577,14 +592,14 @@ public class FileHandler {
 		// Actually create the file
 		FileHandler.createFile(name + ".html", content, FileHandler.FUZZ_FILE);
 	}
-	*/
-	
+	 */
+
 	public void writeFuzzFile2(final String content, String name) {
-		
+
 		name += ".html";
-		
+
 		File f = new File(FileHandler.fuzzDirectory, name);
-		
+
 		try {
 			FileUtils.touch(f);
 			FileUtils.writeStringToFile(f, content);
@@ -720,7 +735,7 @@ public class FileHandler {
 
 		// Load the necessary files into the various panels of the application
 		new DConstructor(g );
-		
+
 	}
 
 	/**
@@ -797,7 +812,7 @@ public class FileHandler {
 				// e.printStackTrace();
 			}
 		}
-		
+
 
 		if(FileUtils.sizeOfDirectory(new File(baseDir + File.separator + "jbrofuzz"
 				+ File.separator)) == 0L) {

@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.panels;
 
@@ -98,7 +96,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	// A counter for the number of times fuzz has been clicked
 	private int counter, session;
 	// The request iterator performing all the fuzzing
-	private MessageCreator mRIterator;
+	// private MessageCreator mRIterator;
 	// The table sorter
 	// private TableSorter sorter;
 	// The console
@@ -106,7 +104,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	// The frame window
 	private JBroFuzzWindow m;
 	
-	private JSplitPane mainPane, topPane, bottomPane;
+	private JSplitPane mainPane, topPane;
 	
 	private JTabbedPane topRightPanel;
 	
@@ -348,7 +346,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		// outputPanel.setBackground(Color.white);
 
 		outputTableModel = new SixColumnModel();
-		outputTableModel.setColumnNames("No", "Target", "Timestamp", "Status", "Time Taken", "Response Size");
+		outputTableModel.setColumnNames("No", "Target", "Timestamp", "Status", "Request", "Response Size");
 		// sorter = new TableSorter(outputTableModel);
 
 		outputTable = new JTable(outputTableModel);
@@ -433,7 +431,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		
 		mainPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		topPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		bottomPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		
 		topPane.setOneTouchExpandable(false);
 		topPane.setDividerLocation(600);
@@ -455,13 +452,15 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		this.add(mainPane, BorderLayout.CENTER);
 		
 		// Some value defaults
-		target.setText("http://localhost");
+		target.setText("http://localhost:13180");
 		setMessageText(Format.REQUEST_TCP);
+		
 		message.setCaretPosition(0);
 		
 	}
 	
 	public void toConsole(String input) {
+		
 		consoleEvent++;
 		topRightPanel.setTitleAt(1, " Console (" + consoleEvent + ") ");
 		console.append(input);

@@ -57,21 +57,23 @@ public class PropertiesViewer extends JFrame {
 	 * @param view
 	 */
 	public PropertiesViewer(final JBroFuzzWindow m, final String header, final String text) {
-		super();
+		super("JBroFuzz - " + header);
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
-		setTitle("JBroFuzz - " + header);
 
-		//	 The container pane
+		//	 The Container Pane
 		final Container pane = getContentPane();
 		pane.setLayout(null);
+
 		// Define the JPanel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		// Set the bounds
 		listPanel.setBounds(10, 10, 520, 250);
+		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" " + header + " "), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
 
-		//	 The text area
+		// Define the Text Area
 		final JTextArea listTextArea = new JTextArea();
 		listTextArea.setFont(new Font("Verdana", Font.BOLD, 12));
 		listTextArea.setEditable(false);
@@ -82,41 +84,55 @@ public class PropertiesViewer extends JFrame {
 		listTextArea.setLineWrap(true);
 		m.popup(listTextArea);
 
+		// Define the Scroll Area for the Text
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
 		listTextScrollPane.setHorizontalScrollBarPolicy(30);
 		listTextScrollPane.setPreferredSize(new Dimension(500, 210));
-		listPanel.add(listTextScrollPane);
-		this.add(listPanel);
 
-		listTextArea.setText(text);
-		listTextArea.setCaretPosition(0);
-
-		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" " + header + " "), BorderFactory
-				.createEmptyBorder(1, 1, 1, 1)));
-
+		// Define the Progress Bar
+		final JProgressBar progressBar = new JProgressBar(0, text.length());
+		progressBar.setValue(0);
+		progressBar.setStringPainted(true);
+		progressBar.setBounds(410, 265, 120, 20);
 
 		//	 Global Frame Issues
 		this.setLocation(200, 200);
-		this.setSize(550, 300);
+		this.setSize(550, 325);
+		this.add(listPanel);
+		this.add(progressBar);
 		setResizable(false);
+		setVisible(true);
+		setDefaultCloseOperation(2);
 
+		/*
 		// Don't show the frame unless there is content
 		if (listTextArea.getText().length() < 1) {
 			setVisible(false);
 		} else {
 			setVisible(true);
 		}
-		setDefaultCloseOperation(2);
+		 */
 
-		listTextArea.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					PropertiesViewer.this.dispose();
+		SwingWorker3 worker = new SwingWorker3() {
+
+			public Object construct() {
+				int n = 0; 
+				while(n < text.length()) {
+					listTextArea.append("" + text.charAt(n));
+					progressBar.setValue(n);
+					n++;
 				}
+				progressBar.setValue(n);
+				return "return-worker";
 			}
-		});
+
+		};
+		worker.start();
+
+		listTextArea.setCaretPosition(0);
+		listPanel.add(listTextScrollPane);	
+
 	}
+
 }
