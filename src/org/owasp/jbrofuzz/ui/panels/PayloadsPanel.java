@@ -50,7 +50,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 
 	private static final long serialVersionUID = -5848191307114097542L;
 	// The JPanels carrying the components
-	private JPanel categoriesPanel, generatorsPanel, payloadsPanel;
+	private JPanel categoriesPanel, fuzzersPanel, payloadsPanel;
 	// The JTables carrying the data
 	private JTable categoriesTable, fuzzersTable, payloadsTable;
 	// The Table Models with a single column
@@ -108,12 +108,12 @@ public class PayloadsPanel extends JBroFuzzPanel {
 
 		// Generators: Second table with one column of all the generators of the selected category
 
-		generatorsPanel = new JPanel();
-		generatorsPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+		fuzzersPanel = new JPanel();
+		fuzzersPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Select a Category "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
-		generatorsPanel.setBounds(235, 100, 220, 350);
-		this.add(generatorsPanel);
+		fuzzersPanel.setBounds(235, 100, 220, 350);
+		this.add(fuzzersPanel);
 
 		fuzzersTableModel = new SingleColumnModel(" Fuzzer Name ");
 
@@ -144,7 +144,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		nameTextAreaTextScrollPane.setVerticalScrollBarPolicy(20);
 		nameTextAreaTextScrollPane.setHorizontalScrollBarPolicy(30);
 		nameTextAreaTextScrollPane.setPreferredSize(new Dimension(200, 310));
-		generatorsPanel.add(nameTextAreaTextScrollPane);
+		fuzzersPanel.add(nameTextAreaTextScrollPane);
 
 
 		// Payloads Table: Payload table with one column of all the generators of the selected category
@@ -273,10 +273,10 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	 * Method for setting the given name and category name to be displayed
 	 * </p>
 	 * 
-	 * @param name
+	 * @param fuzzer
 	 * @param category
 	 */
-	public void setFuzzerDisplayed(final String name, final String category) {
+	public void setFuzzerDisplayed(final String fuzzer, final String category) {
 
 		int c = 0;
 		final String[] allRows = categoriesTableModel.getAllRows();
@@ -290,11 +290,42 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		int d = 0; 
 		final String[] allNames = fuzzersTableModel.getAllRows();
 		for(int j = 0; j < allNames.length; j++) {
-			if(allNames[j].equalsIgnoreCase(name)) {
+			if(allNames[j].equalsIgnoreCase(fuzzer)) {
 				d = j;
 			}
 		}
 		fuzzersTable.getSelectionModel().setSelectionInterval(d, d);
+
+	}
+	
+	public void setPayloadDisplayed(final String payload, final String fuzzer, final String category) {
+
+		int c = 0;
+		final String[] allRows = categoriesTableModel.getAllRows();
+		for(int i = 0; i < allRows.length; i++) {
+			if(allRows[i].equalsIgnoreCase(category)) {
+				c = i;
+			}
+		}
+		categoriesTable.getSelectionModel().setSelectionInterval(c, c);
+
+		int d = 0; 
+		final String[] allNames = fuzzersTableModel.getAllRows();
+		for(int j = 0; j < allNames.length; j++) {
+			if(allNames[j].equalsIgnoreCase(fuzzer)) {
+				d = j;
+			}
+		}
+		fuzzersTable.getSelectionModel().setSelectionInterval(d, d);
+		
+		int e = 0;
+		final String[] allPayloads = payloadsTableModel.getAllRows();
+		for(int k = 0; k < allPayloads.length; k++) {
+			if(allPayloads[k].equalsIgnoreCase(payload)) {
+				e = k;
+			}
+		}
+		payloadsTable.getSelectionModel().setSelectionInterval(e, e);
 
 	}
 
@@ -312,7 +343,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 
 			fuzzersTableModel.setData(getFrame().getJBroFuzz().getDatabase().getGenerators(value));
 
-			generatorsPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+			fuzzersPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 					.createTitledBorder(" " + value + " "), BorderFactory
 					.createEmptyBorder(1, 1, 1, 1)));
 

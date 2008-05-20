@@ -99,13 +99,13 @@ public class JBroFuzzWindow extends JFrame {
 	private final SniffingPanel mSniffingPanel;
 
 	// The main definitions panel
-	private final PayloadsPanel mDefinitionsPanel;
+	private final PayloadsPanel mPayloadsPanel;
 
 	// The main fuzzing panel
 	private final FuzzingPanel mFuzzingPanel;
 
 	// The system logger panel
-	private final SystemPanel mSystemLogger;
+	private final SystemPanel mSystemPanel;
 	
 	// The toolbar of the window
 	private JBRToolBar mToolBar;
@@ -140,14 +140,14 @@ public class JBroFuzzWindow extends JFrame {
 		mWebDirectoriesPanel = new DirectoriesPanel(this);
 		mFuzzingPanel = new FuzzingPanel(this);
 		mSniffingPanel = new SniffingPanel(this);
-		mDefinitionsPanel = new PayloadsPanel(this);
-		mSystemLogger = new SystemPanel(this);
+		mPayloadsPanel = new PayloadsPanel(this);
+		mSystemPanel = new SystemPanel(this);
 		
 		mWebDirectoriesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		mFuzzingPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 		mSniffingPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		mDefinitionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		mSystemLogger.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		mPayloadsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		mSystemPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
 		// The tabbed pane, 3 is for bottom orientation
 		tabbedPane = new JTabbedPane(3);
@@ -157,10 +157,10 @@ public class JBroFuzzWindow extends JFrame {
 		// Do not change the names!!!
 		tabbedPane.add(" Fuzzing ", mFuzzingPanel);
 		tabbedPane.add(" Sniffing ", mSniffingPanel);
-		tabbedPane.add(" Payloads ", mDefinitionsPanel);
+		tabbedPane.add(" Payloads ", mPayloadsPanel);
 		tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
 		
-		tabbedPane.setSelectedComponent(mDefinitionsPanel);
+		tabbedPane.setSelectedComponent(mFuzzingPanel);
 		
 		/*
 		// Close button on the tabs
@@ -225,7 +225,7 @@ public class JBroFuzzWindow extends JFrame {
 	 * @return mDefinitionsPanel
 	 */
 	public PayloadsPanel getPanelPayloads() {
-		return mDefinitionsPanel;
+		return mPayloadsPanel;
 	}
 
 	/**
@@ -313,7 +313,7 @@ public class JBroFuzzWindow extends JFrame {
 	public void log(final String str) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				mSystemLogger.addLoggingEvent(str);
+				mSystemPanel.addLoggingEvent(str);
 			}
 		});
 	}
@@ -407,7 +407,7 @@ public class JBroFuzzWindow extends JFrame {
 	 */
 	public void setTabHide(final int n) {
 		if (n == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
-			tabbedPane.remove(mDefinitionsPanel);
+			tabbedPane.remove(mPayloadsPanel);
 		}
 		if (n == JBroFuzzWindow.ID_PANEL_FUZZING) {
 			tabbedPane.remove(mFuzzingPanel);
@@ -416,7 +416,7 @@ public class JBroFuzzWindow extends JFrame {
 			tabbedPane.remove(mSniffingPanel);
 		}
 		if (n == JBroFuzzWindow.ID_PANEL_SYSTEM) {
-			tabbedPane.remove(mSystemLogger);
+			tabbedPane.remove(mSystemPanel);
 		}
 		if (n == JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES) {
 			tabbedPane.remove(mWebDirectoriesPanel);
@@ -433,8 +433,8 @@ public class JBroFuzzWindow extends JFrame {
 	 */
 	public void setTabShow(final int n) {
 		if (n == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
-			tabbedPane.addTab(" Payloads ", mDefinitionsPanel);
-			tabbedPane.setSelectedComponent(mDefinitionsPanel);
+			tabbedPane.addTab(" Payloads ", mPayloadsPanel);
+			tabbedPane.setSelectedComponent(mPayloadsPanel);
 		}
 		if (n == JBroFuzzWindow.ID_PANEL_FUZZING) {
 			tabbedPane.addTab(" Fuzzing ", mFuzzingPanel);
@@ -445,8 +445,8 @@ public class JBroFuzzWindow extends JFrame {
 			tabbedPane.setSelectedComponent(mSniffingPanel);
 		}
 		if (n == JBroFuzzWindow.ID_PANEL_SYSTEM) {
-			tabbedPane.addTab(" System ", mSystemLogger);
-			tabbedPane.setSelectedComponent(mSystemLogger);
+			tabbedPane.addTab(" System ", mSystemPanel);
+			tabbedPane.setSelectedComponent(mSystemPanel);
 		}
 		if (n == JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES) {
 			tabbedPane.addTab(" Web Directories ", mWebDirectoriesPanel);

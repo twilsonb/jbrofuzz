@@ -262,7 +262,7 @@ R:NUM-BIN:Binary Fuzzer:2
 1
 
 R:BFO-UPP:Buffer Overflows:17
-> Exploits | Buffer overflows
+> Exploits | Buffer Overflows
 A
 f(x)=A x 3
 f(x)=A x 5

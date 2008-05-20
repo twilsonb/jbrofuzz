@@ -31,16 +31,13 @@ import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.text.Document;
-import javax.swing.text.StyledEditorKit;
+import javax.swing.*;
+import javax.swing.text.*;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
+import org.owasp.jbrofuzz.util.SwingWorker3;
 import org.owasp.jbrofuzz.util.TextHighlighter;
 
 /**
@@ -66,7 +63,7 @@ public class WindowViewer extends JFrame {
 	 */
 
 	public static final int VIEW_SNIFFING_PANEL = 1;
-	
+
 	/**
 	 * <p>
 	 * Constant used for specifying within which directory to look for the
@@ -75,8 +72,8 @@ public class WindowViewer extends JFrame {
 	 * </p>
 	 */
 	public static final int VIEW_FUZZING_PANEL = 2;
-	
-	
+
+
 	/**
 	 * <p>The window viewer that gets launched for each request within the
 	 * corresponding panel.</p>
@@ -86,31 +83,27 @@ public class WindowViewer extends JFrame {
 	 * @param typeOfPanel
 	 */
 	public WindowViewer(final JBroFuzzWindow m, final String name, final int typeOfPanel) {
-		super();
+		super("JBroFuzz - File Viewer - " + name + ".html");
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
-		// final String[] input = name.split(" ");
-		final String number = name + ".html";
-		setTitle("Window Viewer " + number);
-
-		// The container pane
+		// The Container Pane
 		final Container pane = getContentPane();
-		// pane.setLayout(null);
-		// Define the JPanel
+		pane.setLayout(null);
+
+		// Define the Panel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		// Set the bounds
-		// listPanel.setBounds(10, 10, 520, 450);
-		// The text area
-		final NonWrappingTextPane listTextArea = new NonWrappingTextPane();
+		listPanel.setBounds(10, 10, 520, 450);
+
+		// Define the Text Area
+		final JTextArea listTextArea = new JTextArea();
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
 		m.popup(listTextArea);
+		/*
 		listTextArea.setEditorKit(new StyledEditorKit() {
-			/**
-			 * 
-			 */
+	
 			private static final long serialVersionUID = -6885612347033981164L;
 
 			@Override
@@ -118,54 +111,46 @@ public class WindowViewer extends JFrame {
 				return new TextHighlighter();
 			}
 		});
+		*/
 
+		// Define the Scroll Pane for the Text Area
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
 		listTextScrollPane.setHorizontalScrollBarPolicy(30);
 		listTextScrollPane.setPreferredSize(new Dimension(500, 410));
-		listPanel.add(listTextScrollPane);
 
-		this.add(listPanel);
-
-		StringBuffer text = new StringBuffer();
+		StringBuffer textBuffer = new StringBuffer();
 		if (typeOfPanel == WindowViewer.VIEW_SNIFFING_PANEL) {
-			text = m.getJBroFuzz().getHandler().readSnifFile(number);
+			textBuffer = m.getJBroFuzz().getHandler().readSnifFile(name + ".html");
 		}
 		if (typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
-			text = m.getJBroFuzz().getHandler().readFuzzFile(number);
+			textBuffer = m.getJBroFuzz().getHandler().readFuzzFile(name + ".html");
 		}
-		
-		
-		/* Find the header
-		int headerEnd = text.indexOf("]");
-		if ((headerEnd < 0)) {
-			headerEnd = 0;
-		}
-		String header = "";
-		if (headerEnd != 0) {
-			header = text.substring(0, headerEnd + 1);
-			text.delete(0, headerEnd + 1);
-		}
-		*/
-		
+		final String text = textBuffer.toString();
+
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(number), BorderFactory
+				.createTitledBorder(name + ".html"), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 
 		listTextArea.setText(text.toString());
 		listTextArea.setCaretPosition(0);
+
+		// Define the Progress Bar
+		final JProgressBar progressBar = new JProgressBar(0, text.length());
+		progressBar.setValue(0);
+		progressBar.setStringPainted(true);
+		progressBar.setBounds(410, 465, 120, 20);
+
 		// Global Frame Issues
+		this.add(listPanel);
+		this.add(progressBar);
 		this.setLocation(200, 200);
-		this.setSize(550, 500);
+		this.setSize(550, 525);
 		setResizable(false);
-		// Don't show the frame unless there is content
-		if (listTextArea.getText().length() < 1) {
-			setVisible(false);
-		} else {
-			setVisible(true);
-		}
+		setVisible(true);
 		setDefaultCloseOperation(2);
 
+		/*
 		listTextArea.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
@@ -174,6 +159,29 @@ public class WindowViewer extends JFrame {
 				}
 			}
 		});
+		 */
+
+		SwingWorker3 worker = new SwingWorker3() {
+
+			public Object construct() {
+				int n = 0; 
+				
+				while(n < text.toString().length()) {
+					listTextArea.append("" + text.toString().charAt(n));
+					progressBar.setValue(n);
+					n++;
+				}
+				
+				progressBar.setValue(n);
+				return "return-worker";
+			}
+
+		};
+		worker.start();
+
+		listTextArea.setCaretPosition(0);
+		listPanel.add(listTextScrollPane);	
+
 	}
 
 } // Frame class
