@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.viewers;
 
@@ -52,11 +50,11 @@ public class PropertiesViewer extends JFrame {
 	 * reference to the main JBRFrame, as well as the integer value of 
 	 * the exploit passed from the database.</p>
 	 * 
-	 * @param m
+	 * @param parent
 	 * @param display
 	 * @param view
 	 */
-	public PropertiesViewer(final JBroFuzzWindow m, final String header, final String text) {
+	public PropertiesViewer(final JBroFuzzWindow parent, final String header, final String text) {
 		super("JBroFuzz - " + header);
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
@@ -82,7 +80,7 @@ public class PropertiesViewer extends JFrame {
 		listTextArea.setForeground(Color.WHITE);
 		listTextArea.setWrapStyleWord(true);
 		listTextArea.setLineWrap(true);
-		m.popup(listTextArea);
+		parent.popup(listTextArea);
 
 		// Define the Scroll Area for the Text
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
@@ -97,7 +95,7 @@ public class PropertiesViewer extends JFrame {
 		progressBar.setBounds(410, 265, 120, 20);
 
 		//	 Global Frame Issues
-		this.setLocation(200, 200);
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
 		this.setSize(550, 325);
 		this.add(listPanel);
 		this.add(progressBar);
@@ -113,6 +111,16 @@ public class PropertiesViewer extends JFrame {
 			setVisible(true);
 		}
 		 */
+		
+		listTextArea.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+					PropertiesViewer.this.dispose();
+				}
+			}
+		});
+		 
 
 		SwingWorker3 worker = new SwingWorker3() {
 

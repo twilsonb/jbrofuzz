@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.viewers;
 
@@ -38,6 +36,7 @@ import jcckit.util.ConfigParameters;
 import jcckit.util.PropertiesBasedConfigData;
 
 import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 
 /**
@@ -68,7 +67,7 @@ public class WindowPlotter extends JFrame {
 
 	private DataPlot _dataPlot;
 
-	public WindowPlotter(final String name) {
+	public WindowPlotter(final JBroFuzzWindow parent, final String name) {
 		super(name);
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
@@ -85,7 +84,7 @@ public class WindowPlotter extends JFrame {
 		setLayout(new BorderLayout());
 		this.add(plotCanvas.getGraphicsCanvas(), BorderLayout.CENTER);
 		// Global frame issues
-		this.setLocation(180, 140);
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
 		this.setSize(WindowPlotter.x, WindowPlotter.y);
 		setResizable(false);
 		setVisible(true);

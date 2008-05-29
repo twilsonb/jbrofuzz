@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.panels;
 
@@ -36,6 +34,7 @@ import org.owasp.jbrofuzz.dir.DRequestIterator;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SixColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
+import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 import org.owasp.jbrofuzz.util.*;
 import org.owasp.jbrofuzz.version.Format;
 
@@ -210,9 +209,14 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		
 		responseTableModel = new SixColumnModel();
 		responseTableModel.setColumnNames("No", "URI", "Code", "Status Text", "Comments", "Scripts" );
+		
 		// sorter = new TableSorter(responseTableModel);
 		responseTable = new JTable(responseTableModel);
 		// responseTable.setAutoCreateRowSorter(true);
+		
+		
+		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(responseTableModel);
+		responseTable.setRowSorter(sorter);
 		
 		responseTable.getTableHeader().setToolTipText("Click to sort by row");
 		popup(responseTable);
@@ -248,6 +252,35 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 			}
 
 		}
+		
+		responseTable.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mouseClicked(final MouseEvent e){
+				if (e.getClickCount() == 2){
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+
+							StringBuffer output = new StringBuffer();
+							
+							
+							for (int i = 0; i < responseTable.getColumnCount(); i++) {
+								
+								// TableColumn column = area.getColumnModel().getColumn(i);
+								output.append(responseTable.getColumnName(i) + ": ");
+								output.append(responseTable.getModel().getValueAt(responseTable.convertRowIndexToModel(responseTable.getSelectedRow()), i));
+								output.append("\n");
+							}
+							
+							
+							// final String exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
+							new PropertiesViewer(getFrame(), "Properties", output.toString());
+
+						}
+					});
+				}
+			}
+		} );
+
 
 		final JScrollPane listTextScrollPane = new JScrollPane(responseTable);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
@@ -273,7 +306,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		startButton.setEnabled(true);
 		stopButton.setEnabled(false);
 
-		targetText.setText("http://localhost");
+		targetText.setText("http://192.168.1.254");
 		portText.setText("80");
 	}
 
@@ -350,7 +383,11 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		final String dirs = directoryText.getText();
 		final String port = portText.getText();
 
+		responseTable.removeAll();
 		responseTableModel.removeAllRows();
+		
+		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(responseTableModel);
+		responseTable.setRowSorter(sorter);
 
 		cesg = new DRequestIterator(getFrame(), uri, dirs, port);
 		cesg.run();
@@ -481,7 +518,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 				final int[] selection = area.getSelectedRows();
 				for(final int element : selection) {
 					for(int i = 0; i < area.getRowCount(); i++) {
-						selectionBuffer.append(area.getModel().getValueAt(element, i));
+						selectionBuffer.append(area.getModel().getValueAt(area.convertRowIndexToModel(element), i));
 						if(i < area.getRowCount() - 1) {
 							selectionBuffer.append(",");
 						}
@@ -513,7 +550,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 					
 					// TableColumn column = area.getColumnModel().getColumn(i);
 					output.append(area.getColumnName(i) + ": ");
-					output.append(area.getModel().getValueAt(area.getSelectedRow(), i));
+					output.append(area.getModel().getValueAt(area.convertRowIndexToModel(area.getSelectedRow()), i));
 					output.append("\n");
 				}
 				

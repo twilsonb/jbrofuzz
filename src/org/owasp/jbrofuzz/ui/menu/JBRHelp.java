@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.menu;
 
@@ -47,6 +45,8 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
+
+import org.owasp.jbrofuzz.util.ImageCreator;
 
 /**
  * <p>
@@ -76,7 +76,8 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 	private JSplitPane splitPane;
 
 	public JBRHelp(final JFrame parent) {
-		super(parent, " Help Topics ", true);
+		super(parent, " JBroFuzz - Help Topics ", true);
+		setIconImage(ImageCreator.FRAME_IMG.getImage());
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
@@ -215,8 +216,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(Math.abs((parent.getWidth() / 2) - (JBRHelp.x / 2 - 100)),
-				Math.abs((parent.getHeight() / 2) - (JBRHelp.y / 2) + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
 		this.setSize(JBRHelp.x, JBRHelp.y);
 		setResizable(true);
 		setVisible(true);
