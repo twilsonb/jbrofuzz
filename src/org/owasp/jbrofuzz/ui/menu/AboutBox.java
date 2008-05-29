@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.menu;
 
@@ -82,7 +80,8 @@ public class AboutBox extends JDialog {
 	 * </p>
 	 */
 	public AboutBox(final JFrame parent, final int tab) {
-		super(parent, " About ", true);
+		super(parent, " JBroFuzz - About ", true);
+		setIconImage(ImageCreator.FRAME_IMG.getImage());
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		setLayout(new BorderLayout());
@@ -156,9 +155,7 @@ public class AboutBox extends JDialog {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(
-				Math.abs((parent.getWidth() / 2) - (AboutBox.x / 2 - 100)), Math
-						.abs((parent.getHeight() / 2) - (AboutBox.y / 2) + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
 		this.setSize(AboutBox.x, AboutBox.y);
 		setResizable(false);
 		setVisible(true);

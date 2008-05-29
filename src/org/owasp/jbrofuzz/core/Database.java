@@ -194,28 +194,6 @@ public class Database {
 		}
 		return "";
 	}
-	
-	/*
-	public String[] getNamesFromCategory(String category) {
-		
-		HashSet<String> o = new HashSet<String>();
-		
-		String [] ids = getAllIds();
-		for(String id : ids) {
-			Generator g = generators.get(id);
-			if(g.isAMemberOfCategory(category)) {
-				o.add(g.getName());
-			}
-			
-			
-		}
-
-		String [] uniqueNamesArray = new String[o.size()];
-		o.toArray(uniqueNamesArray);
-		
-		return uniqueNamesArray;
-	}
-	*/
 
 	public String[] getAllNames() {
 
@@ -245,22 +223,17 @@ public class Database {
 		
 		String[] ids = getAllIds();
 		for(String id : ids) {
-			// System.out.println(id);
-			
-			// Generator g = generators.get(id);
-			// System.out.println("-----> " + g.getId() + ":" + g.getName());
 			
 			ArrayList<String> categoriesArrayList = generators.get(id).getCategories();
 			String [] categoriesArray = new String[categoriesArrayList.size()];
 			categoriesArrayList.toArray(categoriesArray);
 			
 			for(String cCategory : categoriesArray) {
-				// System.out.println(cCategory);
+				
 				o.add(cCategory);
+				
 			}
-			
-			
-			
+				
 		}
 		
 		String [] uniqueCategoriesArray = new String[o.size()];
@@ -329,47 +302,6 @@ public class Database {
 	public boolean containsGenerator(String Id) {
 		
 		return generators.containsKey(Id);
-		
-	}
-
-	
-	public void test() {
-		
-		/*
-		System.out.println("\n\nFound a total of : " + this.size() + " Generators in the Database.");
-
-
-		for(String s : this.getAllIds()) {
-			System.out.println(s);
-		}
-
-		for(String t : this.getAllNames()) {
-			System.out.println(t);
-		}
-
-		for(String u : this.getAllIds()) {
-			System.out.println("\n\nGenerator ID: " + u + "  (" + (this.getPayloads(u).length - 1) + ")");
-			for(String v : this.getPayloads(u)) {
-				System.out.println("\t" + "\t\t" + v.length());
-			}
-
-		}
-		*/
-		
-		/*
-		System.out.println("\n\nGenerator ID: BFO  (" + this.getPayloads("BFO").length + ")");
-
-		String [] payloads = this.getPayloads("BFO");
-		System.out.print(payloads[this.getPayloads("BFO").length - 1]);
-		*/
-		
-		System.out.println("\n\nFound a total of : " + this.size() + " Generators in the Database.");
-		
-		String [] keys = this.getAllIds();
-		for(String key : keys) {
-			System.out.println(" " + key + "\t\t" + this.getGenerator(key).getId() + "\t\t" + this.getGenerator(key).getName() + "\t\t" + this.getGenerator(key).isReplacive());
-		}
-		
 		
 	}
 	

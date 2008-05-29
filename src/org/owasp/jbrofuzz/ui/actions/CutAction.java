@@ -1,9 +1,9 @@
 /**
- * EDLGraph is a social engineering tool that harvests email addresses 
- * in the public domain and produces a graph linking FQDN domains 
- * in a single row based on public user interaction records.
+ * JBroFuzz 1.0
  *
- * Copyright (C) 2008 subere@uncon.org
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
+ * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.actions;
 

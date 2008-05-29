@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.menu;
 
@@ -30,13 +28,16 @@ import java.awt.*;
 import javax.swing.*;
 
 import java.awt.event.*;
+import java.io.*;
+import java.net.*;
 import java.util.prefs.*;
 
 import javax.swing.event.*;
+import javax.swing.tree.*;
 
 import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.io.*;
-
+import org.owasp.jbrofuzz.util.*;
 import org.owasp.jbrofuzz.version.*;
 
 /**
@@ -48,15 +49,326 @@ import org.owasp.jbrofuzz.version.*;
  * @author subere@uncon.org
  * @version 0.8
  */
-public class JBRPreferences extends JDialog {
 
+
+public class JBRPreferences extends JDialog implements TreeSelectionListener {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4301858021356404678L;
 	// Dimensions of the about box
-	private static final int x = 500;
-	private static final int y = 300;
+	private static final int x = 650;
+	private static final int y = 400;
+	// The buttons
+	private JButton ok;
+	// The tree
+	private JTree tree;
+	// The JEditorPane
+	private JEditorPane faqEditorPane;
+	// The corresponding scroll pane
+	private JScrollPane faqScrollPane;
+	// The main split pane
+	private JSplitPane splitPane;
 
-	// The table holding the list of provider URLs
-	private JTable prefsTable;
+	private JPanel preferences, fuzzing, directories, sniffing;
+	
+	private Preferences prefs;
 
+	public JBRPreferences(final JFrame parent) {
+
+		super(parent, " JBroFuzz - Preferences ", true);
+		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setLayout(new BorderLayout());
+		setFont(new Font("SansSerif", Font.PLAIN, 12));
+		
+		// Set the preferences object access
+		prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+
+		/*
+		faqURL = new URL[NO_LINKS];
+		for (int i = 0; i < NO_LINKS; i++) {
+			if (i == 0) {
+				faqURL[i] = ClassLoader.getSystemClassLoader().getResource(
+						"help/faq.html");
+			} else {
+				faqURL[i] = ClassLoader.getSystemClassLoader().getResource(
+						"help/faq.html#" + i);
+			}
+		}
+		*/
+
+		// Create the nodes
+		final DefaultMutableTreeNode top = new DefaultMutableTreeNode("Preferences");
+		createNodes(top);
+
+		// Create a tree that allows one selection at a time.
+		tree = new JTree(top);
+		tree.getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		// Listen for when the selection changes.
+		tree.addTreeSelectionListener(this);
+
+		// Create the scroll pane and add the tree to it.
+		final JScrollPane treeView = new JScrollPane(tree);
+		/*
+		try {
+			faqEditorPane = new JEditorPane(faqURL[0]);
+		} catch (final IOException e1) {
+			faqEditorPane = new JEditorPane();
+			faqEditorPane
+					.setText("Frequently Asked Questions file could not be located.");
+		}
+		*/
+		faqScrollPane = new JScrollPane(faqEditorPane);
+
+		// Create the preferences panel
+		preferences = new JPanel();
+		preferences.setLayout(new BoxLayout(preferences,
+				BoxLayout.PAGE_AXIS));
+		JLabel header = new JLabel("<HTML><H3>&nbsp;Preferences</H3></HTML>");
+		preferences.add(header);
+		preferences.add(Box.createRigidArea(new Dimension(0, 10)));
+
+		final JLabel firstBox = new JLabel("<html>"
+				+ System.getProperty("user.dir") + "</html>");
+		firstBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Current Working Directory "), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
+		preferences.add(firstBox);
+		preferences.add(Box.createRigidArea(new Dimension(0, 10)));
+
+
+		// Create the fuzzing panel
+		fuzzing = new JPanel();
+		fuzzing.setLayout(new BoxLayout(fuzzing, BoxLayout.PAGE_AXIS));
+		header = new JLabel("<HTML><H3>&nbsp;Fuzzing</H3></HTML>");
+		fuzzing.add(header);
+		header.add(Box.createRigidArea(new Dimension(0, 10)));
+
+		final JLabel secondBox = new JLabel("<html>"
+				+ FileHandler.getCanonicalPath(FileHandler.DIR_TCPF) + "</html>");
+		secondBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Fuzzing Directory (where data is saved) "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		fuzzing.add(secondBox);
+		fuzzing.add(Box.createRigidArea(new Dimension(0, 10)));
+
+
+		// Create the directories panel
+		directories = new JPanel();
+		directories.setLayout(new BoxLayout(directories,
+				BoxLayout.PAGE_AXIS));
+		header = new JLabel(
+		"<HTML><H3>&nbsp;Fuzzing Directories</H3></HTML>");
+		directories.add(header);
+		header.add(Box.createRigidArea(new Dimension(0, 10)));
+
+		final JLabel fourthBox = new JLabel("<html>"
+				+ FileHandler.getCanonicalPath(FileHandler.DIR_WEBD) + "</html>");
+		fourthBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Web Enum Directory (where data is saved) "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		directories.add(fourthBox);
+		directories.add(Box.createRigidArea(new Dimension(0, 10)));
+
+		final boolean checkbox = prefs.getBoolean(Format.PREF_FUZZ_DIR_ERR,
+				false);
+		final JCheckBox errorCheckBox = new JCheckBox(
+				" While Fuzzing, if an error occurs, Continue ", checkbox);
+		errorCheckBox.setBorderPaintedFlat(true);
+		errorCheckBox
+		.setToolTipText("Continue attempting to Fuzz, even if an error occurs");
+
+		errorCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (errorCheckBox.isSelected()) {
+					prefs.putBoolean(Format.PREF_FUZZ_DIR_ERR,
+							true);
+				} else {
+					prefs.putBoolean(Format.PREF_FUZZ_DIR_ERR,
+							false);
+				}
+			}
+		});
+		directories.add(errorCheckBox);
+		header.add(Box.createRigidArea(new Dimension(0, 15)));
+
+
+		// Create the sniffing panel
+		sniffing = new JPanel();
+		sniffing.setLayout(new BoxLayout(sniffing, BoxLayout.PAGE_AXIS));
+		header = new JLabel("<HTML><H3>&nbsp;Sniffing</H3></HTML>");
+		sniffing.add(header);
+		header.add(Box.createRigidArea(new Dimension(0, 10)));
+
+		final JLabel thirdBox = new JLabel("<html>"
+				+ FileHandler.getCanonicalPath(FileHandler.DIR_SNIF) + "</html>");
+		thirdBox.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Sniffing Directory (where data is saved) "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		sniffing.add(thirdBox);
+		sniffing.add(Box.createRigidArea(new Dimension(0, 10)));
+
+
+		// Create the top split pane, showing the treeView and the Preferences
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		splitPane.setLeftComponent(treeView);
+		splitPane.setRightComponent(faqScrollPane);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setDividerLocation(150);
+
+		final Dimension minimumSize = new Dimension(JBRPreferences.x / 4, JBRPreferences.y / 2);
+		faqScrollPane.setMinimumSize(minimumSize);
+		treeView.setMinimumSize(minimumSize);
+		splitPane.setDividerLocation(100);
+		splitPane.setPreferredSize(new Dimension(JBRPreferences.x, JBRPreferences.y));
+
+		// Add the split pane to this panel
+		getContentPane().add(splitPane, BorderLayout.CENTER);
+
+		// Bottom button
+		
+		
+		// Buttons
+		JButton ok = new JButton("  OK  ");
+		JButton cancel = new JButton("Cancel");
+
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
+				15));
+		buttonPanel.add(ok);
+		buttonPanel.add(cancel);
+
+		// Action Listeners for all components
+
+		ok.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						clickOK();
+					}
+				});
+			}
+		});
+
+		cancel.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						clickCANCEL();
+					}
+				});
+			}
+		});
+
+		tree.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+					clickCANCEL();
+				}
+			}
+		});
+
+		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+
+		// Global frame issues
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
+		this.setSize(JBRPreferences.x, JBRPreferences.y);
+		setResizable(true);
+		setVisible(true);
+	}
+	
+	private void clickOK() {
+
+		// final int c = prefsTable.getSelectedRow();
+		// final String name = (String) prefsTable.getModel().getValueAt(c, 0);
+
+		/*
+		final String url = providersText.getText();
+		StringUtils.trimToNull(url);
+		StringUtils.deleteWhitespace(url);
+		providersText.setText(url);
+
+		if(url != null) {
+			// parent.getEDOL().getEngine().setCurrentProvider(name, url);
+			// providersText.setText(parent.getEDOL().getEngine().getCurrentProvider().getURL());
+		} 
+		 */
+		// JBRPreferences.this.dispose();
+
+	}
+	
+	private void clickCANCEL() {
+		JBRPreferences.this.dispose();
+	}
+
+	private void createNodes(final DefaultMutableTreeNode top) {
+		DefaultMutableTreeNode node = null;
+		
+		/*
+		for (int i = 0; i < NO_LINKS; i++) {
+			node = new DefaultMutableTreeNode("Question " + (i + 1));
+			top.add(node);
+		}
+		*/
+		node = new DefaultMutableTreeNode("Fuzzing");
+		top.add(node);
+		
+		node = new DefaultMutableTreeNode("Sniffing");
+		top.add(node);
+
+		node = new DefaultMutableTreeNode("Web Directories");
+		top.add(node);
+		
+		/*
+		node = new DefaultMutableTreeNode("Java requirements");
+		top.add(node);
+		
+		node = new DefaultMutableTreeNode("Directory problems");
+		top.add(node);
+
+		node = new DefaultMutableTreeNode("What is a Generator?");
+		top.add(node);
+		
+		node = new DefaultMutableTreeNode("What is a Fuzzer?");
+		top.add(node);
+
+		node = new DefaultMutableTreeNode("Sniffing problems");
+		top.add(node);
+		*/
+
+
+
+	}
+
+	public void valueChanged(final TreeSelectionEvent e) {
+		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+				.getLastSelectedPathComponent();
+
+		if (node == null) {
+			return;
+		}
+
+		final String s = node.toString();
+		if (s.equalsIgnoreCase("Fuzzing")) {
+			/*
+			try	 {
+				faqEditorPane.setPage(faqURL[9]);
+				faqScrollPane.setViewportView(faqEditorPane);
+			} catch (final IOException e1) {
+				// TODO Auto-generated catch block
+				// e1.printStackTrace();
+			}
+			*/
+			splitPane.setRightComponent(faqScrollPane);
+		}
+	}
+}
+
+/*
+
+	
 	private JPanel preferences, fuzzing, directories, sniffing;
 
 	// private JPanel centerPanel, southPanel;
@@ -80,6 +392,29 @@ public class JBRPreferences extends JDialog {
 
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
+		
+		// Create the nodes
+		final DefaultMutableTreeNode top = new DefaultMutableTreeNode("FAQ");
+		createNodes(top);
+
+		// Create a tree that allows one selection at a time.
+		tree = new JTree(top);
+		tree.getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		// Listen for when the selection changes.
+		tree.addTreeSelectionListener(this);
+
+		// Create the scroll pane and add the tree to it.
+		final JScrollPane treeView = new JScrollPane(tree);
+
+		try {
+			providersTextScrollPane = new JEditorPane(faqURL[0]);
+		} catch (final IOException e1) {
+			providersTextScrollPane = new JEditorPane();
+			providersTextScrollPane
+					.setText("Frequently Asked Questions file could not be located.");
+		}
+		providersTextScrollPane = new JScrollPane(faqEditorPane);
 
 		final JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
 		final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
@@ -281,14 +616,77 @@ public class JBRPreferences extends JDialog {
 			// providersText.setText(parent.getEDOL().getEngine().getCurrentProvider().getURL());
 		} 
 		 */
-		JBRPreferences.this.dispose();
+		// JBRPreferences.this.dispose();
 
-	}
-
+	// }
+	/*
 	private void clickCANCEL() {
 		JBRPreferences.this.dispose();
 	}
+	
+	private void createNodes(final DefaultMutableTreeNode top) {
+		DefaultMutableTreeNode node = null;
+		
+		/*
+		for (int i = 0; i < NO_LINKS; i++) {
+			node = new DefaultMutableTreeNode("Question " + (i + 1));
+			top.add(node);
+		}
+		*/
+/*
+		node = new DefaultMutableTreeNode("Name");
+		top.add(node);
+		
+		node = new DefaultMutableTreeNode("Running the jar");
+		top.add(node);
 
+		node = new DefaultMutableTreeNode("Latest version");
+		top.add(node);
+
+		node = new DefaultMutableTreeNode("Java requirements");
+		top.add(node);
+		
+		node = new DefaultMutableTreeNode("Directory problems");
+		top.add(node);
+
+		node = new DefaultMutableTreeNode("What is a Generator?");
+		top.add(node);
+		
+		node = new DefaultMutableTreeNode("What is a Fuzzer?");
+		top.add(node);
+
+		node = new DefaultMutableTreeNode("Sniffing problems");
+		top.add(node);
+
+
+
+	}
+	
+	public void valueChanged(final TreeSelectionEvent e) {
+		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+				.getLastSelectedPathComponent();
+
+		if (node == null) {
+			return;
+		}
+
+		final String s = node.toString();
+		if (s.equalsIgnoreCase("Question 16")) {
+
+			try {
+				faqEditorPane.setPage(faqURL[9]);
+				faqScrollPane.setViewportView(faqEditorPane);
+			} catch (final IOException e1) {
+				// TODO Auto-generated catch block
+				// e1.printStackTrace();
+			}
+			splitPane.setRightComponent(faqScrollPane);
+		}
+	}
+	*/
+
+
+	/*
 	private class ProviderRowListener implements ListSelectionListener {
 
 		public void valueChanged(final ListSelectionEvent event) {
@@ -320,5 +718,6 @@ public class JBRPreferences extends JDialog {
 		}
 
 	}
+	*/
 
-}
+// }

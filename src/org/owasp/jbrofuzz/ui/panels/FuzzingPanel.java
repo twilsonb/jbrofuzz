@@ -37,6 +37,7 @@ import org.owasp.jbrofuzz.fuzz.ConnectionException;
 import org.owasp.jbrofuzz.fuzz.MessageCreator;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.ui.tablemodels.SixColumnModel;
 import org.owasp.jbrofuzz.ui.tablemodels.ThreeColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.WindowPlotter;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
@@ -348,9 +349,14 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		outputTableModel = new SixColumnModel();
 		outputTableModel.setColumnNames("No", "Target", "Timestamp", "Status", "Request", "Response Size");
 		// sorter = new TableSorter(outputTableModel);
-
+		
 		outputTable = new JTable(outputTableModel);
-		outputTable.setAutoCreateRowSorter(true);
+		// outputTable.setAutoCreateRowSorter(true);
+		
+		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(outputTableModel);
+		outputTable.setRowSorter(sorter);
+
+		
 		outputTable.setBackground(Color.white);
 		// sorter.setTableHeader(outputTable.getTableHeader());
 		popup(outputTable);
@@ -394,7 +400,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 						public void run() {
 
 							final int c = outputTable.getSelectedRow();
-							final String name = (String) outputTable.getModel().getValueAt(c, 0);
+							final String name = (String) outputTable.getModel().getValueAt(outputTable.convertRowIndexToModel(c), 0);
 							new WindowViewer(getFrame(), name, WindowViewer.VIEW_FUZZING_PANEL);
 
 						}
@@ -474,7 +480,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		if (!buttonPlot.isEnabled()) {
 			return;
 		}
-		final WindowPlotter wd = new WindowPlotter(FileHandler.getName(FileHandler.DIR_TCPF));
+		final WindowPlotter wd = new WindowPlotter(this.m, FileHandler.getName(FileHandler.DIR_TCPF));
 		wd.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {

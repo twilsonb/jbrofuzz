@@ -25,12 +25,12 @@ package org.owasp.jbrofuzz;
 
 import org.owasp.jbrofuzz.io.*;
 import org.owasp.jbrofuzz.ui.*;
-import org.owasp.jbrofuzz.version.*;
 import org.owasp.jbrofuzz.core.*;
+import org.owasp.jbrofuzz.version.*;
 
 /**
  * <p>
- * Title: Java Bro Fuzzer
+ * Title: JBroFuzz
  * </p>
  * 
  * <p>

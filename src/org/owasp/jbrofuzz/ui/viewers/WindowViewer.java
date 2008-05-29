@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.viewers;
 
@@ -78,11 +76,11 @@ public class WindowViewer extends JFrame {
 	 * <p>The window viewer that gets launched for each request within the
 	 * corresponding panel.</p>
 	 * 
-	 * @param m
+	 * @param parent
 	 * @param name
 	 * @param typeOfPanel
 	 */
-	public WindowViewer(final JBroFuzzWindow m, final String name, final int typeOfPanel) {
+	public WindowViewer(final JBroFuzzWindow parent, final String name, final int typeOfPanel) {
 		super("JBroFuzz - File Viewer - " + name + ".html");
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
@@ -100,7 +98,7 @@ public class WindowViewer extends JFrame {
 		final JTextArea listTextArea = new JTextArea();
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
-		m.popup(listTextArea);
+		parent.popup(listTextArea);
 		/*
 		listTextArea.setEditorKit(new StyledEditorKit() {
 	
@@ -121,10 +119,10 @@ public class WindowViewer extends JFrame {
 
 		StringBuffer textBuffer = new StringBuffer();
 		if (typeOfPanel == WindowViewer.VIEW_SNIFFING_PANEL) {
-			textBuffer = m.getJBroFuzz().getHandler().readSnifFile(name + ".html");
+			textBuffer = parent.getJBroFuzz().getHandler().readSnifFile(name + ".html");
 		}
 		if (typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
-			textBuffer = m.getJBroFuzz().getHandler().readFuzzFile(name + ".html");
+			textBuffer = parent.getJBroFuzz().getHandler().readFuzzFile(name + ".html");
 		}
 		final String text = textBuffer.toString();
 
@@ -144,13 +142,13 @@ public class WindowViewer extends JFrame {
 		// Global Frame Issues
 		this.add(listPanel);
 		this.add(progressBar);
-		this.setLocation(200, 200);
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
 		this.setSize(550, 525);
 		setResizable(false);
 		setVisible(true);
 		setDefaultCloseOperation(2);
 
-		/*
+		
 		listTextArea.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
@@ -159,7 +157,7 @@ public class WindowViewer extends JFrame {
 				}
 			}
 		});
-		 */
+		 
 
 		SwingWorker3 worker = new SwingWorker3() {
 

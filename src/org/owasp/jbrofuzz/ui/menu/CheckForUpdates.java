@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.menu;
 
@@ -61,7 +59,8 @@ private boolean newVersionExists;
 
 public CheckForUpdates(final JBroFuzzWindow parent) {
 
-	super(parent, " Check For Updates ", true);
+	super(parent, " JBroFuzz - Check For Updates ", true);
+	setIconImage(ImageCreator.FRAME_IMG.getImage());
 	setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 	setLayout(new BorderLayout());
@@ -145,9 +144,7 @@ public CheckForUpdates(final JBroFuzzWindow parent) {
 
 
 	// Global frame issues
-	this.setLocation(Math.abs((parent.getWidth() / 2)
-			- (CheckForUpdates.x / 2 - 100)), Math.abs((parent.getHeight() / 2)
-					- (CheckForUpdates.y / 2) + 100));
+	this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
 	this.setSize(CheckForUpdates.x, CheckForUpdates.y);
 	setResizable(false);
 	setVisible(true);

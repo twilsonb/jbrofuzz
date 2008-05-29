@@ -1,11 +1,8 @@
 /**
- * JBroFuzz 0.9
+ * JBroFuzz 1.0
  *
- * Java Bro Fuzzer. A stateless network protocol fuzzer for penetration tests.
- * It allows for the identification of certain classes of security bugs, by
- * means of creating malformed data and having the network protocol in question
- * consume the data.
- *
+ * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * 
  * Copyright (C) 2007, 2008 subere@uncon.org
  *
  * This program is free software; you can redistribute it and/or
@@ -22,6 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
+ * 
  */
 package org.owasp.jbrofuzz.ui.tablemodels;
 
@@ -30,7 +28,7 @@ import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 class ResponseOutput {
-	
+
 	protected String one;
 	protected String two;
 	protected String three;
@@ -48,7 +46,7 @@ class ResponseOutput {
 		this.four = four;
 		this.five = five;
 		this.six = six;
-		
+
 	}
 
 	public String getFirst() {
@@ -58,7 +56,7 @@ class ResponseOutput {
 	public String getSecond() {
 		return two;
 	}
-	
+
 	public String getThird() {
 		return three;
 	}
@@ -70,7 +68,7 @@ class ResponseOutput {
 	public String getFifth() {
 		return five;
 	}
-	
+
 	public String getSixth() {
 		return six;
 	}
@@ -81,7 +79,7 @@ class ResponseOutput {
  * <p>The Table Model for the output consisting of six fields.</p>
  * 
  * @author subere@uncon.org
- * @version 0.8
+ * @version 1.0
  */
 public class SixColumnModel extends AbstractTableModel {
 
@@ -97,7 +95,7 @@ public class SixColumnModel extends AbstractTableModel {
 
 	// The names of the columns within the table of generators
 	private static String[] COLUMNNAMES = { "No", "URI", "Code",
-			"Status Text", "Comments", "Scripts" };
+		"Status Text", "Comments", "Scripts" };
 	// The vector of ResponseOutputs
 	private Vector<ResponseOutput> dataVector;
 
@@ -114,9 +112,10 @@ public class SixColumnModel extends AbstractTableModel {
 	 * a JTable.
 	 */
 	public SixColumnModel() {
-		
+
 		dataVector = new Vector<ResponseOutput>();
-		
+		dataVector.setSize(0);
+
 	}
 
 	/**
@@ -135,6 +134,7 @@ public class SixColumnModel extends AbstractTableModel {
 	 * @param scripts
 	 *          String
 	 */
+
 	public void addRow(
 			final String one, final String two, final String three, 
 			final String four, final String five, final String six) {
@@ -143,17 +143,17 @@ public class SixColumnModel extends AbstractTableModel {
 		dataVector.add(response);
 		fireTableRowsInserted(0, dataVector.size() - 1);
 	}
-	
+
 	public void updateLastRow(
 			final String one, final String two, final String three, 
 			final String four, final String five, final String six) {
 
 		final ResponseOutput response = new ResponseOutput(one, two, three, four, five, six);
-		
+
 		dataVector.setElementAt(response, dataVector.size() - 1);
 		fireTableRowsUpdated(0, dataVector.size() - 1);
 	}
-	
+
 
 	/**
 	 * Return the total number of columns
@@ -161,7 +161,7 @@ public class SixColumnModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getColumnCount() {
-		return SixColumnModel.COLUMNNAMES.length;
+		return 6;
 	}
 
 	/**
@@ -172,12 +172,16 @@ public class SixColumnModel extends AbstractTableModel {
 	 * @return String
 	 */
 	@Override
-	public String getColumnName(final int column) {
+	public String getColumnName(final int columnIndex) {
+		
 		String out = "";
-		if ((column > -1) && (column < SixColumnModel.COLUMNNAMES.length)) {
-			out = SixColumnModel.COLUMNNAMES[column];
+		
+		if ((columnIndex < 6) && (columnIndex >= 0)) {
+			out = SixColumnModel.COLUMNNAMES[columnIndex];
 		}
+		
 		return out;
+		
 	}
 
 	/**
@@ -187,21 +191,27 @@ public class SixColumnModel extends AbstractTableModel {
 	 *          int
 	 * @return String
 	 */
-	public String getRow(final int row) {
+	public String getRow(final int rowIndex) {
+		
 		final StringBuffer output = new StringBuffer();
-		if ((row > -1) && (row < dataVector.size())) {
+		
+		if ( (rowIndex < dataVector.size()) && (rowIndex >= 0) ) {
+			
 			for (int i = 0; i < SixColumnModel.COLUMNNAMES.length; i++) {
-				output.append(getValueAt(row, i));
+				output.append(getValueAt(rowIndex, i));
 				if (i < SixColumnModel.COLUMNNAMES.length - 1) {
 					output.append(SixColumnModel.STRING_SEPARATOR);
 				}
 			}
 			output.append("\n");
+			
 		}
+		
 		return output.toString();
+		
 	}
-	
-	
+
+
 
 	/**
 	 * Return the total number of rows
@@ -222,9 +232,8 @@ public class SixColumnModel extends AbstractTableModel {
 	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
-		if ((row < 0) || (row > dataVector.size() - 1)) {
-			return "";
-		} else {
+		
+		if ((row < dataVector.size()) && (row >= 0) && (column < 6) && (column >= 0)) {
 			final ResponseOutput record = (ResponseOutput) dataVector.get(row);
 			switch (column) {
 			case 0:
@@ -243,6 +252,8 @@ public class SixColumnModel extends AbstractTableModel {
 				return "";
 			}
 		}
+		return "";
+		
 	}
 
 	/**
@@ -250,7 +261,31 @@ public class SixColumnModel extends AbstractTableModel {
 	 */
 	public void removeAllRows() {
 		dataVector.removeAllElements();
-		
-		fireTableRowsDeleted(0, this.getRowCount());
+
+		if (dataVector.size() > 0) {
+			fireTableRowsDeleted(0, dataVector.size() - 1);
+		}
+	}
+
+	public void setValueAt(Object o, int rowIndex, int columnIndex) {
+
+		if ((rowIndex < dataVector.size()) && (rowIndex >= 0) && (columnIndex < 6) && (columnIndex >= 0)) {
+
+			ResponseOutput current = dataVector.get(rowIndex);
+			switch(columnIndex) {
+			case 0: current.one = o.toString(); break;
+			case 1: current.two = o.toString(); break;
+			case 2: current.three = o.toString(); break;
+			case 3: current.four = o.toString(); break;
+			case 4: current.five = o.toString(); break;
+			case 5: current.six = o.toString(); break;
+			default:
+			}
+			
+			dataVector.set(rowIndex, current);
+
+		}
+
 	}
 }
+
