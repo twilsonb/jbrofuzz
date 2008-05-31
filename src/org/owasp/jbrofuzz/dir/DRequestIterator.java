@@ -84,13 +84,13 @@ public class DRequestIterator {
 	 * </p>
 	 * 
 	 * @param m
-	 *          FrameWindow
+	 *            FrameWindow
 	 * @param url
-	 *          String
+	 *            String
 	 * @param directories
-	 *          String
+	 *            String
 	 * @param port
-	 *          int
+	 *            int
 	 */
 	public DRequestIterator(final JBroFuzzWindow m, final String url,
 			final String directories, final String port) {
@@ -107,7 +107,8 @@ public class DRequestIterator {
 			this.port = Integer.parseInt(port);
 		} catch (final NumberFormatException e1) {
 			this.port = 0;
-			m.log("Web Directories Panel: Specify a valid port: \"" + port + "\"");
+			m.log("Web Directories Panel: Specify a valid port: \"" + port
+					+ "\"");
 		}
 		if ((this.port < 1) || (this.port > 65535)) {
 			this.port = 0;
@@ -141,7 +142,8 @@ public class DRequestIterator {
 	}
 
 	/**
-	 * Method used for running the request iterator once it has been initialised.
+	 * Method used for running the request iterator once it has been
+	 * initialised.
 	 */
 	public void run() {
 		// Check for a valid URL
@@ -165,8 +167,7 @@ public class DRequestIterator {
 				currentURI = url + URIUtil.encodePath(directories[i]);
 			} catch (final URIException ex) {
 				currentURI = "";
-				m.log("Could not encode the URI: " + url
-						+ directories[i]);
+				m.log("Could not encode the URI: " + url + directories[i]);
 			}
 
 			// Checks...
@@ -178,7 +179,8 @@ public class DRequestIterator {
 			}
 
 			final HttpClient client = new HttpClient();
-			client.getParams().setParameter(HttpConnectionParams.CONNECTION_TIMEOUT,
+			client.getParams().setParameter(
+					HttpConnectionParams.CONNECTION_TIMEOUT,
 					Integer.valueOf(10000));
 
 			final GetMethod method = new GetMethod(currentURI);
@@ -210,9 +212,11 @@ public class DRequestIterator {
 
 					String results = null;
 					try {
-						results = new String(allbytes, method.getResponseCharSet());
+						results = new String(allbytes, method
+								.getResponseCharSet());
 					} catch (final UnsupportedEncodingException ex1) {
-						m.log("Web Directories: Unsupported Character Encoding");
+						m
+								.log("Web Directories: Unsupported Character Encoding");
 						results = "";
 					}
 
@@ -223,13 +227,15 @@ public class DRequestIterator {
 						responses[i] += "No\n";
 					}
 					// Check for scripts
-					if ((results.contains("<script")) || (results.contains("<SCRIPT"))) {
+					if ((results.contains("<script"))
+							|| (results.contains("<SCRIPT"))) {
 						responses[i] += "Yes\n";
 					} else {
 						responses[i] += "No\n";
 					}
 				}
-				// If no ok response has come back just append comments and scripts
+				// If no ok response has come back just append comments and
+				// scripts
 				else {
 					responses[i] += "No\n";
 					responses[i] += "No\n";
@@ -242,9 +248,10 @@ public class DRequestIterator {
 				responses[i] += " \n";
 				responses[i] += " \n";
 				// Bomb out...
-				final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-				boolean continueOnError = prefs.getBoolean(Format.PREF_FUZZ_DIR_ERR,
-						false);
+				final Preferences prefs = Preferences.userRoot().node(
+						"owasp/jbrofuzz");
+				boolean continueOnError = prefs.getBoolean(
+						Format.PREF_FUZZ_DIR_ERR, false);
 				if (!continueOnError) {
 					stop();
 				}
@@ -256,9 +263,10 @@ public class DRequestIterator {
 				responses[i] += " \n";
 				responses[i] += " \n";
 				// Bomb out...
-				final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-				boolean continueOnError = prefs.getBoolean(Format.PREF_FUZZ_DIR_ERR,
-						false);
+				final Preferences prefs = Preferences.userRoot().node(
+						"owasp/jbrofuzz");
+				boolean continueOnError = prefs.getBoolean(
+						Format.PREF_FUZZ_DIR_ERR, false);
 				if (!continueOnError) {
 					stop();
 				}
@@ -269,12 +277,12 @@ public class DRequestIterator {
 			m.getPanelWebDirectories().addRow(responses[i]);
 			// Create a String to be written to file
 			final StringBuffer outToFile = new StringBuffer();
-			
+
 			final Date currentTime = new Date();
 			final SimpleDateFormat dateTime = new SimpleDateFormat(
 					"dd.MM.yyyy HH:mm:ss", new Locale("en"));
 			outToFile.append(dateTime.format(currentTime));
-			
+
 			// String outToFile = Time.dateAndTime();
 			final String[] tempArray = responses[i].split("\n");
 			for (final String element : tempArray) {

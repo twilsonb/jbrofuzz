@@ -39,7 +39,8 @@ public class CopyAction extends TextAction {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				final JTextComponent text = CopyAction.this.getTextComponent(evt);
+				final JTextComponent text = CopyAction.this
+						.getTextComponent(evt);
 				if (text != null) {
 					text.copy();
 					text.requestFocus();

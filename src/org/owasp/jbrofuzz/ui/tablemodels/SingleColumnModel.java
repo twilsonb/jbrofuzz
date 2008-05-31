@@ -48,7 +48,8 @@ public class SingleColumnModel extends AbstractTableModel {
 	/**
 	 * Main Constructor for the Table Model
 	 * 
-	 * @param columnName String
+	 * @param columnName
+	 *            String
 	 */
 	public SingleColumnModel(final String columnName) {
 		columnNames = new String[1];
@@ -58,15 +59,25 @@ public class SingleColumnModel extends AbstractTableModel {
 
 	/**
 	 * <p>
-	 * Method for adding an empty row to the table model and thus the table. This
-	 * method invokes the fireTableRowsInserted method.
+	 * Method for adding an empty row to the table model and thus the table.
+	 * This method invokes the fireTableRowsInserted method.
 	 * </p>
 	 */
 	public void addEmptyRow() {
 		dataVector.add("");
 		dataVector.trimToSize();
-		fireTableRowsInserted(dataVector.size(), dataVector
-				.size());
+		fireTableRowsInserted(dataVector.size(), dataVector.size());
+	}
+
+	/**
+	 * Return all rows as a string array
+	 * 
+	 * @return String[]
+	 */
+	public String[] getAllRows() {
+		dataVector.trimToSize();
+		final String[] outputCategories = new String[dataVector.size()];
+		return dataVector.toArray(outputCategories);
 	}
 
 	/**
@@ -86,12 +97,26 @@ public class SingleColumnModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param column
-	 *          int
+	 *            int
 	 * @return String
 	 */
 	@Override
 	public String getColumnName(final int column) {
 		return columnNames[0];
+	}
+
+	/**
+	 * Return a given row in String format using the stated separator
+	 * 
+	 * @param row
+	 *            int
+	 * @return String
+	 */
+	public String getRow(final int row) {
+		if ((row > -1) && (row < dataVector.size())) {
+			return this.getValueAt(row);
+		}
+		return "";
 	}
 
 	/**
@@ -111,7 +136,7 @@ public class SingleColumnModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @return String
 	 */
 	public String getValueAt(final int row) {
@@ -127,9 +152,9 @@ public class SingleColumnModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
@@ -150,8 +175,7 @@ public class SingleColumnModel extends AbstractTableModel {
 		if (dataVector.size() == 0) {
 			returnValue = false;
 		} else {
-			final String record = dataVector
-					.get(dataVector.size() - 1);
+			final String record = dataVector.get(dataVector.size() - 1);
 			if ("".equals(record)) {
 				returnValue = true;
 			}
@@ -161,14 +185,14 @@ public class SingleColumnModel extends AbstractTableModel {
 
 	/**
 	 * <p>
-	 * Method for checking if a cell is editable. By default, this method returns
-	 * false, regardless of the parameters being passed.
+	 * Method for checking if a cell is editable. By default, this method
+	 * returns false, regardless of the parameters being passed.
 	 * </p>
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 * @return boolean
 	 */
 	@Override
@@ -178,63 +202,40 @@ public class SingleColumnModel extends AbstractTableModel {
 
 	/**
 	 * <p>
+	 * Method for setting, from scratch all the data within the model.
+	 * </p>
+	 * 
+	 * @param values
+	 */
+	public void setData(final String[] values) {
+		fireTableRowsDeleted(0, getRowCount());
+		dataVector.clear();
+
+		for (final String element : values) {
+
+			dataVector.add(element);
+			dataVector.trimToSize();
+			fireTableRowsInserted(dataVector.size(), dataVector.size());
+
+		}
+	}
+
+	/**
+	 * <p>
 	 * Set the value of a particular object at a particular row/column.
 	 * </p>
 	 * 
 	 * @param value
-	 *          Object
+	 *            Object
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 */
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
 		dataVector.set(row, value.toString());
 		fireTableCellUpdated(row, 0);
-	}
-	
-	/**
-	 * <p>Method for setting, from scratch all the data within the model.</p>
-	 * 
-	 * @param values
-	 */
-	public void setData(final String [] values) {
-		fireTableRowsDeleted(0, getRowCount());
-		dataVector.clear();
-		
-		for (final String element : values) {
-			
-			dataVector.add(element);
-			dataVector.trimToSize();
-			fireTableRowsInserted(dataVector.size(), dataVector.size());
-			
-		}
-	}
-	
-	/**
-	 * Return a given row in String format using the stated separator
-	 * 
-	 * @param row
-	 *          int
-	 * @return String
-	 */
-	public String getRow(final int row) {
-		if ((row > -1) && (row < dataVector.size())) {
-			return this.getValueAt(row);
-		}
-		return "";
-	}
-	
-	/**
-	 * Return all rows as a string array
-	 * 
-	 * @return String[]
-	 */
-	public String[] getAllRows() {
-		dataVector.trimToSize();
-		final String [] outputCategories = new String[dataVector.size()];
-		return dataVector.toArray(outputCategories);
 	}
 
 }

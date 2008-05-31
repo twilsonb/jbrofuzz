@@ -67,8 +67,8 @@ public abstract class SwingWorker3 {
 
 	/**
 	 * <p>
-	 * Start a thread that will call the <code>construct</code> method and then
-	 * exit.
+	 * Start a thread that will call the <code>construct</code> method and
+	 * then exit.
 	 * </p>
 	 */
 	public SwingWorker3() {
@@ -105,8 +105,8 @@ public abstract class SwingWorker3 {
 
 	/**
 	 * <p>
-	 * Called on the event dispatching thread (not on the worker thread) after the
-	 * <code>construct</code> method has returned.
+	 * Called on the event dispatching thread (not on the worker thread) after
+	 * the <code>construct</code> method has returned.
 	 * </p>
 	 */
 	public void finished() {
@@ -169,7 +169,7 @@ public abstract class SwingWorker3 {
 	 * </p>
 	 * 
 	 * @param x
-	 *          Object
+	 *            Object
 	 */
 	synchronized void setValue(final Object x) {
 		value = x;

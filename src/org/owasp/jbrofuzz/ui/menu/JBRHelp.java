@@ -64,14 +64,14 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 	private static final int y = 400;
 	//
 	private static String FILE_NOT_FOUND = "Help file could not be located.";
-	
+
 	// The buttons
 	private JButton ok;
 	// The tree
 	private JTree tree;
 	// The corresponding scroll panels
 	private JScrollPane helpScrPane, webdScrPane, tcpsScrPane, tcpfScrPane,
-			geneScrPane, sysmScrPane, osrcScrPane;
+			geneScrPane, sysmScrPane;
 	// The main split pane
 	private JSplitPane splitPane;
 
@@ -97,7 +97,8 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 				"help/osrc.html");
 
 		// Create the nodes
-		final DefaultMutableTreeNode top = new DefaultMutableTreeNode("Help Topics");
+		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
+				"Help Topics");
 		createNodes(top);
 
 		// Create a tree that allows one selection at a time.
@@ -178,17 +179,21 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			osrcPane.setText(FILE_NOT_FOUND);
 		}
 		osrcPane.setEditable(false);
-		osrcScrPane = new JScrollPane(osrcPane);
+		// osrcScrPane = new JScrollPane(osrcPane);
 
 		// Create the top split pane, showing the treeView and the Preferences
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setLeftComponent(treeView);
 		splitPane.setRightComponent(helpScrPane);
-		splitPane.setOneTouchExpandable(true);
-		splitPane.setDividerLocation(150);
+		splitPane.setOneTouchExpandable(false);
 
-		final Dimension minimumSize = new Dimension(JBRHelp.x / 4, JBRHelp.y / 2);
+		final Dimension minimumSize = new Dimension(0, 0);
 		helpScrPane.setMinimumSize(minimumSize);
+		webdScrPane.setMinimumSize(minimumSize);
+		tcpsScrPane.setMinimumSize(minimumSize);
+		tcpfScrPane.setMinimumSize(minimumSize);
+		geneScrPane.setMinimumSize(minimumSize);
+		sysmScrPane.setMinimumSize(minimumSize);
 		treeView.setMinimumSize(minimumSize);
 		splitPane.setDividerLocation(100);
 		splitPane.setPreferredSize(new Dimension(JBRHelp.x, JBRHelp.y));
@@ -199,8 +204,8 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		// Bottom button
 		ok = new JButton("  OK  ");
 
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		buttonPanel.add(ok);
 
 		ok.addActionListener(new ActionListener() {
@@ -216,14 +221,17 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
+		splitPane.setDividerLocation(150);
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
+				.abs(parent.getLocation().y + 100));
 		this.setSize(JBRHelp.x, JBRHelp.y);
+		this.setMinimumSize(new Dimension(x, y));
 		setResizable(true);
 		setVisible(true);
 	}
 
 	private void createNodes(final DefaultMutableTreeNode top) {
-		
+
 		DefaultMutableTreeNode leaf = null;
 
 		leaf = new DefaultMutableTreeNode("Fuzzing");
@@ -240,11 +248,11 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 		leaf = new DefaultMutableTreeNode("System");
 		top.add(leaf);
-		
+
 	}
 
 	public void valueChanged(final TreeSelectionEvent e) {
-		
+
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 				.getLastSelectedPathComponent();
 
@@ -255,21 +263,33 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		final String s = node.toString();
 		if (s.equalsIgnoreCase("Help Topics")) {
 			splitPane.setRightComponent(helpScrPane);
+			splitPane.setDividerLocation(150);
+
 		}
 		if (s.equalsIgnoreCase("Web Directories")) {
 			splitPane.setRightComponent(webdScrPane);
+			splitPane.setDividerLocation(150);
+
 		}
 		if (s.equalsIgnoreCase("Fuzzing")) {
 			splitPane.setRightComponent(tcpfScrPane);
+			splitPane.setDividerLocation(150);
+
 		}
 		if (s.equalsIgnoreCase("Sniffing")) {
 			splitPane.setRightComponent(tcpsScrPane);
+			splitPane.setDividerLocation(150);
+
 		}
 		if (s.equalsIgnoreCase("Payloads")) {
 			splitPane.setRightComponent(geneScrPane);
+			splitPane.setDividerLocation(150);
+
 		}
 		if (s.equalsIgnoreCase("System")) {
 			splitPane.setRightComponent(sysmScrPane);
+			splitPane.setDividerLocation(150);
+
 		}
 
 	}

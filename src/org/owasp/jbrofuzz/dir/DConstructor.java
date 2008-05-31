@@ -41,11 +41,11 @@ import org.owasp.jbrofuzz.version.Format;
  */
 public class DConstructor {
 	/**
-	 * The main constructor reading the contents of the web directory file, if one
-	 * is present and setting the text within the panel.
+	 * The main constructor reading the contents of the web directory file, if
+	 * one is present and setting the text within the panel.
 	 * 
 	 * @param mJBroFuzz
-	 *          JBroFuzz
+	 *            JBroFuzz
 	 */
 	public DConstructor(final JBroFuzz mJBroFuzz) {
 

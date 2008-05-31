@@ -34,7 +34,6 @@ import org.owasp.jbrofuzz.dir.DRequestIterator;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SixColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
-import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 import org.owasp.jbrofuzz.util.*;
 import org.owasp.jbrofuzz.version.Format;
 
@@ -91,7 +90,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	 * main panel involving web directories.
 	 * 
 	 * @param m
-	 *          FrameWindow
+	 *            FrameWindow
 	 */
 	public DirectoriesPanel(final JBroFuzzWindow m) {
 		super(m);
@@ -101,7 +100,8 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		// Define the directory JPanel
 		directoryPanel = new JPanel();
 		directoryPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" Total Directories to test: "),
+				BorderFactory
+						.createTitledBorder(" Total Directories to test: "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		directoryPanel.setBounds(630, 20, 230, 430);
 		this.add(directoryPanel);
@@ -117,16 +117,16 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		// Define the port JPanel
 		final JPanel portPanel = new JPanel();
 		portPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1,
-				1)));
+				.createTitledBorder(" Port "), BorderFactory.createEmptyBorder(
+				1, 1, 1, 1)));
 		portPanel.setBounds(510, 20, 60, 60);
 		this.add(portPanel);
 
 		// Define the output JPanel
 		outputPanel = new JPanel();
 		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Output "), BorderFactory.createEmptyBorder(1, 1,
-				1, 1)));
+				.createTitledBorder(" Output "), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
 		outputPanel.setBounds(10, 150, 610, 300);
 		this.add(outputPanel);
 
@@ -206,18 +206,19 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 				DirectoriesPanel.this.stop();
 			}
 		});
-		
+
 		responseTableModel = new SixColumnModel();
-		responseTableModel.setColumnNames("No", "URI", "Code", "Status Text", "Comments", "Scripts" );
-		
+		responseTableModel.setColumnNames("No", "URI", "Code", "Status Text",
+				"Comments", "Scripts");
+
 		// sorter = new TableSorter(responseTableModel);
 		responseTable = new JTable(responseTableModel);
 		// responseTable.setAutoCreateRowSorter(true);
-		
-		
-		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(responseTableModel);
+
+		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(
+				responseTableModel);
 		responseTable.setRowSorter(sorter);
-		
+
 		responseTable.getTableHeader().setToolTipText("Click to sort by row");
 		popup(responseTable);
 		// sorter.setTableHeader(responseTable.getTableHeader());
@@ -252,35 +253,44 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 			}
 
 		}
-		
-		responseTable.addMouseListener(new MouseAdapter(){
+
+		responseTable.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(final MouseEvent e){
-				if (e.getClickCount() == 2){
+			public void mouseClicked(final MouseEvent e) {
+				if (e.getClickCount() == 2) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 
 							StringBuffer output = new StringBuffer();
-							
-							
+
 							for (int i = 0; i < responseTable.getColumnCount(); i++) {
-								
-								// TableColumn column = area.getColumnModel().getColumn(i);
-								output.append(responseTable.getColumnName(i) + ": ");
-								output.append(responseTable.getModel().getValueAt(responseTable.convertRowIndexToModel(responseTable.getSelectedRow()), i));
+
+								// TableColumn column =
+								// area.getColumnModel().getColumn(i);
+								output.append(responseTable.getColumnName(i)
+										+ ": ");
+								output
+										.append(responseTable
+												.getModel()
+												.getValueAt(
+														responseTable
+																.convertRowIndexToModel(responseTable
+																		.getSelectedRow()),
+														i));
 								output.append("\n");
 							}
-							
-							
-							// final String exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
-							new PropertiesViewer(getFrame(), "Properties", output.toString());
+
+							// final String exploit = (String)
+							// area.getModel().getValueAt(area.getSelectedRow(),
+							// 0);
+							new PropertiesViewer(getFrame(), "Properties",
+									output.toString());
 
 						}
 					});
 				}
 			}
-		} );
-
+		});
 
 		final JScrollPane listTextScrollPane = new JScrollPane(responseTable);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
@@ -296,9 +306,9 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		progressBar.setMaximum(100);
 		progressBar.setPreferredSize(new Dimension(310, 20));
 		final JPanel progressPanel = new JPanel();
-		progressPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Progress "), BorderFactory.createEmptyBorder(1,
-				1, 1, 1)));
+		progressPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(" Progress "), BorderFactory
+						.createEmptyBorder(1, 1, 1, 1)));
 		progressPanel.setBounds(10, 85, 330, 60);
 		progressPanel.add(progressBar);
 		this.add(progressPanel);
@@ -312,11 +322,11 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 
 	/**
 	 * <p>
-	 * Method for adding an extra row to the output response table. The different
-	 * fields are identified by \n.
+	 * Method for adding an extra row to the output response table. The
+	 * different fields are identified by \n.
 	 * 
 	 * @param s
-	 *          String
+	 *            String
 	 * 
 	 */
 	public void addRow(final String s) {
@@ -333,18 +343,221 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		} else {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					responseTableModel.addRow(inputArray[0],
-							inputArray[1], inputArray[2], inputArray[3], inputArray[4],
+					responseTableModel.addRow(inputArray[0], inputArray[1],
+							inputArray[2], inputArray[3], inputArray[4],
 							inputArray[5]);
 					// Set the last row to be visible
-					responseTable
-							.scrollRectToVisible(responseTable
-									.getCellRect(
-											responseTable.getRowCount() - 1, 0,
-											true));
+					responseTable.scrollRectToVisible(responseTable
+							.getCellRect(responseTable.getRowCount() - 1, 0,
+									true));
 				}
 			});
 
+		}
+	}
+
+	/**
+	 * Get the session number. This number represents the number of times the
+	 * start button has been hit.
+	 * 
+	 * @return String
+	 */
+	public String getSessionNumber() {
+		String s = "";
+		if (session < 10) {
+			s += "0";
+		}
+		s += session;
+		return s;
+	}
+
+	/**
+	 * Handle the key pressed event from the text field.
+	 * 
+	 * @param e
+	 *            KeyEvent
+	 */
+	public void keyPressed(final KeyEvent e) {
+		// System.out.println(directoryText.getLineCount() );
+	}
+
+	/**
+	 * Handle the key released event from the text field.
+	 * 
+	 * @param e
+	 *            KeyEvent
+	 */
+	public void keyReleased(final KeyEvent e) {
+		// System.out.println(directoryText.getLineCount() );
+	}
+
+	/**
+	 * Handle the key typed event from the text field.
+	 * 
+	 * @param ke
+	 *            KeyEvent
+	 */
+	public void keyTyped(final KeyEvent ke) {
+		directoryPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(" Total Directories to test: "
+						+ directoryText.getLineCount() + " "), BorderFactory
+						.createEmptyBorder(1, 1, 1, 1)));
+	}
+
+	/**
+	 * Method for setting up the right click copy paste cut and select all menu.
+	 * 
+	 * @param area
+	 *            JTextArea
+	 */
+	private void popup(final JTable area) {
+
+		final JPopupMenu popmenu = new JPopupMenu();
+
+		final JMenuItem i0 = new JMenuItem("Open in Browser");
+		final JMenuItem i1 = new JMenuItem("Cut");
+		final JMenuItem i2 = new JMenuItem("Copy");
+		final JMenuItem i3 = new JMenuItem("Paste");
+		final JMenuItem i4 = new JMenuItem("Select All");
+		final JMenuItem i5 = new JMenuItem("Properties");
+
+		i0.setEnabled(true);
+		i1.setEnabled(false);
+		i2.setEnabled(true);
+		i3.setEnabled(false);
+		i4.setEnabled(true);
+		i5.setEnabled(true);
+
+		popmenu.add(i0);
+		popmenu.addSeparator();
+		popmenu.add(i1);
+		popmenu.add(i2);
+		popmenu.add(i3);
+		popmenu.add(i4);
+		popmenu.addSeparator();
+		popmenu.add(i5);
+
+		i0.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				Browser.init();
+				final String url = (String) area.getValueAt(area
+						.getSelectedRow(), 1 % area.getColumnCount());
+				try {
+					Browser.displayURL(url);
+				} catch (final IOException ex) {
+					getFrame().log("Could not launch link in external browser");
+				}
+			}
+		});
+
+		i2.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				// Copy
+				final StringBuffer selectionBuffer = new StringBuffer();
+				final int[] selection = area.getSelectedRows();
+				for (final int element : selection) {
+					for (int i = 0; i < area.getRowCount(); i++) {
+						selectionBuffer.append(area.getModel().getValueAt(
+								area.convertRowIndexToModel(element), i));
+						if (i < area.getRowCount() - 1) {
+							selectionBuffer.append(",");
+						}
+					}
+					selectionBuffer.append("\n");
+				}
+				final JTextArea myTempArea = new JTextArea();
+				myTempArea.setText(selectionBuffer.toString());
+				myTempArea.selectAll();
+				myTempArea.copy();
+				area.removeRowSelectionInterval(0, area.getRowCount() - 1);
+
+			}
+		});
+
+		i4.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				area.selectAll();
+			}
+		});
+
+		i5.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+
+				StringBuffer output = new StringBuffer();
+
+				for (int i = 0; i < area.getColumnCount(); i++) {
+
+					// TableColumn column = area.getColumnModel().getColumn(i);
+					output.append(area.getColumnName(i) + ": ");
+					output.append(area.getModel().getValueAt(
+							area.convertRowIndexToModel(area.getSelectedRow()),
+							i));
+					output.append("\n");
+				}
+
+				// final String exploit = (String)
+				// area.getModel().getValueAt(area.getSelectedRow(), 0);
+				new PropertiesViewer(getFrame(), "Properties", output
+						.toString());
+
+			}
+		});
+
+		area.addMouseListener(new MouseAdapter() {
+			private void checkForTriggerEvent(final MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					area.requestFocus();
+					popmenu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+
+			@Override
+			public void mousePressed(final MouseEvent e) {
+				checkForTriggerEvent(e);
+			}
+
+			@Override
+			public void mouseReleased(final MouseEvent e) {
+				checkForTriggerEvent(e);
+			}
+		});
+	}
+
+	/**
+	 * Set the text content of the directories jtextarea.
+	 * 
+	 * @param s
+	 *            StringBuffer
+	 */
+	public void setDirectoriesText(final StringBuffer s) {
+		directoryText.setText(s.toString());
+		directoryPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(" Total Directories to test: "
+						+ directoryText.getLineCount() + " "), BorderFactory
+						.createEmptyBorder(1, 1, 1, 1)));
+		directoryText.setCaretPosition(0);
+	}
+
+	/**
+	 * Set the progress bar on the display to a value between 0 and 100.
+	 * 
+	 * @param percent
+	 *            int
+	 */
+	public void setProgressBar(final int percent) {
+		if ((percent >= 0) && (percent <= 100)) {
+			final SwingWorker3 progressWorker = new SwingWorker3() {
+				@Override
+				public Object construct() {
+					progressBar.setValue(percent);
+					return "progress-update-return";
+				}
+
+				@Override
+				public void finished() {
+				}
+			};
+			progressWorker.start();
 		}
 	}
 
@@ -361,9 +574,8 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		// Update the panel, indicating directory
 		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output " + "[Logging in file \\web-dir\\"
-						+ Format.DATE + "\\"
-						+ getSessionNumber() + ".csv]  "), BorderFactory
-				.createEmptyBorder(1, 1, 1, 1)));
+						+ Format.DATE + "\\" + getSessionNumber() + ".csv]  "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 		// UI and Colors
 		startButton.setEnabled(false);
@@ -385,8 +597,9 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 
 		responseTable.removeAll();
 		responseTableModel.removeAllRows();
-		
-		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(responseTableModel);
+
+		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(
+				responseTableModel);
 		responseTable.setRowSorter(sorter);
 
 		cesg = new DRequestIterator(getFrame(), uri, dirs, port);
@@ -414,210 +627,6 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		portText.setForeground(Color.BLACK);
 
 		cesg.stop();
-	}
-
-	/**
-	 * Get the session number. This number represents the number of times the
-	 * start button has been hit.
-	 * 
-	 * @return String
-	 */
-	public String getSessionNumber() {
-		String s = "";
-		if (session < 10) {
-			s += "0";
-		}
-		s += session;
-		return s;
-	}
-
-	/**
-	 * Handle the key pressed event from the text field.
-	 * 
-	 * @param e
-	 *          KeyEvent
-	 */
-	public void keyPressed(final KeyEvent e) {
-		// System.out.println(directoryText.getLineCount() );
-	}
-
-	/**
-	 * Handle the key released event from the text field.
-	 * 
-	 * @param e
-	 *          KeyEvent
-	 */
-	public void keyReleased(final KeyEvent e) {
-		// System.out.println(directoryText.getLineCount() );
-	}
-
-	/**
-	 * Handle the key typed event from the text field.
-	 * 
-	 * @param ke
-	 *          KeyEvent
-	 */
-	public void keyTyped(final KeyEvent ke) {
-		directoryPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" Total Directories to test: "
-						+ directoryText.getLineCount() + " "), BorderFactory
-						.createEmptyBorder(1, 1, 1, 1)));
-	}
-
-	/**
-	 * Method for setting up the right click copy paste cut and select all menu.
-	 * 
-	 * @param area
-	 *          JTextArea
-	 */
-	private void popup(final JTable area) {
-
-		final JPopupMenu popmenu = new JPopupMenu();
-
-		final JMenuItem i0 = new JMenuItem("Open in Browser");
-		final JMenuItem i1 = new JMenuItem("Cut");
-		final JMenuItem i2 = new JMenuItem("Copy");
-		final JMenuItem i3 = new JMenuItem("Paste");
-		final JMenuItem i4 = new JMenuItem("Select All");
-		final JMenuItem i5 = new JMenuItem("Properties");
-		
-		i0.setEnabled(true);
-		i1.setEnabled(false);
-		i2.setEnabled(true);
-		i3.setEnabled(false);
-		i4.setEnabled(true);
-		i5.setEnabled(true);
-		
-		popmenu.add(i0);
-		popmenu.addSeparator();
-		popmenu.add(i1);
-		popmenu.add(i2);
-		popmenu.add(i3);
-		popmenu.add(i4);
-		popmenu.addSeparator();
-		popmenu.add(i5);
-
-		i0.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				Browser.init();
-				final String url = (String) area.getValueAt(area.getSelectedRow(),
-						1 % area.getColumnCount());
-				try {
-					Browser.displayURL(url);
-				} catch (final IOException ex) {
-					getFrame().log(
-							"Could not launch link in external browser");
-				}
-			}
-		});
-		
-		i2.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				// Copy
-				final StringBuffer selectionBuffer = new StringBuffer();
-				final int[] selection = area.getSelectedRows();
-				for(final int element : selection) {
-					for(int i = 0; i < area.getRowCount(); i++) {
-						selectionBuffer.append(area.getModel().getValueAt(area.convertRowIndexToModel(element), i));
-						if(i < area.getRowCount() - 1) {
-							selectionBuffer.append(",");
-						}
-					}
-					selectionBuffer.append("\n");
-				}
-				final JTextArea myTempArea = new JTextArea();
-				myTempArea.setText(selectionBuffer.toString());
-				myTempArea.selectAll();
-				myTempArea.copy();
-				area.removeRowSelectionInterval(0, area.getRowCount() - 1);
-				
-			}
-		});
-
-		i4.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				area.selectAll();
-			}
-		});
-
-		i5.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				
-				StringBuffer output = new StringBuffer();
-				
-				
-				for (int i = 0; i < area.getColumnCount(); i++) {
-					
-					// TableColumn column = area.getColumnModel().getColumn(i);
-					output.append(area.getColumnName(i) + ": ");
-					output.append(area.getModel().getValueAt(area.convertRowIndexToModel(area.getSelectedRow()), i));
-					output.append("\n");
-				}
-				
-				
-				// final String exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
-				new PropertiesViewer(getFrame(), "Properties", output.toString());
-				
-			}
-		});
-		
-		
-		area.addMouseListener(new MouseAdapter() {
-			private void checkForTriggerEvent(final MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					area.requestFocus();
-					popmenu.show(e.getComponent(), e.getX(), e.getY());
-				}
-			}
-
-			@Override
-			public void mousePressed(final MouseEvent e) {
-				checkForTriggerEvent(e);
-			}
-
-			@Override
-			public void mouseReleased(final MouseEvent e) {
-				checkForTriggerEvent(e);
-			}
-		});
-	}
-
-	/**
-	 * Set the text content of the directories jtextarea.
-	 * 
-	 * @param s
-	 *          StringBuffer
-	 */
-	public void setDirectoriesText(final StringBuffer s) {
-		directoryText.setText(s.toString());
-		directoryPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" Total Directories to test: "
-						+ directoryText.getLineCount() + " "), BorderFactory
-						.createEmptyBorder(1, 1, 1, 1)));
-		directoryText.setCaretPosition(0);
-	}
-
-	/**
-	 * Set the progress bar on the display to a value between 0 and 100.
-	 * 
-	 * @param percent
-	 *          int
-	 */
-	public void setProgressBar(final int percent) {
-		if ((percent >= 0) && (percent <= 100)) {
-			final SwingWorker3 progressWorker = new SwingWorker3() {
-				@Override
-				public Object construct() {
-					progressBar.setValue(percent);
-					return "progress-update-return";
-				}
-
-				@Override
-				public void finished() {
-				}
-			};
-			progressWorker.start();
-		}
 	}
 
 	/**

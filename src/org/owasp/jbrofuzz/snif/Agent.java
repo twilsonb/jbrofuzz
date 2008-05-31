@@ -54,9 +54,9 @@ class Agent implements Runnable {
 	 * </p>
 	 * 
 	 * @param input
-	 *          String
+	 *            String
 	 * @param length
-	 *          int
+	 *            int
 	 * @return String
 	 */
 	private static String hexPad(final String input, final int length) {
@@ -98,8 +98,8 @@ class Agent implements Runnable {
 	private void log(final byte buffer[], final int nBytes) {
 		synchronized (System.out) {
 			final Date currentTime = new Date();
-			final String fileNumber = mJBroFuzz.getWindow()
-					.getPanelSniffing().getCounter();
+			final String fileNumber = mJBroFuzz.getWindow().getPanelSniffing()
+					.getCounter();
 
 			FileHandler.writeSnifFile(fileNumber, "[" + name + ", (" + nBytes
 					+ " bytes) " + Agent.dateFormat.format(currentTime) + "]");
@@ -165,7 +165,8 @@ class Agent implements Runnable {
 				}
 
 				hb.append(Agent.hexPad(Integer.toHexString(value), 2));
-				if ((line_counter == 3) || (line_counter == 7) || (line_counter == 11)) { // for
+				if ((line_counter == 3) || (line_counter == 7)
+						|| (line_counter == 11)) { // for
 					// readability,
 					// space
 					// every
@@ -176,7 +177,8 @@ class Agent implements Runnable {
 				}
 
 				if (line_counter == 15) { // 16 characters per line
-					pb.append(Agent.hexPad(Integer.toHexString(byte_counter), 4));
+					pb.append(Agent
+							.hexPad(Integer.toHexString(byte_counter), 4));
 					pb.append(":  ");
 					pb.append(hb);
 					pb.append("    ");

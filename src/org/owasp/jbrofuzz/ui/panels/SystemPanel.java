@@ -54,6 +54,10 @@ public class SystemPanel extends JBroFuzzPanel {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	// private static final long serialVersionUID = -1771587308148328608L;
 	// The frame that the sniffing panel is attached
 	// private JBRFrame m;
@@ -65,11 +69,11 @@ public class SystemPanel extends JBroFuzzPanel {
 	private int lineCount;
 
 	/**
-	 * Constructor for the System Logger Panel of the represented as a tab. Only a
-	 * single instance of this class is constructed.
+	 * Constructor for the System Logger Panel of the represented as a tab. Only
+	 * a single instance of this class is constructed.
 	 * 
 	 * @param m
-	 *          FrameWindow
+	 *            FrameWindow
 	 */
 	public SystemPanel(final JBroFuzzWindow m) {
 		super(m);
@@ -106,8 +110,8 @@ public class SystemPanel extends JBroFuzzPanel {
 		// The action listener for the info button
 		infoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				final String systemInfo = "[System Info Start]\r\n" + "  [Java]\r\n"
-						+ "    Vendor:  "
+				final String systemInfo = "[System Info Start]\r\n"
+						+ "  [Java]\r\n" + "    Vendor:  "
 						+ System.getProperty("java.vendor")
 						+ "\r\n"
 						+ "    Version: "
@@ -137,7 +141,9 @@ public class SystemPanel extends JBroFuzzPanel {
 						+ System.getProperty("os.version")
 						+ "\r\n"
 						+ "    Architecture: "
-						+ System.getProperty("os.arch") + "\r\n" + "[System Info End]\r\n";
+						+ System.getProperty("os.arch")
+						+ "\r\n"
+						+ "[System Info End]\r\n";
 
 				final String[] info = systemInfo.split("\r\n");
 
@@ -154,26 +160,26 @@ public class SystemPanel extends JBroFuzzPanel {
 
 	/**
 	 * <p>
-	 * Method for setting the text within the JTextArea displayed as part of this
-	 * panel. This method simply appends any string given adding a new line (\n)
-	 * to the end of it.
+	 * Method for setting the text within the JTextArea displayed as part of
+	 * this panel. This method simply appends any string given adding a new line
+	 * (\n) to the end of it.
 	 * </p>
 	 * 
 	 * @param str
-	 *          String
+	 *            String
 	 */
 	public void addLoggingEvent(final String str) {
-		
+
 		final Date currentTime = new Date();
 		final SimpleDateFormat dateTime = new SimpleDateFormat(
 				"dd.MM.yyyy HH:mm:ss", new Locale("en"));
-		
+
 		lineCount++;
-		listTextArea.append("[" + dateTime.format(currentTime) + "] " + str + "\n");
+		listTextArea.append("[" + dateTime.format(currentTime) + "] " + str
+				+ "\n");
 		// Fix the disappearing tab problem
 		int tab = -1;
-		final int totalTabs = getFrame().getTabbedPane()
-				.getComponentCount();
+		final int totalTabs = getFrame().getTabbedPane().getComponentCount();
 		for (int i = 0; i < totalTabs; i++) {
 			final String title = getFrame().getTabbedPane().getTitleAt(i);
 			if (title.startsWith(" System")) {

@@ -104,49 +104,51 @@ public class JBroFuzzWindow extends JFrame {
 
 	// The system logger panel
 	private final SystemPanel mSystemPanel;
-	
+
 	// The toolbar of the window
 	private JBRToolBar mToolBar;
 
 	/**
 	 * <p>
-	 * The constructor of the main window launched in JBroFuzz. This class should
-	 * be instantiated as a singleton and never again.
+	 * The constructor of the main window launched in JBroFuzz. This class
+	 * should be instantiated as a singleton and never again.
 	 * </p>
 	 * 
 	 * @param mJBroFuzz
-	 *          JBroFuzz
+	 *            JBroFuzz
 	 */
 	public JBroFuzzWindow(final JBroFuzz mJBroFuzz) {
 		// The frame
 		super("JBroFuzz " + Format.VERSION);
 		this.mJBroFuzz = mJBroFuzz;
-		
+
 		// The container pane
 		final Container pane = getContentPane();
 		pane.setLayout(new BorderLayout());
-		
+
 		// The menu bar
 		mMenuBar = new JBRMenuBar(this);
 		setJMenuBar(mMenuBar);
-		
+
 		// The tool bar
 		mToolBar = new JBRToolBar(this);
-		
-		
+
 		// The tabbed panels
 		mWebDirectoriesPanel = new DirectoriesPanel(this);
 		mFuzzingPanel = new FuzzingPanel(this);
 		mSniffingPanel = new SniffingPanel(this);
 		mPayloadsPanel = new PayloadsPanel(this);
 		mSystemPanel = new SystemPanel(this);
-		
-		mWebDirectoriesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		mWebDirectoriesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10,
+				10, 10));
 		mFuzzingPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-		mSniffingPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		mPayloadsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		mSniffingPanel.setBorder(BorderFactory
+				.createEmptyBorder(10, 10, 10, 10));
+		mPayloadsPanel.setBorder(BorderFactory
+				.createEmptyBorder(10, 10, 10, 10));
 		mSystemPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		
+
 		// The tabbed pane, 3 is for bottom orientation
 		tabbedPane = new JTabbedPane(3);
 		tabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
@@ -157,47 +159,33 @@ public class JBroFuzzWindow extends JFrame {
 		tabbedPane.add(" Sniffing ", mSniffingPanel);
 		tabbedPane.add(" Payloads ", mPayloadsPanel);
 		tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
-		
+
 		tabbedPane.setSelectedComponent(mFuzzingPanel);
-		
+
 		/*
-		// Close button on the tabs
-		ImageIcon closeButton = ImageCreator.EXIT_IMG;
-		// closeButton.setPreferredSize(new Dimension(ImageCreator.EXIT_IMG.getIconWidth(), ImageCreator.EXIT_IMG.getIconHeight()));
-		ActionListener al = new ActionListener () {
-			public void actionPerformed (ActionEvent ae)
-			{
-				JButton btn = (JButton) ae.getSource ();
-				String s1 = btn.getActionCommand ();
-				for (int i = 1; i < tabbedPane.getTabCount (); i++)
-				{
-					JPanel pnl = (JPanel) tabbedPane.getTabComponentAt (i);
-					btn = (JButton) pnl.getComponent (0);
-					String s2 = btn.getActionCommand ();
-					if (s1.equals (s2))
-					{
-						tabbedPane.removeTabAt (i);
-						break;
-					}
-				}
-			}
-		};
-		closeButton.addActionListener(al);
-		
-		JPanel pnl = new JPanel ();
-		pnl.setOpaque (false);
-		pnl.add (closeButton);
-		for(int i = 0; i < tabbedPane.getTabCount(); i++) {
-			tabbedPane.setTabComponentAt(i, pnl);
-		}
-		*/
+		 * // Close button on the tabs ImageIcon closeButton =
+		 * ImageCreator.EXIT_IMG; // closeButton.setPreferredSize(new
+		 * Dimension(ImageCreator.EXIT_IMG.getIconWidth(),
+		 * ImageCreator.EXIT_IMG.getIconHeight())); ActionListener al = new
+		 * ActionListener () { public void actionPerformed (ActionEvent ae) {
+		 * JButton btn = (JButton) ae.getSource (); String s1 =
+		 * btn.getActionCommand (); for (int i = 1; i < tabbedPane.getTabCount
+		 * (); i++) { JPanel pnl = (JPanel) tabbedPane.getTabComponentAt (i);
+		 * btn = (JButton) pnl.getComponent (0); String s2 =
+		 * btn.getActionCommand (); if (s1.equals (s2)) { tabbedPane.removeTabAt
+		 * (i); break; } } } }; closeButton.addActionListener(al);
+		 * 
+		 * JPanel pnl = new JPanel (); pnl.setOpaque (false); pnl.add
+		 * (closeButton); for(int i = 0; i < tabbedPane.getTabCount(); i++) {
+		 * tabbedPane.setTabComponentAt(i, pnl); }
+		 */
 		pane.add(mToolBar, BorderLayout.PAGE_START);
-	    pane.add(tabbedPane, BorderLayout.CENTER);
-	    
+		pane.add(tabbedPane, BorderLayout.CENTER);
+
 		// The image icon and min size
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
-		setMinimumSize (new Dimension (400, 300));
-		
+		setMinimumSize(new Dimension(400, 300));
+
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -205,7 +193,7 @@ public class JBroFuzzWindow extends JFrame {
 				exitProcedure();
 			}
 		});
-	     
+
 		this.setLocation(50, 100);
 		this.setSize(950, 600);
 		setResizable(true);
@@ -216,20 +204,26 @@ public class JBroFuzzWindow extends JFrame {
 
 	/**
 	 * <p>
-	 * Method returning the m definitions panel that is being instantiated through
-	 * the m window.
+	 * Method for exiting the entire application.
 	 * </p>
 	 * 
-	 * @return mDefinitionsPanel
 	 */
-	public PayloadsPanel getPanelPayloads() {
-		return mPayloadsPanel;
+	public void exitProcedure() {
+
+		Runtime.getRuntime().gc();
+		Runtime.getRuntime().runFinalization();
+
+		mFuzzingPanel.stop();
+
+		getJBroFuzz().getHandler().deleteEmptryDirectories();
+		dispose();
+
 	}
 
 	/**
 	 * <p>
-	 * Method for returning the m menu bar that is being instantiated through the
-	 * m window.
+	 * Method for returning the m menu bar that is being instantiated through
+	 * the m window.
 	 * </p>
 	 * 
 	 * @return mMenuBar
@@ -237,21 +231,9 @@ public class JBroFuzzWindow extends JFrame {
 	public JBRMenuBar getFrameMenuBar() {
 		return mMenuBar;
 	}
-	
+
 	public JBRToolBar getFrameToolBar() {
 		return mToolBar;
-	}
-
-	/**
-	 * <p>
-	 * Method for returning the fuzzing panel that is being instantiated through
-	 * this frame window.
-	 * </p>
-	 * 
-	 * @return mFuzzingPanel
-	 */
-	public FuzzingPanel getPanelFuzzing() {
-		return mFuzzingPanel;
 	}
 
 	/**
@@ -268,13 +250,26 @@ public class JBroFuzzWindow extends JFrame {
 
 	/**
 	 * <p>
-	 * Method for accessing the Tabbed Pane within the current Frame Window.
+	 * Method for returning the fuzzing panel that is being instantiated through
+	 * this frame window.
 	 * </p>
 	 * 
-	 * @return JTabbedPane
+	 * @return mFuzzingPanel
 	 */
-	public JTabbedPane getTabbedPane() {
-		return tabbedPane;
+	public FuzzingPanel getPanelFuzzing() {
+		return mFuzzingPanel;
+	}
+
+	/**
+	 * <p>
+	 * Method returning the m definitions panel that is being instantiated
+	 * through the m window.
+	 * </p>
+	 * 
+	 * @return mDefinitionsPanel
+	 */
+	public PayloadsPanel getPanelPayloads() {
+		return mPayloadsPanel;
 	}
 
 	/**
@@ -302,11 +297,22 @@ public class JBroFuzzWindow extends JFrame {
 
 	/**
 	 * <p>
+	 * Method for accessing the Tabbed Pane within the current Frame Window.
+	 * </p>
+	 * 
+	 * @return JTabbedPane
+	 */
+	public JTabbedPane getTabbedPane() {
+		return tabbedPane;
+	}
+
+	/**
+	 * <p>
 	 * Method for logging values within the system event log.
 	 * </p>
 	 * 
 	 * @param str
-	 *          String
+	 *            String
 	 */
 	public void log(final String str) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -320,7 +326,7 @@ public class JBroFuzzWindow extends JFrame {
 	 * Method for setting up the right click copy paste cut and select all menu.
 	 * 
 	 * @param area
-	 *          JTextArea
+	 *            JTextArea
 	 */
 	public void popup(final JTextComponent area) {
 
@@ -397,11 +403,11 @@ public class JBroFuzzWindow extends JFrame {
 	}
 
 	/**
-	 * Set which tab to hide based on the int n of ID values. These are taken from
-	 * the FrameWindow.
+	 * Set which tab to hide based on the int n of ID values. These are taken
+	 * from the FrameWindow.
 	 * 
 	 * @param n
-	 *          int
+	 *            int
 	 */
 	public void setTabHide(final int n) {
 		if (n == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
@@ -419,15 +425,15 @@ public class JBroFuzzWindow extends JFrame {
 		if (n == JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES) {
 			tabbedPane.remove(mWebDirectoriesPanel);
 		}
-		
+
 	}
 
 	/**
-	 * Set which tab to show based on the int n of ID values. These are taken from
-	 * the FrameWindow.
+	 * Set which tab to show based on the int n of ID values. These are taken
+	 * from the FrameWindow.
 	 * 
 	 * @param n
-	 *          int
+	 *            int
 	 */
 	public void setTabShow(final int n) {
 		if (n == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
@@ -450,79 +456,66 @@ public class JBroFuzzWindow extends JFrame {
 			tabbedPane.addTab(" Web Directories ", mWebDirectoriesPanel);
 			tabbedPane.setSelectedComponent(mWebDirectoriesPanel);
 		}
-		
-	}
-	
-	/**
-	 * <p>
-	 * Method for exiting the entire application.
-	 * </p>
-	 *
-	 */
-	public void exitProcedure() {
-		
-		Runtime.getRuntime().gc();
-		Runtime.getRuntime().runFinalization();
-		
-		mFuzzingPanel.stop();
-		
-		getJBroFuzz().getHandler().deleteEmptryDirectories();
-		dispose();
-		
+
 	}
 
 }
 
 class MyTabbedPaneUI extends BasicTabbedPaneUI {
-    public MyTabbedPaneUI() {
-        super();
-    }
- 
-    protected void paintTab(Graphics g, int tabPlacement,
-                            Rectangle[] rects, int tabIndex,
-                            Rectangle iconRect, Rectangle textRect) {
- 
-        super.paintTab(g,tabPlacement,rects,tabIndex,iconRect,textRect);
- 
-        Rectangle rect=rects[tabIndex];
-        g.setColor(Color.black);
-        g.drawRect(rect.x+5,rect.y+5,10,10);
-        g.drawLine(rect.x+5,rect.y+5,rect.x+15,rect.y+15);
-        g.drawLine(rect.x+15,rect.y+5,rect.x+5,rect.y+15);
-    }
- 
-    protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
-        return super.calculateTabWidth(tabPlacement,tabIndex,metrics)+20;
-    }
- 
-    protected MouseListener createMouseListener() {
-        return new MyMouseHandler();
-    }
- 
-    class MyMouseHandler extends MouseHandler {
-        public MyMouseHandler() {
-            super();
-        }
-        public void mouseClicked(MouseEvent e) {
-            int x=e.getX();
-            int y=e.getY();
-            int tabIndex=-1;
-            int tabCount = tabPane.getTabCount();
-            for (int i = 0; i < tabCount; i++) {
-                if (rects[ i ].contains(x, y)) {
-                    tabIndex= i;
-                    break;
-                }
-            }
-            if (tabIndex >= 0) {
-                Rectangle tabRect=rects[tabIndex];
-                x=x-tabRect.x;
-                y=y-tabRect.y;
-                if ((x>=5) && (x<=15) && (y>=5) && (y<=15)) {
-                    tabPane.remove(tabIndex);
-                }
-            }
-        }
- 
-    }
+	class MyMouseHandler extends MouseHandler {
+		public MyMouseHandler() {
+			super();
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			int x = e.getX();
+			int y = e.getY();
+			int tabIndex = -1;
+			int tabCount = tabPane.getTabCount();
+			for (int i = 0; i < tabCount; i++) {
+				if (rects[i].contains(x, y)) {
+					tabIndex = i;
+					break;
+				}
+			}
+			if (tabIndex >= 0) {
+				Rectangle tabRect = rects[tabIndex];
+				x = x - tabRect.x;
+				y = y - tabRect.y;
+				if ((x >= 5) && (x <= 15) && (y >= 5) && (y <= 15)) {
+					tabPane.remove(tabIndex);
+				}
+			}
+		}
+
+	}
+
+	public MyTabbedPaneUI() {
+		super();
+	}
+
+	@Override
+	protected int calculateTabWidth(int tabPlacement, int tabIndex,
+			FontMetrics metrics) {
+		return super.calculateTabWidth(tabPlacement, tabIndex, metrics) + 20;
+	}
+
+	@Override
+	protected MouseListener createMouseListener() {
+		return new MyMouseHandler();
+	}
+
+	@Override
+	protected void paintTab(Graphics g, int tabPlacement, Rectangle[] rects,
+			int tabIndex, Rectangle iconRect, Rectangle textRect) {
+
+		super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);
+
+		Rectangle rect = rects[tabIndex];
+		g.setColor(Color.black);
+		g.drawRect(rect.x + 5, rect.y + 5, 10, 10);
+		g.drawLine(rect.x + 5, rect.y + 5, rect.x + 15, rect.y + 15);
+		g.drawLine(rect.x + 15, rect.y + 5, rect.x + 5, rect.y + 15);
+	}
 }

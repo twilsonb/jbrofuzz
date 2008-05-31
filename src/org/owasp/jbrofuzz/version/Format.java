@@ -49,14 +49,16 @@ public class Format {
 
 	/**
 	 * <p>
-	 * The version of JBroFuzz in String format and always of the form "x.x" where
-	 * 'x' is a single digit in the range of [0-9].
+	 * The version of JBroFuzz in String format and always of the form "x.x"
+	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
 	public static final String VERSION = "1.0";
 
 	/**
-	 * <p> The year of the release.</p>
+	 * <p>
+	 * The year of the release.
+	 * </p>
 	 */
 	public static final String YEAR = "2008";
 
@@ -66,8 +68,8 @@ public class Format {
 	 */
 	public static final String PREF_FUZZ_DIR_ERR = "fuzz.dir.error.continue";
 	/**
-	 * The web site used via means of the selecting "JBroFuzz Website on the About
-	 * menu.
+	 * The web site used via means of the selecting "JBroFuzz Website on the
+	 * About menu.
 	 */
 	public static final String URL_WEBSITE = "http://www.owasp.org/index.php/Category:OWASP_JBroFuzz";
 	/**
@@ -83,8 +85,8 @@ public class Format {
 	public static final String FILE_DIR = "directories.jbrofuzz";
 
 	/**
-	 * The GNU Citizen DB file name, expected to be read from within the directory
-	 * from which JBroFuzz gets launched.
+	 * The GNU Citizen DB file name, expected to be read from within the
+	 * directory from which JBroFuzz gets launched.
 	 */
 	public static final String FILE_GNU = "generators.jbrofuzz";
 
@@ -102,25 +104,25 @@ public class Format {
 	 * @since 0.1
 	 */
 	public static final String SYSTEM_INFO = "Vendor:  "
-		+ System.getProperty("java.vendor") + "\r\n" + "Version: "
-		+ System.getProperty("java.version") + "\r\n" + "Installed at: "
-		+ System.getProperty("java.home") + "\r\n" + "Website: "
-		+ System.getProperty("java.vendor.url") + "\r\n" + "User: "
-		+ System.getProperty("user.name") + "\r\n" + "Home $: "
-		+ System.getProperty("user.home") + "\r\n" + "Current $: "
-		+ System.getProperty("user.dir") + "\r\n" + "O/S: "
-		+ System.getProperty("os.name") + "\r\n" + "Version: "
-		+ System.getProperty("os.version") + "\r\n" + "Architecture: "
-		+ System.getProperty("os.arch") + "\r\n";
+			+ System.getProperty("java.vendor") + "\r\n" + "Version: "
+			+ System.getProperty("java.version") + "\r\n" + "Installed at: "
+			+ System.getProperty("java.home") + "\r\n" + "Website: "
+			+ System.getProperty("java.vendor.url") + "\r\n" + "User: "
+			+ System.getProperty("user.name") + "\r\n" + "Home $: "
+			+ System.getProperty("user.home") + "\r\n" + "Current $: "
+			+ System.getProperty("user.dir") + "\r\n" + "O/S: "
+			+ System.getProperty("os.name") + "\r\n" + "Version: "
+			+ System.getProperty("os.version") + "\r\n" + "Architecture: "
+			+ System.getProperty("os.arch") + "\r\n";
 
 	/**
 	 * <p>
-	 * The list of directories used if a file is not found to load the directories
-	 * from.
+	 * The list of directories used if a file is not found to load the
+	 * directories from.
 	 * </p>
 	 */
 	public static final String DEFAULT_DIRS = "images\n" + ".svn\n" + "fuzz\n"
-	+ "rss\n" + "live\n";
+			+ "rss\n" + "live\n";
 
 	/**
 	 * <p>
@@ -143,30 +145,20 @@ public class Format {
 	 */
 	public static final String ABOUTTEXT =
 
-		"<HTML><B>JBroFuzz Version:  "
-		+ VERSION
-		+ "<BR>"
-		+ "Codename: "
-		+ Format.getCodeName(Format.VERSION)
-		+ "</B><BR><BR>"
-		+ "<B>Copyright &copy; " + YEAR + " subere@uncon.org</B><BR><BR>"
-		+ "Running Under  Java " + System.getProperty("java.version") + "<BR><BR>"
-		+ "<B>A stateless network protocol fuzzer <BR>"
-		+ "for web applications."
-		+ "</B><BR></HTML>";
+	"<HTML><B>JBroFuzz Version:  " + VERSION + "<BR>" + "Codename: "
+			+ Format.getCodeName(Format.VERSION) + "</B><BR><BR>"
+			+ "<B>Copyright &copy; " + YEAR + " subere@uncon.org</B><BR><BR>"
+			+ "Running Under  Java " + System.getProperty("java.version")
+			+ "<BR><BR>" + "<B>A stateless network protocol fuzzer <BR>"
+			+ "for web applications." + "</B><BR></HTML>";
 
 	/*
-		"<HTML><B>Java Bro Fuzzer Version:  "
-		+ JBRFormat.VERSION
-		+ "<BR>"
-		+ "Codename: "
-		+ JBRFormat.getCodeName(JBRFormat.VERSION)
-		+ "</B><BR><BR>"
-		+ "JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software "
-		+ "and you are welcome to redistribute it under the GNU GPL license<BR><BR>"
-		+ "<B>Copyright &copy;" + YEAR  + " subere@uncon.org</B><BR><BR>"
-		+ "Running Under  Java " + System.getProperty("java.version")
-		+ "<BR></HTML>";
+	 * "<HTML><B>Java Bro Fuzzer Version: " + JBRFormat.VERSION + "<BR>" +
+	 * "Codename: " + JBRFormat.getCodeName(JBRFormat.VERSION) + "</B><BR><BR>" +
+	 * "JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software " +
+	 * "and you are welcome to redistribute it under the GNU GPL license<BR><BR>" + "<B>Copyright
+	 * &copy;" + YEAR + " subere@uncon.org</B><BR><BR>" + "Running Under
+	 * Java " + System.getProperty("java.version") + "<BR></HTML>";
 	 */
 
 	/**
@@ -174,24 +166,22 @@ public class Format {
 	 * The text, in html format, shown in the disclaimer box.
 	 * </p>
 	 */
-	public static final String DISCLAIMER =
-		"<HTML>This program generates a substantial amount " +
-		"of network traffic for the purpose of fuzzing " +
-		"web applications.<BR><BR>" +
-		"JBroFuzz has been developed with penetration " +
-		"testing in mind.<BR><BR>" +
-		"The author of JBroFuzz takes no " +
-		"legal or other responsibility for any problems that " +
-		"might occur <BR>while running this program.<BR></HTML>";
+	public static final String DISCLAIMER = "<HTML>This program generates a substantial amount "
+			+ "of network traffic for the purpose of fuzzing "
+			+ "web applications.<BR><BR>"
+			+ "JBroFuzz has been developed with penetration "
+			+ "testing in mind.<BR><BR>"
+			+ "The author of JBroFuzz takes no "
+			+ "legal or other responsibility for any problems that "
+			+ "might occur <BR>while running this program.<BR></HTML>";
 
 	/*
-		"<HTML>"
-		+ "<B>You should only use this software to test the security of"
-		+ "your own network protocol application or those you are "
-		+ "authorised to do so.</B><BR><BR> The authors of JBroFuzz take no "
-		+ "legal or other responsibility for any problems that "
-		+ "might occur while running JBroFuzz on a "
-		+ "particular application or network protocol.<BR></HTML>";
+	 * "<HTML>" + "<B>You should only use this software to test the security
+	 * of" + "your own network protocol application or those you are " +
+	 * "authorised to do so.</B><BR><BR> The authors of JBroFuzz take no " +
+	 * "legal or other responsibility for any problems that " + "might occur
+	 * while running JBroFuzz on a " + "particular application or network
+	 * protocol.<BR></HTML>";
 	 */
 
 	/**
@@ -203,10 +193,10 @@ public class Format {
 	 * The String displaying within the Fuzzing Request text area
 	 */
 	public static final String REQUEST_TCP = "GET / HTTP/1.0\n"
-		+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\n"
-		+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n"
-		+ "Accept-Language: en-gb,en;q=0.5\n"
-		+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n\n";
+			+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\n"
+			+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n"
+			+ "Accept-Language: en-gb,en;q=0.5\n"
+			+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n\n";
 
 	/**
 	 * Return the code name of the current version, based on the version number.
@@ -280,31 +270,11 @@ public class Format {
 		}
 		return "Zeus ";
 	}
-	
-	public int getMajorVersion() {
-
-		try {
-			return Integer.parseInt(VERSION.split("\\.")[0]);
-		} catch (Exception e) {
-			return 0;
-		}
-
-	}
-	
-	public int getMinorVersion() {
-
-		try {
-			return Integer.parseInt(VERSION.split("\\.")[1]);
-		} catch (Exception e) {
-			return 0;
-		}
-
-	}
 
 	private static final String getDate() {
 		final String DATE_FORMAT = "DDD yyyy-MM-dd HH-mm-ss";
-		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT, new Locale(
-				Format.ISO_LAN_CODE));
+		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT,
+				new Locale(Format.ISO_LAN_CODE));
 		return SDF.format(new Date());
 	}
 
@@ -316,7 +286,7 @@ public class Format {
 	 * </p>
 	 * 
 	 * @param mJBroFuzz
-	 *          JBroFuzz
+	 *            JBroFuzz
 	 */
 	public static final void setLookAndFeel(final JBroFuzz mJBroFuzz) {
 		int errors = 0;
@@ -325,7 +295,7 @@ public class Format {
 			oSystem = oSystem.toLowerCase(new Locale(Format.ISO_LAN_CODE));
 			if (oSystem.startsWith("windows")) {
 				UIManager
-				.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+						.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			}
 		} catch (final UnsupportedLookAndFeelException e) {
 			errors += 100;
@@ -342,12 +312,12 @@ public class Format {
 
 	/**
 	 * <p>
-	 * The main constructor of this class, setting a number of variables, prior to
-	 * the launch of the graphical user interface.
+	 * The main constructor of this class, setting a number of variables, prior
+	 * to the launch of the graphical user interface.
 	 * </p>
 	 * 
 	 * @param mJBroFuzz
-	 *          JBroFuzz
+	 *            JBroFuzz
 	 */
 	public Format(final JBroFuzz mJBroFuzz) {
 
@@ -356,8 +326,28 @@ public class Format {
 		// Set some preferences for the mac
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-		"JBroFuzz");
+				"JBroFuzz");
 		// Set the application preferences
+
+	}
+
+	public int getMajorVersion() {
+
+		try {
+			return Integer.parseInt(VERSION.split("\\.")[0]);
+		} catch (Exception e) {
+			return 0;
+		}
+
+	}
+
+	public int getMinorVersion() {
+
+		try {
+			return Integer.parseInt(VERSION.split("\\.")[1]);
+		} catch (Exception e) {
+			return 0;
+		}
 
 	}
 

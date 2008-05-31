@@ -56,7 +56,8 @@ class Connection implements Runnable, AgentMonitor {
 	private JBroFuzz mJBroFuzz;
 
 	public Connection(final JBroFuzz mJBroFuzz, final Socket s,
-			final ConnectionMonitor cm, final String destHost, final int destPort) {
+			final ConnectionMonitor cm, final String destHost,
+			final int destPort) {
 
 		this.mJBroFuzz = mJBroFuzz;
 		srcSocket = s;
@@ -162,10 +163,10 @@ class Connection implements Runnable, AgentMonitor {
 			cm.addConnection(this);
 
 			// Create our two agents
-			fromSrcToDest = new Agent(mJBroFuzz, srcIn, destOut,
-					this, "{Local Host => Remote Host}");
-			fromDestToSrc = new Agent(mJBroFuzz, destIn, srcOut,
-					this, "{Remote Host => Local Host}");
+			fromSrcToDest = new Agent(mJBroFuzz, srcIn, destOut, this,
+					"{Local Host => Remote Host}");
+			fromDestToSrc = new Agent(mJBroFuzz, destIn, srcOut, this,
+					"{Remote Host => Local Host}");
 
 			// No need for our thread to continue, we'll be notified if
 			// either of our agents dies

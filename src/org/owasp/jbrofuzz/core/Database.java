@@ -47,7 +47,8 @@ public class Database {
 		final StringBuffer fileContents = new StringBuffer();
 
 		// Attempt to read from the jar file
-		final URL fileURL = ClassLoader.getSystemClassLoader().getResource("generators.jbrofuzz");
+		final URL fileURL = ClassLoader.getSystemClassLoader().getResource(
+				"fuzzers.jbrofuzz");
 
 		try {
 			final URLConnection connection = fileURL.openConnection();
@@ -66,13 +67,11 @@ public class Database {
 				line = in.readLine();
 			}
 			in.close();
-		} 
-		catch (final IOException e1) {
+		} catch (final IOException e1) {
 			System.out.println("Directories file (inside jar): "
 					+ fileURL.toString() + " could not be found");
-		} 
-		finally {
-			IOUtils.closeQuietly( in );
+		} finally {
+			IOUtils.closeQuietly(in);
 		}
 
 		// Parse the contents of the StringBuffer to the array of generators
@@ -87,35 +86,44 @@ public class Database {
 			// The number of payloads identified for each category
 			int numberOfPayloads = 0;
 
-
 			final String line = fileInput[i];
-			if ( (!line.startsWith("#")) && (line.length() > 5)) {
+			if ((!line.startsWith("#")) && (line.length() > 5)) {
 				// "P:ABC-DEF:" or "P:ABC-DEF-GHI:"
-				if ((line.charAt(1) == ':') && ( (line.charAt(9) == ':') || (line.charAt(13) == ':' ) )) {
+				if ((line.charAt(1) == ':')
+						&& ((line.charAt(9) == ':') || (line.charAt(13) == ':'))) {
 					final String[] firstLineArray = line.split(":");
-					// Check that there are four fields separated by : in the first line
+					// Check that there are four fields separated by : in the
+					// first line
 					if (firstLineArray.length == 4) {
-						// Check that the name of the identifier is less than maxFuzzerNameLength
-						if ((firstLineArray[2].length() < maxFuzzerNameLength) && (firstLineArray[2].length() > 0)) {
-							// Check that the first character is either a P or an R
-							if (("P".equals(firstLineArray[0]))	|| ("R".equals(firstLineArray[0]))) {
-								
+						// Check that the name of the identifier is less than
+						// maxFuzzerNameLength
+						if ((firstLineArray[2].length() < maxFuzzerNameLength)
+								&& (firstLineArray[2].length() > 0)) {
+							// Check that the first character is either a P or
+							// an R
+							if (("P".equals(firstLineArray[0]))
+									|| ("R".equals(firstLineArray[0]))) {
+
 								try {
-									numberOfPayloads = Integer.parseInt(firstLineArray[3]);
+									numberOfPayloads = Integer
+											.parseInt(firstLineArray[3]);
 								} catch (final NumberFormatException e) {
 									numberOfPayloads = 0;
 								}
-								
+
 							}
 						}
 					}
 				} // First line check
 
-				// If a positive number of payloads is claimed in the first line and the first line is ok
-				if ((numberOfPayloads > 0) && (numberOfPayloads <= maxNumberOfPayloads)) {
+				// If a positive number of payloads is claimed in the first line
+				// and the first line is ok
+				if ((numberOfPayloads > 0)
+						&& (numberOfPayloads <= maxNumberOfPayloads)) {
 					final String[] firstArray = line.split(":");
-					
-					// Check that there remaining element in the generator Vector
+
+					// Check that there remaining element in the generator
+					// Vector
 					if (i < len - numberOfPayloads - 1) {
 
 						// Check that the second line starts with a >
@@ -123,24 +131,35 @@ public class Database {
 						if (line2.startsWith(">")) {
 							line2 = line2.substring(1);
 
-							// Finally create the generator if all the checks pass
-							final Generator myGen = new Generator(firstArray[0].charAt(0), firstArray[1], /*StringUtils.rightPad(*/ firstArray[2] /*, 24)*/);
-							
+							// Finally create the generator if all the checks
+							// pass
+							final Generator myGen = new Generator(firstArray[0]
+									.charAt(0), firstArray[1], /* StringUtils.rightPad( */
+							firstArray[2] /* , 24) */);
+
 							// If categories do exist in the second line
-							if(line2.contains("|")) {
-								
-								String [] categoriesArray = line2.split("\\|");
-								for(String currentCategory : categoriesArray) {
+							if (line2.contains("|")) {
+
+								String[] categoriesArray = line2.split("\\|");
+								for (String currentCategory : categoriesArray) {
 									// System.out.println(currentCategory);
-									myGen.addCategory(StringUtils.stripStart(StringUtils.stripEnd(currentCategory, " "), " "));
-									
+									myGen
+											.addCategory(StringUtils
+													.stripStart(
+															StringUtils
+																	.stripEnd(
+																			currentCategory,
+																			" "),
+															" "));
+
 								}
 							}
-							// If no categories have been specified, add a default category
+							// If no categories have been specified, add a
+							// default category
 							else {
-								
+
 								myGen.addCategory("Default");
-								
+
 							}
 
 							// Add the values for each element
@@ -151,7 +170,8 @@ public class Database {
 								myGen.addPayload(myBuffer.toString());
 
 							}
-							// Finally add the generator to the Vector of generators
+							// Finally add the generator to the Vector of
+							// generators
 							generators.put(firstArray[1], myGen);
 							// }
 						}
@@ -162,9 +182,142 @@ public class Database {
 
 		// generators.trimToSize();
 
-
 	} // constructor
 
+	public boolean containsGenerator(String Id) {
+
+		return generators.containsKey(Id);
+
+	}
+
+	/**
+	 * <p>
+	 * Return all the unique categories found in all the Generators that are
+	 * inside the database.
+	 * <p>
+	 * 
+	 * @return String[] uniqueCategories
+	 */
+	public String[] getAllCategories() {
+
+		HashSet<String> o = new HashSet<String>();
+
+		String[] ids = getAllIds();
+		for (String id : ids) {
+
+			ArrayList<String> categoriesArrayList = generators.get(id)
+					.getCategories();
+			String[] categoriesArray = new String[categoriesArrayList.size()];
+			categoriesArrayList.toArray(categoriesArray);
+
+			for (String cCategory : categoriesArray) {
+
+				o.add(cCategory);
+
+			}
+
+		}
+
+		String[] uniqueCategoriesArray = new String[o.size()];
+		o.toArray(uniqueCategoriesArray);
+
+		return uniqueCategoriesArray;
+
+	}
+
+	public String[] getAllIds() {
+
+		Set<String> set = generators.keySet();
+		final String[] output = new String[set.size()];
+		return set.toArray(output);
+
+	}
+
+	public String[] getAllNames() {
+
+		StringBuffer output = new StringBuffer();
+
+		Set<String> set = generators.keySet();
+		final String[] input = new String[set.size()];
+		set.toArray(input);
+
+		for (String key : input) {
+			output.append(generators.get(key).getName() + "\n");
+		}
+
+		return output.toString().split("\n");
+
+	}
+
+	public Generator getGenerator(String Id) {
+
+		return generators.get(Id);
+
+	}
+
+	public String[] getGenerators(String category) {
+
+		HashSet<String> o = new HashSet<String>();
+		String[] ids = getAllIds();
+
+		for (String id : ids) {
+
+			Generator g = generators.get(id);
+			if (g.isAMemberOfCategory(category)) {
+				o.add(g.getName());
+			}
+		}
+
+		String[] uniqueCategoriesArray = new String[o.size()];
+		o.toArray(uniqueCategoriesArray);
+
+		return uniqueCategoriesArray;
+	}
+
+	public String getIdFromName(String name) {
+
+		String[] ids = getAllIds();
+		for (String id : ids) {
+			Generator g = generators.get(id);
+			// System.out.println("In getAllIds() input name is: -" + name + "-
+			// current name is: -" + g.getName() + "-");
+			if (name.equalsIgnoreCase(g.getName())) {
+				// System.out.println("Found Match! input -" + name + "- output
+				// is: -" + g.getName() + "-");
+				return id;
+			}
+		}
+		return "";
+	}
+
+	public String getName(String id) {
+
+		return generators.get(id).getName();
+
+	}
+
+	public String[] getPayloads(String id) {
+
+		if (containsGenerator(id)) {
+			Generator g = generators.get(id);
+			final String[] output = new String[g.size()];
+			return g.getPayloads().toArray(output);
+		} else {
+			return new String[0];
+		}
+
+	}
+
+	public int getSize(String id) {
+
+		if (containsGenerator(id)) {
+			Generator g = generators.get(id);
+			return g.size();
+		} else {
+			return 0;
+		}
+
+	}
 
 	public int size() {
 
@@ -172,137 +325,4 @@ public class Database {
 
 	}
 
-
-	public String[] getAllIds() {
-		
-		Set<String> set = generators.keySet();
-		final String [] output = new String[set.size()];
-		return set.toArray(output);
-
-	}
-	
-	public String getIdFromName(String name) {
-		
-		String [] ids = getAllIds();
-		for(String id : ids) {
-			Generator g = generators.get(id);
-			// System.out.println("In getAllIds() input name is: -" + name + "- current name is: -" + g.getName() + "-");
-			if(name.equalsIgnoreCase(g.getName())) {
-				// System.out.println("Found Match! input -" + name + "- output is: -" + g.getName() + "-"); 
-				return id;
-			}
-		}
-		return "";
-	}
-
-	public String[] getAllNames() {
-
-		StringBuffer output = new StringBuffer();
-		
-		Set<String> set = generators.keySet();
-		final String [] input = new String[set.size()];
-		set.toArray(input);
-		
-		for(String key : input) {
-			output.append(generators.get(key).getName() + "\n");
-		}
-		
-		return output.toString().split("\n");
-		
-	}
-	
-	/**
-	 * <p>Return all the unique categories found in all the Generators 
-	 * that are inside the database.<p>
-	 * 
-	 * @return String[] uniqueCategories
-	 */
-	public String[] getAllCategories() {
-				
-		HashSet<String> o = new HashSet<String>();
-		
-		String[] ids = getAllIds();
-		for(String id : ids) {
-			
-			ArrayList<String> categoriesArrayList = generators.get(id).getCategories();
-			String [] categoriesArray = new String[categoriesArrayList.size()];
-			categoriesArrayList.toArray(categoriesArray);
-			
-			for(String cCategory : categoriesArray) {
-				
-				o.add(cCategory);
-				
-			}
-				
-		}
-		
-		String [] uniqueCategoriesArray = new String[o.size()];
-		o.toArray(uniqueCategoriesArray);
-		
-		return uniqueCategoriesArray;
-		
-	}
-	
-	public String[] getGenerators(String category) {
-		
-		HashSet<String> o = new HashSet<String>();
-		String[] ids = getAllIds();
-		
-		for(String id : ids) {
-			
-			Generator g = generators.get(id);
-			if(g.isAMemberOfCategory(category)) {
-				o.add(g.getName());
-			}
-		}
-		
-		String [] uniqueCategoriesArray = new String[o.size()];
-		o.toArray(uniqueCategoriesArray);
-		
-		return uniqueCategoriesArray;
-	}
-
-	public String[] getPayloads(String id) {
-
-		if(containsGenerator(id)) {
-		Generator g = generators.get(id);
-		final String [] output = new String[g.size()];
-		return g.getPayloads().toArray(output);
-		}
-		else {
-			return new String[0];
-		}
-
-	}
-	
-	public int getSize(String id) {
-		
-		if(containsGenerator(id)) {
-		Generator g = generators.get(id);
-		return g.size();
-		}
-		else {
-			return 0;
-		}
-		
-	}
-	
-	public Generator getGenerator(String Id) {
-
-		return generators.get(Id);
-		
-	}
-	
-	public String getName(String id) {
-		
-		return generators.get(id).getName();
-		
-	}
-	
-	public boolean containsGenerator(String Id) {
-		
-		return generators.containsKey(Id);
-		
-	}
-	
 }

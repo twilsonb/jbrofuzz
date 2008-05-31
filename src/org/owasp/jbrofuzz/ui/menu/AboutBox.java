@@ -25,6 +25,7 @@ package org.owasp.jbrofuzz.ui.menu;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -89,8 +90,8 @@ public class AboutBox extends JDialog {
 
 		final URL licenseURL = ClassLoader.getSystemClassLoader().getResource(
 				"LICENSE/gpl-license.txt");
-		final URL disclaimerURL = ClassLoader.getSystemClassLoader().getResource(
-				"LICENSE/NOTICE.txt");
+		final URL disclaimerURL = ClassLoader.getSystemClassLoader()
+				.getResource("LICENSE/NOTICE.txt");
 
 		// The about editor label
 		final JLabel about = new JLabel(Format.ABOUTTEXT,
@@ -140,8 +141,8 @@ public class AboutBox extends JDialog {
 		setTab(tab);
 		// OK Button
 		ok = new JButton("  OK  ");
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		buttonPanel.add(ok);
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -155,9 +156,11 @@ public class AboutBox extends JDialog {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
+				.abs(parent.getLocation().y + 100));
 		this.setSize(AboutBox.x, AboutBox.y);
-		setResizable(false);
+		this.setMinimumSize(new Dimension(x, y));
+		setResizable(true);
 		setVisible(true);
 	}
 

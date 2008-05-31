@@ -84,7 +84,8 @@ public class WindowPlotter extends JFrame {
 		setLayout(new BorderLayout());
 		this.add(plotCanvas.getGraphicsCanvas(), BorderLayout.CENTER);
 		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
+				.abs(parent.getLocation().y + 100));
 		this.setSize(WindowPlotter.x, WindowPlotter.y);
 		setResizable(false);
 		setVisible(true);

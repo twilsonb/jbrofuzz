@@ -54,18 +54,19 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 	 * The main constructor for the Connection Listener.
 	 * 
 	 * @param mn
-	 *          SniffingPanel
+	 *            SniffingPanel
 	 * @param remoteAddress
-	 *          String
+	 *            String
 	 * @param remotePort
-	 *          String
+	 *            String
 	 * @param localAddress
-	 *          String
+	 *            String
 	 * @param localPort
-	 *          String
+	 *            String
 	 */
-	public ConnectionListener(final SniffingPanel mn, final String remoteAddress,
-			final String remotePort, final String localAddress, final String localPort) {
+	public ConnectionListener(final SniffingPanel mn,
+			final String remoteAddress, final String remotePort,
+			final String localAddress, final String localPort) {
 		this.mn = mn;
 		this.remoteAddress = remoteAddress;
 		// Initial variables
@@ -110,15 +111,15 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 
 	public void attemptingConnection(final Connection c) {
 		/*
-		 * mn.setListText( getClass().getName() + " " + "Connection initiated from: " +
-		 * c.getSrcHost() );
+		 * mn.setListText( getClass().getName() + " " + "Connection initiated
+		 * from: " + c.getSrcHost() );
 		 */
 	}
 
 	public void connectionError(final Connection c, final String errMsg) {
 		/*
-		 * mn.setListText( getClass().getName() + " " + "Error involving connection
-		 * from:" + c.getSrcHost() + ":" + this.lPort + " " + errMsg );
+		 * mn.setListText( getClass().getName() + " " + "Error involving
+		 * connection from:" + c.getSrcHost() + ":" + this.lPort + " " + errMsg );
 		 */
 	}
 
@@ -132,9 +133,9 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 
 	public void removeConnection(final Connection c) {
 		/*
-		 * mn.setListText( getClass().getName() + " " + "Removing connection from: " +
-		 * c.getSrcHost() + ":" + this.lPort + " " + "To : " + c.getDestHost() + ":" +
-		 * c.getDestPort() );
+		 * mn.setListText( getClass().getName() + " " + "Removing connection
+		 * from: " + c.getSrcHost() + ":" + this.lPort + " " + "To : " +
+		 * c.getDestHost() + ":" + c.getDestPort() );
 		 */
 		synchronized (connections) {
 			connections.removeElement(c);
@@ -150,8 +151,8 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 		while (!connectionStopped) {
 			try {
 				final Socket clientSocket = server.accept();
-				new Connection(mn.getFrame().getJBroFuzz(),
-						clientSocket, this, remoteAddress, remotePort);
+				new Connection(mn.getFrame().getJBroFuzz(), clientSocket, this,
+						remoteAddress, remotePort);
 			} catch (final IOException ex) {
 				connectionStopped = true;
 				break;
@@ -160,16 +161,13 @@ public class ConnectionListener extends Thread implements ConnectionMonitor {
 
 		try {
 			server.close();
-		} 
-		catch (final IOException ex1) {
-		} 
-		finally {
+		} catch (final IOException ex1) {
+		} finally {
 			try {
-				if(server != null) {
+				if (server != null) {
 					server.close();
 				}
-			} 
-			catch (final IOException ex2) {
+			} catch (final IOException ex2) {
 			}
 		}
 

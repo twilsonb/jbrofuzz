@@ -34,38 +34,42 @@ import org.owasp.jbrofuzz.util.*;
 
 /**
  * <p>
- * Class extending a JFrame for displaying the contents of each exploit
- * that has been selected.
+ * Class extending a JFrame for displaying the contents of each exploit that has
+ * been selected.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.8
+ * @author subere@uncon.org
+ * @version 1.0
  */
 public class PropertiesViewer extends JFrame {
 
 	private static final long serialVersionUID = 2145212672855056458L;
 
 	/**
-	 * <p>Main constructor for the exploit viewer window. This requires
-	 * reference to the main JBRFrame, as well as the integer value of 
-	 * the exploit passed from the database.</p>
+	 * <p>
+	 * Main constructor for the exploit viewer window. This requires reference
+	 * to the main JBRFrame, as well as the integer value of the exploit passed
+	 * from the database.
+	 * </p>
 	 * 
 	 * @param parent
 	 * @param display
 	 * @param view
 	 */
-	public PropertiesViewer(final JBroFuzzWindow parent, final String header, final String text) {
+	public PropertiesViewer(final JBroFuzzWindow parent, final String header,
+			final String text) {
 		super("JBroFuzz - " + header);
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
-		//	 The Container Pane
+		// The Container Pane
 		final Container pane = getContentPane();
 		pane.setLayout(null);
 
 		// Define the JPanel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1,
+				1, 1)));
 		listPanel.setBounds(10, 10, 520, 250);
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" " + header + " "), BorderFactory
@@ -94,8 +98,9 @@ public class PropertiesViewer extends JFrame {
 		progressBar.setStringPainted(true);
 		progressBar.setBounds(410, 265, 120, 20);
 
-		//	 Global Frame Issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
+		// Global Frame Issues
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
+				.abs(parent.getLocation().y + 100));
 		this.setSize(550, 325);
 		this.add(listPanel);
 		this.add(progressBar);
@@ -104,14 +109,11 @@ public class PropertiesViewer extends JFrame {
 		setDefaultCloseOperation(2);
 
 		/*
-		// Don't show the frame unless there is content
-		if (listTextArea.getText().length() < 1) {
-			setVisible(false);
-		} else {
-			setVisible(true);
-		}
+		 * // Don't show the frame unless there is content if
+		 * (listTextArea.getText().length() < 1) { setVisible(false); } else {
+		 * setVisible(true); }
 		 */
-		
+
 		listTextArea.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
@@ -120,13 +122,13 @@ public class PropertiesViewer extends JFrame {
 				}
 			}
 		});
-		 
 
 		SwingWorker3 worker = new SwingWorker3() {
 
+			@Override
 			public Object construct() {
-				int n = 0; 
-				while(n < text.length()) {
+				int n = 0;
+				while (n < text.length()) {
 					listTextArea.append("" + text.charAt(n));
 					progressBar.setValue(n);
 					n++;
@@ -139,7 +141,7 @@ public class PropertiesViewer extends JFrame {
 		worker.start();
 
 		listTextArea.setCaretPosition(0);
-		listPanel.add(listTextScrollPane);	
+		listPanel.add(listTextScrollPane);
 
 	}
 
