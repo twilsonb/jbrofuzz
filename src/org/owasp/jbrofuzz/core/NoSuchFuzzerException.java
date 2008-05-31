@@ -29,8 +29,8 @@ public class NoSuchFuzzerException extends Exception {
 
 	public NoSuchFuzzerException(String message) {
 
-       super(message);
-       
-    }
-	
- }
+		super(message);
+
+	}
+
+}

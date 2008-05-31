@@ -29,18 +29,19 @@ import java.awt.event.*;
 import javax.swing.text.*;
 
 public class CutAction extends TextAction {
-	
+
 	private static final long serialVersionUID = -4536111278468156391L;
-	
+
 	public CutAction() {
 		super("Cut");
 	}
 
 	public void actionPerformed(final ActionEvent evt) {
-		
+
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				final JTextComponent text = CutAction.this.getTextComponent(evt);
+				final JTextComponent text = CutAction.this
+						.getTextComponent(evt);
 				if (text != null) {
 					text.cut();
 					text.requestFocus();

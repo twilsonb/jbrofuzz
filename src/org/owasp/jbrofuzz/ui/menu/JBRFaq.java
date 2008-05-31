@@ -54,6 +54,10 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 	// Dimensions of the about box
 	private static final int x = 650;
 	private static final int y = 400;
+	// The final String Array of tree nodes
+	private static final String[] nodeNames = { "FAQ", "Requirements", "Java",
+			"Installation", "Files & Directories", "What is a Fuzzer?",
+			"Sniffing Ports" };
 	// The buttons
 	private JButton ok;
 	// The tree
@@ -64,8 +68,6 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 	private JScrollPane faqScrollPane;
 	// The main split pane
 	private JSplitPane splitPane;
-	// The final String Array of tree nodes
-	private static final String [] nodeNames = {"FAQ", "Requirements/Java", "Latest Version", "Page 5", "Java requirements", "Directory problems", "What is a Generator?", "What is a Fuzzer?", "Sniffing problems"};
 	// The list of URLs
 	private URL[] faqURL;
 
@@ -77,8 +79,9 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		faqURL = new URL[nodeNames.length];
-		faqURL[0] = ClassLoader.getSystemClassLoader().getResource("help/faq-00.html");
-		for (int i = 1; i < nodeNames.length; i++) {
+		// faqURL[0] =
+		// ClassLoader.getSystemClassLoader().getResource("help/faq-00.html");
+		for (int i = 0; i < nodeNames.length; i++) {
 			if (i < 10) {
 				faqURL[i] = ClassLoader.getSystemClassLoader().getResource(
 						"help/faq-0" + i + ".html");
@@ -89,8 +92,9 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 		}
 
 		// Create the nodes
-		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(nodeNames[0]);
-		for (int i = 0; i < nodeNames.length; i++) {
+		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
+				nodeNames[0]);
+		for (int i = 1; i < nodeNames.length; i++) {
 			top.add(new DefaultMutableTreeNode(nodeNames[i]));
 		}
 
@@ -118,9 +122,8 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 		splitPane.setLeftComponent(treeView);
 		splitPane.setRightComponent(faqScrollPane);
 		splitPane.setOneTouchExpandable(false);
-		splitPane.setDividerLocation(150);
 
-		final Dimension minimumSize = new Dimension(0,0);
+		final Dimension minimumSize = new Dimension(0, 0);
 		faqScrollPane.setMinimumSize(minimumSize);
 		treeView.setMinimumSize(minimumSize);
 		splitPane.setDividerLocation(100);
@@ -132,8 +135,8 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 		// Bottom button
 		ok = new JButton("  OK  ");
 
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		buttonPanel.add(ok);
 
 		ok.addActionListener(new ActionListener() {
@@ -149,25 +152,29 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
+		splitPane.setDividerLocation(150);
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
+				.abs(parent.getLocation().y + 100));
 		this.setSize(JBRFaq.x, JBRFaq.y);
+		this.setMinimumSize(new Dimension(x, y));
 		setResizable(true);
 		setVisible(true);
 	}
 
 	public void valueChanged(final TreeSelectionEvent e) {
-		
+
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 				.getLastSelectedPathComponent();
 
 		if (node == null) {
 			return;
 		}
+
 		final String s = node.toString();
-		
-		for (int i = 1; i < nodeNames.length; i++) {
-			
-			if(s.equalsIgnoreCase(nodeNames[i])) {
+
+		for (int i = 0; i < nodeNames.length; i++) {
+
+			if (s.equalsIgnoreCase(nodeNames[i])) {
 				try {
 					faqEditorPane.setPage(faqURL[i]);
 				} catch (IOException e1) {
@@ -175,9 +182,10 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 				}
 				faqScrollPane.setViewportView(faqEditorPane);
 				splitPane.setRightComponent(faqScrollPane);
+				splitPane.setDividerLocation(150);
 			}
-			
+
 		} // for loop
-	
+
 	} // value changed
 }

@@ -44,7 +44,8 @@ import java.io.*;
 public class Connection {
 
 	// The content length header text used for a POST request
-	private static final byte[] CONTENT_LENGTH = new String("Content-Length:").getBytes();
+	private static final byte[] CONTENT_LENGTH = new String("Content-Length:")
+			.getBytes();
 
 	// The maximum size for the socket I/O
 	private final static int SEND_BUF_SIZE = 256 * 1024;
@@ -62,98 +63,98 @@ public class Connection {
 
 	/**
 	 * <p>
-	 * Implement a connection to a particular address, on a given port, specifying
-	 * the message to be transmitted.
+	 * Implement a connection to a particular address, on a given port,
+	 * specifying the message to be transmitted.
 	 * </p>
 	 * 
 	 * @param address
-	 *          String
+	 *            String
 	 * @param port
-	 *          String
+	 *            String
 	 * @param message
-	 *          String
+	 *            String
 	 */
-	public Connection(final String urlString, final String message) throws ConnectionException {
+	public Connection(final String urlString, final String message)
+			throws ConnectionException {
 
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e1) {
-			reply = "Malformed URL : "
-				+ e1.getMessage() + "\n";
+			reply = "Malformed URL : " + e1.getMessage() + "\n";
 			throw new ConnectionException(reply);
 		}
 
-		protocol = url == null ? "" : url.getProtocol();    // http
-		host = url == null ? "" : url.getHost();            // localhost
-		port = url == null ? -1 : url.getPort();               // 443
-		file = url == null ? "" : url.getFile();            // index.jsp
-		ref = url == null ? "" : url.getRef();              // _top_
+		protocol = url == null ? "" : url.getProtocol(); // http
+		host = url == null ? "" : url.getHost(); // localhost
+		port = url == null ? -1 : url.getPort(); // 443
+		file = url == null ? "" : url.getFile(); // index.jsp
+		ref = url == null ? "" : url.getRef(); // _top_
 
 		// Set default ports
 		//
-		if(protocol.equalsIgnoreCase("https") && (port == -1)) {
+		if (protocol.equalsIgnoreCase("https") && (port == -1)) {
 			port = 443;
 		}
-		if(protocol.equalsIgnoreCase("http") && (port == -1)) {
+		if (protocol.equalsIgnoreCase("http") && (port == -1)) {
 			port = 80;
 		}
 
 		this.message = message;
 
-
 		final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
 
 		// Create a trust manager that does not validate certificate chains
-		TrustManager[] trustAllCerts = new TrustManager[]{
-				new X509TrustManager() {
-					public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-						return null;
-					}
-					public void checkClientTrusted(
-							java.security.cert.X509Certificate[] certs, String authType) {
-					}
-					public void checkServerTrusted(
-							java.security.cert.X509Certificate[] certs, String authType) {
-					}
-				}
-		};
+		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+			public void checkClientTrusted(
+					java.security.cert.X509Certificate[] certs, String authType) {
+			}
+
+			public void checkServerTrusted(
+					java.security.cert.X509Certificate[] certs, String authType) {
+			}
+
+			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+		} };
 
 		// Install the all-trusting trust manager
 		try {
 			SSLContext sc = SSLContext.getInstance("SSL");
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
-			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		} 
-		catch (Exception e) {
-			
-			throw new ConnectionException("Could not install all-trusting certificates... " + e.getMessage());
-			
+			HttpsURLConnection
+					.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		} catch (Exception e) {
+
+			throw new ConnectionException(
+					"Could not install all-trusting certificates... "
+							+ e.getMessage());
+
 		}
 
-
-
-
 		// Create the Socket to the specified address and port
-		if(protocol.equalsIgnoreCase("https")) {
+		if (protocol.equalsIgnoreCase("https")) {
 
 			// Creating Client Sockets
-			SSLSocketFactory sslsocketfactory = (SSLSocketFactory)SSLSocketFactory.getDefault();
+			SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory
+					.getDefault();
 			SSLSocket sslSocket = null;
 			try {
 
-				sslSocket = (SSLSocket)sslsocketfactory.createSocket(host, port);
+				sslSocket = (SSLSocket) sslsocketfactory.createSocket(host,
+						port);
 				sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
 				sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
 				sslSocket.setSoTimeout(30000);
 
 			} catch (UnknownHostException e) {
 				reply = "The IP address of the host could not be determined : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			} catch (IOException e) {
 				reply = "An IO Error occured when creating the socket : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -163,7 +164,7 @@ public class Connection {
 				in_stream = sslSocket.getInputStream();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the input stream : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -172,7 +173,7 @@ public class Connection {
 				out_stream = sslSocket.getOutputStream();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the output stream : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -182,7 +183,7 @@ public class Connection {
 				out_stream.write(this.message.getBytes());
 			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to write to the output stream : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -191,7 +192,8 @@ public class Connection {
 				reply = "The output stream is null : " + e.getMessage();
 				throw new ConnectionException(reply);
 			}
-			// Read the input stream, once you have finished writing to the output
+			// Read the input stream, once you have finished writing to the
+			// output
 			try {
 				final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				int got;
@@ -204,22 +206,22 @@ public class Connection {
 				reply = new String(allbytes);
 
 			} catch (final IOException e) {
-				
-				throw new ConnectionException("An IO Exception occured: " + e.getMessage());
+
+				throw new ConnectionException("An IO Exception occured: "
+						+ e.getMessage());
 
 			}
 			// Close the socket
 			try {
 				sslSocket.close();
-			} 
-			catch (final IOException e) {
+			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to close the socket : "
-					+ e.getMessage() + "\n";
-				
+						+ e.getMessage() + "\n";
+
 				throw new ConnectionException(reply);
 
 			}
-//			-----
+			// -----
 
 		}
 		// Protocol is http going over a normal socket
@@ -234,12 +236,12 @@ public class Connection {
 				socket.setSoTimeout(30000);
 			} catch (final UnknownHostException e) {
 				reply = "The IP address of the host could not be determined : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the socket : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 			}
 
@@ -248,7 +250,7 @@ public class Connection {
 				in_stream = socket.getInputStream();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the input stream : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -257,7 +259,7 @@ public class Connection {
 				out_stream = socket.getOutputStream();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the output stream : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -267,7 +269,7 @@ public class Connection {
 				out_stream.write(this.message.getBytes());
 			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to write to the output stream : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -276,7 +278,8 @@ public class Connection {
 				reply = "The output stream is null : " + e.getMessage();
 				throw new ConnectionException(reply);
 			}
-			// Read the input stream, once you have finished writing to the output
+			// Read the input stream, once you have finished writing to the
+			// output
 			try {
 				final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				int got;
@@ -289,14 +292,15 @@ public class Connection {
 				reply = new String(allbytes);
 
 			} catch (final IOException e) {
-				throw new ConnectionException("An IO Exception occured: " + e.getMessage());
+				throw new ConnectionException("An IO Exception occured: "
+						+ e.getMessage());
 			}
 			// Close the socket
 			try {
 				socket.close();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to close the socket : "
-					+ e.getMessage() + "\n";
+						+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 			}
 		}
@@ -310,11 +314,17 @@ public class Connection {
 	 * @return StringBuffer
 	 */
 	public String getMessage() throws ConnectionException {
-		if(this.message.isEmpty()) {
+		if (message.isEmpty()) {
 			throw new ConnectionException("The message is blank");
 		} else {
-			return this.message;
+			return message;
 		}
+	}
+
+	public int getPort() {
+
+		return port;
+
 	}
 
 	/**
@@ -326,17 +336,11 @@ public class Connection {
 	 * @return String
 	 */
 	public String getReply() throws ConnectionException {
-		if(this.reply.isEmpty()) {
+		if (reply.isEmpty()) {
 			throw new ConnectionException("The reply is blank");
 		} else {
-		return reply;
+			return reply;
 		}
-
-	}
-
-	public int getPort() {
-
-		return port;
 
 	}
 
@@ -350,14 +354,12 @@ public class Connection {
 		} catch (Exception e) {
 			throw new ConnectionException("Could not obtain the status");
 		}
-		
-		if(StringUtils.isNumeric(value)) {
+
+		if (StringUtils.isNumeric(value)) {
 			output = value;
 		}
 
 		return output;
 	}
-
-
 
 }

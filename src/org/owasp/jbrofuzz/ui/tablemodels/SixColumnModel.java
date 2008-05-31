@@ -36,9 +36,9 @@ class ResponseOutput {
 	protected String five;
 	protected String six;
 
-	public ResponseOutput(
-			final String one, final String two, final String three, 
-			final String four, final String five, final String six) {
+	public ResponseOutput(final String one, final String two,
+			final String three, final String four, final String five,
+			final String six) {
 
 		this.one = one;
 		this.two = two;
@@ -49,34 +49,36 @@ class ResponseOutput {
 
 	}
 
+	public String getFifth() {
+		return five;
+	}
+
 	public String getFirst() {
 		return one;
-	}
-
-	public String getSecond() {
-		return two;
-	}
-
-	public String getThird() {
-		return three;
 	}
 
 	public String getFourth() {
 		return four;
 	}
 
-	public String getFifth() {
-		return five;
+	public String getSecond() {
+		return two;
 	}
 
 	public String getSixth() {
 		return six;
 	}
 
+	public String getThird() {
+		return three;
+	}
+
 }
 
 /**
- * <p>The Table Model for the output consisting of six fields.</p>
+ * <p>
+ * The Table Model for the output consisting of six fields.
+ * </p>
  * 
  * @author subere@uncon.org
  * @version 1.0
@@ -86,30 +88,22 @@ public class SixColumnModel extends AbstractTableModel {
 	private static final long serialVersionUID = 185093L;
 	/**
 	 * <p>
-	 * The String used to separate columns when a toString representation of a set
-	 * number of columns or rows is required. This is typically used in method
-	 * getRow() that returns a String.
+	 * The String used to separate columns when a toString representation of a
+	 * set number of columns or rows is required. This is typically used in
+	 * method getRow() that returns a String.
 	 * </p>
 	 */
 	public static final String STRING_SEPARATOR = ",";
 
 	// The names of the columns within the table of generators
-	private static String[] COLUMNNAMES = { "No", "URI", "Code",
-		"Status Text", "Comments", "Scripts" };
+	private static String[] COLUMNNAMES = { "No", "URI", "Code", "Status Text",
+			"Comments", "Scripts" };
 	// The vector of ResponseOutputs
 	private Vector<ResponseOutput> dataVector;
 
-	public void setColumnNames(String one, String two, String three, String four, String five, String six) {
-		COLUMNNAMES[0] = one;
-		COLUMNNAMES[1] = two;
-		COLUMNNAMES[2] = three;
-		COLUMNNAMES[3] = four;
-		COLUMNNAMES[4] = five;
-		COLUMNNAMES[5] = six;
-	}
 	/**
-	 * Default constructor for this web directory model. This is to be attached to
-	 * a JTable.
+	 * Default constructor for this web directory model. This is to be attached
+	 * to a JTable.
 	 */
 	public SixColumnModel() {
 
@@ -122,38 +116,27 @@ public class SixColumnModel extends AbstractTableModel {
 	 * Add a row to the table model.
 	 * 
 	 * @param id
-	 *          String
+	 *            String
 	 * @param uri
-	 *          String
+	 *            String
 	 * @param statusCode
-	 *          String
+	 *            String
 	 * @param statusText
-	 *          String
+	 *            String
 	 * @param comments
-	 *          String
+	 *            String
 	 * @param scripts
-	 *          String
+	 *            String
 	 */
 
-	public void addRow(
-			final String one, final String two, final String three, 
+	public void addRow(final String one, final String two, final String three,
 			final String four, final String five, final String six) {
 
-		final ResponseOutput response = new ResponseOutput(one, two, three, four, five, six);
+		final ResponseOutput response = new ResponseOutput(one, two, three,
+				four, five, six);
 		dataVector.add(response);
 		fireTableRowsInserted(0, dataVector.size() - 1);
 	}
-
-	public void updateLastRow(
-			final String one, final String two, final String three, 
-			final String four, final String five, final String six) {
-
-		final ResponseOutput response = new ResponseOutput(one, two, three, four, five, six);
-
-		dataVector.setElementAt(response, dataVector.size() - 1);
-		fireTableRowsUpdated(0, dataVector.size() - 1);
-	}
-
 
 	/**
 	 * Return the total number of columns
@@ -168,35 +151,35 @@ public class SixColumnModel extends AbstractTableModel {
 	 * Method for obtaining the String name of a given column.
 	 * 
 	 * @param column
-	 *          int
+	 *            int
 	 * @return String
 	 */
 	@Override
 	public String getColumnName(final int columnIndex) {
-		
+
 		String out = "";
-		
+
 		if ((columnIndex < 6) && (columnIndex >= 0)) {
 			out = SixColumnModel.COLUMNNAMES[columnIndex];
 		}
-		
+
 		return out;
-		
+
 	}
 
 	/**
 	 * Return a given row in String format using the stated separator
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @return String
 	 */
 	public String getRow(final int rowIndex) {
-		
+
 		final StringBuffer output = new StringBuffer();
-		
-		if ( (rowIndex < dataVector.size()) && (rowIndex >= 0) ) {
-			
+
+		if ((rowIndex < dataVector.size()) && (rowIndex >= 0)) {
+
 			for (int i = 0; i < SixColumnModel.COLUMNNAMES.length; i++) {
 				output.append(getValueAt(rowIndex, i));
 				if (i < SixColumnModel.COLUMNNAMES.length - 1) {
@@ -204,14 +187,12 @@ public class SixColumnModel extends AbstractTableModel {
 				}
 			}
 			output.append("\n");
-			
+
 		}
-		
+
 		return output.toString();
-		
+
 	}
-
-
 
 	/**
 	 * Return the total number of rows
@@ -226,15 +207,16 @@ public class SixColumnModel extends AbstractTableModel {
 	 * Method for returning a particular value within the existing table model.
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
-		
-		if ((row < dataVector.size()) && (row >= 0) && (column < 6) && (column >= 0)) {
-			final ResponseOutput record = (ResponseOutput) dataVector.get(row);
+
+		if ((row < dataVector.size()) && (row >= 0) && (column < 6)
+				&& (column >= 0)) {
+			final ResponseOutput record = dataVector.get(row);
 			switch (column) {
 			case 0:
 				return record.getFirst();
@@ -253,7 +235,7 @@ public class SixColumnModel extends AbstractTableModel {
 			}
 		}
 		return "";
-		
+
 	}
 
 	/**
@@ -267,25 +249,59 @@ public class SixColumnModel extends AbstractTableModel {
 		}
 	}
 
+	public void setColumnNames(String one, String two, String three,
+			String four, String five, String six) {
+		COLUMNNAMES[0] = one;
+		COLUMNNAMES[1] = two;
+		COLUMNNAMES[2] = three;
+		COLUMNNAMES[3] = four;
+		COLUMNNAMES[4] = five;
+		COLUMNNAMES[5] = six;
+	}
+
+	@Override
 	public void setValueAt(Object o, int rowIndex, int columnIndex) {
 
-		if ((rowIndex < dataVector.size()) && (rowIndex >= 0) && (columnIndex < 6) && (columnIndex >= 0)) {
+		if ((rowIndex < dataVector.size()) && (rowIndex >= 0)
+				&& (columnIndex < 6) && (columnIndex >= 0)) {
 
 			ResponseOutput current = dataVector.get(rowIndex);
-			switch(columnIndex) {
-			case 0: current.one = o.toString(); break;
-			case 1: current.two = o.toString(); break;
-			case 2: current.three = o.toString(); break;
-			case 3: current.four = o.toString(); break;
-			case 4: current.five = o.toString(); break;
-			case 5: current.six = o.toString(); break;
+			switch (columnIndex) {
+			case 0:
+				current.one = o.toString();
+				break;
+			case 1:
+				current.two = o.toString();
+				break;
+			case 2:
+				current.three = o.toString();
+				break;
+			case 3:
+				current.four = o.toString();
+				break;
+			case 4:
+				current.five = o.toString();
+				break;
+			case 5:
+				current.six = o.toString();
+				break;
 			default:
 			}
-			
+
 			dataVector.set(rowIndex, current);
 
 		}
 
 	}
-}
 
+	public void updateLastRow(final String one, final String two,
+			final String three, final String four, final String five,
+			final String six) {
+
+		final ResponseOutput response = new ResponseOutput(one, two, three,
+				four, five, six);
+
+		dataVector.setElementAt(response, dataVector.size() - 1);
+		fireTableRowsUpdated(0, dataVector.size() - 1);
+	}
+}

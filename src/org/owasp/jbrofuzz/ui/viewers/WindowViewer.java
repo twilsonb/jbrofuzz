@@ -30,13 +30,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
-import javax.swing.text.*;
-
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.SwingWorker3;
-import org.owasp.jbrofuzz.util.TextHighlighter;
 
 /**
  * <p>
@@ -71,16 +67,18 @@ public class WindowViewer extends JFrame {
 	 */
 	public static final int VIEW_FUZZING_PANEL = 2;
 
-
 	/**
-	 * <p>The window viewer that gets launched for each request within the
-	 * corresponding panel.</p>
+	 * <p>
+	 * The window viewer that gets launched for each request within the
+	 * corresponding panel.
+	 * </p>
 	 * 
 	 * @param parent
 	 * @param name
 	 * @param typeOfPanel
 	 */
-	public WindowViewer(final JBroFuzzWindow parent, final String name, final int typeOfPanel) {
+	public WindowViewer(final JBroFuzzWindow parent, final String name,
+			final int typeOfPanel) {
 		super("JBroFuzz - File Viewer - " + name + ".html");
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
@@ -91,7 +89,8 @@ public class WindowViewer extends JFrame {
 		// Define the Panel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1,
+				1, 1)));
 		listPanel.setBounds(10, 10, 520, 450);
 
 		// Define the Text Area
@@ -100,16 +99,13 @@ public class WindowViewer extends JFrame {
 		listTextArea.setEditable(false);
 		parent.popup(listTextArea);
 		/*
-		listTextArea.setEditorKit(new StyledEditorKit() {
-	
-			private static final long serialVersionUID = -6885612347033981164L;
-
-			@Override
-			public Document createDefaultDocument() {
-				return new TextHighlighter();
-			}
-		});
-		*/
+		 * listTextArea.setEditorKit(new StyledEditorKit() {
+		 * 
+		 * private static final long serialVersionUID = -6885612347033981164L;
+		 * 
+		 * @Override public Document createDefaultDocument() { return new
+		 * TextHighlighter(); } });
+		 */
 
 		// Define the Scroll Pane for the Text Area
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
@@ -119,10 +115,12 @@ public class WindowViewer extends JFrame {
 
 		StringBuffer textBuffer = new StringBuffer();
 		if (typeOfPanel == WindowViewer.VIEW_SNIFFING_PANEL) {
-			textBuffer = parent.getJBroFuzz().getHandler().readSnifFile(name + ".html");
+			textBuffer = parent.getJBroFuzz().getHandler().readSnifFile(
+					name + ".html");
 		}
 		if (typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
-			textBuffer = parent.getJBroFuzz().getHandler().readFuzzFile(name + ".html");
+			textBuffer = parent.getJBroFuzz().getHandler().readFuzzFile(
+					name + ".html");
 		}
 		final String text = textBuffer.toString();
 
@@ -142,13 +140,13 @@ public class WindowViewer extends JFrame {
 		// Global Frame Issues
 		this.add(listPanel);
 		this.add(progressBar);
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
+				.abs(parent.getLocation().y + 100));
 		this.setSize(550, 525);
 		setResizable(false);
 		setVisible(true);
 		setDefaultCloseOperation(2);
 
-		
 		listTextArea.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
@@ -157,19 +155,19 @@ public class WindowViewer extends JFrame {
 				}
 			}
 		});
-		 
 
 		SwingWorker3 worker = new SwingWorker3() {
 
+			@Override
 			public Object construct() {
-				int n = 0; 
-				
-				while(n < text.toString().length()) {
+				int n = 0;
+
+				while (n < text.toString().length()) {
 					listTextArea.append("" + text.toString().charAt(n));
 					progressBar.setValue(n);
 					n++;
 				}
-				
+
 				progressBar.setValue(n);
 				return "return-worker";
 			}
@@ -178,7 +176,7 @@ public class WindowViewer extends JFrame {
 		worker.start();
 
 		listTextArea.setCaretPosition(0);
-		listPanel.add(listTextScrollPane);	
+		listPanel.add(listTextScrollPane);
 
 	}
 

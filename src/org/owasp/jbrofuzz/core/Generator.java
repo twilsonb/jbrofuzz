@@ -29,120 +29,6 @@ import org.apache.commons.lang.*;
 
 public class Generator {
 
-	private char type;
-
-	private String id;
-
-	private String name;
-
-	private ArrayList<String> categories;
-
-	private ArrayList<String> payloads;
-
-	public Generator(char type, String id, String name) {
-
-		this(type, id, name, new ArrayList<String>(), new ArrayList<String>());
-		
-	}
-
-	public Generator(char type, String id, String name, ArrayList<String> categories, ArrayList<String> payloads) {
-
-		this.type = type;
-		this.id = id;
-		this.name = StringUtils.trim(name);
-		this.categories = categories;
-		this.payloads = payloads;
-
-	}
-
-	public boolean isRecursive() {
-		if(type == 'R')
-			return true;
-		return false;
-	}
-
-	public boolean isReplacive() {
-		if(type == 'P')
-			return true;
-		return false;
-	}
-	
-	public boolean isAMemberOfCategory(String category) {
-		
-		String[] categoriesArray = new String[categories.size()];
-		categories.toArray(categoriesArray);
-		
-		for(String s : categoriesArray) {
-			if(s.equalsIgnoreCase(category)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
-
-	public char getType() {
-		return type;
-	}
-
-	public void setType(char type) {
-		this.type = type;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int size() {
-		return payloads.size();
-	}
-
-	public ArrayList<String> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(ArrayList<String> categories) {
-		// categories.trimToSize();
-		this.categories = categories;
-	}
-
-	public ArrayList<String> getPayloads() {
-		payloads.trimToSize();
-		return payloads;
-	}
-
-	public void setPayloads(ArrayList<String> payloads) {
-		this.payloads = payloads;
-	}
-
-
-	public void addPayload(String value) {
-
-		payloads.add(calculatePayload(value));
-		payloads.trimToSize();
-
-	}
-	
-	public void addCategory(String value) {
-		
-		categories.add(value);
-		categories.trimToSize();
-		
-	}
-
 	private static String calculatePayload(String param) {
 
 		String beginning;
@@ -188,7 +74,117 @@ public class Generator {
 		return newBuffer.toString();
 	}
 
+	private char type;
 
+	private String id;
 
+	private String name;
+
+	private ArrayList<String> categories;
+
+	private ArrayList<String> payloads;
+
+	public Generator(char type, String id, String name) {
+
+		this(type, id, name, new ArrayList<String>(), new ArrayList<String>());
+
+	}
+
+	public Generator(char type, String id, String name,
+			ArrayList<String> categories, ArrayList<String> payloads) {
+
+		this.type = type;
+		this.id = id;
+		this.name = StringUtils.trim(name);
+		this.categories = categories;
+		this.payloads = payloads;
+
+	}
+
+	public void addCategory(String value) {
+
+		categories.add(value);
+		categories.trimToSize();
+
+	}
+
+	public void addPayload(String value) {
+
+		payloads.add(calculatePayload(value));
+		payloads.trimToSize();
+
+	}
+
+	public ArrayList<String> getCategories() {
+		return categories;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public ArrayList<String> getPayloads() {
+		payloads.trimToSize();
+		return payloads;
+	}
+
+	public char getType() {
+		return type;
+	}
+
+	public boolean isAMemberOfCategory(String category) {
+
+		String[] categoriesArray = new String[categories.size()];
+		categories.toArray(categoriesArray);
+
+		for (String s : categoriesArray) {
+			if (s.equalsIgnoreCase(category)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public boolean isRecursive() {
+		if (type == 'R')
+			return true;
+		return false;
+	}
+
+	public boolean isReplacive() {
+		if (type == 'P')
+			return true;
+		return false;
+	}
+
+	public void setCategories(ArrayList<String> categories) {
+		// categories.trimToSize();
+		this.categories = categories;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setPayloads(ArrayList<String> payloads) {
+		this.payloads = payloads;
+	}
+
+	public void setType(char type) {
+		this.type = type;
+	}
+
+	public int size() {
+		return payloads.size();
+	}
 
 }

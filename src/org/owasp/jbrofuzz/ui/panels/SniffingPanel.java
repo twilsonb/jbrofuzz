@@ -65,23 +65,15 @@ import com.Ostermiller.util.Browser;
  */
 public class SniffingPanel extends JBroFuzzPanel {
 	/*
-	private class SniffingRowListener {//  implements ListSelectionListener {
-		
-		public void valueChanged(final ListSelectionEvent event) {
-			
-			if (event.getValueIsAdjusting()) {
-				return;
-			}
-			final int c = sniffingTable.getSelectedRow();
-			final String [] value = ((String) tableModel
-					.getValueAt(c, 0)).split(" ");
-			new WindowViewer(
-					getFrame(), value[0],
-					WindowViewer.VIEW_SNIFFING_PANEL);
-			
-		}
-	
-} */
+	 * private class SniffingRowListener {// implements ListSelectionListener {
+	 * 
+	 * public void valueChanged(final ListSelectionEvent event) {
+	 * 
+	 * if (event.getValueIsAdjusting()) { return; } final int c =
+	 * sniffingTable.getSelectedRow(); final String [] value = ((String)
+	 * tableModel .getValueAt(c, 0)).split(" "); new WindowViewer( getFrame(),
+	 * value[0], WindowViewer.VIEW_SNIFFING_PANEL); } }
+	 */
 
 	/**
 	 * 
@@ -121,10 +113,10 @@ public class SniffingPanel extends JBroFuzzPanel {
 	 * </p>
 	 * 
 	 * @param m
-	 *          MainWindow
+	 *            MainWindow
 	 */
 	public SniffingPanel(final JBroFuzzWindow m) {
-		super(m );
+		super(m);
 		// this.setLayout(null);
 		// this.m = m;
 		// Set the counter to zero
@@ -138,17 +130,17 @@ public class SniffingPanel extends JBroFuzzPanel {
 		listPanel = new JPanel();
 		// Set the borders
 		rHostPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Remote Host "), BorderFactory.createEmptyBorder(
-				1, 1, 1, 1)));
+				.createTitledBorder(" Remote Host "), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
 		rPortPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1,
-				1)));
+				.createTitledBorder(" Port "), BorderFactory.createEmptyBorder(
+				1, 1, 1, 1)));
 		lHostPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Local Host "), BorderFactory.createEmptyBorder(1,
-				1, 1, 1)));
+				.createTitledBorder(" Local Host "), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
 		lPortPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Port "), BorderFactory.createEmptyBorder(1, 1, 1,
-				1)));
+				.createTitledBorder(" Port "), BorderFactory.createEmptyBorder(
+				1, 1, 1, 1)));
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" List of Requests "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
@@ -196,7 +188,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 		getFrame().popup(lPortText);
 		lPortText.setPreferredSize(new Dimension(50, 20));
 		lPortPanel.add(lPortText);
-		
+
 		// The table of list of requests text
 		tableModel = new SingleColumnModel(" Requests / Replies ");
 
@@ -208,24 +200,26 @@ public class SniffingPanel extends JBroFuzzPanel {
 		sniffingTable.setSurrendersFocusOnKeystroke(true);
 		sniffingTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		// sniffingTable.getSelectionModel().addListSelectionListener(
-		//		new SniffingRowListener());
-		sniffingTable.addMouseListener(new MouseAdapter(){
+		// new SniffingRowListener());
+		sniffingTable.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(final MouseEvent e){
-				if (e.getClickCount() == 2){
+			public void mouseClicked(final MouseEvent e) {
+				if (e.getClickCount() == 2) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
-							
+
 							final int c = sniffingTable.getSelectedRow();
-							final String name = (String) sniffingTable.getModel().getValueAt(c, 0);
-							new WindowViewer(getFrame(), name.split(" ")[0], WindowViewer.VIEW_SNIFFING_PANEL);
+							final String name = (String) sniffingTable
+									.getModel().getValueAt(c, 0);
+							new WindowViewer(getFrame(), name.split(" ")[0],
+									WindowViewer.VIEW_SNIFFING_PANEL);
 
 						}
 					});
 				}
 			}
-		} );
-		
+		});
+
 		final JScrollPane listTextScrollPane = new JScrollPane(sniffingTable);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
 		listTextScrollPane.setHorizontalScrollBarPolicy(31);
@@ -248,9 +242,9 @@ public class SniffingPanel extends JBroFuzzPanel {
 		browserButton.setBounds(790, 33, 80, 40);
 		browserButton.setEnabled(true);
 		browserButton.setToolTipText("Open in external browser");
-		
+
 		// The action listener for the start button
-		
+
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// Worker, working...
@@ -303,7 +297,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 	 * Method for adding an extra row to the requests / replies JTable
 	 * 
 	 * @param s
-	 *          String
+	 *            String
 	 */
 	public void addRow(final String s) {
 
@@ -313,9 +307,8 @@ public class SniffingPanel extends JBroFuzzPanel {
 				final int totalRows = tableModel.getRowCount();
 				tableModel.setValueAt(s, totalRows - 1, 0);
 				// Set the last row to be visible
-				sniffingTable
-						.scrollRectToVisible(sniffingTable.getCellRect(
-								sniffingTable.getRowCount(), 0, true));
+				sniffingTable.scrollRectToVisible(sniffingTable.getCellRect(
+						sniffingTable.getRowCount(), 0, true));
 			}
 		});
 	}
@@ -335,89 +328,6 @@ public class SniffingPanel extends JBroFuzzPanel {
 			Browser.displayURL(url.toString());
 		} catch (final IOException ex) {
 			getFrame().log("Could not launch link in external browser");
-		}
-	}
-
-	/**
-	 * Method for hitting the start button.
-	 */
-	public void start() {
-		if (!startButton.isEnabled()) {
-			return;
-		}
-		startButton.setEnabled(false);
-		stopButton.setEnabled(true);
-		session++;
-
-		rHostText.setEditable(false);
-		rPortText.setEditable(false);
-		lHostText.setEditable(false);
-		lPortText.setEditable(false);
-
-		rHostText.setBackground(Color.black);
-		rPortText.setBackground(Color.black);
-		lHostText.setBackground(Color.black);
-		lPortText.setBackground(Color.black);
-
-		rHostText.setForeground(Color.white);
-		rPortText.setForeground(Color.white);
-		lHostText.setForeground(Color.white);
-		lPortText.setForeground(Color.white);
-
-		final String rh = getRemoteHostText();
-		final String rp = getRemotePortText();
-		final String lh = getLocalHostText();
-		final String lp = getLocalPortText();
-
-		// Update the border of the output panel
-		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" List of Requests " + "[Logging in folder .\\"
-						+ Format.DATE + "\\" + session
-						+ "*.txt]  [" + rh + ":" + rp + " <=> " + lh + ":" + lp + "] "),
-				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-
-		reflector = new ConnectionListener(this, rh, rp, lh, lp);
-		reflector.start();
-	}
-
-	/**
-	 * Method for hitting the stop button.
-	 */
-	public void stop() {
-		if (!stopButton.isEnabled()) {
-			return;
-		}
-		stopButton.setEnabled(false);
-		startButton.setEnabled(true);
-		if (reflector != null) {
-			reflector.stopConnection();
-		}
-
-		rHostText.setEditable(true);
-		rPortText.setEditable(true);
-		lHostText.setEditable(true);
-		lPortText.setEditable(true);
-
-		rHostText.setBackground(Color.white);
-		rPortText.setBackground(Color.white);
-		lHostText.setBackground(Color.white);
-		lPortText.setBackground(Color.white);
-
-		rHostText.setForeground(Color.black);
-		rPortText.setForeground(Color.black);
-		lHostText.setForeground(Color.black);
-		lPortText.setForeground(Color.black);
-
-		// Update the border of the output panel
-		if (counter == 0) {
-			listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-					.createTitledBorder(" List of Requests " + "[Last log was empty] "),
-					BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		} else {
-			listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-					.createTitledBorder(" List of Requests " + "[Last log was .\\"
-							+ Format.DATE + "\\" + session
-							+ "*.txt] "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		}
 	}
 
@@ -463,8 +373,8 @@ public class SniffingPanel extends JBroFuzzPanel {
 
 	/**
 	 * Method for accessing the Local Host text field and retrieving it's value.
-	 * This method performs sanitisation attempting to remove protocol as well as
-	 * trailing slashes.
+	 * This method performs sanitisation attempting to remove protocol as well
+	 * as trailing slashes.
 	 * 
 	 * @return String
 	 */
@@ -505,9 +415,9 @@ public class SniffingPanel extends JBroFuzzPanel {
 	}
 
 	/**
-	 * Method for accessing the Remote Host text field and retrieving it's value.
-	 * This method performs sanitisation attempting to remove protocol as well as
-	 * trailing slashes.
+	 * Method for accessing the Remote Host text field and retrieving it's
+	 * value. This method performs sanitisation attempting to remove protocol as
+	 * well as trailing slashes.
 	 * 
 	 * @return String
 	 */
@@ -539,12 +449,99 @@ public class SniffingPanel extends JBroFuzzPanel {
 	}
 
 	/**
-	 * Method for accessing the Remote Host port field and retrieving it's value.
+	 * Method for accessing the Remote Host port field and retrieving it's
+	 * value.
 	 * 
 	 * @return String
 	 */
 	public String getRemotePortText() {
 		return rPortText.getText();
+	}
+
+	/**
+	 * Method for hitting the start button.
+	 */
+	public void start() {
+		if (!startButton.isEnabled()) {
+			return;
+		}
+		startButton.setEnabled(false);
+		stopButton.setEnabled(true);
+		session++;
+
+		rHostText.setEditable(false);
+		rPortText.setEditable(false);
+		lHostText.setEditable(false);
+		lPortText.setEditable(false);
+
+		rHostText.setBackground(Color.black);
+		rPortText.setBackground(Color.black);
+		lHostText.setBackground(Color.black);
+		lPortText.setBackground(Color.black);
+
+		rHostText.setForeground(Color.white);
+		rPortText.setForeground(Color.white);
+		lHostText.setForeground(Color.white);
+		lPortText.setForeground(Color.white);
+
+		final String rh = getRemoteHostText();
+		final String rp = getRemotePortText();
+		final String lh = getLocalHostText();
+		final String lp = getLocalPortText();
+
+		// Update the border of the output panel
+		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" List of Requests "
+						+ "[Logging in folder .\\" + Format.DATE + "\\"
+						+ session + "*.txt]  [" + rh + ":" + rp + " <=> " + lh
+						+ ":" + lp + "] "), BorderFactory.createEmptyBorder(1,
+				1, 1, 1)));
+
+		reflector = new ConnectionListener(this, rh, rp, lh, lp);
+		reflector.start();
+	}
+
+	/**
+	 * Method for hitting the stop button.
+	 */
+	public void stop() {
+		if (!stopButton.isEnabled()) {
+			return;
+		}
+		stopButton.setEnabled(false);
+		startButton.setEnabled(true);
+		if (reflector != null) {
+			reflector.stopConnection();
+		}
+
+		rHostText.setEditable(true);
+		rPortText.setEditable(true);
+		lHostText.setEditable(true);
+		lPortText.setEditable(true);
+
+		rHostText.setBackground(Color.white);
+		rPortText.setBackground(Color.white);
+		lHostText.setBackground(Color.white);
+		lPortText.setBackground(Color.white);
+
+		rHostText.setForeground(Color.black);
+		rPortText.setForeground(Color.black);
+		lHostText.setForeground(Color.black);
+		lPortText.setForeground(Color.black);
+
+		// Update the border of the output panel
+		if (counter == 0) {
+			listPanel.setBorder(BorderFactory.createCompoundBorder(
+					BorderFactory.createTitledBorder(" List of Requests "
+							+ "[Last log was empty] "), BorderFactory
+							.createEmptyBorder(1, 1, 1, 1)));
+		} else {
+			listPanel.setBorder(BorderFactory.createCompoundBorder(
+					BorderFactory.createTitledBorder(" List of Requests "
+							+ "[Last log was .\\" + Format.DATE + "\\"
+							+ session + "*.txt] "), BorderFactory
+							.createEmptyBorder(1, 1, 1, 1)));
+		}
 	}
 
 }

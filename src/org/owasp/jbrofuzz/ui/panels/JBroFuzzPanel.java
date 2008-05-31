@@ -26,6 +26,7 @@ package org.owasp.jbrofuzz.ui.panels;
 import javax.swing.*;
 
 import org.owasp.jbrofuzz.ui.*;
+
 /**
  * <p>
  * The super class that is extended for every panel that is implemented.
@@ -37,16 +38,15 @@ import org.owasp.jbrofuzz.ui.*;
 public abstract class JBroFuzzPanel extends JPanel {
 
 	private JBroFuzzWindow frame;
-	
+
 	public JBroFuzzPanel(final JBroFuzzWindow frame) {
 		super();
 		setLayout(null);
 		this.frame = frame;
 	}
-	
+
 	public JBroFuzzWindow getFrame() {
 		return frame;
 	}
-	
-	
+
 }

@@ -125,24 +125,19 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Last-modified", Color.blue);
 		keywords.put("Content-length", Color.blue);
 		keywords.put("ETag", Color.blue);
-		
+
 		keywords.put("Windows", Color.gray);
 		keywords.put("Mozilla", Color.gray);
 		keywords.put("Firefox", Color.gray);
 		keywords.put("Internet", Color.gray);
 
 		/*
-		keywords.put("0", Color.blue);
-		keywords.put("1", Color.blue);
-		keywords.put("2", Color.blue);
-		keywords.put("3", Color.blue);
-		keywords.put("4", Color.blue);
-		keywords.put("5", Color.blue);
-		keywords.put("6", Color.blue);
-		keywords.put("7", Color.blue);
-		keywords.put("8", Color.blue);
-		keywords.put("9", Color.blue);
-		*/
+		 * keywords.put("0", Color.blue); keywords.put("1", Color.blue);
+		 * keywords.put("2", Color.blue); keywords.put("3", Color.blue);
+		 * keywords.put("4", Color.blue); keywords.put("5", Color.blue);
+		 * keywords.put("6", Color.blue); keywords.put("7", Color.blue);
+		 * keywords.put("8", Color.blue); keywords.put("9", Color.blue);
+		 */
 		keywords.put("html", Color.magenta);
 		keywords.put("head", Color.magenta);
 		keywords.put("body", Color.magenta);
@@ -193,22 +188,24 @@ public class TextHighlighter extends DefaultStyledDocument {
 			}
 		}
 		/*
-		 * Matcher mlcStart = multiLineCommentDelimiterStart.matcher(text); Matcher
-		 * mlcEnd = multiLineCommentDelimiterEnd.matcher(text);
+		 * Matcher mlcStart = multiLineCommentDelimiterStart.matcher(text);
+		 * Matcher mlcEnd = multiLineCommentDelimiterEnd.matcher(text);
 		 * 
 		 * while(mlcStart.find()) {
 		 * 
 		 * if(mlcEnd.find( mlcStart.end() )) { highlightString(commentColor,
-		 * mlcStart.start(), (mlcEnd.end()-mlcStart.start()), true, true); } else {
-		 * highlightString(commentColor, mlcStart.start(), getLength(), true, true); } }
+		 * mlcStart.start(), (mlcEnd.end()-mlcStart.start()), true, true); }
+		 * else { highlightString(commentColor, mlcStart.start(), getLength(),
+		 * true, true); } }
 		 * 
 		 * Matcher slc = singleLineCommentDelimter.matcher(text);
 		 * 
-		 * while(slc.find()) { int line = rootElement.getElementIndex(slc.start());
-		 * int endOffset = rootElement.getElement(line).getEndOffset() - 1;
+		 * while(slc.find()) { int line =
+		 * rootElement.getElementIndex(slc.start()); int endOffset =
+		 * rootElement.getElement(line).getEndOffset() - 1;
 		 * 
-		 * highlightString(commentColor, slc.start(), (endOffset-slc.start()), true,
-		 * true); }
+		 * highlightString(commentColor, slc.start(), (endOffset-slc.start()),
+		 * true, true); }
 		 */
 
 	}

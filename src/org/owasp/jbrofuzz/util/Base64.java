@@ -42,7 +42,7 @@ public class Base64 {
 	 * </p>
 	 * 
 	 * @param base64
-	 *          String
+	 *            String
 	 * @return byte[]
 	 */
 	public static byte[] decode(final String base64) {
@@ -73,7 +73,7 @@ public class Base64 {
 	 * </p>
 	 * 
 	 * @param raw
-	 *          byte[]
+	 *            byte[]
 	 * @return String
 	 */
 	public static String encode(final byte[] raw) {

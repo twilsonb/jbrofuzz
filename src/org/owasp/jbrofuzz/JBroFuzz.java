@@ -35,9 +35,8 @@ import org.owasp.jbrofuzz.version.*;
  * 
  * <p>
  * Description: The central class launching the application. This class
- * instantiates a database, a version, a main frame window and a file
- * handler. The order in which the last three are instantiated should not be
- * altered.
+ * instantiates a database, a version, a main frame window and a file handler.
+ * The order in which the last three are instantiated should not be altered.
  * </p>
  * <p>
  * In order to fill in the contents of the corresponding text fields
@@ -56,18 +55,18 @@ public class JBroFuzz {
 	 * </p>
 	 * 
 	 * @param args
-	 *          String[]
+	 *            String[]
 	 */
 	public static void main(final String[] args) {
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			
+
 			public void run() {
 
 				new JBroFuzz();
 
 			}
-			
+
 		});
 
 	}
@@ -77,7 +76,7 @@ public class JBroFuzz {
 	private Format mFormat;
 
 	private JBroFuzzWindow mWindow;
-	
+
 	private Database mDatabase;
 
 	/**
@@ -88,20 +87,34 @@ public class JBroFuzz {
 	 * </p>
 	 */
 	public JBroFuzz() {
-		
+
 		mDatabase = new Database();
-		
+
 		mFormat = new Format(this);
 		mWindow = new JBroFuzzWindow(this);
 
 		mHandler = new FileHandler(this);
-				
+
 	}
 
 	/**
 	 * <p>
-	 * Return the main format object, thus allowing on top of static, also dynamic
-	 * access to various constant variables, methods, etc.
+	 * Return the main database of exploits loaded, thus giving access to
+	 * generators, etc.
+	 * </p>
+	 * 
+	 * @return Database
+	 */
+	public Database getDatabase() {
+
+		return mDatabase;
+
+	}
+
+	/**
+	 * <p>
+	 * Return the main format object, thus allowing on top of static, also
+	 * dynamic access to various constant variables, methods, etc.
 	 * </p>
 	 * 
 	 * @return mFormat JBRFormat
@@ -137,19 +150,5 @@ public class JBroFuzz {
 
 		return mWindow;
 
-	}
-	
-	/**
-	 * <p>
-	 * Return the main database of exploits loaded, thus giving access to 
-	 * generators, etc.
-	 * </p>
-	 * 
-	 * @return Database
-	 */
-	public Database getDatabase() {
-		
-		return mDatabase;
-		
 	}
 }

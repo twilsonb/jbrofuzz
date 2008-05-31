@@ -27,7 +27,47 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.owasp.jbrofuzz.ui.JBroFuzzWindow;;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+
+;
+
+class Generator {
+	protected String type;
+	protected Integer start;
+	protected Integer end;
+
+	public Generator(final String generator, final int start, final int end) {
+
+		this.start = Integer.valueOf(start);
+		this.end = Integer.valueOf(end);
+		type = generator;
+
+	}
+
+	public int getEnd() {
+		return end.intValue();
+	}
+
+	public int getStart() {
+		return start.intValue();
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setEnd(final int end) {
+		this.end = Integer.valueOf(end);
+	}
+
+	public void setStart(final int start) {
+		this.start = Integer.valueOf(start);
+	}
+
+	public void setType(final String generator) {
+		type = generator;
+	}
+}
 
 /**
  * <p>
@@ -44,9 +84,9 @@ public class ThreeColumnModel extends AbstractTableModel {
 
 	/**
 	 * <p>
-	 * The String used to separate columns when a toString representation of a set
-	 * number of columns or rows is required. This is typically used in method
-	 * getRow() that returns a String.
+	 * The String used to separate columns when a toString representation of a
+	 * set number of columns or rows is required. This is typically used in
+	 * method getRow() that returns a String.
 	 * </p>
 	 */
 	public static final String STRING_SEPARATOR = "          ";
@@ -68,7 +108,7 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param fPanel
-	 *          FuzzingPanel
+	 *            FuzzingPanel
 	 */
 	public ThreeColumnModel(final JBroFuzzWindow fPanel) {
 		this.fPanel = fPanel;
@@ -81,11 +121,11 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param generator
-	 *          String
+	 *            String
 	 * @param start
-	 *          int
+	 *            int
 	 * @param end
-	 *          int
+	 *            int
 	 */
 	public void addRow(final String generator, final int start, final int end) {
 		final Generator addingGenerator = new Generator(generator, start, end);
@@ -107,7 +147,7 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 * Get a given column name.
 	 * 
 	 * @param column
-	 *          int
+	 *            int
 	 * @return String
 	 */
 	@Override
@@ -121,7 +161,7 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @return String
 	 */
 	public String getRow(final int row) {
@@ -146,14 +186,14 @@ public class ThreeColumnModel extends AbstractTableModel {
 
 	/**
 	 * <p>
-	 * Get the value within the generator table at a given location of column and
-	 * row.
+	 * Get the value within the generator table at a given location of column
+	 * and row.
 	 * </p>
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
@@ -181,8 +221,7 @@ public class ThreeColumnModel extends AbstractTableModel {
 		if (dataVector.size() == 0) {
 			return false;
 		}
-		final Generator gen = dataVector.get(dataVector
-				.size() - 1);
+		final Generator gen = dataVector.get(dataVector.size() - 1);
 		if (gen.getType().trim().equalsIgnoreCase("") && (gen.getStart() == 0)
 				&& (gen.getEnd() == 0)) {
 			return true;
@@ -195,9 +234,9 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 * Check to see if a generator table is editable
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 * @return boolean
 	 */
 	@Override
@@ -215,18 +254,18 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param generator
-	 *          String
+	 *            String
 	 * @param start
-	 *          int
+	 *            int
 	 * @param end
-	 *          int
+	 *            int
 	 */
 	public void removeRow(final String generator, final int start, final int end) {
 		int rowToRemove = -1;
 		for (int i = 0; i < dataVector.size(); i++) {
 			final Generator record = dataVector.get(i);
-			if (record.getType().equals(generator) && (record.getStart() == start)
-					&& (record.getEnd() == end)) {
+			if (record.getType().equals(generator)
+					&& (record.getStart() == start) && (record.getEnd() == end)) {
 				rowToRemove = i;
 			}
 		}
@@ -242,11 +281,11 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param value
-	 *          Object
+	 *            Object
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 */
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
@@ -265,43 +304,5 @@ public class ThreeColumnModel extends AbstractTableModel {
 			fPanel.log("TCP Fuzzing Panel: Invalid index ");
 		}
 		fireTableCellUpdated(row, column);
-	}
-}
-
-class Generator {
-	protected String type;
-	protected Integer start;
-	protected Integer end;
-
-	public Generator(final String generator, final int start, final int end) {
-		
-		this.start = Integer.valueOf(start);
-		this.end = Integer.valueOf(end);
-		type = generator;
-		
-	}
-
-	public int getEnd() {
-		return end.intValue();
-	}
-
-	public int getStart() {
-		return start.intValue();
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setEnd(final int end) {
-		this.end = Integer.valueOf(end);
-	}
-
-	public void setStart(final int start) {
-		this.start = Integer.valueOf(start);
-	}
-
-	public void setType(final String generator) {
-		type = generator;
 	}
 }
