@@ -30,7 +30,9 @@ import java.util.Locale;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.io.FileHandler;
 
 /**
  * <p>
@@ -307,6 +309,30 @@ public class Format {
 			errors += 100;
 		} catch (final SecurityException e) {
 			errors += 100;
+		}
+	}
+	
+	/**
+	 * <p>
+	 * Method for abbreviating the given String to a particular length,
+	 * by removing characters from the middle of the String.
+	 * </p>
+	 * <p>This method does not, yet guarantee a return String of length len.</p>
+	 * 
+	 * @param s
+	 * @param len
+	 * @return
+	 */
+	public static final String centerAbbreviate(String s, int len) {
+		
+		if(len < 5) {
+			return s;
+		}
+		
+		if(s.length() < len) {
+			return s;
+		} else {
+			return StringUtils.abbreviate(s, len / 2) + StringUtils.right(s, len / 2);
 		}
 	}
 

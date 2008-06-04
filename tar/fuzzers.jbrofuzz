@@ -62,8 +62,8 @@
 # First line must have 4 fields divided by ":"
 # First character must be "P" for Replacive or "R" for recursive
 # XXX-XXX-XXX has to be unique and in batches of 3 letters long
-# Name has to be less than or equal to 25 characters
-# L has to be between [0-32]
+# Name has to be less than or equal to 64 characters
+# L has to be between [0-64]
 # The total number of payloads, one per line has to be equal to the value of L
 # Second line (describing the categories) must start with ">"
 # Categories must be separated with a "|"
@@ -94,8 +94,8 @@
 # Version 1.0
 #
 
-P:INT-LOW:Integer Overflows:12
-> Exploits | Replacive Fuzzers | Integer Overflows
+P:INT-LOW:Lowercase Integer Overflows:12
+> Exploits | Replacive Fuzzers | Integer Overflows | Lowercase Fuzzers
 -1
 0
 0x100
@@ -109,8 +109,24 @@ P:INT-LOW:Integer Overflows:12
 0x10000
 0x100000
 
-P:FSE-LOW:Format String Errors:19
-> Exploits | Replacive Fuzzers | Format String Errors
+P:INT-UPP:Uppercase Integer Overflows:12
+> Exploits | Replacive Fuzzers | Integer Overflows | Uppercase Fuzzers
+-1
+0
+0x100
+0x1000
+0x3FFFFFFF
+0x7FFFFFFE
+0x7FFFFFFF
+0x80000000
+0xFFFFFFFE
+0xFFFFFFFF
+0x10000
+0x100000
+
+
+P:FSE-LOW:Lowercase Format Strings:19
+> Exploits | Replacive Fuzzers | Format String Errors | Lowercase Fuzzers
 %s%p%x%d
 .1024d
 %.2049d
@@ -127,8 +143,13 @@ P:FSE-LOW:Format String Errors:19
 %s%s%s%s%s%s%s%s%s%s
 %p%p%p%p%p%p%p%p%p%p
 %#0123456x%08x%x%s%p%d%n%o%u%c%h%l%q%j%z%Z%t%i%e%g%f%a%C%S%08x%%
-f(x)=%s x 123
-f(x)=%x x 255
+f(x)=%s x 129
+f(x)=%x x 257
+
+P:FSE-UPP:Uppercase Format Strings:2
+> Exploits | Replacive Fuzzers | Format String Errors | Uppercase Fuzzers
+%X
+f(x)=%X x 257
 
 P:SQL-INJ:SQL Injection:12
 > Replacive Fuzzers | SQL Injection
@@ -195,7 +216,7 @@ http://aa'><script>alert(123)</script>
 http://aa<script>alert(123)</script>
 
 R:NUM-HEX-LOW:Hexadecimal Lowercase:16
-> Number Systems | Recursive Fuzzers
+> Number Systems | Recursive Fuzzers | Lowercase Fuzzers
 0
 1
 2
@@ -214,7 +235,7 @@ e
 f
 
 R:NUM-HEX-UPP:Hexadecimal Uppercase:16
-> Number Systems | Recursive Fuzzers
+> Number Systems | Base | Recursive Fuzzers | Uppercase Fuzzers 
 0
 1
 2
@@ -261,8 +282,352 @@ R:NUM-BIN:Binary Fuzzer:2
 0
 1
 
-R:BFO-UPP:Buffer Overflows:17
-> Exploits | Buffer Overflows
+R:ALP-NUM-LOW:Alpha-Numeric Lowercase:36
+> Alphabets | Recursive Fuzzers | Lowercase Fuzzers
+a
+b
+c
+d
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+p
+q
+r
+s
+t
+u
+v
+w
+x
+y
+z
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+R:ALP-NUM-UPP:Alpha-Numeric Uppercase:36
+> Alphabets | Recursive Fuzzers | Uppercase Fuzzers
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
+Y
+Z
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+R:ALP-UPP:Alpha Uppercase:26
+> Alphabets | Recursive Fuzzers | Uppercase Fuzzers
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
+Y
+Z
+
+R:ALP-LOW:Alpha Lowercase:26
+> Alphabets | Recursive Fuzzers | Lowercase Fuzzers
+a
+b
+c
+d
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+p
+q
+r
+s
+t
+u
+v
+w
+x
+y
+z
+
+R:B64-RFC:Base64 Alphabet:64
+> Alphabets | Number Systems | Base | Recursive Fuzzers
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
+Y
+Z
+a
+b
+c
+d
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+p
+q
+r
+s
+t
+u
+v
+w
+x
+y
+z
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
++
+/
+=
+
+R:B64-URL:Base64 (URL/File Safe) Alphabet:64
+> Alphabets | Number Systems | Base | Recursive Fuzzers
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
+Y
+Z
+a
+b
+c
+d
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+p
+q
+r
+s
+t
+u
+v
+w
+x
+y
+z
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+-
+_
+=
+
+R:B32-RFC:Base32 Alphabet:32
+> Alphabets | Number Systems | Base | Recursive Fuzzers | Uppercase Fuzzers
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
+Y
+Z
+2
+3
+4
+5
+6
+7
+=
+
+R:B32-HEX:Base32 (Extended Hex) Alphabet:32
+> Alphabets | Number Systems | Base | Recursive Fuzzers | Uppercase Fuzzers
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+=
+
+R:BFO-UPP:Long Uppercase AAA's:17
+> Exploits | Buffer Overflows | Uppercase Fuzzers
 A
 f(x)=A x 3
 f(x)=A x 5
@@ -281,9 +646,36 @@ f(x)=A x 16385
 f(x)=A x 32769
 f(x)=A x 65537
 
+R:BFO-LOW:Long Lowercase aaa's:17
+> Exploits | Buffer Overflows | Lowercase Fuzzers
+a
+f(x)=a x 3
+f(x)=a x 5
+f(x)=a x 9
+f(x)=a x 17
+f(x)=a x 33
+f(x)=a x 65
+f(x)=a x 129
+f(x)=a x 257
+f(x)=a x 513
+f(x)=a x 1025
+f(x)=a x 2049
+f(x)=a x 4197
+f(x)=a x 8193
+f(x)=a x 16385
+f(x)=a x 32769
+f(x)=a x 65537
+
 R:DNA-UPP:DNA Uppercase Fuzzer:4
-> Biology | Recursive Fuzzers
+> Biology | Recursive Fuzzers | Uppercase Fuzzers
 A
 T
 C
 G
+
+R:DNA-LOW:DNA Lowercase Fuzzer:4
+> Biology | Recursive Fuzzers | Lowercase Fuzzers
+a
+t
+c
+g

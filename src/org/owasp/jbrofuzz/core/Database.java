@@ -38,8 +38,8 @@ public class Database {
 
 		final int maxLines = 1024;
 		final int maxLineLength = 512;
-		final int maxNumberOfPayloads = 32;
-		final int maxFuzzerNameLength = 25;
+		final int maxNumberOfPayloads = 64;
+		final int maxFuzzerNameLength = 64;
 
 		int line_counter = 0;
 		BufferedReader in = null;
