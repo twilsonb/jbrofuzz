@@ -28,9 +28,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.prefs.Preferences;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
 /**
  * <p>
@@ -38,8 +40,8 @@ import org.owasp.jbrofuzz.io.FileHandler;
  * to function correctly.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 1.0
  */
 class Agent implements Runnable {
 
@@ -128,7 +130,7 @@ class Agent implements Runnable {
 			row.append(" bytes)          ");
 			row.append(Agent.dateFormat.format(currentTime));
 			// Append a row in the table
-			mJBroFuzz.getWindow().getPanelSniffing().addRow(row.toString());
+			mJBroFuzz.getWindow().getPanelSniffing().add(row.toString());
 			// formatted string
 			final StringBuffer sb = new StringBuffer(nBytes);
 			// formatted binary string
@@ -204,8 +206,14 @@ class Agent implements Runnable {
 			pb.append("    ");
 			pb.append(tb);
 			pb.append("\n");
-			// If less than 5% binary?
-			if ((bin_counter / nBytes) < .05) {
+			
+			
+			final Preferences prefs = Preferences.userRoot().node(
+			"owasp/jbrofuzz");
+			boolean displayBinaryinHex = prefs.getBoolean(JBRFormat.PR_SNIF_1, true);
+	
+			// If less than 5 % binary?
+			if (((bin_counter / nBytes) < .05) && (displayBinaryinHex)) {
 				FileHandler.writeSnifFile(fileNumber, sb.toString());
 			} else {
 				FileHandler.writeSnifFile(fileNumber, pb.toString());

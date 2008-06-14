@@ -46,8 +46,8 @@ public class CheckForUpdates extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	// Dimensions of the about box
-	private static final int x = 400;
-	private static final int y = 300;
+	private static final int x = 650;
+	private static final int y = 400;
 
 	// The JPanels inside the main window
 	private JTextArea mainLabel;
@@ -78,7 +78,7 @@ public class CheckForUpdates extends JDialog {
 		newVersionExists = false;
 
 		mainLabel = new JTextArea();
-		mainLabel.setFont(new Font("Monospaced", Font.PLAIN, 10));
+		mainLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
 		mainLabel.setMargin(new Insets(1, 1, 1, 1));
 		mainLabel.setBackground(Color.BLACK);
 		mainLabel.setForeground(new Color(0, 128, 255));
@@ -177,13 +177,13 @@ public class CheckForUpdates extends JDialog {
 						public void run() {
 							Browser.init();
 							try {
-								Browser.displayURL(Format.URL_WEBSITE);
+								Browser.displayURL(JBRFormat.URL_WEBSITE);
 								startStop.setEnabled(false);
 								close.setEnabled(true);
 							} catch (final IOException ex) {
 								mainLabel
 										.append("\nAn error occured while attempting to open the browser:\n\n"
-												+ Format.URL_WEBSITE);
+												+ JBRFormat.URL_WEBSITE);
 							}
 						}
 					});
@@ -235,13 +235,13 @@ public class CheckForUpdates extends JDialog {
 
 		String response = "";
 
-		mainLabel.setText("Finding JBroFuzz Website...\t");
+		mainLabel.setText("Finding JBroFuzz Website...\t\t\t\t");
 
 		// Create an instance of HttpClient.
 		HttpClient client = new HttpClient();
 
 		// Create a method instance.
-		GetMethod method = new GetMethod(Format.URL_WEBSITE);
+		GetMethod method = new GetMethod(JBRFormat.URL_WEBSITE);
 
 		// Provide custom retry handler is necessary
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
@@ -257,7 +257,7 @@ public class CheckForUpdates extends JDialog {
 						+ method.getStatusLine() + "\n");
 
 			} else {
-				mainLabel.append("[ OK ]\n" + "Checking JBroFuzz Website...\t");
+				mainLabel.append("[ OK ]\n" + "Checking JBroFuzz Website...\t\t\t\t");
 				// Read the response body.
 				byte[] responseBody = method.getResponseBody();
 				response = new String(responseBody, "UTF-8");
@@ -276,12 +276,12 @@ public class CheckForUpdates extends JDialog {
 		}
 
 		if (!response.equalsIgnoreCase("")) {
-			mainLabel.append("[ OK ]\n" + "Checking for latest version...\t");
+			mainLabel.append("[ OK ]\n" + "Checking for latest version...\t\t\t\t");
 
 			final Pattern p1 = Pattern.compile("Current version is (\\d.\\d)");
 			final Matcher m1 = p1.matcher(response);
 			if (m1.find()) {
-				mainLabel.append("[ OK ]\n" + "Comparing version numbers...\t");
+				mainLabel.append("[ OK ]\n" + "Comparing version numbers...\t\t\t\t");
 				final String webVersion = m1.group().substring(19, 22);
 
 				double current = 0.0;
@@ -289,12 +289,12 @@ public class CheckForUpdates extends JDialog {
 
 				try {
 
-					current = Double.parseDouble(Format.VERSION);
+					current = Double.parseDouble(JBRFormat.VERSION);
 					latest = Double.parseDouble(webVersion);
 
 					mainLabel.append("[ OK ]\n\nWebsite Version is: "
 							+ webVersion);
-					mainLabel.append("\nCurrent Version is: " + Format.VERSION
+					mainLabel.append("\nCurrent Version is: " + JBRFormat.VERSION
 							+ "\n\n");
 
 				} catch (NumberFormatException e) {
@@ -318,13 +318,13 @@ public class CheckForUpdates extends JDialog {
 					mainLabel
 							.append("\n"
 									+ "Could not interpret JBroFuzz version\nnumbers.\n\nTo check manually, visit:\n\n"
-									+ Format.URL_WEBSITE);
+									+ JBRFormat.URL_WEBSITE);
 				}
 
 			} else {
 				mainLabel.append("[FAIL]\n\n"
 						+ "Could not identify JBroFuzz version at:\n\n"
-						+ Format.URL_WEBSITE);
+						+ JBRFormat.URL_WEBSITE);
 			}
 		}
 	}

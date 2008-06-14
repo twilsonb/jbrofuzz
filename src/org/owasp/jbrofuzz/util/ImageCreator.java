@@ -40,8 +40,8 @@ import javax.swing.ImageIcon;
  * representation of the image.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 1.0
  */
 public class ImageCreator {
 
@@ -159,6 +159,13 @@ public class ImageCreator {
 
 	public static final ImageIcon OWASP_IMAGE_SML = new ImageIcon(Base64
 			.decode(ImageCreator.OWASP_SMALL));
+	
+	private static final String CLOSE = 
+		"R0lGODlhCgAKAIAAAAAAAP///yH5BAEAAAEALAAAAAAKAAoAAAIUjI8BgGvLlHtwnpqkpZh7"
+		+ "2UTZUQAAOw==";
+	
+	public static final ImageIcon IMG_CLOSE = new ImageIcon(Base64.decode(CLOSE));
+	
 	/**
 	 * <p>
 	 * The owasp image being displayed in the about box. This image is

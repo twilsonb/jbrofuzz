@@ -49,7 +49,7 @@ import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.SwingWorker3;
-import org.owasp.jbrofuzz.version.Format;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
 import com.Ostermiller.util.Browser;
 
@@ -60,30 +60,17 @@ import com.Ostermiller.util.Browser;
  * user in the main frame.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.8
+ * @author subere@uncon.org
+ * @version 1.0
  */
 public class SniffingPanel extends JBroFuzzPanel {
-	/*
-	 * private class SniffingRowListener {// implements ListSelectionListener {
-	 * 
-	 * public void valueChanged(final ListSelectionEvent event) {
-	 * 
-	 * if (event.getValueIsAdjusting()) { return; } final int c =
-	 * sniffingTable.getSelectedRow(); final String [] value = ((String)
-	 * tableModel .getValueAt(c, 0)).split(" "); new WindowViewer( getFrame(),
-	 * value[0], WindowViewer.VIEW_SNIFFING_PANEL); } }
-	 */
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2185868982471609733L;
 
 	private final JTextField rHostText, rPortText, lHostText, lPortText;
 
 	// The buttons to start and stop the listener, as well as launch a browser
-	private final JButton startButton, stopButton, browserButton;
+	private final JButton browserButton;
 
 	//
 	private final JTable sniffingTable;
@@ -116,12 +103,19 @@ public class SniffingPanel extends JBroFuzzPanel {
 	 *            MainWindow
 	 */
 	public SniffingPanel(final JBroFuzzWindow m) {
-		super(m);
+		super(" Sniffing ", m);
 		// this.setLayout(null);
 		// this.m = m;
 		// Set the counter to zero
 		counter = 0;
 		session = 0;
+		
+		// Set the options in the toolbar enabled at startup
+		setOptionsAvailable(true, false, false, false, false);
+		
+		// setEnabled(JBroFuzzPanel.START, true);
+		// setEnabled(JBroFuzzPanel.STOP, true);
+		
 		// Define the JPanels
 		final JPanel rHostPanel = new JPanel();
 		final JPanel rPortPanel = new JPanel();
@@ -228,7 +222,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 		listPanel.add(listTextScrollPane);
 
 		// The start, stop buttons
-
+		/*
 		startButton = new JButton("Start", ImageCreator.START_IMG);
 		startButton.setBounds(590, 33, 90, 40);
 		startButton.setEnabled(true);
@@ -238,13 +232,14 @@ public class SniffingPanel extends JBroFuzzPanel {
 		stopButton.setEnabled(false);
 		stopButton.setBounds(690, 33, 90, 40);
 		stopButton.setToolTipText("Stop Sniffing");
+		*/
 		browserButton = new JButton("Browser");
 		browserButton.setBounds(790, 33, 80, 40);
 		browserButton.setEnabled(true);
 		browserButton.setToolTipText("Open in external browser");
 
 		// The action listener for the start button
-
+		/*
 		startButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				// Worker, working...
@@ -268,6 +263,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 				SniffingPanel.this.stop();
 			}
 		});
+		*/
 		// The action listener for the browser button
 		browserButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -280,8 +276,8 @@ public class SniffingPanel extends JBroFuzzPanel {
 		this.add(rPortPanel);
 		this.add(lHostPanel);
 		this.add(lPortPanel);
-		this.add(startButton);
-		this.add(stopButton);
+		// this.add(startButton);
+		// this.add(stopButton);
 		this.add(browserButton);
 		this.add(listPanel);
 
@@ -299,7 +295,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 	 * @param s
 	 *            String
 	 */
-	public void addRow(final String s) {
+	public boolean add(final String s) {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -311,6 +307,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 						sniffingTable.getRowCount(), 0, true));
 			}
 		});
+		return true;
 	}
 
 	public void bro() {
@@ -462,11 +459,16 @@ public class SniffingPanel extends JBroFuzzPanel {
 	 * Method for hitting the start button.
 	 */
 	public void start() {
-		if (!startButton.isEnabled()) {
+		if (isStarted()) {
 			return;
 		}
-		startButton.setEnabled(false);
-		stopButton.setEnabled(true);
+		
+		// Set the options in the toolbar enabled at startup
+		setOptionsAvailable(false, true, false, false, false);
+		
+	//	setStarted(true);
+		// startButton.setEnabled(false);
+		// stopButton.setEnabled(true);
 		session++;
 
 		rHostText.setEditable(false);
@@ -492,7 +494,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 		// Update the border of the output panel
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" List of Requests "
-						+ "[Logging in folder .\\" + Format.DATE + "\\"
+						+ "[Logging in folder .\\" + JBRFormat.DATE + "\\"
 						+ session + "*.txt]  [" + rh + ":" + rp + " <=> " + lh
 						+ ":" + lp + "] "), BorderFactory.createEmptyBorder(1,
 				1, 1, 1)));
@@ -505,11 +507,17 @@ public class SniffingPanel extends JBroFuzzPanel {
 	 * Method for hitting the stop button.
 	 */
 	public void stop() {
-		if (!stopButton.isEnabled()) {
+		if (!isStarted()) {
 			return;
 		}
-		stopButton.setEnabled(false);
-		startButton.setEnabled(true);
+		
+		// Set the options in the toolbar enabled at startup
+		setOptionsAvailable(true, false, false, false, false);
+		
+		// setStarted(false);
+		
+		// stopButton.setEnabled(false);
+		// startButton.setEnabled(true);
 		if (reflector != null) {
 			reflector.stopConnection();
 		}
@@ -538,10 +546,20 @@ public class SniffingPanel extends JBroFuzzPanel {
 		} else {
 			listPanel.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createTitledBorder(" List of Requests "
-							+ "[Last log was .\\" + Format.DATE + "\\"
+							+ "[Last log was .\\" + JBRFormat.DATE + "\\"
 							+ session + "*.txt] "), BorderFactory
 							.createEmptyBorder(1, 1, 1, 1)));
 		}
+	}
+	
+	public void graph() {
+	}
+	
+	public void add() {
+		add(" Line Separator ");
+	}
+	
+	public void remove() {
 	}
 
 }

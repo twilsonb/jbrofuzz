@@ -25,17 +25,18 @@ package org.owasp.jbrofuzz.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.prefs.Preferences;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
+import javax.swing.text.*;
 
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
+import javax.swing.event.*;
 
 import org.owasp.jbrofuzz.*;
 import org.owasp.jbrofuzz.ui.menu.*;
 import org.owasp.jbrofuzz.ui.panels.*;
 import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.version.Format;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
 /**
  * <p>
@@ -47,7 +48,7 @@ import org.owasp.jbrofuzz.version.Format;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 0.9
+ * @version 1.0
  */
 public class JBroFuzzWindow extends JFrame {
 
@@ -119,27 +120,28 @@ public class JBroFuzzWindow extends JFrame {
 	 */
 	public JBroFuzzWindow(final JBroFuzz mJBroFuzz) {
 		// The frame
-		super("JBroFuzz " + Format.VERSION);
+		super("JBroFuzz " + JBRFormat.VERSION);
 		this.mJBroFuzz = mJBroFuzz;
 
 		// The container pane
 		final Container pane = getContentPane();
 		pane.setLayout(new BorderLayout());
-
+		
 		// The menu bar
 		mMenuBar = new JBRMenuBar(this);
 		setJMenuBar(mMenuBar);
 
 		// The tool bar
 		mToolBar = new JBRToolBar(this);
-
-		// The tabbed panels
+		
+		// The panels must be below the toolBar and menuBar
 		mWebDirectoriesPanel = new DirectoriesPanel(this);
 		mFuzzingPanel = new FuzzingPanel(this);
 		mSniffingPanel = new SniffingPanel(this);
 		mPayloadsPanel = new PayloadsPanel(this);
 		mSystemPanel = new SystemPanel(this);
-
+		
+		// Set the corresponding borders for each panel
 		mWebDirectoriesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10,
 				10, 10));
 		mFuzzingPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
@@ -148,37 +150,59 @@ public class JBroFuzzWindow extends JFrame {
 		mPayloadsPanel.setBorder(BorderFactory
 				.createEmptyBorder(10, 10, 10, 10));
 		mSystemPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
+		
 		// The tabbed pane, 3 is for bottom orientation
 		tabbedPane = new JTabbedPane(3);
+		tabbedPane.setOpaque(false);
 		tabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-		// tabbedPane.setPreferredSize(new Dimension(588,368));
-		// tabbedPane.setBounds(0, 0, 895, 500);
-		// Do not change the names!!!
-		tabbedPane.add(" Fuzzing ", mFuzzingPanel);
-		tabbedPane.add(" Sniffing ", mSniffingPanel);
-		tabbedPane.add(" Payloads ", mPayloadsPanel);
-		tabbedPane.add(" Web Directories ", mWebDirectoriesPanel);
+		
+		tabbedPane.add(mFuzzingPanel.getName(), mFuzzingPanel);
+		tabbedPane.add(mSniffingPanel.getName(), mSniffingPanel);
+		tabbedPane.add(mPayloadsPanel.getName(), mPayloadsPanel);
+		tabbedPane.add(mWebDirectoriesPanel.getName(), mWebDirectoriesPanel);
+		
+		
+		tabbedPane.addChangeListener(new ChangeListener() {
 
+			public void stateChanged(ChangeEvent evt) {
+	            JTabbedPane pane = (JTabbedPane)evt.getSource();
+	    
+	            // Get current tab
+	            int sel = pane.getSelectedIndex();
+	            
+	            String name = pane.getComponent(sel).getName();
+	            if(name.equalsIgnoreCase(mFuzzingPanel.getName())) {
+	            	// Set the options enabled taking into account if start has already being triggered
+	            	boolean [] optionsEnabled = mFuzzingPanel.getOptionsAvailable();
+	            	
+	            	mToolBar.setEnabledPanelOptions(optionsEnabled);
+	            	mMenuBar.setEnabledPanelOptions(optionsEnabled);
+	            }
+	            if(name.equalsIgnoreCase(mSniffingPanel.getName())) {
+	            	// Set the options enabled taking into account if start has already being triggered
+	            	boolean [] optionsEnabled = mSniffingPanel.getOptionsAvailable();
+	            	
+	            	mToolBar.setEnabledPanelOptions(optionsEnabled);
+	            	mMenuBar.setEnabledPanelOptions(optionsEnabled);
+	            }
+	            if(name.equalsIgnoreCase(mSystemPanel.getName())) {
+	            	mToolBar.setEnabledPanelOptions(mSystemPanel.getOptionsAvailable());
+	            	mMenuBar.setEnabledPanelOptions(mSystemPanel.getOptionsAvailable());
+	            }
+	            if(name.equalsIgnoreCase(mPayloadsPanel.getName())) {
+	            	mToolBar.setEnabledPanelOptions(mPayloadsPanel.getOptionsAvailable());
+	            	mMenuBar.setEnabledPanelOptions(mPayloadsPanel.getOptionsAvailable());
+	            }
+	            if(name.equalsIgnoreCase(mWebDirectoriesPanel.getName())) {
+	            	// Set the options enabled taking into account if start has already being triggered
+	            	mToolBar.setEnabledPanelOptions(mWebDirectoriesPanel.getOptionsAvailable());
+	            	mMenuBar.setEnabledPanelOptions(mWebDirectoriesPanel.getOptionsAvailable());
+	            }
+	        }
+	    });
 		tabbedPane.setSelectedComponent(mFuzzingPanel);
 
-		/*
-		 * // Close button on the tabs ImageIcon closeButton =
-		 * ImageCreator.EXIT_IMG; // closeButton.setPreferredSize(new
-		 * Dimension(ImageCreator.EXIT_IMG.getIconWidth(),
-		 * ImageCreator.EXIT_IMG.getIconHeight())); ActionListener al = new
-		 * ActionListener () { public void actionPerformed (ActionEvent ae) {
-		 * JButton btn = (JButton) ae.getSource (); String s1 =
-		 * btn.getActionCommand (); for (int i = 1; i < tabbedPane.getTabCount
-		 * (); i++) { JPanel pnl = (JPanel) tabbedPane.getTabComponentAt (i);
-		 * btn = (JButton) pnl.getComponent (0); String s2 =
-		 * btn.getActionCommand (); if (s1.equals (s2)) { tabbedPane.removeTabAt
-		 * (i); break; } } } }; closeButton.addActionListener(al);
-		 * 
-		 * JPanel pnl = new JPanel (); pnl.setOpaque (false); pnl.add
-		 * (closeButton); for(int i = 0; i < tabbedPane.getTabCount(); i++) {
-		 * tabbedPane.setTabComponentAt(i, pnl); }
-		 */
+		
 		pane.add(mToolBar, BorderLayout.PAGE_START);
 		pane.add(tabbedPane, BorderLayout.CENTER);
 
@@ -214,8 +238,13 @@ public class JBroFuzzWindow extends JFrame {
 		Runtime.getRuntime().runFinalization();
 
 		mFuzzingPanel.stop();
-
-		getJBroFuzz().getHandler().deleteEmptryDirectories();
+		
+		// Get the prefences on deleting empty dirs on exit
+		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+		boolean deleteBlankDirs = prefs.getBoolean(JBRFormat.PR_1, true);
+		if(deleteBlankDirs) {
+			getJBroFuzz().getHandler().deleteEmptryDirectories();
+		}
 		dispose();
 
 	}
@@ -317,7 +346,7 @@ public class JBroFuzzWindow extends JFrame {
 	public void log(final String str) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				mSystemPanel.addLoggingEvent(str);
+				mSystemPanel.start(str);
 			}
 		});
 	}
@@ -410,18 +439,23 @@ public class JBroFuzzWindow extends JFrame {
 	 *            int
 	 */
 	public void setTabHide(final int n) {
+		
 		if (n == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
 			tabbedPane.remove(mPayloadsPanel);
 		}
+		
 		if (n == JBroFuzzWindow.ID_PANEL_FUZZING) {
 			tabbedPane.remove(mFuzzingPanel);
 		}
+		
 		if (n == JBroFuzzWindow.ID_PANEL_SNIFFING) {
 			tabbedPane.remove(mSniffingPanel);
 		}
+		
 		if (n == JBroFuzzWindow.ID_PANEL_SYSTEM) {
 			tabbedPane.remove(mSystemPanel);
 		}
+		
 		if (n == JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES) {
 			tabbedPane.remove(mWebDirectoriesPanel);
 		}
@@ -436,24 +470,29 @@ public class JBroFuzzWindow extends JFrame {
 	 *            int
 	 */
 	public void setTabShow(final int n) {
+		
 		if (n == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
-			tabbedPane.addTab(" Payloads ", mPayloadsPanel);
+			tabbedPane.addTab(mPayloadsPanel.getName(), mPayloadsPanel);
 			tabbedPane.setSelectedComponent(mPayloadsPanel);
 		}
+		
 		if (n == JBroFuzzWindow.ID_PANEL_FUZZING) {
-			tabbedPane.addTab(" Fuzzing ", mFuzzingPanel);
+			tabbedPane.addTab(mFuzzingPanel.getName(), mFuzzingPanel);
 			tabbedPane.setSelectedComponent(mFuzzingPanel);
 		}
+		
 		if (n == JBroFuzzWindow.ID_PANEL_SNIFFING) {
-			tabbedPane.addTab(" Sniffing ", mSniffingPanel);
+			tabbedPane.addTab(mSniffingPanel.getName(), mSniffingPanel);
 			tabbedPane.setSelectedComponent(mSniffingPanel);
 		}
+		
 		if (n == JBroFuzzWindow.ID_PANEL_SYSTEM) {
-			tabbedPane.addTab(" System ", mSystemPanel);
+			tabbedPane.addTab(mSystemPanel.getName(), mSystemPanel);
 			tabbedPane.setSelectedComponent(mSystemPanel);
 		}
+		
 		if (n == JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES) {
-			tabbedPane.addTab(" Web Directories ", mWebDirectoriesPanel);
+			tabbedPane.addTab(mWebDirectoriesPanel.getName(), mWebDirectoriesPanel);
 			tabbedPane.setSelectedComponent(mWebDirectoriesPanel);
 		}
 
@@ -461,61 +500,4 @@ public class JBroFuzzWindow extends JFrame {
 
 }
 
-class MyTabbedPaneUI extends BasicTabbedPaneUI {
-	class MyMouseHandler extends MouseHandler {
-		public MyMouseHandler() {
-			super();
-		}
 
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			int x = e.getX();
-			int y = e.getY();
-			int tabIndex = -1;
-			int tabCount = tabPane.getTabCount();
-			for (int i = 0; i < tabCount; i++) {
-				if (rects[i].contains(x, y)) {
-					tabIndex = i;
-					break;
-				}
-			}
-			if (tabIndex >= 0) {
-				Rectangle tabRect = rects[tabIndex];
-				x = x - tabRect.x;
-				y = y - tabRect.y;
-				if ((x >= 5) && (x <= 15) && (y >= 5) && (y <= 15)) {
-					tabPane.remove(tabIndex);
-				}
-			}
-		}
-
-	}
-
-	public MyTabbedPaneUI() {
-		super();
-	}
-
-	@Override
-	protected int calculateTabWidth(int tabPlacement, int tabIndex,
-			FontMetrics metrics) {
-		return super.calculateTabWidth(tabPlacement, tabIndex, metrics) + 20;
-	}
-
-	@Override
-	protected MouseListener createMouseListener() {
-		return new MyMouseHandler();
-	}
-
-	@Override
-	protected void paintTab(Graphics g, int tabPlacement, Rectangle[] rects,
-			int tabIndex, Rectangle iconRect, Rectangle textRect) {
-
-		super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);
-
-		Rectangle rect = rects[tabIndex];
-		g.setColor(Color.black);
-		g.drawRect(rect.x + 5, rect.y + 5, 10, 10);
-		g.drawLine(rect.x + 5, rect.y + 5, rect.x + 15, rect.y + 15);
-		g.drawLine(rect.x + 15, rect.y + 5, rect.x + 5, rect.y + 15);
-	}
-}

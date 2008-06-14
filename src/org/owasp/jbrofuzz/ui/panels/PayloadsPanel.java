@@ -171,7 +171,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	 *            FrameWindow
 	 */
 	public PayloadsPanel(final JBroFuzzWindow m) {
-		super(m);
+		super(" Payloads ", m);
 
 		// Categories: First table with one column of all the different
 		// categories
@@ -571,5 +571,21 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		payloadsTable.getSelectionModel().setSelectionInterval(e, e);
 
 	}
+	
+	public void start() {
+	}
+	
+	public void stop() {
+	}
+	
+	public void graph() {
+	}
+	
+	public void add() {
+	}
+	
+	public void remove() {
+	}
+
 
 }

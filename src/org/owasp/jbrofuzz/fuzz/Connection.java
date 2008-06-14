@@ -24,8 +24,11 @@
 package org.owasp.jbrofuzz.fuzz;
 
 import org.apache.commons.lang.*;
+import org.owasp.jbrofuzz.version.JBRFormat;
+
 import javax.net.ssl.*;
 import java.net.*;
+import java.util.prefs.Preferences;
 import java.io.*;
 
 /**
@@ -45,7 +48,7 @@ public class Connection {
 
 	// The content length header text used for a POST request
 	private static final byte[] CONTENT_LENGTH = new String("Content-Length:")
-			.getBytes();
+	.getBytes();
 
 	// The maximum size for the socket I/O
 	private final static int SEND_BUF_SIZE = 256 * 1024;
@@ -61,6 +64,8 @@ public class Connection {
 	private InputStream in_stream;
 	private OutputStream out_stream;
 
+	private int socketTimeout;
+
 	/**
 	 * <p>
 	 * Implement a connection to a particular address, on a given port,
@@ -75,7 +80,7 @@ public class Connection {
 	 *            String
 	 */
 	public Connection(final String urlString, final String message)
-			throws ConnectionException {
+	throws ConnectionException {
 
 		try {
 			url = new URL(urlString);
@@ -98,6 +103,11 @@ public class Connection {
 		if (protocol.equalsIgnoreCase("http") && (port == -1)) {
 			port = 80;
 		}
+
+		// Set the socket timeout from the preferences
+		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+		boolean maxTimeout = prefs.getBoolean(JBRFormat.PR_FUZZ_1, false);
+		socketTimeout = maxTimeout ? 30000 : 5000;
 
 		this.message = message;
 
@@ -123,12 +133,12 @@ public class Connection {
 			SSLContext sc = SSLContext.getInstance("SSL");
 			sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			HttpsURLConnection
-					.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			.setDefaultSSLSocketFactory(sc.getSocketFactory());
 		} catch (Exception e) {
 
 			throw new ConnectionException(
 					"Could not install all-trusting certificates... "
-							+ e.getMessage());
+					+ e.getMessage());
 
 		}
 
@@ -137,7 +147,7 @@ public class Connection {
 
 			// Creating Client Sockets
 			SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory
-					.getDefault();
+			.getDefault();
 			SSLSocket sslSocket = null;
 			try {
 
@@ -145,16 +155,16 @@ public class Connection {
 						port);
 				sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
 				sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-				sslSocket.setSoTimeout(30000);
+				sslSocket.setSoTimeout(socketTimeout);
 
 			} catch (UnknownHostException e) {
 				reply = "The IP address of the host could not be determined : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			} catch (IOException e) {
 				reply = "An IO Error occured when creating the socket : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -164,7 +174,7 @@ public class Connection {
 				in_stream = sslSocket.getInputStream();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the input stream : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -173,7 +183,7 @@ public class Connection {
 				out_stream = sslSocket.getOutputStream();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the output stream : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -183,7 +193,7 @@ public class Connection {
 				out_stream.write(this.message.getBytes());
 			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to write to the output stream : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -216,7 +226,7 @@ public class Connection {
 				sslSocket.close();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to close the socket : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 
 				throw new ConnectionException(reply);
 
@@ -229,19 +239,19 @@ public class Connection {
 			try {
 				socket = new Socket();
 				socket.bind(null);
-				socket.connect(new InetSocketAddress(host, port), 5000);
+				socket.connect(new InetSocketAddress(host, port), socketTimeout);
 
 				socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
 				socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
 				socket.setSoTimeout(30000);
 			} catch (final UnknownHostException e) {
 				reply = "The IP address of the host could not be determined : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the socket : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 			}
 
@@ -250,7 +260,7 @@ public class Connection {
 				in_stream = socket.getInputStream();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the input stream : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -259,7 +269,7 @@ public class Connection {
 				out_stream = socket.getOutputStream();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when creating the output stream : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -269,7 +279,7 @@ public class Connection {
 				out_stream.write(this.message.getBytes());
 			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to write to the output stream : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 
 			}
@@ -300,7 +310,7 @@ public class Connection {
 				socket.close();
 			} catch (final IOException e) {
 				reply = "An IO Error occured when attempting to close the socket : "
-						+ e.getMessage() + "\n";
+					+ e.getMessage() + "\n";
 				throw new ConnectionException(reply);
 			}
 		}

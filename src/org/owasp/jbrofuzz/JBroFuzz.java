@@ -73,7 +73,7 @@ public class JBroFuzz {
 
 	private FileHandler mHandler;
 
-	private Format mFormat;
+	private JBRFormat mFormat;
 
 	private JBroFuzzWindow mWindow;
 
@@ -90,7 +90,7 @@ public class JBroFuzz {
 
 		mDatabase = new Database();
 
-		mFormat = new Format(this);
+		mFormat = new JBRFormat(this);
 		mWindow = new JBroFuzzWindow(this);
 
 		mHandler = new FileHandler(this);
@@ -119,7 +119,7 @@ public class JBroFuzz {
 	 * 
 	 * @return mFormat JBRFormat
 	 */
-	public Format getFormat() {
+	public JBRFormat getFormat() {
 
 		return mFormat;
 
