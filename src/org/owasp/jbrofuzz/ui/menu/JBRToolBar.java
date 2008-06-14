@@ -28,7 +28,8 @@ import javax.swing.*;
 
 import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.util.*;
-import org.owasp.jbrofuzz.version.Format;
+import org.owasp.jbrofuzz.ui.panels.*;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
 import com.Ostermiller.util.Browser;
 
@@ -44,7 +45,7 @@ public class JBRToolBar extends JToolBar {
 
 	private final JBroFuzzWindow mFrameWindow;
 
-	public final JButton start, stop, graph, add, remove, help, about, website;
+	private final JButton start, stop, graph, add, remove, help, about, website;
 
 	public JBRToolBar(final JBroFuzzWindow mFrameWindow) {
 
@@ -83,50 +84,65 @@ public class JBRToolBar extends JToolBar {
 
 		setFloatable(true);
 		setRollover(true);
-
+		/*
+		start.setEnabled(true);
+		stop.setEnabled(false);
+		graph.setEnabled(false);
+		*/
 		start.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						final SwingWorker3 worker = new SwingWorker3() {
+							
+							JBroFuzzPanel p;
 							@Override
 							public Object construct() {
+								/*
 								int currentTab = JBRToolBar.this
-										.getFrameWindow().getTabbedPane()
-										.getSelectedIndex();
-								String s = JBRToolBar.this.getFrameWindow()
-										.getTabbedPane().getTitleAt(currentTab);
+								.getFrame().getTabbedPane()
+								.getSelectedIndex();
+								String s = JBRToolBar.this.getFrame()
+								.getTabbedPane().getTitleAt(currentTab);
 								if (s.equals(" Fuzzing ")) {
-									JBRToolBar.this.getFrameWindow()
-											.getPanelFuzzing().start();
+									JBRToolBar.this.getFrame()
+									.getPanelFuzzing().start();
 								}
 								if (s.equals(" Sniffing ")) {
-									JBRToolBar.this.getFrameWindow()
-											.getPanelSniffing().start();
+									JBRToolBar.this.getFrame()
+									.getPanelSniffing().start();
 								}
 								if (s.equals(" Web Directories ")) {
-									JBRToolBar.this.getFrameWindow()
-											.getPanelWebDirectories().start();
+									JBRToolBar.this.getFrame()
+									.getPanelWebDirectories().start();
 								}
+								*/
+								int c = getFrame().getTabbedPane().getSelectedIndex();
+								p = (JBroFuzzPanel) getFrame().getTabbedPane().getComponent(c);
+								p.start();
 								return "start-menu-bar-return";
 							}
 
 							@Override
 							public void finished() {
+								/*
 								int currentTab = JBRToolBar.this
-										.getFrameWindow().getTabbedPane()
-										.getSelectedIndex();
+								.getFrameWindow().getTabbedPane()
+								.getSelectedIndex();
 								String s = JBRToolBar.this.getFrameWindow()
-										.getTabbedPane().getTitleAt(currentTab);
+								.getTabbedPane().getTitleAt(currentTab);
 								if (s.equals(" Fuzzing ")) {
 									JBRToolBar.this.getFrameWindow()
-											.getPanelFuzzing().stop();
+									.getPanelFuzzing().stop();
+									System.out.println("Is this...");
 								}
 								if (s.equals(" Web Directories ")) {
 									JBRToolBar.this.getFrameWindow()
-											.getPanelWebDirectories().stop();
+									.getPanelWebDirectories().stop();
 								}
+								*/
+								p.stop();
 							}
 						};
 						worker.start();
@@ -141,22 +157,28 @@ public class JBRToolBar extends JToolBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						final int currentTab = JBRToolBar.this.getFrameWindow()
-								.getTabbedPane().getSelectedIndex();
-						final String s = JBRToolBar.this.getFrameWindow()
-								.getTabbedPane().getTitleAt(currentTab);
+						/*
+						final int currentTab = JBRToolBar.this.getFrame()
+						.getTabbedPane().getSelectedIndex();
+						final String s = JBRToolBar.this.getFrame()
+						.getTabbedPane().getTitleAt(currentTab);
 						if (s.equals(" Fuzzing ")) {
-							JBRToolBar.this.getFrameWindow().getPanelFuzzing()
-									.stop();
+							JBRToolBar.this.getFrame().getPanelFuzzing()
+							.stop();
 						}
 						if (s.equals(" Sniffing ")) {
-							JBRToolBar.this.getFrameWindow().getPanelSniffing()
-									.stop();
+							JBRToolBar.this.getFrame().getPanelSniffing()
+							.stop();
 						}
 						if (s.equals(" Web Directories ")) {
-							JBRToolBar.this.getFrameWindow()
-									.getPanelWebDirectories().stop();
+							JBRToolBar.this.getFrame()
+							.getPanelWebDirectories().stop();
 						}
+						*/
+						int c = getFrame().getTabbedPane().getSelectedIndex();
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTabbedPane().getComponent(c);
+						p.stop();
+						
 					}
 				});
 
@@ -167,18 +189,25 @@ public class JBRToolBar extends JToolBar {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						final int currentTab = JBRToolBar.this.getFrameWindow()
-								.getTabbedPane().getSelectedIndex();
-						final String s = JBRToolBar.this.getFrameWindow()
-								.getTabbedPane().getTitleAt(currentTab);
+						/*
+						final int currentTab = JBRToolBar.this.getFrame()
+						.getTabbedPane().getSelectedIndex();
+						final String s = JBRToolBar.this.getFrame()
+						.getTabbedPane().getTitleAt(currentTab);
 						if (s.equals(" Fuzzing ")) {
-							JBRToolBar.this.getFrameWindow().getPanelFuzzing()
-									.fuzzBroButton();
+							JBRToolBar.this.getFrame().getPanelFuzzing()
+							.graph();
 						}
+						
 						if (s.equals(" Sniffing ")) {
 							JBRToolBar.this.getFrameWindow().getPanelSniffing()
-									.bro();
+							.bro();
 						}
+						*/
+						int c = getFrame().getTabbedPane().getSelectedIndex();
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTabbedPane().getComponent(c);
+						p.graph();
+						
 					}
 				});
 			}
@@ -189,14 +218,29 @@ public class JBRToolBar extends JToolBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						final int currentTab = JBRToolBar.this.getFrameWindow()
-								.getTabbedPane().getSelectedIndex();
-						final String s = JBRToolBar.this.getFrameWindow()
-								.getTabbedPane().getTitleAt(currentTab);
-						if (s.equals(" Fuzzing ")) {
-							JBRToolBar.this.getFrameWindow().getPanelFuzzing()
-									.add();
+						/*
+						for(int i = 0; i < JBRToolBar.this.getFrameWindow().getTabbedPane().getTabCount(); i++ ) {
+
+							final String s = JBRToolBar.this.getFrameWindow().getTabbedPane().getTitleAt(i);
+							if(s.equalsIgnoreCase(" Fuzzing ")) {
+
+								JBRToolBar.this.getFrameWindow().getTabbedPane().setSelectedIndex(i);
+								JBRToolBar.this.getFrameWindow().getPanelFuzzing().add();
+							}
 						}
+						
+						
+						
+						final int currentTab = JBRToolBar.this.getFrame().getTabbedPane().getSelectedIndex();
+						final String s = JBRToolBar.this.getFrame().getTabbedPane().getTitleAt(currentTab);
+						if (s.equals(" Fuzzing ")) {
+							JBRToolBar.this.getFrame().getPanelFuzzing().add();
+						}
+						*/
+						int c = getFrame().getTabbedPane().getSelectedIndex();
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTabbedPane().getComponent(c);
+						p.add();
+						
 
 					}
 				});
@@ -209,7 +253,18 @@ public class JBRToolBar extends JToolBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
+						/*
+						for(int i = 0; i < JBRToolBar.this.getFrame().getTabbedPane().getTabCount(); i++ ) {
 
+							final String s = JBRToolBar.this.getFrame().getTabbedPane().getTitleAt(i);
+							if(s.equalsIgnoreCase(" Fuzzing ")) {
+
+								JBRToolBar.this.getFrame().getTabbedPane().setSelectedIndex(i);
+								JBRToolBar.this.getFrame().getPanelFuzzing().remove();
+							}
+						}
+
+						
 						final int currentTab = JBRToolBar.this.getFrameWindow()
 								.getTabbedPane().getSelectedIndex();
 						final String s = JBRToolBar.this.getFrameWindow()
@@ -218,6 +273,11 @@ public class JBRToolBar extends JToolBar {
 							JBRToolBar.this.getFrameWindow().getPanelFuzzing()
 									.remove();
 						}
+						*/
+						int c = getFrame().getTabbedPane().getSelectedIndex();
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTabbedPane().getComponent(c);
+						p.remove();
+						
 
 					}
 				});
@@ -230,7 +290,7 @@ public class JBRToolBar extends JToolBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new JBRHelp(JBRToolBar.this.getFrameWindow());
+						new JBRHelp(JBRToolBar.this.getFrame());
 					}
 				});
 			}
@@ -241,7 +301,7 @@ public class JBRToolBar extends JToolBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new AboutBox(JBRToolBar.this.getFrameWindow(),
+						new AboutBox(JBRToolBar.this.getFrame(),
 								AboutBox.ABOUT);
 					}
 				});
@@ -255,12 +315,12 @@ public class JBRToolBar extends JToolBar {
 					public void run() {
 						Browser.init();
 						try {
-							Browser.displayURL(Format.URL_WEBSITE);
+							Browser.displayURL(JBRFormat.URL_WEBSITE);
 						} catch (final IOException ex) {
 							JBRToolBar.this
-									.getFrameWindow()
-									.log(
-											"Could not launch link in external browser");
+							.getFrame()
+							.log(
+									"Could not launch link in external browser");
 						}
 					}
 				});
@@ -268,8 +328,19 @@ public class JBRToolBar extends JToolBar {
 		});
 
 	}
+	
+	public void setEnabledPanelOptions(boolean [] b) {
+		
+		if(b.length == 5) {
+			start.setEnabled(b[0]);
+			stop.setEnabled(b[1]);
+			graph.setEnabled(b[2]);
+			add.setEnabled(b[3]);
+			remove.setEnabled(b[4]);
+		}
+	}
 
-	public JBroFuzzWindow getFrameWindow() {
+	public JBroFuzzWindow getFrame() {
 
 		return mFrameWindow;
 

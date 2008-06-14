@@ -25,7 +25,7 @@ package org.owasp.jbrofuzz.dir;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.version.Format;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
 /**
  * Class used for constructing the contents of the text displayed within the web
@@ -50,7 +50,7 @@ public class DConstructor {
 	public DConstructor(final JBroFuzz mJBroFuzz) {
 
 		final StringBuffer dirTextBuffer = FileHandler
-				.readDirectories(Format.FILE_DIR);
+				.readDirectories(JBRFormat.FILE_DIR);
 
 		mJBroFuzz.getWindow().getPanelWebDirectories().setDirectoriesText(
 				dirTextBuffer);

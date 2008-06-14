@@ -34,8 +34,8 @@ import org.owasp.jbrofuzz.JBroFuzz;
  * class uses the Agent class in order to achieve this.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 1.0
  */
 class Connection implements Runnable, AgentMonitor {
 
@@ -157,7 +157,7 @@ class Connection implements Runnable, AgentMonitor {
 		if (!connectToDest()) {
 			closeSrc();
 		} else {
-			// Ok, we're all ready ... since we've gotten this far,
+			// Ok, we're here ... since we've gotten this far,
 			// add ourselves into the connection list
 
 			cm.addConnection(this);

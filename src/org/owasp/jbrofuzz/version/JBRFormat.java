@@ -32,7 +32,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.io.FileHandler;
 
 /**
  * <p>
@@ -44,10 +43,10 @@ import org.owasp.jbrofuzz.io.FileHandler;
  * generators and the directories list, user properties.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 1.0
  */
-public class Format {
+public class JBRFormat {
 
 	/**
 	 * <p>
@@ -68,7 +67,26 @@ public class Format {
 	 * The preferences used for selecting on whether or not to continue upon an
 	 * error occurring while in the fuzzing directories tab.
 	 */
-	public static final String PREF_FUZZ_DIR_ERR = "fuzz.dir.error.continue";
+	public static final String PR_WEB_DIR_1 = "fuzz.dir.error.continue";
+	
+	/**
+	 * The preferences used for selecting the timeout in the socket created,
+	 * while fuzzing.
+	 */
+	public static final String PR_FUZZ_1 = "fuzz.socket.timeout.max";
+	
+	/**
+	 * The preferences used to decide whether or not to display binary files
+	 * in hex format.
+	 */
+	public static final String PR_SNIF_1 = "snif.display.hex";
+	
+	/**
+	 * The preferences used for deciding whether or not to delete any blank
+	 * directories while exiting.
+	 */
+	public static final String PR_1 = "prefs.dir.delete";
+	
 	/**
 	 * The web site used via means of the selecting "JBroFuzz Website on the
 	 * About menu.
@@ -132,7 +150,7 @@ public class Format {
 	 * variable.
 	 * </p>
 	 */
-	public static String CODENAME = getCodeName(Format.VERSION);;
+	public static String CODENAME = getCodeName(JBRFormat.VERSION);;
 
 	/**
 	 * <p>
@@ -148,7 +166,7 @@ public class Format {
 	public static final String ABOUTTEXT =
 
 	"<HTML><B>JBroFuzz Version:  " + VERSION + "<BR>" + "Codename: "
-			+ Format.getCodeName(Format.VERSION) + "</B><BR><BR>"
+			+ JBRFormat.getCodeName(JBRFormat.VERSION) + "</B><BR><BR>"
 			+ "<B>Copyright &copy; " + YEAR + " subere@uncon.org</B><BR><BR>"
 			+ "Running Under  Java " + System.getProperty("java.version")
 			+ "<BR><BR>" + "<B>A stateless network protocol fuzzer <BR>"
@@ -276,7 +294,7 @@ public class Format {
 	private static final String getDate() {
 		final String DATE_FORMAT = "DDD yyyy-MM-dd HH-mm-ss";
 		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT,
-				new Locale(Format.ISO_LAN_CODE));
+				new Locale(JBRFormat.ISO_LAN_CODE));
 		return SDF.format(new Date());
 	}
 
@@ -294,7 +312,7 @@ public class Format {
 		int errors = 0;
 		try {
 			String oSystem = System.getProperty("os.name");
-			oSystem = oSystem.toLowerCase(new Locale(Format.ISO_LAN_CODE));
+			oSystem = oSystem.toLowerCase(new Locale(JBRFormat.ISO_LAN_CODE));
 			if (oSystem.startsWith("windows")) {
 				UIManager
 						.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -345,10 +363,10 @@ public class Format {
 	 * @param mJBroFuzz
 	 *            JBroFuzz
 	 */
-	public Format(final JBroFuzz mJBroFuzz) {
+	public JBRFormat(final JBroFuzz mJBroFuzz) {
 
 		// Set the look and feel
-		Format.setLookAndFeel(mJBroFuzz);
+		JBRFormat.setLookAndFeel(mJBroFuzz);
 		// Set some preferences for the mac
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",

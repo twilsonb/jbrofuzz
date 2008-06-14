@@ -35,7 +35,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SixColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.util.*;
-import org.owasp.jbrofuzz.version.Format;
+import org.owasp.jbrofuzz.version.JBRFormat;
 
 import com.Ostermiller.util.Browser;
 
@@ -62,7 +62,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	private JFormattedTextField portText;
 
 	// The JButtons present in the user interface
-	private final JButton startButton, stopButton;
+	// private final JButton startButton, stopButton;
 
 	// The JTable holding all the responses
 	private JTable responseTable;
@@ -93,10 +93,18 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	 *            FrameWindow
 	 */
 	public DirectoriesPanel(final JBroFuzzWindow m) {
-		super(m);
+		super(" Web Directories ", m);
 		// this.m = m;
 		session = 0;
 
+		// Set the options in the toolbar enabled at startup
+		setOptionsAvailable(true, false, false, false, false);
+		
+		// Set options enabled for each panel 
+		// setEnabled(JBroFuzzPanel.START, true);
+		// setEnabled(JBroFuzzPanel.STOP, true);
+		
+		
 		// Define the directory JPanel
 		directoryPanel = new JPanel();
 		directoryPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -172,7 +180,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		directoryScrollPane.setPreferredSize(new Dimension(210, 390));
 		directoryPanel.add(directoryScrollPane);
 
-		// The add generator button
+		/* The add generator button
 		startButton = new JButton("Start", ImageCreator.START_IMG);
 		startButton.setBounds(420, 95, 90, 40);
 		startButton
@@ -206,6 +214,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 				DirectoriesPanel.this.stop();
 			}
 		});
+		*/
 
 		responseTableModel = new SixColumnModel();
 		responseTableModel.setColumnNames("No", "URI", "Code", "Status Text",
@@ -313,8 +322,8 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		progressPanel.add(progressBar);
 		this.add(progressPanel);
 
-		startButton.setEnabled(true);
-		stopButton.setEnabled(false);
+		// startButton.setEnabled(true);
+		// stopButton.setEnabled(false);
 
 		targetText.setText("http://192.168.1.254");
 		portText.setText("80");
@@ -565,21 +574,33 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	 * Method triggered when the start button is pressed.
 	 */
 	public void start() {
-		if (!startButton.isEnabled()) {
+		
+		// JButton startButton = getFrame().getFrameToolBar().start;
+		// JButton stopButton = getFrame().getFrameToolBar().stop;
+		
+		if (!isStarted()) {
 			return;
 		}
+		// Set the options in the toolbar enabled at startup
+		setOptionsAvailable(false, true, false, false, false);
+		
+		// setStarted(true);
+		
+		// startButton.setEnabled(false);
+		// stopButton.setEnabled(true);
+		
 		// Increment the session number
 		session++;
 		session %= 100;
 		// Update the panel, indicating directory
 		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output " + "[Logging in file \\web-dir\\"
-						+ Format.DATE + "\\" + getSessionNumber() + ".csv]  "),
+						+ JBRFormat.DATE + "\\" + getSessionNumber() + ".csv]  "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 		// UI and Colors
-		startButton.setEnabled(false);
-		stopButton.setEnabled(true);
+		// startButton.setEnabled(false);
+		// stopButton.setEnabled(true);
 		targetText.setEditable(false);
 		targetText.setBackground(Color.BLACK);
 		targetText.setForeground(Color.WHITE);
@@ -612,13 +633,22 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	 * </p>
 	 */
 	public void stop() {
-		if (!stopButton.isEnabled()) {
+		
+		// JButton startButton = getFrame().getFrameToolBar().start;
+		// JButton stopButton = getFrame().getFrameToolBar().stop;
+		
+		if (!isStarted()) {
 			return;
 		}
+		// Set the options in the toolbar enabled at startup
+		setOptionsAvailable(true, false, false, false, false);
+		
+		// setStarted(false);
 
 		// UI and Colors
-		stopButton.setEnabled(false);
-		startButton.setEnabled(true);
+		// stopButton.setEnabled(false);
+		// startButton.setEnabled(true);
+		
 		targetText.setEditable(true);
 		targetText.setBackground(Color.WHITE);
 		targetText.setForeground(Color.BLACK);
@@ -628,14 +658,14 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 
 		cesg.stop();
 	}
-
-	/**
-	 * Get the value of the check box, allowing the application to continue
-	 * running even if an error occurs.
-	 * 
-	 * @return boolean
-	 * 
-	 * public boolean getCheckBoxValue() { return checkbox; }
-	 */
+	
+	public void graph() {
+	}
+	
+	public void add() {
+	}
+	
+	public void remove() {
+	}
 
 }

@@ -32,21 +32,104 @@ import org.owasp.jbrofuzz.ui.*;
  * The super class that is extended for every panel that is implemented.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.8
+ * @author subere@uncon.org
+ * @version 1.0
  */
 public abstract class JBroFuzzPanel extends JPanel {
 
 	private JBroFuzzWindow frame;
 
-	public JBroFuzzPanel(final JBroFuzzWindow frame) {
+	private String name;
+
+	private boolean[] optionsAvailable;
+
+	public JBroFuzzPanel(final String name, final JBroFuzzWindow frame) {
+
 		super();
 		setLayout(null);
+		setOpaque(false);
+		this.name = name;
 		this.frame = frame;
+		this.optionsAvailable = new boolean [] {false, false, false, false, false};
+
 	}
 
-	public JBroFuzzWindow getFrame() {
+	public final JBroFuzzWindow getFrame() {
+
 		return frame;
+
+	}
+
+	public abstract void start();
+
+	public abstract void stop();
+
+	public abstract void add();
+
+	public abstract void remove();
+
+	public abstract void graph();
+
+	public final void setOptionsAvailable(boolean start, boolean stop, boolean graph, boolean add, boolean remove) {
+
+		optionsAvailable[0] = start;
+		optionsAvailable[1] = stop;
+		optionsAvailable[2] = graph;
+		optionsAvailable[3] = add;
+		optionsAvailable[4] = remove;
+
+		getFrame().getFrameToolBar().setEnabledPanelOptions(optionsAvailable);
+		getFrame().getFrameMenuBar().setEnabledPanelOptions(optionsAvailable);
+
+	}
+
+	public final boolean[] getOptionsAvailable() {
+
+		return optionsAvailable;
+
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	public int getOptionsLength() {
+		
+		return optionsAvailable.length;
+		
+	}
+
+	
+	public boolean isStarted() {
+
+		return optionsAvailable[0];
+
+	}
+	
+	public boolean isStopped() {
+		
+		return optionsAvailable[1];
+	}
+	
+	public boolean isGraphed() {
+		
+		return optionsAvailable[2];
+		
+	}
+	
+	public boolean isAdded() {
+		
+		return optionsAvailable[3];
+		
+	}
+	
+	public boolean isRemoved() {
+		
+		return optionsAvailable[4];
+		
 	}
 
 }

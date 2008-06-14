@@ -46,21 +46,12 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
  * frame window.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 1.0
  */
 public class SystemPanel extends JBroFuzzPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
-	// private static final long serialVersionUID = -1771587308148328608L;
-	// The frame that the sniffing panel is attached
-	// private JBRFrame m;
 	// The JTable that holds all the data
 	private JTextArea listTextArea;
 	// The info button
@@ -76,16 +67,18 @@ public class SystemPanel extends JBroFuzzPanel {
 	 *            FrameWindow
 	 */
 	public SystemPanel(final JBroFuzzWindow m) {
-		super(m);
-		// this.setLayout(null);
-		// this.m = m;
+		
+		super(" System ", m);
 		lineCount = 0;
+		
+		// setEnabled(JBroFuzzPanel.ADD, true);
+		
 		// Define the JPanel
 		final JPanel listPanel = new JPanel();
-
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" System Logger "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
+		
 		// Set the bounds
 		listPanel.setBounds(10, 90, 870, 360);
 
@@ -148,7 +141,7 @@ public class SystemPanel extends JBroFuzzPanel {
 				final String[] info = systemInfo.split("\r\n");
 
 				for (final String element : info) {
-					SystemPanel.this.addLoggingEvent(element);
+					SystemPanel.this.start(element);
 				}
 
 			}
@@ -168,7 +161,7 @@ public class SystemPanel extends JBroFuzzPanel {
 	 * @param str
 	 *            String
 	 */
-	public void addLoggingEvent(final String str) {
+	public void start(final String str) {
 
 		final Date currentTime = new Date();
 		final SimpleDateFormat dateTime = new SimpleDateFormat(
@@ -190,5 +183,23 @@ public class SystemPanel extends JBroFuzzPanel {
 			getFrame().getTabbedPane().setTitleAt(tab,
 					" System (" + lineCount + ")");
 		}
+		
 	}
+	
+	public void start() {
+		start("Logging Time Instance");
+	}
+	
+	public void stop() {
+	}
+	
+	public void graph() {
+	}
+	
+	public void add() {
+	}
+	
+	public void remove() {
+	}
+
 }
