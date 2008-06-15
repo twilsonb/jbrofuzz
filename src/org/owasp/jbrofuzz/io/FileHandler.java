@@ -37,7 +37,7 @@ import java.util.Vector;
 
 import org.owasp.jbrofuzz.dir.DConstructor;
 import org.owasp.jbrofuzz.*;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 import org.apache.commons.io.*;
 
@@ -291,7 +291,7 @@ public class FileHandler {
 				boolean passedResponse = false;
 				line = bufRead.readLine();
 				while (line != null) {
-					if (line.startsWith(JBRFormat.LINE_SEPARATOR)) {
+					if (line.startsWith(JBroFuzzFormat.LINE_SEPARATOR)) {
 						passedResponse = true;
 					}
 					if (passedResponse) {
@@ -377,7 +377,7 @@ public class FileHandler {
 			line_counter = 0;
 
 			final URL fileURL = ClassLoader.getSystemClassLoader().getResource(
-					JBRFormat.FILE_DIR);
+					JBroFuzzFormat.FILE_DIR);
 
 			try {
 				final URLConnection connection = fileURL.openConnection();
@@ -420,7 +420,7 @@ public class FileHandler {
 				FileHandler.g.getWindow().log(
 						"Loading default directories list");
 			}
-			final String[] defaultArray = JBRFormat.DEFAULT_DIRS.split("\n");
+			final String[] defaultArray = JBroFuzzFormat.DEFAULT_DIRS.split("\n");
 			len = defaultArray.length;
 			file.setSize(len);
 			for (int x = 0; x < len; x++) {
@@ -521,15 +521,15 @@ public class FileHandler {
 		// Create the necessary directory with the corresponding timestamp
 		FileHandler.fuzzDirectory = new File(baseDir + File.separator
 				+ "jbrofuzz" + File.separator + "fuzzing" + File.separator
-				+ JBRFormat.DATE);
+				+ JBroFuzzFormat.DATE);
 
 		FileHandler.snifDirectory = new File(baseDir + File.separator
 				+ "jbrofuzz" + File.separator + "sniffing" + File.separator
-				+ JBRFormat.DATE);
+				+ JBroFuzzFormat.DATE);
 
 		FileHandler.webEnumDirectory = new File(baseDir + File.separator
 				+ "jbrofuzz" + File.separator + "web-dir" + File.separator
-				+ JBRFormat.DATE);
+				+ JBroFuzzFormat.DATE);
 
 		int failedDirCounter = 0;
 
@@ -564,7 +564,7 @@ public class FileHandler {
 					.log(
 							"\tToo many directories could not be created! Are you launching me through your browser?");
 			g.getWindow().log(
-					"\tTry \"java -jar jbrofuzz-" + JBRFormat.VERSION
+					"\tTry \"java -jar jbrofuzz-" + JBroFuzzFormat.VERSION
 							+ ".jar\" on command line...");
 			failedDirCounter = 0;
 		}

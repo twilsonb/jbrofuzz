@@ -45,7 +45,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -94,7 +94,7 @@ public class AboutBox extends JDialog {
 				.getResource("LICENSE/NOTICE.txt");
 
 		// The about editor label
-		final JLabel about = new JLabel(JBRFormat.ABOUTTEXT,
+		final JLabel about = new JLabel(JBroFuzzFormat.ABOUTTEXT,
 				ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
 
 		// The license editor pane
@@ -113,7 +113,7 @@ public class AboutBox extends JDialog {
 		lcsScrollPane.setHorizontalScrollBarPolicy(30);
 
 		// The disclaimer editor label
-		final JLabel disclaimer = new JLabel(JBRFormat.DISCLAIMER, ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
+		final JLabel disclaimer = new JLabel(JBroFuzzFormat.DISCLAIMER, ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
 
 		// The acknoledgement editor pane
 		JEditorPane acknoledgements;

@@ -46,7 +46,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
  * @author subere@uncon.org
  * @version 1.0
  */
-public class JBRFormat {
+public class JBroFuzzFormat {
 
 	/**
 	 * <p>
@@ -86,6 +86,14 @@ public class JBRFormat {
 	 * directories while exiting.
 	 */
 	public static final String PR_1 = "prefs.dir.delete";
+	
+	/**
+	 * The preferences used for deciding whether or not to allign the tabs
+	 * at the top or bottom of the main window.
+	 * 
+	 * True represents top.
+	 */
+	public static final String PR_2 = "prefs.ui.tabs";
 	
 	/**
 	 * The web site used via means of the selecting "JBroFuzz Website on the
@@ -150,7 +158,7 @@ public class JBRFormat {
 	 * variable.
 	 * </p>
 	 */
-	public static String CODENAME = getCodeName(JBRFormat.VERSION);;
+	public static String CODENAME = getCodeName(JBroFuzzFormat.VERSION);;
 
 	/**
 	 * <p>
@@ -166,7 +174,7 @@ public class JBRFormat {
 	public static final String ABOUTTEXT =
 
 	"<HTML><B>JBroFuzz Version:  " + VERSION + "<BR>" + "Codename: "
-			+ JBRFormat.getCodeName(JBRFormat.VERSION) + "</B><BR><BR>"
+			+ JBroFuzzFormat.getCodeName(JBroFuzzFormat.VERSION) + "</B><BR><BR>"
 			+ "<B>Copyright &copy; " + YEAR + " subere@uncon.org</B><BR><BR>"
 			+ "Running Under  Java " + System.getProperty("java.version")
 			+ "<BR><BR>" + "<B>A stateless network protocol fuzzer <BR>"
@@ -294,7 +302,7 @@ public class JBRFormat {
 	private static final String getDate() {
 		final String DATE_FORMAT = "DDD yyyy-MM-dd HH-mm-ss";
 		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT,
-				new Locale(JBRFormat.ISO_LAN_CODE));
+				new Locale(JBroFuzzFormat.ISO_LAN_CODE));
 		return SDF.format(new Date());
 	}
 
@@ -312,7 +320,7 @@ public class JBRFormat {
 		int errors = 0;
 		try {
 			String oSystem = System.getProperty("os.name");
-			oSystem = oSystem.toLowerCase(new Locale(JBRFormat.ISO_LAN_CODE));
+			oSystem = oSystem.toLowerCase(new Locale(JBroFuzzFormat.ISO_LAN_CODE));
 			if (oSystem.startsWith("windows")) {
 				UIManager
 						.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -363,10 +371,10 @@ public class JBRFormat {
 	 * @param mJBroFuzz
 	 *            JBroFuzz
 	 */
-	public JBRFormat(final JBroFuzz mJBroFuzz) {
+	public JBroFuzzFormat(final JBroFuzz mJBroFuzz) {
 
 		// Set the look and feel
-		JBRFormat.setLookAndFeel(mJBroFuzz);
+		JBroFuzzFormat.setLookAndFeel(mJBroFuzz);
 		// Set some preferences for the mac
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",

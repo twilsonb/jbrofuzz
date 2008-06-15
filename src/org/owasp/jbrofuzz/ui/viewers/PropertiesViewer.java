@@ -29,7 +29,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
-import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.ui.*;
+import org.owasp.jbrofuzz.ui.panels.*;
 import org.owasp.jbrofuzz.util.*;
 
 /**
@@ -56,7 +57,7 @@ public class PropertiesViewer extends JFrame {
 	 * @param display
 	 * @param view
 	 */
-	public PropertiesViewer(final JBroFuzzWindow parent, final String header,
+	public PropertiesViewer(final JBroFuzzPanel parent, final String header,
 			final String text) {
 		super("JBroFuzz - " + header);
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
@@ -84,7 +85,7 @@ public class PropertiesViewer extends JFrame {
 		listTextArea.setForeground(Color.WHITE);
 		listTextArea.setWrapStyleWord(true);
 		listTextArea.setLineWrap(true);
-		parent.popup(listTextArea);
+		parent.popupText(listTextArea);
 
 		// Define the Scroll Area for the Text
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);

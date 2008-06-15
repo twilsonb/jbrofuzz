@@ -46,7 +46,7 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -251,7 +251,7 @@ public class DRequestIterator {
 				final Preferences prefs = Preferences.userRoot().node(
 						"owasp/jbrofuzz");
 				boolean continueOnError = prefs.getBoolean(
-						JBRFormat.PR_WEB_DIR_1, false);
+						JBroFuzzFormat.PR_WEB_DIR_1, false);
 				if (!continueOnError) {
 					stop();
 				}
@@ -266,7 +266,7 @@ public class DRequestIterator {
 				final Preferences prefs = Preferences.userRoot().node(
 						"owasp/jbrofuzz");
 				boolean continueOnError = prefs.getBoolean(
-						JBRFormat.PR_WEB_DIR_1, false);
+						JBroFuzzFormat.PR_WEB_DIR_1, false);
 				if (!continueOnError) {
 					stop();
 				}

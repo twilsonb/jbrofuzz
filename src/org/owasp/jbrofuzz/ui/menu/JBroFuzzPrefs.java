@@ -47,7 +47,7 @@ import org.owasp.jbrofuzz.version.*;
  * @version 1.0
  */
 
-public class JBRPreferences extends JDialog implements TreeSelectionListener {
+public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 	private static final long serialVersionUID = 4301858021356404678L;
 	// Dimensions of the about box
@@ -67,7 +67,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 	
 	private JPanel [] panels = new JPanel[nodeNames.length];
 
-	public JBRPreferences(final JFrame parent) {
+	public JBroFuzzPrefs(final JFrame parent) {
 
 		super(parent, " JBroFuzz - Preferences ", true);
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
@@ -107,6 +107,25 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		
 		// Create the options in the preferences panel
 
+		final boolean tabsbottom = prefs.getBoolean(JBroFuzzFormat.PR_2, false);
+		final JCheckBox tabsCheckBox = new JCheckBox(" Show tabs in the main window at the top of the window (requires restart) ", tabsbottom);
+		
+		tabsCheckBox.setBorderPaintedFlat(true);
+		tabsCheckBox.setToolTipText("Tick this option, if you would like to see the tabs under the tool bar, instead of at the bottom of the window ");
+		
+		tabsCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (tabsCheckBox.isSelected()) {
+					prefs.putBoolean(JBroFuzzFormat.PR_2, true);
+				} else {
+					prefs.putBoolean(JBroFuzzFormat.PR_2, false);
+				}
+			}
+		});
+		panels[0].add(tabsCheckBox);
+		panels[0].add(Box.createRigidArea(new Dimension(0, 20)));
+		
+		/*
 		HashMap<String, String> prefsHash = new HashMap<String, String>(4);
 		prefsHash.put(nodeNames[1], "Displays the directory locations used by JBroFuzz, also giving the option to delete any directories created at startup that have not being used and are empty");
 		prefsHash.put(nodeNames[2], "Allows for the modification of the socket timeout parameter, while fuzzing, setting its value to 30 seconds");
@@ -123,9 +142,11 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 			panels[0].add(Box.createRigidArea(new Dimension(0, 20)));
 			
 		}
+		*/
+		
 		// Display the directory locations in the Directory Locations panel
 		
-		final boolean deletebox = prefs.getBoolean(JBRFormat.PR_1, false);
+		final boolean deletebox = prefs.getBoolean(JBroFuzzFormat.PR_1, false);
 		final JCheckBox deleteCheckBox = new JCheckBox(" On exit, delete any empty directories created at startup ", deletebox);
 		
 		deleteCheckBox.setBorderPaintedFlat(true);
@@ -134,9 +155,9 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		deleteCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (deleteCheckBox.isSelected()) {
-					prefs.putBoolean(JBRFormat.PR_1, true);
+					prefs.putBoolean(JBroFuzzFormat.PR_1, true);
 				} else {
-					prefs.putBoolean(JBRFormat.PR_1, false);
+					prefs.putBoolean(JBroFuzzFormat.PR_1, false);
 				}
 			}
 		});
@@ -151,7 +172,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		
 		for(String dir : dirHash.keySet()) {
 			
-			JLabel box = new JLabel("<html>" + JBRFormat.centerAbbreviate(dirHash.get(dir), 70) + "</html>");
+			JLabel box = new JLabel("<html>" + JBroFuzzFormat.centerAbbreviate(dirHash.get(dir), 70) + "</html>");
 			box.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 					.createTitledBorder(dir),
 					BorderFactory.createEmptyBorder(1, 1, 1, 5)));
@@ -162,7 +183,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 
 		// Create the options in the fuzzing panel
 		
-		final boolean socketbox = prefs.getBoolean(JBRFormat.PR_FUZZ_1, false);
+		final boolean socketbox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
 		final JCheckBox socketCheckBox = new JCheckBox(" Extend the socket timeout from 5 to 30 seconds ", socketbox);
 		
 		socketCheckBox.setBorderPaintedFlat(true);
@@ -171,9 +192,9 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		socketCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (socketCheckBox.isSelected()) {
-					prefs.putBoolean(JBRFormat.PR_FUZZ_1, true);
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_1, true);
 				} else {
-					prefs.putBoolean(JBRFormat.PR_FUZZ_1, false);
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
 				}
 			}
 		});
@@ -182,7 +203,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		
 		// Create the options in the sniffing panel
 		
-		final boolean hexbox = prefs.getBoolean(JBRFormat.PR_SNIF_1, true);
+		final boolean hexbox = prefs.getBoolean(JBroFuzzFormat.PR_SNIF_1, true);
 		final JCheckBox hexBoxCheck = new JCheckBox(" Display and store binary files in hexadecimal format ", hexbox);
 		
 		hexBoxCheck.setBorderPaintedFlat(true);
@@ -191,9 +212,9 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		hexBoxCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (hexBoxCheck.isSelected()) {
-					prefs.putBoolean(JBRFormat.PR_SNIF_1, true);
+					prefs.putBoolean(JBroFuzzFormat.PR_SNIF_1, true);
 				} else {
-					prefs.putBoolean(JBRFormat.PR_SNIF_1, false);
+					prefs.putBoolean(JBroFuzzFormat.PR_SNIF_1, false);
 				}
 			}
 		});
@@ -202,7 +223,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		panels[3].add(Box.createRigidArea(new Dimension(0, 20)));
 		// Create the options in the web directories panel
 		
-		final boolean checkbox = prefs.getBoolean(JBRFormat.PR_WEB_DIR_1, false);
+		final boolean checkbox = prefs.getBoolean(JBroFuzzFormat.PR_WEB_DIR_1, false);
 		final JCheckBox errorCheckBox = new JCheckBox(" While enumerating directories, continue regardless of the response received", checkbox);
 		
 		errorCheckBox.setBorderPaintedFlat(true);
@@ -211,9 +232,9 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		errorCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (errorCheckBox.isSelected()) {
-					prefs.putBoolean(JBRFormat.PR_WEB_DIR_1, true);
+					prefs.putBoolean(JBroFuzzFormat.PR_WEB_DIR_1, true);
 				} else {
-					prefs.putBoolean(JBRFormat.PR_WEB_DIR_1, false);
+					prefs.putBoolean(JBroFuzzFormat.PR_WEB_DIR_1, false);
 				}
 			}
 		});
@@ -330,7 +351,7 @@ public class JBRPreferences extends JDialog implements TreeSelectionListener {
 		 * parent.getEDOL().getEngine().setCurrentProvider(name, url); //
 		 * providersText.setText(parent.getEDOL().getEngine().getCurrentProvider().getURL()); }
 		 */
-		JBRPreferences.this.dispose();
+		JBroFuzzPrefs.this.dispose();
 	}
 
 	public void valueChanged(final TreeSelectionEvent e) {

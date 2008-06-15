@@ -32,7 +32,7 @@ import java.util.prefs.Preferences;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -210,7 +210,7 @@ class Agent implements Runnable {
 			
 			final Preferences prefs = Preferences.userRoot().node(
 			"owasp/jbrofuzz");
-			boolean displayBinaryinHex = prefs.getBoolean(JBRFormat.PR_SNIF_1, true);
+			boolean displayBinaryinHex = prefs.getBoolean(JBroFuzzFormat.PR_SNIF_1, true);
 	
 			// If less than 5 % binary?
 			if (((bin_counter / nBytes) < .05) && (displayBinaryinHex)) {

@@ -172,7 +172,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	 */
 	public PayloadsPanel(final JBroFuzzWindow m) {
 		super(" Payloads ", m);
-
+		setLayout(null);
 		// Categories: First table with one column of all the different
 		// categories
 
@@ -196,7 +196,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		categoriesTable.getTableHeader().setToolTipText("Click to sort by row");
 		categoriesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		popup(categoriesTable);
+		popupTable(categoriesTable);
 		categoriesTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD,
 				14));
 		categoriesTable.setRowHeight(30);
@@ -214,7 +214,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 									categoriesTable
 											.convertRowIndexToModel(categoriesTable
 													.getSelectedRow()), 0);
-					new PropertiesViewer(m, "Category of Fuzzers", category);
+					new PropertiesViewer(PayloadsPanel.this, "Category of Fuzzers", category);
 				}
 			}
 		});
@@ -245,7 +245,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				.setToolTipText(
 						"Click to specify sorting; Control-Click to specify secondary sorting");
 		fuzzersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		popup(fuzzersTable);
+		popupTable(fuzzersTable);
 
 		fuzzersTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
 		fuzzersTable.setRowHeight(30);
@@ -263,7 +263,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 									fuzzersTable
 											.convertRowIndexToModel(fuzzersTable
 													.getSelectedRow()), 0);
-					new PropertiesViewer(m, "Name of Fuzzer", fuzzer);
+					new PropertiesViewer(PayloadsPanel.this, "Name of Fuzzer", fuzzer);
 				}
 			}
 		});
@@ -288,7 +288,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				.getTableHeader()
 				.setToolTipText(
 						"Click to specify sorting; Control-Click to specify secondary sorting");
-		popup(payloadsTable);
+		popupTable(payloadsTable);
 
 		payloadsTable
 				.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
@@ -303,7 +303,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				if (e.getClickCount() == 2) {
 					final String payload = (String) payloadsTable.getModel()
 							.getValueAt(payloadsTable.getSelectedRow(), 0);
-					new PropertiesViewer(m, "Payload Information", payload);
+					new PropertiesViewer(PayloadsPanel.this, "Payload Information", payload);
 				}
 			}
 		});
@@ -335,7 +335,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		fuzzerInfoTextArea.setMargin(new Insets(1, 1, 1, 1));
 		fuzzerInfoTextArea.setBackground(Color.WHITE);
 		fuzzerInfoTextArea.setForeground(Color.BLACK);
-		m.popup(fuzzerInfoTextArea);
+		popupText(fuzzerInfoTextArea);
 
 		final JScrollPane viewTextScrollPane = new JScrollPane(
 				fuzzerInfoTextArea);
@@ -350,7 +350,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		payloadInfoTextArea.setEditable(false);
 
 		payloadInfoTextArea.setFont(new Font("Verdana", Font.BOLD, 10));
-		m.popup(payloadInfoTextArea);
+		popupText(payloadInfoTextArea);
 
 		final JScrollPane commentLabelScrollPane = new JScrollPane(
 				payloadInfoTextArea);
@@ -397,6 +397,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	 * @param area
 	 *            JTextArea
 	 */
+	/*
 	protected void popup(final JTable area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
@@ -413,6 +414,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		 * popmenu.add(i2); popmenu.add(i4); popmenu.addSeparator();
 		 * popmenu.add(i5);
 		 */
+	/*
 		final JMenuItem i1 = new JMenuItem("Cut");
 		final JMenuItem i2 = new JMenuItem("Copy");
 		final JMenuItem i3 = new JMenuItem("Paste");
@@ -452,6 +454,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				area.selectAll();
 			}
 		});
+		*/
 		/*
 		 * i5.addActionListener(new ActionListener() { public void
 		 * actionPerformed(final ActionEvent e) { // Properties final String
@@ -464,6 +467,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		 * ExploitViewer(getFrame(), exploit, ExploitViewer.VIEW_CATEGORY); } }
 		 * });
 		 */
+		/*
 		area.addMouseListener(new MouseAdapter() {
 			private void checkForTriggerEvent(final MouseEvent e) {
 				if (e.isPopupTrigger()) {
@@ -483,6 +487,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 			}
 		});
 	}
+	*/
 
 	/**
 	 * <p>
