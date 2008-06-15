@@ -67,18 +67,21 @@ public class SystemPanel extends JBroFuzzPanel {
 	 *            FrameWindow
 	 */
 	public SystemPanel(final JBroFuzzWindow m) {
-		
+
 		super(" System ", m);
+		// setLayout(null);
+
 		lineCount = 0;
-		
-		// setEnabled(JBroFuzzPanel.ADD, true);
-		
+
+		// Set the enabled options: Start, Stop, Graph, Add, Remove
+		setOptionsAvailable(true, false, false, true, false);
+
 		// Define the JPanel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" System Logger "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
-		
+
 		// Set the bounds
 		listPanel.setBounds(10, 90, 870, 360);
 
@@ -89,7 +92,7 @@ public class SystemPanel extends JBroFuzzPanel {
 		listTextArea.setWrapStyleWord(true);
 		listTextArea.setBackground(Color.WHITE);
 		listTextArea.setForeground(Color.BLACK);
-		getFrame().popup(listTextArea);
+		popupText(listTextArea);
 
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
@@ -103,46 +106,7 @@ public class SystemPanel extends JBroFuzzPanel {
 		// The action listener for the info button
 		infoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				final String systemInfo = "[System Info Start]\r\n"
-						+ "  [Java]\r\n" + "    Vendor:  "
-						+ System.getProperty("java.vendor")
-						+ "\r\n"
-						+ "    Version: "
-						+ System.getProperty("java.version")
-						+ "\r\n"
-						+ "    Installed at: "
-						+ System.getProperty("java.home")
-						+ "\r\n"
-						+ "    Website: "
-						+ System.getProperty("java.vendor.url")
-						+ "\r\n"
-						+ "  [User]\r\n"
-						+ "    User: "
-						+ System.getProperty("user.name")
-						+ "\r\n"
-						+ "    Home dir: "
-						+ System.getProperty("user.home")
-						+ "\r\n"
-						+ "    Current dir: "
-						+ System.getProperty("user.dir")
-						+ "\r\n"
-						+ "  [O/S]\r\n"
-						+ "    Name: "
-						+ System.getProperty("os.name")
-						+ "\r\n"
-						+ "    Version: "
-						+ System.getProperty("os.version")
-						+ "\r\n"
-						+ "    Architecture: "
-						+ System.getProperty("os.arch")
-						+ "\r\n"
-						+ "[System Info End]\r\n";
 
-				final String[] info = systemInfo.split("\r\n");
-
-				for (final String element : info) {
-					SystemPanel.this.start(element);
-				}
 
 			}
 		});
@@ -172,33 +136,91 @@ public class SystemPanel extends JBroFuzzPanel {
 				+ "\n");
 		// Fix the disappearing tab problem
 		int tab = -1;
-		final int totalTabs = getFrame().getTabbedPane().getComponentCount();
+		final int totalTabs = getFrame().getTp().getComponentCount();
 		for (int i = 0; i < totalTabs; i++) {
-			final String title = getFrame().getTabbedPane().getTitleAt(i);
+			final String title = getFrame().getTp().getTitleAt(i);
 			if (title.startsWith(" System")) {
 				tab = i;
 			}
 		}
 		if ((tab > -1)) {
-			getFrame().getTabbedPane().setTitleAt(tab,
+			getFrame().getTp().setTitleAt(tab,
 					" System (" + lineCount + ")");
 		}
-		
+
 	}
-	
+
 	public void start() {
-		start("Logging Time Instance");
+
+		// Set the enabled options: Start, Stop, Graph, Add, Remove
+		setOptionsAvailable(false, false, false, false, false);
+
+		Runtime.getRuntime().gc();
+		Runtime.getRuntime().runFinalization();
+
+		final String systemInfo = "[System Info Start]\r\n"
+			+ "  [Java]\r\n" + "    Vendor:  "
+			+ System.getProperty("java.vendor")
+			+ "\r\n"
+			+ "    Version: "
+			+ System.getProperty("java.version")
+			+ "\r\n"
+			+ "    Installed at: "
+			+ System.getProperty("java.home")
+			+ "\r\n"
+			+ "    Website: "
+			+ System.getProperty("java.vendor.url")
+			+ "\r\n"
+			+ "  [User]\r\n"
+			+ "    User: "
+			+ System.getProperty("user.name")
+			+ "\r\n"
+			+ "    Home dir: "
+			+ System.getProperty("user.home")
+			+ "\r\n"
+			+ "    Current dir: "
+			+ System.getProperty("user.dir")
+			+ "\r\n"
+			+ "  [O/S]\r\n"
+			+ "    Name: "
+			+ System.getProperty("os.name")
+			+ "\r\n"
+			+ "    Version: "
+			+ System.getProperty("os.version")
+			+ "\r\n"
+			+ "    Architecture: "
+			+ System.getProperty("os.arch")
+			+ "\r\n"
+			+ "[System Info End]\r\n";
+
+		final String[] info = systemInfo.split("\r\n");
+
+		for (final String element : info) {
+			SystemPanel.this.start(element);
+		}
+
+
 	}
-	
+
 	public void stop() {
+
+		// Set the enabled options: Start, Stop, Graph, Add, Remove
+		setOptionsAvailable(true, false, false, true, false);
+
 	}
-	
+
 	public void graph() {
 	}
-	
+
 	public void add() {
+
+		Runtime.getRuntime().gc();
+		Runtime.getRuntime().runFinalization();
+
+		start("Logging Current Timestamp");
+
 	}
-	
+
 	public void remove() {
 	}
 

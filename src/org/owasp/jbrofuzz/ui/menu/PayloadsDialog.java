@@ -180,8 +180,7 @@ public class PayloadsDialog extends JDialog {
 	 * @param start
 	 * @param end
 	 */
-	public PayloadsDialog(final FuzzingPanel parent, final int start,
-			final int end) {
+	public PayloadsDialog(final JBroFuzzPanel parent, final int start, final int end) {
 
 		super(parent.getFrame(), " Add a Fuzzer ", true);
 		setFont(new Font("SansSerif", Font.BOLD, 10));
@@ -317,7 +316,7 @@ public class PayloadsDialog extends JDialog {
 		fuzzerInfoTextArea.setMargin(new Insets(1, 1, 1, 1));
 		fuzzerInfoTextArea.setBackground(Color.WHITE);
 		fuzzerInfoTextArea.setForeground(Color.BLACK);
-		parent.getFrame().popup(fuzzerInfoTextArea);
+		parent.popupText(fuzzerInfoTextArea);
 		fuzzerInfoTextArea.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {

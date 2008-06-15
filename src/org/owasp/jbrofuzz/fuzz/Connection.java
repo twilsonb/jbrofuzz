@@ -24,7 +24,7 @@
 package org.owasp.jbrofuzz.fuzz;
 
 import org.apache.commons.lang.*;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 import javax.net.ssl.*;
 import java.net.*;
@@ -106,7 +106,7 @@ public class Connection {
 
 		// Set the socket timeout from the preferences
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-		boolean maxTimeout = prefs.getBoolean(JBRFormat.PR_FUZZ_1, false);
+		boolean maxTimeout = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
 		socketTimeout = maxTimeout ? 30000 : 5000;
 
 		this.message = message;

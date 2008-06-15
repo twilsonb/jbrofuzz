@@ -35,7 +35,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SixColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.util.*;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 import com.Ostermiller.util.Browser;
 
@@ -82,8 +82,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	// The progress bar for the site
 	private JProgressBar progressBar;
 
-	// The table sorter
-	// private TableSorter sorter;
+	private boolean stopped;
 
 	/**
 	 * The constructor for the Web Directory Panel. This constructor spawns the
@@ -93,17 +92,16 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	 *            FrameWindow
 	 */
 	public DirectoriesPanel(final JBroFuzzWindow m) {
+		
 		super(" Web Directories ", m);
+		setLayout(null);
 		// this.m = m;
 		session = 0;
 
+		stopped = true;
+		
 		// Set the options in the toolbar enabled at startup
 		setOptionsAvailable(true, false, false, false, false);
-		
-		// Set options enabled for each panel 
-		// setEnabled(JBroFuzzPanel.START, true);
-		// setEnabled(JBroFuzzPanel.STOP, true);
-		
 		
 		// Define the directory JPanel
 		directoryPanel = new JPanel();
@@ -147,7 +145,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		targetText.setBackground(Color.WHITE);
 		targetText.setForeground(Color.BLACK);
 		targetText.setPreferredSize(new Dimension(480, 20));
-		getFrame().popup(targetText);
+		popupText(targetText);
 		targetPanel.add(targetText);
 
 		// Define the port text area
@@ -158,7 +156,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		portText.setMargin(new Insets(1, 1, 1, 1));
 		portText.setBackground(Color.WHITE);
 		portText.setForeground(Color.BLACK);
-		getFrame().popup(portText);
+		popupText(portText);
 		portText.setPreferredSize(new Dimension(50, 20));
 		portPanel.add(portText);
 
@@ -173,7 +171,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		directoryText.setBackground(Color.WHITE);
 		directoryText.setForeground(Color.BLACK);
 		directoryText.addKeyListener(this);
-		getFrame().popup(directoryText);
+		popupText(directoryText);
 		final JScrollPane directoryScrollPane = new JScrollPane(directoryText);
 		directoryScrollPane.setVerticalScrollBarPolicy(20);
 		directoryScrollPane.setHorizontalScrollBarPolicy(30);
@@ -229,7 +227,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		responseTable.setRowSorter(sorter);
 
 		responseTable.getTableHeader().setToolTipText("Click to sort by row");
-		popup(responseTable);
+		popupTable(responseTable);
 		// sorter.setTableHeader(responseTable.getTableHeader());
 		responseTable.setFont(new Font("Monospaced", Font.BOLD, 12));
 		responseTable.setBackground(Color.black);
@@ -292,8 +290,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 							// final String exploit = (String)
 							// area.getModel().getValueAt(area.getSelectedRow(),
 							// 0);
-							new PropertiesViewer(getFrame(), "Properties",
-									output.toString());
+							new PropertiesViewer(DirectoriesPanel.this, "Properties", output.toString());
 
 						}
 					});
@@ -302,7 +299,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		});
 
 		final JScrollPane listTextScrollPane = new JScrollPane(responseTable);
-		listTextScrollPane.setVerticalScrollBarPolicy(20);
+		listTextScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		listTextScrollPane.setHorizontalScrollBarPolicy(31);
 		listTextScrollPane.setPreferredSize(new Dimension(590, 260));
 		listTextScrollPane.setWheelScrollingEnabled(true);
@@ -419,6 +416,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	 * @param area
 	 *            JTextArea
 	 */
+	/*
 	private void popup(final JTable area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
@@ -506,8 +504,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 
 				// final String exploit = (String)
 				// area.getModel().getValueAt(area.getSelectedRow(), 0);
-				new PropertiesViewer(getFrame(), "Properties", output
-						.toString());
+				new PropertiesViewer(DirectoriesPanel.this, "Properties", output.toString());
 
 			}
 		});
@@ -531,6 +528,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 			}
 		});
 	}
+	*/
 
 	/**
 	 * Set the text content of the directories jtextarea.
@@ -578,9 +576,10 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		// JButton startButton = getFrame().getFrameToolBar().start;
 		// JButton stopButton = getFrame().getFrameToolBar().stop;
 		
-		if (!isStarted()) {
+		if (!stopped) {
 			return;
-		}
+		}	
+		stopped = false;
 		// Set the options in the toolbar enabled at startup
 		setOptionsAvailable(false, true, false, false, false);
 		
@@ -595,7 +594,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		// Update the panel, indicating directory
 		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output " + "[Logging in file \\web-dir\\"
-						+ JBRFormat.DATE + "\\" + getSessionNumber() + ".csv]  "),
+						+ JBroFuzzFormat.DATE + "\\" + getSessionNumber() + ".csv]  "),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 		// UI and Colors
@@ -637,9 +636,10 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		// JButton startButton = getFrame().getFrameToolBar().start;
 		// JButton stopButton = getFrame().getFrameToolBar().stop;
 		
-		if (!isStarted()) {
+		if (stopped) {
 			return;
 		}
+		stopped = true;
 		// Set the options in the toolbar enabled at startup
 		setOptionsAvailable(true, false, false, false, false);
 		

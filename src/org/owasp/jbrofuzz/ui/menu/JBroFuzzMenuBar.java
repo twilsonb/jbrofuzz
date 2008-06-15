@@ -45,7 +45,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.SwingWorker3;
 import org.owasp.jbrofuzz.ui.panels.*;
-import org.owasp.jbrofuzz.version.JBRFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 import org.owasp.jbrofuzz.ui.actions.*;
 import com.Ostermiller.util.Browser;
@@ -58,7 +58,7 @@ import com.Ostermiller.util.Browser;
  * @author subere@uncon.org
  * @version 1.0
  */
-public class JBRMenuBar extends JMenuBar {
+public class JBroFuzzMenuBar extends JMenuBar {
 
 	/**
 	 * 
@@ -77,7 +77,7 @@ public class JBRMenuBar extends JMenuBar {
 	 * @param mFrameWindow
 	 *            FrameWindow
 	 */
-	public JBRMenuBar(final JBroFuzzWindow mFrameWindow) {
+	public JBroFuzzMenuBar(final JBroFuzzWindow mFrameWindow) {
 
 		this.mFrameWindow = mFrameWindow;
 
@@ -190,25 +190,25 @@ public class JBRMenuBar extends JMenuBar {
 									UIManager.setLookAndFeel(info
 											.getClassName());
 									SwingUtilities
-											.updateComponentTreeUI(JBRMenuBar.this
+											.updateComponentTreeUI(JBroFuzzMenuBar.this
 													.getFrame());
 								} catch (final UnsupportedLookAndFeelException e) {
-									JBRMenuBar.this
+									JBroFuzzMenuBar.this
 											.getFrame()
 											.log(
 													"An error occured while setting the Look & Feel");
 								} catch (final IllegalAccessException e) {
-									JBRMenuBar.this
+									JBroFuzzMenuBar.this
 											.getFrame()
 											.log(
 													"An error occured while setting the Look & Feel");
 								} catch (final ClassNotFoundException e) {
-									JBRMenuBar.this
+									JBroFuzzMenuBar.this
 											.getFrame()
 											.log(
 													"An error occured while setting the Look & Feel");
 								} catch (final InstantiationException e) {
-									JBRMenuBar.this
+									JBroFuzzMenuBar.this
 											.getFrame()
 											.log(
 													"An error occured while setting the Look & Feel");
@@ -224,7 +224,7 @@ public class JBRMenuBar extends JMenuBar {
 		view.add(lookAndFeel);
 
 		// Panel
-		start = new JMenuItem("Fuzz", ImageCreator.START_IMG);
+		start = new JMenuItem("Start", ImageCreator.START_IMG);
 		graph = new JMenuItem("Graph", ImageCreator.PAUSE_IMG);
 		stop = new JMenuItem("Stop", ImageCreator.STOP_IMG);
 		add = new JMenuItem("Add", ImageCreator.ADD_IMG);
@@ -292,7 +292,7 @@ public class JBRMenuBar extends JMenuBar {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						JBRMenuBar.this.getFrame().exitProcedure();
+						JBroFuzzMenuBar.this.getFrame().exitProcedure();
 					}
 				});
 			}
@@ -304,10 +304,10 @@ public class JBRMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!directories.getState()) {
-							JBRMenuBar.this.getFrame().setTabHide(
+							JBroFuzzMenuBar.this.getFrame().setTabHide(
 									JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES);
 						} else {
-							JBRMenuBar.this.getFrame().setTabShow(
+							JBroFuzzMenuBar.this.getFrame().setTabShow(
 									JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES);
 						}
 					}
@@ -321,10 +321,10 @@ public class JBRMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!fuzzing.getState()) {
-							JBRMenuBar.this.getFrame().setTabHide(
+							JBroFuzzMenuBar.this.getFrame().setTabHide(
 									JBroFuzzWindow.ID_PANEL_FUZZING);
 						} else {
-							JBRMenuBar.this.getFrame().setTabShow(
+							JBroFuzzMenuBar.this.getFrame().setTabShow(
 									JBroFuzzWindow.ID_PANEL_FUZZING);
 						}
 					}
@@ -338,10 +338,10 @@ public class JBRMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!sniffing.getState()) {
-							JBRMenuBar.this.getFrame().setTabHide(
+							JBroFuzzMenuBar.this.getFrame().setTabHide(
 									JBroFuzzWindow.ID_PANEL_SNIFFING);
 						} else {
-							JBRMenuBar.this.getFrame().setTabShow(
+							JBroFuzzMenuBar.this.getFrame().setTabShow(
 									JBroFuzzWindow.ID_PANEL_SNIFFING);
 						}
 					}
@@ -356,10 +356,10 @@ public class JBRMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!payloads.getState()) {
-							JBRMenuBar.this.getFrame().setTabHide(
+							JBroFuzzMenuBar.this.getFrame().setTabHide(
 									JBroFuzzWindow.ID_PANEL_PAYLOADS);
 						} else {
-							JBRMenuBar.this.getFrame().setTabShow(
+							JBroFuzzMenuBar.this.getFrame().setTabShow(
 									JBroFuzzWindow.ID_PANEL_PAYLOADS);
 						}
 					}
@@ -374,10 +374,10 @@ public class JBRMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (!system.getState()) {
-							JBRMenuBar.this.getFrame().setTabHide(
+							JBroFuzzMenuBar.this.getFrame().setTabHide(
 									JBroFuzzWindow.ID_PANEL_SYSTEM);
 						} else {
-							JBRMenuBar.this.getFrame().setTabShow(
+							JBroFuzzMenuBar.this.getFrame().setTabShow(
 									JBroFuzzWindow.ID_PANEL_SYSTEM);
 						}
 					}
@@ -392,20 +392,20 @@ public class JBRMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						JBRMenuBar.this.getFrame().setTabShow(
+						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES);
 						directories.setState(true);
 
-						JBRMenuBar.this.getFrame().setTabShow(
+						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_FUZZING);
 						fuzzing.setState(true);
-						JBRMenuBar.this.getFrame().setTabShow(
+						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_SNIFFING);
 						sniffing.setState(true);
-						JBRMenuBar.this.getFrame().setTabShow(
+						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_PAYLOADS);
 						payloads.setState(true);
-						JBRMenuBar.this.getFrame().setTabShow(
+						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_SYSTEM);
 						system.setState(true);
 
@@ -420,19 +420,19 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						JBRMenuBar.this.getFrame().setTabHide(
+						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES);
 						directories.setState(false);
-						JBRMenuBar.this.getFrame().setTabHide(
+						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_FUZZING);
 						fuzzing.setState(false);
-						JBRMenuBar.this.getFrame().setTabHide(
+						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_SNIFFING);
 						sniffing.setState(false);
-						JBRMenuBar.this.getFrame().setTabHide(
+						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_PAYLOADS);
 						payloads.setState(false);
-						JBRMenuBar.this.getFrame().setTabHide(
+						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_SYSTEM);
 						system.setState(false);
 
@@ -453,27 +453,9 @@ public class JBRMenuBar extends JMenuBar {
 							
 							@Override
 							public Object construct() {
-								/*
-								int currentTab = JBRMenuBar.this
-										.getFrameWindow().getTabbedPane()
-										.getSelectedIndex();
-								String s = JBRMenuBar.this.getFrameWindow()
-										.getTabbedPane().getTitleAt(currentTab);
-								if (s.equals(" Fuzzing ")) {
-									JBRMenuBar.this.getFrameWindow()
-											.getPanelFuzzing().start();
-								}
-								if (s.equals(" Sniffing ")) {
-									JBRMenuBar.this.getFrameWindow()
-											.getPanelSniffing().start();
-								}
-								if (s.equals(" Web Directories ")) {
-									JBRMenuBar.this.getFrameWindow()
-											.getPanelWebDirectories().start();
-								}
-								*/
-								int c = getFrame().getTabbedPane().getSelectedIndex();
-								p = (JBroFuzzPanel) getFrame().getTabbedPane().getComponent(c);
+								
+								int c = getFrame().getTp().getSelectedIndex();
+								p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 								p.start();
 								
 								return "start-menu-bar-return";
@@ -481,22 +463,10 @@ public class JBRMenuBar extends JMenuBar {
 
 							@Override
 							public void finished() {
-								/*
-								int currentTab = JBRMenuBar.this
-										.getFrame().getTabbedPane()
-										.getSelectedIndex();
-								String s = JBRMenuBar.this.getFrame()
-										.getTabbedPane().getTitleAt(currentTab);
-								if (s.equals(" Fuzzing ")) {
-									JBRMenuBar.this.getFrame()
-											.getPanelFuzzing().stop();
+								// Make sure while sniffing you don't stop
+								if(!p.getName().startsWith(" Sniffing ")) {
+									p.stop();
 								}
-								if (s.equals(" Web Directories ")) {
-									JBRMenuBar.this.getFrame()
-											.getPanelWebDirectories().stop();
-								}
-								*/
-								p.stop();
 								
 							}
 						};
@@ -512,26 +482,9 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						/*
-						final int currentTab = JBRMenuBar.this.getFrame()
-								.getTabbedPane().getSelectedIndex();
-						final String s = JBRMenuBar.this.getFrame()
-								.getTabbedPane().getTitleAt(currentTab);
-						if (s.equals(" Fuzzing ")) {
-							JBRMenuBar.this.getFrame().getPanelFuzzing()
-									.stop();
-						}
-						if (s.equals(" Sniffing ")) {
-							JBRMenuBar.this.getFrame().getPanelSniffing()
-									.stop();
-						}
-						if (s.equals(" Web Directories ")) {
-							JBRMenuBar.this.getFrame()
-									.getPanelWebDirectories().stop();
-						}
-						*/
-						int c = getFrame().getTabbedPane().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTabbedPane().getComponent(c);
+						
+						int c = getFrame().getTp().getSelectedIndex();
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 						p.stop();
 						
 					}
@@ -544,22 +497,9 @@ public class JBRMenuBar extends JMenuBar {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						/*
-						final int currentTab = JBRMenuBar.this.getFrame()
-								.getTabbedPane().getSelectedIndex();
-						final String s = JBRMenuBar.this.getFrame()
-								.getTabbedPane().getTitleAt(currentTab);
-						if (s.equals(" Fuzzing ")) {
-							JBRMenuBar.this.getFrame().getPanelFuzzing()
-									.graph();
-						}
-						if (s.equals(" Sniffing ")) {
-							JBRMenuBar.this.getFrame().getPanelSniffing()
-									.bro();
-						}
-						*/
-						int c = getFrame().getTabbedPane().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTabbedPane().getComponent(c);
+						
+						int c = getFrame().getTp().getSelectedIndex();
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 						p.graph();
 						
 					}
@@ -572,18 +512,9 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						/*
-						final int currentTab = JBRMenuBar.this.getFrame()
-								.getTabbedPane().getSelectedIndex();
-						final String s = JBRMenuBar.this.getFrame()
-								.getTabbedPane().getTitleAt(currentTab);
-						if (s.equals(" Fuzzing ")) {
-							JBRMenuBar.this.getFrame().getPanelFuzzing()
-									.start();
-						}
-						*/
-						int c = getFrame().getTabbedPane().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTabbedPane().getComponent(c);
+						
+						int c = getFrame().getTp().getSelectedIndex();
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 						p.add();
 						
 
@@ -598,7 +529,7 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new CheckForUpdates(JBRMenuBar.this.getFrame());
+						new CheckForUpdates((JBroFuzzPanel) getFrame().getTp().getComponent(getFrame().getTp().getSelectedIndex()));
 					}
 				});
 
@@ -610,21 +541,11 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						/*
-						final int currentTab = JBRMenuBar.this.getFrame()
-								.getTabbedPane().getSelectedIndex();
-						final String s = JBRMenuBar.this.getFrame()
-								.getTabbedPane().getTitleAt(currentTab);
-						if (s.equals(" Fuzzing ")) {
-							JBRMenuBar.this.getFrame().getPanelFuzzing()
-									.remove();
-						}
-						*/
-						int c = getFrame().getTabbedPane().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTabbedPane().getComponent(c);
+						
+						int c = getFrame().getTp().getSelectedIndex();
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 						p.remove();
 						
-
 					}
 				});
 
@@ -636,7 +557,7 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new JBRPreferences(JBRMenuBar.this.getFrame());
+						new JBroFuzzPrefs(JBroFuzzMenuBar.this.getFrame());
 					}
 				});
 
@@ -647,7 +568,7 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new JBRFaq(JBRMenuBar.this.getFrame());
+						new JBRFaq(JBroFuzzMenuBar.this.getFrame());
 					}
 				});
 			}
@@ -658,7 +579,7 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new JBRHelp(JBRMenuBar.this.getFrame());
+						new JBRHelp(JBroFuzzMenuBar.this.getFrame());
 					}
 				});
 			}
@@ -671,9 +592,9 @@ public class JBRMenuBar extends JMenuBar {
 					public void run() {
 						Browser.init();
 						try {
-							Browser.displayURL(JBRFormat.URL_WEBSITE);
+							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 						} catch (final IOException ex) {
-							JBRMenuBar.this
+							JBroFuzzMenuBar.this
 									.getFrame()
 									.log(
 											"Could not launch link in external browser");
@@ -688,7 +609,7 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new AboutBox(JBRMenuBar.this.getFrame(),
+						new AboutBox(JBroFuzzMenuBar.this.getFrame(),
 								AboutBox.DISCLAIMER);
 					}
 				});
@@ -700,7 +621,7 @@ public class JBRMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new AboutBox(JBRMenuBar.this.getFrame(),
+						new AboutBox(JBroFuzzMenuBar.this.getFrame(),
 								AboutBox.ABOUT);
 					}
 				});

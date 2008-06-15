@@ -38,7 +38,7 @@ import org.apache.commons.httpclient.methods.*;
 
 import org.owasp.jbrofuzz.util.*;
 import org.owasp.jbrofuzz.version.*;
-import org.owasp.jbrofuzz.ui.*;
+import org.owasp.jbrofuzz.ui.panels.*;
 
 public class CheckForUpdates extends JDialog {
 	/**
@@ -61,9 +61,9 @@ public class CheckForUpdates extends JDialog {
 	// The boolean checking for a new version
 	private boolean newVersionExists;
 
-	public CheckForUpdates(final JBroFuzzWindow parent) {
+	public CheckForUpdates(final JBroFuzzPanel parent) {
 
-		super(parent, " JBroFuzz - Check For Updates ", true);
+		super(parent.getFrame(), " JBroFuzz - Check For Updates ", true);
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -84,7 +84,7 @@ public class CheckForUpdates extends JDialog {
 		mainLabel.setForeground(new Color(0, 128, 255));
 		mainLabel.setEditable(false);
 		mainLabel.setVisible(true);
-		parent.popup(mainLabel);
+		parent.popupText(mainLabel);
 
 		// Scroll Panels for the text area and image
 
@@ -177,13 +177,13 @@ public class CheckForUpdates extends JDialog {
 						public void run() {
 							Browser.init();
 							try {
-								Browser.displayURL(JBRFormat.URL_WEBSITE);
+								Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 								startStop.setEnabled(false);
 								close.setEnabled(true);
 							} catch (final IOException ex) {
 								mainLabel
 										.append("\nAn error occured while attempting to open the browser:\n\n"
-												+ JBRFormat.URL_WEBSITE);
+												+ JBroFuzzFormat.URL_WEBSITE);
 							}
 						}
 					});
@@ -241,7 +241,7 @@ public class CheckForUpdates extends JDialog {
 		HttpClient client = new HttpClient();
 
 		// Create a method instance.
-		GetMethod method = new GetMethod(JBRFormat.URL_WEBSITE);
+		GetMethod method = new GetMethod(JBroFuzzFormat.URL_WEBSITE);
 
 		// Provide custom retry handler is necessary
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
@@ -289,12 +289,12 @@ public class CheckForUpdates extends JDialog {
 
 				try {
 
-					current = Double.parseDouble(JBRFormat.VERSION);
+					current = Double.parseDouble(JBroFuzzFormat.VERSION);
 					latest = Double.parseDouble(webVersion);
 
 					mainLabel.append("[ OK ]\n\nWebsite Version is: "
 							+ webVersion);
-					mainLabel.append("\nCurrent Version is: " + JBRFormat.VERSION
+					mainLabel.append("\nCurrent Version is: " + JBroFuzzFormat.VERSION
 							+ "\n\n");
 
 				} catch (NumberFormatException e) {
@@ -318,13 +318,13 @@ public class CheckForUpdates extends JDialog {
 					mainLabel
 							.append("\n"
 									+ "Could not interpret JBroFuzz version\nnumbers.\n\nTo check manually, visit:\n\n"
-									+ JBRFormat.URL_WEBSITE);
+									+ JBroFuzzFormat.URL_WEBSITE);
 				}
 
 			} else {
 				mainLabel.append("[FAIL]\n\n"
 						+ "Could not identify JBroFuzz version at:\n\n"
-						+ JBRFormat.URL_WEBSITE);
+						+ JBroFuzzFormat.URL_WEBSITE);
 			}
 		}
 	}

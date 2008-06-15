@@ -30,7 +30,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
-import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.ui.panels.*;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.SwingWorker3;
 
@@ -77,7 +77,7 @@ public class WindowViewer extends JFrame {
 	 * @param name
 	 * @param typeOfPanel
 	 */
-	public WindowViewer(final JBroFuzzWindow parent, final String name,
+	public WindowViewer(final JBroFuzzPanel parent, final String name,
 			final int typeOfPanel) {
 		super("JBroFuzz - File Viewer - " + name + ".html");
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
@@ -97,7 +97,7 @@ public class WindowViewer extends JFrame {
 		final JTextArea listTextArea = new JTextArea();
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
-		parent.popup(listTextArea);
+		parent.popupText(listTextArea);
 		/*
 		 * listTextArea.setEditorKit(new StyledEditorKit() {
 		 * 
@@ -115,12 +115,10 @@ public class WindowViewer extends JFrame {
 
 		StringBuffer textBuffer = new StringBuffer();
 		if (typeOfPanel == WindowViewer.VIEW_SNIFFING_PANEL) {
-			textBuffer = parent.getJBroFuzz().getHandler().readSnifFile(
-					name + ".html");
+			textBuffer = parent.getFrame().getJBroFuzz().getHandler().readSnifFile(name + ".html");
 		}
 		if (typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
-			textBuffer = parent.getJBroFuzz().getHandler().readFuzzFile(
-					name + ".html");
+			textBuffer = parent.getFrame().getJBroFuzz().getHandler().readFuzzFile(name + ".html");
 		}
 		final String text = textBuffer.toString();
 
