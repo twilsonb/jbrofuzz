@@ -132,7 +132,10 @@ public class SniffingPanel extends JBroFuzzPanel {
 		rHostText.setEditable(true);
 		rHostText.setFont(new Font("Verdana", Font.BOLD, 12));
 		rHostText.setMargin(new Insets(1, 1, 1, 1));
-		popupText(rHostText);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(rHostText, true, true, true, true);
+		
 		rHostText.setPreferredSize(new Dimension(200, 20));
 		rHostPanel.add(rHostText);
 		
@@ -140,10 +143,11 @@ public class SniffingPanel extends JBroFuzzPanel {
 		rPortText = new JFormattedTextField();
 		rPortText.setEditable(true);
 		rPortText.setFont(new Font("Verdana", Font.BOLD, 12));
-		// rPortText.setLineWrap(false);
-		// rPortText.setWrapStyleWord(true);
 		rPortText.setMargin(new Insets(1, 1, 1, 1));
-		popupText(rPortText);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(rPortText, true, true, true, true);
+		
 		rPortText.setPreferredSize(new Dimension(50, 20));
 		rPortPanel.add(rPortText);
 		
@@ -151,10 +155,12 @@ public class SniffingPanel extends JBroFuzzPanel {
 		lHostText = new JTextField();
 		lHostText.setEditable(true);
 		lHostText.setFont(new Font("Verdana", Font.BOLD, 12));
-		// lHostText.setLineWrap(false);
-		// lHostText.setWrapStyleWord(true);
+
 		lHostText.setMargin(new Insets(1, 1, 1, 1));
-		popupText(lHostText);
+
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(lHostText, true, true, true, true);
+		
 		lHostText.setPreferredSize(new Dimension(200, 20));
 		lHostPanel.add(lHostText);
 		
@@ -162,10 +168,12 @@ public class SniffingPanel extends JBroFuzzPanel {
 		lPortText = new JFormattedTextField();
 		lPortText.setEditable(true);
 		lPortText.setFont(new Font("Verdana", Font.BOLD, 12));
-		// lPortText.setLineWrap(false);
-		// lPortText.setWrapStyleWord(true);
+
 		lPortText.setMargin(new Insets(1, 1, 1, 1));
-		popupText(lPortText);
+
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(lPortText, true, true, true, true);
+		
 		lPortText.setPreferredSize(new Dimension(50, 20));
 		lPortPanel.add(lPortText);
 
@@ -191,8 +199,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 							Runtime.getRuntime().runFinalization();
 
 							final int c = sniffingTable.getSelectedRow();
-							final String name = (String) sniffingTable
-									.getModel().getValueAt(c, 0);
+							final String name = (String) sniffingTable.getModel().getValueAt(c, 0);
 							new WindowViewer(SniffingPanel.this, name.split(" ")[0], WindowViewer.VIEW_SNIFFING_PANEL);
 
 						}
@@ -200,6 +207,9 @@ public class SniffingPanel extends JBroFuzzPanel {
 				}
 			}
 		});
+		
+		// Right click: Open, Cut, Copy, Paste, Select All, Properties
+		popupTable(sniffingTable, true, false, true, false, false, true);
 
 		final JScrollPane listTextScrollPane = new JScrollPane(sniffingTable);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
@@ -266,7 +276,7 @@ public class SniffingPanel extends JBroFuzzPanel {
 			public void run() {
 				tableModel.addEmptyRow();
 				final int totalRows = tableModel.getRowCount();
-				tableModel.setValueAt(s, totalRows - 1, 0);
+				tableModel.setValueAt((Object)s, totalRows - 1, 0);
 				// Set the last row to be visible
 				sniffingTable.scrollRectToVisible(sniffingTable.getCellRect(
 						sniffingTable.getRowCount(), 0, true));

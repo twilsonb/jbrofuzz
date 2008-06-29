@@ -84,7 +84,9 @@ public class CheckForUpdates extends JDialog {
 		mainLabel.setForeground(new Color(0, 128, 255));
 		mainLabel.setEditable(false);
 		mainLabel.setVisible(true);
-		parent.popupText(mainLabel);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		parent.popupText(mainLabel, false, true, false, true);
 
 		// Scroll Panels for the text area and image
 
@@ -150,8 +152,7 @@ public class CheckForUpdates extends JDialog {
 		getContentPane().add(southPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
 		this.setSize(CheckForUpdates.x, CheckForUpdates.y);
 		setResizable(false);
 		setVisible(true);
@@ -258,9 +259,33 @@ public class CheckForUpdates extends JDialog {
 
 			} else {
 				mainLabel.append("[ OK ]\n" + "Checking JBroFuzz Website...\t\t\t\t");
+				
+                byte[] buffer = new byte[65535];
+				InputStream instream = method.getResponseBodyAsStream();
+				if (instream != null) {
+					
+					// Make sure content length can be handled from the JVM
+	                long contentLength = method.getResponseContentLength();
+	                if (contentLength > Integer.MAX_VALUE) {
+	                	
+	                	throw new IOException("Content too large to be buffered: "+ contentLength +" bytes");
+	                	
+	                }
+	                
+	                // int limit = method.getParams().getIntParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024*1024);
+	                ByteArrayOutputStream outstream = new ByteArrayOutputStream(contentLength > 0 ? (int) contentLength : 32);
+
+	                int len;
+	                while ((len = instream.read(buffer)) > 0) {
+	                	outstream.write(buffer, 0, len);
+	                }
+	                outstream.close(); 
+				}
+				
 				// Read the response body.
-				byte[] responseBody = method.getResponseBody();
-				response = new String(responseBody, "UTF-8");
+				// byte[] responseBody = method.getResponseBody();
+				response = new String(buffer, "UTF-8");
+				
 			}
 
 		} catch (HttpException e) {
@@ -304,19 +329,17 @@ public class CheckForUpdates extends JDialog {
 				if (latest != 0.0) {
 
 					if (latest > current) {
-						mainLabel.append("\nJBroFuzz " + latest
-								+ " is available for download.");
+						mainLabel.append("\nJBroFuzz " + latest + " is available for download.");
 						newVersionExists = true;
 					} else if (latest < current) {
-						mainLabel.append("\nYou are running a newer version.");
+						mainLabel.append("\nYou are running a newer (perhaps experimental) version.");
 					} else {
 						mainLabel
 								.append("\nYou are running the latest version.");
 					}
 
 				} else {
-					mainLabel
-							.append("\n"
+					mainLabel.append("\n"
 									+ "Could not interpret JBroFuzz version\nnumbers.\n\nTo check manually, visit:\n\n"
 									+ JBroFuzzFormat.URL_WEBSITE);
 				}

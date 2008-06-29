@@ -36,6 +36,8 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
 import org.owasp.jbrofuzz.ui.*;
+import org.owasp.jbrofuzz.ui.actions.*;
+import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 
 import com.Ostermiller.util.Browser;
@@ -51,6 +53,8 @@ import com.Ostermiller.util.Browser;
 public abstract class JBroFuzzPanel extends JPanel {
 
 	private JBroFuzzWindow frame;
+
+	private static final long serialVersionUID = -88328054872L;
 
 	private String name;
 
@@ -100,8 +104,8 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 	/**
 	 * <p>Method for setting the options available for that particular panel. These 
-	 * options can be found in the toolbar as well as the menubar under the FileMenuItem
-	 * "Panel".</p>
+	 * options can be found in the tool bar as well as the menu bar under the 
+	 * FileMenuItem "Panel".</p>
 	 * 
 	 * @param start
 	 * @param stop
@@ -142,88 +146,89 @@ public abstract class JBroFuzzPanel extends JPanel {
 	}
 
 	public int getOptionsLength() {
-		
+
 		return optionsAvailable.length;
-		
+
 	}
 
-	
+
 	public boolean isStarted() {
 
 		return optionsAvailable[0];
 
 	}
-	
+
 	public boolean isStopped() {
-		
+
 		return optionsAvailable[1];
 	}
-	
+
 	public boolean isGraphed() {
-		
+
 		return optionsAvailable[2];
-		
+
 	}
-	
+
 	public boolean isAdded() {
-		
+
 		return optionsAvailable[3];
-		
+
 	}
-	
+
 	public boolean isRemoved() {
-		
+
 		return optionsAvailable[4];
-		
+
 	}
-	
+
 	/**
-	 * Method for setting up the right click copy paste cut and select all menu.
-	 * 
+	 * <p>Method for setting up the right click copy paste cut and select all menu.</p>
+	 * <p>It passes the parameters of which options in the right click menu are enabled.</p>
 	 * @param area
 	 *            JTextArea
 	 */
-	public final void popupText(final JTextComponent area) {
+	public final void popupText(final JTextComponent area, boolean cut, boolean copy, boolean paste, boolean selectAll) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
-		final JMenuItem i1 = new JMenuItem("Cut");
-		final JMenuItem i2 = new JMenuItem("Copy");
-		final JMenuItem i3 = new JMenuItem("Paste");
-		final JMenuItem i4 = new JMenuItem("Select All");
+		final JMenuItem i1_cut = new JMenuItem("Cut");
+		final JMenuItem i2_copy = new JMenuItem("Copy");
+		final JMenuItem i3_paste = new JMenuItem("Paste");
+		final JMenuItem i4_select = new JMenuItem("Select All");
 
-		i1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				ActionEvent.CTRL_MASK));
-		i2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-				ActionEvent.CTRL_MASK));
-		i3.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-				ActionEvent.CTRL_MASK));
-		i4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				ActionEvent.CTRL_MASK));
+		i1_cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+		i2_copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+		i3_paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+		i4_select.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
 
-		popmenu.add(i1);
-		popmenu.add(i2);
-		popmenu.add(i3);
+		popmenu.add(i1_cut);
+		popmenu.add(i2_copy);
+		popmenu.add(i3_paste);
 		popmenu.addSeparator();
-		popmenu.add(i4);
+		popmenu.add(i4_select);
 
+		i1_cut.setEnabled(cut);
+		i2_copy.setEnabled(copy);
+		i3_paste.setEnabled(paste);
+		i4_select.setEnabled(selectAll);
+		
 		if (!area.isEditable()) {
-			i3.setEnabled(false);
+			i3_paste.setEnabled(false);
 		}
 
-		i1.addActionListener(new ActionListener() {
+		i1_cut.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				area.cut();
 			}
 		});
 
-		i2.addActionListener(new ActionListener() {
+		i2_copy.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				area.copy();
 			}
 		});
 
-		i3.addActionListener(new ActionListener() {
+		i3_paste.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (area.isEditable()) {
 					area.paste();
@@ -231,7 +236,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 			}
 		});
 
-		i4.addActionListener(new ActionListener() {
+		i4_select.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				area.selectAll();
 			}
@@ -257,97 +262,192 @@ public abstract class JBroFuzzPanel extends JPanel {
 		});
 	}
 
-	protected final void popupTable(final JTable area) {
+	protected final void popupTable(final JTable area, boolean open, boolean cut, boolean copy, boolean paste, boolean selectAll, boolean properties) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
-		final JMenuItem i0 = new JMenuItem("Open in Browser");
-		final JMenuItem i1 = new JMenuItem("Cut");
-		final JMenuItem i2 = new JMenuItem("Copy");
-		final JMenuItem i3 = new JMenuItem("Paste");
-		final JMenuItem i4 = new JMenuItem("Select All");
-		final JMenuItem i5 = new JMenuItem("Properties");
+		final JMenuItem i0_open = new JMenuItem("Open in Browser");
+		final JMenuItem i1_cut = new JMenuItem(new CutAction());
+		final JMenuItem i2_copy = new JMenuItem(new CopyAction());
+		final JMenuItem i3_paste = new JMenuItem(new PasteAction());
+		final JMenuItem i4_select = new JMenuItem(new SelectAllAction());
+		final JMenuItem i5_props = new JMenuItem("Properties");
 
-		i0.setEnabled(true);
-		i1.setEnabled(false);
-		i2.setEnabled(true);
-		i3.setEnabled(false);
-		i4.setEnabled(true);
-		i5.setEnabled(true);
+		i0_open.setEnabled(open);
+		i1_cut.setEnabled(cut);
+		i2_copy.setEnabled(copy);
+		i3_paste.setEnabled(paste);
+		i4_select.setEnabled(selectAll);
+		i5_props.setEnabled(properties);
 
-		popmenu.add(i0);
+		popmenu.add(i0_open);
 		popmenu.addSeparator();
-		popmenu.add(i1);
-		popmenu.add(i2);
-		popmenu.add(i3);
-		popmenu.add(i4);
+		popmenu.add(i1_cut);
+		popmenu.add(i2_copy);
+		popmenu.add(i3_paste);
+		popmenu.add(i4_select);
 		popmenu.addSeparator();
-		popmenu.add(i5);
+		popmenu.add(i5_props);
 
-		i0.addActionListener(new ActionListener() {
+		// Open in Browser
+		i0_open.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				Browser.init();
 
-				final String fileName = (String) area.getValueAt(area
-						.getSelectedRow(), 0)
-						+ ".html";
-				final File f = getFrame().getJBroFuzz().getHandler().getFuzzFile(fileName);
+				JTabbedPane pane = getFrame().getTp();
+				final int d = pane.getSelectedIndex();
+				if(d >= 0) {
 
-				try {
-					Browser.displayURL(f.toURI().toString());
-				} catch (final IOException ex) {getFrame().log("Could not launch link in external browser");
-				}
+
+					String s = ((JBroFuzzPanel)pane.getComponent(d)).getName();
+
+					if(s.equalsIgnoreCase(getFrame().getPanelFuzzing().getName())) {
+
+						Browser.init();
+						final String fileName = (String) area.getModel().getValueAt(area.convertRowIndexToModel(area.getSelectedRow()) , 0) + ".html";
+						final File f = getFrame().getJBroFuzz().getHandler().getFuzzFile(fileName);
+
+						try {
+							Browser.displayURL(f.toURI().toString());
+						} 
+						catch (final IOException ex) {
+							getFrame().log("Could not launch link in external browser");
+						}
+					}
+					
+					if(s.equalsIgnoreCase(getFrame().getPanelSniffing().getName())) {
+
+						final int c = area.getSelectedRow();
+						final String row = (String) area.getModel().getValueAt(c, 0);
+						final String fileName = row.split(" ")[0] + ".html";
+						
+						Browser.init();
+						
+						final File f = getFrame().getJBroFuzz().getHandler().getSnifFile(fileName);
+
+						try {
+							Browser.displayURL(f.toURI().toString());
+						} 
+						catch (final IOException ex) {
+							getFrame().log("Could not launch link in external browser");
+						}
+					}
+					
+				} // tab selection
 			}
 		});
 
-		i2.addActionListener(new ActionListener() {
+		// Cut
+		i1_cut.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				// Copy
-				final StringBuffer selectionBuffer = new StringBuffer();
+				// No need to implement as tables are read only
+			}
+		});
+
+		// Copy
+		i2_copy.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+
+				StringBuffer selectionBuffer = new StringBuffer();
 				final int[] selection = area.getSelectedRows();
+
 				for (final int element : selection) {
-					for (int i = 0; i < area.getRowCount(); i++) {
-						selectionBuffer.append(area.getModel().getValueAt(
-								element, i));
-						if (i < area.getRowCount() - 1) {
+					for (int i = 0; i < area.getColumnCount(); i++) {
+
+						selectionBuffer.append(area.getModel().getValueAt(area.convertRowIndexToModel(element), i));
+						if (i < area.getColumnCount() - 1) {
 							selectionBuffer.append(",");
 						}
+
 					}
 					selectionBuffer.append("\n");
 				}
+
 				final JTextArea myTempArea = new JTextArea();
 				myTempArea.setText(selectionBuffer.toString());
 				myTempArea.selectAll();
 				myTempArea.copy();
-				area.removeRowSelectionInterval(0, area.getRowCount() - 1);
+				// area.removeRowSelectionInterval(0, area.getRowCount() - 1 );
 
 			}
 		});
 
-		i4.addActionListener(new ActionListener() {
+		// Paste
+		i3_paste.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				// No need to implement as tables are read only
+			}
+		});
+
+		// Select All
+		i4_select.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				area.selectAll();
 			}
 		});
 
-		i4.addActionListener(new ActionListener() {
+		// Properties
+		i5_props.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				// Select All
-				area.selectAll();
+
+
+
+				JTabbedPane pane = getFrame().getTp();
+				final int d = pane.getSelectedIndex();
+				if(d >= 0) {
+
+					String s = ((JBroFuzzPanel)pane.getComponent(d)).getName();
+
+					if(s.equalsIgnoreCase(getFrame().getPanelFuzzing().getName())) {
+
+						// If multiple rows are selected the first row is the one
+						final int c = area.getSelectedRow();
+						final String name = (String) area.getModel().getValueAt(area.convertRowIndexToModel(c), 0);
+						new WindowViewer(JBroFuzzPanel.this, name, WindowViewer.VIEW_FUZZING_PANEL);
+
+					}
+
+					if(s.equalsIgnoreCase(getFrame().getPanelPayloads().getName())) {
+
+						final String payload = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
+						new PropertiesViewer(JBroFuzzPanel.this, "Payload Information", payload);
+
+					}
+
+					if(s.equalsIgnoreCase(getFrame().getPanelSniffing().getName())) {
+
+						Runtime.getRuntime().gc();
+						Runtime.getRuntime().runFinalization();
+
+						final int c = area.getSelectedRow();
+						final String name = (String) area.getModel().getValueAt(c, 0);
+						new WindowViewer(JBroFuzzPanel.this, name.split(" ")[0], WindowViewer.VIEW_SNIFFING_PANEL);
+
+
+					}
+					
+					if(s.equalsIgnoreCase(getFrame().getPanelWebDirectories().getName())) {
+						
+						StringBuffer output = new StringBuffer();
+
+						for (int i = 0; i < area.getColumnCount(); i++) {
+
+							output.append(area.getColumnName(i) + ": ");
+							output.append(area.getModel().getValueAt(area.convertRowIndexToModel(area.getSelectedRow()), i));
+							output.append("\n");
+						}
+
+						new PropertiesViewer(JBroFuzzPanel.this, "Properties", output.toString());
+
+
+					}
+				}
+
 			}
 		});
 
-		i5.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				final int c = area.getSelectedRow();
-				final String name = (String) area.getModel().getValueAt(c, 0);
-				new WindowViewer(JBroFuzzPanel.this, name, WindowViewer.VIEW_FUZZING_PANEL);
-
-			}
-		});
 
 		area.addMouseListener(new MouseAdapter() {
+
 			private void checkForTriggerEvent(final MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					area.requestFocus();
@@ -364,6 +464,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 			public void mouseReleased(final MouseEvent e) {
 				checkForTriggerEvent(e);
 			}
+
 		});
 	}
 

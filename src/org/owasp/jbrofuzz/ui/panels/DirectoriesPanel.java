@@ -145,7 +145,10 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		targetText.setBackground(Color.WHITE);
 		targetText.setForeground(Color.BLACK);
 		targetText.setPreferredSize(new Dimension(480, 20));
-		popupText(targetText);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(targetText, true, true, true, true);
+		
 		targetPanel.add(targetText);
 
 		// Define the port text area
@@ -156,7 +159,10 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		portText.setMargin(new Insets(1, 1, 1, 1));
 		portText.setBackground(Color.WHITE);
 		portText.setForeground(Color.BLACK);
-		popupText(portText);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(portText, true, true, true, true);
+		
 		portText.setPreferredSize(new Dimension(50, 20));
 		portPanel.add(portText);
 
@@ -171,69 +177,34 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		directoryText.setBackground(Color.WHITE);
 		directoryText.setForeground(Color.BLACK);
 		directoryText.addKeyListener(this);
-		popupText(directoryText);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(directoryText, true, true, true, true);
+		
 		final JScrollPane directoryScrollPane = new JScrollPane(directoryText);
 		directoryScrollPane.setVerticalScrollBarPolicy(20);
 		directoryScrollPane.setHorizontalScrollBarPolicy(30);
 		directoryScrollPane.setPreferredSize(new Dimension(210, 390));
 		directoryPanel.add(directoryScrollPane);
 
-		/* The add generator button
-		startButton = new JButton("Start", ImageCreator.START_IMG);
-		startButton.setBounds(420, 95, 90, 40);
-		startButton
-				.setToolTipText("Start Fuzzing through the Directories List");
-		this.add(startButton);
-		startButton.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				final SwingWorker3 worker = new SwingWorker3() {
-					@Override
-					public Object construct() {
-						DirectoriesPanel.this.start();
-						return "start-window-return";
-					}
-
-					@Override
-					public void finished() {
-						DirectoriesPanel.this.stop();
-					}
-				};
-				worker.start();
-			}
-		});
-
-		stopButton = new JButton("Stop", ImageCreator.STOP_IMG);
-		stopButton.setBounds(520, 95, 90, 40);
-		stopButton.setToolTipText("Stop Fuzzing through the Directories List");
-		this.add(stopButton);
-		stopButton.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				DirectoriesPanel.this.stop();
-			}
-		});
-		*/
-
 		responseTableModel = new SixColumnModel();
-		responseTableModel.setColumnNames("No", "URI", "Code", "Status Text",
-				"Comments", "Scripts");
+		responseTableModel.setColumnNames("No", "URI", "Code", "Status Text", "Comments", "Scripts");
 
-		// sorter = new TableSorter(responseTableModel);
 		responseTable = new JTable(responseTableModel);
-		// responseTable.setAutoCreateRowSorter(true);
 
-		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(
-				responseTableModel);
+		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(responseTableModel);
 		responseTable.setRowSorter(sorter);
 
 		responseTable.getTableHeader().setToolTipText("Click to sort by row");
-		popupTable(responseTable);
-		// sorter.setTableHeader(responseTable.getTableHeader());
+
+		// Right click: Open, Cut, Copy, Paste, Select All, Properties
+		popupTable(responseTable, false, false, true, false, true, true);
+		
 		responseTable.setFont(new Font("Monospaced", Font.BOLD, 12));
 		responseTable.setBackground(Color.black);
 		responseTable.setForeground(Color.white);
 		responseTable.setSurrendersFocusOnKeystroke(true);
-		// this.responseTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
 		responseTable.setColumnSelectionAllowed(false);
 		responseTable.setRowSelectionAllowed(true);
 		// Set the column widths
@@ -272,24 +243,11 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 
 							for (int i = 0; i < responseTable.getColumnCount(); i++) {
 
-								// TableColumn column =
-								// area.getColumnModel().getColumn(i);
-								output.append(responseTable.getColumnName(i)
-										+ ": ");
-								output
-										.append(responseTable
-												.getModel()
-												.getValueAt(
-														responseTable
-																.convertRowIndexToModel(responseTable
-																		.getSelectedRow()),
-														i));
+								output.append(responseTable.getColumnName(i) + ": ");
+								output.append(responseTable.getModel().getValueAt(responseTable.convertRowIndexToModel(responseTable.getSelectedRow()), i));
 								output.append("\n");
 							}
 
-							// final String exploit = (String)
-							// area.getModel().getValueAt(area.getSelectedRow(),
-							// 0);
 							new PropertiesViewer(DirectoriesPanel.this, "Properties", output.toString());
 
 						}
@@ -409,126 +367,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 						+ directoryText.getLineCount() + " "), BorderFactory
 						.createEmptyBorder(1, 1, 1, 1)));
 	}
-
-	/**
-	 * Method for setting up the right click copy paste cut and select all menu.
-	 * 
-	 * @param area
-	 *            JTextArea
-	 */
-	/*
-	private void popup(final JTable area) {
-
-		final JPopupMenu popmenu = new JPopupMenu();
-
-		final JMenuItem i0 = new JMenuItem("Open in Browser");
-		final JMenuItem i1 = new JMenuItem("Cut");
-		final JMenuItem i2 = new JMenuItem("Copy");
-		final JMenuItem i3 = new JMenuItem("Paste");
-		final JMenuItem i4 = new JMenuItem("Select All");
-		final JMenuItem i5 = new JMenuItem("Properties");
-
-		i0.setEnabled(true);
-		i1.setEnabled(false);
-		i2.setEnabled(true);
-		i3.setEnabled(false);
-		i4.setEnabled(true);
-		i5.setEnabled(true);
-
-		popmenu.add(i0);
-		popmenu.addSeparator();
-		popmenu.add(i1);
-		popmenu.add(i2);
-		popmenu.add(i3);
-		popmenu.add(i4);
-		popmenu.addSeparator();
-		popmenu.add(i5);
-
-		i0.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				Browser.init();
-				final String url = (String) area.getValueAt(area
-						.getSelectedRow(), 1 % area.getColumnCount());
-				try {
-					Browser.displayURL(url);
-				} catch (final IOException ex) {
-					getFrame().log("Could not launch link in external browser");
-				}
-			}
-		});
-
-		i2.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				// Copy
-				final StringBuffer selectionBuffer = new StringBuffer();
-				final int[] selection = area.getSelectedRows();
-				for (final int element : selection) {
-					for (int i = 0; i < area.getRowCount(); i++) {
-						selectionBuffer.append(area.getModel().getValueAt(
-								area.convertRowIndexToModel(element), i));
-						if (i < area.getRowCount() - 1) {
-							selectionBuffer.append(",");
-						}
-					}
-					selectionBuffer.append("\n");
-				}
-				final JTextArea myTempArea = new JTextArea();
-				myTempArea.setText(selectionBuffer.toString());
-				myTempArea.selectAll();
-				myTempArea.copy();
-				area.removeRowSelectionInterval(0, area.getRowCount() - 1);
-
-			}
-		});
-
-		i4.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				area.selectAll();
-			}
-		});
-
-		i5.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				StringBuffer output = new StringBuffer();
-
-				for (int i = 0; i < area.getColumnCount(); i++) {
-
-					// TableColumn column = area.getColumnModel().getColumn(i);
-					output.append(area.getColumnName(i) + ": ");
-					output.append(area.getModel().getValueAt(
-							area.convertRowIndexToModel(area.getSelectedRow()),
-							i));
-					output.append("\n");
-				}
-
-				// final String exploit = (String)
-				// area.getModel().getValueAt(area.getSelectedRow(), 0);
-				new PropertiesViewer(DirectoriesPanel.this, "Properties", output.toString());
-
-			}
-		});
-
-		area.addMouseListener(new MouseAdapter() {
-			private void checkForTriggerEvent(final MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					area.requestFocus();
-					popmenu.show(e.getComponent(), e.getX(), e.getY());
-				}
-			}
-
-			@Override
-			public void mousePressed(final MouseEvent e) {
-				checkForTriggerEvent(e);
-			}
-
-			@Override
-			public void mouseReleased(final MouseEvent e) {
-				checkForTriggerEvent(e);
-			}
-		});
-	}
-	*/
+	
 
 	/**
 	 * Set the text content of the directories jtextarea.
@@ -573,20 +412,13 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	 */
 	public void start() {
 		
-		// JButton startButton = getFrame().getFrameToolBar().start;
-		// JButton stopButton = getFrame().getFrameToolBar().stop;
-		
 		if (!stopped) {
 			return;
 		}	
 		stopped = false;
+		
 		// Set the options in the toolbar enabled at startup
 		setOptionsAvailable(false, true, false, false, false);
-		
-		// setStarted(true);
-		
-		// startButton.setEnabled(false);
-		// stopButton.setEnabled(true);
 		
 		// Increment the session number
 		session++;
@@ -598,8 +430,6 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 		// UI and Colors
-		// startButton.setEnabled(false);
-		// stopButton.setEnabled(true);
 		targetText.setEditable(false);
 		targetText.setBackground(Color.BLACK);
 		targetText.setForeground(Color.WHITE);
@@ -624,6 +454,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 
 		cesg = new DRequestIterator(getFrame(), uri, dirs, port);
 		cesg.run();
+		
 	}
 
 	/**
@@ -633,21 +464,13 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 	 */
 	public void stop() {
 		
-		// JButton startButton = getFrame().getFrameToolBar().start;
-		// JButton stopButton = getFrame().getFrameToolBar().stop;
-		
 		if (stopped) {
 			return;
 		}
 		stopped = true;
+		
 		// Set the options in the toolbar enabled at startup
 		setOptionsAvailable(true, false, false, false, false);
-		
-		// setStarted(false);
-
-		// UI and Colors
-		// stopButton.setEnabled(false);
-		// startButton.setEnabled(true);
 		
 		targetText.setEditable(true);
 		targetText.setBackground(Color.WHITE);
@@ -657,6 +480,7 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		portText.setForeground(Color.BLACK);
 
 		cesg.stop();
+		
 	}
 	
 	public void graph() {

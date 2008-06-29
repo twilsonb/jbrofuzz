@@ -77,8 +77,8 @@ public class WindowViewer extends JFrame {
 	 * @param name
 	 * @param typeOfPanel
 	 */
-	public WindowViewer(final JBroFuzzPanel parent, final String name,
-			final int typeOfPanel) {
+	public WindowViewer(final JBroFuzzPanel parent, final String name, final int typeOfPanel) {
+		
 		super("JBroFuzz - File Viewer - " + name + ".html");
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
@@ -97,16 +97,10 @@ public class WindowViewer extends JFrame {
 		final JTextArea listTextArea = new JTextArea();
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
-		parent.popupText(listTextArea);
-		/*
-		 * listTextArea.setEditorKit(new StyledEditorKit() {
-		 * 
-		 * private static final long serialVersionUID = -6885612347033981164L;
-		 * 
-		 * @Override public Document createDefaultDocument() { return new
-		 * TextHighlighter(); } });
-		 */
-
+		
+		// Right click: Cut, Copy, Paste, Select All
+		parent.popupText(listTextArea, false, true, false, true);
+		
 		// Define the Scroll Pane for the Text Area
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
@@ -126,9 +120,6 @@ public class WindowViewer extends JFrame {
 				.createTitledBorder(name + ".html"), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 
-		listTextArea.setText(text.toString());
-		listTextArea.setCaretPosition(0);
-
 		// Define the Progress Bar
 		final JProgressBar progressBar = new JProgressBar(0, text.length());
 		progressBar.setValue(0);
@@ -138,9 +129,9 @@ public class WindowViewer extends JFrame {
 		// Global Frame Issues
 		this.add(listPanel);
 		this.add(progressBar);
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
 		this.setSize(550, 525);
+		
 		setResizable(false);
 		setVisible(true);
 		setDefaultCloseOperation(2);

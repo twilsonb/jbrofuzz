@@ -121,7 +121,7 @@ public class JBroFuzzFormat {
 	/**
 	 * The line distinguisher found in a file
 	 */
-	public static final String LINE_SEPARATOR = "-- jbrf-end -->";
+	public static final String LINE_SEPARATOR = "-->";
 
 	/**
 	 * <p>

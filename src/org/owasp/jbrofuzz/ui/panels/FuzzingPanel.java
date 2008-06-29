@@ -71,8 +71,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	private final JPanel outputPanel;
 	// The JTextField
 	private final JTextField target;
-	// The port JFormattedTextField
-	// private final JFormattedTextField port;
 	// The JTextArea
 	private final NonWrappingTextPane message;
 	// The JTable were results are outputted
@@ -84,15 +82,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	// And the table model that goes with it
 	private ThreeColumnModel mFuzzingTableModel;
 	// The JButtons
-	private final JButton buttonAddGen, buttonRemGen; //  buttonFuzzStart, buttonFuzzStop, buttonPlot;
-	// The swing worker used when the button "fuzz" is pressed
-	private SwingWorker3 worker;
+	private final JButton buttonAddGen, buttonRemGen;
 	// A counter for the number of times fuzz has been clicked
 	private int counter, session;
-	// The request iterator performing all the fuzzing
-	// private MessageCreator mRIterator;
-	// The table sorter
-	// private TableSorter sorter;
 	// The console
 	private JTextArea console;
 	// The frame window
@@ -138,7 +130,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		target.setMargin(new Insets(1, 1, 1, 1));
 		target.setBackground(Color.WHITE);
 		target.setForeground(Color.BLACK);
-		popupText(target);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(target, true, true, true, true);
+		
 		targetPanel.add(target);
 
 		// The message panel
@@ -167,7 +162,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			}
 			
 		});
-		popupText(message);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(message, true, true, true, true);
 
 		// The message scroll pane where the message pane sits
 		final JScrollPane messageScrollPane = new JScrollPane(message);
@@ -246,7 +243,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		console = new JTextArea();
 		console.setFont(new Font("Verdana", Font.PLAIN, 10));
 		console.setEditable(false);
-		popupText(console);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(console, false, true, false, true);
+		
 		consoleEvent = 0;
 
 		JScrollPane consoleScrollPane = new JScrollPane(console);
@@ -260,24 +260,17 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				.createTitledBorder(" Output "), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
 
-		// outputPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		// outputPanel.setBackground(Color.white);
-
 		outputTableModel = new SixColumnModel();
-		outputTableModel.setColumnNames("No", "Target", "Timestamp", "Status",
-				"Request", "Response Size");
-		// sorter = new TableSorter(outputTableModel);
+		outputTableModel.setColumnNames("No", "Target", "Timestamp", "Status", "Request", "Response Size");
 
 		outputTable = new JTable(outputTableModel);
-		// outputTable.setAutoCreateRowSorter(true);
 
-		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(
-				outputTableModel);
+		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(outputTableModel);
 		outputTable.setRowSorter(sorter);
 
 		outputTable.setBackground(Color.white);
-		// sorter.setTableHeader(outputTable.getTableHeader());
-		popupTable(outputTable);
+		// Right click: Open, Cut, Copy, Paste, Select All, Properties
+		popupTable(outputTable, true, false, true, false, true, true);
 
 		outputTable.setColumnSelectionAllowed(false);
 		outputTable.setRowSelectionAllowed(true);
@@ -286,7 +279,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		outputTable.setBackground(Color.BLACK);
 		outputTable.setForeground(Color.WHITE);
 		outputTable.setSurrendersFocusOnKeystroke(true);
-		outputTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		outputTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		// Set the column widths
 		for (int i = 0; i < outputTableModel.getColumnCount(); i++) {
 			column = outputTable.getColumnModel().getColumn(i);
@@ -335,16 +328,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		outputScrollPane.setVerticalScrollBarPolicy(20);
 		// outputScrollPane.setPreferredSize(new Dimension(840, 130));
 		outputPanel.add(outputScrollPane);
-		// outputPanel.setBounds(10, 280, 860, 170);
-		// this.add(outputPanel);
-
-		// setLayout(new BorderLayout());
-
-		// The button panel
-		// JPanel buttonPanel = new JPanel(new FlowLayout());
-		// buttonPanel.add(buttonFuzzStart);
-		// buttonPanel.add(buttonPlot);
-		// buttonPanel.add(buttonFuzzStop);
 
 		// Set the scroll areas
 		JPanel topLeftPanel = new JPanel(new BorderLayout());

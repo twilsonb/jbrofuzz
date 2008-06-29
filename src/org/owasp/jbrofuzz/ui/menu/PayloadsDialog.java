@@ -65,8 +65,7 @@ public class PayloadsDialog extends JDialog {
 			final int c = categoriesTable.getSelectedRow();
 			final String value = (String) categoriesTableModel.getValueAt(c, 0);
 
-			fuzzersTableModel.setData(m.getJBroFuzz().getDatabase()
-					.getGenerators(value));
+			fuzzersTableModel.setData(m.getJBroFuzz().getDatabase().getGenerators(value));
 
 			fuzzersPanel.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createTitledBorder(" " + value + " "),
@@ -316,7 +315,10 @@ public class PayloadsDialog extends JDialog {
 		fuzzerInfoTextArea.setMargin(new Insets(1, 1, 1, 1));
 		fuzzerInfoTextArea.setBackground(Color.WHITE);
 		fuzzerInfoTextArea.setForeground(Color.BLACK);
-		parent.popupText(fuzzerInfoTextArea);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		parent.popupText(fuzzerInfoTextArea, false, true, false, true);
+		
 		fuzzerInfoTextArea.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
