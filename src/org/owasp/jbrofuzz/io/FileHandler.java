@@ -230,20 +230,11 @@ public class FileHandler {
 
 	/**
 	 * <p>
-	 * Method for returning an integer array of hashes for each file found
-	 * inside the session fuzz directory created at runtime.
-	 * </p>
-	 * <p>
-	 * Each hash is an integer between the value of [0 - 1000] and is calculated
-	 * by means of consecutive addition of the byte values found on each line.
-	 * </p>
-	 * <p>
-	 * As a result of this, files with small alterations e.g. date and time
-	 * stamps will have little differences in their hash value, thus keeping the
-	 * hamming distance between them to a minimum.
+	 * Method for returning the file names created inside the fuzz directory.
 	 * </p>
 	 * 
-	 * @return String[] hashValue
+	 * @return String[] filenames
+	 * @version 1.0
 	 * @since 0.6
 	 */
 	public static String[] getFileList() {
@@ -258,34 +249,40 @@ public class FileHandler {
 
 	}
 
-	/**
-	 * <p>
-	 * Method for returning an integer array of hashes for each file found
-	 * inside the session fuzz directory created at runtime.
-	 * </p>
-	 * <p>
-	 * Each hash is an integer between the value of [0 - 1000] and is calculated
-	 * by means of consecutive addition of the byte values found on each line.
-	 * </p>
-	 * <p>
-	 * As a result of this, files with small alterations e.g. date and time
-	 * stamps will have little differences in their hash value, thus keeping the
-	 * hamming distance between them to a minimum.
-	 * </p>
-	 * 
-	 * @return int[] An array of integers, of length the same as the number of
-	 *         files
-	 * @since 0.6
-	 */
-	public static int[] getFuzzDirFileHashes() {
+	public static int getFuzzDirBigestFile() {
 
 		final File[] folderFiles = FileHandler.fuzzDirectory.listFiles();
-		final int[] hashValue = new int[folderFiles.length];
+		long maxValue = 0;
+		
+		for(File f : folderFiles) {
+			if(f.length() > maxValue) {
+				maxValue = f.length();
+			}
+		}
+		
+		return (int) maxValue;
+	}
+	
+	public static int getFuzzFileSize(String fileName) {
+		
+		File f = new File(FileHandler.fuzzDirectory, fileName);
+		
+		int hashValue = 0;
+		
+		hashValue = (int) (f.length() ); 
+		
+		return hashValue;
+	}
 
-		for (int i = 0; i < folderFiles.length; i++) {
+	public static int getFuzzFileHash(String fileName) {
+
+		File f =  new File(FileHandler.fuzzDirectory, fileName);
+		
+		int hashValue = 0;
+		
 			BufferedReader bufRead = null;
 			try {
-				final FileReader input = new FileReader(folderFiles[i]);
+				final FileReader input = new FileReader(f);
 				bufRead = new BufferedReader(input);
 				String line;
 				boolean passedResponse = false;
@@ -297,8 +294,8 @@ public class FileHandler {
 					if (passedResponse) {
 						final byte[] b_array = line.getBytes();
 						for (final byte element : b_array) {
-							hashValue[i] += element;
-							hashValue[i] %= 1000;
+							hashValue += element;
+							hashValue %= 1000;
 						}
 					}
 					line = bufRead.readLine();
@@ -308,22 +305,22 @@ public class FileHandler {
 			} catch (final ArrayIndexOutOfBoundsException e) {
 				g.getWindow().log(
 						"Cannot Find Location" + "\n"
-								+ folderFiles[i].getName()
+								+ f.getName()
 								+ "\nAn Array Error Occured "
 								+ "JBroFuzz File Read Error");
 			} catch (final IOException e) {
 				g.getWindow().log(
 						"Cannot Read Location" + "\n"
-								+ folderFiles[i].getName()
+								+ f.getName()
 								+ "\nA File Read Error Occured"
 								+ "JBroFuzz File Read Error");
 			} finally {
 				IOUtils.closeQuietly(bufRead);
 			}
-		}
+		
 		return hashValue;
 	}
-
+	
 	/**
 	 * <p>
 	 * Method for returning the name of the directory specified.
@@ -766,6 +763,12 @@ public class FileHandler {
 
 		return new File(FileHandler.fuzzDirectory, fileName);
 
+	}
+	
+	public File getSnifFile(String fileName) {
+		
+		return new File(FileHandler.snifDirectory, fileName);
+		
 	}
 
 	public StringBuffer readFuzzFile(String fileName) {

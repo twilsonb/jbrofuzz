@@ -167,18 +167,20 @@ public class JBroFuzzWindow extends JFrame {
 				// Get current tab
 	            JTabbedPane pane = (JTabbedPane)evt.getSource();
 	            final int c = pane.getSelectedIndex();
-	            if(c > 0) {
+	            if(c >= 0) {
+	         
 	            	boolean [] b = ((JBroFuzzPanel)pane.getComponent(c)).getOptionsAvailable();
 	            	// Set the toolbar/menubar options which are enabled
 	            	tb.setEnabledPanelOptions(b);
 	            	mb.setEnabledPanelOptions(b);
+	         
 	            }
+	            
+	            Runtime.getRuntime().gc();
+	    		Runtime.getRuntime().runFinalization();
 	            
 	        }
 	    });
-		
-		tp.setSelectedComponent(wp);
-
 		
 		pane.add(tb, BorderLayout.PAGE_START);
 		pane.add(tp, BorderLayout.CENTER);
@@ -215,6 +217,10 @@ public class JBroFuzzWindow extends JFrame {
 		Runtime.getRuntime().runFinalization();
 
 		fp.stop();
+		wp.stop();
+		pp.stop();
+		sp.stop();
+		cp.stop();
 		
 		// Get the prefences on deleting empty dirs on exit
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");

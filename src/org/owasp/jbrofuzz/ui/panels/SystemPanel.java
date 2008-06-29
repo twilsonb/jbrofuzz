@@ -23,9 +23,7 @@
  */
 package org.owasp.jbrofuzz.ui.panels;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -36,9 +34,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.util.SwingWorker3;
 
 /**
  * <p>
@@ -54,8 +55,6 @@ public class SystemPanel extends JBroFuzzPanel {
 	private static final long serialVersionUID = 1L;
 	// The JTable that holds all the data
 	private JTextArea listTextArea;
-	// The info button
-	private JButton infoButton;
 	// The line count
 	private int lineCount;
 
@@ -69,7 +68,6 @@ public class SystemPanel extends JBroFuzzPanel {
 	public SystemPanel(final JBroFuzzWindow m) {
 
 		super(" System ", m);
-		// setLayout(null);
 
 		lineCount = 0;
 
@@ -77,13 +75,9 @@ public class SystemPanel extends JBroFuzzPanel {
 		setOptionsAvailable(true, false, false, true, false);
 
 		// Define the JPanel
-		final JPanel listPanel = new JPanel();
-		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" System Logger "), BorderFactory
-				.createEmptyBorder(1, 1, 1, 1)));
-
-		// Set the bounds
-		listPanel.setBounds(10, 90, 870, 360);
+		final JPanel listPanel = new JPanel(new BorderLayout());
+		
+		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(" System Logger "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 		listTextArea = new JTextArea();
 		listTextArea.setFont(new Font("Verdana", Font.PLAIN, 10));
@@ -92,27 +86,36 @@ public class SystemPanel extends JBroFuzzPanel {
 		listTextArea.setWrapStyleWord(true);
 		listTextArea.setBackground(Color.WHITE);
 		listTextArea.setForeground(Color.BLACK);
-		popupText(listTextArea);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		popupText(listTextArea, false, true, false, true);
 
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
 		listTextScrollPane.setHorizontalScrollBarPolicy(31);
-		listTextScrollPane.setPreferredSize(new Dimension(850, 320));
+		// listTextScrollPane.setPreferredSize(new Dimension(850, 320));
 		listPanel.add(listTextScrollPane);
 
-		infoButton = new JButton("Info");
-		infoButton.setBounds(800, 33, 70, 40);
-		infoButton.setEnabled(true);
-		// The action listener for the info button
-		infoButton.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
+		// The top and bottom split components
+		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 50, 33));
+		
+		// topPanel.add(infoButton);
+		
+		JSplitPane mainPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		mainPane.setOneTouchExpandable(false);
+		mainPane.setTopComponent(topPanel);
+		mainPane.setBottomComponent(listPanel);
+		mainPane.setDividerLocation(100);
 
-
-			}
-		});
-		this.add(listPanel);
-		this.add(infoButton);
+		// Allow for all areas to be resized to even not be seen
+		Dimension minimumSize = new Dimension(0, 0);
+		topPanel.setMinimumSize(minimumSize);
+		listPanel.setMinimumSize(minimumSize);
+		
+		this.add(mainPane, BorderLayout.CENTER);
+		
 		listTextArea.setCaretPosition(0);
+		
 	}
 
 	/**
@@ -147,6 +150,8 @@ public class SystemPanel extends JBroFuzzPanel {
 			getFrame().getTp().setTitleAt(tab,
 					" System (" + lineCount + ")");
 		}
+		
+		listTextArea.setCaretPosition(listTextArea.getText().length());
 
 	}
 
@@ -217,7 +222,11 @@ public class SystemPanel extends JBroFuzzPanel {
 		Runtime.getRuntime().gc();
 		Runtime.getRuntime().runFinalization();
 
-		start("Logging Current Timestamp");
+		final Date currentTime = new Date();
+		final SimpleDateFormat dateTime = new SimpleDateFormat(
+				"dd.MM.yyyy HH:mm:ss:SSS", new Locale("en"));
+		
+		start("JBroFuzz Timestamp --- " + dateTime.format(currentTime) + " --- JBroFuzz Timestamp");
 
 	}
 

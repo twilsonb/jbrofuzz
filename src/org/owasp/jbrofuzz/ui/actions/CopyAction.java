@@ -39,14 +39,52 @@ public class CopyAction extends TextAction {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				final JTextComponent text = CopyAction.this
-						.getTextComponent(evt);
-				if (text != null) {
-					text.copy();
-					text.requestFocus();
-				}
-			}
+				
+				if(evt != null) {
+					
+					Object o = evt.getSource();
+					
+					if(o instanceof JTable) {
+						
+						final JTable table = (JTable) o;
+						
+						StringBuffer selectionBuffer = new StringBuffer();
+						final int[] selection = table.getSelectedRows();
+						
+						for (final int element : selection) {
+							for (int i = 0; i < table.getColumnCount(); i++) {
+								
+								selectionBuffer.append(table.getModel().getValueAt(table.convertRowIndexToModel(element), i));
+								if (i < table.getColumnCount() - 1) {
+									selectionBuffer.append(",");
+								}
+								
+							}
+							selectionBuffer.append("\n");
+						}
+						
+						final JTextArea myTempArea = new JTextArea();
+						myTempArea.setText(selectionBuffer.toString());
+						myTempArea.selectAll();
+						myTempArea.copy();
+						table.removeRowSelectionInterval(0, table.getRowCount() - 1);
+						
+					}
+					
+					if(o instanceof JTextComponent) {
+						
+						final JTextComponent text = (JTextComponent) CopyAction.this.getTextComponent(evt);
+						
+						text.copy();
+						text.requestFocus();
+						
+					}
+					
+				} // null evt
+				
+			} // run()
 		});
 
 	}
+	
 }

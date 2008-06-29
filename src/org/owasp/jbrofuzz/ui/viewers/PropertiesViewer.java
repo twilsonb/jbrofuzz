@@ -85,7 +85,9 @@ public class PropertiesViewer extends JFrame {
 		listTextArea.setForeground(Color.WHITE);
 		listTextArea.setWrapStyleWord(true);
 		listTextArea.setLineWrap(true);
-		parent.popupText(listTextArea);
+		
+		// Right click: Cut, Copy, Paste, Select All
+		parent.popupText(listTextArea, false, true, false, true);
 
 		// Define the Scroll Area for the Text
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);

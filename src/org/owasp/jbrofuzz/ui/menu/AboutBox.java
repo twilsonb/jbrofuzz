@@ -67,8 +67,8 @@ public class AboutBox extends JDialog {
 	public static final int ACKNOWLEDGEMENTS = 3;
 
 	// Dimensions of the about box
-	private static final int x = 650;
-	private static final int y = 400;
+	private static final int x = 450;
+	private static final int y = 300;
 	// The tabbed pane, holding all the different panels and labels
 	private JTabbedPane tabbedPane;
 	// The ok button at the bottom of the box

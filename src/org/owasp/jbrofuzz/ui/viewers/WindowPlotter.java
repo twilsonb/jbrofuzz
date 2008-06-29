@@ -23,10 +23,11 @@
  */
 package org.owasp.jbrofuzz.ui.viewers;
 
-import java.awt.BorderLayout;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Properties;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import jcckit.GraphicsPlotCanvas;
 import jcckit.data.DataCurve;
@@ -38,23 +39,20 @@ import jcckit.util.PropertiesBasedConfigData;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.util.SwingWorker3;
 
 /**
  * <p>
- * Class extending a JFrame for displaying fuzzed results in a linear graph.
- * </p>
- * <p>
- * This class launched a JFrame inside the "TCP Fuzzing" Panel.
+ * Class extending a JFrame for displaying fuzzed results in 
+ * various linear graphs.
  * </p>
  * 
- * @author subere (at) uncon org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 1.0
  * @since 0.6
  */
 public class WindowPlotter extends JFrame {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -5604856799032027536L;
 
 	// The x size of the frame
@@ -62,116 +60,194 @@ public class WindowPlotter extends JFrame {
 	// The y size of the frame
 	private static final int y = 450;
 
-	private int[] y_data = null;
-	private String[] x_data = null;
-
-	private DataPlot _dataPlot;
+	// The progress bar used
+	private JProgressBar progressBar;
 
 	public WindowPlotter(final JBroFuzzWindow parent, final String name) {
-		super(name);
+
+		super("JBroFuzz - " + name);
+		setLayout(new BorderLayout());
 		setIconImage(ImageCreator.FRAME_IMG.getImage());
 
-		y_data = FileHandler.getFuzzDirFileHashes();
-		x_data = FileHandler.getFileList();
+		// Get the total number of files - early on as its used for the length
+		final String[] x_data =  FileHandler.getFileList();
 
-		normaliseData();
+		// Define the Progress Bar - 4 loops to progress through
+		progressBar = new JProgressBar(0, x_data.length);
+		progressBar.setValue(0);
+		progressBar.setStringPainted(true);
+		progressBar.setBounds(410, 465, 120, 20);
 
-		final GraphicsPlotCanvas plotCanvas = createPlotCanvas();
+		// Define the bottom panel with the progress bar
+		final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		bottomPanel.add(progressBar);
 
-		_dataPlot = new DataPlot();
-		_dataPlot.addElement(new DataCurve(""));
-		plotCanvas.connect(_dataPlot);
-		setLayout(new BorderLayout());
-		this.add(plotCanvas.getGraphicsCanvas(), BorderLayout.CENTER);
-		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
-		this.setSize(WindowPlotter.x, WindowPlotter.y);
-		setResizable(false);
-		setVisible(true);
-		setDefaultCloseOperation(2);
+		// Define the tabs panel
+		JTabbedPane tabs = new JTabbedPane(JTabbedPane.BOTTOM);
 
-		drawData();
-	}
+		// Add the corresponding components
+		this.add(tabs, BorderLayout.CENTER);
+		this.add(bottomPanel, BorderLayout.SOUTH);
 
-	private GraphicsPlotCanvas createPlotCanvas() {
-		final int xMin = 0;
-		final int xMax = y_data.length + 1;
-		final int yMin = 0;
-		final int yMax = 1000;
 
-		final Properties props = new Properties();
-		final ConfigParameters config = new ConfigParameters(
-				new PropertiesBasedConfigData(props));
-		props.put("foreground", "0xffffff");
-		props.put("background", "0");
 
-		props.put("plot/legendVisible", "false");
-		props.put("plot/coordinateSystem/xAxis/minimum", "" + xMin);
-		props.put("plot/coordinateSystem/xAxis/maximum", "" + xMax);
-		props.put("plot/coordinateSystem/xAxis/axisLabel",
-				"Fuzzing Instance File Generated");
+		// Create the plot canvas for the first graph
+		final int xMin1 = 0;
+		final int xMax1 = x_data.length + 1;
+		final int yMin1 = 0;
+		final int yMax1 = 1000;
 
-		props.put("plot/coordinateSystem/yAxis/minimum", "" + yMin);
-		props.put("plot/coordinateSystem/yAxis/maximum", "" + yMax);
-		props.put("plot/coordinateSystem/yAxis/axisLabel",
-				"Normalised Fuzzing Hash Value [0 - 1000]");
+		final Properties props1 = new Properties();
+		final ConfigParameters config1 = new ConfigParameters(new PropertiesBasedConfigData(props1));
+		props1.put("foreground", "0xffffff");
+		props1.put("background", "0");
 
-		props.put("plot/curveFactory/definitions", "curve");
-		props.put("plot/curveFactory/curve/withLine", "true");
+		props1.put("plot/legendVisible", "false");
+		props1.put("plot/coordinateSystem/xAxis/minimum", "" + xMin1);
+		props1.put("plot/coordinateSystem/xAxis/maximum", "" + xMax1);
+		props1.put("plot/coordinateSystem/xAxis/axisLabel", "Fuzzing Instance File Generated");
 
-		props.put("plot/initialHintForNextCurve/className",
-				"jcckit.plot.PositionHint");
-		props.put("plot/initialHintForNextCurve/position", "0 0.1");
+		props1.put("plot/coordinateSystem/yAxis/minimum", "" + yMin1);
+		props1.put("plot/coordinateSystem/yAxis/maximum", "" + yMax1);
+		props1.put("plot/coordinateSystem/yAxis/axisLabel", " Hash Value [0 - 1000]");
 
-		props.put("plot/curveFactory/curve/initialHintForNextPoint/className",
-				"jcckit.plot.ShapeAttributesHint");
-		props
-				.put(
-						"plot/curveFactory/curve/initialHintForNextPoint/initialAttributes/fillColor",
-						"0x00090");
-		props
-				.put(
-						"plot/curveFactory/curve/initialHintForNextPoint/fillColorHSBIncrement",
-						"0.0 0.0 0.018");
-		props.put("plot/curveFactory/curve/withLine", "true");
-		props.put("plot/curveFactory/curve/symbolFactory/className",
-				"jcckit.plot.CircleSymbolFactory");
-		props.put("plot/curveFactory/curve/symbolFactory/size", "0.015");
+		props1.put("plot/curveFactory/definitions", "curve");
+		props1.put("plot/curveFactory/curve/withLine", "true");
+
+		props1.put("plot/initialHintForNextCurve/className","jcckit.plot.PositionHint");
+		props1.put("plot/initialHintForNextCurve/position", "0 0.1");
+
+		props1.put("plot/curveFactory/curve/initialHintForNextPoint/className","jcckit.plot.ShapeAttributesHint");
+		props1.put("plot/curveFactory/curve/initialHintForNextPoint/initialAttributes/fillColor", "0x00090");
+		props1.put("plot/curveFactory/curve/initialHintForNextPoint/fillColorHSBIncrement", "0.0 0.0 0.018");
+
+		props1.put("plot/curveFactory/curve/symbolFactory/className", "jcckit.plot.CircleSymbolFactory");
+		props1.put("plot/curveFactory/curve/symbolFactory/size", "0.015");
 
 		final StringBuffer xAxisMap = new StringBuffer();
-		for (int i = 0; i < x_data.length; i++) {
+		// Go up to 1000 files for generating the index
+		for (int i = 0; i <= Math.min(x_data.length, 100000); i++) {
+			
 			if (i == 0) {
 				xAxisMap.append("0=0;");
 			} else {
-				if (xAxisMap.length() < 100000) {
-					xAxisMap.append((i + 1) + "=" + x_data[i] + ";");
+				xAxisMap.append(i + "=" + x_data[i - 1] + ";");
+			}
+			
+		}
+		xAxisMap.append("" + (Math.min(x_data.length, 100000) + 1) + "=;" );
+		
+		props1.put("plot/coordinateSystem/xAxis/ticLabelFormat/className", "jcckit.plot.TicLabelMap");
+		props1.put("plot/coordinateSystem/xAxis/ticLabelFormat/map", xAxisMap.toString());
+
+		// Define the first data plot of hash values
+		final GraphicsPlotCanvas pc1 = new GraphicsPlotCanvas(config1);
+		final DataPlot dp1 = new DataPlot();
+		dp1.addElement(new DataCurve(""));
+		pc1.connect(dp1);
+
+		// Define the plot canvas for the second graph
+
+		final int xMin2 = 0;
+		final int xMax2 = x_data.length + 1;
+		final int yMin2 = 0;
+		final int yMax2 = FileHandler.getFuzzDirBigestFile() + (FileHandler.getFuzzDirBigestFile() / 10);
+
+		final Properties props2 = new Properties();
+		final ConfigParameters config2 = new ConfigParameters(new PropertiesBasedConfigData(props2));
+
+		props2.put("foreground", "0xffffff");
+		props2.put("background", "0");
+
+		props2.put("plot/legendVisible", "false");
+		props2.put("plot/coordinateSystem/xAxis/minimum", "" + xMin2);
+		props2.put("plot/coordinateSystem/xAxis/maximum", "" + xMax2);
+		props2.put("plot/coordinateSystem/xAxis/axisLabel", "Fuzzing Instance File Generated");
+
+		props2.put("plot/coordinateSystem/yAxis/minimum", "" + yMin2);
+		props2.put("plot/coordinateSystem/yAxis/maximum", "" + yMax2);
+		props2.put("plot/coordinateSystem/yAxis/axisLabel", " File Size (bytes)");
+
+		props2.put("plot/curveFactory/definitions", "curve");
+		props2.put("plot/curveFactory/curve/withLine", "true");
+
+		props2.put("plot/initialHintForNextCurve/className","jcckit.plot.PositionHint");
+		props2.put("plot/initialHintForNextCurve/position", "0 0.1");
+
+		props2.put("plot/curveFactory/curve/initialHintForNextPoint/className","jcckit.plot.ShapeAttributesHint");
+		props2.put("plot/curveFactory/curve/initialHintForNextPoint/initialAttributes/fillColor", "0x00090");
+		props2.put("plot/curveFactory/curve/initialHintForNextPoint/fillColorHSBIncrement", "0.0 0.0 0.018");
+
+		props2.put("plot/curveFactory/curve/symbolFactory/className", "jcckit.plot.CircleSymbolFactory");
+		props2.put("plot/curveFactory/curve/symbolFactory/size", "0.015");
+
+		props2.put("plot/coordinateSystem/xAxis/ticLabelFormat/className", "jcckit.plot.TicLabelMap");
+		props2.put("plot/coordinateSystem/xAxis/ticLabelFormat/map", xAxisMap.toString());
+
+
+		// Define the second data plot of file lengths
+		final GraphicsPlotCanvas pc2 = new GraphicsPlotCanvas(config2);
+		final DataPlot dp2 = new DataPlot();
+		dp2.addElement(new DataCurve(""));
+		pc2.connect(dp2);
+
+		// Bring in the y data values
+		final int[] y_data = new int[x_data.length]; 
+		final int[] z_data = new int[x_data.length];
+
+		final DataCurve curve1 = new DataCurve("");
+		final DataCurve curve2 = new DataCurve("");
+
+		SwingWorker3 worker = new SwingWorker3() {
+
+			@Override
+			public Object construct() {
+
+				for(int a = 0; a < x_data.length; a++) {
+
+					y_data[a] = FileHandler.getFuzzFileHash(x_data[a]);
+					z_data[a] = FileHandler.getFuzzFileSize(x_data[a]);
+
+					curve1.addElement(new DataPoint(a, 0));
+					curve2.addElement(new DataPoint(a, 0));
+
+					final int x = a + 1;
+
+					curve1.replaceElementAt(a, new DataPoint(x, y_data[a]));
+					curve2.replaceElementAt(a, new DataPoint(x, z_data[a]));
+
+					progressBar.setValue(a);
+
+				}
+				dp1.replaceElementAt(0, curve1);
+				dp2.replaceElementAt(0, curve2);
+
+				progressBar.setValue(x_data.length);
+				return "return-worker";
+			}
+
+		};
+		worker.start();
+
+		// Add the elements to the tab and a key listener to close
+		tabs.add(" Hash Value ", pc1.getGraphicsCanvas());
+		tabs.add(" File Size ", pc2.getGraphicsCanvas());
+		tabs.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+					WindowPlotter.this.dispose();
 				}
 			}
-		}
-		props.put("plot/coordinateSystem/xAxis/ticLabelFormat/className",
-				"jcckit.plot.TicLabelMap");
-		props.put("plot/coordinateSystem/xAxis/ticLabelFormat/map", xAxisMap
-				.toString());
-		return new GraphicsPlotCanvas(config);
-	}
+		});
+		
+		// Global frame issues
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
+		setDefaultCloseOperation(2);
+		setResizable(true);
+		this.setSize(x, y);
+		setVisible(true);
 
-	private void drawData() {
-		final DataCurve curve = new DataCurve("");
-		for (int i = 0; i < y_data.length; i++) {
-			curve.addElement(new DataPoint(i, 0));
-			final int x = i + 1;
-			final int y = y_data[i];
-			curve.replaceElementAt(i, new DataPoint(x, y));
-		}
-		_dataPlot.replaceElementAt(0, curve);
-	}
-
-	private void normaliseData() {
-		final int norm = y_data[0];
-		for (int i = 0; i < y_data.length; i++) {
-			y_data[i] = Math.abs((y_data[i] - norm + 10) % 1000);
-		}
 	}
 
 } // Frame class

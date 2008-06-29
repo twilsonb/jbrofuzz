@@ -184,7 +184,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		// Create the options in the fuzzing panel
 		
 		final boolean socketbox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
-		final JCheckBox socketCheckBox = new JCheckBox(" Extend the socket timeout from 5 to 30 seconds ", socketbox);
+		final JCheckBox socketCheckBox = new JCheckBox(" Extend the socket timeout from 5 seconds to 30 seconds ", socketbox);
 		
 		socketCheckBox.setBorderPaintedFlat(true);
 		socketCheckBox.setToolTipText("Tick this box, if you are getting timeout responses");

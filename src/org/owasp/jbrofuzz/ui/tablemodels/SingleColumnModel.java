@@ -88,7 +88,7 @@ public class SingleColumnModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getColumnCount() {
-		return columnNames.length;
+		return 1;
 	}
 
 	/**
@@ -140,15 +140,14 @@ public class SingleColumnModel extends AbstractTableModel {
 	 * @return String
 	 */
 	public String getValueAt(final int row) {
-		if ((row > -1) && (row < dataVector.size())) {
-			return dataVector.get(row);
-		}
-		return "";
+		
+		return (String) this.getValueAt(row, 0);
+
 	}
 
 	/**
 	 * <p>
-	 * Method for returning the Objectlocated at a particular row/column.
+	 * Method for returning the Object located at a particular row/column.
 	 * </p>
 	 * 
 	 * @param row
@@ -158,7 +157,34 @@ public class SingleColumnModel extends AbstractTableModel {
 	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
-		return this.getValueAt(row);
+
+		if ((row < dataVector.size()) && (row >= 0) && (column < 1) && (column >= 0)) {
+
+			return dataVector.get(row);
+			/*
+			switch (column) {
+			case 0:
+				return record.getFirst();
+			case 1:
+				return record.getSecond();
+			case 2:
+				return record.getThird();
+			case 3:
+				return record.getFourth();
+			case 4:
+				return record.getFifth();
+			case 5:
+				return record.getSixth();
+			default:
+				return "";
+			}
+			 */
+
+		}
+		return "";
+
+
+		// return this.getValueAt(row);
 	}
 
 	/**
@@ -233,9 +259,16 @@ public class SingleColumnModel extends AbstractTableModel {
 	 *            int
 	 */
 	@Override
-	public void setValueAt(final Object value, final int row, final int column) {
-		dataVector.set(row, value.toString());
-		fireTableCellUpdated(row, 0);
+	public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
+
+		if ((rowIndex < dataVector.size()) && (rowIndex >= 0) && (columnIndex < 1) && (columnIndex >= 0)) {
+
+			dataVector.set(rowIndex, value.toString());
+
+		}
+
+		// dataVector.set(row, value.toString());
+		// fireTableCellUpdated(row, 0);
 	}
 
 }
