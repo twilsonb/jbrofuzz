@@ -55,7 +55,7 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 	private static final int x = 650;
 	private static final int y = 400;
 	// The final String Array of tree nodes
-	private static final String[] nodeNames = { "FAQ", "Requirements", "Java",
+	private static final String[] nodeNames = { "FAQ", "System Requirements", "Java Issues",
 			"Installation", "Files & Directories", "What is a Fuzzer?",
 			"Sniffing Ports" };
 	// The buttons
