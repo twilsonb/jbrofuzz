@@ -280,8 +280,8 @@ public class DirectoriesPanel extends JBroFuzzPanel implements KeyListener {
 		// startButton.setEnabled(true);
 		// stopButton.setEnabled(false);
 
-		targetText.setText("http://192.168.1.254");
-		portText.setText("80");
+		targetText.setText("https://www.owasp.org");
+		portText.setText("443");
 	}
 
 	/**

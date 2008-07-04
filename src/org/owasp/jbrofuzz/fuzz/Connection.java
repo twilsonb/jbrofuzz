@@ -90,7 +90,7 @@ public class Connection {
 		}
 
 		protocol = url == null ? "" : url.getProtocol(); // http
-		host = url == null ? "" : url.getHost(); // localhost
+		host = url == null ? "" : url.getHost(); // host
 		port = url == null ? -1 : url.getPort(); // 443
 		file = url == null ? "" : url.getFile(); // index.jsp
 		ref = url == null ? "" : url.getRef(); // _top_

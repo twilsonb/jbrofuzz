@@ -362,7 +362,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		this.add(mainPane, BorderLayout.CENTER);
 
 		// Some value defaults
-		target.setText("http://localhost:13180");
+		target.setText("https://www.owasp.org");
 		setMessageText(JBroFuzzFormat.REQUEST_TCP);
 
 		message.setCaretPosition(0);
