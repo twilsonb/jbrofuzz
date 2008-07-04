@@ -30,18 +30,15 @@ import org.owasp.jbrofuzz.version.*;
 
 /**
  * <p>
- * Title: JBroFuzz
+ * Title: JBroFuzz.java
  * </p>
  * 
  * <p>
  * Description: The central class launching the application. This class
- * instantiates a database, a version, a main frame window and a file handler.
- * The order in which the last three are instantiated should not be altered.
- * </p>
+ * instantiates a file IO handler, a database, a format object, a main frame 
+ * window and a file handler.</p>
  * <p>
- * In order to fill in the contents of the corresponding text fields
- * (directories and generators), constructors are created to populate the
- * corresponding fields.
+ * The order in which the last four are instantiated should not be altered.
  * </p>
  * 
  * @author subere@uncon.org
@@ -81,9 +78,11 @@ public class JBroFuzz {
 
 	/**
 	 * <p>
-	 * The main creation object, instantiating a Window, a File Hander and a
-	 * Format object. The order in which construction takes place is rather
-	 * important.
+	 * The main creation object, instantiating a Database, a Format Object, 
+	 * a Window, and a File Hander</p>
+	 * 
+	 * <p>The order in which construction takes place is rather
+	 * important and should not be altered.
 	 * </p>
 	 */
 	public JBroFuzz() {
@@ -100,10 +99,10 @@ public class JBroFuzz {
 	/**
 	 * <p>
 	 * Return the main database of exploits loaded, thus giving access to
-	 * generators, etc.
+	 * fuzzers and the payloads.
 	 * </p>
 	 * 
-	 * @return Database
+	 * @return mDatabase Database
 	 */
 	public Database getDatabase() {
 
@@ -117,7 +116,7 @@ public class JBroFuzz {
 	 * dynamic access to various constant variables, methods, etc.
 	 * </p>
 	 * 
-	 * @return mFormat JBRFormat
+	 * @return mFormat JBroFuzzFormat
 	 */
 	public JBroFuzzFormat getFormat() {
 
@@ -144,7 +143,7 @@ public class JBroFuzz {
 	 * Return the main window, thus allowing access to various GUI components.
 	 * </p>
 	 * 
-	 * @return mWindow JBRFrame
+	 * @return mWindow JBroFuzzWindow
 	 */
 	public JBroFuzzWindow getWindow() {
 
