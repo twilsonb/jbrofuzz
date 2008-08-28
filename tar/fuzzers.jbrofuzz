@@ -215,8 +215,8 @@ http://aa"><script>alert(123)</script>
 http://aa'><script>alert(123)</script>
 http://aa<script>alert(123)</script>
 
-R:NUM-HEX-LOW:Hexadecimal Lowercase:16
-> Number Systems | Recursive Fuzzers | Lowercase Fuzzers
+R:NUM-HEX-LOW:Base16 (Hex) Lowercase:16
+> Number Systems | Base | Recursive Fuzzers | Lowercase Fuzzers
 0
 1
 2
@@ -234,7 +234,7 @@ d
 e
 f
 
-R:NUM-HEX-UPP:Hexadecimal Uppercase:16
+R:NUM-HEX-UPP:Base16 (Hex) Uppercase:16
 > Number Systems | Base | Recursive Fuzzers | Uppercase Fuzzers 
 0
 1
@@ -253,8 +253,8 @@ D
 E
 F
 
-R:NUM-DEC:Decimal Fuzzer:10
-> Number Systems | Recursive Fuzzers
+R:B10-DEC:Base10 (Decimal) Alphabet:10
+> Number Systems | Base | Recursive Fuzzers
 0
 1
 2
@@ -266,8 +266,8 @@ R:NUM-DEC:Decimal Fuzzer:10
 8
 9
 
-R:NUM-OCT:Octal Fuzzer:8
-> Number Systems | Recursive Fuzzers
+R:B08-OCT:Base08 (Octal) Alphabet:8
+> Number Systems | Base | Recursive Fuzzers
 0
 1
 2
@@ -277,8 +277,8 @@ R:NUM-OCT:Octal Fuzzer:8
 6
 7
 
-R:NUM-BIN:Binary Fuzzer:2
-> Number Systems | Recursive Fuzzers
+R:B02-BIN:Base02 (Binary) Alphabet:2
+> Number Systems | Base | Recursive Fuzzers
 0
 1
 
@@ -626,7 +626,7 @@ U
 V
 =
 
-R:BFO-UPP:Long Uppercase AAA's:17
+P:BFO-UPP:Long Uppercase AAA's:17
 > Exploits | Buffer Overflows | Uppercase Fuzzers
 A
 f(x)=A x 3
@@ -646,7 +646,7 @@ f(x)=A x 16385
 f(x)=A x 32769
 f(x)=A x 65537
 
-R:BFO-LOW:Long Lowercase aaa's:17
+P:BFO-LOW:Long Lowercase aaa's:17
 > Exploits | Buffer Overflows | Lowercase Fuzzers
 a
 f(x)=a x 3

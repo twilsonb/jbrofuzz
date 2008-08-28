@@ -55,9 +55,9 @@ public class JBroFuzzToolBar extends JToolBar {
 		graph = new JButton(ImageCreator.PAUSE_IMG);
 		graph.setToolTipText("Graph");
 		add = new JButton(ImageCreator.ADD_IMG);
-		add.setToolTipText("Add Generator");
+		add.setToolTipText("Add");
 		remove = new JButton(ImageCreator.REMOVE_IMG);
-		remove.setToolTipText("Remove Generator");
+		remove.setToolTipText("Remove");
 		help = new JButton(ImageCreator.IMG_HELP);
 		help.setToolTipText("Help Topics");
 		about = new JButton(ImageCreator.IMG_ABOUT);
