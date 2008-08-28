@@ -358,10 +358,8 @@ public class PayloadsDialog extends JDialog {
 					public void run() {
 
 						final int c = fuzzersTable.getSelectedRow();
-						final String name = (String) fuzzersTableModel
-								.getValueAt(c, 0);
-						final String id = m.getJBroFuzz().getDatabase()
-								.getIdFromName(name);
+						final String name = (String) fuzzersTableModel.getValueAt(c, 0);
+						final String id = m.getJBroFuzz().getDatabase().getIdFromName(name);
 						m.getPanelFuzzing().addPayload(id, start, end);
 						PayloadsDialog.this.dispose();
 

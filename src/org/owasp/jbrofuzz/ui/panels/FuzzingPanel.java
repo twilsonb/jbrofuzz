@@ -177,12 +177,13 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		buttonAddGen.setToolTipText("Add a Generator");
 		buttonAddGen.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				FuzzingPanel.this.start();
+				FuzzingPanel.this.add();
 			}
 		});
 
 		// The remove generator button
 		buttonRemGen = new JButton(ImageCreator.REMOVE_IMG);
+		buttonRemGen.setEnabled(false);
 		buttonRemGen.setToolTipText("Remove a Generator");
 		buttonRemGen.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -336,7 +337,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		topRightPanel = new JTabbedPane(2);
 		topRightPanel.add(" Payloads ", generatorPanel);
-		topRightPanel.add(" Console ", consolePanel);
+		topRightPanel.add(" Console (0) ", consolePanel);
 		topRightPanel.setTabPlacement(JTabbedPane.TOP);
 
 		mainPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -396,7 +397,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		Runtime.getRuntime().gc();
 		Runtime.getRuntime().runFinalization();
-
+		
 	}
 	
 	public void addPayload(String Id, int start, int end) {

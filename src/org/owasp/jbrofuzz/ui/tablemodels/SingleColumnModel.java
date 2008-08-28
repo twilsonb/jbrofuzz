@@ -35,13 +35,14 @@ import javax.swing.table.AbstractTableModel;
  * This model is used for the requests and replies being made.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.8
+ * @author subere@uncon.org
+ * @version 1.1
  */
 public class SingleColumnModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 188456456483L;
-	private String[] columnNames;
+	
+	private String columnName;
 
 	private ArrayList<String> dataVector;
 
@@ -52,9 +53,10 @@ public class SingleColumnModel extends AbstractTableModel {
 	 *            String
 	 */
 	public SingleColumnModel(final String columnName) {
-		columnNames = new String[1];
-		columnNames[0] = columnName;
+
+		this.columnName = columnName;
 		dataVector = new ArrayList<String>();
+		
 	}
 
 	/**
@@ -102,66 +104,78 @@ public class SingleColumnModel extends AbstractTableModel {
 	 */
 	@Override
 	public String getColumnName(final int column) {
-		return columnNames[0];
-	}
-
-	/**
-	 * Return a given row in String format using the stated separator
-	 * 
-	 * @param row
-	 *            int
-	 * @return String
-	 */
-	public String getRow(final int row) {
-		if ((row > -1) && (row < dataVector.size())) {
-			return this.getValueAt(row);
-		}
-		return "";
-	}
-
-	/**
-	 * <p>
-	 * Get the total number of rows present within the table.
-	 * </p>
-	 * 
-	 * @return int
-	 */
-	public int getRowCount() {
-		return dataVector.size();
-	}
-
-	/**
-	 * <p>
-	 * Method for returning the contents of a row as a String.
-	 * </p>
-	 * 
-	 * @param row
-	 *            int
-	 * @return String
-	 */
-	public String getValueAt(final int row) {
 		
-		return (String) this.getValueAt(row, 0);
-
+		return columnName;
+		
 	}
 
-	/**
-	 * <p>
-	 * Method for returning the Object located at a particular row/column.
-	 * </p>
-	 * 
-	 * @param row
-	 *            int
-	 * @param column
-	 *            int
-	 * @return Object
-	 */
-	public Object getValueAt(final int row, final int column) {
+	public Class getColumnClass(int column) {
 
-		if ((row < dataVector.size()) && (row >= 0) && (column < 1) && (column >= 0)) {
+		if (column >= 0 &&
+				column <= getColumnCount ())
+			return getValueAt (0, column).getClass ();
+		else
+			return Object.class;
+	}
 
-			return dataVector.get(row);
-			/*
+
+/**
+ * Return a given row in String format using the stated separator
+ * 
+ * @param row
+ *            int
+ * @return String
+ */
+public String getRow(final int row) {
+	if ((row > -1) && (row < dataVector.size())) {
+		return this.getValueAt(row);
+	}
+	return "";
+}
+
+/**
+ * <p>
+ * Get the total number of rows present within the table.
+ * </p>
+ * 
+ * @return int
+ */
+public int getRowCount() {
+	return dataVector.size();
+}
+
+/**
+ * <p>
+ * Method for returning the contents of a row as a String.
+ * </p>
+ * 
+ * @param row
+ *            int
+ * @return String
+ */
+public String getValueAt(final int row) {
+
+	return (String) this.getValueAt(row, 0);
+
+}
+
+/**
+ * <p>
+ * Method for returning the Object located at a particular row/column.
+ * </p>
+ * 
+ * @param row
+ *            int
+ * @param column
+ *            int
+ * @return Object
+ */
+public Object getValueAt(final int row, final int column) {
+
+	if ((row < dataVector.size()) && (row >= 0) && (column < 1) && (column >= 0)) {
+
+		return dataVector.get(row);
+		/*
 			switch (column) {
 			case 0:
 				return record.getFirst();
@@ -178,97 +192,97 @@ public class SingleColumnModel extends AbstractTableModel {
 			default:
 				return "";
 			}
-			 */
+		 */
 
-		}
-		return "";
-
-
-		// return this.getValueAt(row);
 	}
+	return "";
 
-	/**
-	 * <p>
-	 * Method for checking to see if an empty row is present within the current
-	 * table model.
-	 * </p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasEmptyRow() {
-		boolean returnValue = false;
 
-		if (dataVector.size() == 0) {
-			returnValue = false;
-		} else {
-			final String record = dataVector.get(dataVector.size() - 1);
-			if ("".equals(record)) {
-				returnValue = true;
-			}
-		}
-		return returnValue;
-	}
+	// return this.getValueAt(row);
+}
 
-	/**
-	 * <p>
-	 * Method for checking if a cell is editable. By default, this method
-	 * returns false, regardless of the parameters being passed.
-	 * </p>
-	 * 
-	 * @param row
-	 *            int
-	 * @param column
-	 *            int
-	 * @return boolean
-	 */
-	@Override
-	public boolean isCellEditable(final int row, final int column) {
-		return false;
-	}
+/**
+ * <p>
+ * Method for checking to see if an empty row is present within the current
+ * table model.
+ * </p>
+ * 
+ * @return boolean
+ */
+public boolean hasEmptyRow() {
+	boolean returnValue = false;
 
-	/**
-	 * <p>
-	 * Method for setting, from scratch all the data within the model.
-	 * </p>
-	 * 
-	 * @param values
-	 */
-	public void setData(final String[] values) {
-		fireTableRowsDeleted(0, getRowCount());
-		dataVector.clear();
-
-		for (final String element : values) {
-
-			dataVector.add(element);
-			dataVector.trimToSize();
-			fireTableRowsInserted(dataVector.size(), dataVector.size());
-
+	if (dataVector.size() == 0) {
+		returnValue = false;
+	} else {
+		final String record = dataVector.get(dataVector.size() - 1);
+		if ("".equals(record)) {
+			returnValue = true;
 		}
 	}
+	return returnValue;
+}
 
-	/**
-	 * <p>
-	 * Set the value of a particular object at a particular row/column.
-	 * </p>
-	 * 
-	 * @param value
-	 *            Object
-	 * @param row
-	 *            int
-	 * @param column
-	 *            int
-	 */
-	@Override
-	public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
+/**
+ * <p>
+ * Method for checking if a cell is editable. By default, this method
+ * returns false, regardless of the parameters being passed.
+ * </p>
+ * 
+ * @param row
+ *            int
+ * @param column
+ *            int
+ * @return boolean
+ */
+@Override
+public boolean isCellEditable(final int row, final int column) {
+	return false;
+}
 
-		if ((rowIndex < dataVector.size()) && (rowIndex >= 0) && (columnIndex < 1) && (columnIndex >= 0)) {
+/**
+ * <p>
+ * Method for setting, from scratch all the data within the model.
+ * </p>
+ * 
+ * @param values
+ */
+public void setData(final String[] values) {
+	dataVector.clear();
+	fireTableRowsDeleted(0, getRowCount());
 
-			dataVector.set(rowIndex, value.toString());
+	for (final String element : values) {
 
-		}
+		dataVector.add(element);
+		dataVector.trimToSize();
+		fireTableRowsInserted(dataVector.size(), dataVector.size());
 
-		// dataVector.set(row, value.toString());
-		// fireTableCellUpdated(row, 0);
 	}
+}
+
+/**
+ * <p>
+ * Set the value of a particular object at a particular row/column.
+ * </p>
+ * 
+ * @param value
+ *            Object
+ * @param rowIndex
+ *            int
+ * @param columnIndex
+ *            int
+ */
+@Override
+public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
+
+	if ((rowIndex < dataVector.size()) && (rowIndex >= 0) && (columnIndex < 1) && (columnIndex >= 0)) {
+
+		dataVector.set(rowIndex, value.toString());
+
+	}
+
+	// dataVector.set(row, value.toString());
+	// fireTableCellUpdated(row, 0);
+}
 
 }

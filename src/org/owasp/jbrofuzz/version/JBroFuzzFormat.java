@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.1
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -36,15 +36,17 @@ import org.owasp.jbrofuzz.JBroFuzz;
 /**
  * <p>
  * Class responsible for holding the description of a number of static
- * parameters and constants relating to the application.
+ * parameters and constants relating to the application. This class also holds a
+ * small number of public and private methods, relating to similar format values. 
  * </p>
  * <p>
- * Typical parameters found in this class include the file names for the
- * generators and the directories list, user properties.
+ * Typical parameters found in this class as public variables include directory names
+ * created at run-time, date/time timestamps, as well as user preferences values and 
+ * disclaimer information displayed in the about box.  
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.0
+ * @version 1.1
  */
 public class JBroFuzzFormat {
 
@@ -54,11 +56,11 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "1.0";
+	public static final String VERSION = "1.1";
 
 	/**
 	 * <p>
-	 * The year of the release.
+	 * The year in which the current <code>VERSION</code> of JBroFuzz was released.
 	 * </p>
 	 */
 	public static final String YEAR = "2008";
@@ -100,11 +102,6 @@ public class JBroFuzzFormat {
 	 * About menu.
 	 */
 	public static final String URL_WEBSITE = "http://www.owasp.org/index.php/Category:OWASP_JBroFuzz";
-	/**
-	 * The generators file name, expected to be read from within the directory
-	 * from which JBroFuzz gets launched.
-	 */
-	public static final String FILE_GEN = "jbrofuzz-generators";
 
 	/**
 	 * The directories file name, expected to be read from within the directory
@@ -113,8 +110,8 @@ public class JBroFuzzFormat {
 	public static final String FILE_DIR = "directories.jbrofuzz";
 
 	/**
-	 * The GNU Citizen DB file name, expected to be read from within the
-	 * directory from which JBroFuzz gets launched.
+	 * <p> The file name of the database including all payloads. This is expected to be 
+	 * included within the jar/exe file of JBroFuzz.</p>
 	 */
 	public static final String FILE_GNU = "generators.jbrofuzz";
 
@@ -123,26 +120,7 @@ public class JBroFuzzFormat {
 	 */
 	public static final String LINE_SEPARATOR = "-->";
 
-	/**
-	 * <p>
-	 * The system info providing console information and potentially useful for
-	 * debugging under different JVMs.
-	 * </p>
-	 * 
-	 * @since 0.1
-	 */
-	public static final String SYSTEM_INFO = "Vendor:  "
-			+ System.getProperty("java.vendor") + "\r\n" + "Version: "
-			+ System.getProperty("java.version") + "\r\n" + "Installed at: "
-			+ System.getProperty("java.home") + "\r\n" + "Website: "
-			+ System.getProperty("java.vendor.url") + "\r\n" + "User: "
-			+ System.getProperty("user.name") + "\r\n" + "Home $: "
-			+ System.getProperty("user.home") + "\r\n" + "Current $: "
-			+ System.getProperty("user.dir") + "\r\n" + "O/S: "
-			+ System.getProperty("os.name") + "\r\n" + "Version: "
-			+ System.getProperty("os.version") + "\r\n" + "Architecture: "
-			+ System.getProperty("os.arch") + "\r\n";
-
+	
 	/**
 	 * <p>
 	 * The list of directories used if a file is not found to load the
@@ -180,15 +158,6 @@ public class JBroFuzzFormat {
 			+ "<BR><BR>" + "<B>A stateless network protocol fuzzer <BR>"
 			+ "for web applications." + "</B><BR></HTML>";
 
-	/*
-	 * "<HTML><B>Java Bro Fuzzer Version: " + JBRFormat.VERSION + "<BR>" +
-	 * "Codename: " + JBRFormat.getCodeName(JBRFormat.VERSION) + "</B><BR><BR>" +
-	 * "JBroFuzz comes with ABSOLUTELY NO WARRANTY. This is free software " +
-	 * "and you are welcome to redistribute it under the GNU GPL license<BR><BR>" + "<B>Copyright
-	 * &copy;" + YEAR + " subere@uncon.org</B><BR><BR>" + "Running Under
-	 * Java " + System.getProperty("java.version") + "<BR></HTML>";
-	 */
-
 	/**
 	 * <p>
 	 * The text, in html format, shown in the disclaimer box.
@@ -202,15 +171,6 @@ public class JBroFuzzFormat {
 			+ "The author of JBroFuzz takes no "
 			+ "legal or other responsibility for any problems that "
 			+ "might occur <BR>while running this program.<BR></HTML>";
-
-	/*
-	 * "<HTML>" + "<B>You should only use this software to test the security
-	 * of" + "your own network protocol application or those you are " +
-	 * "authorised to do so.</B><BR><BR> The authors of JBroFuzz take no " +
-	 * "legal or other responsibility for any problems that " + "might occur
-	 * while running JBroFuzz on a " + "particular application or network
-	 * protocol.<BR></HTML>";
-	 */
 
 	/**
 	 * Formatting the date in ISO8601 standard format.
@@ -300,9 +260,11 @@ public class JBroFuzzFormat {
 	}
 
 	private static final String getDate() {
+		
 		final String DATE_FORMAT = "DDD yyyy-MM-dd HH-mm-ss";
-		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT,
-				new Locale(JBroFuzzFormat.ISO_LAN_CODE));
+		
+		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT, new Locale(ISO_LAN_CODE));
+		
 		return SDF.format(new Date());
 	}
 
@@ -347,7 +309,7 @@ public class JBroFuzzFormat {
 	 * 
 	 * @param s
 	 * @param len
-	 * @return
+	 * @return String 
 	 */
 	public static final String centerAbbreviate(String s, int len) {
 		
@@ -377,8 +339,7 @@ public class JBroFuzzFormat {
 		JBroFuzzFormat.setLookAndFeel(mJBroFuzz);
 		// Set some preferences for the mac
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
-		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-				"JBroFuzz");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JBroFuzz");
 		// Set the application preferences
 
 	}
