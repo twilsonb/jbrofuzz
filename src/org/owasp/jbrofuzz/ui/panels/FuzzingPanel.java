@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.1
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -26,6 +26,7 @@ package org.owasp.jbrofuzz.ui.panels;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
 
 import java.awt.event.*;
 
@@ -51,6 +52,7 @@ import java.util.*;
 import java.text.*;
 
 import org.apache.commons.lang.*;
+
 /**
  * <p>
  * The main "Fuzzing" panel, displayed within the Main Frame Window.
@@ -67,26 +69,37 @@ import org.apache.commons.lang.*;
 public class FuzzingPanel extends JBroFuzzPanel {
 
 	private static final long serialVersionUID = 16982374020211L;
-	// The JPanels
+	
+	// The output JPanel on the bottom (south) of the tab
 	private final JPanel outputPanel;
+	
 	// The JTextField
 	private final JTextField target;
+	
 	// The JTextArea
 	private final NonWrappingTextPane message;
+	
 	// The JTable were results are outputted
 	private JTable outputTable;
+	
 	// And the table model that goes with it
 	private SixColumnModel outputTableModel;
+	
 	// The JTable of the generator
-	private JTable generatorTable;
+	private JTable fuzzersTable;
+	
 	// And the table model that goes with it
 	private ThreeColumnModel mFuzzingTableModel;
+	
 	// The JButtons
 	private final JButton buttonAddGen, buttonRemGen;
+	
 	// A counter for the number of times fuzz has been clicked
 	private int counter, session;
+	
 	// The console
 	private JTextArea console;
+	
 	// The frame window
 	private JBroFuzzWindow m;
 
@@ -201,24 +214,27 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		
 		// The fuzzing table and model
 		mFuzzingTableModel = new ThreeColumnModel(getFrame());
-		generatorTable = new JTable();
-		generatorTable.setBackground(Color.BLACK);
-		generatorTable.setForeground(Color.WHITE);
+		fuzzersTable = new JTable();
+		fuzzersTable.setBackground(Color.BLACK);
+		fuzzersTable.setForeground(Color.WHITE);
 
-		generatorTable.setModel(mFuzzingTableModel);
+		fuzzersTable.setModel(mFuzzingTableModel);
+		// generatorTable.getSelectionModel().addListSelectionListener(new PayloadsRowListener());
+		fuzzersTable.getModel().addTableModelListener(new PayloadsModelListener());
+		
 		// Set the column widths
 		TableColumn column = null;
 		for (int i = 0; i < mFuzzingTableModel.getColumnCount(); i++) {
-			column = generatorTable.getColumnModel().getColumn(i);
+			column = fuzzersTable.getColumnModel().getColumn(i);
 			if (i == 0) {
 				column.setPreferredWidth(100);
 			} else {
 				column.setPreferredWidth(50);
 			}
 		}
-		generatorTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		fuzzersTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
 
-		final JScrollPane generatorScrollPane = new JScrollPane(generatorTable);
+		final JScrollPane generatorScrollPane = new JScrollPane(fuzzersTable);
 		generatorScrollPane.setVerticalScrollBarPolicy(20);
 
 		generatorScrollPane.setPreferredSize(new Dimension(180, 100));
@@ -494,7 +510,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			return;
 		}
 		
-		final int rows = generatorTable.getRowCount();
+		final int rows = fuzzersTable.getRowCount();
 		if (rows < 1) {
 			return;
 		}
@@ -551,7 +567,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		stopped = false;
 		// Start, Stop, Graph, Add, Remove
 		setOptionsAvailable(false, true, false, false, false);
-		
+		buttonAddGen.setEnabled(false);
+		buttonRemGen.setEnabled(false);
 		
 		
 		// UI and Colors
@@ -588,7 +605,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 						+ JBroFuzzFormat.DATE + ") Session " + session), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
 
-		final int rows = generatorTable.getRowCount();
+		final int rows = fuzzersTable.getRowCount();
 		if (rows == 0) {
 
 			MessageCreator currentMessage = new MessageCreator(
@@ -730,7 +747,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 	/**
 	 * <p>
-	 * Method trigered when attempting to stop any fuzzing taking place.
+	 * Method trigerred when attempting to stop any fuzzing taking place.
 	 * </p>
 	 */
 	public void stop() {
@@ -747,11 +764,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		stopped = true;
 		// Start, Stop, Graph, Add, Remove
 		setOptionsAvailable(true, false, true, true, true);
-		
-		// fuzzingStopped = true;
-		// UI and Colors
-		// startButton.setEnabled(true);
-		// stopButton.setEnabled(false);
+		buttonAddGen.setEnabled(true);
+		if(fuzzersTable.getRowCount() > 0) {
+			buttonRemGen.setEnabled(true);
+		}
+
 		target.setEditable(true);
 		target.setBackground(Color.WHITE);
 		target.setForeground(Color.BLACK);
@@ -770,4 +787,36 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	}
 	
 
+	/**
+	 * <p>Inner class used to detect changes to the data managed by the fuzzers table model,
+	 * where all the fuzzers and corresponding payloads are stored.</p>
+	 *  
+	 * <p>This class implements the TableModelListener interface and is called via 
+	 * addTableModelListener() to catch events on the fuzzers table.</p> 
+	 * 
+	 * @author subere@uncon.org
+	 * @since 1.1
+	 * 
+	 */
+	private class PayloadsModelListener implements TableModelListener {
+		
+		public void tableChanged(final TableModelEvent event) {
+			
+			final int total = fuzzersTable.getRowCount(); 
+			
+			if(total > 0 ) {
+				
+				buttonRemGen.setEnabled(true);
+				setOptionRemove(true);
+				
+			} else {
+				
+				buttonRemGen.setEnabled(false);
+				setOptionRemove(false);
+				
+			}
+		}
+	}
+	
 }
+

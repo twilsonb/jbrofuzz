@@ -138,7 +138,9 @@ public class PayloadsDialog extends JDialog {
 			// ok.setEnabled(false);
 		}
 	}
+	
 	private static final long serialVersionUID = -1083415577221148132L;
+	
 	// Dimensions of the generator dialog box
 	private static final int x = 680;
 	private static final int y = 400;
@@ -147,10 +149,13 @@ public class PayloadsDialog extends JDialog {
 	private static final String NAME_CATEGORY = "Category-Table";
 	private static final String NAME_FUZZER = "Fuzzer-Table";
 	private static final String NAME_PAYLOAD = "Payload-Table";
+	
 	// The buttons
 	private JButton ok;
+	
 	// The frame that the sniffing panel is attached
 	private JBroFuzzWindow m;
+	
 	// The JPanels carrying the components
 	private JPanel categoriesPanel, fuzzersPanel, payloadsPanel;
 
@@ -210,8 +215,7 @@ public class PayloadsDialog extends JDialog {
 
 		categoriesTable.setFont(new Font("Verdana", Font.BOLD, 10));
 		categoriesTable.setRowHeight(30);
-		categoriesTable.getSelectionModel().addListSelectionListener(
-				new CategoriesRowListener());
+		categoriesTable.getSelectionModel().addListSelectionListener(new CategoriesRowListener());
 		categoriesTable.setBackground(Color.BLACK);
 		categoriesTable.setForeground(Color.WHITE);
 

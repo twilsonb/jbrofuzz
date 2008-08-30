@@ -48,7 +48,7 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.0
+ * @version 1.1
  */
 public abstract class JBroFuzzPanel extends JPanel {
 
@@ -124,6 +124,15 @@ public abstract class JBroFuzzPanel extends JPanel {
 		getFrame().getJBroToolBar().setEnabledPanelOptions(optionsAvailable);
 		getFrame().getJBroMenuBar().setEnabledPanelOptions(optionsAvailable);
 
+	}
+	
+	public final void setOptionRemove(boolean remove) {
+		
+		optionsAvailable[4] = remove;
+		
+		getFrame().getJBroToolBar().setEnabledPanelOptions(optionsAvailable);
+		getFrame().getJBroMenuBar().setEnabledPanelOptions(optionsAvailable);
+		
 	}
 
 	/**
