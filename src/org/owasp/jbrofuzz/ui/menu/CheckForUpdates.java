@@ -24,6 +24,8 @@
 package org.owasp.jbrofuzz.ui.menu;
 
 import java.io.*;
+import java.nio.charset.*;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -70,10 +72,8 @@ public class CheckForUpdates extends JDialog {
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-		final JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,
-				15, 15));
-		final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
-				15, 15));
+		final JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
+		final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
 
 		newVersionExists = false;
 
@@ -266,6 +266,7 @@ public class CheckForUpdates extends JDialog {
 					
 					// Make sure content length can be handled from the JVM
 	                long contentLength = method.getResponseContentLength();
+	                
 	                if (contentLength > Integer.MAX_VALUE) {
 	                	
 	                	throw new IOException("Content too large to be buffered: "+ contentLength +" bytes");
@@ -275,16 +276,21 @@ public class CheckForUpdates extends JDialog {
 	                // int limit = method.getParams().getIntParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024*1024);
 	                ByteArrayOutputStream outstream = new ByteArrayOutputStream(contentLength > 0 ? (int) contentLength : 32);
 
+	                
 	                int len;
+	                int count = 0;
 	                while ((len = instream.read(buffer)) > 0) {
 	                	outstream.write(buffer, 0, len);
+	                	System.out.println(count + " total bytes read: " + len);
+	                	count++;
 	                }
 	                outstream.close(); 
 				}
 				
 				// Read the response body.
 				// byte[] responseBody = method.getResponseBody();
-				response = new String(buffer, "UTF-8");
+				System.out.println(Charset.defaultCharset());
+				response += new String(buffer, "US-ASCII");
 				
 			}
 
@@ -292,10 +298,14 @@ public class CheckForUpdates extends JDialog {
 			mainLabel.append("[FAIL]\n" + "Fatal protocol violation: "
 					+ e.getMessage());
 
+		} catch (UnsupportedEncodingException e) {
+			mainLabel.append("[FAIL]\n" + "UTF-8 Encoding error: "
+					+ e.getMessage());
 		} catch (IOException e) {
 			mainLabel.append("[FAIL]\n" + "Fatal transport error: "
 					+ e.getMessage());
-		} finally {
+		}finally {
+		
 			// Release the connection.
 			method.releaseConnection();
 		}

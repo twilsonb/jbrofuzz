@@ -781,11 +781,23 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		consoleEvent++;
 		topRightPanel.setTitleAt(1, " Console (" + consoleEvent + ") ");
+
+		// Use a FILO for the output to the console, never exceeding 500 lines
+		if (console.getLineCount() > 500) {
+			try {
+				console.select(console.getLineStartOffset(0), console.getLineEndOffset( console.getLineCount() - 500 ));
+				console.replaceSelection(null);
+			}
+			catch (BadLocationException e) {
+				m.log("Fuzzing Panel: Could not clear the console");
+			}
+		} 
+		
 		console.append(input);
 		console.setCaretPosition(console.getText().length());
 
 	}
-	
+
 
 	/**
 	 * <p>Inner class used to detect changes to the data managed by the fuzzers table model,

