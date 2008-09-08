@@ -319,8 +319,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), 
+							Math.abs(parent.getLocationOnScreen().y + 20));
 		this.setSize(x, y);
 		this.setMinimumSize(new Dimension(x, y));
 		setResizable(true);

