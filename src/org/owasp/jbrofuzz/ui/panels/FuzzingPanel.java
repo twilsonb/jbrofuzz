@@ -814,8 +814,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		
 		public void tableChanged(final TableModelEvent event) {
 			
-			final int total = fuzzersTable.getRowCount(); 
-			
+			int total = 0;
+			total = fuzzersTable.getRowCount(); 
+			System.out.println(total);
 			if(total > 0 ) {
 				
 				buttonRemGen.setEnabled(true);
