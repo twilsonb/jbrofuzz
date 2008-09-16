@@ -24,6 +24,8 @@
 package org.owasp.jbrofuzz.ui.menu;
 
 import java.io.*;
+import java.net.*;
+
 import java.nio.*;
 import java.nio.charset.*;
 
@@ -34,11 +36,11 @@ import java.awt.event.*;
 import java.util.regex.*;
 
 import com.Ostermiller.util.*;
-
+/*
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.params.*;
 import org.apache.commons.httpclient.methods.*;
-
+*/
 import org.owasp.jbrofuzz.util.*;
 import org.owasp.jbrofuzz.version.*;
 import org.owasp.jbrofuzz.ui.panels.*;
@@ -239,6 +241,7 @@ public class CheckForUpdates extends JDialog {
 
 		mainLabel.setText("Finding JBroFuzz Website...\t\t\t\t");
 
+		/* Old HttpCommonsImplementation
 		// Create an instance of HttpClient.
 		HttpClient client = new HttpClient();
 
@@ -248,25 +251,36 @@ public class CheckForUpdates extends JDialog {
 		// Provide custom retry handler is necessary
 		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
 				new DefaultHttpMethodRetryHandler(3, false));
-
+		*/
+		
 		try {
+			/*
 			// Execute the method.
 			int statusCode = client.executeMethod(method);
-
-			if (statusCode != HttpStatus.SC_OK) {
+			*/
+			URL url = new URL(JBroFuzzFormat.URL_WEBSITE);
+			
+			URLConnection urlc = url.openConnection();
+			
+			int statusCode = ((HttpURLConnection)urlc).getResponseCode();
+			
+			if (statusCode != 200) {
 				mainLabel.append("[FAIL]\n"
 						+ "Connection returned the following code: "
-						+ method.getStatusLine() + "\n");
+						+ statusCode + "\n");
 
 			} else {
 				mainLabel.append("[ OK ]\n" + "Checking JBroFuzz Website...\t\t\t\t");
 				
-                byte[] buffer = new byte[65535];
-				InputStream instream = method.getResponseBodyAsStream();
+                // byte[] buffer = new byte[65535];
+				BufferedReader instream = new BufferedReader(
+						new InputStreamReader(urlc.getInputStream()));
+
 				if (instream != null) {
 					
 					// Make sure content length can be handled from the JVM
-	                long contentLength = method.getResponseContentLength();
+	                // long contentLength = method.getResponseContentLength();
+	                long contentLength = urlc.getContentLength(); 
 	                
 	                if (contentLength > Integer.MAX_VALUE) {
 	                	
@@ -274,6 +288,22 @@ public class CheckForUpdates extends JDialog {
 	                	
 	                }
 	                
+	                int c;
+	                int l = 0;
+	                StringBuffer body = new StringBuffer(131072);
+	                // 
+	                while( ((c = instream.read()) != -1) && (l < 131072) ) {
+	                	body.append((char) c);
+	                	l++;
+	                }
+	                System.out.println("The total count in the input stream is: " + l);
+	                
+	                instream.close();
+	                
+					response = body.toString();
+	            
+					System.out.println("The default CharSet is: " + Charset.defaultCharset());
+	                /*
 	                // int limit = method.getParams().getIntParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024*1024);
 	                ByteArrayOutputStream outstream = new ByteArrayOutputStream(contentLength > 0 ? (int) contentLength : 32);
 
@@ -285,36 +315,39 @@ public class CheckForUpdates extends JDialog {
 	                	System.out.println(count + " total bytes read: " + len);
 	                	count++;
 	                }
-	                outstream.close(); 
+	                outstream.close();
+	                */ 
 				}
 				
 				// Read the response body.
 				// byte[] responseBody = method.getResponseBody();
-				System.out.println("The default CharSet is: " + Charset.defaultCharset());
+				/*
 				// response += new String(buffer, "US-ASCII");
 				Charset charset = Charset.forName("UTF-8");
 				CharsetDecoder decoder = charset.newDecoder();
 				ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
 				CharBuffer charBuffer = decoder.decode(byteBuffer);
-
-				response = charBuffer.toString();
+				*/
 				
 			}
 
-		} catch (HttpException e) {
-			mainLabel.append("[FAIL]\n" + "Fatal protocol violation: "
+		} 
+		catch (MalformedURLException e) {
+			mainLabel.append("[FAIL]\n" + "Malformed URL violation: "
 					+ e.getMessage());
 
-		} catch (UnsupportedEncodingException e) {
+		} 
+		catch (UnsupportedEncodingException e) {
 			mainLabel.append("[FAIL]\n" + "UTF-8 Encoding error: "
 					+ e.getMessage());
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			mainLabel.append("[FAIL]\n" + "Fatal transport error: "
 					+ e.getMessage());
 		}finally {
 		
-			// Release the connection.
-			method.releaseConnection();
+			// Release the connection
+			// method.releaseConnection();
 		}
 
 		if (!response.equalsIgnoreCase("")) {
