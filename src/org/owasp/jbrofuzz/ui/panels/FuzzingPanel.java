@@ -27,6 +27,7 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.border.*;
 
 import java.awt.event.*;
 
@@ -64,7 +65,7 @@ import org.apache.commons.lang.*;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.0
+ * @version 1.1
  */
 public class FuzzingPanel extends JBroFuzzPanel {
 
@@ -253,9 +254,13 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		// The console panel
 
 		JPanel consolePanel = new JPanel();
-		consolePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Console "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
+		consolePanel.setBorder(
+				BorderFactory.createCompoundBorder(
+						BorderFactory.createTitledBorder(" Requests "), 
+						BorderFactory.createEmptyBorder(5, 5, 5, 5) 
+				)
+		);
+		
 
 		console = new JTextArea();
 		console.setFont(new Font("Verdana", Font.PLAIN, 10));
@@ -353,7 +358,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		topRightPanel = new JTabbedPane(2);
 		topRightPanel.add(" Payloads ", generatorPanel);
-		topRightPanel.add(" Console (0) ", consolePanel);
+		topRightPanel.add(" On The Wire (0) ", consolePanel);
 		topRightPanel.setTabPlacement(JTabbedPane.TOP);
 
 		mainPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -581,7 +586,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		console.setText("");
 		console.setBackground(Color.BLACK);
 		console.setForeground(Color.WHITE);
-		topRightPanel.setTitleAt(1, " Console ");
+		topRightPanel.setTitleAt(1, " On The Wire ");
 		topRightPanel.setSelectedIndex(1);
 		consoleEvent = 0;
 		// topRightPanel.set
@@ -774,13 +779,15 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		target.setForeground(Color.BLACK);
 		console.setBackground(Color.WHITE);
 		console.setForeground(Color.BLACK);
+		
+		topRightPanel.setSelectedIndex(0);
 
 	}
 
 	public void toConsole(String input) {
 
 		consoleEvent++;
-		topRightPanel.setTitleAt(1, " Console (" + consoleEvent + ") ");
+		topRightPanel.setTitleAt(1, " On The Wire (" + consoleEvent + ") ");
 
 		// Use a FILO for the output to the console, never exceeding 500 lines
 		if (console.getLineCount() > 500) {
