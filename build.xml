@@ -11,6 +11,7 @@
 		</fileset>
 	</path>
 	
+	<!--
 	<javadoc packagenames="org.owasp.jbrofuzz.*"
 	           sourcepath="src"
 	           defaultexcludes="yes"
@@ -27,7 +28,8 @@
 	    <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
 	
 	</javadoc>
-
+	-->
+	
 	<target name="init" description="Setup for Build">
 		<tstamp />
 		<echo>Checking Directories</echo>

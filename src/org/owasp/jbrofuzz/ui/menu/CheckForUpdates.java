@@ -24,6 +24,7 @@
 package org.owasp.jbrofuzz.ui.menu;
 
 import java.io.*;
+import java.nio.*;
 import java.nio.charset.*;
 
 import java.awt.*;
@@ -289,8 +290,14 @@ public class CheckForUpdates extends JDialog {
 				
 				// Read the response body.
 				// byte[] responseBody = method.getResponseBody();
-				System.out.println(Charset.defaultCharset());
-				response += new String(buffer, "US-ASCII");
+				System.out.println("The default CharSet is: " + Charset.defaultCharset());
+				// response += new String(buffer, "US-ASCII");
+				Charset charset = Charset.forName("UTF-8");
+				CharsetDecoder decoder = charset.newDecoder();
+				ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
+				CharBuffer charBuffer = decoder.decode(byteBuffer);
+
+				response = charBuffer.toString();
 				
 			}
 
