@@ -397,8 +397,10 @@ public class PayloadsDialog extends JDialog {
 
 		// Global frame issues
 
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
+		this.setLocation(
+				Math.abs(parent.getFrame().getLocation().x + 100), 
+				Math.abs(parent.getFrame().getLocation().y + 100)
+		);
 		this.setSize(PayloadsDialog.x, PayloadsDialog.y);
 		setResizable(true);
 		setVisible(true);

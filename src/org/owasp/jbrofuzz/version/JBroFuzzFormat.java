@@ -180,7 +180,8 @@ public class JBroFuzzFormat {
 	/**
 	 * The String displaying within the Fuzzing Request text area
 	 */
-	public static final String REQUEST_TCP = "GET / HTTP/1.0\n"
+	public static final String REQUEST_TCP = "GET / HTTP/1.1\n"
+			+ "Host: localhost\n"
 			+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\n"
 			+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n"
 			+ "Accept-Language: en-gb,en;q=0.5\n"

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.1
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -47,8 +47,7 @@ public class Database {
 		final StringBuffer fileContents = new StringBuffer();
 
 		// Attempt to read from the jar file
-		final URL fileURL = ClassLoader.getSystemClassLoader().getResource(
-				"fuzzers.jbrofuzz");
+		final URL fileURL = ClassLoader.getSystemClassLoader().getResource("fuzzers.jbrofuzz");
 
 		try {
 			final URLConnection connection = fileURL.openConnection();
@@ -68,8 +67,7 @@ public class Database {
 			}
 			in.close();
 		} catch (final IOException e1) {
-			System.out.println("Directories file (inside jar): "
-					+ fileURL.toString() + " could not be found");
+			System.out.println("Directories file (inside jar): " + fileURL.toString() + " could not be found");
 		} finally {
 			IOUtils.closeQuietly(in);
 		}

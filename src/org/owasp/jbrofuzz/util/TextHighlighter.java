@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.1
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -23,18 +23,11 @@
  */
 package org.owasp.jbrofuzz.util;
 
-import java.awt.Color;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.regex.Matcher;
+import java.awt.*;
+import java.util.*;
 import java.util.regex.*;
-
 import javax.swing.text.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
+
 
 /*
  * Syntax Highlighting Test using a JTextPane
@@ -64,14 +57,9 @@ public class TextHighlighter extends DefaultStyledDocument {
 	 * 
 	 */
 	private static final long serialVersionUID = -7741580168036778852L;
-	// private Element rootElement;
+
 	private HashMap<String, Color> keywords;
 	private MutableAttributeSet style;
-
-	// private Color commentColor = Color.cyan;
-	// private Pattern singleLineCommentDelimter = Pattern.compile("//");
-	// private Pattern multiLineCommentDelimiterStart = Pattern.compile("/\\*");
-	// private Pattern multiLineCommentDelimiterEnd = Pattern.compile("\\*/");
 
 	/**
 	 * Default Constructor for the TextHighlighter, extending the DefaultStyled
@@ -79,78 +67,84 @@ public class TextHighlighter extends DefaultStyledDocument {
 	 */
 	public TextHighlighter() {
 
-		// this.putProperty( DefaultEditorKit.EndOfLineStringProperty, "\n" );
-
-		// rootElement = getDefaultRootElement();
-
 		keywords = new HashMap<String, Color>();
-		keywords.put("GET", Color.gray);
-		keywords.put("PUT", Color.gray);
-		keywords.put("HEAD", Color.gray);
-		keywords.put("TRACE", Color.gray);
+		keywords.put("GET", Color.darkGray);
+		keywords.put("PUT", Color.black);
+		keywords.put("POST", Color.black);
+		keywords.put("HEAD", Color.black);
+		keywords.put("TRACE", Color.black);
+		keywords.put("HTTP/\\d.\\d", Color.black);
 
-		keywords.put("Accept", Color.blue);
-		keywords.put("User-Agent", Color.blue);
-		keywords.put("Accept-Language", Color.blue);
-		keywords.put("Accept-Encoding", Color.blue);
-		keywords.put("Accept-Charset", Color.blue);
-		keywords.put("Keep-Alive", Color.blue);
-		keywords.put("Cache-Control", Color.blue);
-		keywords.put("Content-Type", Color.blue);
-		keywords.put("Set-Cookie", Color.blue);
-		keywords.put("Server", Color.blue);
-		keywords.put("Date", Color.blue);
-		keywords.put("Host", Color.blue);
-		keywords.put("Connection", Color.blue);
-		keywords.put("Cookie", Color.blue);
-		keywords.put("Content-Length", Color.blue);
-		keywords.put("Content-type", Color.blue);
-		keywords.put("Location", Color.blue);
-		keywords.put("Referer", Color.blue);
-		keywords.put("Cache-control", Color.blue);
-		keywords.put("Proxy-Connection", Color.blue);
-		keywords.put("Pragma", Color.blue);
-		keywords.put("Expires", Color.blue);
-		keywords.put("Proxy-Connection", Color.blue);
-		keywords.put("X-AspNet-Version", Color.blue);
-		keywords.put("P3P", Color.blue);
-		keywords.put("P3p", Color.blue);
-		keywords.put("X-Powered-By", Color.blue);
-		keywords.put("X-Powered-by", Color.blue);
-		keywords.put("X-Cache-TTL", Color.blue);
-		keywords.put("X-Cached-Time", Color.blue);
-		keywords.put("Age", Color.blue);
-		keywords.put("Mime-Version", Color.blue);
-		keywords.put("Last-Modified", Color.blue);
-		keywords.put("Last-modified", Color.blue);
-		keywords.put("Content-length", Color.blue);
-		keywords.put("ETag", Color.blue);
 
 		keywords.put("Windows", Color.gray);
-		keywords.put("Mozilla", Color.gray);
+		keywords.put("Windows NT \\d.\\d", Color.gray);
+		keywords.put("Mozilla/\\d.\\d", Color.gray);
 		keywords.put("Firefox", Color.gray);
 		keywords.put("Internet", Color.gray);
+		keywords.put("Gecko", Color.gray);
+		keywords.put("keep-alive", Color.gray);
+		keywords.put("localhost", Color.gray);
+		
+		keywords.put("ISO-[0-9]{4}-[0-9]", Color.gray);
+		keywords.put("[-\\w]+/[\\w\\.\\+]+", Color.gray);
+		keywords.put("utf-8", Color.gray);
+		
+		keywords.put("[\\d\\.]+", Color.orange);
+		
+		
+		keywords.put("[\\w]+=", Color.magenta);
+		
 
-		/*
-		 * keywords.put("0", Color.blue); keywords.put("1", Color.blue);
-		 * keywords.put("2", Color.blue); keywords.put("3", Color.blue);
-		 * keywords.put("4", Color.blue); keywords.put("5", Color.blue);
-		 * keywords.put("6", Color.blue); keywords.put("7", Color.blue);
-		 * keywords.put("8", Color.blue); keywords.put("9", Color.blue);
-		 */
-		keywords.put("html", Color.magenta);
-		keywords.put("head", Color.magenta);
-		keywords.put("body", Color.magenta);
-		keywords.put("form", Color.magenta);
-		keywords.put("title", Color.magenta);
-		keywords.put("style", Color.magenta);
-		keywords.put("type", Color.magenta);
-		keywords.put("table", Color.magenta);
-		keywords.put("tr", Color.magenta);
-		keywords.put("td", Color.magenta);
-		keywords.put("li", Color.magenta);
-		keywords.put("ul", Color.magenta);
-		keywords.put("code", Color.magenta);
+		keywords.put("&", Color.red);
+		
+		keywords.put("Accept", Color.blue);
+		keywords.put("Accept-Charset", Color.blue);
+		keywords.put("Accept-Encoding", Color.blue);
+		keywords.put("Accept-Language", Color.blue);
+		keywords.put("Age", Color.blue);
+		keywords.put("Cache-control", Color.blue);
+		keywords.put("Cache-Control", Color.blue);
+		keywords.put("Connection", Color.blue);
+		keywords.put("Content-Encoding", Color.blue);
+		keywords.put("Content-encoding", Color.blue);
+		keywords.put("Content-language", Color.blue);
+		keywords.put("Content-length", Color.blue);
+		keywords.put("Content-Length", Color.blue);
+		keywords.put("Content-type", Color.blue);
+		keywords.put("Content-Type", Color.blue);
+		keywords.put("Cookie", Color.blue);
+		keywords.put("Date", Color.blue);
+		keywords.put("ETag", Color.blue);
+		keywords.put("Expires", Color.blue);
+		keywords.put("Host", Color.blue);
+		keywords.put("Keep-Alive", Color.blue);
+		keywords.put("Last-Modified", Color.blue);
+		keywords.put("Last-modified", Color.blue);
+		keywords.put("Location", Color.blue);
+		keywords.put("Mime-Version", Color.blue);
+		keywords.put("P3P", Color.blue);
+		keywords.put("P3p", Color.blue);
+		keywords.put("Pragma", Color.blue);
+		keywords.put("Proxy-Agent", Color.blue);
+		keywords.put("Proxy-agent", Color.blue);
+		keywords.put("Proxy-Connection", Color.blue);
+		keywords.put("Referer", Color.blue);
+		keywords.put("Server", Color.blue);
+		keywords.put("Set-Cookie", Color.blue);
+		keywords.put("Set-cookie", Color.blue);
+		keywords.put("Transfer-Encoding", Color.blue);
+		keywords.put("User-Agent", Color.blue);
+		keywords.put("Vary", Color.blue);
+		keywords.put("Via", Color.blue);
+		keywords.put("X-AspNet-Version", Color.blue);
+		keywords.put("X-Cache-TTL", Color.blue);
+		keywords.put("X-Cached-Time", Color.blue);
+		keywords.put("X-PHP-Load", Color.blue);
+		keywords.put("X-Powered-By", Color.blue);
+		keywords.put("X-Powered-by", Color.blue);
+		keywords.put("X-powered-by", Color.blue);
+		keywords.put("X-Requested-With", Color.blue);
+
 
 		style = new SimpleAttributeSet();
 	}
@@ -184,7 +178,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 			final Matcher m = p.matcher(text);
 
 			while (m.find()) {
-				highlightString(col, m.start(), keyword.length(), true, true);
+				highlightString(col, m.start(), m.group().length(), true, true);
 			}
 		}
 		/*

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.1
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -26,9 +26,6 @@ package org.owasp.jbrofuzz.ui.menu;
 import java.io.*;
 import java.net.*;
 
-import java.nio.*;
-import java.nio.charset.*;
-
 import java.awt.*;
 import javax.swing.*;
 
@@ -36,11 +33,7 @@ import java.awt.event.*;
 import java.util.regex.*;
 
 import com.Ostermiller.util.*;
-/*
-import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.params.*;
-import org.apache.commons.httpclient.methods.*;
-*/
+
 import org.owasp.jbrofuzz.util.*;
 import org.owasp.jbrofuzz.version.*;
 import org.owasp.jbrofuzz.ui.panels.*;
@@ -240,28 +233,11 @@ public class CheckForUpdates extends JDialog {
 		String response = "";
 
 		mainLabel.setText("Finding JBroFuzz Website...\t\t\t\t");
-
-		/* Old HttpCommonsImplementation
-		// Create an instance of HttpClient.
-		HttpClient client = new HttpClient();
-
-		// Create a method instance.
-		GetMethod method = new GetMethod(JBroFuzzFormat.URL_WEBSITE);
-
-		// Provide custom retry handler is necessary
-		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-				new DefaultHttpMethodRetryHandler(3, false));
-		*/
 		
 		try {
-			/*
-			// Execute the method.
-			int statusCode = client.executeMethod(method);
-			*/
+			
 			URL url = new URL(JBroFuzzFormat.URL_WEBSITE);
-			
 			URLConnection urlc = url.openConnection();
-			
 			int statusCode = ((HttpURLConnection)urlc).getResponseCode();
 			
 			if (statusCode != 200) {
@@ -278,10 +254,9 @@ public class CheckForUpdates extends JDialog {
 
 				if (instream != null) {
 					
-					// Make sure content length can be handled from the JVM
-	                // long contentLength = method.getResponseContentLength();
+					// Typically returns -1
 	                long contentLength = urlc.getContentLength(); 
-	                
+
 	                if (contentLength > Integer.MAX_VALUE) {
 	                	
 	                	throw new IOException("Content too large to be buffered: "+ contentLength +" bytes");
@@ -295,41 +270,14 @@ public class CheckForUpdates extends JDialog {
 	                while( ((c = instream.read()) != -1) && (l < 131072) ) {
 	                	body.append((char) c);
 	                	l++;
-	                }
-	                System.out.println("The total count in the input stream is: " + l);
-	                
+	                }	                
 	                instream.close();
 	                
 					response = body.toString();
-	            
-					System.out.println("The default CharSet is: " + Charset.defaultCharset());
-	                /*
-	                // int limit = method.getParams().getIntParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024*1024);
-	                ByteArrayOutputStream outstream = new ByteArrayOutputStream(contentLength > 0 ? (int) contentLength : 32);
-
-	                
-	                int len;
-	                int count = 0;
-	                while ((len = instream.read(buffer)) > 0) {
-	                	outstream.write(buffer, 0, len);
-	                	System.out.println(count + " total bytes read: " + len);
-	                	count++;
-	                }
-	                outstream.close();
-	                */ 
-				}
+	            	                
+				} // null-check (should really revisit the distro causing this
 				
-				// Read the response body.
-				// byte[] responseBody = method.getResponseBody();
-				/*
-				// response += new String(buffer, "US-ASCII");
-				Charset charset = Charset.forName("UTF-8");
-				CharsetDecoder decoder = charset.newDecoder();
-				ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
-				CharBuffer charBuffer = decoder.decode(byteBuffer);
-				*/
-				
-			}
+			} // else statement for a 200 response
 
 		} 
 		catch (MalformedURLException e) {
@@ -338,16 +286,14 @@ public class CheckForUpdates extends JDialog {
 
 		} 
 		catch (UnsupportedEncodingException e) {
-			mainLabel.append("[FAIL]\n" + "UTF-8 Encoding error: "
+			mainLabel.append("[FAIL]\n" + "Encoding error: "
 					+ e.getMessage());
 		} 
 		catch (IOException e) {
 			mainLabel.append("[FAIL]\n" + "Fatal transport error: "
 					+ e.getMessage());
 		}finally {
-		
-			// Release the connection
-			// method.releaseConnection();
+			// 
 		}
 
 		if (!response.equalsIgnoreCase("")) {
