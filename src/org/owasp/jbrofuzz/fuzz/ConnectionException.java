@@ -23,7 +23,9 @@
  */
 package org.owasp.jbrofuzz.fuzz;
 
-public class ConnectionException extends Exception {
+import java.io.*;
+
+public class ConnectionException extends IOException {
 
 	private static final long serialVersionUID = 73278167420801202L;
 

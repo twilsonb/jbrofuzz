@@ -129,7 +129,7 @@ public class WindowViewer extends JFrame {
 		// Global Frame Issues
 		this.add(listPanel);
 		this.add(progressBar);
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math.abs(parent.getLocationOnScreen().y + 20));
 		this.setSize(550, 525);
 		
 		setResizable(false);

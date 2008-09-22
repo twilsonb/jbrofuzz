@@ -613,8 +613,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		final int rows = fuzzersTable.getRowCount();
 		if (rows == 0) {
 
-			MessageCreator currentMessage = new MessageCreator(
-					getMessageText(), "", 0, 0);
+			MessageCreator currentMessage = new MessageCreator(getMessageText(), "", 0, 0);
 
 			final Date now = new Date();
 			final SimpleDateFormat format = new SimpleDateFormat("HH-mm-ss-SSS");
@@ -625,21 +624,23 @@ public class FuzzingPanel extends JBroFuzzPanel {
 					"Sending...", "1 / 1", "0 bytes");
 			outputTable.scrollRectToVisible(outputTable.getCellRect(outputTable
 					.getRowCount(), 0, true));
-			// message.setText(currentMessage.getMessage());
 
-			toConsole(currentMessage.getMessage());
+			// Put the message on the console as it goes out on the wire
+			toConsole(currentMessage.getMessageAsPutOnTheWire());
 
 			try {
-				Connection con = new Connection(getTargetText(),
-						currentMessage.getMessage());
+				Connection con = new Connection(getTargetText(), currentMessage.getMessage());
+				
 				outputTableModel.updateLastRow(filename, getTargetText(),
 						timestamp, "Finished - " + con.getStatus(), "1 / 1",
 						con.getReply().getBytes().length + " bytes");
+				
 				getFrame().getJBroFuzz().getHandler().writeFuzzFile2(
 						"<!-- \r\n[ { 1 / 1 }, " + filename + " " + timestamp
 								+ "] " + "\r\n" + getTargetText() + " : "
 								+ con.getPort() + "\r\n" + con.getMessage()
 								+ "\r\n-->\r\n" + con.getReply(), filename);
+				
 			} catch (ConnectionException e) {
 				outputTableModel.updateLastRow(filename, getTargetText(),
 						timestamp, "Exception - " + e.getMessage(), "1 / 1",
@@ -680,9 +681,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 							outputTable.scrollRectToVisible(outputTable
 									.getCellRect(outputTable.getModel()
 											.getRowCount(), 0, true));
-							// message.setText(currentMessage.getMessage());
-							toConsole(currentMessage.getMessage());
-
+							
+							// Put the message on the console as it goes out on the wire
+							toConsole(currentMessage.getMessageAsPutOnTheWire());
+							
 							try {
 								Connection con = new Connection(getTargetText(), currentMessage
 										.getMessage());
@@ -769,6 +771,17 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		stopped = true;
 		// Start, Stop, Graph, Add, Remove
 		setOptionsAvailable(true, false, true, true, true);
+		int total = 0;
+		total = fuzzersTable.getRowCount(); 
+		if(total > 0 ) {	
+			buttonRemGen.setEnabled(true);
+			setOptionRemove(true);
+							
+		} else {	
+			buttonRemGen.setEnabled(false);
+			setOptionRemove(false);
+		}
+		
 		buttonAddGen.setEnabled(true);
 		if(fuzzersTable.getRowCount() > 0) {
 			buttonRemGen.setEnabled(true);
@@ -823,17 +836,14 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			
 			int total = 0;
 			total = fuzzersTable.getRowCount(); 
-			System.out.println(total);
 			if(total > 0 ) {
 				
 				buttonRemGen.setEnabled(true);
 				setOptionRemove(true);
-				
-			} else {
-				
+								
+			} else {	
 				buttonRemGen.setEnabled(false);
 				setOptionRemove(false);
-				
 			}
 		}
 	}

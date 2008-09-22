@@ -92,7 +92,7 @@
 # Will produce a line of 100 A's
 #
 # Copyright (C) 2008 subere@uncon.org
-# Version 1.0
+# Version 1.1
 #
 
 P:INT-LOW:Lowercase Integer Overflows:12

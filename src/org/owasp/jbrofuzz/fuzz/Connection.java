@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.1
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -41,14 +41,10 @@ import java.io.*;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 0.9
+ * @version 1.1
  * @since 0.1
  */
 public class Connection {
-
-	// The content length header text used for a POST request
-	private static final byte[] CONTENT_LENGTH = new String("Content-Length:")
-	.getBytes();
 
 	// The maximum size for the socket I/O
 	private final static int SEND_BUF_SIZE = 256 * 1024;
@@ -79,8 +75,7 @@ public class Connection {
 	 * @param message
 	 *            String
 	 */
-	public Connection(final String urlString, final String message)
-	throws ConnectionException {
+	public Connection(final String urlString, final String message) throws ConnectionException {
 
 		try {
 			url = new URL(urlString);
@@ -113,6 +108,7 @@ public class Connection {
 
 		final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
 
+
 		// Create a trust manager that does not validate certificate chains
 		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 			public void checkClientTrusted(
@@ -142,177 +138,221 @@ public class Connection {
 
 		}
 
+
 		// Create the Socket to the specified address and port
 		if (protocol.equalsIgnoreCase("https")) {
 
-			// Creating Client Sockets
-			SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory
-			.getDefault();
-			SSLSocket sslSocket = null;
-			try {
+			// Create a normal SSL Socket if HTTP/1.1 is not being used
+			if (!protocolIsHTTP11(message)) {
+				// Creating Client Sockets
+				SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+				SSLSocket sslSocket;
+				try {
 
-				sslSocket = (SSLSocket) sslsocketfactory.createSocket(host,
-						port);
-				sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
-				sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-				sslSocket.setSoTimeout(socketTimeout);
+					sslSocket = (SSLSocket) sslsocketfactory.createSocket(host, port);
+					sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+					sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
+					sslSocket.setSoTimeout(socketTimeout);
 
-			} catch (UnknownHostException e) {
-				reply = "The IP address of the host could not be determined : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
+					in_stream = sslSocket.getInputStream();
+					out_stream = sslSocket.getOutputStream();
 
-			} catch (IOException e) {
-				reply = "An IO Error occured when creating the socket : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
+					out_stream.write(this.message.getBytes());
+
+					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					int got;
+					while ((got = in_stream.read(recv)) > -1) {
+						baos.write(recv, 0, got);
+
+					} // while loop
+
+					in_stream.close();
+					out_stream.close();
+					sslSocket.close();
+
+					final byte[] allbytes = baos.toByteArray();
+					reply = new String(allbytes);
+
+				} catch (UnknownHostException e) {
+					reply = "The IP address of the host could not be determined : "
+						+ e.getMessage() + "\n";
+					throw new ConnectionException(reply);
+
+				} catch (IOException e) {
+					reply = "An IO Error occured on socket : " + e.getMessage()
+					+ "\n";
+					throw new ConnectionException(reply);
+
+				}
+			}
+			else { // SSL: If HTTP/1.1 is being used, handle separately
+
+				try {
+
+					SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+					SSLSocket sslSocket;
+
+					sslSocket = (SSLSocket) sslsocketfactory.createSocket(host,port);
+					sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+					sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
+					sslSocket.setSoTimeout(socketTimeout);
+
+					in_stream = sslSocket.getInputStream();
+					out_stream = sslSocket.getOutputStream();
+
+					out_stream.write(this.message.getBytes());
+
+					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					int got;
+					boolean end_reached = false;
+					while ( (!end_reached) && ((got = in_stream.read(recv)) > -1) ) {
+						
+						baos.write(recv, 0, got);
+
+						// Check if \r\n has come in, in its many shapes and forms
+						final String incoming = new String(baos.toByteArray()); 
+						if(incoming.contains("\r\n\r\n") || incoming.contains("\n\n")|| incoming.contains("\r\r") ) {
+
+							// Check if Chunked Encoding is being used
+							if(incoming.contains("Transfer-Encoding: chunked")) {
+
+								if(incoming.contains("\r\n0\r\n") || incoming.contains("\n0\n")|| incoming.contains("\r0\r") ) {
+									end_reached = true;
+								}
+								
+							} else {
+								end_reached = true;
+							}
+
+						}
+
+
+					} // while loop
+
+					in_stream.close();
+
+					final byte[] allbytes = baos.toByteArray();
+					reply = new String(allbytes);
+
+
+				} catch (MalformedURLException e) {
+					reply = "Malformed URL: " + e.getMessage() 
+					+ "\n";
+					throw new ConnectionException(reply);
+				} catch (IOException e) {
+					reply = "An IO Error occured on the URL : " + e.getMessage()
+					+ "\n";
+					throw new ConnectionException(reply);
+
+				}
+
 
 			}
 
-			// Assign the input stream
-			try {
-				in_stream = sslSocket.getInputStream();
-			} catch (final IOException e) {
-				reply = "An IO Error occured when creating the input stream : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
-
-			}
-			// Assign the output stream
-			try {
-				out_stream = sslSocket.getOutputStream();
-			} catch (final IOException e) {
-				reply = "An IO Error occured when creating the output stream : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
-
-			}
-
-			// Write to the output stream
-			try {
-				out_stream.write(this.message.getBytes());
-			} catch (final IOException e) {
-				reply = "An IO Error occured when attempting to write to the output stream : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
-
-			}
-			// Really don't like catching null pointer exceptions...
-			catch (final NullPointerException e) {
-				reply = "The output stream is null : " + e.getMessage();
-				throw new ConnectionException(reply);
-			}
-			// Read the input stream, once you have finished writing to the
-			// output
-			try {
-				final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				int got;
-				while ((got = in_stream.read(recv)) > -1) {
-					baos.write(recv, 0, got);
-
-				} // while loop
-
-				final byte[] allbytes = baos.toByteArray();
-				reply = new String(allbytes);
-
-			} catch (final IOException e) {
-
-				throw new ConnectionException("An IO Exception occured: "
-						+ e.getMessage());
-
-			}
-			// Close the socket
-			try {
-				sslSocket.close();
-			} catch (final IOException e) {
-				reply = "An IO Error occured when attempting to close the socket : "
-					+ e.getMessage() + "\n";
-
-				throw new ConnectionException(reply);
-
-			}
-			// -----
 
 		}
-		// Protocol is http going over a normal socket
+		// Default protocol is HTTP going over a normal socket
 		else {
-			try {
-				socket = new Socket();
-				socket.bind(null);
-				socket.connect(new InetSocketAddress(host, port), socketTimeout);
 
-				socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
-				socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-				socket.setSoTimeout(30000);
-			} catch (final UnknownHostException e) {
-				reply = "The IP address of the host could not be determined : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
+			// Create a normal Socket if HTTP/1.1 is not being used
+			if (!protocolIsHTTP11(message)) {
+				try {
+					socket = new Socket(host, port);
+					socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+					socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
+					socket.setSoTimeout(socketTimeout);
 
-			} catch (final IOException e) {
-				reply = "An IO Error occured when creating the socket : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
+					in_stream = socket.getInputStream();
+					out_stream = socket.getOutputStream();
+
+					out_stream.write(this.message.getBytes());
+
+					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					int got;
+					while ((got = in_stream.read(recv)) > -1) {
+						baos.write(recv, 0, got);
+
+					} // while loop
+
+					in_stream.close();
+					out_stream.close();
+					socket.close();
+
+					final byte[] allbytes = baos.toByteArray();
+					reply = new String(allbytes);
+
+				} catch (final UnknownHostException e) {
+					reply = "The IP address of the host could not be determined : "
+						+ e.getMessage() + "\n";
+					throw new ConnectionException(reply);
+
+				} catch (final IOException e) {
+					reply = "An IO Error occured on socket : " + e.getMessage()
+					+ "\n";
+					throw new ConnectionException(reply);
+				}
+			}
+			else { // If HTTP/1.1 is being used, handle separately
+				 
+				try {
+					socket = new Socket(host, port);
+					socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+					socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
+					socket.setSoTimeout(socketTimeout);
+					
+					in_stream = socket.getInputStream();
+					out_stream = socket.getOutputStream();
+
+					out_stream.write(this.message.getBytes());
+
+					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					int got;
+					boolean end_reached = false;
+					while ( (!end_reached) && ((got = in_stream.read(recv)) > -1) ) {
+						
+						baos.write(recv, 0, got);
+
+						// Check if \r\n has come in, in its many shapes and forms
+						final String incoming = new String(baos.toByteArray()); 
+						if(incoming.contains("\r\n\r\n") || incoming.contains("\n\n")|| incoming.contains("\r\r") ) {
+
+							// Check if Chunked Encoding is being used
+							if(incoming.contains("Transfer-Encoding: chunked")) {
+
+								if(incoming.contains("\r\n0\r\n") || incoming.contains("\n0\n")|| incoming.contains("\r0\r") ) {
+									end_reached = true;
+								}
+								
+							} else {
+								end_reached = true;
+							}
+
+						}
+
+
+					} // while loop
+
+					in_stream.close();
+					out_stream.close();
+					socket.close();
+
+					final byte[] allbytes = baos.toByteArray();
+					reply = new String(allbytes);
+
+				} catch (final UnknownHostException e) {
+					reply = "The IP address of the host could not be determined : "
+						+ e.getMessage() + "\n";
+					throw new ConnectionException(reply);
+
+				} catch (final IOException e) {
+					reply = "An IO Error occured on socket : " + e.getMessage()
+					+ "\n";
+					throw new ConnectionException(reply);
+				}
+
+
 			}
 
-			// Assign the input stream
-			try {
-				in_stream = socket.getInputStream();
-			} catch (final IOException e) {
-				reply = "An IO Error occured when creating the input stream : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
-
-			}
-			// Assign the output stream
-			try {
-				out_stream = socket.getOutputStream();
-			} catch (final IOException e) {
-				reply = "An IO Error occured when creating the output stream : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
-
-			}
-
-			// Write to the output stream
-			try {
-				out_stream.write(this.message.getBytes());
-			} catch (final IOException e) {
-				reply = "An IO Error occured when attempting to write to the output stream : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
-
-			}
-			// Really don't like catching null pointer exceptions...
-			catch (final NullPointerException e) {
-				reply = "The output stream is null : " + e.getMessage();
-				throw new ConnectionException(reply);
-			}
-			// Read the input stream, once you have finished writing to the
-			// output
-			try {
-				final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				int got;
-				while ((got = in_stream.read(recv)) > -1) {
-					baos.write(recv, 0, got);
-
-				} // while loop
-
-				final byte[] allbytes = baos.toByteArray();
-				reply = new String(allbytes);
-
-			} catch (final IOException e) {
-				throw new ConnectionException("An IO Exception occured: "
-						+ e.getMessage());
-			}
-			// Close the socket
-			try {
-				socket.close();
-			} catch (final IOException e) {
-				reply = "An IO Error occured when attempting to close the socket : "
-					+ e.getMessage() + "\n";
-				throw new ConnectionException(reply);
-			}
 		}
 	}
 
@@ -370,6 +410,31 @@ public class Connection {
 		}
 
 		return output;
+	}
+
+	/**
+	 * <p>Method for checking if the actual String given is an HTTP/1.1
+	 * request.</p>
+	 * <p>This check entails looking for the first line (as divided by \r\n
+	 * to be finishing with the String literal "HTTP/1.1" in uppercase or
+	 * lowercase.</p>
+	 * 
+	 * @param message
+	 * @return
+	 */
+	public boolean protocolIsHTTP11(String message) {
+
+		try {
+
+			String line = message.split("\r\n")[0];
+			if (line.toLowerCase().endsWith("http/1.1")) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			return false;
+		}
+		return false;
 	}
 
 }

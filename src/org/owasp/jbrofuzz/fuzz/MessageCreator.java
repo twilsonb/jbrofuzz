@@ -208,12 +208,18 @@ public class MessageCreator {
 	 */
 	public String getMessage() {
 
-		String test = stringReplace("\r\n", message, "\\r\\n\n");
+		// String test = stringReplace("\r\n", message, "\\r\\n\n");
 
 		// System.out.println(test);
 
 		return message;
 
+	}
+	
+	public String getMessageAsPutOnTheWire() {
+		
+		return stringReplace("\r\n", message, "\\r\\n\n");
+		
 	}
 
 	/**

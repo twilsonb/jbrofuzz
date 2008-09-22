@@ -58,11 +58,11 @@
 			</fileset>
 			<zipfileset src="lib/commons-codec-1.3.jar" />
 			<zipfileset src="lib/commons-httpclient-3.1.jar" />
-			<zipfileset src="lib/commons-lang-2.3.jar" />
-			<zipfileset src="lib/commons-io-1.3.2.jar" />
+			<zipfileset src="lib/commons-lang-2.4.jar" />
+			<zipfileset src="lib/commons-io-1.4.jar" />
 			<zipfileset src="lib/commons-logging-1.1.jar" />
-			<zipfileset src="lib/junit-4.1.jar" />
-			<zipfileset src="lib/ostermillerutils_1_06_00.jar" />
+			<zipfileset src="lib/junit-4.5.jar" />
+			<zipfileset src="lib/ostermillerutils_1_07_00.jar" />
 			<zipfileset src="lib/jcckit.jar" />
 			<manifest>
 				<attribute name="Main-Class" value="org.owasp.jbrofuzz.JBroFuzz" />
