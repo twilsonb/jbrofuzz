@@ -23,12 +23,18 @@
  */
 package org.owasp.jbrofuzz.core;
 
-import org.apache.commons.lang.*;
-import org.apache.commons.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
-import java.util.*;
-import java.net.*;
-import java.io.*;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 public class Database {
 
@@ -187,6 +193,25 @@ public class Database {
 		return generators.containsKey(Id);
 
 	}
+	
+	//TODO
+	/**
+	 *
+	public boolean addGenerator(Generator g) {
+		
+		if(this.containsGenerator(g.getId())) {
+			return false;
+		} else {
+			g.addCategory("Default");
+			if(!g.getPayloads().isEmpty()) {
+				generators.put(g.getId(), g);
+				return true;
+			}
+			return false;
+		}
+		
+	}
+	*/
 
 	/**
 	 * <p>
