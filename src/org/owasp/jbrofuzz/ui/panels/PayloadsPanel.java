@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 

@@ -31,9 +31,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import org.owasp.jbrofuzz.ui.*;
 import org.owasp.jbrofuzz.ui.actions.*;
@@ -271,7 +274,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 		});
 	}
 
-	protected final void popupTable(final JTable area, boolean open, boolean cut, boolean copy, boolean paste, boolean selectAll, boolean properties) {
+	public final void popupTable(final JTable area, boolean open, boolean cut, boolean copy, boolean paste, boolean selectAll, boolean properties) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
@@ -323,23 +326,6 @@ public abstract class JBroFuzzPanel extends JPanel {
 						}
 					}
 					
-					if(s.equalsIgnoreCase(getFrame().getPanelSniffing().getName())) {
-
-						final int c = area.getSelectedRow();
-						final String row = (String) area.getModel().getValueAt(c, 0);
-						final String fileName = row.split(" ")[0] + ".html";
-						
-						Browser.init();
-						
-						final File f = getFrame().getJBroFuzz().getHandler().getSnifFile(fileName);
-
-						try {
-							Browser.displayURL(f.toURI().toString());
-						} 
-						catch (final IOException ex) {
-							getFrame().log("Could not launch link in external browser");
-						}
-					}
 					
 				} // tab selection
 			}
@@ -477,6 +463,36 @@ public abstract class JBroFuzzPanel extends JPanel {
 		});
 	}
 
-
+	/**
+	 * <p>Method for completely expanding or collapsing a given 
+	 * <code>JTree</code>.</p>
+	 * <p>Originally from the Java Developers Almanac 1.4
+	 * 
+	 * @param tree The JTree to be expanded/collapsed
+	 * @param parent The parent TreePath from which to begin
+	 * @param expand If true, expands all nodes in the tree, else collapse all nodes.
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public void expandAll(JTree tree, TreePath parent, boolean expand) {
+        // Traverse children
+        TreeNode node = (TreeNode)parent.getLastPathComponent();
+        if (node.getChildCount() >= 0) {
+            for (Enumeration e=node.children(); e.hasMoreElements(); ) {
+                TreeNode n = (TreeNode)e.nextElement();
+                TreePath path = parent.pathByAddingChild(n);
+                expandAll(tree, path, expand);
+            }
+        }
+    
+        // Expansion or collapse must be done bottom-up
+        if (expand) {
+            tree.expandPath(parent);
+        } else {
+            tree.collapsePath(parent);
+        }
+    }
 
 }

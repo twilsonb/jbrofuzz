@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -75,7 +75,7 @@ public class JBroFuzz {
 	private JBroFuzzWindow mWindow;
 
 	private Database mDatabase;
-
+	
 	/**
 	 * <p>
 	 * The main creation object, instantiating a Database, a Format Object, 

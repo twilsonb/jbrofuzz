@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.1
+ * JBroFuzz 1.2
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -46,7 +46,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.1
+ * @version 1.2
  */
 public class JBroFuzzFormat {
 
@@ -56,7 +56,7 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "1.1";
+	public static final String VERSION = "1.2";
 
 	/**
 	 * <p>
@@ -64,12 +64,6 @@ public class JBroFuzzFormat {
 	 * </p>
 	 */
 	public static final String YEAR = "2008";
-
-	/**
-	 * The preferences used for selecting on whether or not to continue upon an
-	 * error occurring while in the fuzzing directories tab.
-	 */
-	public static final String PR_WEB_DIR_1 = "fuzz.dir.error.continue";
 	
 	/**
 	 * The preferences used for selecting the timeout in the socket created,

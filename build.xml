@@ -81,7 +81,10 @@
 	<target name="clean" description="Removing the /bin and /jar directory contents">
 		<delete verbose="true" failonerror="false" includeemptydirs="true">
 			<fileset dir="bin" />
-			<fileset dir="jar" />
+			<fileset dir="jar" >
+				<include name="**/*.jar" />
+				<include name="**/*.exe" />
+			</fileset>
 		</delete>
 	</target>
 
