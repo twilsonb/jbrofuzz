@@ -24,22 +24,17 @@
 package org.owasp.jbrofuzz.ui.panels;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.util.SwingWorker3;
 
 /**
  * <p>
@@ -48,7 +43,7 @@ import org.owasp.jbrofuzz.util.SwingWorker3;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.0
+ * @version 1.2
  */
 public class SystemPanel extends JBroFuzzPanel {
 

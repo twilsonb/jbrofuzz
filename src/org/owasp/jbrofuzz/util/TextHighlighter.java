@@ -133,6 +133,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Set-Cookie", Color.blue);
 		keywords.put("Set-cookie", Color.blue);
 		keywords.put("Transfer-Encoding", Color.blue);
+		keywords.put("UA-CPU", Color.blue);
 		keywords.put("User-Agent", Color.blue);
 		keywords.put("Vary", Color.blue);
 		keywords.put("Via", Color.blue);
@@ -144,7 +145,9 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("X-Powered-by", Color.blue);
 		keywords.put("X-powered-by", Color.blue);
 		keywords.put("X-Requested-With", Color.blue);
-
+		keywords.put("X-SDCH", Color.blue);
+		keywords.put("x-ps3-browser", Color.blue);
+		keywords.put("x-wap-profile", Color.blue);
 
 		style = new SimpleAttributeSet();
 	}

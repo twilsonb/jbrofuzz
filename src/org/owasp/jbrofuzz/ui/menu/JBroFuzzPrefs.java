@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -44,7 +44,7 @@ import org.owasp.jbrofuzz.version.*;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.0
+ * @version 1.2
  */
 
 public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
@@ -63,7 +63,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	// The actual preferences object
 	private Preferences prefs;
 
-	private static final String [] nodeNames = {"Preferences", "Directory Locations", "Fuzzing", "Sniffing", "Web Directories"};
+	private static final String [] nodeNames = {"Preferences", "Directory Locations", "Fuzzing", "Sniffing", "Graphing"};
 	
 	private JPanel [] panels = new JPanel[nodeNames.length];
 
@@ -86,8 +86,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Create a tree that allows one selection at a time
 		tree = new JTree(top);
-		tree.getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		// Selection can only contain one path at a time
+		tree.getSelectionModel().setSelectionMode(1);
 		// Listen for when the selection changes.
 		tree.addTreeSelectionListener(this);
 
@@ -166,9 +167,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		
 		HashMap<String, String> dirHash = new HashMap<String, String>(4);
 		// dirHash.put(" Launch Directory (where JBroFuzz is running from) ", System.getProperty("user.dir"));
-		dirHash.put(" Fuzzing (where data is saved) ", FileHandler.getCanonicalPath(FileHandler.DIR_TCPF));
-		dirHash.put(" Sniffing (where data is saved) ", FileHandler.getCanonicalPath(FileHandler.DIR_SNIF));
-		dirHash.put(" Web Directories (where data is saved) ", FileHandler.getCanonicalPath(FileHandler.DIR_WEBD));
+		dirHash.put(" Fuzzing (where data is saved) ", FileHandler.getCanonicalPath(FileHandler.DIR_FUZZ));
+		dirHash.put(" Sniffing (where data is saved) ", FileHandler.getCanonicalPath(FileHandler.DIR_AUTO));
 		
 		for(String dir : dirHash.keySet()) {
 			
@@ -221,25 +221,10 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		
 		panels[3].add(hexBoxCheck);
 		panels[3].add(Box.createRigidArea(new Dimension(0, 20)));
-		// Create the options in the web directories panel
 		
-		final boolean checkbox = prefs.getBoolean(JBroFuzzFormat.PR_WEB_DIR_1, false);
-		final JCheckBox errorCheckBox = new JCheckBox(" While enumerating directories, continue regardless of the response received", checkbox);
+		// Create the options in the graphing panel
 		
-		errorCheckBox.setBorderPaintedFlat(true);
-		errorCheckBox.setToolTipText("Continue attempting to enumerating directories, even if an error occurs");
-
-		errorCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				if (errorCheckBox.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_WEB_DIR_1, true);
-				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_WEB_DIR_1, false);
-				}
-			}
-		});
-		panels[4].add(errorCheckBox);
-		panels[4].add(Box.createRigidArea(new Dimension(0, 20)));
+		
 				
 		// Create the top split pane, showing the treeView and the Preferences
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -327,30 +312,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		setVisible(true);
 	}
 
-	/*
-	private void clickCANCEL() {
-		JBRPreferences.this.dispose();
-	}
-
-	private void clickAPPLY() {
-		apply.setEnabled(false);
-	}
-	*/
-
 	private void clickOK() {
-
-		// final int c = prefsTable.getSelectedRow();
-		// final String name = (String) prefsTable.getModel().getValueAt(c, 0);
-
-		/*
-		 * final String url = providersText.getText();
-		 * StringUtils.trimToNull(url); StringUtils.deleteWhitespace(url);
-		 * providersText.setText(url);
-		 * 
-		 * if(url != null) { //
-		 * parent.getEDOL().getEngine().setCurrentProvider(name, url); //
-		 * providersText.setText(parent.getEDOL().getEngine().getCurrentProvider().getURL()); }
-		 */
 		JBroFuzzPrefs.this.dispose();
 	}
 
@@ -370,14 +332,6 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 				// faqScrollPane.setViewportView(faqEditorPane);
 				splitPane.setRightComponent(panels[i]);
 				splitPane.setDividerLocation(150);
-				/* The apply button
-				if(i == 0 || i == 3) {
-					apply.setEnabled(false);
-				} else {
-					apply.setEnabled(true);
-				}
-				*/
-				
 			}
 
 		} // for loop

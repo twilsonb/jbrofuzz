@@ -33,6 +33,8 @@ import javax.swing.text.*;
 import javax.swing.event.*;
 
 import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.graph.GraphingPanel;
+import org.owasp.jbrofuzz.ui.headers.HeadersPanel;
 import org.owasp.jbrofuzz.ui.menu.*;
 import org.owasp.jbrofuzz.ui.panels.*;
 import org.owasp.jbrofuzz.util.ImageCreator;
@@ -48,19 +50,19 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.0
+ * @version 1.2
  */
 public class JBroFuzzWindow extends JFrame {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8877330557328054872L;
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Unique int identifier for the Web Directory Panel
+	 * Unique int identifier for the Graphing Panel
 	 */
-	public static final int ID_PANEL_WEB_DIRECTORIES = 121;
+	public static final int ID_PANEL_GRAPHING = 121;
 
 	/**
 	 * Unique int identifier for the Sniffing Panel
@@ -92,10 +94,10 @@ public class JBroFuzzWindow extends JFrame {
 	private JTabbedPane tp;
 
 	// The web directories panel
-	private final DirectoriesPanel wp;
+	private final GraphingPanel gp;
 
 	// The main sniffing panel
-	private final SniffingPanel sp;
+	private final HeadersPanel sp;
 
 	// The main definitions panel
 	private final PayloadsPanel pp;
@@ -135,9 +137,9 @@ public class JBroFuzzWindow extends JFrame {
 		tb = new JBroFuzzToolBar(this);
 		
 		// The panels must be below the toolBar and menuBar
-		wp = new DirectoriesPanel(this);
+		gp = new GraphingPanel(this);
 		fp = new FuzzingPanel(this);
-		sp = new SniffingPanel(this);
+		sp = new HeadersPanel(this);
 		pp = new PayloadsPanel(this);
 		cp = new SystemPanel(this);
 		
@@ -155,10 +157,11 @@ public class JBroFuzzWindow extends JFrame {
 		tp.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 		
 		tp.add(fp.getName(), fp);
+		tp.add(gp.getName(), gp);
 		tp.add(pp.getName(), pp);
 		tp.add(sp.getName(), sp);
-		tp.add(wp.getName(), wp);
 		
+		tp.setSelectedIndex(3);
 		
 		tp.addChangeListener(new ChangeListener() {
 			// Change listener for the tabbed pane
@@ -217,7 +220,7 @@ public class JBroFuzzWindow extends JFrame {
 		Runtime.getRuntime().runFinalization();
 
 		fp.stop();
-		wp.stop();
+		gp.stop();
 		pp.stop();
 		sp.stop();
 		cp.stop();
@@ -292,7 +295,7 @@ public class JBroFuzzWindow extends JFrame {
 	 * 
 	 * @return mSniffingPanel
 	 */
-	public SniffingPanel getPanelSniffing() {
+	public HeadersPanel getPanelSniffing() {
 		return sp;
 	}
 
@@ -303,8 +306,8 @@ public class JBroFuzzWindow extends JFrame {
 	 * 
 	 * @return WebDirectoriesPanel
 	 */
-	public DirectoriesPanel getPanelWebDirectories() {
-		return wp;
+	public GraphingPanel getPanelWebDirectories() {
+		return gp;
 	}
 
 	/**
@@ -359,8 +362,8 @@ public class JBroFuzzWindow extends JFrame {
 			tp.remove(cp);
 		}
 		
-		if (n == JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES) {
-			tp.remove(wp);
+		if (n == JBroFuzzWindow.ID_PANEL_GRAPHING) {
+			tp.remove(gp);
 		}
 
 	}
@@ -394,9 +397,9 @@ public class JBroFuzzWindow extends JFrame {
 			tp.setSelectedComponent(cp);
 		}
 		
-		if (n == JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES) {
-			tp.addTab(wp.getName(), wp);
-			tp.setSelectedComponent(wp);
+		if (n == JBroFuzzWindow.ID_PANEL_GRAPHING) {
+			tp.addTab(gp.getName(), gp);
+			tp.setSelectedComponent(gp);
 		}
 
 	}

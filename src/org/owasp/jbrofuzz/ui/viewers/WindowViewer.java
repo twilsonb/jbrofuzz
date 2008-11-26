@@ -108,12 +108,11 @@ public class WindowViewer extends JFrame {
 		listTextScrollPane.setPreferredSize(new Dimension(500, 410));
 
 		StringBuffer textBuffer = new StringBuffer();
-		if (typeOfPanel == WindowViewer.VIEW_SNIFFING_PANEL) {
-			textBuffer = parent.getFrame().getJBroFuzz().getHandler().readSnifFile(name + ".html");
-		}
+
 		if (typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
 			textBuffer = parent.getFrame().getJBroFuzz().getHandler().readFuzzFile(name + ".html");
 		}
+		
 		final String text = textBuffer.toString();
 
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory

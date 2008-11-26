@@ -1,29 +1,6 @@
-/**
- * JBroFuzz 1.0
- *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
- * 
- * Copyright (C) 2007, 2008 subere@uncon.org
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
- * 
- */
 package org.owasp.jbrofuzz.util;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 /**
  * This is the 3rd version of SwingWorker (also known as SwingWorker 3), an
@@ -49,26 +26,26 @@ public abstract class SwingWorker3 {
 		private Thread thread;
 
 		ThreadVar(final Thread t) {
-			thread = t;
+			this.thread = t;
 		}
 
 		synchronized void clear() {
-			thread = null;
+			this.thread = null;
 		}
 
 		synchronized Thread get() {
-			return thread;
+			return this.thread;
 		}
 	}
 
 	private Object value;
 
-	ThreadVar threadVar;
+	private ThreadVar threadVar;
 
 	/**
 	 * <p>
-	 * Start a thread that will call the <code>construct</code> method and
-	 * then exit.
+	 * Start a thread that will call the <code>construct</code> method and then
+	 * exit.
 	 * </p>
 	 */
 	public SwingWorker3() {
@@ -83,7 +60,7 @@ public abstract class SwingWorker3 {
 				try {
 					SwingWorker3.this.setValue(SwingWorker3.this.construct());
 				} finally {
-					threadVar.clear();
+					SwingWorker3.this.threadVar.clear();
 				}
 
 				SwingUtilities.invokeLater(doFinished);
@@ -91,7 +68,7 @@ public abstract class SwingWorker3 {
 		};
 
 		final Thread t = new Thread(doConstruct);
-		threadVar = new ThreadVar(t);
+		this.threadVar = new ThreadVar(t);
 	}
 
 	/**
@@ -105,12 +82,11 @@ public abstract class SwingWorker3 {
 
 	/**
 	 * <p>
-	 * Called on the event dispatching thread (not on the worker thread) after
-	 * the <code>construct</code> method has returned.
+	 * Called on the event dispatching thread (not on the worker thread) after the
+	 * <code>construct</code> method has returned.
 	 * </p>
 	 */
 	public void finished() {
-		// Nothing here
 	}
 
 	/**
@@ -124,9 +100,9 @@ public abstract class SwingWorker3 {
 	 */
 	public Object get() {
 		while (true) {
-			final Thread t = threadVar.get();
+			final Thread t = this.threadVar.get();
 			if (t == null) {
-				return getValue();
+				return this.getValue();
 			}
 			try {
 				t.join();
@@ -146,7 +122,7 @@ public abstract class SwingWorker3 {
 	 * @return Object
 	 */
 	protected synchronized Object getValue() {
-		return value;
+		return this.value;
 	}
 
 	/**
@@ -156,11 +132,11 @@ public abstract class SwingWorker3 {
 	 * </p>
 	 */
 	public void interrupt() {
-		final Thread t = threadVar.get();
+		final Thread t = this.threadVar.get();
 		if (t != null) {
 			t.interrupt();
 		}
-		threadVar.clear();
+		this.threadVar.clear();
 	}
 
 	/**
@@ -169,10 +145,10 @@ public abstract class SwingWorker3 {
 	 * </p>
 	 * 
 	 * @param x
-	 *            Object
+	 *          Object
 	 */
-	synchronized void setValue(final Object x) {
-		value = x;
+	private synchronized void setValue(final Object x) {
+		this.value = x;
 	}
 
 	/**
@@ -181,7 +157,7 @@ public abstract class SwingWorker3 {
 	 * </p>
 	 */
 	public void start() {
-		final Thread t = threadVar.get();
+		final Thread t = this.threadVar.get();
 		if (t != null) {
 			t.start();
 		}

@@ -243,7 +243,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		leaf = new DefaultMutableTreeNode("Payloads");
 		top.add(leaf);
 
-		leaf = new DefaultMutableTreeNode("Web Directories");
+		leaf = new DefaultMutableTreeNode("Graphing");
 		top.add(leaf);
 
 		leaf = new DefaultMutableTreeNode("System");
@@ -266,7 +266,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			splitPane.setDividerLocation(150);
 
 		}
-		if (s.equalsIgnoreCase("Web Directories")) {
+		if (s.equalsIgnoreCase("Graphing")) {
 			splitPane.setRightComponent(webdScrPane);
 			splitPane.setDividerLocation(150);
 

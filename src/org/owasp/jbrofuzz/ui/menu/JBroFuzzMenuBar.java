@@ -56,7 +56,7 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.0
+ * @version 1.2
  */
 public class JBroFuzzMenuBar extends JMenuBar {
 
@@ -70,7 +70,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 	// Used under the Panel JMenu as items
 	private JMenuItem showAll, hideAll, start, graph, stop, add, remove;
 	// Used under the view JMenu as items
-	private JCheckBoxMenuItem directories, fuzzing, sniffing, payloads, system;
+	private JCheckBoxMenuItem graphing, fuzzing, headers, payloads, system;
 
 	/**
 	 * 
@@ -130,9 +130,9 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		// View
 		final JMenu showHide = new JMenu("Show/Hide");
 
-		directories = new JCheckBoxMenuItem(" Web Directories ", true);
+		graphing = new JCheckBoxMenuItem(" Graphing ", true);
 		fuzzing = new JCheckBoxMenuItem(" Fuzzing ", true);
-		sniffing = new JCheckBoxMenuItem(" Sniffing ", true);
+		headers = new JCheckBoxMenuItem(" Headers ", true);
 		payloads = new JCheckBoxMenuItem(" Payloads ", false);
 		system = new JCheckBoxMenuItem(" System ", false);
 
@@ -140,15 +140,15 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		hideAll = new JMenuItem("Hide All");
 
 		showHide.add(fuzzing);
-		showHide.add(sniffing);
+		showHide.add(headers);
 		showHide.add(payloads);
-		showHide.add(directories);
+		showHide.add(graphing);
 		showHide.add(system);
 
 		fuzzing.setState(true);
-		sniffing.setState(true);
+		headers.setState(true);
 		payloads.setState(true);
-		directories.setState(true);
+		graphing.setState(true);
 		system.setState(false);
 
 		view.add(showHide);
@@ -298,17 +298,17 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			}
 		});
 
-		directories.addActionListener(new ActionListener() {
+		graphing.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!directories.getState()) {
+						if (!graphing.getState()) {
 							JBroFuzzMenuBar.this.getFrame().setTabHide(
-									JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES);
+									JBroFuzzWindow.ID_PANEL_GRAPHING);
 						} else {
 							JBroFuzzMenuBar.this.getFrame().setTabShow(
-									JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES);
+									JBroFuzzWindow.ID_PANEL_GRAPHING);
 						}
 					}
 				});
@@ -332,12 +332,12 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			}
 		});
 
-		sniffing.addActionListener(new ActionListener() {
+		headers.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!sniffing.getState()) {
+						if (!headers.getState()) {
 							JBroFuzzMenuBar.this.getFrame().setTabHide(
 									JBroFuzzWindow.ID_PANEL_SNIFFING);
 						} else {
@@ -393,15 +393,15 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					public void run() {
 
 						JBroFuzzMenuBar.this.getFrame().setTabShow(
-								JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES);
-						directories.setState(true);
+								JBroFuzzWindow.ID_PANEL_GRAPHING);
+						graphing.setState(true);
 
 						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_FUZZING);
 						fuzzing.setState(true);
 						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_SNIFFING);
-						sniffing.setState(true);
+						headers.setState(true);
 						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_PAYLOADS);
 						payloads.setState(true);
@@ -421,14 +421,14 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						JBroFuzzMenuBar.this.getFrame().setTabHide(
-								JBroFuzzWindow.ID_PANEL_WEB_DIRECTORIES);
-						directories.setState(false);
+								JBroFuzzWindow.ID_PANEL_GRAPHING);
+						graphing.setState(false);
 						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_FUZZING);
 						fuzzing.setState(false);
 						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_SNIFFING);
-						sniffing.setState(false);
+						headers.setState(false);
 						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_PAYLOADS);
 						payloads.setState(false);

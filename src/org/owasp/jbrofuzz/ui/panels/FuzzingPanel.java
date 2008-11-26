@@ -27,7 +27,6 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.border.*;
 
 import java.awt.event.*;
 
@@ -431,7 +430,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	public void graph() {
 		
 		final WindowPlotter wd = new WindowPlotter(m, FileHandler
-				.getName(FileHandler.DIR_TCPF));
+				.getName(FileHandler.DIR_FUZZ));
 		wd.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
