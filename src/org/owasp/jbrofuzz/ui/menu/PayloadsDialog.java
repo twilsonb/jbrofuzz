@@ -363,7 +363,7 @@ public class PayloadsDialog extends JDialog {
 		fuzzerInfoTextArea.setMinimumSize(minimumSize);
 
 		// Bottom button
-		ok = new JButton(" Add Fuzzer ", ImageCreator.ADD_IMG);
+		ok = new JButton(" Add Fuzzer ", ImageCreator.IMG_ADD);
 		ok.setBounds(515, 305, 140, 40);
 		ok.setEnabled(false);
 

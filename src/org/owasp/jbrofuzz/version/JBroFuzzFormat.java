@@ -98,12 +98,6 @@ public class JBroFuzzFormat {
 	public static final String URL_WEBSITE = "http://www.owasp.org/index.php/Category:OWASP_JBroFuzz";
 
 	/**
-	 * The directories file name, expected to be read from within the directory
-	 * from which JBroFuzz gets launched.
-	 */
-	public static final String FILE_DIR = "directories.jbrofuzz";
-
-	/**
 	 * <p> The file name of the database including all payloads. This is expected to be 
 	 * included within the jar/exe file of JBroFuzz.</p>
 	 */
@@ -115,15 +109,6 @@ public class JBroFuzzFormat {
 	public static final String LINE_SEPARATOR = "-->";
 
 	
-	/**
-	 * <p>
-	 * The list of directories used if a file is not found to load the
-	 * directories from.
-	 * </p>
-	 */
-	public static final String DEFAULT_DIRS = "images\n" + ".svn\n" + "fuzz\n"
-			+ "rss\n" + "live\n";
-
 	/**
 	 * <p>
 	 * Each version of JBroFuzz has a code name, which is defined by this public

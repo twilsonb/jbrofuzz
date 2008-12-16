@@ -33,6 +33,7 @@ import javax.swing.text.*;
 import javax.swing.event.*;
 
 import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
 import org.owasp.jbrofuzz.graph.GraphingPanel;
 import org.owasp.jbrofuzz.ui.headers.HeadersPanel;
 import org.owasp.jbrofuzz.ui.menu.*;
@@ -161,7 +162,7 @@ public class JBroFuzzWindow extends JFrame {
 		tp.add(pp.getName(), pp);
 		tp.add(sp.getName(), sp);
 		
-		tp.setSelectedIndex(3);
+		tp.setSelectedIndex(0);
 		
 		tp.addChangeListener(new ChangeListener() {
 			// Change listener for the tabbed pane
@@ -189,7 +190,7 @@ public class JBroFuzzWindow extends JFrame {
 		pane.add(tp, BorderLayout.CENTER);
 
 		// The image icon and min size
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setMinimumSize(new Dimension(400, 300));
 
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

@@ -74,7 +74,7 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 	public JBRFaq(final JFrame parent) {
 
 		super(parent, " JBroFuzz - Frequently Asked Questions ", true);
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 

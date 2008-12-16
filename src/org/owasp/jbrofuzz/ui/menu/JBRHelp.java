@@ -77,7 +77,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 	public JBRHelp(final JFrame parent) {
 		super(parent, " JBroFuzz - Help Topics ", true);
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 

@@ -82,7 +82,7 @@ public class AboutBox extends JDialog {
 	 */
 	public AboutBox(final JFrame parent, final int tab) {
 		super(parent, " JBroFuzz - About ", true);
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		setLayout(new BorderLayout());
@@ -95,7 +95,7 @@ public class AboutBox extends JDialog {
 
 		// The about editor label
 		final JLabel about = new JLabel(JBroFuzzFormat.ABOUTTEXT,
-				ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
+				ImageCreator.IMG_OWASP, SwingConstants.LEFT);
 
 		// The license editor pane
 		JEditorPane license;
@@ -113,7 +113,7 @@ public class AboutBox extends JDialog {
 		lcsScrollPane.setHorizontalScrollBarPolicy(30);
 
 		// The disclaimer editor label
-		final JLabel disclaimer = new JLabel(JBroFuzzFormat.DISCLAIMER, ImageCreator.OWASP_IMAGE, SwingConstants.LEFT);
+		final JLabel disclaimer = new JLabel(JBroFuzzFormat.DISCLAIMER, ImageCreator.IMG_OWASP, SwingConstants.LEFT);
 
 		// The acknoledgement editor pane
 		JEditorPane acknoledgements;

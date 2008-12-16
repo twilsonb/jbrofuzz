@@ -37,7 +37,7 @@
 #
 
 J:AAA-AAA:9
->Windows | XP SP3 | Firefox | 3.0.4
+>Windows | XP SP3 | Firefox | 3.0.4, English (British)
 >>The British release of Firefox 3.0.4 for Windows XP 
 GET / HTTP/1.1
 Host: localhost
@@ -51,7 +51,7 @@ Connection: keep-alive
 
 J:AAA-AAB:8
 >Windows | XP SP3 | IE | 7.0.5730.13
->>The standard release of Internet Explorer 7.0 for Windows XP
+>>The standard release of Internet Explorer 7.0 for x86 Windows XP
 GET / HTTP/1.1
 Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, application/xaml+xml, application/vnd.ms-xpsdocument, application/x-ms-xbap, application/x-ms-application, */*
 Accept-Language: en-gb
@@ -140,4 +140,14 @@ Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plai
 Accept-Language: en-gb,en;q=0.5
 Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
 
-
+J:AAA-AAH:8
+>Windows | Vista SP1 | IE | 7.0.6001.18000
+>> Internet Explorer 7.0 for x86 Vista
+GET / HTTP/1.1
+Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-ms-application, application/vnd.ms-xpsdocument, application/xaml+xml, application/x-ms-xbap, application/x-shockwave-flash, */*
+Accept-Language: en
+UA-CPU: x86
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506)
+Host: localhost
+Connection: Keep-Alive
