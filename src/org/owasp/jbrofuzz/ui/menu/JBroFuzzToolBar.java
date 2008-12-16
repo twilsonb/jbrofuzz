@@ -25,21 +25,21 @@ public class JBroFuzzToolBar extends JToolBar {
 
 		this.mFrameWindow = mFrameWindow;
 
-		start = new JButton(ImageCreator.START_IMG);
+		start = new JButton(ImageCreator.IMG_START);
 		start.setToolTipText("Start");
-		stop = new JButton(ImageCreator.STOP_IMG);
+		stop = new JButton(ImageCreator.IMG_STOP);
 		stop.setToolTipText("Stop");
-		graph = new JButton(ImageCreator.PAUSE_IMG);
+		graph = new JButton(ImageCreator.IMG_PAUSE);
 		graph.setToolTipText("Graph");
-		add = new JButton(ImageCreator.ADD_IMG);
+		add = new JButton(ImageCreator.IMG_ADD);
 		add.setToolTipText("Add");
-		remove = new JButton(ImageCreator.REMOVE_IMG);
+		remove = new JButton(ImageCreator.IMG_REMOVE);
 		remove.setToolTipText("Remove");
 		help = new JButton(ImageCreator.IMG_HELP);
 		help.setToolTipText("Help Topics");
 		about = new JButton(ImageCreator.IMG_ABOUT);
 		about.setToolTipText("About");
-		website = new JButton(ImageCreator.OWASP_IMAGE_SML);
+		website = new JButton(ImageCreator.IMG_OWASP_IMAGE_SML);
 		website.setToolTipText("JBroFuzz Website");
 
 		this.addSeparator(new Dimension(13, 0));

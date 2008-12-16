@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -41,11 +41,11 @@ import javax.swing.ImageIcon;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.0
+ * @version 1.2
  */
 public class ImageCreator {
 
-	private static final String OWASP = "iVBORw0KGgoAAAANSUhEUgAAAGAAAABYCAMAAAA9bwLKAAAAAXNSR0ICQMB9xQAAAqxQTFRF"
+	private static final String TXT_OWASP = "iVBORw0KGgoAAAANSUhEUgAAAGAAAABYCAMAAAA9bwLKAAAAAXNSR0ICQMB9xQAAAqxQTFRF"
 			+ "AAAAExMTGxsbCwsLFBkbFBUaCgkGDxASBggFBwgKAAETAAEaAwkUDhIbGBYYEBAOBgsZDhAP"
 			+ "CQwaGBkWCAcFCw0SAQIjExkiCAs1DBE8CxEhBgkvAwUrCAsuExUhGx0hDRREFR1WERZGHSIk"
 			+ "HCMqHiQwGSJaGCBHHCdlHy5xHzR3IBwbICAeOzs7KyssLjAuMjIzIiMiNTg2JSksKS0wNTk7"
@@ -142,7 +142,7 @@ public class ImageCreator {
 			+ "I+DvY1R7QR7p05bIN4EndiM75jnntfyoHbb3FXwGnBeLmc7wf31c9Qjsj8vvZ8bOei0dnYLv"
 			+ "DLOvqeOn4cy1ctUjtPJyMZWOkNJ9K5368JFifxP7P3WlcRVYxi88AAAAAElFTkSuQmCC";
 
-	private static final String OWASP_SMALL = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1B"
+	private static final String TXT_OWASP_SMALL = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1B"
 			+ "AACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAA"
 			+ "AkFJREFUOE+1kt1L02EUxx8wnTBbuWb51tx8mdNZ+O7U8i0ISVw/NA3BSlcqvpBFOlEpKw2T"
 			+ "0jSHSgYytoVlZktrmZWZCXVRRFflbX/Ip7UgVxJ104HDc3O+n+fL9xwh/ksFiHjhL5K9/c/l"
@@ -157,27 +157,11 @@ public class ImageCreator {
 			+ "93PxEwXbQhMwFA2wp9iJdv8ksmAdcuVu90bCfz/2cO/wz5VsFnwDvOgQIORD68sAAAAASUVO"
 			+ "RK5CYII=";
 
-	public static final ImageIcon OWASP_IMAGE_SML = new ImageIcon(Base64
-			.decode(ImageCreator.OWASP_SMALL));
-	
-	private static final String CLOSE = 
+	private static final String TXT_CLOSE = 
 		"R0lGODlhCgAKAIAAAAAAAP///yH5BAEAAAEALAAAAAAKAAoAAAIUjI8BgGvLlHtwnpqkpZh7"
 		+ "2UTZUQAAOw==";
 	
-	public static final ImageIcon IMG_CLOSE = new ImageIcon(Base64.decode(CLOSE));
-	
-	/**
-	 * <p>
-	 * The owasp image being displayed in the about box. This image is
-	 * originally a png file.
-	 * </p>.
-	 * 
-	 * @since 0.4
-	 */
-	public static final ImageIcon OWASP_IMAGE = new ImageIcon(Base64
-			.decode(ImageCreator.OWASP));
-
-	private static final String FRAMEICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAp1J"
+	private static final String TXT_FRAMEICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAp1J"
 			+ "REFUOE+lk1tPE1EUhaHQltJ22tI77fReoFfoDVoEKRQoFEEFEhRBTDDEEKM+iUiAakj8ASYm"
 			+ "JiQmvvjqP/zcrYThWSfZM8nMnO+svfY6ve12m57/uToA+3AOb3yW6MQ2zsAExdU2Nn+enl5d"
 			+ "B/63evtQnAlKiycMKH5ihS26m3duerMLxZ1kKFjEMhQjPrlHsrSLzjBwA+jFYHWSmTnCH6li"
@@ -191,18 +175,7 @@ public class ImageCreator {
 			+ "iyPUTZpHLaN4EpicITyRe13T3GqJspioNymSCUVaXSI41sRou5NE1/AEvvCUZD1Kvv5OEreN"
 			+ "0eykR6JsHgqTm++828IwaCcuz9LSCXZvRlMQTq9jFenu4Djp+8dCD0hQ5Bzo+mSREzX3mErz"
 			+ "nKFAAV+khksO33B0RgN0zPjX+gPK6Z2eb2W0vwAAAABJRU5ErkJggg==";
-	/**
-	 * <p>
-	 * The image being displayed at the top left of the frame, when the UI
-	 * manager is windows based. This image is originally a png file.
-	 * </p>.
-	 * 
-	 * @since 0.3
-	 */
-	public static final ImageIcon FRAME_IMG = new ImageIcon(Base64
-			.decode(ImageCreator.FRAMEICON));
-
-	private static final String EXIT = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+	private static final String TXT_EXIT = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAAA9klEQVR42mL8//8/A7kAIICYGCgAAAHEAmMwNjIkAKn5UO5HIFYA4g9Q/gQg"
 			+ "zoeyL/6vZzAAMQACCNnmBUB8EMrmh/JBwAFJI8jQAJgGgABCd3YCVAEI+EP5C9DkH8A4AAGE"
@@ -210,17 +183,7 @@ public class ImageCreator {
 			+ "iwz80bwDBgABhE3zAmhoMyCFPiy6FJAVAgQQuuYCqC3g+IRG00Ys0QcGAAGErBkU8Q1o0YIe"
 			+ "ffbIAQcQQCxIihWQ/HoBihmgARUAdQUKAAggRkoyBkAAUZQxAAIMANElKut+P5onAAAAAElF"
 			+ "TkSuQmCC";
-	/**
-	 * <p>
-	 * The exit image seen in the menu bar. This is an original gif file.
-	 * </p>
-	 * 
-	 * @since 0.1
-	 */
-	public static final ImageIcon EXIT_IMG = new ImageIcon(Base64
-			.decode(ImageCreator.EXIT));
-
-	private final static String cutImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+	private final static String TXT_cutImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAAA10lEQVR42mL8//8/A7kAIICYGCgAAAHEAiIYGxkOACl7EPt/PQMjkO8AZO6H"
 			+ "qmkEijUgqwECR6DYAYAAoshmgACiSDNAAFGkGSCAMDQD/SZAhL4HIAIggGCaLyBJNGAx0AAp"
@@ -228,7 +191,7 @@ public class ImageCreator {
 			+ "AAQQI7YUBnQmyLZ+KHchyHagpg/o6gACCFdoI4fBA2waQQAggFjwhGYjlH0AV5ADBBAjJRkD"
 			+ "IIAoSiQAAQYAHREwlOPeTOgAAAAASUVORK5CYII=";
 
-	private final static String copyImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+	private final static String TXT_copyImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAAA/UlEQVR42mL8//8/A7kAIICYGCgAAAHEAiIYG7HKwZx0EIgdMCTrGRgAAgjd"
 			+ "5gQgPgDEH5DE7IH4ARBvQDcEIIBYkNgXgFgfhwvlodgfiEHubAAJAgQQzOYCJI0XgdgRSeNF"
@@ -237,7 +200,7 @@ public class ImageCreator {
 			+ "0JAuRBIHGRgIxIZQC+BpACCAWLD47wAUCyAF1AZsIQgQQIyUZAyAAKIoYwAEGAABuyyw6aZU"
 			+ "xAAAAABJRU5ErkJggg==";
 
-	private final static String pasteImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+	private final static String TXT_pasteImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAABDUlEQVR42mL8//8/A7kAIICYcEkwNjIoALEBPs0AAcSIbDNUcQMQ+6OpOwgS"
 			+ "/1/PcABZECCA4JqhGkGS/HgsSwQasADGAQggZGdvQNJ4EYgDgdgRiDciqZkAtEQAxgEIIBYk"
@@ -246,7 +209,7 @@ public class ImageCreator {
 			+ "gUJTH03zQyB+AOVfABpSAGIABBALkp/s8cSvPFpsgAFAAME0H8Ci4QAOg2AuYAAIIEZKMgZA"
 			+ "ADExUAAAAgwAtRNGMVUn4dEAAAAASUVORK5CYII=";
 
-	private final static String selectAllImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+	private final static String TXT_selectAllImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAAA0klEQVR42mL8//8/A7kAIICYGCgAAAHEgsxhbGQ4AKTs8ahv/F/P0ADjAAQQ"
 			+ "RTYDBBALGv8Cms2NQHwAif8AWTFAADGiBxjQ6QlAaj6SUCLQqQuw2QwQQBjOhip0BOKPUKH5"
@@ -254,39 +217,32 @@ public class ImageCreator {
 			+ "QAChBBhQ8wckjSBwEE39AuTAAwgg9KjiR+OjJxjkaGMACCB0zY0E0gWKZoAAYqQkYwAEEEXJ"
 			+ "EyDAAL1bLDuzPKEfAAAAAElFTkSuQmCC";
 
-	private static final String STOP = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
+	private static final String TXT_STOP = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
 			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
 			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAAf0lEQVR42mL8//8/A7kAIICYGCgAAAHEAmMw"
 			+ "NjIoACkFIvRc+F/P8AHEAAggFiTBBCCuJ0KzIxAfADEAAogiZwMEEEWaAQKIIs0A"
 			+ "AUSRZoAAokgzQABRpBkggCjSDBBAFGkGCCDkRPIAiA8SoecDjAEQQIyUZAyAAKLI"
 			+ "2QABBgCrAA6ONiIoUgAAAABJRU5ErkJggg==";
 
-	/**
-	 * <p>
-	 * The stop imager seen in the menu bar, as well as various buttons within
-	 * the main frame.
-	 * </p>
-	 */
-	public static final ImageIcon STOP_IMG = new ImageIcon(Base64
-			.decode(ImageCreator.STOP));
-
-	private static final String PAUSE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+	private static final String TXT_PAUSE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAAAlklEQVR42mL8//8/A7kAIICYGCgAAAFEUDNjI8N/EMYmBxBALPg0gej/9QyM"
 			+ "uNQABBBem/FpBAGAAGLCZyshABBATIRsRTcImQ8QQAygqELHDA3//xNDAwQQQY0wNjofRAME"
 			+ "EMnxDHI2zEsAAcSESwKfGAwABBBWJ6OzcYkBBBAjmCAiQWADAAHESEnGAAggijIGQIABAJTK"
 			+ "opgmzUDQAAAAAElFTkSuQmCC";
-	/**
-	 * <p>
-	 * The pause image seen in the menu bar. This is an original gif file.
-	 * </p>
-	 * 
-	 * @since 0.1
-	 */
-	public static final ImageIcon PAUSE_IMG = new ImageIcon(Base64
-			.decode(ImageCreator.PAUSE));
-
-	private static final String START = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
+	
+	private final static String TXT_SAVE =
+		"iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL" +
+		"EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA" +
+		"dTAAAOpgAAA6mAAAF2+SX8VGAAABH0lEQVR42mL8//8/A7kAIIBYQARjI8MHIAUy" +
+		"5QwQs+JRrwjELUC8+n89wweAAGKBCjIB8W0g3gPEzHg0FwNxEFT9TIAAgmk+CcSr" +
+		"gKbNxudMoAt9gJQHEFuANAMEEBNUHORUXiK8CQsgARABEEBMDBQAgABiweK0JCD1" +
+		"D8QE4qtALAjEd4FeuoOuFiCAWLAYOBeJPQ2IdYB4ERBjaAYIIELO/gPEv6EuwQAA" +
+		"AUSRnwECCKYZFLdfscizAzEnUsL5hSwJEECMoOQJDKR9UIX3gNgWiP9CDX4CxFxA" +
+		"/BqIXwKxHyyagAHICBBAsABbCsShQByDZrMCljAA+f8HiAMQQCxQU+YCbX8IZH4D" +
+		"YlGozbiACBC/ATEAAoiRklwFEGAAFBU6eIy60OQAAAAASUVORK5CYII=";
+	
+	private static final String TXT_START = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
 			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
 			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAAzElEQVR42mL8//8/A7kAIIBYYAzGRgYBIAXC"
 			+ "Dwhp+l8PoQECiAlJzACILwBxA9QQggAggJjQ+PxAXA81JICQZoAAYsIhLg/E64H4"
@@ -295,18 +251,7 @@ public class ImageCreator {
 			+ "yQABhM3ZC6GpjGAyBQggZM0gxY7IoUkIAAQQIyW5CiDAAKusHj7ANrjHAAAAAElF"
 			+ "TkSuQmCC";
 
-	/**
-	 * <p>
-	 * The start image seen in the menu bar having the shape of a play button.
-	 * This is an original gif file.
-	 * </p>
-	 * 
-	 * @since 0.1
-	 */
-	public static final ImageIcon START_IMG = new ImageIcon(Base64
-			.decode(ImageCreator.START));
-
-	private static final String ADD = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAACVUlEQVR4nH2SO2tUYRCGn/nO"
+	private static final String TXT_ADD = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAACVUlEQVR4nH2SO2tUYRCGn/nO"
 			+ "dy7Zs4ludKNbGFBZoqiohWAjCAp2FgpWIuJfEEQs7cTSfyC2KlgIlsHCSyXiBS/BIImbjcaN"
 			+ "ezY5e87u941FFFYR327gnWFm3ke894yoOcj7pz7dvHkrnp1Fu13CTZt53W6zevFC89zly3OA"
 			+ "/jZb/pKqN2ltE9sbDUySIFMN2iiLef9vKxZojtTHjTF71FqcDVHnsc7hnCKhLQD5o7n/9dv1"
@@ -319,17 +264,6 @@ public class ImageCreator {
 			+ "iFAWfexk7WhSq3WSWu3SKGEPRqCZVO+PGGPAhoi1EAQYMagbTgPz/2O7JyKDtc4K7XaBX1jA"
 			+ "f/5Mu9UC5yv/YntU38KxsQ47d7E4P4+Z2YvubrIF5cDZMw8BM2r+CQbeCNwWeEAbAAAAAElF"
 			+ "TkSuQmCC";
-	/**
-	 * <p>
-	 * The add image seen in the menu bar having the shape of red, transparent
-	 * cross. This is an original png file.
-	 * </p>
-	 * 
-	 * @since 0.1
-	 */
-	public static final ImageIcon ADD_IMG = new ImageIcon(Base64
-			.decode(ImageCreator.ADD));
-
 	private final static String TXT_UPDATE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
 			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
 			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAAwElEQVR42mL8//8/A7kAIICYGCgAAAFEkWaA"
@@ -338,41 +272,19 @@ public class ImageCreator {
 			+ "AQFYbMSqGSCAkG0G2bofT/jYo3sJIIDQne2IQ+MENBoMAAIIWfMHLH6FgQNQGz8g"
 			+ "CwIEECMlaRsggChKngABRJFmgAADAIGBIrsWh+BkAAAAAElFTkSuQmCC";
 
-	public static final ImageIcon IMG_UPDATE = new ImageIcon(Base64
-			.decode(ImageCreator.TXT_UPDATE));
-
-	private static final String REMOVE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAGCAIAAACTu1PVAAAABGdBTUEAALGPC/xhBQAAARhJ"
+	private static final String TXT_REMOVE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAGCAIAAACTu1PVAAAABGdBTUEAALGPC/xhBQAAARhJ"
 			+ "REFUKFNjfHH02PsLF5hZ2f///8/IyMDEyMzAyAAEIIKR8T8jwz8Ghv9Amonp35+/DOdaWx9V"
 			+ "VX6bMePLlMlfp035MXP6z1kzf86Z+X32TCD7x+RJn9vbP9XVfqmouBsXx3Curf1FSdH/KZP/"
 			+ "T+j739f9r6v1X2P9n/Ly3zm5vxITfoWF/fLx/+Xm+dfN876hEcO5lpbHHp7/U1N/Jyb+iY7+"
 			+ "FRz2yy/wt4/vL2/fXz6+v339fwUG/QkO+Rca/sDGluF0bd1NQ+NvAaGf/YO+BoX9jIj9FR33"
 			+ "My7uZ3wiEP2IjfsaHvk5JPJbRMxNKxuGS0uWbAgK3pOUvCc5eV96xqGs7EPZOXB0MDNrf1r6"
 			+ "nuQUINocHgkApraQtS2/P7kAAAAASUVORK5CYII=";
-	/**
-	 * <p>
-	 * The add image seen in the menu bar having the shape of red, transparent
-	 * minus sign.
-	 * </p>
-	 * 
-	 * @since 0.1
-	 */
-	public static final ImageIcon REMOVE_IMG = new ImageIcon(Base64
-			.decode(ImageCreator.REMOVE));
-
 	private static final String TXT_DISCLAIMER = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAAAsklEQVR42mL8//8/A7kAIICYGCgAAAFEkWaAACJJM2MjQwEQB8D4AAHEQqQm"
 			+ "ASC1AIgf/K9nmAATBwggJiI1HgDiDUCNBchyAAFEjLNBNl4AalyALgEQQAygqELGDA3/HYA4"
 			+ "AcpuAOIL6GpgGCCAsPn5AxBPgDq3HogNcTkJIICwmgi18T8QL8BlKwgDBBAuP4NC9CEQN+AL"
 			+ "DIAAYqQkeQIEEEUpDCCAKNIMEEAUaQYIMABFQmtvHnE2kgAAAABJRU5ErkJggg==";
-	/**
-	 * <p>
-	 * The disclaimer image.
-	 * </p>
-	 */
-	public static final ImageIcon IMG_DISCLAIMER = new ImageIcon(Base64
-			.decode(ImageCreator.TXT_DISCLAIMER));
-
 	private static final String TXT_TOPICS = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAAA0UlEQVR42mL8//8/A7kAIIBY0AUYG1G4BkB8AVngfz2CDRBATFgMbADiByB1"
@@ -426,28 +338,100 @@ public class ImageCreator {
 			+ "BBC6Zlio9kMNugC10R7KX4CsGCCA0DWDnOUANcQBGucgkIiuEQQAAoiRkrQNEEAU"
 			+ "JU+AAKJIM0CAAQBcCi/wtU5IcgAAAABJRU5ErkJggg==";
 
-	public static final ImageIcon IMG_CUT = new ImageIcon(Base64
-			.decode(cutImageText));
-	public static final ImageIcon IMG_COPY = new ImageIcon(Base64
-			.decode(copyImageText));
-	public static final ImageIcon IMG_PASTE = new ImageIcon(Base64
-			.decode(pasteImageText));
-	public static final ImageIcon IMG_SELECTALL = new ImageIcon(Base64
-			.decode(selectAllImageText));
+	public static final ImageIcon IMG_OWASP_IMAGE_SML = new ImageIcon(B64
+			.decode(TXT_OWASP_SMALL));
 
-	public static final ImageIcon IMG_LKF = new ImageIcon(Base64
-			.decode(TXT_LKF));
+	public static final ImageIcon IMG_CLOSE = new ImageIcon(B64
+			.decode(TXT_CLOSE));
 
-	public static final ImageIcon IMG_TOPICS = new ImageIcon(Base64
-			.decode(ImageCreator.TXT_TOPICS));
+	/**
+	 * <p> The owasp image being displayed in the about box. This image is originally a png file. </p>.
+	 * @since  0.4
+	 */
+	public static final ImageIcon IMG_OWASP = new ImageIcon(B64
+			.decode(TXT_OWASP));
 
-	public static final ImageIcon IMG_PREFERENCES = new ImageIcon(Base64
-			.decode(TXT_PREFS));
-	public static final ImageIcon IMG_HELP = new ImageIcon(Base64
-			.decode(TXT_HELP));
-	public static final ImageIcon IMG_FAQ = new ImageIcon(Base64
-			.decode(TXT_FAQ));
-	public static final ImageIcon IMG_ABOUT = new ImageIcon(Base64
-			.decode(TXT_ABOUT));
+	/**
+	 * <p> The image being displayed at the top left of the frame, when the UI manager is windows based. This image is originally a png file. </p>.
+	 * @since  0.3
+	 */
+	public static final ImageIcon IMG_FRAME = new ImageIcon(B64
+			.decode(TXT_FRAMEICON));
+
+	/**
+	 * <p> The exit image seen in the menu bar. This is an original gif file. </p>
+	 * @since  0.1
+	 */
+	public static final ImageIcon IMG_EXIT = new ImageIcon(B64
+			.decode(TXT_EXIT));
+
+	/**
+	 * <p> The stop imager seen in the menu bar, as well as various buttons within the main frame. </p>
+	 */
+	public static final ImageIcon IMG_STOP = new ImageIcon(B64
+			.decode(TXT_STOP));
+
+	/**
+	 * <p> The pause image seen in the menu bar. This is an original gif file. </p>
+	 * @since  0.1
+	 */
+	public static final ImageIcon IMG_PAUSE = new ImageIcon(B64
+			.decode(TXT_PAUSE));
+
+	/**
+	 * <p>The save image icon seen in the 'save' on the menu bar.</p>
+	 * @since 1.2
+	 */
+	public static final ImageIcon IMG_SAVE = new ImageIcon(B64.decode(TXT_SAVE));
+	/**
+	 * <p> The start image seen in the menu bar having the shape of a play button. This is an original gif file. </p>
+	 * @since  0.1
+	 */
+	public static final ImageIcon IMG_START = new ImageIcon(B64
+			.decode(TXT_START));
+
+	/**
+	 * <p> The add image seen in the menu bar having the shape of red, transparent cross. This is an original png file. </p>
+	 * @since  0.1
+	 */
+	public static final ImageIcon IMG_ADD = new ImageIcon(B64
+			.decode(TXT_ADD));
+
+	public static final ImageIcon IMG_UPDATE = new ImageIcon(B64
+			.decode(TXT_UPDATE));
+
+	/**
+	 * <p> The add image seen in the menu bar having the shape of red, transparent minus sign. </p>
+	 * @since  0.1
+	 */
+	public static final ImageIcon IMG_REMOVE = new ImageIcon(B64
+			.decode(TXT_REMOVE));
+
+	/**
+	 * <p> The disclaimer image. </p>
+	 */
+	public static final ImageIcon IMG_DISCLAIMER = new ImageIcon(B64
+			.decode(TXT_DISCLAIMER));
+
+	public static final ImageIcon IMG_CUT = new ImageIcon(B64
+			.decode(TXT_cutImageText));
+	public static final ImageIcon IMG_COPY = new ImageIcon(B64
+			.decode(TXT_copyImageText));
+	public static final ImageIcon IMG_PASTE = new ImageIcon(B64
+			.decode(TXT_pasteImageText));
+	public static final ImageIcon IMG_SELECTALL = new ImageIcon(B64
+			.decode(TXT_selectAllImageText));
+
+	public static final ImageIcon IMG_LKF = new ImageIcon(B64.decode(TXT_LKF));
+
+	public static final ImageIcon IMG_TOPICS = new ImageIcon(B64.decode(TXT_TOPICS));
+
+	public static final ImageIcon IMG_PREFERENCES = new ImageIcon(B64.decode(TXT_PREFS));
+	
+	public static final ImageIcon IMG_HELP = new ImageIcon(B64.decode(TXT_HELP));
+	
+	public static final ImageIcon IMG_FAQ = new ImageIcon(B64.decode(TXT_FAQ));
+	
+	public static final ImageIcon IMG_ABOUT = new ImageIcon(B64.decode(TXT_ABOUT));
 
 }

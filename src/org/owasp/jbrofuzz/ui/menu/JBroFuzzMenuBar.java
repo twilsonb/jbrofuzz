@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
  * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
  * 
@@ -41,6 +41,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.owasp.jbrofuzz.fuzz.io.OpenSession;
+import org.owasp.jbrofuzz.fuzz.io.SaveSession;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.SwingWorker3;
@@ -96,10 +98,23 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		this.add(help);
 
 		// File
-		final JMenuItem exit = new JMenuItem("Exit", ImageCreator.EXIT_IMG);
+		final JMenuItem open = new JMenuItem("Open...");
+		final JMenuItem save = new JMenuItem("Save", ImageCreator.IMG_SAVE);
+		final JMenuItem exit = new JMenuItem("Exit", ImageCreator.IMG_EXIT);
+
+		open.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+
+		save.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+
+
 		exit.setAccelerator(KeyStroke.getKeyStroke('1', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
+		file.add(open);
+		file.add(save);
+		file.addSeparator();
 		file.add(exit);
 		// Edit
 
@@ -161,7 +176,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final JMenu lookAndFeel = new JMenu("Look and Feel");
 		lookAndFeel.setIcon(ImageCreator.IMG_LKF);
 		final UIManager.LookAndFeelInfo[] installedFeels = UIManager
-				.getInstalledLookAndFeels();
+		.getInstalledLookAndFeels();
 		final ButtonGroup group = new ButtonGroup();
 
 		for (int i = 0; i < Math.min(installedFeels.length, 7); i++) {
@@ -177,11 +192,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			rb.addItemListener(new ItemListener() {
 				public void itemStateChanged(final ItemEvent ie) {
 					final JRadioButtonMenuItem rbi = (JRadioButtonMenuItem) ie
-							.getSource();
+					.getSource();
 
 					if (rbi.isSelected()) {
 						final UIManager.LookAndFeelInfo info = (UIManager.LookAndFeelInfo) rbi
-								.getClientProperty("Look and Feel Name");
+						.getClientProperty("Look and Feel Name");
 
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run() {
@@ -190,28 +205,28 @@ public class JBroFuzzMenuBar extends JMenuBar {
 									UIManager.setLookAndFeel(info
 											.getClassName());
 									SwingUtilities
-											.updateComponentTreeUI(JBroFuzzMenuBar.this
-													.getFrame());
+									.updateComponentTreeUI(JBroFuzzMenuBar.this
+											.getFrame());
 								} catch (final UnsupportedLookAndFeelException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel");
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel");
 								} catch (final IllegalAccessException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel");
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel");
 								} catch (final ClassNotFoundException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel");
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel");
 								} catch (final InstantiationException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel");
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel");
 								}
 
 							}
@@ -224,11 +239,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		view.add(lookAndFeel);
 
 		// Panel
-		start = new JMenuItem("Start", ImageCreator.START_IMG);
-		graph = new JMenuItem("Graph", ImageCreator.PAUSE_IMG);
-		stop = new JMenuItem("Stop", ImageCreator.STOP_IMG);
-		add = new JMenuItem("Add", ImageCreator.ADD_IMG);
-		remove = new JMenuItem("Remove", ImageCreator.REMOVE_IMG);
+		start = new JMenuItem("Start", ImageCreator.IMG_START);
+		graph = new JMenuItem("Graph", ImageCreator.IMG_PAUSE);
+		stop = new JMenuItem("Stop", ImageCreator.IMG_STOP);
+		add = new JMenuItem("Add", ImageCreator.IMG_ADD);
+		remove = new JMenuItem("Remove", ImageCreator.IMG_REMOVE);
 
 		add.setAccelerator(KeyStroke.getKeyStroke('=', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
@@ -268,7 +283,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final JMenuItem faq = new JMenuItem("FAQ", ImageCreator.IMG_FAQ);
 		// final JMenuItem tutorial = new JMenuItem("Tutorial");
 		final JMenuItem website = new JMenuItem("JBroFuzz Website...",
-				ImageCreator.OWASP_IMAGE_SML);
+				ImageCreator.IMG_OWASP_IMAGE_SML);
 		final JMenuItem disclaimer = new JMenuItem("Disclaimer",
 				ImageCreator.IMG_DISCLAIMER);
 		final JMenuItem about = new JMenuItem("About", ImageCreator.IMG_ABOUT);
@@ -288,6 +303,26 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		//
 		// The action listeners for each component...
 		//
+
+		// File -> Open
+		open.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				new OpenSession(mFrameWindow);
+				
+			}
+		});
+		// File -> Save
+		save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				new SaveSession(mFrameWindow);
+				
+			}
+		}
+		);
+
+		// File -> Exit
 		exit.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -448,27 +483,19 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						final SwingWorker3 worker = new SwingWorker3() {
-							
+
 							JBroFuzzPanel p;
-							
+
 							@Override
 							public Object construct() {
-								
+
 								int c = getFrame().getTp().getSelectedIndex();
 								p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 								p.start();
-								
+
 								return "start-menu-bar-return";
 							}
 
-							@Override
-							public void finished() {
-								// Make sure while sniffing you don't stop
-								if(!p.getName().startsWith(" Sniffing ")) {
-									p.stop();
-								}
-								
-							}
 						};
 						worker.start();
 					}
@@ -482,11 +509,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						
+
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 						p.stop();
-						
+
 					}
 				});
 
@@ -497,11 +524,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						
+
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 						p.graph();
-						
+
 					}
 				});
 			}
@@ -512,11 +539,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						
+
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 						p.add();
-						
+
 
 					}
 				});
@@ -541,11 +568,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						
+
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 						p.remove();
-						
+
 					}
 				});
 
@@ -595,9 +622,9 @@ public class JBroFuzzMenuBar extends JMenuBar {
 							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 						} catch (final IOException ex) {
 							JBroFuzzMenuBar.this
-									.getFrame()
-									.log(
-											"Could not launch link in external browser");
+							.getFrame()
+							.log(
+									"Could not launch link in external browser");
 						}
 					}
 				});
@@ -633,9 +660,9 @@ public class JBroFuzzMenuBar extends JMenuBar {
 	private JBroFuzzWindow getFrame() {
 		return mFrameWindow;
 	}
-	
+
 	public void setEnabledPanelOptions(boolean [] b) {
-		
+
 		if(b.length == 5) {
 			start.setEnabled(b[0]);
 			stop.setEnabled(b[1]);
@@ -644,4 +671,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			remove.setEnabled(b[4]);
 		}
 	}
+	
+
 }

@@ -67,7 +67,7 @@ public class WindowPlotter extends JFrame {
 
 		super("JBroFuzz - " + name);
 		setLayout(new BorderLayout());
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.IMG_FRAME.getImage());
 
 		// Get the total number of files - early on as its used for the length
 		final String[] x_data =  FileHandler.getFileList();

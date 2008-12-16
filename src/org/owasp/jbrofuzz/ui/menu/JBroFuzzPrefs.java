@@ -70,7 +70,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	public JBroFuzzPrefs(final JFrame parent) {
 
 		super(parent, " JBroFuzz - Preferences ", true);
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 		setFont(new Font("Verdana", Font.PLAIN, 12));
 

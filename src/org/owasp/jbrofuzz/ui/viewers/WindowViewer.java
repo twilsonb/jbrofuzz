@@ -80,7 +80,7 @@ public class WindowViewer extends JFrame {
 	public WindowViewer(final JBroFuzzPanel parent, final String name, final int typeOfPanel) {
 		
 		super("JBroFuzz - File Viewer - " + name + ".html");
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.IMG_FRAME.getImage());
 
 		// The Container Pane
 		final Container pane = getContentPane();

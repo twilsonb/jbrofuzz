@@ -62,7 +62,7 @@ public class CheckForUpdates extends JDialog {
 	public CheckForUpdates(final JBroFuzzPanel parent) {
 
 		super(parent.getFrame(), " JBroFuzz - Check For Updates ", true);
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		setLayout(new BorderLayout());
@@ -86,7 +86,7 @@ public class CheckForUpdates extends JDialog {
 
 		// Scroll Panels for the text area and image
 
-		final JLabel imageLabel = new JLabel(ImageCreator.OWASP_IMAGE);
+		final JLabel imageLabel = new JLabel(ImageCreator.IMG_OWASP);
 		final JScrollPane providersTableScrollPane = new JScrollPane(imageLabel);
 		providersTableScrollPane.setColumnHeader(null);
 		providersTableScrollPane.setVerticalScrollBarPolicy(20);

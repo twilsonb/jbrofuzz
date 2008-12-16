@@ -60,7 +60,7 @@ public class PropertiesViewer extends JFrame {
 	public PropertiesViewer(final JBroFuzzPanel parent, final String header,
 			final String text) {
 		super("JBroFuzz - " + header);
-		setIconImage(ImageCreator.FRAME_IMG.getImage());
+		setIconImage(ImageCreator.IMG_FRAME.getImage());
 
 		// The Container Pane
 		final Container pane = getContentPane();
