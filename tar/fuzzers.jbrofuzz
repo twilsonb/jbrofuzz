@@ -95,6 +95,17 @@
 # Version 1.2
 #
 
+P:HTT-PMT-EDS:Uppercase HTTP Methods:8
+> HTTP Methods | Replacive Fuzzers | Uppercase Fuzzers
+GET
+POST
+HEAD
+PUT
+DELETE
+TRACE
+PROPFIND
+OPTIONS
+
 P:INT-LOW:Lowercase Integer Overflows:12
 > Exploits | Replacive Fuzzers | Integer Overflows | Lowercase Fuzzers
 -1

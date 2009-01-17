@@ -1,43 +1,58 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
 package org.owasp.jbrofuzz.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.prefs.Preferences;
 
-import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import javax.swing.event.*;
-
-import org.owasp.jbrofuzz.*;
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
 import org.owasp.jbrofuzz.graph.GraphingPanel;
-import org.owasp.jbrofuzz.ui.headers.HeadersPanel;
-import org.owasp.jbrofuzz.ui.menu.*;
-import org.owasp.jbrofuzz.ui.panels.*;
+import org.owasp.jbrofuzz.headers.HeadersPanel;
+import org.owasp.jbrofuzz.payloads.PayloadsPanel;
+import org.owasp.jbrofuzz.system.SystemPanel;
+import org.owasp.jbrofuzz.ui.menu.JBroFuzzMenuBar;
+import org.owasp.jbrofuzz.ui.menu.JBroFuzzToolBar;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -55,10 +70,11 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  */
 public class JBroFuzzWindow extends JFrame {
 
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8055724052613595729L;
 
 	/**
 	 * Unique int identifier for the Graphing Panel
@@ -66,9 +82,9 @@ public class JBroFuzzWindow extends JFrame {
 	public static final int ID_PANEL_GRAPHING = 121;
 
 	/**
-	 * Unique int identifier for the Sniffing Panel
+	 * Unique int identifier for the Headers Panel
 	 */
-	public static final int ID_PANEL_SNIFFING = 123;
+	public static final int ID_PANEL_HEADERS = 123;
 
 	/**
 	 * Unique int identifier for the Fuzzing Panel
@@ -76,7 +92,7 @@ public class JBroFuzzWindow extends JFrame {
 	public static final int ID_PANEL_FUZZING = 124;
 
 	/**
-	 * Unique int identifier for the Generators Panel
+	 * Unique int identifier for the Payloads Panel
 	 */
 	public static final int ID_PANEL_PAYLOADS = 125;
 
@@ -111,21 +127,28 @@ public class JBroFuzzWindow extends JFrame {
 
 	// The toolbar of the window
 	private JBroFuzzToolBar tb;
-
+	
+	// The file to which the window saves to
+	private File currentFile;
+	// A boolean to see if the current file is set
+	private boolean isCurrentFileSet;
+	
 	/**
 	 * <p>
-	 * The constructor of the main window launched in JBroFuzz. This class
-	 * should be instantiated as a singleton and never again.
+	 * The constructor of the main window launched in JBroFuzz. 
 	 * </p>
 	 * 
 	 * @param mJBroFuzz
 	 *            JBroFuzz
 	 */
 	public JBroFuzzWindow(final JBroFuzz mJBroFuzz) {
+		
 		// The frame
-		super("JBroFuzz " + JBroFuzzFormat.VERSION);
+		super(" JBroFuzz - Untitled ");
 		this.mJBroFuzz = mJBroFuzz;
-
+		this.currentFile = new File(System.getProperty("user.home") + File.separator + "Untitled.jbrofuzz");
+		this.isCurrentFileSet = false;
+		
 		// The container pane
 		final Container pane = getContentPane();
 		pane.setLayout(new BorderLayout());
@@ -162,7 +185,7 @@ public class JBroFuzzWindow extends JFrame {
 		tp.add(pp.getName(), pp);
 		tp.add(sp.getName(), sp);
 		
-		tp.setSelectedIndex(0);
+		tp.setSelectedIndex(3);
 		
 		tp.addChangeListener(new ChangeListener() {
 			// Change listener for the tabbed pane
@@ -245,9 +268,102 @@ public class JBroFuzzWindow extends JFrame {
 	 * @return mMenuBar
 	 */
 	public JBroFuzzMenuBar getJBroMenuBar() {
+		
 		return mb;
+		
+	}
+	
+	/**
+	 * <p>Check if you have a filename from an opened file.</p>
+	 * 
+	 * @return true if a file has been opened by the user,
+	 * but not closed.
+	 *
+	 * @see #setOpenFileTo(File) {@link #setCloseFile()}
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public boolean isCurrentFileOpened() {
+		
+		return isCurrentFileSet;
+		
+	}
+	
+	/**
+	 * Given a file, set the UI to that file as being 
+	 * opened
+	 * 
+	 * @param f
+	 *
+	 * @see #setCloseFile()
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public void setOpenFileTo(final File f) {
+		
+		this.currentFile = f;
+		this.isCurrentFileSet = true;
+		
+		String name = f.getName(); 
+		
+		if(name.endsWith(".jbrofuzz")) {
+			
+			name = name.substring(0, name.indexOf(".jbrofuzz"));
+			
+		} 
+
+		this.setTitle(name);
+
+	}
+	
+	/**
+	 * Close, in UI terms the file being used, setting 
+	 * it to the default "Untitled"
+	 * 
+	 *
+	 * @see #setOpenFileTo(File)
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public void setCloseFile() {
+
+		this.isCurrentFileSet = false;
+		
+		this.currentFile = new File(System.getProperty("user.home") + File.separator + "Untitled.jbrofuzz");
+		this.getPanelFuzzing().setTextURL("https://www.owasp.org");
+		this.getPanelFuzzing().setTextRequest(JBroFuzzFormat.URL_REQUEST);
+		
 	}
 
+	/**
+	 * <p>Method returning the current file opened.</p>
+	 * 
+	 * @return File the file opened, default is "Untitled.jbrofuzz"
+	 *
+	 * @see #setCloseFile()
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public File getCurrentFileOpened() {
+		
+		return this.currentFile;
+		
+	}
+
+	/**
+	 * <p>Method for returning the tool bar present within the window.</p>
+	 * 
+	 * @return JBroFuzzToolBar The Tool Bar of JBroFuzz
+	 *
+	 * @see #getJBroMenuBar() 
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public JBroFuzzToolBar getJBroToolBar() {
 		return tb;
 	}
@@ -337,6 +453,12 @@ public class JBroFuzzWindow extends JFrame {
 			}
 		});
 	}
+	
+	public void setTitle(String s) {
+		
+		super.setTitle(" JBroFuzz - " + JBroFuzzFormat.centerAbbreviate(s, 256) );
+		
+	}
 
 	/**
 	 * Set which tab to hide based on the int n of ID values. These are taken
@@ -348,61 +470,121 @@ public class JBroFuzzWindow extends JFrame {
 	public void setTabHide(final int n) {
 		
 		if (n == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
-			tp.remove(pp);
+			if(isTabOpen(pp.getName())) {
+			
+				tp.remove(pp);
+				
+			}
 		}
 		
 		if (n == JBroFuzzWindow.ID_PANEL_FUZZING) {
-			tp.remove(fp);
+			if(isTabOpen(fp.getName())) {
+			
+				tp.remove(fp);
+			}
 		}
 		
-		if (n == JBroFuzzWindow.ID_PANEL_SNIFFING) {
-			tp.remove(sp);
+		if (n == JBroFuzzWindow.ID_PANEL_HEADERS) {
+			if(isTabOpen(sp.getName())) {
+				
+				tp.remove(sp);
+				
+			}
 		}
 		
 		if (n == JBroFuzzWindow.ID_PANEL_SYSTEM) {
-			tp.remove(cp);
+			if(isTabOpen(cp.getName())) {
+			
+				tp.remove(cp);
+			}
 		}
 		
 		if (n == JBroFuzzWindow.ID_PANEL_GRAPHING) {
-			tp.remove(gp);
+			if(isTabOpen(gp.getName())) {
+				
+				tp.remove(gp);
+			}
 		}
 
 	}
 
 	/**
-	 * Set which tab to show based on the int n of ID values. These are taken
-	 * from the FrameWindow.
+	 * <p>Set which tab to show based on the int n of ID values. These are taken
+	 * from the JBroFuzzWindow.</p>
+	 * <p>If the tab is already present and does not need to be added, set the
+	 * tab as the selected component.</p>
 	 * 
-	 * @param n
-	 *            int
+	 * 
+	 * @param n The integer value representing each panel, defined in this class.
 	 */
 	public void setTabShow(final int n) {
 		
+		
 		if (n == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
-			tp.addTab(pp.getName(), pp);
+			
+			if(!isTabOpen(pp.getName())) {
+				tp.addTab(pp.getName(), pp);
+			}
 			tp.setSelectedComponent(pp);
 		}
 		
 		if (n == JBroFuzzWindow.ID_PANEL_FUZZING) {
-			tp.addTab(fp.getName(), fp);
+			
+			if(!isTabOpen(fp.getName())) {
+				tp.addTab(fp.getName(), fp);
+			}
 			tp.setSelectedComponent(fp);
 		}
 		
-		if (n == JBroFuzzWindow.ID_PANEL_SNIFFING) {
-			tp.addTab(sp.getName(), sp);
+		if (n == JBroFuzzWindow.ID_PANEL_HEADERS) {
+			
+			if(!isTabOpen(sp.getName())) {
+				tp.addTab(sp.getName(), sp);
+			}
 			tp.setSelectedComponent(sp);
 		}
 		
 		if (n == JBroFuzzWindow.ID_PANEL_SYSTEM) {
-			tp.addTab(cp.getName(), cp);
+			
+			if(!isTabOpen(cp.getName())) {
+				tp.addTab(cp.getName(), cp);
+			}
 			tp.setSelectedComponent(cp);
 		}
 		
 		if (n == JBroFuzzWindow.ID_PANEL_GRAPHING) {
-			tp.addTab(gp.getName(), gp);
+			
+			if(!isTabOpen(gp.getName())) {
+				tp.addTab(gp.getName(), gp);
+			}
 			tp.setSelectedComponent(gp);
 		}
 
+	}
+	
+	/**
+	 * <p>If a tab by the name specified, is open will return true.</p>
+	 * 
+	 * @param name The name of the tab, e.g. " Fuzzing ", " Payloads ", ...
+	 * @return True if tab with that name is open
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public boolean isTabOpen(String name) {
+
+		for(int i = 0; i < tp.getTabCount(); i++) {
+		
+			if(name.equals((((JBroFuzzPanel)tp.getComponent(i)).getName()))) {
+				 
+				return true;
+				
+			}
+		}
+		
+		return false;
+		
 	}
 
 }

@@ -1,41 +1,55 @@
 /**
  * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
-package org.owasp.jbrofuzz.ui.panels;
+package org.owasp.jbrofuzz.payloads;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableRowSorter;
 
-import org.owasp.jbrofuzz.ui.*;
-import org.owasp.jbrofuzz.ui.viewers.*;
-import org.owasp.jbrofuzz.ui.tablemodels.*;
+import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
+import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
-
-import org.apache.commons.lang.*;
 
 /**
  * <p>
@@ -48,137 +62,37 @@ import org.apache.commons.lang.*;
 public class PayloadsPanel extends JBroFuzzPanel {
 	
 
-	private class CategoriesRowListener implements ListSelectionListener {
-		
-		/**
-		 * <p>Method for the categories table selection row.</p>
-		 * 
-		 * @param event
-		 *            ListSelectionEvent
-		 */
-		public void valueChanged(final ListSelectionEvent event) {
-			
-			if (event.getValueIsAdjusting()) {
-				return;
-			}
-			
-			final int c = categoriesTable.getSelectedRow();
-			final String value = (String) categoriesTableModel.getValueAt(categoriesTable.convertRowIndexToModel(c), 0);
-
-			fuzzersTable.setRowSorter(null);
-			fuzzersTableModel.setData(getFrame().getJBroFuzz().getDatabase().getGenerators(value));
-			sorter2 = new TableRowSorter<SingleColumnModel>(fuzzersTableModel);
-			fuzzersTable.setRowSorter(sorter2);
-			
-			fuzzersPanel.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createTitledBorder(" " + value + " "),
-					BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-
-			fuzzerInfoTextArea.setText("");
-			fuzzerInfoTextArea.setCaretPosition(0);
-
-			payloadInfoTextArea.setText("");
-			payloadInfoTextArea.setCaretPosition(0);
-			
-		}
-	}
-	
-	
-	private class FuzzersRowListener implements ListSelectionListener {
-		
-		/**
-		 * <p>
-		 * Method for the name table selection row.
-		 * </p>
-		 * 
-		 * @param event
-		 *            ListSelectionEvent
-		 */
-		public void valueChanged(final ListSelectionEvent event) {
-			
-			if (event.getValueIsAdjusting()) {
-				return;
-			}
-
-			final int d = fuzzersTable.getSelectedRow();
-			final String name = (String) fuzzersTableModel.getValueAt(fuzzersTable.convertRowIndexToModel(d), 0);
-			final String id = getFrame().getJBroFuzz().getDatabase().getIdFromName(name);
-
-			payloadsTableModel.setData(getFrame().getJBroFuzz().getDatabase().getPayloads(id));
-
-			if (payloadsTableModel.getRowCount() > 0) {
-				
-				payloadsPanel.setBorder(BorderFactory.createCompoundBorder(
-						BorderFactory.createTitledBorder(" " + name + " - "
-								+ id + " "), BorderFactory.createEmptyBorder(1,
-								1, 1, 1)));
-
-				fuzzerInfoTextArea.setText("\nFuzzer Name: "
-						+ name
-						+ "\n"
-						+ "Fuzzer Type: "
-						+ ((getFrame().getJBroFuzz().getDatabase()
-								.getGenerator(id).isRecursive()) ? "Recursive"
-								: "Replacive") + "\n" + "Fuzzer Id:   " + id
-						+ "\n\n" + "Total Number of Payloads: "
-						+ getFrame().getJBroFuzz().getDatabase().getSize(id));
-				fuzzerInfoTextArea.setCaretPosition(fuzzerInfoTextArea
-						.getText().length());
-				
-			}
-
-			payloadInfoTextArea.setText("");
-			payloadInfoTextArea.setCaretPosition(0);
-
-		}
-	}
-	
-	
-	private class PayloadsRowListener implements ListSelectionListener {
-		
-		/**
-		 * <p>
-		 * Method for the name table selection row.
-		 * </p>
-		 * 
-		 * @param event
-		 *            ListSelectionEvent
-		 */
-		public void valueChanged(final ListSelectionEvent event) {
-			
-			if (event.getValueIsAdjusting()) {
-				return;
-			}
-
-			final int d = payloadsTable.getSelectedRow();
-			final String payload = (String) payloadsTableModel.getValueAt(d, 0);
-
-			payloadInfoTextArea.setText("\nPayload Length: " + payload.length()
-					+ "\n\n" + "Is Numeric? " + StringUtils.isNumeric(payload)
-					+ "\n\n" + "Is Alpha? " + StringUtils.isAlpha(payload)
-					+ "\n\n" + "Has whitespaces? "
-					+ StringUtils.isWhitespace(payload) + "\n\n");
-			payloadInfoTextArea.setCaretPosition(0);
-
-		}
-	}
-	
 	private static final long serialVersionUID = -5848191307114097542L;
 	
 	// The JPanels carrying the components
-	private JPanel categoriesPanel, fuzzersPanel, payloadsPanel;
+	private JPanel categoriesPanel;
+
+	JPanel payloadsPanel;
+
+	JPanel fuzzersPanel;
 
 	// The JTables carrying the data
-	private JTable categoriesTable, fuzzersTable, payloadsTable;
+	JTable payloadsTable;
+
+	JTable fuzzersTable;
+
+	JTable categoriesTable;
 
 	// The Table Models with a single column
-	private SingleColumnModel categoriesTableModel, fuzzersTableModel, payloadsTableModel;
+	SingleColumnModel payloadsTableModel;
+
+	SingleColumnModel fuzzersTableModel;
+
+	SingleColumnModel categoriesTableModel;
 	
 	// The row sorters for the two tables
-	private TableRowSorter<SingleColumnModel> sorter, sorter2;
+	private TableRowSorter<SingleColumnModel> sorter;
 
-	// The non-wrapping text panes
-	private NonWrappingTextPane fuzzerInfoTextArea, payloadInfoTextArea;
+	TableRowSorter<SingleColumnModel> sorter2;
+
+	NonWrappingTextPane payloadInfoTextArea;
+
+	NonWrappingTextPane fuzzerInfoTextArea;
 
 	/**
 	 * Constructor for the Payloads Panel.
@@ -213,7 +127,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		
 		categoriesTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
 		categoriesTable.setRowHeight(30);
-		categoriesTable.getSelectionModel().addListSelectionListener(new CategoriesRowListener());
+		categoriesTable.getSelectionModel().addListSelectionListener(new CategoriesRowListener(this));
 		
 		categoriesTable.setBackground(Color.BLACK);
 		categoriesTable.setForeground(Color.WHITE);
@@ -249,7 +163,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 
 		fuzzersTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
 		fuzzersTable.setRowHeight(30);
-		fuzzersTable.getSelectionModel().addListSelectionListener(new FuzzersRowListener());
+		fuzzersTable.getSelectionModel().addListSelectionListener(new FuzzersRowListener(this));
 		fuzzersTable.setBackground(Color.BLACK);
 		fuzzersTable.setForeground(Color.WHITE);
 
@@ -275,7 +189,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
 		payloadsTable.setRowHeight(30);
 		payloadsTable.getSelectionModel().addListSelectionListener(
-				new PayloadsRowListener());
+				new PayloadsRowListener(this));
 		payloadsTable.setBackground(Color.BLACK);
 		payloadsTable.setForeground(Color.WHITE);
 		payloadsTable.addMouseListener(new MouseAdapter() {

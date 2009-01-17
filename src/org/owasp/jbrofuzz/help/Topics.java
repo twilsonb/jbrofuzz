@@ -1,27 +1,33 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
-package org.owasp.jbrofuzz.ui.menu;
+package org.owasp.jbrofuzz.help;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -29,41 +35,48 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URL;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 
 /**
- * <p>
- * The about box used in the FrameWindow.
- * </p>
+ * <p>The main help window.</p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.7
+ * @author subere@uncon.org
+ * @version 1.2
  */
-public class JBRHelp extends JDialog implements TreeSelectionListener {
+public class Topics extends JFrame implements TreeSelectionListener {
 
-	private static final long serialVersionUID = -7783429547227101140L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8514525952768016091L;
+
 	// Dimensions of the about box
 	private static final int x = 650;
 	private static final int y = 400;
 	//
 	private static String FILE_NOT_FOUND = "Help file could not be located.";
+
+	// The final String Array of tree nodes
+	private static final String[] nodeNames = { "Help Topics", "Fuzzing", "Graphing", "Payloads", "Headers", "System" };
 
 	// The buttons
 	private JButton ok;
@@ -71,35 +84,58 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 	private JTree tree;
 	// The corresponding scroll panels
 	private JScrollPane helpScrPane, webdScrPane, tcpsScrPane, tcpfScrPane,
-			geneScrPane, sysmScrPane;
+	geneScrPane, sysmScrPane;
 	// The main split pane
 	private JSplitPane splitPane;
 
-	public JBRHelp(final JFrame parent) {
-		super(parent, " JBroFuzz - Help Topics ", true);
+	// The list of URLs
+	private URL[] topicsURL;
+
+	/**
+	 * <p>Boolean is true if Topics are already showing.</p>
+	 */
+	public static boolean topicsShowing = false;
+	
+	/**
+	 * <p>The constructor of the help topics JDialog.</p>
+	 * 
+	 * @param parent
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public Topics(final JBroFuzzWindow parent) {
+
+		if(topicsShowing) {
+			return;
+		}
+		topicsShowing = true;
+		
+		//super(parent, " JBroFuzz - Help Topics ", true);
+		setTitle(" JBroFuzz - Help Topics ");
+		
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-		final URL helpURL = ClassLoader.getSystemClassLoader().getResource(
-				"help/index.html");
-		final URL webdURL = ClassLoader.getSystemClassLoader().getResource(
-				"help/webd.html");
-		final URL tcpsURL = ClassLoader.getSystemClassLoader().getResource(
-				"help/tcps.html");
-		final URL tcpfURL = ClassLoader.getSystemClassLoader().getResource(
-				"help/tcpf.html");
-		final URL geneURL = ClassLoader.getSystemClassLoader().getResource(
-				"help/gene.html");
-		final URL sysmURL = ClassLoader.getSystemClassLoader().getResource(
-				"help/sysm.html");
-		final URL osrcURL = ClassLoader.getSystemClassLoader().getResource(
-				"help/osrc.html");
+		topicsURL = new URL[nodeNames.length];
+		for (int i = 0; i < nodeNames.length; i++) {
+			if (i < 10) {
+				topicsURL[i] = ClassLoader.getSystemClassLoader().getResource(
+						"help/topics-0" + i + ".html");
+			} else {
+				topicsURL[i] = ClassLoader.getSystemClassLoader().getResource(
+						"help/topics-" + i + ".html");
+			}
+		}
 
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
-				"Help Topics");
-		createNodes(top);
+				nodeNames[0]);
+		for (int i = 1; i < nodeNames.length; i++) {
+			top.add(new DefaultMutableTreeNode(nodeNames[i]));
+		}
 
 		// Create a tree that allows one selection at a time.
 		tree = new JTree(top);
@@ -113,7 +149,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 		JEditorPane helpPane;
 		try {
-			helpPane = new JEditorPane(helpURL);
+			helpPane = new JEditorPane(topicsURL[0]);
 		} catch (final IOException e1) {
 			helpPane = new JEditorPane();
 			helpPane.setText(FILE_NOT_FOUND);
@@ -123,7 +159,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 		JEditorPane webdPane;
 		try {
-			webdPane = new JEditorPane(webdURL);
+			webdPane = new JEditorPane(topicsURL[1]);
 		} catch (final IOException e1) {
 			webdPane = new JEditorPane();
 			webdPane.setText(FILE_NOT_FOUND);
@@ -133,7 +169,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 		JEditorPane tcpfPane;
 		try {
-			tcpfPane = new JEditorPane(tcpfURL);
+			tcpfPane = new JEditorPane(topicsURL[2]);
 		} catch (final IOException e1) {
 			tcpfPane = new JEditorPane();
 			tcpfPane.setText(FILE_NOT_FOUND);
@@ -143,7 +179,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 		JEditorPane tcpsPane;
 		try {
-			tcpsPane = new JEditorPane(tcpsURL);
+			tcpsPane = new JEditorPane(topicsURL[3]);
 		} catch (final IOException e1) {
 			tcpsPane = new JEditorPane();
 			tcpsPane.setText(FILE_NOT_FOUND);
@@ -153,7 +189,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 		JEditorPane genePane;
 		try {
-			genePane = new JEditorPane(geneURL);
+			genePane = new JEditorPane(topicsURL[4]);
 		} catch (final IOException e1) {
 			genePane = new JEditorPane();
 			genePane.setText(FILE_NOT_FOUND);
@@ -163,7 +199,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 		JEditorPane sysmPane;
 		try {
-			sysmPane = new JEditorPane(sysmURL);
+			sysmPane = new JEditorPane(topicsURL[5]);
 		} catch (final IOException e1) {
 			sysmPane = new JEditorPane();
 			sysmPane.setText(FILE_NOT_FOUND);
@@ -171,14 +207,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		sysmPane.setEditable(false);
 		sysmScrPane = new JScrollPane(sysmPane);
 
-		JEditorPane osrcPane;
-		try {
-			osrcPane = new JEditorPane(osrcURL);
-		} catch (final IOException e1) {
-			osrcPane = new JEditorPane();
-			osrcPane.setText(FILE_NOT_FOUND);
-		}
-		osrcPane.setEditable(false);
+
 		// osrcScrPane = new JScrollPane(osrcPane);
 
 		// Create the top split pane, showing the treeView and the Preferences
@@ -196,7 +225,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		sysmScrPane.setMinimumSize(minimumSize);
 		treeView.setMinimumSize(minimumSize);
 		splitPane.setDividerLocation(100);
-		splitPane.setPreferredSize(new Dimension(JBRHelp.x, JBRHelp.y));
+		splitPane.setPreferredSize(new Dimension(Topics.x, Topics.y));
 
 		// Add the split pane to this panel
 		getContentPane().add(splitPane, BorderLayout.CENTER);
@@ -210,11 +239,12 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						JBRHelp.this.dispose();
-					}
-				});
+				//SwingUtilities.invokeLater(new Runnable() {
+				//	public void run() {
+						topicsShowing = false;
+						Topics.this.dispose();
+				//	}
+				// });
 			}
 		});
 
@@ -224,37 +254,29 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 		splitPane.setDividerLocation(150);
 		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
 				.abs(parent.getLocation().y + 100));
-		this.setSize(JBRHelp.x, JBRHelp.y);
-		this.setMinimumSize(new Dimension(x, y));
+		
+		this.setSize(Topics.x, Topics.y);
+		this.setMinimumSize(new Dimension(x / 2, y / 2));
+		
 		setResizable(true);
 		setVisible(true);
-	}
+		
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(final WindowEvent e) {
+				topicsShowing = false;
+				dispose();
+			}
+		});
 
-	private void createNodes(final DefaultMutableTreeNode top) {
-
-		DefaultMutableTreeNode leaf = null;
-
-		leaf = new DefaultMutableTreeNode("Fuzzing");
-		top.add(leaf);
-
-		leaf = new DefaultMutableTreeNode("Sniffing");
-		top.add(leaf);
-
-		leaf = new DefaultMutableTreeNode("Payloads");
-		top.add(leaf);
-
-		leaf = new DefaultMutableTreeNode("Graphing");
-		top.add(leaf);
-
-		leaf = new DefaultMutableTreeNode("System");
-		top.add(leaf);
 
 	}
 
 	public void valueChanged(final TreeSelectionEvent e) {
 
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-				.getLastSelectedPathComponent();
+		.getLastSelectedPathComponent();
 
 		if (node == null) {
 			return;
@@ -276,7 +298,7 @@ public class JBRHelp extends JDialog implements TreeSelectionListener {
 			splitPane.setDividerLocation(150);
 
 		}
-		if (s.equalsIgnoreCase("Sniffing")) {
+		if (s.equalsIgnoreCase("Headers")) {
 			splitPane.setRightComponent(tcpsScrPane);
 			splitPane.setDividerLocation(150);
 

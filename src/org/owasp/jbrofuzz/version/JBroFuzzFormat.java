@@ -1,24 +1,30 @@
 /**
  * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
 package org.owasp.jbrofuzz.version;
@@ -52,6 +58,105 @@ public class JBroFuzzFormat {
 
 	/**
 	 * <p>
+	 * Each version of JBroFuzz has a code name, which is defined by this public
+	 * variable.
+	 * </p>
+	 */
+	public static String CODENAME = getCodeName(JBroFuzzFormat.VERSION);
+
+	/**
+	 * Formatting the date in ISO8601 standard format.
+	 */
+	public static final String DATE = getDate();
+
+	/**
+	 * <p>
+	 * The text, in html format, shown in the disclaimer box.
+	 * </p>
+	 */
+	public static final String DISCLAIMER = 
+		"<HTML>JBroFuzz generates requests and records the responses. It does not attempt to identify if a particular " +
+		"site is vulnerable or not; this requires further human analysis. <BR><BR>However, certain payload categories, like XSS, " +
+		"are crafted to try to successfully exploit flaws. Thus the human analyst would have to review the results " +
+		"in order to recognize if exploitation succeeded or not.<BR><BR>"
+		+ "The author of JBroFuzz takes no "
+		+ "legal or other responsibility for any problems that "
+		+ "might occur while running this program.<BR></HTML>";
+
+	/**
+	 * <p> The file name of the database including all payloads. This is expected to be 
+	 * included within the jar/exe file of JBroFuzz.</p>
+	 */
+	public static final String FILE_GNU = "generators.jbrofuzz";
+
+	/**
+	 * <p>
+	 * The default ISO language code, set to English (en).
+	 * </p>
+	 */
+	public static final String ISO_LAN_CODE = "en";
+
+	/**
+	 * The line distinguisher found in a file
+	 */
+	public static final String LINE_SEPARATOR = "-->";
+
+	/**
+	 * The preferences used for deciding whether or not to delete any blank
+	 * directories while exiting.
+	 */
+	public static final String PR_1 = "prefs.dir.delete";
+
+
+	/**
+	 * The preferences used for deciding whether or not to alling the tabs
+	 * at the top or bottom of the main window.
+	 * 
+	 * True represents top.
+	 */
+	public static final String PR_2 = "prefs.ui.tabs";;
+
+	/**
+	 * The preferences used for selecting the timeout in the socket created,
+	 * while fuzzing.
+	 */
+	public static final String PR_FUZZ_1 = "fuzz.socket.timeout.max";
+
+	/**
+	 * The preferences used for selecting the end of line character to be
+	 * appended to each line sent on the wire.
+	 */
+	public static final String PR_FUZZ_2 = "fuzz.end.of.line";
+
+	/**
+	 * The preferences used for keeping the "On The Wire" tab always 
+	 * selected.
+	 */
+	public static final String PR_FUZZ_3 = "fuzz.ui.show.wire";
+
+	/**
+	 * If true the panels displaying text will wrap.
+	 */
+	public static final String PR_WORD_WRAP = "prefs.word.wrap";
+
+	/**
+	 * The String displaying within the Fuzzing Request text area
+	 */
+	public static final String URL_REQUEST = "GET /index.php/Main_Page HTTP/1.1\n"
+		+ "Host: localhost\n"
+		+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\n"
+		+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n"
+		+ "Accept-Language: en-gb,en;q=0.5\n"
+		+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n\n";
+
+	/**
+	 * The web site used via means of the selecting "JBroFuzz Website on the
+	 * About menu.
+	 */
+	public static final String URL_WEBSITE = "http://www.owasp.org/index.php/Category:OWASP_JBroFuzz";
+
+	/**
+	 * <p>
 	 * The version of JBroFuzz in String format and always of the form "x.x"
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
@@ -63,108 +168,49 @@ public class JBroFuzzFormat {
 	 * The year in which the current <code>VERSION</code> of JBroFuzz was released.
 	 * </p>
 	 */
-	public static final String YEAR = "2008";
-	
-	/**
-	 * The preferences used for selecting the timeout in the socket created,
-	 * while fuzzing.
-	 */
-	public static final String PR_FUZZ_1 = "fuzz.socket.timeout.max";
-	
-	/**
-	 * The preferences used to decide whether or not to display binary files
-	 * in hex format.
-	 */
-	public static final String PR_SNIF_1 = "snif.display.hex";
-	
-	/**
-	 * The preferences used for deciding whether or not to delete any blank
-	 * directories while exiting.
-	 */
-	public static final String PR_1 = "prefs.dir.delete";
-	
-	/**
-	 * The preferences used for deciding whether or not to allign the tabs
-	 * at the top or bottom of the main window.
-	 * 
-	 * True represents top.
-	 */
-	public static final String PR_2 = "prefs.ui.tabs";
-	
-	/**
-	 * The web site used via means of the selecting "JBroFuzz Website on the
-	 * About menu.
-	 */
-	public static final String URL_WEBSITE = "http://www.owasp.org/index.php/Category:OWASP_JBroFuzz";
+	public static final String YEAR = "2009";
 
-	/**
-	 * <p> The file name of the database including all payloads. This is expected to be 
-	 * included within the jar/exe file of JBroFuzz.</p>
-	 */
-	public static final String FILE_GNU = "generators.jbrofuzz";
-
-	/**
-	 * The line distinguisher found in a file
-	 */
-	public static final String LINE_SEPARATOR = "-->";
-
-	
-	/**
-	 * <p>
-	 * Each version of JBroFuzz has a code name, which is defined by this public
-	 * variable.
-	 * </p>
-	 */
-	public static String CODENAME = getCodeName(JBroFuzzFormat.VERSION);;
-
-	/**
-	 * <p>
-	 * The default ISO language code, set to English (en).
-	 * </p>
-	 */
-	public static final String ISO_LAN_CODE = "en";
 	/**
 	 * <p>
 	 * The text, in html format, shown in the about box.
 	 * </p>
 	 */
-	public static final String ABOUTTEXT =
+	public static final String ABOUT =
 
-	"<HTML><B>JBroFuzz Version:  " + VERSION + "<BR>" + "Codename: "
-			+ JBroFuzzFormat.getCodeName(JBroFuzzFormat.VERSION) + "</B><BR><BR>"
-			+ "<B>Copyright &copy; " + YEAR + " subere@uncon.org</B><BR><BR>"
-			+ "Running Under  Java " + System.getProperty("java.version")
-			+ "<BR><BR>" + "<B>A stateless network protocol fuzzer <BR>"
-			+ "for web applications." + "</B><BR></HTML>";
+		"<HTML><B>JBroFuzz Version:  " + VERSION + "<BR>" + "Codename: "
+		+ JBroFuzzFormat.getCodeName(JBroFuzzFormat.VERSION) + "</B><BR><BR>"
+		+ "<B>Copyright &copy; " + YEAR + " subere@uncon.org</B><BR><BR>"
+		+ "Running Under  Java " + System.getProperty("java.version")
+		+ "<BR><BR>" + "<B>A stateless network protocol fuzzer <BR>"
+		+ "for web applications." + "</B><BR></HTML>";
 
 	/**
 	 * <p>
-	 * The text, in html format, shown in the disclaimer box.
+	 * Method for abbreviating the given String to a particular length,
+	 * by removing characters from the middle of the String.
 	 * </p>
+	 * <p>This method does not, yet guarantee a return String of length len.</p>
+	 * 
+	 * @param s
+	 * @param len
+	 * @return String 
 	 */
-	public static final String DISCLAIMER = "<HTML>This program generates a substantial amount "
-			+ "of network traffic for the purpose of fuzzing "
-			+ "web applications.<BR><BR>"
-			+ "JBroFuzz has been developed with penetration "
-			+ "testing in mind.<BR><BR>"
-			+ "The author of JBroFuzz takes no "
-			+ "legal or other responsibility for any problems that "
-			+ "might occur <BR>while running this program.<BR></HTML>";
+	public static final String centerAbbreviate(String s, int len) {
 
-	/**
-	 * Formatting the date in ISO8601 standard format.
-	 */
-	public static final String DATE = getDate();
+		if(s.length() <= len) {
+			return s;
+		}
+		
+		if(len < 5) {
+			return s;
+		}
 
-	/**
-	 * The String displaying within the Fuzzing Request text area
-	 */
-	public static final String REQUEST_TCP = "GET / HTTP/1.1\n"
-			+ "Host: localhost\n"
-			+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\n"
-			+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n"
-			+ "Accept-Language: en-gb,en;q=0.5\n"
-			+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n\n";
+		if(s.length() < len) {
+			return s;
+		} else {
+			return StringUtils.abbreviate(s, len / 2) + StringUtils.right(s, len / 2);
+		}
+	}
 
 	/**
 	 * Return the code name of the current version, based on the version number.
@@ -240,11 +286,11 @@ public class JBroFuzzFormat {
 	}
 
 	private static final String getDate() {
-		
+
 		final String DATE_FORMAT = "DDD yyyy-MM-dd HH-mm-ss";
-		
+
 		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT, new Locale(ISO_LAN_CODE));
-		
+
 		return SDF.format(new Date());
 	}
 
@@ -258,14 +304,14 @@ public class JBroFuzzFormat {
 	 * @param mJBroFuzz
 	 *            JBroFuzz
 	 */
-	public static final void setLookAndFeel(final JBroFuzz mJBroFuzz) {
+	private static final void setLookAndFeel(final JBroFuzz mJBroFuzz) {
 		int errors = 0;
 		try {
 			String oSystem = System.getProperty("os.name");
 			oSystem = oSystem.toLowerCase(new Locale(JBroFuzzFormat.ISO_LAN_CODE));
 			if (oSystem.startsWith("windows")) {
 				UIManager
-						.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+				.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			}
 		} catch (final UnsupportedLookAndFeelException e) {
 			errors += 100;
@@ -277,30 +323,6 @@ public class JBroFuzzFormat {
 			errors += 100;
 		} catch (final SecurityException e) {
 			errors += 100;
-		}
-	}
-	
-	/**
-	 * <p>
-	 * Method for abbreviating the given String to a particular length,
-	 * by removing characters from the middle of the String.
-	 * </p>
-	 * <p>This method does not, yet guarantee a return String of length len.</p>
-	 * 
-	 * @param s
-	 * @param len
-	 * @return String 
-	 */
-	public static final String centerAbbreviate(String s, int len) {
-		
-		if(len < 5) {
-			return s;
-		}
-		
-		if(s.length() < len) {
-			return s;
-		} else {
-			return StringUtils.abbreviate(s, len / 2) + StringUtils.right(s, len / 2);
 		}
 	}
 
@@ -320,27 +342,6 @@ public class JBroFuzzFormat {
 		// Set some preferences for the mac
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "JBroFuzz");
-		// Set the application preferences
-
-	}
-
-	public int getMajorVersion() {
-
-		try {
-			return Integer.parseInt(VERSION.split("\\.")[0]);
-		} catch (Exception e) {
-			return 0;
-		}
-
-	}
-
-	public int getMinorVersion() {
-
-		try {
-			return Integer.parseInt(VERSION.split("\\.")[1]);
-		} catch (Exception e) {
-			return 0;
-		}
 
 	}
 

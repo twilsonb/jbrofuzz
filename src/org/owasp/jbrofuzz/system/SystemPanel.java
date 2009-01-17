@@ -1,29 +1,39 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
-package org.owasp.jbrofuzz.ui.panels;
+package org.owasp.jbrofuzz.system;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -34,6 +44,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
+import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 
 /**
@@ -67,7 +78,7 @@ public class SystemPanel extends JBroFuzzPanel {
 		lineCount = 0;
 
 		// Set the enabled options: Start, Stop, Graph, Add, Remove
-		setOptionsAvailable(true, false, false, true, false);
+		setOptionsAvailable(true, false, true, true, false);
 
 		// Define the JPanel
 		final JPanel listPanel = new JPanel(new BorderLayout());
@@ -153,7 +164,7 @@ public class SystemPanel extends JBroFuzzPanel {
 	public void start() {
 
 		// Set the enabled options: Start, Stop, Graph, Add, Remove
-		setOptionsAvailable(false, false, false, false, false);
+		setOptionsAvailable(false, false, true, false, false);
 
 		Runtime.getRuntime().gc();
 		Runtime.getRuntime().runFinalization();
@@ -205,7 +216,7 @@ public class SystemPanel extends JBroFuzzPanel {
 	public void stop() {
 
 		// Set the enabled options: Start, Stop, Graph, Add, Remove
-		setOptionsAvailable(true, false, false, true, false);
+		setOptionsAvailable(true, false, true, true, false);
 
 	}
 

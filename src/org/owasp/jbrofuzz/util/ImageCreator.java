@@ -1,28 +1,35 @@
 /**
  * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
 package org.owasp.jbrofuzz.util;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 /**
@@ -44,6 +51,106 @@ import javax.swing.ImageIcon;
  * @version 1.2
  */
 public class ImageCreator {
+
+	private final static String TXT_ABOUT = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
+			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
+			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAA5UlEQVR42mL8//8/A7kAIICYGCgAAAFEkWaA"
+			+ "AGJB5jA2gikFIJ4AxP5Q4Y9QPgh/+F+PUA8QQOg2GwDxBSgNMsoRiDcAcQEQH0C3"
+			+ "GSCA0DWDTYdqeADVAOI3ALE+1BA4AAggdM32UANAts+Hak6A0geBOABZMUAAYQsw"
+			+ "kMIFUMXIhmE4GyCAsGkOgGqG+bseKhYA9QIcAAQQC5rGhVBnTkCy8QHUIH2oGBwA"
+			+ "BBC6Zlio9kMNugC10R7KX4CsGCCA0DWDnOUANcQBGucgkIiuEQQAAoiRkrQNEEAU"
+			+ "JU+AAKJIM0CAAQBcCi/wtU5IcgAAAABJRU5ErkJggg==";
+
+	private static final String TXT_ADD = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAACVUlEQVR4nH2SO2tUYRCGn/nO"
+			+ "dy7Zs4ludKNbGFBZoqiohWAjCAp2FgpWIuJfEEQs7cTSfyC2KlgIlsHCSyXiBS/BIImbjcaN"
+			+ "ezY5e87u941FFFYR327gnWFm3ke894yoOcj7pz7dvHkrnp1Fu13CTZt53W6zevFC89zly3OA"
+			+ "/jZb/pKqN2ltE9sbDUySIFMN2iiLef9vKxZojtTHjTF71FqcDVHnsc7hnCKhLQD5o7n/9dv1"
+			+ "7MuXF6CPJAjuF1nWcL0ewfgEfmkJREmiCP+9cyxrte5qUez33pdBtfpaPty+o/FwQJAkIKBl"
+			+ "zoQxpO/nGD59hqlvI6sktJzDbpsiqtcZ5DmPP85hRYTGoYME49WNm9fXkK9LuIUFsBanjkqa"
+			+ "0pzaim9sJ5jewWA9p3j1BosIviwIyghU8cUAKQcwlkIUg1c2AhGIQggtRDFBXMFu7Aqogv76"
+			+ "iIKJQjSOEfUoiurvkAREQBSjziFGwBiwAWIEEUFsgFRi1G0MNHi0KKAsoSgZ5jnWVhI6S8uE"
+			+ "qxlqwPX7xN9XGA8EKmOYXkm2lrP4YY60HCBZj/Vul9pkDSmz7FrZzfYBj8UGYdnNTv64d/f0"
+			+ "9OQE/u07zOIyL1dWeH740PL5q1cOFL3ejbLf3zVer5+wNk1f2TSdBVaBGVutPsmi5DRDj0Qx"
+			+ "iFAWfexk7WhSq3WSWu3SKGEPRqCZVO+PGGPAhoi1EAQYMagbTgPz/2O7JyKDtc4K7XaBX1jA"
+			+ "f/5Mu9UC5yv/YntU38KxsQ47d7E4P4+Z2YvubrIF5cDZMw8BM2r+CQbeCNwWeEAbAAAAAElF"
+			+ "TkSuQmCC";
+
+	private static final String TXT_CLOSE = "R0lGODlhCgAKAIAAAAAAAP///yH5BAEAAAEALAAAAAAKAAoAAAIUjI8BgGvLlHtwnpqkpZh7"
+			+ "2UTZUQAAOw==";
+
+	private final static String TXT_copyImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
+			+ "F2+SX8VGAAAA/UlEQVR42mL8//8/A7kAIICYGCgAAAHEAiIYG7HKwZx0EIgdMCTrGRgAAgjd"
+			+ "5gQgPgDEH5DE7IH4ARBvQDcEIIBYkNgXgFgfhwvlodgfiEHubAAJAgQQzOYCJI0XgdgRSeNF"
+			+ "qAYYADqYwQDEAAggmOYAJMkJUKfDwAeoTRuRxMCaAQIIW2g/wOF0ZHEFEAEQQExI/kUONHQg"
+			+ "gOY6sMsAAgimeQEQf4Sy49GcbQC1VR4pDMDyAAGEbDPI5IdI0QMD/FDMAPU3PLoAAogJzSkK"
+			+ "0JAuRBIHGRgIxIZQC+BpACCAWLD47wAUCyAF1AZsIQgQQIyUZAyAAKIoYwAEGAABuyyw6aZU"
+			+ "xAAAAABJRU5ErkJggg==";
+
+	private final static String TXT_cutImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
+			+ "F2+SX8VGAAAA10lEQVR42mL8//8/A7kAIICYGCgAAAHEAiIYGxkOACl7EPt/PQMjkO8AZO6H"
+			+ "qmkEijUgqwECR6DYAYAAoshmgACiSDNAAFGkGSCAMDQD/SZAhL4HIAIggGCaLyBJNGAx0AAp"
+			+ "sECBCtYMEEAwzROA+COUnQ/EG5D0FgDxeSR+IYwBEEBMSCYFAPFBqDg/kmIY+yEQJwLVToBJ"
+			+ "AAQQI7YUBnQmyLZ+KHchyHagpg/o6gACCFdoI4fBA2waQQAggFjwhGYjlH0AV5ADBBAjJRkD"
+			+ "IIAoSiQAAQYAHREwlOPeTOgAAAAASUVORK5CYII=";
+
+	private static final String TXT_DISCLAIMER = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
+			+ "F2+SX8VGAAAAsklEQVR42mL8//8/A7kAIICYGCgAAAFEkWaAACJJM2MjQwEQB8D4AAHEQqQm"
+			+ "ASC1AIgf/K9nmAATBwggJiI1HgDiDUCNBchyAAFEjLNBNl4AalyALgEQQAygqELGDA3/HYA4"
+			+ "AcpuAOIL6GpgGCCAsPn5AxBPgDq3HogNcTkJIICwmgi18T8QL8BlKwgDBBAuP4NC9CEQN+AL"
+			+ "DIAAYqQkeQIEEEUpDCCAKNIMEEAUaQYIMABFQmtvHnE2kgAAAABJRU5ErkJggg==";
+
+	private static final String TXT_EXIT = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
+			+ "F2+SX8VGAAAA9klEQVR42mL8//8/A7kAIICYGCgAAAHEAmMwNjIkAKn5UO5HIFYA4g9Q/gQg"
+			+ "zoeyL/6vZzAAMQACCNnmBUB8EMrmh/JBwAFJI8jQAJgGgABCd3YCVAEI+EP5C9DkH8A4AAGE"
+			+ "rvkBVAEMgLwhD2UvBOINyIoBAghbgIEUbEQTewjEBegKAQIIV2hvQONfQAo8OAAIIGyaBaCh"
+			+ "iwz80bwDBgABhE3zAmhoMyCFPiy6FJAVAgQQuuYCqC3g+IRG00Ys0QcGAAGErBkU8Q1o0YIe"
+			+ "ffbIAQcQQCxIihWQ/HoBihmgARUAdQUKAAggRkoyBkAAUZQxAAIMANElKut+P5onAAAAAElF"
+			+ "TkSuQmCC";
+
+	private static final String TXT_FAQ = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
+			+ "F2+SX8VGAAABPklEQVR42mL8//8/A7kAIIBYsAkyNjIYACkBEPt/PcMBXJoBAogR2WagpkIg"
+			+ "1QbEf6CYA2rBfqAhbuiaAQKICUljAJDqA+KJQMwDxIFADZxA+jAQuwLlE9A1AwQQExJ7ARBv"
+			+ "BOIdaGqSgPgtEE8AGiCALAEQQExQWx2AFD/UAAY014BsbIHKGyDLAwQQE5otH5DY+4F4PZR9"
+			+ "AUo7ICsGCCB0zciSjiB/o8k/QOYABBATmiCKs4ABtgGIG4BMBTQXgAFAADFBFYE0HwRifyAO"
+			+ "gsohBw7IgINAdSiaAQIIOZGAAucYEKcB8Ukg9gAG2C8o/wNUHgUABBB6IhGAhi5MoQLUBQHY"
+			+ "UhpAADHiS9tQwzYAsT0QLwTiA1AsAPICQAAxEpMxoPG9ABrXIPAQFLgAAcRISq6CGgKyFZyY"
+			+ "AAIMACj4UJZKxS5mAAAAAElFTkSuQmCC";
+
+	private static final String TXT_FRAMEICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAp1J"
+			+ "REFUOE+lk1tPE1EUhaHQltJ22tI77fReoFfoDVoEKRQoFEEFEhRBTDDEEKM+iUiAakj8ASYm"
+			+ "JiQmvvjqP/zcrYThWSfZM8nMnO+svfY6ve12m57/uToA+3AOb3yW6MQ2zsAExdU2Nn+enl5d"
+			+ "B/63evtQnAlKiycMKH5ihS26m3duerMLxZ1kKFjEMhQjPrlHsrSLzjBwA+jFYHWSmTnCH6li"
+			+ "tgfQW70aQPGnUFwJgvFp3IEiRouTUvNMdlK7gD6DhXB2nUh+C59aJFU9QDdg1QD9gw4MJhue"
+			+ "cAmzK0You0Gs/JTA2Cr6ARv+eB2zKDPKf5HsGpHMBkYlqAFS1UPsvjG8kWksDpVgaoVaq004"
+			+ "0yKQXMAdqlJpXeKJVnF4R9DpTfT0GzRA7cEVpeUz0tOHeEJTzO58Y1R8mHr4hXT1JY39n+LJ"
+			+ "EwrSlsHikvKIZ6N3AOtX1G4qO/+WdOU5jd1rFvZ/ECtuU1m5YO3oN2abXxQ1SMi0RqZeaIDC"
+			+ "yiehfyC//J7szDGp2iHh/AaJ4hYLosYh7RUFXGyeUm5d3NSVBgiNbxIYbeAS+UarW2CnTDY/"
+			+ "Ut/5jjNYoLJ2xeL+L9zRGqXW+a3a2xyY7Sr9JgfuSIXK+mdi+UfMbX6lsnpJrv6Gxb1rUiJ5"
+			+ "ZPIAr7SQm33FpHy7BXRnbbIyVt7DIiHxxO6TLD8jmJxHzayQESPH517jE5VqZklG6MWXqGsA"
+			+ "iyPUTZpHLaN4EpicITyRe13T3GqJspioNymSCUVaXSI41sRou5NE1/AEvvCUZD1Kvv5OEreN"
+			+ "0eykR6JsHgqTm++828IwaCcuz9LSCXZvRlMQTq9jFenu4Djp+8dCD0hQ5Bzo+mSREzX3mErz"
+			+ "nKFAAV+khksO33B0RgN0zPjX+gPK6Z2eb2W0vwAAAABJRU5ErkJggg==";
+
+	private final static String TXT_LKF = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
+			+ "F2+SX8VGAAABCklEQVR42mL8//8/A7kAIICYcEkwNjIIgDA+zQABxIhsM1TxBCCOR1LzEST2"
+			+ "v56hAV0zQACh27wASeNGIH4IxPxAXA80OABdM0AAoWtGdmYB1BUwYICuGSCAWND4D4DYHsre"
+			+ "gMVVKAAggLD5+QHUqTBwEYgTkFxxAeh/kKsYAAII3eYJaBpBQAFK26PbDBBATEi2GiAF1kEg"
+			+ "nghlgww7gKTnAowBEEBMOALrA9RpiUgGILsODAACCK4ZqPgANGpAwB/oElAAfYD6mQEtFsAA"
+			+ "IICY8IQoyAvrgVgfmlA+QsXzoQYzAAQQI3rahiaGAGhAPYD6cQGUj5xQFgAEECMlGQMggJgY"
+			+ "KAAAAQYAa/I8dLncHpcAAAAASUVORK5CYII=";
+
+	private static final String TXT_OPENINBROWSER = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
+			+ "F2+SX8VGAAAAnUlEQVR42mL8//8/A7kAIICYGCgAAAHEgsxhbGRwAFL7Cehx/F/PcADEAAgg"
+			+ "imwGCCAWNP4DIG4koOcBjAEQQNg0NxBrM0AAYXM2yD//ceADyAoBAogiPwMEEAsWsQIgFsCh"
+			+ "/gMyByCAsGm+QKzNAAGErtkAiCcQ0FMAswAggNA1g5xrT0Az3EsAAURRPAMEECMlGQMggCiK"
+			+ "KoAAAwAFjhwi6P1nMwAAAABJRU5ErkJggg==";
 
 	private static final String TXT_OWASP = "iVBORw0KGgoAAAANSUhEUgAAAGAAAABYCAMAAAA9bwLKAAAAAXNSR0ICQMB9xQAAAqxQTFRF"
 			+ "AAAAExMTGxsbCwsLFBkbFBUaCgkGDxASBggFBwgKAAETAAEaAwkUDhIbGBYYEBAOBgsZDhAP"
@@ -142,7 +249,41 @@ public class ImageCreator {
 			+ "I+DvY1R7QR7p05bIN4EndiM75jnntfyoHbb3FXwGnBeLmc7wf31c9Qjsj8vvZ8bOei0dnYLv"
 			+ "DLOvqeOn4cy1ctUjtPJyMZWOkNJ9K5368JFifxP7P3WlcRVYxi88AAAAAElFTkSuQmCC";
 
-	private static final String TXT_OWASP_SMALL = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1B"
+	private static final String TXT_OWASP_MED = "iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAMAAAApB0NrAAAACXBIWXMAAAnYAAAJ2AHHoLmt"
+			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
+			+ "F2+SX8VGAAADAFBMVEUAAAATExMbGxsLCwsUGRsUFRoKCQYPEBIGCAUHCAoAARMAARoDCRQO"
+			+ "EhsYFhgQEA4GCxkOEA8JDBoYGRYIBwULDRIBAiMTGSIICzUMETwLESEGCS8DBSsICy4TFSEb"
+			+ "HSENFEQVHVYRFkYdIiQcIyoeJDAZIloYIEccJ2UfLnEfNHcgHBsgIB47OzsrKywuMC4yMjMi"
+			+ "IyI1ODYlKSwpLTA1OTspJygxMS8qMDM0NTkoKCYlJSk4NzwrMjg8PUElMWswPHYmNXghLGok"
+			+ "LnQoPIgmPpExPYc+Qz89QkQqQYw0RYw0S5g5UpwqRZU1T6M8VaBAPj9TU1NKS0tCQ0NZV1hb"
+			+ "W1tYVldQUk9GSEdNTlFNUFNUVVlWWFtGSEpIR0xFRUlWWFddXGBATpVDVptEVI9UXZxEW6Nd"
+			+ "YF9dYGFeY5tLY6dVaatbcK5adLJZbbBNca1OdLFdgbdgXl9zcnNjY2Nra2t7entucG9oamdv"
+			+ "cXJ3eHllaWt1dXh5d3hoZmd4dndiaqpmebR0fLZic612dqt+gYB2hrpqg7l7kL17jMB7lMNt"
+			+ "isGAf4CLi4yDg4SampuJh4iSkpOYmJaKiYeQkI6WmJWSmJiWlpiOjpCHiIqPkJGQjo+Ei7yL"
+			+ "kLiRkLqCjcGHl8WRnMieoJ+LocuXpsyaq9GesdKOpdGgnp+hn6CgoJ67u7urq6yjo6OtsK+z"
+			+ "s7O4urenqaa2uLenqKm3uLmoqqevsLGmpaiwr7Ggrc6hrdGntdWzu9mjsM65wty/wMG8xeDA"
+			+ "v8Lb29vDw8PLy8vT09PQztDW2NfM0NHW1tjJzNXGxsjHyMrIxsfZ2dbY1tfIx8rDyuHL0eTW"
+			+ "3/Dd3uHe4eDh3+Dg4N7z8/Pr6+vj4+Pw8O74+Pb29vjp5+jq5uXu7vDo6Obu8O72+Pfk5OTl"
+			+ "5eXm5ubn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb3"
+			+ "9/f4+Pj5+fn6+vr7+/v8/Pz9/f3+/v7////g18BUAAAAAXRSTlMAQObYZgAAAzJJREFUeNpi"
+			+ "YCAMAAKIGAQQQMQggAAiBgEEEDEIIICIQQABRAwCCCBiEEAAMSJziu8zMilKFqKrAQggJDWM"
+			+ "+srMSv9k/0v9l7RBUQMQQHA1zP9Nf95g5GX4whwd+1dcHVkNQADB1DDq3pLQ+yfFwsjE+Pfe"
+			+ "oV3Wt9QQagACCKqG7wunM4MsoyirFCPTvxePtllkMiHsAwggiBr2X+JmEqxirMwSEkxAkZcP"
+			+ "75hpvwmEqQEIICawEi0pU0ZWRlZmcWYmRlFRFklTq4aXDIdhagACCKSGX+ux0T9xBnGgqxjE"
+			+ "RN8y/mFg4MiM+3cJpgYggEBqlDhFgLL/X/7++//vi9f/GP6/YBDjSAr/0QdVAxBALED8/5yj"
+			+ "KMMTVumXrM8ZZM0ev/7H9IKRQVSS8SlUDUAAAc0xUBJmZLBm/vv0z28GM8M/DL+Y/ov9//ta"
+			+ "7wgrVA1AADEzMFizcjJ8u8FgZsH6WfTLxa+fv3IzfP735dOH7WbHIGoAAghoDtOH/8zMDP9P"
+			+ "HXv0X/7Jn0eMjEwS/5/9+s/EcvcWRA1AAAHVKAgy//7BxMTw8o/4MYZ/zKLPfj9/yfjqjygj"
+			+ "E9QugAACupmR5S8zww+O/38ZTrKIs4i//M/wmPHX/xd//t9ih6gBCCCgWnFzRlBoM/2XY/z7"
+			+ "UvyX9O+Hv3+9/fP3939meYgagAACmsMkc9IOGGyMzMcZGKVfMT9lecXM8OcZ02NNWBgCBBDQ"
+			+ "nEIRPSZ29v//LBik5RgZ/jD8+f/nxyPG748Z7kHVAAQQyF1MC89KySnLP1GWYpFgYGR9+ejP"
+			+ "M8Yff//edYaqAQggcLw/SmOXYRQFRgfDW4a/Jmv/A9335wDrrx9QNQABBPaf3I6T/4FRAsQM"
+			+ "f/8f//nr/4/v53m+wtMGQABB0s+tFx4uwBTG8Pbv75d/LA/+Z7jynknlMkwNQABB0+ERBk8Z"
+			+ "VRnG/0CXfGdg+n3yp+Db//B0CBBAsPS8/u/JqWbcDEzAeP175zXbV7PjiPQMEEDwfNHP9OfW"
+			+ "AmZG7i///mtdYPVdi5QvAAIIKX+tPfX34d9/D/5d0Zxuh5K/AAIIJZ8yHDnNJK2jgZ5PAQIM"
+			+ "ACal/BLAttOmAAAAAElFTkSuQmCC";
+
+	private static final String TXT_OWASP_SML = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAARnQU1B"
 			+ "AACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAA"
 			+ "AkFJREFUOE+1kt1L02EUxx8wnTBbuWb51tx8mdNZ+O7U8i0ISVw/NA3BSlcqvpBFOlEpKw2T"
 			+ "0jSHSgYytoVlZktrmZWZCXVRRFflbX/Ip7UgVxJ104HDc3O+n+fL9xwh/ksFiHjhL5K9/c/l"
@@ -157,49 +298,6 @@ public class ImageCreator {
 			+ "93PxEwXbQhMwFA2wp9iJdv8ksmAdcuVu90bCfz/2cO/wz5VsFnwDvOgQIORD68sAAAAASUVO"
 			+ "RK5CYII=";
 
-	private static final String TXT_CLOSE = 
-		"R0lGODlhCgAKAIAAAAAAAP///yH5BAEAAAEALAAAAAAKAAoAAAIUjI8BgGvLlHtwnpqkpZh7"
-		+ "2UTZUQAAOw==";
-	
-	private static final String TXT_FRAMEICON = "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAp1J"
-			+ "REFUOE+lk1tPE1EUhaHQltJ22tI77fReoFfoDVoEKRQoFEEFEhRBTDDEEKM+iUiAakj8ASYm"
-			+ "JiQmvvjqP/zcrYThWSfZM8nMnO+svfY6ve12m57/uToA+3AOb3yW6MQ2zsAExdU2Nn+enl5d"
-			+ "B/63evtQnAlKiycMKH5ihS26m3duerMLxZ1kKFjEMhQjPrlHsrSLzjBwA+jFYHWSmTnCH6li"
-			+ "tgfQW70aQPGnUFwJgvFp3IEiRouTUvNMdlK7gD6DhXB2nUh+C59aJFU9QDdg1QD9gw4MJhue"
-			+ "cAmzK0You0Gs/JTA2Cr6ARv+eB2zKDPKf5HsGpHMBkYlqAFS1UPsvjG8kWksDpVgaoVaq004"
-			+ "0yKQXMAdqlJpXeKJVnF4R9DpTfT0GzRA7cEVpeUz0tOHeEJTzO58Y1R8mHr4hXT1JY39n+LJ"
-			+ "EwrSlsHikvKIZ6N3AOtX1G4qO/+WdOU5jd1rFvZ/ECtuU1m5YO3oN2abXxQ1SMi0RqZeaIDC"
-			+ "yiehfyC//J7szDGp2iHh/AaJ4hYLosYh7RUFXGyeUm5d3NSVBgiNbxIYbeAS+UarW2CnTDY/"
-			+ "Ut/5jjNYoLJ2xeL+L9zRGqXW+a3a2xyY7Sr9JgfuSIXK+mdi+UfMbX6lsnpJrv6Gxb1rUiJ5"
-			+ "ZPIAr7SQm33FpHy7BXRnbbIyVt7DIiHxxO6TLD8jmJxHzayQESPH517jE5VqZklG6MWXqGsA"
-			+ "iyPUTZpHLaN4EpicITyRe13T3GqJspioNymSCUVaXSI41sRou5NE1/AEvvCUZD1Kvv5OEreN"
-			+ "0eykR6JsHgqTm++828IwaCcuz9LSCXZvRlMQTq9jFenu4Djp+8dCD0hQ5Bzo+mSREzX3mErz"
-			+ "nKFAAV+khksO33B0RgN0zPjX+gPK6Z2eb2W0vwAAAABJRU5ErkJggg==";
-	private static final String TXT_EXIT = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
-			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
-			+ "F2+SX8VGAAAA9klEQVR42mL8//8/A7kAIICYGCgAAAHEAmMwNjIkAKn5UO5HIFYA4g9Q/gQg"
-			+ "zoeyL/6vZzAAMQACCNnmBUB8EMrmh/JBwAFJI8jQAJgGgABCd3YCVAEI+EP5C9DkH8A4AAGE"
-			+ "rvkBVAEMgLwhD2UvBOINyIoBAghbgIEUbEQTewjEBegKAQIIV2hvQONfQAo8OAAIIGyaBaCh"
-			+ "iwz80bwDBgABhE3zAmhoMyCFPiy6FJAVAgQQuuYCqC3g+IRG00Ys0QcGAAGErBkU8Q1o0YIe"
-			+ "ffbIAQcQQCxIihWQ/HoBihmgARUAdQUKAAggRkoyBkAAUZQxAAIMANElKut+P5onAAAAAElF"
-			+ "TkSuQmCC";
-	private final static String TXT_cutImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
-			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
-			+ "F2+SX8VGAAAA10lEQVR42mL8//8/A7kAIICYGCgAAAHEAiIYGxkOACl7EPt/PQMjkO8AZO6H"
-			+ "qmkEijUgqwECR6DYAYAAoshmgACiSDNAAFGkGSCAMDQD/SZAhL4HIAIggGCaLyBJNGAx0AAp"
-			+ "sECBCtYMEEAwzROA+COUnQ/EG5D0FgDxeSR+IYwBEEBMSCYFAPFBqDg/kmIY+yEQJwLVToBJ"
-			+ "AAQQI7YUBnQmyLZ+KHchyHagpg/o6gACCFdoI4fBA2waQQAggFjwhGYjlH0AV5ADBBAjJRkD"
-			+ "IIAoSiQAAQYAHREwlOPeTOgAAAAASUVORK5CYII=";
-
-	private final static String TXT_copyImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
-			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
-			+ "F2+SX8VGAAAA/UlEQVR42mL8//8/A7kAIICYGCgAAAHEAiIYG7HKwZx0EIgdMCTrGRgAAgjd"
-			+ "5gQgPgDEH5DE7IH4ARBvQDcEIIBYkNgXgFgfhwvlodgfiEHubAAJAgQQzOYCJI0XgdgRSeNF"
-			+ "qAYYADqYwQDEAAggmOYAJMkJUKfDwAeoTRuRxMCaAQIIW2g/wOF0ZHEFEAEQQExI/kUONHQg"
-			+ "gOY6sMsAAgimeQEQf4Sy49GcbQC1VR4pDMDyAAGEbDPI5IdI0QMD/FDMAPU3PLoAAogJzSkK"
-			+ "0JAuRBIHGRgIxIZQC+BpACCAWLD47wAUCyAF1AZsIQgQQIyUZAyAAKIoYwAEGAABuyyw6aZU"
-			+ "xAAAAABJRU5ErkJggg==";
-
 	private final static String TXT_pasteImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAABDUlEQVR42mL8//8/A7kAIICYcEkwNjIoALEBPs0AAcSIbDNUcQMQ+6OpOwgS"
@@ -209,98 +307,12 @@ public class ImageCreator {
 			+ "gUJTH03zQyB+AOVfABpSAGIABBALkp/s8cSvPFpsgAFAAME0H8Ci4QAOg2AuYAAIIEZKMgZA"
 			+ "ADExUAAAAgwAtRNGMVUn4dEAAAAASUVORK5CYII=";
 
-	private final static String TXT_selectAllImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
-			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
-			+ "F2+SX8VGAAAA0klEQVR42mL8//8/A7kAIICYGCgAAAHEgsxhbGQ4AKTs8ahv/F/P0ADjAAQQ"
-			+ "RTYDBBALGv8Cms2NQHwAif8AWTFAADGiBxjQ6QlAaj6SUCLQqQuw2QwQQBjOhip0BOKPUKH5"
-			+ "QAMnYNMMEEC4/HwBzYkK2BQBBBCGZqAtBlCN+lChjUCcgE0zQACxYNEICiB+qNBCoDcScIU2"
-			+ "QAChBBhQ8wckjSBwEE39AuTAAwgg9KjiR+OjJxjkaGMACCB0zY0E0gWKZoAAYqQkYwAEEEXJ"
-			+ "EyDAAL1bLDuzPKEfAAAAAElFTkSuQmCC";
-
-	private static final String TXT_STOP = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
-			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
-			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAAf0lEQVR42mL8//8/A7kAIICYGCgAAAHEAmMw"
-			+ "NjIoACkFIvRc+F/P8AHEAAggFiTBBCCuJ0KzIxAfADEAAogiZwMEEEWaAQKIIs0A"
-			+ "AUSRZoAAokgzQABRpBkggCjSDBBAFGkGCCDkRPIAiA8SoecDjAEQQIyUZAyAAKLI"
-			+ "2QABBgCrAA6ONiIoUgAAAABJRU5ErkJggg==";
-
 	private static final String TXT_PAUSE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAAAlklEQVR42mL8//8/A7kAIICYGCgAAAFEUDNjI8N/EMYmBxBALPg0gej/9QyM"
 			+ "uNQABBBem/FpBAGAAGLCZyshABBATIRsRTcImQ8QQAygqELHDA3//xNDAwQQQY0wNjofRAME"
 			+ "EMnxDHI2zEsAAcSESwKfGAwABBBWJ6OzcYkBBBAjmCAiQWADAAHESEnGAAggijIGQIABAJTK"
 			+ "opgmzUDQAAAAAElFTkSuQmCC";
-	
-	private final static String TXT_SAVE =
-		"iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL" +
-		"EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA" +
-		"dTAAAOpgAAA6mAAAF2+SX8VGAAABH0lEQVR42mL8//8/A7kAIIBYQARjI8MHIAUy" +
-		"5QwQs+JRrwjELUC8+n89wweAAGKBCjIB8W0g3gPEzHg0FwNxEFT9TIAAgmk+CcSr" +
-		"gKbNxudMoAt9gJQHEFuANAMEEBNUHORUXiK8CQsgARABEEBMDBQAgABiweK0JCD1" +
-		"D8QE4qtALAjEd4FeuoOuFiCAWLAYOBeJPQ2IdYB4ERBjaAYIIELO/gPEv6EuwQAA" +
-		"AUSRnwECCKYZFLdfscizAzEnUsL5hSwJEECMoOQJDKR9UIX3gNgWiP9CDX4CxFxA" +
-		"/BqIXwKxHyyagAHICBBAsABbCsShQByDZrMCljAA+f8HiAMQQCxQU+YCbX8IZH4D" +
-		"YlGozbiACBC/ATEAAoiRklwFEGAAFBU6eIy60OQAAAAASUVORK5CYII=";
-	
-	private static final String TXT_START = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
-			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
-			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAAzElEQVR42mL8//8/A7kAIIBYYAzGRgYBIAXC"
-			+ "Dwhp+l8PoQECiAlJzACILwBxA9QQggAggJjQ+PxAXA81JICQZoAAYsIhLg/E64H4"
-			+ "ANRFWAFAADERMNweiM8D8QRsXgEIICYiAzYfGpAFyIIAAcREQsyAwqMf6hUwAAgg"
-			+ "JhKjdiJyQAIEEAuRmg4CcQJ6GgAIIEI2PwTiQCB2wJZ4AAIIl+aPQNwIxApAvAGX"
-			+ "yQABhM3ZC6GpjGAyBQggZM0gxY7IoUkIAAQQIyW5CiDAAKusHj7ANrjHAAAAAElF"
-			+ "TkSuQmCC";
-
-	private static final String TXT_ADD = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAACVUlEQVR4nH2SO2tUYRCGn/nO"
-			+ "dy7Zs4ludKNbGFBZoqiohWAjCAp2FgpWIuJfEEQs7cTSfyC2KlgIlsHCSyXiBS/BIImbjcaN"
-			+ "ezY5e87u941FFFYR327gnWFm3ke894yoOcj7pz7dvHkrnp1Fu13CTZt53W6zevFC89zly3OA"
-			+ "/jZb/pKqN2ltE9sbDUySIFMN2iiLef9vKxZojtTHjTF71FqcDVHnsc7hnCKhLQD5o7n/9dv1"
-			+ "7MuXF6CPJAjuF1nWcL0ewfgEfmkJREmiCP+9cyxrte5qUez33pdBtfpaPty+o/FwQJAkIKBl"
-			+ "zoQxpO/nGD59hqlvI6sktJzDbpsiqtcZ5DmPP85hRYTGoYME49WNm9fXkK9LuIUFsBanjkqa"
-			+ "0pzaim9sJ5jewWA9p3j1BosIviwIyghU8cUAKQcwlkIUg1c2AhGIQggtRDFBXMFu7Aqogv76"
-			+ "iIKJQjSOEfUoiurvkAREQBSjziFGwBiwAWIEEUFsgFRi1G0MNHi0KKAsoSgZ5jnWVhI6S8uE"
-			+ "qxlqwPX7xN9XGA8EKmOYXkm2lrP4YY60HCBZj/Vul9pkDSmz7FrZzfYBj8UGYdnNTv64d/f0"
-			+ "9OQE/u07zOIyL1dWeH740PL5q1cOFL3ejbLf3zVer5+wNk1f2TSdBVaBGVutPsmi5DRDj0Qx"
-			+ "iFAWfexk7WhSq3WSWu3SKGEPRqCZVO+PGGPAhoi1EAQYMagbTgPz/2O7JyKDtc4K7XaBX1jA"
-			+ "f/5Mu9UC5yv/YntU38KxsQ47d7E4P4+Z2YvubrIF5cDZMw8BM2r+CQbeCNwWeEAbAAAAAElF"
-			+ "TkSuQmCC";
-	private final static String TXT_UPDATE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
-			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
-			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAAwElEQVR42mL8//8/A7kAIICYGCgAAAFEkWaA"
-			+ "AMLQzNjI4ECsZoAAYkHSxAWkpgGxAhATZQBAADHCAgyoeS6QSgLij0B8AYf64P/1"
-			+ "DG9hHIAAYkGSmAySBOIHQNyAQ/NnZA5AACFrvgB1LkjjATRNCUC8AN0kgABCDzCQ"
-			+ "AQFYbMSqGSCAkG0G2bofT/jYo3sJIIDQne2IQ+MENBoMAAIIWfMHLH6FgQNQGz8g"
-			+ "CwIEECMlaRsggChKngABRJFmgAADAIGBIrsWh+BkAAAAAElFTkSuQmCC";
-
-	private static final String TXT_REMOVE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAGCAIAAACTu1PVAAAABGdBTUEAALGPC/xhBQAAARhJ"
-			+ "REFUKFNjfHH02PsLF5hZ2f///8/IyMDEyMzAyAAEIIKR8T8jwz8Ghv9Amonp35+/DOdaWx9V"
-			+ "VX6bMePLlMlfp035MXP6z1kzf86Z+X32TCD7x+RJn9vbP9XVfqmouBsXx3Curf1FSdH/KZP/"
-			+ "T+j739f9r6v1X2P9n/Ly3zm5vxITfoWF/fLx/+Xm+dfN876hEcO5lpbHHp7/U1N/Jyb+iY7+"
-			+ "FRz2yy/wt4/vL2/fXz6+v339fwUG/QkO+Rca/sDGluF0bd1NQ+NvAaGf/YO+BoX9jIj9FR33"
-			+ "My7uZ3wiEP2IjfsaHvk5JPJbRMxNKxuGS0uWbAgK3pOUvCc5eV96xqGs7EPZOXB0MDNrf1r6"
-			+ "nuQUINocHgkApraQtS2/P7kAAAAASUVORK5CYII=";
-	private static final String TXT_DISCLAIMER = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
-			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
-			+ "F2+SX8VGAAAAsklEQVR42mL8//8/A7kAIICYGCgAAAFEkWaAACJJM2MjQwEQB8D4AAHEQqQm"
-			+ "ASC1AIgf/K9nmAATBwggJiI1HgDiDUCNBchyAAFEjLNBNl4AalyALgEQQAygqELGDA3/HYA4"
-			+ "AcpuAOIL6GpgGCCAsPn5AxBPgDq3HogNcTkJIICwmgi18T8QL8BlKwgDBBAuP4NC9CEQN+AL"
-			+ "DIAAYqQkeQIEEEUpDCCAKNIMEEAUaQYIMABFQmtvHnE2kgAAAABJRU5ErkJggg==";
-	private static final String TXT_TOPICS = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
-			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
-			+ "F2+SX8VGAAAA0UlEQVR42mL8//8/A7kAIIBY0AUYG1G4BkB8AVngfz2CDRBATFgMbADiByB1"
-			+ "QHweSoP4DugKAQIIm2aQInk0MRB/AbpCgADCphnkzEIgVgRiQyB+iGQAiu0AAcSCRXMBGv8B"
-			+ "FpeAAUAAMREIUJD/7aFskAsOIEsCBBALHo0fgJgfyj4IxAHoCgACCJ/NMI0ToX79gK4AIIDw"
-			+ "2XwQKQCxAoAAwqVZAd1/2ABAAOHTXI/kggXYFAEEEC7NoOhpRGJjBQABxEhJxgAIICYGCgBA"
-			+ "gAEAHtwgxMCFBqgAAAAASUVORK5CYII=";
-
-	private final static String TXT_LKF = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
-			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
-			+ "F2+SX8VGAAABCklEQVR42mL8//8/A7kAIICYcEkwNjIIgDA+zQABxIhsM1TxBCCOR1LzEST2"
-			+ "v56hAV0zQACh27wASeNGIH4IxPxAXA80OABdM0AAoWtGdmYB1BUwYICuGSCAWND4D4DYHsre"
-			+ "gMVVKAAggLD5+QHUqTBwEYgTkFxxAeh/kKsYAAII3eYJaBpBQAFK26PbDBBATEi2GiAF1kEg"
-			+ "nghlgww7gKTnAowBEEBMOALrA9RpiUgGILsODAACCK4ZqPgANGpAwB/oElAAfYD6mQEtFsAA"
-			+ "IICY8IQoyAvrgVgfmlA+QsXzoQYzAAQQI3rahiaGAGhAPYD6cQGUj5xQFgAEECMlGQMggJgY"
-			+ "KAAAAQYAa/I8dLncHpcAAAAASUVORK5CYII=";
 
 	private final static String TXT_PREFS = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
 			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
@@ -311,7 +323,49 @@ public class ImageCreator {
 			+ "OzsfB18ciD3Q/QcQQOiaDaFRtRBKG0LFQTbvQNcMEEDozgYFkD2UHQ/EB5H8/AUa"
 			+ "BnAAEECMlKRtgACiKG0DBBBFmgECDADk8CgQHS3hUQAAAABJRU5ErkJggg==";
 
-	private static final String TXT_HELP = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+	private static final String TXT_REMOVE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAGCAIAAACTu1PVAAAABGdBTUEAALGPC/xhBQAAARhJ"
+			+ "REFUKFNjfHH02PsLF5hZ2f///8/IyMDEyMzAyAAEIIKR8T8jwz8Ghv9Amonp35+/DOdaWx9V"
+			+ "VX6bMePLlMlfp035MXP6z1kzf86Z+X32TCD7x+RJn9vbP9XVfqmouBsXx3Curf1FSdH/KZP/"
+			+ "T+j739f9r6v1X2P9n/Ly3zm5vxITfoWF/fLx/+Xm+dfN876hEcO5lpbHHp7/U1N/Jyb+iY7+"
+			+ "FRz2yy/wt4/vL2/fXz6+v339fwUG/QkO+Rca/sDGluF0bd1NQ+NvAaGf/YO+BoX9jIj9FR33"
+			+ "My7uZ3wiEP2IjfsaHvk5JPJbRMxNKxuGS0uWbAgK3pOUvCc5eV96xqGs7EPZOXB0MDNrf1r6"
+			+ "nuQUINocHgkApraQtS2/P7kAAAAASUVORK5CYII=";
+
+	private final static String TXT_SAVE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
+			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
+			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAABH0lEQVR42mL8//8/A7kAIIBYQARjI8MHIAUy"
+			+ "5QwQs+JRrwjELUC8+n89wweAAGKBCjIB8W0g3gPEzHg0FwNxEFT9TIAAgmk+CcSr"
+			+ "gKbNxudMoAt9gJQHEFuANAMEEBNUHORUXiK8CQsgARABEEBMDBQAgABiweK0JCD1"
+			+ "D8QE4qtALAjEd4FeuoOuFiCAWLAYOBeJPQ2IdYB4ERBjaAYIIELO/gPEv6EuwQAA"
+			+ "AUSRnwECCKYZFLdfscizAzEnUsL5hSwJEECMoOQJDKR9UIX3gNgWiP9CDX4CxFxA"
+			+ "/BqIXwKxHyyagAHICBBAsABbCsShQByDZrMCljAA+f8HiAMQQCxQU+YCbX8IZH4D"
+			+ "YlGozbiACBC/ATEAAoiRklwFEGAAFBU6eIy60OQAAAAASUVORK5CYII=";
+
+	private final static String TXT_selectAllImageText = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
+			+ "F2+SX8VGAAAA0klEQVR42mL8//8/A7kAIICYGCgAAAHEgsxhbGQ4AKTs8ahv/F/P0ADjAAQQ"
+			+ "RTYDBBALGv8Cms2NQHwAif8AWTFAADGiBxjQ6QlAaj6SUCLQqQuw2QwQQBjOhip0BOKPUKH5"
+			+ "QAMnYNMMEEC4/HwBzYkK2BQBBBCGZqAtBlCN+lChjUCcgE0zQACxYNEICiB+qNBCoDcScIU2"
+			+ "QAChBBhQ8wckjSBwEE39AuTAAwgg9KjiR+OjJxjkaGMACCB0zY0E0gWKZoAAYqQkYwAEEEXJ"
+			+ "EyDAAL1bLDuzPKEfAAAAAElFTkSuQmCC";
+
+	private static final String TXT_START = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
+			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
+			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAAzElEQVR42mL8//8/A7kAIIBYYAzGRgYBIAXC"
+			+ "Dwhp+l8PoQECiAlJzACILwBxA9QQggAggJjQ+PxAXA81JICQZoAAYsIhLg/E64H4"
+			+ "ANRFWAFAADERMNweiM8D8QRsXgEIICYiAzYfGpAFyIIAAcREQsyAwqMf6hUwAAgg"
+			+ "JhKjdiJyQAIEEAuRmg4CcQJ6GgAIIEI2PwTiQCB2wJZ4AAIIl+aPQNwIxApAvAGX"
+			+ "yQABhM3ZC6GpjGAyBQggZM0gxY7IoUkIAAQQIyW5CiDAAKusHj7ANrjHAAAAAElF"
+			+ "TkSuQmCC";
+
+	private static final String TXT_STOP = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
+			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
+			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAAf0lEQVR42mL8//8/A7kAIICYGCgAAAHEAmMw"
+			+ "NjIoACkFIvRc+F/P8AHEAAggFiTBBCCuJ0KzIxAfADEAAogiZwMEEEWaAQKIIs0A"
+			+ "AUSRZoAAokgzQABRpBkggCjSDBBAFGkGCCDkRPIAiA8SoecDjAEQQIyUZAyAAKLI"
+			+ "2QABBgCrAA6ONiIoUgAAAABJRU5ErkJggg==";
+
+	private static final String TXT_TOPICS = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 			+ "F2+SX8VGAAAA0UlEQVR42mL8//8/A7kAIIBY0AUYG1G4BkB8AVngfz2CDRBATFgMbADiByB1"
 			+ "QHweSoP4DugKAQIIm2aQInk0MRB/AbpCgADCphnkzEIgVgRiQyB+iGQAiu0AAcSCRXMBGv8B"
@@ -319,119 +373,166 @@ public class ImageCreator {
 			+ "2XwQKQCxAoAAwqVZAd1/2ABAAOHTXI/kggXYFAEEEC7NoOhpRGJjBQABxEhJxgAIICYGCgBA"
 			+ "gAEAHtwgxMCFBqgAAAAASUVORK5CYII=";
 
-	private static final String TXT_FAQ = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
-			+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
-			+ "F2+SX8VGAAABPklEQVR42mL8//8/A7kAIIBYsAkyNjIYACkBEPt/PcMBXJoBAogR2WagpkIg"
-			+ "1QbEf6CYA2rBfqAhbuiaAQKICUljAJDqA+KJQMwDxIFADZxA+jAQuwLlE9A1AwQQExJ7ARBv"
-			+ "BOIdaGqSgPgtEE8AGiCALAEQQExQWx2AFD/UAAY014BsbIHKGyDLAwQQE5otH5DY+4F4PZR9"
-			+ "AUo7ICsGCCB0zciSjiB/o8k/QOYABBATmiCKs4ABtgGIG4BMBTQXgAFAADFBFYE0HwRifyAO"
-			+ "gsohBw7IgINAdSiaAQIIOZGAAucYEKcB8Ukg9gAG2C8o/wNUHgUABBB6IhGAhi5MoQLUBQHY"
-			+ "UhpAADHiS9tQwzYAsT0QLwTiA1AsAPICQAAxEpMxoPG9ABrXIPAQFLgAAcRISq6CGgKyFZyY"
-			+ "AAIMACj4UJZKxS5mAAAAAElFTkSuQmCC";
-
-	private final static String TXT_ABOUT = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
+	private final static String TXT_UPDATE = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAAL"
 			+ "EwEAmpwYAAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAA"
-			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAA5UlEQVR42mL8//8/A7kAIICYGCgAAAFEkWaA"
-			+ "AGJB5jA2gikFIJ4AxP5Q4Y9QPgh/+F+PUA8QQOg2GwDxBSgNMsoRiDcAcQEQH0C3"
-			+ "GSCA0DWDTYdqeADVAOI3ALE+1BA4AAggdM32UANAts+Hak6A0geBOABZMUAAYQsw"
-			+ "kMIFUMXIhmE4GyCAsGkOgGqG+bseKhYA9QIcAAQQC5rGhVBnTkCy8QHUIH2oGBwA"
-			+ "BBC6Zlio9kMNugC10R7KX4CsGCCA0DWDnOUANcQBGucgkIiuEQQAAoiRkrQNEEAU"
-			+ "JU+AAKJIM0CAAQBcCi/wtU5IcgAAAABJRU5ErkJggg==";
+			+ "dTAAAOpgAAA6mAAAF2+SX8VGAAAAwElEQVR42mL8//8/A7kAIICYGCgAAAFEkWaA"
+			+ "AMLQzNjI4ECsZoAAYkHSxAWkpgGxAhATZQBAADHCAgyoeS6QSgLij0B8AYf64P/1"
+			+ "DG9hHIAAYkGSmAySBOIHQNyAQ/NnZA5AACFrvgB1LkjjATRNCUC8AN0kgABCDzCQ"
+			+ "AQFYbMSqGSCAkG0G2bofT/jYo3sJIIDQne2IQ+MENBoMAAIIWfMHLH6FgQNQGz8g"
+			+ "CwIEECMlaRsggChKngABRJFmgAADAIGBIrsWh+BkAAAAAElFTkSuQmCC";
 
-	public static final ImageIcon IMG_OWASP_IMAGE_SML = new ImageIcon(B64
-			.decode(TXT_OWASP_SMALL));
+	/**
+	 * <p> The about image icon. </p>
+	 */
+	public static final ImageIcon IMG_ABOUT = new ImageIcon(B64
+			.decode(TXT_ABOUT));
 
+	/**
+	 * <p> The add image seen in the menu bar having the shape of red,  transparent cross. This is an original PNG file. </p>
+	 * @since   0.1
+	 */
+	public static final ImageIcon IMG_ADD = new ImageIcon(B64.decode(TXT_ADD));
+	
+	/**
+	 * <p> A black cross, representing the close image icon. </p>
+	 */
 	public static final ImageIcon IMG_CLOSE = new ImageIcon(B64
 			.decode(TXT_CLOSE));
 
 	/**
-	 * <p> The owasp image being displayed in the about box. This image is originally a png file. </p>.
-	 * @since  0.4
+	 * <p> The copy image icon. </p>
 	 */
-	public static final ImageIcon IMG_OWASP = new ImageIcon(B64
-			.decode(TXT_OWASP));
+	public static final ImageIcon IMG_COPY = new ImageIcon(B64.decode(TXT_copyImageText));
 
 	/**
-	 * <p> The image being displayed at the top left of the frame, when the UI manager is windows based. This image is originally a png file. </p>.
-	 * @since  0.3
+	 * <p> The cut image icon. </p>
 	 */
-	public static final ImageIcon IMG_FRAME = new ImageIcon(B64
-			.decode(TXT_FRAMEICON));
+	public static final ImageIcon IMG_CUT = new ImageIcon(B64.decode(TXT_cutImageText));
 
 	/**
-	 * <p> The exit image seen in the menu bar. This is an original gif file. </p>
+	 * <p> The disclaimer image icon. </p>
+	 */
+	public static final ImageIcon IMG_DISCLAIMER = new ImageIcon(B64.decode(TXT_DISCLAIMER));
+
+	/**
+	 * <p> The exit image seen in the menu bar. This is an 
+	 * original GIF file. </p>
+	 * 
 	 * @since  0.1
 	 */
 	public static final ImageIcon IMG_EXIT = new ImageIcon(B64
 			.decode(TXT_EXIT));
 
 	/**
-	 * <p> The stop imager seen in the menu bar, as well as various buttons within the main frame. </p>
+	 * <p> The frequently asked questions image icon. </p>
+	 */
+	public static final ImageIcon IMG_FAQ = new ImageIcon(B64.decode(TXT_FAQ));
+
+	/**
+	 * <p> The image being displayed at the top left of the frame, 
+	 * when the UI manager is windows based. This image is 
+	 * originally a PNG file. </p>.
+	 * 
+	 * @since  0.3
+	 */
+	public static final ImageIcon IMG_FRAME = new ImageIcon(B64
+			.decode(TXT_FRAMEICON));
+
+	/**
+	 * <p> The graphing 'f(x)' image seen in the menu bar
+	 * and tool bar. 
+	 * This is an original GIF file. </p>
+	 * 
+	 * @since  1.2
+	 */
+	public static final ImageIcon IMG_GRAPH = new ImageIcon(B64
+			.decode(TXT_PAUSE));
+
+	/**
+	 * <p> The Look & Feel image icon. </p>
+	 */
+	public static final ImageIcon IMG_LKF = new ImageIcon(B64.decode(TXT_LKF));
+
+	/**
+	 * <p> The open in browser icon. </p>
+	 */
+	public static final Icon IMG_OPENINBROWSER = new ImageIcon(B64.decode(TXT_OPENINBROWSER));
+	
+	/**
+	 * <p> The OWASP image being displayed in the about box. 
+	 * This image is originally a PNG file. </p>.
+	 * 
+	 * @since  0.4
+	 */
+	public static final ImageIcon IMG_OWASP = new ImageIcon(B64
+			.decode(TXT_OWASP));
+
+	/**
+	 * <p> The medium owasp image, seen in the graphs. </p>
+	 */
+	public static final ImageIcon IMG_OWASP_MED = new ImageIcon(B64
+			.decode(TXT_OWASP_MED));
+
+	/**
+	 * <p> The small owasp image icon, seen in the menu bar and tool bar. </p>
+	 */
+	public static final ImageIcon IMG_OWASP_SML = new ImageIcon(B64
+			.decode(TXT_OWASP_SML));
+
+	/**
+	 * <p> The paste image icon. </p>
+	 */
+	public static final ImageIcon IMG_PASTE = new ImageIcon(B64.decode(TXT_pasteImageText));
+
+	/**
+	 * <p> The preferences image icon. </p>
+	 */
+	public static final ImageIcon IMG_PREFERENCES = new ImageIcon(B64.decode(TXT_PREFS));
+
+	/**
+	 * <p> The add image seen in the menu bar having the shape of red, 
+	 * transparent minus sign. </p>
+	 * 
+	 * @since  0.1
+	 */
+	public static final ImageIcon IMG_REMOVE = new ImageIcon(B64.decode(TXT_REMOVE));
+
+	/**
+	 * <p>The save image icon seen in the 'save' on the menu bar.</p>
+	 * 
+	 * @since 1.2
+	 */
+	public static final ImageIcon IMG_SAVE = new ImageIcon(B64.decode(TXT_SAVE));
+
+	/**
+	 * <p> The select all image icon. </p>
+	 */
+	public static final ImageIcon IMG_SELECTALL = new ImageIcon(B64.decode(TXT_selectAllImageText));
+
+	/**
+	 * <p> The start image seen in the menu bar having the shape 
+	 * of a play button. This is an original GIF file. </p>
+	 * 
+	 * @since  0.1
+	 */
+	public static final ImageIcon IMG_START = new ImageIcon(B64.decode(TXT_START));
+
+	/**
+	 * <p> The stop image seen in the menu bar, being a light
+	 * blue solid box. </p>
 	 */
 	public static final ImageIcon IMG_STOP = new ImageIcon(B64
 			.decode(TXT_STOP));
 
 	/**
-	 * <p> The pause image seen in the menu bar. This is an original gif file. </p>
-	 * @since  0.1
+	 * <p> The help topics image icon. </p>
 	 */
-	public static final ImageIcon IMG_PAUSE = new ImageIcon(B64
-			.decode(TXT_PAUSE));
-
-	/**
-	 * <p>The save image icon seen in the 'save' on the menu bar.</p>
-	 * @since 1.2
-	 */
-	public static final ImageIcon IMG_SAVE = new ImageIcon(B64.decode(TXT_SAVE));
-	/**
-	 * <p> The start image seen in the menu bar having the shape of a play button. This is an original gif file. </p>
-	 * @since  0.1
-	 */
-	public static final ImageIcon IMG_START = new ImageIcon(B64
-			.decode(TXT_START));
-
-	/**
-	 * <p> The add image seen in the menu bar having the shape of red, transparent cross. This is an original png file. </p>
-	 * @since  0.1
-	 */
-	public static final ImageIcon IMG_ADD = new ImageIcon(B64
-			.decode(TXT_ADD));
-
-	public static final ImageIcon IMG_UPDATE = new ImageIcon(B64
-			.decode(TXT_UPDATE));
-
-	/**
-	 * <p> The add image seen in the menu bar having the shape of red, transparent minus sign. </p>
-	 * @since  0.1
-	 */
-	public static final ImageIcon IMG_REMOVE = new ImageIcon(B64
-			.decode(TXT_REMOVE));
-
-	/**
-	 * <p> The disclaimer image. </p>
-	 */
-	public static final ImageIcon IMG_DISCLAIMER = new ImageIcon(B64
-			.decode(TXT_DISCLAIMER));
-
-	public static final ImageIcon IMG_CUT = new ImageIcon(B64
-			.decode(TXT_cutImageText));
-	public static final ImageIcon IMG_COPY = new ImageIcon(B64
-			.decode(TXT_copyImageText));
-	public static final ImageIcon IMG_PASTE = new ImageIcon(B64
-			.decode(TXT_pasteImageText));
-	public static final ImageIcon IMG_SELECTALL = new ImageIcon(B64
-			.decode(TXT_selectAllImageText));
-
-	public static final ImageIcon IMG_LKF = new ImageIcon(B64.decode(TXT_LKF));
-
 	public static final ImageIcon IMG_TOPICS = new ImageIcon(B64.decode(TXT_TOPICS));
 
-	public static final ImageIcon IMG_PREFERENCES = new ImageIcon(B64.decode(TXT_PREFS));
-	
-	public static final ImageIcon IMG_HELP = new ImageIcon(B64.decode(TXT_HELP));
-	
-	public static final ImageIcon IMG_FAQ = new ImageIcon(B64.decode(TXT_FAQ));
-	
-	public static final ImageIcon IMG_ABOUT = new ImageIcon(B64.decode(TXT_ABOUT));
+	/**
+	 * <p> The update image icon. </p>
+	 */
+	public static final ImageIcon IMG_UPDATE = new ImageIcon(B64
+			.decode(TXT_UPDATE));
 
 }
