@@ -1,27 +1,33 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
-package org.owasp.jbrofuzz.ui.menu;
+package org.owasp.jbrofuzz.help;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -29,35 +35,46 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URL;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 
-public class JBRFaq extends JDialog implements TreeSelectionListener {
+/**
+ * 
+ *
+ * @author subere@uncon.org
+ * @version 1.2
+ * @since 1.2 
+ */
+public class Faq extends JFrame implements TreeSelectionListener {
 
 	private static final long serialVersionUID = 4301858021356404678L;
+
 	// Dimensions of the about box
 	private static final int x = 650;
 	private static final int y = 400;
+
 	// The final String Array of tree nodes
 	private static final String[] nodeNames = { "FAQ", "System Requirements", "Java Issues",
-			"Installation", "Files & Directories", "What is a Fuzzer?",
-			"Sniffing Ports" };
+		"Installation", "Files & Directories", "What is a Fuzzer?",
+	"Sniffing Ports" };
 	// The buttons
 	private JButton ok;
 	// The tree
@@ -71,16 +88,26 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 	// The list of URLs
 	private URL[] faqURL;
 
-	public JBRFaq(final JFrame parent) {
+	/**
+	 * <p>Boolean is true if Topics are already showing.</p>
+	 */
+	public static boolean faqShowing = false;
 
-		super(parent, " JBroFuzz - Frequently Asked Questions ", true);
+	public Faq(final JBroFuzzWindow parent) {
+
+		if(faqShowing) {
+			return;
+		}
+		faqShowing = true;
+
+		// super(parent, " JBroFuzz - Frequently Asked Questions ", true);
+		setTitle(" JBroFuzz - Frequently Asked Questions ");
+
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		faqURL = new URL[nodeNames.length];
-		// faqURL[0] =
-		// ClassLoader.getSystemClassLoader().getResource("help/faq-00.html");
 		for (int i = 0; i < nodeNames.length; i++) {
 			if (i < 10) {
 				faqURL[i] = ClassLoader.getSystemClassLoader().getResource(
@@ -113,7 +140,7 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 		} catch (final IOException e1) {
 			faqEditorPane = new JEditorPane();
 			faqEditorPane
-					.setText("Frequently Asked Questions file could not be located.");
+			.setText("Frequently Asked Questions file could not be located.");
 		}
 		faqScrollPane = new JScrollPane(faqEditorPane);
 
@@ -141,11 +168,12 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						JBRFaq.this.dispose();
-					}
-				});
+				//SwingUtilities.invokeLater(new Runnable() {
+				//	public void run() {
+				faqShowing = false;
+				Faq.this.dispose();
+				//	}
+				//});
 			}
 		});
 
@@ -155,16 +183,27 @@ public class JBRFaq extends JDialog implements TreeSelectionListener {
 		splitPane.setDividerLocation(150);
 		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
 				.abs(parent.getLocation().y + 100));
-		this.setSize(JBRFaq.x, JBRFaq.y);
-		this.setMinimumSize(new Dimension(x, y));
+
+		this.setSize(Faq.x, Faq.y);
+		this.setMinimumSize(new Dimension(x / 2, y / 2));
+
 		setResizable(true);
 		setVisible(true);
+		
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(final WindowEvent e) {
+				faqShowing = false;
+				dispose();
+			}
+		});
 	}
 
 	public void valueChanged(final TreeSelectionEvent e) {
 
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-				.getLastSelectedPathComponent();
+		.getLastSelectedPathComponent();
 
 		if (node == null) {
 			return;

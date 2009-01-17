@@ -1,29 +1,36 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
-package org.owasp.jbrofuzz.ui.panels;
+package org.owasp.jbrofuzz.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -33,15 +40,26 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.owasp.jbrofuzz.ui.*;
-import org.owasp.jbrofuzz.ui.actions.*;
+import org.owasp.jbrofuzz.ui.actions.CopyAction;
+import org.owasp.jbrofuzz.ui.actions.CutAction;
+import org.owasp.jbrofuzz.ui.actions.PasteAction;
+import org.owasp.jbrofuzz.ui.actions.SelectAllAction;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
+import org.owasp.jbrofuzz.util.ImageCreator;
 
 import com.Ostermiller.util.Browser;
 
@@ -56,8 +74,6 @@ import com.Ostermiller.util.Browser;
 public abstract class JBroFuzzPanel extends JPanel {
 
 	private JBroFuzzWindow frame;
-
-	private static final long serialVersionUID = -88328054872L;
 
 	private String name;
 
@@ -80,14 +96,14 @@ public abstract class JBroFuzzPanel extends JPanel {
 		setOpaque(false);
 		this.name = name;
 		this.frame = frame;
-		this.optionsAvailable = new boolean [] {false, false, false, false, false};
+		this.optionsAvailable = new boolean [] {false, false, true, false, false};
 
 	}
 
 	/**
 	 * <p>Obtain the JBroFuzzWindow parent frame.</p>
 	 * 
-	 * @return
+	 * @return JBroFuzzWindow
 	 */
 	public final JBroFuzzWindow getFrame() {
 
@@ -164,30 +180,30 @@ public abstract class JBroFuzzPanel extends JPanel {
 	}
 
 
-	public boolean isStarted() {
+	public boolean isStartedEnabled() {
 
 		return optionsAvailable[0];
 
 	}
 
-	public boolean isStopped() {
+	public boolean isStoppedEnabled() {
 
 		return optionsAvailable[1];
 	}
 
-	public boolean isGraphed() {
+	public boolean isGraphedEnabled() {
 
 		return optionsAvailable[2];
 
 	}
 
-	public boolean isAdded() {
+	public boolean isAddedEnabled() {
 
 		return optionsAvailable[3];
 
 	}
 
-	public boolean isRemoved() {
+	public boolean isRemovedEnabled() {
 
 		return optionsAvailable[4];
 
@@ -285,6 +301,8 @@ public abstract class JBroFuzzPanel extends JPanel {
 		final JMenuItem i4_select = new JMenuItem(new SelectAllAction());
 		final JMenuItem i5_props = new JMenuItem("Properties");
 
+		i0_open.setIcon(ImageCreator.IMG_OPENINBROWSER);
+		
 		i0_open.setEnabled(open);
 		i1_cut.setEnabled(cut);
 		i2_copy.setEnabled(copy);
@@ -314,10 +332,14 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 					if(s.equalsIgnoreCase(getFrame().getPanelFuzzing().getName())) {
 
-						Browser.init();
-						final String fileName = (String) area.getModel().getValueAt(area.convertRowIndexToModel(area.getSelectedRow()) , 0) + ".html";
+						final int c = area.getSelectedRow();
+						if(c < 0) {
+							return;
+						}
+						final String fileName = (String) area.getModel().getValueAt(area.convertRowIndexToModel(c) , 0) + ".html";
 						final File f = getFrame().getJBroFuzz().getHandler().getFuzzFile(fileName);
-
+						
+						Browser.init();
 						try {
 							Browser.displayURL(f.toURI().toString());
 						} 
@@ -396,8 +418,11 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 						// If multiple rows are selected the first row is the one
 						final int c = area.getSelectedRow();
+						if(c < 0) {
+							return;
+						}
 						final String name = (String) area.getModel().getValueAt(area.convertRowIndexToModel(c), 0);
-						new WindowViewer(JBroFuzzPanel.this, name, WindowViewer.VIEW_FUZZING_PANEL);
+						new WindowViewer(JBroFuzzPanel.this, name);
 
 					}
 
@@ -415,7 +440,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 						final int c = area.getSelectedRow();
 						final String name = (String) area.getModel().getValueAt(c, 0);
-						new WindowViewer(JBroFuzzPanel.this, name.split(" ")[0], WindowViewer.VIEW_SNIFFING_PANEL);
+						new WindowViewer(JBroFuzzPanel.this, name.split(" ")[0]);
 
 
 					}
@@ -445,6 +470,14 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 			private void checkForTriggerEvent(final MouseEvent e) {
 				if (e.isPopupTrigger()) {
+					
+					final Point point = e.getPoint();
+					final int row = area.rowAtPoint(point);
+					if( row < 0) {
+						return;
+					}
+					area.getSelectionModel().setSelectionInterval(row, row);
+					
 					area.requestFocus();
 					popmenu.show(e.getComponent(), e.getX(), e.getY());
 				}

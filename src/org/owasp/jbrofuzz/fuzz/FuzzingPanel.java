@@ -1,55 +1,78 @@
 /**
- * JBroFuzz 1.1
+ * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
 package org.owasp.jbrofuzz.fuzz;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.prefs.Preferences;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.StyledEditorKit;
 
-import java.awt.event.*;
-
-import javax.swing.text.*;
-import javax.swing.table.*;
-
-import org.owasp.jbrofuzz.io.FileHandler;
+import org.apache.commons.lang.StringUtils;
+import org.owasp.jbrofuzz.core.Fuzzer;
+import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzersAddedTableModel;
+import org.owasp.jbrofuzz.fuzz.ui.ResponseTableModel;
+import org.owasp.jbrofuzz.payloads.PayloadsDialog;
+import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.ui.tablemodels.SixColumnModel;
-import org.owasp.jbrofuzz.ui.tablemodels.ThreeColumnModel;
-import org.owasp.jbrofuzz.ui.viewers.WindowPlotter;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
-import org.owasp.jbrofuzz.util.*;
+import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.util.NonWrappingTextPane;
+import org.owasp.jbrofuzz.util.TextHighlighter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
-
-import org.owasp.jbrofuzz.ui.menu.*;
-import org.owasp.jbrofuzz.ui.panels.JBroFuzzPanel;
-import org.owasp.jbrofuzz.core.*;
-
-import java.util.*;
-import java.text.*;
-
-import org.apache.commons.lang.*;
 
 /**
  * <p>
@@ -62,42 +85,42 @@ import org.apache.commons.lang.*;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.1
+ * @version 1.2
  */
 public class FuzzingPanel extends JBroFuzzPanel {
 
 	private static final long serialVersionUID = 16982374020211L;
-	
+
 	// The output JPanel on the bottom (south) of the tab
 	private final JPanel outputPanel;
-	
+
 	// The JTextField
 	private final JTextField target;
-	
+
 	// The JTextArea
 	private final NonWrappingTextPane message;
-	
+
 	// The JTable were results are outputted
 	private JTable outputTable;
-	
+
 	// And the table model that goes with it
-	private SixColumnModel outputTableModel;
-	
+	private ResponseTableModel outputTableModel;
+
 	// The JTable of the generator
 	private JTable fuzzersTable;
-	
+
 	// And the table model that goes with it
-	private ThreeColumnModel mFuzzingTableModel;
-	
+	private FuzzersAddedTableModel mFuzzingTableModel;
+
 	// The JButtons
 	private final JButton buttonAddGen, buttonRemGen;
-	
+
 	// A counter for the number of times fuzz has been clicked
 	private int counter, session;
-	
+
 	// The console
 	private JTextArea console;
-	
+
 	// The frame window
 	private JBroFuzzWindow m;
 
@@ -117,7 +140,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 *            FrameWindow
 	 */
 	public FuzzingPanel(final JBroFuzzWindow m) {
-		
+
 		super(" Fuzzing ", m);
 
 		this.m = m;
@@ -126,13 +149,13 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		stopped = true;
 		// Set the enabled options: Start, Stop, Graph, Add, Remove
-		setOptionsAvailable(true, false, false, true, false);
-		
+		setOptionsAvailable(true, false, true, true, false);
+
 		// The target panel
 		final JPanel targetPanel = new JPanel(new BorderLayout());
 		targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" URL "), BorderFactory.createEmptyBorder(
-				1, 1, 1, 1)));
+						1, 1, 1, 1)));
 
 		target = new JTextField();
 		target.setEditable(true);
@@ -141,10 +164,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		target.setMargin(new Insets(1, 1, 1, 1));
 		target.setBackground(Color.WHITE);
 		target.setForeground(Color.BLACK);
-		
+
 		// Right click: Cut, Copy, Paste, Select All
 		popupText(target, true, true, true, true);
-		
+
 		targetPanel.add(target);
 
 		// The message panel
@@ -158,7 +181,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		message.setEditable(true);
 		message.setVisible(true);
 		message.setFont(new Font("Verdana", Font.PLAIN, 12));
-		
+
 		message.setMargin(new Insets(1, 1, 1, 1));
 		message.setBackground(Color.WHITE);
 		message.setForeground(Color.BLACK);
@@ -171,9 +194,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			public Document createDefaultDocument() {
 				return new TextHighlighter();
 			}
-			
+
 		});
-		
+
 		// Right click: Cut, Copy, Paste, Select All
 		popupText(message, true, true, true, true);
 
@@ -209,9 +232,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		generatorPanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(" Added Payloads Table"),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-		
+
 		// The fuzzing table and model
-		mFuzzingTableModel = new ThreeColumnModel(getFrame());
+		mFuzzingTableModel = new FuzzersAddedTableModel(getFrame());
 		fuzzersTable = new JTable();
 		fuzzersTable.setBackground(Color.BLACK);
 		fuzzersTable.setForeground(Color.WHITE);
@@ -219,7 +242,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		fuzzersTable.setModel(mFuzzingTableModel);
 		// generatorTable.getSelectionModel().addListSelectionListener(new PayloadsRowListener());
 		fuzzersTable.getModel().addTableModelListener(new PayloadsModelListener());
-		
+
 		// Set the column widths
 		TableColumn column = null;
 		for (int i = 0; i < mFuzzingTableModel.getColumnCount(); i++) {
@@ -247,7 +270,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		generatorPanel.add(buttonAddGen);
 
 		generatorPanel.setBounds(570, 20, 300, 160);
-		
+
 		// The console panel
 
 		JPanel consolePanel = new JPanel();
@@ -257,15 +280,15 @@ public class FuzzingPanel extends JBroFuzzPanel {
 						BorderFactory.createEmptyBorder(5, 5, 5, 5) 
 				)
 		);
-		
+
 
 		console = new JTextArea();
 		console.setFont(new Font("Verdana", Font.PLAIN, 10));
 		console.setEditable(false);
-		
+
 		// Right click: Cut, Copy, Paste, Select All
 		popupText(console, false, true, false, true);
-		
+
 		consoleEvent = 0;
 
 		JScrollPane consoleScrollPane = new JScrollPane(console);
@@ -279,12 +302,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				.createTitledBorder(" Output "), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
 
-		outputTableModel = new SixColumnModel();
-		outputTableModel.setColumnNames("No", "Target", "Timestamp", "Status", "Request", "Response Size");
+		outputTableModel = new ResponseTableModel();
 
 		outputTable = new JTable(outputTableModel);
 
-		TableRowSorter<SixColumnModel> sorter = new TableRowSorter<SixColumnModel>(outputTableModel);
+		TableRowSorter<ResponseTableModel> sorter = new TableRowSorter<ResponseTableModel>(outputTableModel);
 		outputTable.setRowSorter(sorter);
 
 		outputTable.setBackground(Color.white);
@@ -331,11 +353,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 							final int c = outputTable.getSelectedRow();
 							final String name = (String) outputTable.getModel()
-									.getValueAt(
-											outputTable
-													.convertRowIndexToModel(c),
-											0);
-							new WindowViewer(FuzzingPanel.this, name, WindowViewer.VIEW_FUZZING_PANEL);
+							.getValueAt(
+									outputTable
+									.convertRowIndexToModel(c),
+									0);
+							new WindowViewer(FuzzingPanel.this, name);
 
 						}
 					});
@@ -382,9 +404,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		// Some value defaults
 		target.setText("https://www.owasp.org");
-		setTextRequest(JBroFuzzFormat.REQUEST_TCP);
-
-		message.setCaretPosition(0);
+		setTextRequest(JBroFuzzFormat.URL_REQUEST);
 
 	}
 
@@ -400,13 +420,13 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			selectedText = message.getSelectedText();
 		} catch (final IllegalArgumentException e) {
 			JOptionPane
-					.showInputDialog(
-							this,
-							"An exception was thrown while attempting to get the selected text",
-							"Add Generator", JOptionPane.ERROR_MESSAGE);
+			.showInputDialog(
+					this,
+					"An exception was thrown while attempting to get the selected text",
+					"Add Generator", JOptionPane.ERROR_MESSAGE);
 			selectedText = "";
 		}
-		
+
 		// Find the location of where the text has been selected
 		final int sPoint = message.getSelectionStart();
 		final int fPoint = message.getSelectionEnd();
@@ -415,30 +435,20 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		Runtime.getRuntime().gc();
 		Runtime.getRuntime().runFinalization();
-		
+
 	}
-	
+
 	public void addPayload(String Id, int start, int end) {
 
 		mFuzzingTableModel.addRow(Id, start, end);
 
 	}
-	
-	
-	
+
+
+
 	public void graph() {
-		
-		final WindowPlotter wd = new WindowPlotter(m, FileHandler
-				.getName(FileHandler.DIR_FUZZ));
-		wd.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					wd.dispose();
-				}
-			}
-		});
-		
+
+
 	}
 
 	/**
@@ -476,7 +486,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		return s;
 	}
-	
+
 	/**
 	 * <p>Get the values of the Payloads from their table, limited 
 	 * to a maximum of 1024 rows.</p>
@@ -489,14 +499,14 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * @since 1.2
 	 */
 	public String getTextPayloads() {
-		
+
 		final int rows = mFuzzingTableModel.getRowCount();
 		if (rows == 0) return "";
-		
+
 		StringBuffer output = new StringBuffer();
 		// MAX_LINES = 1024
 		for(int row = 0; row < Math.min(rows, 1024); row++) {
-			
+
 			for(int column = 0; column < mFuzzingTableModel.getColumnCount(); column++) {
 				output.append(mFuzzingTableModel.getValueAt(row, column));
 				// Append a ',' but not for the last value
@@ -509,10 +519,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				output.append('\n');
 			}
 		}
-		
+
 		return output.toString();
 	}
-	
+
 
 	/**
 	 * <p>Get the value of the Request String, limited to a maximum of 
@@ -533,38 +543,44 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * @return String
 	 */
 	public String getTextURL() {
-		
+
 		return StringUtils.abbreviate(target.getText(), 1024);
-		
+
 	}
 
 	/**
-	 * <p>
-	 * Method for setting the text displayed in the message editor pane.
-	 * </p>
+	 * <p>Method for setting the text displayed in the "Request" 
+	 * pane.</p>
+	 * <p>Also resets the caret position to 0.</p>
 	 * 
-	 * @param input
+	 * @param input The String of header lines plus body to be
+	 * displayed.
+	 * @see #setTextURL(String)
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
 	 */
 	public void setTextRequest(String input) {
-	
+
 		message.setText(input);
-	
+		message.setCaretPosition(0);
+
 	}
-	
+
 	/**
-	 * <p>Method for setting the url text field.</p>
+	 * <p>Method for setting the URL text field.</p>
 	 * 
 	 * @param input
 	 *
-	 * @see 
+	 * @see #setTextRequest(String)
 	 * @author subere@uncon.org
 	 * @version 1.2
 	 * @since 1.2
 	 */
 	public void setTextURL(String input) {
-		
+
 		target.setText(input);
-		
+
 	}
 
 	/**
@@ -574,11 +590,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * </p>
 	 */
 	public void remove() {
-		
-		if(!isAdded()) {
+
+		if(!isAddedEnabled()) {
 			return;
 		}
-		
+
 		final int rows = fuzzersTable.getRowCount();
 		if (rows < 1) {
 			return;
@@ -595,12 +611,42 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		if (selectedFuzzPoint != null) {
 			final String[] splitString = selectedFuzzPoint
-					.split(ThreeColumnModel.STRING_SEPARATOR);
+			.split(FuzzersAddedTableModel.STRING_SEPARATOR);
 			mFuzzingTableModel
-					.removeRow(splitString[0],
-							Integer.parseInt(splitString[1]), Integer
-									.parseInt(splitString[2]));
+			.removeRow(splitString[0],
+					Integer.parseInt(splitString[1]), Integer
+					.parseInt(splitString[2]));
 		}
+	}
+
+	/**
+	 * <p>Clear the URL, Request and Payloads and Responses Table Fields.
+	 * Also, set the focus on the URL area.</p>
+	 * <p>Used when opening a file, or with a File -> New operation.</p>
+	 * 
+	 *
+	 * @see 
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public void clearAllFields() {
+
+		target.setText("");
+		message.setText("");		
+		console.setText("");
+
+		topRightPanel.setTitleAt(1, " On The Wire (0) ");
+		topRightPanel.setSelectedIndex(0);
+
+		while (fuzzersTable.getRowCount() > 0) {
+			mFuzzingTableModel.removeRow(0);
+		}
+		while (outputTable.getRowCount() > 0) {
+			outputTableModel.removeRow(0);
+		}
+
+		target.requestFocusInWindow();
 	}
 
 	/**
@@ -613,44 +659,28 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		Runtime.getRuntime().gc();
 		Runtime.getRuntime().runFinalization();
 
-		// JButton startButton = getFrame().getFrameToolBar().start;
-		// JButton stopButton = getFrame().getFrameToolBar().stop;
-		// JButton buttonPlot = getFrame().getFrameToolBar().graph;
-
 		if (!stopped) {
 			return;
 		}	
 		stopped = false;
+
 		// Start, Stop, Graph, Add, Remove
-		setOptionsAvailable(false, true, false, false, false);
+		setOptionsAvailable(false, true, true, false, false);
 		buttonAddGen.setEnabled(false);
 		buttonRemGen.setEnabled(false);
-		
-		
-		// UI and Colors
-		// startButton.setEnabled(false);
-		// stopButton.setEnabled(true);
-		// buttonPlot.setEnabled(true);
+
+
 		target.setEditable(false);
 		target.setBackground(Color.BLACK);
 		target.setForeground(Color.WHITE);
-		console.setText("");
+
+		console.append("\n--> JBroFuzz Fuzzing Session: " + (session + 1) + " -->\n\n");
 		console.setBackground(Color.BLACK);
 		console.setForeground(Color.WHITE);
-		topRightPanel.setTitleAt(1, " On The Wire ");
+
+		topRightPanel.setTitleAt(1, " On The Wire (0) ");
 		topRightPanel.setSelectedIndex(1);
 		consoleEvent = 0;
-		// topRightPanel.set
-		// port.setEditable(false);
-		// port.setBackground(Color.BLACK);
-		// port.setForeground(Color.WHITE);
-
-		/*
-		 * Check to see if a message is present if
-		 * ("".equals(message.getText())) { JOptionPane.showMessageDialog(this,
-		 * "The request field is blank.\n" + "Specify a request\n", "Empty
-		 * Request Field", JOptionPane.INFORMATION_MESSAGE); return; }
-		 */
 
 		// Increment the session and reset the counter
 		session++;
@@ -659,147 +689,108 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output  " + "Logging in folder ("
 						+ JBroFuzzFormat.DATE + ") Session " + session), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
+						.createEmptyBorder(5, 5, 5, 5)));
 
 		final int rows = fuzzersTable.getRowCount();
 		if (rows == 0) {
 
 			MessageCreator currentMessage = new MessageCreator(getTextRequest(), "", 0, 0);
+			MessageWriter outputMessage = new MessageWriter(currentMessage, this);
 
-			final Date now = new Date();
-			final SimpleDateFormat format = new SimpleDateFormat("HH-mm-ss-SSS");
-			final String timestamp = format.format(now);
-			final String filename = getCounter(true);
+			outputTableModel.addNewRow(outputMessage);
 
-			outputTableModel.addRow(filename, getTextURL(), timestamp,
-					"Sending...", "1 / 1", "0 bytes");
 			outputTable.scrollRectToVisible(outputTable.getCellRect(outputTable
 					.getRowCount(), 0, true));
 
 			// Put the message on the console as it goes out on the wire
-			toConsole(currentMessage.getMessageAsPutOnTheWire());
+			toConsole(currentMessage.getMessageForDisplayPurposes());
 
 			try {
-				Connection con = new Connection(getTextURL(), currentMessage.getMessage());
-				
-				outputTableModel.updateLastRow(filename, getTextURL(),
-						timestamp, "Finished - " + con.getStatus(), "1 / 1",
-						con.getReply().getBytes().length + " bytes");
-				
-				getFrame().getJBroFuzz().getHandler().writeFuzzFile2(
-						"<!-- \r\n[ { 1 / 1 }, " + filename + " " + timestamp
-								+ "] " + "\r\n" + getTextURL() + " : "
-								+ con.getPort() + "\r\n" + con.getMessage()
-								+ "\r\n-->\r\n" + con.getReply(), filename);
-				
-			} catch (ConnectionException e) {
-				outputTableModel.updateLastRow(filename, getTextURL(),
-						timestamp, "Exception - " + e.getMessage(), "1 / 1",
-						"0 bytes");
-				getFrame().getJBroFuzz().getHandler().writeFuzzFile2(
-						"<!-- \r\n[ { 1 / 1 }, " + filename + " " + timestamp
-								+ "] " + "\r\n" + getTextURL() + " : "
-								+ "\r\n" + e.getMessage() + "\r\n-->\r\n",
-						filename);
-				
+
+				// Connect
+				Connection connection = new Connection(getTextURL(), currentMessage.getMessage());
+				// Update the message writer
+				outputMessage.setConnection(connection);
+				// Update the last row, indicating success
+				outputTableModel.updateLastRow(outputMessage);
+
+
+			} catch (ConnectionException e1) {
+
+				// Update the message writer
+				outputMessage.setException(e1);
+				// Update the last row, indicating an error
+				outputTableModel.updateLastRow(outputMessage, e1);
+
 			}
+
+			getFrame().getJBroFuzz().getHandler().writeFuzzFile(outputMessage);
+
 
 		} else {
 			for (int i = 0; i < rows; i++) {
-				final String category = (String) mFuzzingTableModel.getValueAt(
-						i, 0);
-				final int start = ((Integer) mFuzzingTableModel
-						.getValueAt(i, 1)).intValue();
-				final int end = ((Integer) mFuzzingTableModel.getValueAt(i, 2))
-						.intValue();
+
+				final String category = (String) mFuzzingTableModel.getValueAt(i, 0);
+				final int start = ((Integer) mFuzzingTableModel.getValueAt(i, 1)).intValue();
+				final int end = ((Integer) mFuzzingTableModel.getValueAt(i, 2)).intValue();
 
 				try {
-					for (Fuzzer f = new Fuzzer(category, Math.abs(end - start)); f
-							.hasNext();) {
 
-						if (!stopped) {
-							String payload = f.next();
-							MessageCreator currentMessage = new MessageCreator(
-									getTextRequest(), payload, start, end);
-							final Date now = new Date();
-							final SimpleDateFormat format = new SimpleDateFormat(
-									"HH-mm-ss-SSS");
-							final String timestamp = format.format(now);
-							final String filename = getCounter(true);
-							outputTableModel.addRow(filename, getTextURL(), timestamp, "Sending...",
-									f.getCurrectValue() + "/"
-											+ f.getMaximumValue(), "0 bytes");
-							outputTable.scrollRectToVisible(outputTable
-									.getCellRect(outputTable.getModel()
-											.getRowCount(), 0, true));
-							
-							// Put the message on the console as it goes out on the wire
-							toConsole(currentMessage.getMessageAsPutOnTheWire());
-							
-							try {
-								Connection con = new Connection(getTextURL(), currentMessage
-										.getMessage());
+					for (Fuzzer f = new Fuzzer(category, Math.abs(end - start)); f.hasNext();) {
 
-								getFrame().getJBroFuzz().getHandler()
-										.writeFuzzFile2(
-												"<!-- \r\n[ { "
-														+ f.getCurrectValue()
-														+ "/"
-														+ f.getMaximumValue()
-														+ " }, " + filename
-														+ " " + timestamp
-														+ "] \r\n"
-														+ getTextURL()
-														+ " : " + con.getPort()
-														+ "\r\n"
-														+ con.getMessage()
-														+ "\r\n-->\r\n"
-														+ con.getReply(),
-												filename);
+						if(stopped) {
+							return;
+						}
+						
+						String payload = f.next();
+						MessageCreator currentMessage = new MessageCreator(getTextRequest(), payload, start, end);
+						MessageWriter outputMessage = new MessageWriter(currentMessage, this);
 
-								outputTableModel.updateLastRow(filename, getTextURL(), timestamp,
-										"Finished - " + con.getStatus(), f
-												.getCurrectValue()
-												+ "/" + f.getMaximumValue(),
-										con.getReply().getBytes().length
-												+ " bytes");
-							} catch (ConnectionException e) {
+						outputTableModel.addNewRow(outputMessage);
 
-								getFrame().getJBroFuzz().getHandler()
-										.writeFuzzFile2(
-												"<!-- \r\n[ { "
-														+ f.getCurrectValue()
-														+ "/"
-														+ f.getMaximumValue()
-														+ " }, " + filename
-														+ " " + timestamp
-														+ "] \r\n"
-														+ getTextURL()
-														+ " : " + "\r\n"
-														+ e.getMessage()
-														+ "\r\n-->\r\n",
-												filename);
 
-								outputTableModel.updateLastRow(filename, getTextURL(), timestamp,
-										"Exception - " + e.getMessage(), f
-												.getCurrectValue()
-												+ "/" + f.getMaximumValue(),
-										"0 bytes");
-								
-							}
+						outputTable.scrollRectToVisible(outputTable.getCellRect(outputTable.getModel()
+								.getRowCount(), 0, true));
 
-							Runtime.getRuntime().gc();
-							Runtime.getRuntime().runFinalization();
+						// Put the message on the console as it goes out on the wire
+						toConsole(currentMessage.getMessageForDisplayPurposes());
+
+						try {
+
+							// Connect
+							Connection connection = new Connection(getTextURL(), currentMessage.getMessage());
+							// Update the message writer
+							outputMessage.setConnection(connection);
+							// Update the last row, indicating success
+							outputTableModel.updateLastRow(outputMessage);
+
+
+						} catch (ConnectionException e1) {
+
+							// Update the message writer
+							outputMessage.setException(e1);
+							// Update the last row, indicating an error
+							outputTableModel.updateLastRow(outputMessage, e1);
+
 						}
 
+						getFrame().getJBroFuzz().getHandler().writeFuzzFile(outputMessage);
+
+						Runtime.getRuntime().gc();
+						Runtime.getRuntime().runFinalization();
 					}
+
 				} catch (NoSuchFuzzerException e) {
 
 					getFrame().log("The fuzzer could not be found...");
 				}
 
 			}
-		}
+
+		} // else statement for no rows
+
+		// Tidy up matters in case threading chills out...
+		stop();
 
 	}
 
@@ -827,12 +818,12 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		if(total > 0 ) {	
 			buttonRemGen.setEnabled(true);
 			setOptionRemove(true);
-							
+
 		} else {	
 			buttonRemGen.setEnabled(false);
 			setOptionRemove(false);
 		}
-		
+
 		buttonAddGen.setEnabled(true);
 		if(fuzzersTable.getRowCount() > 0) {
 			buttonRemGen.setEnabled(true);
@@ -843,8 +834,16 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		target.setForeground(Color.BLACK);
 		console.setBackground(Color.WHITE);
 		console.setForeground(Color.BLACK);
-		
-		topRightPanel.setSelectedIndex(0);
+
+		// Get the preference for showing the "On The Wire" tab
+		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+		boolean showWireTab = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
+
+		if(showWireTab) {
+			topRightPanel.setSelectedIndex(1);
+		} else {
+			topRightPanel.setSelectedIndex(0);
+		}
 
 	}
 
@@ -863,12 +862,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				m.log("Fuzzing Panel: Could not clear the console");
 			}
 		} 
-		
+
 		console.append(input);
 		console.setCaretPosition(console.getText().length());
 
 	}
-
 
 	/**
 	 * <p>Inner class used to detect changes to the data managed by the fuzzers table model,
@@ -882,22 +880,34 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * 
 	 */
 	private class PayloadsModelListener implements TableModelListener {
-		
+
 		public void tableChanged(final TableModelEvent event) {
-			
+
 			int total = 0;
 			total = fuzzersTable.getRowCount(); 
 			if(total > 0 ) {
-				
+
 				buttonRemGen.setEnabled(true);
 				setOptionRemove(true);
-								
+
 			} else {	
 				buttonRemGen.setEnabled(false);
 				setOptionRemove(false);
 			}
 		}
 	}
-	
+
+	/**
+	 * <p>Check if fuzzing is taking place.</p>
+	 * 
+	 * @return True if a fuzzing session is underway.
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public boolean isStopped() {
+		return stopped;
+	}
 }
 

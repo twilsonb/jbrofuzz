@@ -1,41 +1,64 @@
 /**
  * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
 package org.owasp.jbrofuzz.ui.menu;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.prefs.Preferences;
 
-import java.awt.event.*;
-import java.util.*;
-import java.util.prefs.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 
-import javax.swing.tree.*;
-import javax.swing.event.*;
-
-import org.owasp.jbrofuzz.io.*;
-import org.owasp.jbrofuzz.util.*;
-import org.owasp.jbrofuzz.version.*;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -48,8 +71,12 @@ import org.owasp.jbrofuzz.version.*;
  */
 
 public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
-
-	private static final long serialVersionUID = 4301858021356404678L;
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 594984166923205227L;
+	
 	// Dimensions of the about box
 	private static final int x = 650;
 	private static final int y = 400;
@@ -63,11 +90,11 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	// The actual preferences object
 	private Preferences prefs;
 
-	private static final String [] nodeNames = {"Preferences", "Directory Locations", "Fuzzing", "Sniffing", "Graphing"};
+	private static final String [] nodeNames = {"Preferences", "Directory Locations", "Fuzzing"};
 	
 	private JPanel [] panels = new JPanel[nodeNames.length];
 
-	public JBroFuzzPrefs(final JFrame parent) {
+	public JBroFuzzPrefs(final JBroFuzzWindow parent) {
 
 		super(parent, " JBroFuzz - Preferences ", true);
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
@@ -166,9 +193,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[1].add(Box.createRigidArea(new Dimension(0, 20)));
 		
 		HashMap<String, String> dirHash = new HashMap<String, String>(4);
-		// dirHash.put(" Launch Directory (where JBroFuzz is running from) ", System.getProperty("user.dir"));
-		dirHash.put(" Fuzzing (where data is saved) ", FileHandler.getCanonicalPath(FileHandler.DIR_FUZZ));
-		dirHash.put(" Sniffing (where data is saved) ", FileHandler.getCanonicalPath(FileHandler.DIR_AUTO));
+		dirHash.put(" Fuzzing (where data is saved) ", parent.getJBroFuzz().getHandler().getCanonicalPath());
 		
 		for(String dir : dirHash.keySet()) {
 			
@@ -181,7 +206,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 			
 		}
 
-		// Create the options in the fuzzing panel
+		// Fuzzing Panel -> Socket Timeout CheckBox
 		
 		final boolean socketbox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
 		final JCheckBox socketCheckBox = new JCheckBox(" Extend the socket timeout from 5 seconds to 30 seconds ", socketbox);
@@ -201,27 +226,50 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[2].add(socketCheckBox);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 		
-		// Create the options in the sniffing panel
+		// Fuzzing Panel -> End of Line Character
 		
-		final boolean hexbox = prefs.getBoolean(JBroFuzzFormat.PR_SNIF_1, true);
-		final JCheckBox hexBoxCheck = new JCheckBox(" Display and store binary files in hexadecimal format ", hexbox);
+		final boolean endlinebox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
+		final JCheckBox endlineCheckBox = new JCheckBox(" Use \"\\n\" instead of \"\\r\\n\" as an end of line character ", endlinebox);
 		
-		hexBoxCheck.setBorderPaintedFlat(true);
-		hexBoxCheck.setToolTipText("Tick this box, if you want to store, view and browse sniffed binary content in hexadecimal form");
+		endlineCheckBox.setBorderPaintedFlat(true);
+		endlineCheckBox.setToolTipText("Tick this box, if you want to use \"\\n\" for each line put on the wire");
 		
-		hexBoxCheck.addActionListener(new ActionListener() {
+		endlineCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				if (hexBoxCheck.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_SNIF_1, true);
+				if (endlineCheckBox.isSelected()) {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_2, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_SNIF_1, false);
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
+				}
+			}
+		});
+		panels[2].add(endlineCheckBox);
+		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
+		
+		// Fuzzing Panel -> Show on the wire tab after fuzzing finished
+		
+		final boolean showwirebox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
+		final JCheckBox showwireCheckBox = new JCheckBox(" Show \"On The Wire\" tab after fuzzing has stopped or finished ", showwirebox);
+		
+		showwireCheckBox.setBorderPaintedFlat(true);
+		showwireCheckBox.setToolTipText("Tick this box, if you want to always see the \"On The Wire\" tab");
+		
+		showwireCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (showwireCheckBox.isSelected()) {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3, true);
+				} else {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
 				}
 			}
 		});
 		
-		panels[3].add(hexBoxCheck);
-		panels[3].add(Box.createRigidArea(new Dimension(0, 20)));
+		panels[2].add(showwireCheckBox);
+		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 		
+		// Create the options in the sniffing panel
+		
+
 		// Create the options in the graphing panel
 		
 		

@@ -1,38 +1,53 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
 package org.owasp.jbrofuzz.ui.viewers;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.prefs.Preferences;
 
-import javax.swing.*;
-import org.owasp.jbrofuzz.ui.panels.*;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingWorker;
+
+import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.util.SwingWorker3;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -41,31 +56,15 @@ import org.owasp.jbrofuzz.util.SwingWorker3;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 0.8
+ * @version 1.2
  * @since 0.2
  */
 public class WindowViewer extends JFrame {
 
-	private static final long serialVersionUID = 8155212112319053158L;
-
 	/**
-	 * <p>
-	 * Constant used for specifying within which directory to look for the
-	 * corresponding file. Using this value will point to the sniffing directory
-	 * used for the corresponding session.
-	 * </p>
+	 * 
 	 */
-
-	public static final int VIEW_SNIFFING_PANEL = 1;
-
-	/**
-	 * <p>
-	 * Constant used for specifying within which directory to look for the
-	 * corresponding file. Using this value will point to the fuzzing directory
-	 * used for the correspondng session.
-	 * </p>
-	 */
-	public static final int VIEW_FUZZING_PANEL = 2;
+	private static final long serialVersionUID = 2268254810798437349L;
 
 	/**
 	 * <p>
@@ -75,63 +74,63 @@ public class WindowViewer extends JFrame {
 	 * 
 	 * @param parent
 	 * @param name
-	 * @param typeOfPanel
 	 */
-	public WindowViewer(final JBroFuzzPanel parent, final String name, final int typeOfPanel) {
-		
+	public WindowViewer(final JBroFuzzPanel parent, final String name) {
+
 		super("JBroFuzz - File Viewer - " + name + ".html");
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 
-		// The Container Pane
+		// The container pane
 		final Container pane = getContentPane();
-		pane.setLayout(null);
+		pane.setLayout(new BorderLayout());
 
 		// Define the Panel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1,
-				1, 1)));
-		listPanel.setBounds(10, 10, 520, 450);
+				.createTitledBorder(name + ".html"), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
+		listPanel.setLayout(new BorderLayout());
 
 		// Define the Text Area
 		final JTextArea listTextArea = new JTextArea();
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
-		
+
+		// Get the preferences for wrapping lines of text
+		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+		boolean wrapText = prefs.getBoolean(JBroFuzzFormat.PR_WORD_WRAP, false);
+		listTextArea.setLineWrap(wrapText);
+
 		// Right click: Cut, Copy, Paste, Select All
 		parent.popupText(listTextArea, false, true, false, true);
-		
+
 		// Define the Scroll Pane for the Text Area
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
 		listTextScrollPane.setHorizontalScrollBarPolicy(30);
-		listTextScrollPane.setPreferredSize(new Dimension(500, 410));
 
-		StringBuffer textBuffer = new StringBuffer();
-
-		if (typeOfPanel == WindowViewer.VIEW_FUZZING_PANEL) {
-			textBuffer = parent.getFrame().getJBroFuzz().getHandler().readFuzzFile(name + ".html");
-		}
 		
-		final String text = textBuffer.toString();
-
-		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(name + ".html"), BorderFactory
-				.createEmptyBorder(1, 1, 1, 1)));
-
-		// Define the Progress Bar
-		final JProgressBar progressBar = new JProgressBar(0, text.length());
-		progressBar.setValue(0);
+		// Define the progress bar
+		final JProgressBar progressBar = new JProgressBar();
+		progressBar.setString("   ");
 		progressBar.setStringPainted(true);
-		progressBar.setBounds(410, 465, 120, 20);
+		progressBar.setBounds(410, 265, 120, 20);
+
+		// Define the bottom panel with the progress bar
+		final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		bottomPanel.add(progressBar);
+
+		listTextArea.setCaretPosition(0);
+		listPanel.add(listTextScrollPane);
 
 		// Global Frame Issues
-		this.add(listPanel);
-		this.add(progressBar);
+		pane.add(listPanel, BorderLayout.CENTER);
+		pane.add(bottomPanel, BorderLayout.SOUTH);
+
 		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math.abs(parent.getLocationOnScreen().y + 20));
 		this.setSize(550, 525);
-		
-		setResizable(false);
+
+		setResizable(true);
 		setVisible(true);
 		setDefaultCloseOperation(2);
 
@@ -144,27 +143,33 @@ public class WindowViewer extends JFrame {
 			}
 		});
 
-		SwingWorker3 worker = new SwingWorker3() {
+		class FileLoader extends SwingWorker<String, Object> {
 
 			@Override
-			public Object construct() {
-				int n = 0;
+			public String doInBackground() {
 
-				while (n < text.toString().length()) {
-					listTextArea.append("" + text.toString().charAt(n));
-					progressBar.setValue(n);
-					n++;
-				}
+				progressBar.setIndeterminate(true);
 
-				progressBar.setValue(n);
-				return "return-worker";
+				final StringBuffer textBuffer = new StringBuffer(
+
+						parent.getFrame().getJBroFuzz().getHandler().readFuzzFile(name + ".html")
+
+				);
+
+				listTextArea.setText(textBuffer.toString());
+
+				return "done";
 			}
 
-		};
-		worker.start();
+			@Override
+			protected void done() {
 
-		listTextArea.setCaretPosition(0);
-		listPanel.add(listTextScrollPane);
+				progressBar.setIndeterminate(false);
+				progressBar.setValue(100);
+			}
+		}
+
+		(new FileLoader()).execute();
 
 	}
 

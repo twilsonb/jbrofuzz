@@ -1,35 +1,53 @@
 /**
- * JBroFuzz 1.1
+ * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
 package org.owasp.jbrofuzz.fuzz;
 
-import org.apache.commons.lang.*;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
-
-import javax.net.ssl.*;
-import java.net.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.prefs.Preferences;
-import java.io.*;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import org.apache.commons.lang.StringUtils;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -62,19 +80,6 @@ public class Connection {
 
 	private int socketTimeout;
 
-	/**
-	 * <p>
-	 * Implement a connection to a particular address, on a given port,
-	 * specifying the message to be transmitted.
-	 * </p>
-	 * 
-	 * @param address
-	 *            String
-	 * @param port
-	 *            String
-	 * @param message
-	 *            String
-	 */
 	public Connection(final String urlString, final String message) throws ConnectionException {
 
 		try {
@@ -206,7 +211,7 @@ public class Connection {
 					int got;
 					boolean end_reached = false;
 					while ( (!end_reached) && ((got = in_stream.read(recv)) > -1) ) {
-						
+
 						baos.write(recv, 0, got);
 
 						// Check if \r\n has come in, in its many shapes and forms
@@ -219,7 +224,7 @@ public class Connection {
 								if(incoming.contains("\r\n0\r\n") || incoming.contains("\n0\n")|| incoming.contains("\r0\r") ) {
 									end_reached = true;
 								}
-								
+
 							} else {
 								end_reached = true;
 							}
@@ -281,6 +286,10 @@ public class Connection {
 					final byte[] allbytes = baos.toByteArray();
 					reply = new String(allbytes);
 
+				} catch (final IllegalArgumentException e) {
+					reply = "Bad arguments : " + e.getMessage() + "\n";
+					throw new ConnectionException(reply);
+
 				} catch (final UnknownHostException e) {
 					reply = "The IP address of the host could not be determined : "
 						+ e.getMessage() + "\n";
@@ -293,13 +302,13 @@ public class Connection {
 				}
 			}
 			else { // If HTTP/1.1 is being used, handle separately
-				 
+
 				try {
 					socket = new Socket(host, port);
 					socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
 					socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
 					socket.setSoTimeout(socketTimeout);
-					
+
 					in_stream = socket.getInputStream();
 					out_stream = socket.getOutputStream();
 
@@ -309,7 +318,7 @@ public class Connection {
 					int got;
 					boolean end_reached = false;
 					while ( (!end_reached) && ((got = in_stream.read(recv)) > -1) ) {
-						
+
 						baos.write(recv, 0, got);
 
 						// Check if \r\n has come in, in its many shapes and forms
@@ -322,7 +331,7 @@ public class Connection {
 								if(incoming.contains("\r\n0\r\n") || incoming.contains("\n0\n")|| incoming.contains("\r0\r") ) {
 									end_reached = true;
 								}
-								
+
 							} else {
 								end_reached = true;
 							}
@@ -339,6 +348,10 @@ public class Connection {
 					final byte[] allbytes = baos.toByteArray();
 					reply = new String(allbytes);
 
+				} catch (final IllegalArgumentException e) {
+					reply = "Bad arguments : " + e.getMessage() + "\n";
+					throw new ConnectionException(reply);
+
 				} catch (final UnknownHostException e) {
 					reply = "The IP address of the host could not be determined : "
 						+ e.getMessage() + "\n";
@@ -356,60 +369,77 @@ public class Connection {
 		}
 	}
 
-	/**
-	 * <p>
-	 * Return the message request sent on the Socket.
-	 * </p>
-	 * 
-	 * @return StringBuffer
-	 */
-	public String getMessage() throws ConnectionException {
+	public String getMessage() {
 		if (message.isEmpty()) {
-			throw new ConnectionException("The message is blank");
+			return "[JBROFUZZ REQUEST IS BLANK]";
 		} else {
 			return message;
 		}
 	}
 
-	public int getPort() {
+	public String getPort() {
 
-		return port;
+		if (port == -1) {
+			return "[JBROFUZZ PORT IS INVALID]";
+		} else {
+			return "" + port;
+		}
 
 	}
 
 	/**
-	 * <p>
+	 *  <p>
 	 * Return the reply from the Connection that has been made, based on the
 	 * message that has been transmitted during construction.
 	 * </p>
+	 * <p>Revisited this method in JBroFuzz 1.2 in order NOT to throw an 
+	 * exception if the reply string is empty, see {@link #getMessage()} for
+	 * old implementation logic.</p>
 	 * 
-	 * @return String
+	 * @return String The reply string
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.0 
 	 */
-	public String getReply() throws ConnectionException {
+	public String getReply() {
+
 		if (reply.isEmpty()) {
-			throw new ConnectionException("The reply is blank");
+			return "[JBROFUZZ REPLY IS EMPTY]";
 		} else {
 			return reply;
 		}
+		
 
 	}
 
-	public String getStatus() throws ConnectionException {
+	/**
+	 * <p>Return the HTTP status code, e.g. 200, 404, etc.</p>
+	 * <p>In case of a non-existant code, return "---".</p>
+	 * 
+	 * @return String of three characters with the code value.
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public String getStatus() {
 
-		String output = "---";
-
-		String value;
 		try {
-			value = reply.split(" ")[1];
+			final String out = reply.split(" ")[1].substring(0, 3);
+			
+			if(StringUtils.isNumeric(out)) {
+				return out;
+			} else {
+				return "000";
+			}
+			
 		} catch (Exception e) {
-			throw new ConnectionException("Could not obtain the status");
+			
+			return "---";
+			
 		}
 
-		if (StringUtils.isNumeric(value)) {
-			output = value;
-		}
-
-		return output;
 	}
 
 	/**

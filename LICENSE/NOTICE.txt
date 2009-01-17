@@ -14,10 +14,10 @@ codec, httpclient and logging libraries used are licensed
 under the Apache License that should also be included 
 within this distribution.
 
-This product includes JCCKit. JCCKit is licensed under the
-GNU Lesser General Public License; a copy should be 
-included within this distribution; If not you can 
-find it at http://www.gnu.org/licenses/lgpl.txt
+This product includes JFreeChart and JCommon. Both JFreeChart
+and JCommon are licensed under the GNU Lesser General Public 
+License; a copy should be included within this distribution; 
+if not you can find it at http://www.gnu.org/licenses/lgpl.txt
 
 This product includes JUnit. JUnit is Open Source Software, 
 released under the Common Public License Version 1.0.

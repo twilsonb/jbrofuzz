@@ -1,37 +1,44 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
 package org.owasp.jbrofuzz.ui.menu;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -48,12 +55,10 @@ import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
- * <p>
- * The about box used in the FrameWindow.
- * </p>
+ * <p>The about box used in the FrameWindow.</p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 1.2
  */
 public class AboutBox extends JDialog {
 
@@ -61,16 +66,34 @@ public class AboutBox extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = -7515292150164781290L;
+	
+	/**
+	 * <p>Constant for the about tab to be displayed.</p>
+	 */
 	public static final int ABOUT = 0;
+	
+	/**
+	 * <p>Constant for the license tab to be displayed.</p>
+	 */
 	public static final int LICENSE = 1;
+	
+	/**
+	 * <p>Constant for the disclaimer tab to be displayed.</p>
+	 */
 	public static final int DISCLAIMER = 2;
+	
+	/**
+	 * <p>Constant for the acknowledgements tab to be displayed.</p>
+	 */
 	public static final int ACKNOWLEDGEMENTS = 3;
 
 	// Dimensions of the about box
 	private static final int x = 450;
 	private static final int y = 300;
+	
 	// The tabbed pane, holding all the different panels and labels
 	private JTabbedPane tabbedPane;
+	
 	// The ok button at the bottom of the box
 	private JButton ok;
 
@@ -79,9 +102,13 @@ public class AboutBox extends JDialog {
 	 * The main constructor for the AboutBox. This method is private as it is
 	 * being called through the singleton method get instance.
 	 * </p>
+	 * @param parent 
+	 * @param tab 
 	 */
 	public AboutBox(final JFrame parent, final int tab) {
+		
 		super(parent, " JBroFuzz - About ", true);
+		
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -94,9 +121,11 @@ public class AboutBox extends JDialog {
 				.getResource("LICENSE/NOTICE.txt");
 
 		// The about editor label
-		final JLabel about = new JLabel(JBroFuzzFormat.ABOUTTEXT,
+		final JLabel about = new JLabel(JBroFuzzFormat.ABOUT,
 				ImageCreator.IMG_OWASP, SwingConstants.LEFT);
-
+		about.setIconTextGap(20);
+		about.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+		
 		// The license editor pane
 		JEditorPane license;
 		try {
@@ -114,7 +143,9 @@ public class AboutBox extends JDialog {
 
 		// The disclaimer editor label
 		final JLabel disclaimer = new JLabel(JBroFuzzFormat.DISCLAIMER, ImageCreator.IMG_OWASP, SwingConstants.LEFT);
-
+		disclaimer.setIconTextGap(20);
+		disclaimer.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+		
 		// The acknoledgement editor pane
 		JEditorPane acknoledgements;
 		try {
@@ -124,7 +155,7 @@ public class AboutBox extends JDialog {
 			acknoledgements.setText("Acknoledgements file cannot be found");
 		}
 		acknoledgements.setEditable(false);
-
+		
 		final JScrollPane ackScrollPane = new JScrollPane(acknoledgements);
 		ackScrollPane.setVerticalScrollBarPolicy(20);
 		ackScrollPane.setHorizontalScrollBarPolicy(30);
@@ -134,10 +165,12 @@ public class AboutBox extends JDialog {
 		tabbedPane.add(about, " About ");
 		tabbedPane.add(lcsScrollPane, " License ");
 		tabbedPane.add(disclaimer, " Disclaimer ");
-		tabbedPane.add(ackScrollPane, " Acknoledgements ");
+		tabbedPane.add(ackScrollPane, " Acknowledgements ");  
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		
 		// Set the tab to be displayed
 		setTab(tab);
+		
 		// OK Button
 		ok = new JButton("  OK  ");
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,

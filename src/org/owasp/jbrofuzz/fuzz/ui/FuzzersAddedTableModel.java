@@ -1,27 +1,33 @@
 /**
- * JBroFuzz 1.0
+ * JBroFuzz 1.2
  *
- * JBroFuzz - A stateless network protocol fuzzer for penetration tests.
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008 subere@uncon.org
+ * Copyright (C) 2007, 2008, 2009 subere@uncon.org
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or any later version.
- *
- * This program is distributed in the hope that it will be useful,
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA  02110-1301, USA.
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
  * 
  */
-package org.owasp.jbrofuzz.ui.tablemodels;
+package org.owasp.jbrofuzz.fuzz.ui;
 
 import java.util.Vector;
 
@@ -29,45 +35,6 @@ import javax.swing.table.AbstractTableModel;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 
-;
-
-class Generator {
-	protected String type;
-	protected Integer start;
-	protected Integer end;
-
-	public Generator(final String generator, final int start, final int end) {
-
-		this.start = Integer.valueOf(start);
-		this.end = Integer.valueOf(end);
-		type = generator;
-
-	}
-
-	public int getEnd() {
-		return end.intValue();
-	}
-
-	public int getStart() {
-		return start.intValue();
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setEnd(final int end) {
-		this.end = Integer.valueOf(end);
-	}
-
-	public void setStart(final int start) {
-		this.start = Integer.valueOf(start);
-	}
-
-	public void setType(final String generator) {
-		type = generator;
-	}
-}
 
 /**
  * <p>
@@ -78,9 +45,13 @@ class Generator {
  * @author subere (at) uncon (dot) org
  * @version 0.6
  */
-public class ThreeColumnModel extends AbstractTableModel {
+public class FuzzersAddedTableModel extends AbstractTableModel {
 
-	private static final long serialVersionUID = 1012351L;
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6995264785224510555L;
 
 	/**
 	 * <p>
@@ -110,7 +81,7 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 * @param fPanel
 	 *            FuzzingPanel
 	 */
-	public ThreeColumnModel(final JBroFuzzWindow fPanel) {
+	public FuzzersAddedTableModel(final JBroFuzzWindow fPanel) {
 		this.fPanel = fPanel;
 		dataVector = new Vector<Generator>();
 	}
@@ -140,7 +111,7 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getColumnCount() {
-		return ThreeColumnModel.COLUMNNAMES.length;
+		return FuzzersAddedTableModel.COLUMNNAMES.length;
 	}
 
 	/**
@@ -152,7 +123,7 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 */
 	@Override
 	public String getColumnName(final int column) {
-		return ThreeColumnModel.COLUMNNAMES[column];
+		return FuzzersAddedTableModel.COLUMNNAMES[column];
 	}
 
 	/**
@@ -167,9 +138,9 @@ public class ThreeColumnModel extends AbstractTableModel {
 	public String getRow(final int row) {
 		final StringBuffer output = new StringBuffer();
 		if ((row > -1) && (row < dataVector.size())) {
-			for (int i = 0; i < ThreeColumnModel.COLUMNNAMES.length; i++) {
+			for (int i = 0; i < FuzzersAddedTableModel.COLUMNNAMES.length; i++) {
 				output.append(getValueAt(row, i)
-						+ ThreeColumnModel.STRING_SEPARATOR);
+						+ FuzzersAddedTableModel.STRING_SEPARATOR);
 			}
 		}
 		return output.toString();
@@ -241,7 +212,7 @@ public class ThreeColumnModel extends AbstractTableModel {
 	 */
 	@Override
 	public boolean isCellEditable(final int row, final int column) {
-		if (column == ThreeColumnModel.INDEX_GENERATOR) {
+		if (column == FuzzersAddedTableModel.INDEX_GENERATOR) {
 			return true;
 		} else {
 			return false;
@@ -272,6 +243,24 @@ public class ThreeColumnModel extends AbstractTableModel {
 		if (rowToRemove > -1) {
 			dataVector.removeElementAt(rowToRemove);
 			fireTableRowsDeleted(0, rowToRemove);
+		}
+	}
+	
+	/**
+	 * <p>Remove a particular row from the table model.</p>
+	 * 
+	 * @param row The row to remove
+	 *
+	 * @see 
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public void removeRow(final int row) {		
+		
+		if((row > -1) && (row < dataVector.size())) {
+			dataVector.removeElementAt(row);
+			fireTableRowsDeleted(0, row);
 		}
 	}
 

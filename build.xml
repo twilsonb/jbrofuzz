@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="edol" default="build" basedir=".">
+<project name="jbrofuzz" default="build" basedir=".">
 	<property name="app.name" value="JBroFuzz" />
 
 	<path id="master-classpath" description="Master Classpath">
@@ -10,25 +10,6 @@
 			<include name="*.jar" />
 		</fileset>
 	</path>
-	
-	<!--
-	<javadoc packagenames="org.owasp.jbrofuzz.*"
-	           sourcepath="src"
-	           defaultexcludes="yes"
-	           destdir="doc"
-	           author="true"
-	           version="true"
-	           use="true"
-	           windowtitle="JBroFuzz API">
-	    
-		<doctitle><![CDATA[<h1>JBroFuzz</h1>]]></doctitle>
-	    <bottom><![CDATA[<i>Copyright &#169; 2008 The OWASP Foundation</i>]]></bottom>
-	    <tag name="todo" scope="all" description="To do:"/>
-	    <group title="JBroFuzz Packages" packages="org.owasp.jbrofuzz.*"/>
-	    <link href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
-	
-	</javadoc>
-	-->
 	
 	<target name="init" description="Setup for Build">
 		<tstamp />
@@ -63,7 +44,8 @@
 			<zipfileset src="lib/commons-logging-1.1.jar" />
 			<zipfileset src="lib/junit-4.5.jar" />
 			<zipfileset src="lib/ostermillerutils_1_07_00.jar" />
-			<zipfileset src="lib/jcckit.jar" />
+			<zipfileset src="lib/jcommon-1.0.15.jar" />
+			<zipfileset src="lib/jfreechart-1.0.12.jar" />
 			<manifest>
 				<attribute name="Main-Class" value="org.owasp.jbrofuzz.JBroFuzz" />
 				<attribute name="Build-By" value="subere@uncon.org" />
