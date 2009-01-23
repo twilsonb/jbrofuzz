@@ -1,128 +1,67 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
 <title></title>
 </head>
 <body bgcolor="#ffffff">
-<h3><font face="Verdana">Help Topics&nbsp;</font>  </h3>
-<p><font face="Verdana" size="2">JBroFuzz 
-is a stateless network protocol fuzzer that emerged from the needs of 
-penetration testing. JBroFuzz's design emphasizes simplicity and ease-of-use. We 
-are attempting to get you to cover the basics in terms of penetration testing 
-for web applications by means of creating malformed data and having the 
-network protocol in question consume the data.</font> </p><font face="Verdana" size="2">
-<p>
+<h1>Help Topics&nbsp;</h1>
+<p>JBroFuzz has been designed for fuzzing web applications that use the HTTP<sup>1</sup> and/or the HTTPS<sup>2</sup> protocol. This is a penetration testing tool. </p>
+<br>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
 border=0>
-  
   <tr>
-    <td>
-<p><font face="Verdana" size="2">The 
-one-page summary&nbsp;here within aims to provide all the information for you to 
-get started and use JBroFuzz productively. For more detailed information, you 
-can also use the left-hand menu to navigate to particular topics.</font> </p></td></tr></table> </p>
-<hr> 
-            
-           
-          </font>
-<p>
+    <td><p>This one-page summary&nbsp;describes the components of JBroFuzz. For more detailed information on each of the the mentioned <strong>(in bold) </strong>below, use the left-hand menu to navigate to a particular topic. </p></td>
+  </tr>
+</table>
+<hr>
 <table cellspacing="0" cellpadding="6" width="100%" align="center" border="0">
   <tbody>
-  <tr>
-    <td width="70%">
-      <h3>A Brief Overview of JBroFuzz</h3>
-      <p><font face="Verdana" size="2" 
-      >           
-                JBroFuzz consists of 
-      a number of tabs. You can navigate through the tabs by clicking on 
-      each one located at the bottom left corner within the window of the 
-      application.</font></p>
-      <p><font face="Verdana" size="2" 
-      >           
-                   
-           You can also show or hide individual tabs 
-      by using the "Show/Hide" menu and then selecting the corresponding 
-      tab.</font>&nbsp;</p>
-      <p>
-      <table cellspacing="0" cellpadding="3" width="100%" align="center" 
+    <tr>
+      <td width="70%"><p>When JBroFuzz is launched, the first thing that you see (<em>after the splash screen</em>) is a single window with 4 tabs. Each tab represents a particular component of the application. You can navigate through the tabs by clicking on each one located (by default) at the bottom left corner within the window of the application. </p>
+        <p>&nbsp;</p>
+        <table cellspacing="0" cellpadding="3" width="100%" align="center" 
       bgColor=#c0c0c0 border=0>
-        
-        <tr>
-          <td>
-      <p><font face="Verdana" size="2">By 
-      default 4 tabs are shown: </font></p></td></tr></table></p>
-      <ul>
-	  <li><font face="Verdana"><font 
-        size=2><strong>Fuzzing&nbsp;</strong>Allows you 
-        to perform plaintext fuzzing operations over HTTP or HTTPS, attaching any number of 
-        generators to the request being made </font></font>
-        <li><font face="Verdana"><font 
-        size=2><strong>Sniffing </strong>Allows you to 
-        act as a TCP proxy between any two locations by establishing a man in 
-        the middle channel </font></font>
-                            <li><font 
-        size=2 face="Verdana"><strong>Payloads&nbsp;</strong>Shows the 
-        list of available loaded generators&nbsp;containing templates 
-        for&nbsp;XSS,&nbsp;SQL injection and other attacks&nbsp; </font>
-        <li><font face="Verdana"><font 
-        size=2><strong>Web Directories </strong>Allows you 
-        to perform directory enumeration attacks over HTTP or HTTPS </font></font></li>
-      </ul>
-      <p><font face="Verdana" size="2" 
-      >
-      <table cellspacing="0" cellpadding="3" width="100%" align="center" 
+          <tr>
+            <td><p>Tip: You can also show or hide individual tabs by using the <em>&quot;View&quot;</em> - <em>&quot;Show/Hide&quot;</em> menu and then selecting the corresponding tab.</p></td>
+          </tr>
+        </table>
+        <p>&nbsp;</p>
+        <p>The components of JBroFuzz are all integrated into a single window and can be accessed through individual tabs. These tabs are:</p>
+        <p>&nbsp; </p>
+        <p><strong>Fuzzing&nbsp;</strong>The fuzzing tab is the main tab of JBroFuzz, responsible for all fuzzing operations performed over the network. Depending on the fuzzer payloads selected, it creates the malformed data for each request, puts it on the wire and writes the response to a file. </p>
+        <p>&nbsp;</p>
+        <p><strong>Graphing&nbsp;</strong>The graphing tab is responsible for graphing (in a variety of forms) the responses received while fuzzing. This tab can offer a clear indication of a response that is different then the rest received, an indication of further examination being required. </p>
+        <p>&nbsp;</p>
+        <p><strong>Payloads&nbsp;</strong>The payloads tab is a collection of fuzzers with their corresponding payloads that can be used while fuzzing. Payloads are added to the request in the fuzzing tab; a more clear view of what payloads are available, how they are grouped and what properties each fuzzer has can be seen in this tab. </p>
+        <p>&nbsp;</p>
+        <p><strong>Headers&nbsp;</strong>The headers tab is a collection of browser headers that can be used while fuzzing. Headers are obtained from different browsers on different platforms and operating systems. This tab is provided, as many web applications respond differently to different browser impersonation attacks. </p>
+        <p>&nbsp;</p>
+        <table cellspacing="0" cellpadding="3" width="100%" align="center" 
       bgColor=#c0c0c0 border=0>
-        
-        <tr>
-          <td>
-      <p><font face="Verdana" size="2" 
-           >There are also 1 more tab: </font></p></td></tr></table>      </font>
-      <ul>
-        <li><font face="Verdana"><font 
-        size=2><strong>System&nbsp;</strong>Provides useful 
-        information regarding system operations. Here you can access java runtime 
-            information, see any errors that might occur and also track operation in terms 
-            of events being logged</font></font></li></ul></td>
-    <td valign="top" width="30%" bgcolor="#8080ff" v V>
-      <h3>Fuzzing Concepts: Fundamentals</h3><font 
-      face=Verdana size=2>
-      <p><font face="Verdana" size="2"> 
-                Fuzzing describes a methodology for software testing. 
-                </font></p>
-      <p>&nbsp;</p>
-      <p>The concept stems from Boundary Value Analysis 
-      (BVA) [1]</p>
-      <p><font face="Verdana" size="2"></font>&nbsp;</p>
-      <p><font face="Verdana" size="2"><em>"...Fuzzing can take many forms depending on the 
-      type of protocol, and the desired tests..."</em> [2]</font></p>
-      <p>&nbsp;</p>
-      <p>There are many fuzzer types [3]. JBroFuzz attempts 
-      to encompass the following category types:&nbsp;</p>
-      <ul>
-        <li>
-      <div>Network Protocol Fuzzer</div></li>
-        <li>
-      <div>Web Application 
-      Fuzzer&nbsp; 
-      </font></div></li></ul></td></tr></tbody></table></p>
+          <tr>
+            <td><p>Tip: Access the System tab to monitor JBroFuzz operations and verbose messages. </p></td>
+          </tr>
+        </table>
+        <p>&nbsp;</p>
+        <p><strong>System&nbsp;</strong>The system tab represents the logging console of JBroFuzz at runtime. Here you can access java runtime information, see any errors that might occur and also track operation in terms of events being logged.</p></td>
+      <td valign="top" width="30%" bgcolor="#8080ff"><h3>Fuzzing Fundamentals</h3>
+        <p>Fuzzing is a methodology for software testing, which stems from Boundary Value Analysis (BVA)<sup>3</sup>. This methodology can take many forms depending on the desired tests performed<sup>4</sup>. </p>
+        <p>&nbsp;</p>
+        <p>Fuzzers are applications developed to perform fuzzing. These applications fall in a variety of different categories, called fuzzer types. From known fuzzer types<sup>5</sup>, JBroFuzz falls in the category of a web application fuzzer, a subset category of network protocol fuzzers. </p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+  </tbody>
+  </td>
+  
+  </tr>
+  
+</table>
 <hr>
-      <p><font face="Verdana" size="2" 
-      >           
-                   
-                   
-                
-      Sources</font></p>
-      <p><font face="Verdana" size="2" 
-      >           
-                   
-                   
-               [1] 
-      htp://en.wikipedia.org/wiki/Boundary_value_analysis</font></p>
-      <p><font face="Verdana" size="2">[2] 
-http://marc2.theaimsgroup.com/?l=spike&amp;m=105606327823227&amp;w=2 </font></p>
-      <p><font face="Verdana" size="2">[3] M Sutton, A Greene, P 
-Amini, "Fuzzing: Brute Force Vulnerability Discovery", 2007, pp. 
-33-44</font></p>
+<p>[1] http://en.wikipedia.org/wiki/Http </p>
+<p>[2] http://tools.ietf.org/html/rfc2818</p>
+<p>[3] http://en.wikipedia.org/wiki/Boundary_value_analysis</p>
+<p>[4] http://marc2.theaimsgroup.com/?l=spike&amp;m=105606327823227&amp;w=2</p>
+<p>[5] M Sutton, A Greene, P Amini, &quot;Fuzzing: Brute Force Vulnerability Discovery&quot;, 2007, pp. 33-44</p>
 <hr>
 </body>
 </html>

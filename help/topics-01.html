@@ -1,11 +1,86 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
-<title>JBroFuzz - Graphing Tab</title>
+<title></title>
 </head>
 <body bgcolor="#ffffff">
-<h3><font face="Verdana">Graphing Tab</font></h3>
-<p><font face="Verdana" size="2">This tab graphs any data collected during fuzzing.</font></p>
- 
+<h1>Fuzzing Tab &nbsp;</h1>
+<p>The fuzzing tab is the main tab of JBroFuzz, responsible for all fuzzing operations performed over the network. Depending on the fuzzer payloads selected, it creates the malformed data for each request, puts it on the wire and writes the response to a file. </p>
+<br>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Getting Started: Having selected the fuzzing tab, click <em>&quot;Start&quot;</em> in the tool bar menu. This will send a single request and record the corresponding response. </p></td>
+  </tr>
+</table>
+<hr>
+<table cellspacing="0" cellpadding="6" width="100%" align="center" border="0">
+  <tbody>
+    <tr>
+      <td width="70%"><p>The fuzzing tab is comprised of the following 5 components, described below: </p>
+        <p>&nbsp;</p>
+        <p><strong>URL</strong> The URL component is where protocol,  hostname and port information is entered. In a different manner than the URL entered in a browser, only the protocol,  hostname and port information is read from this component. Examples include:</p>
+        <p>&nbsp;</p>
+        <p><code>http://www.someurl.com:8088<br>
+          https://www.gmail.com<br>
+        http://www.owasp.org<br>
+        http://www.microsoft.com</code></p>
+        <p>&nbsp;</p>
+        <table cellspacing="0" cellpadding="3" width="100%" align="center" 
+      bgColor=#c0c0c0 border=0>
+          <tr>
+            <td><p>Tip: To copy and paste a browser URL use <em>&quot;File&quot;</em> - <em>&quot;Open Location &quot;</em> [Ctrl + L] option from the file menu.</p></td>
+          </tr>
+        </table>        <p>&nbsp;</p>
+        <p><strong>Request&nbsp;</strong>The request component is where request information is entered. Text entered in this component represents what will be placed on the wire. The default end of line character is: &quot;\r\n&quot; and can be changed through the preferences option from the file menu. Finally, payloads can be added to parts of the request text entered. Depending on the payload and length selected, this will increase the number of requests sent, consecutively, to the specified host. <strong>See also</strong>: On The Wire. An example request is:</p>
+        <p>&nbsp;</p>
+        <p><code>GET /index.php/Main_Page HTTP/1.1<br>
+          Host: localhost<br>
+          User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1<br>
+          Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5<br>
+          Accept-Language: en-gb,en;q=0.5<br>
+        Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7</code></p>
+        <p></p>
+        <p>&nbsp;</p>
+        <p><strong>Payloads&nbsp;</strong>The payloads component represents the record of what payloads have been added to the request and at which point. Payloads can be added or removed, using the &quot;Add&quot; or &quot;Remove&quot; options available in the menu. An example of a payload added is:</p>
+        <p>&nbsp;</p>
+        <p><code>B10-DEC&nbsp;:&nbsp;13&nbsp;:&nbsp;14</code></p>
+        <p>&nbsp;</p>
+        <p>Meaning that all base 10 fuzzer payloads will be sent as part of the request, replacing the 13th to 14th characters of the request with the consecutive values {0, 1, 2, ..., 9}. In this case, we are using this fuzzer to test supported HTTP versions on a given host. </p>
+        <p>&nbsp;</p>
+        <table cellspacing="0" cellpadding="3" width="100%" align="center" 
+      bgColor=#c0c0c0 border=0>
+          <tr>
+            <td><p>Tip: To add a payload, select part of the request and select the <em>&quot;Add&quot;</em>  [Ctrl + =] option from the file or tool bar menu. Proceed to select the fuzzer of payloads required and select &quot;Add Fuzzer&quot;. </p></td>
+          </tr>
+        </table> <p>&nbsp;</p>
+        <p><strong>On The Wire &nbsp;</strong>The on the wire component shows all data as it is placed on the wire. Typically, this data will be a combination of the request and selected payloads sent while fuzzing. </p>
+        <p>&nbsp;</p>
+        <p><strong>Output&nbsp;</strong>The output panel keeps a record of each response received back from the host while fuzzing. It represents a record of what is being written to file as it is being received. </p>
+        <p>&nbsp;</p>
+      </td>
+      <td valign="top" width="30%" bgcolor="#8080ff"><h3>Response Output </h3>
+        <p>For each request transmitted, the response received is recorded to file by JBroFuzz. Files saved are also used to perform graphing operations (see &quot;Graphing Tab&quot;). </p>
+        <p>&nbsp;</p>
+        <p>The characteristics monitored are the following:</p>
+        <p>&nbsp;</p>
+        <p><strong>No</strong>: The number given to the request sent.</p>
+        <p>&nbsp;</p>
+        <p><strong>Target</strong>: The target host, protocol and port (if any).</p>
+        <p>&nbsp;</p>
+        <p><strong>Status</strong>: The HTTP status code (if any) received back.</p>
+        <p>&nbsp;</p>
+        <p><strong>Response Time</strong>: The time, in milliseconds that it took to receive back the response, since the request was sent.</p>
+        <p>&nbsp;</p>
+        <p><strong>Response Size</strong>: The size, in bytes of the response received. </p>
+        <p>&nbsp;</p>
+    </tbody>
+  </td>
+  
+  </tr>
+  
+</table>
+<hr>
+<p>&nbsp; </p>
+<hr>
 </body>
 </html>

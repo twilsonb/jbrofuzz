@@ -1,99 +1,44 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
-<meta name="GENERATOR" content="PageBreeze HTML Editor">
 <title></title>
 </head>
 <body bgcolor="#ffffff">
-<h3><font face="Verdana">Payloads Tab&nbsp;</font></h3>
-<p><font face="Verdana" size="2">The 
-    payloads tab provides a list of all generators that have been successfully 
-loaded during start-up.</font> </p>
-<p><font face="Verdana" size="2"> 
-            
-  </font>&nbsp; </p>
-<p><font face="Verdana" size="2">Generators are used for fuzzing. By selecting part of the 
-message request in the "<i>Fuzzing</i>" tab you 
-can add a generator to a specific range of the request, thus 
-fuzzing that range.</font> </p>
+<h1>Payloads Tab &nbsp;</h1>
+<p>The payloads tab provides a number of different groupings for the payloads available in JBroFuzz. Payloads are grouped into fuzzers and each fuzzer can belong to any number of categories.<br>
+</p>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Getting Started: A collection of <em>Payloads </em>is a <em>Fuzzer</em>, which in turn can belong to a number of different <em>Categories</em>. </p></td>
+  </tr>
+</table>
 <hr>
-
-<p>
 <table cellspacing="0" cellpadding="6" width="100%" align="center" border="0">
   <tbody>
-  <tr>
-    <td bgcolor="#c0c0c0">
-      <h3>How to use</h3>
-      <ul>
-        <li><font face="Verdana"><font size="2"><strong>This tab offers 
-        information on&nbsp;successfully loaded 
-        generators</strong> </font></font>
-        <li><strong><font face="Verdana" size="2">The list 
-        provided is available for use within the "Add Generator" functionality 
-        of the "Fuzzing" tab</font></strong>&nbsp;</li></ul>
-      <h3>
-      <hr>
-      What to expect</h3>
-      <p><font face="Verdana" size="2">A 
-      list of 
-      all successfully loaded generators is diplayed at the top. This is followed by all generator details. These are 
-      in the following format:</font> 
-      <ul>
-        <li>
-        <div><font face="Verdana" size="2">        
-        Each generator has 2 or 3 three letter codenames (e.g. INT-UPP, NUM-DEC) 
-</font></div>
-        <li>
-        <div><font face="Verdana" size="2">Each generator has a 
-        name that follows (e.g. Integer Overflows)</font></div>
-        <li>
-        <div><font face="Verdana" size="2">The corresponding 
-        tests follow:</font></div>
-        <ul>
-        <li>
-        <div><font face="Verdana" size="2">One test per 
-          line</font></div>
-        <li>
-        <div><font face="Verdana" size="2">Generator ends by 
-          a blank line</font></div></li></ul></li></ul>
-      <h3>
-      <hr>
-       </h3>
-      <h3>
-      Advanced options</h3>
-      <p><font face="Verdana" size="2">      
-          To access the payloads, unzip the JBroFuzz.jar file and view the file: 
-          &quot;generators.jbrofuzz&quot;.      
-          You can specify you own generators to be loaded during startup, 
-      by modifying the this file and then re-packaging JBroFuzz.jar . </font>
-      <p><font face="Verdana" size="2">        
-       The particular file format used within the file should be followed.</font> 
-
-      <ul>
-        <li><font face="Verdana"><font size="2"><strong># at the 
-        beginning of a line indicates a comment 
-        line</strong>&nbsp; 
-        </font></font></li></ul></td>
-    <td><font face="Verdana" size="2">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; </font></td>
-    <td valign="top" width="200" bgcolor="#8080ff" v V>
-      <h3>jbrofuzz-generators file:</h3><font face="Verdana" size="2">
-      <p><font face="Verdana" size="2">    This 
-      file is distributed with jbrofuzz.</font></p>
-      <p>&nbsp;</p>
-      <p><font face="Verdana" size="2">The 
-      application expects the file to be in the same directory as that 
-      from which jbrofuzz is launched from.</font></p>
-      <p>&nbsp;</p>
-      <p>An identical file exists within the bundled 
-      jar/exe file. In the event of not being able to locate 
-      the jbrofuzz-generators file in the&nbsp;launch directory, the file within the jar/exe will be 
-      used.</font>&nbsp; </p>
-      <p>&nbsp;</p>
-      <p><font face="Verdana" size="2">Not being able to locate 
-      the jbrofuzz-generators file will generate a note in the "System" tab, 
-      stating that the file could not be 
-found.</font>         
-             </p></td></tr></tbody></table></p>
+    <tr>
+      <td width="70%"><p>A list of all successfully loaded categories of fuzzers is displayed on the left hand side. </p>
+        <p>&nbsp;</p>
+        <p>By clicking on a particular category, the list of all fuzzers belonging to it, is displayed in the middle panel.</p>
+        <p>&nbsp;</p>
+        <p>Selecting a particular fuzzer, shows the corresponding payloads that constitute it, on the right hand panel. </p>
+        <p>&nbsp;</p>
+        <table cellspacing="0" cellpadding="3" width="100%" align="center" 
+      bgColor=#c0c0c0 border=0>
+          <tr>
+            <td><p>Tip: Double click on a particular payload to see its value in a separate window.</p></td>
+          </tr>
+        </table>      <td valign="top" width="30%" bgcolor="#8080ff"><h3>Adding your own Fuzzers</h3>
+          <p>To access the payloads, unzip the JBroFuzz.jar file and view the file: &quot;<em>fuzzers.jbrofuzz</em>&quot;. </p>
+          <p>&nbsp;</p>
+          <p>You can specify you own generators to be loaded during startup, by modifying the this file and then re-packaging JBroFuzz.jar.</p>
+          </tbody>
+  </td>
+  
+  </tr>
+  
+</table>
+<hr>
+<p>&nbsp; </p>
 <hr>
 </body>
 </html>

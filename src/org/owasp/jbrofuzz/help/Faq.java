@@ -72,9 +72,10 @@ public class Faq extends JFrame implements TreeSelectionListener {
 	private static final int y = 400;
 
 	// The final String Array of tree nodes
-	private static final String[] nodeNames = { "FAQ", "System Requirements", "Java Issues",
-		"Installation", "Files & Directories", "What is a Fuzzer?",
-	"Sniffing Ports" };
+	private static final String[] nodeNames = { 
+		"FAQ", "System Requirements", "Java",
+		"Installation", "Files & Directories", "Fuzzers & Payloads"
+	};
 	// The buttons
 	private JButton ok;
 	// The tree
@@ -100,7 +101,6 @@ public class Faq extends JFrame implements TreeSelectionListener {
 		}
 		faqShowing = true;
 
-		// super(parent, " JBroFuzz - Frequently Asked Questions ", true);
 		setTitle(" JBroFuzz - Frequently Asked Questions ");
 
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
@@ -108,21 +108,16 @@ public class Faq extends JFrame implements TreeSelectionListener {
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		faqURL = new URL[nodeNames.length];
-		for (int i = 0; i < nodeNames.length; i++) {
-			if (i < 10) {
-				faqURL[i] = ClassLoader.getSystemClassLoader().getResource(
-						"help/faq-0" + i + ".html");
-			} else {
-				faqURL[i] = ClassLoader.getSystemClassLoader().getResource(
-						"help/faq-" + i + ".html");
-			}
-		}
-
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
 				nodeNames[0]);
-		for (int i = 1; i < nodeNames.length; i++) {
-			top.add(new DefaultMutableTreeNode(nodeNames[i]));
+
+		for (int i = 0; i < nodeNames.length; i++) {
+			faqURL[i] = ClassLoader.getSystemClassLoader().getResource(
+					"help/faq-0" + i + ".html");
+			if(i > 0) {
+				top.add(new DefaultMutableTreeNode(nodeNames[i]));
+			}
 		}
 
 		// Create a tree that allows one selection at a time.
@@ -162,18 +157,17 @@ public class Faq extends JFrame implements TreeSelectionListener {
 		// Bottom button
 		ok = new JButton("  OK  ");
 
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
-				15, 15));
+		final JPanel buttonPanel = new JPanel(
+				new FlowLayout(FlowLayout.RIGHT,15, 15)
+		);
 		buttonPanel.add(ok);
 
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				//SwingUtilities.invokeLater(new Runnable() {
-				//	public void run() {
+
 				faqShowing = false;
 				Faq.this.dispose();
-				//	}
-				//});
+
 			}
 		});
 
@@ -189,7 +183,7 @@ public class Faq extends JFrame implements TreeSelectionListener {
 
 		setResizable(true);
 		setVisible(true);
-		
+
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override

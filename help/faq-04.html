@@ -1,78 +1,31 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
-<meta name="GENERATOR" content="PageBreeze HTML Editor">
-<title></title>
-    <style type="text/css">
-        .style1
-        {
-            font-size: x-small;
-        }
-    </style>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JBroFuzz Frequently Asked Questions</title>
 </head>
 <body bgcolor="#ffffff">
-<h3><font face="Verdana">JBroFuzz 
-    FAQ - Files &amp; Directories</font><font face="Verdana" size="2" ><br />
-    <br />
+<h1>JBroFuzz FAQ - Files &amp; Directories </h1>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Q: What files and directories get created when I launch JBroFuzz?</p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
-  
   <tr>
-    <td>
-      <p><font face="Verdana" size="2"><strong>Q: What are all 
-      these folders that get created when I run the 
-    JBroFuzz?</strong>      
-       </font></p></td></tr>
-  <tr>
-    <td>
-<p class="style1">&nbsp;</p>
-        <p><font face="Verdana">    
-              
-              <span class="style1">JBroFuzz creates 
-      the following 3 folders under the folder jbrofuzz 
-      in the location that it got launched 
-from:</span></font><span class="style1"> </span>        
-          
-              
-           
+    <td><p>At launch JBroFuzz creates the following folders within the directory in which it is. </p>
+      <p>&nbsp;</p>
+      <p><code>jbrofuzz | fuzz | 001 2009-01-01 10-10-50</code></p>
+      <p>&nbsp;</p>
+      <p>The final directory (a timestamp) is where all file fuzzing data is stored in individual files. <br>
       </p>
-      <ul>
-        <li>
-<div>
-    <p class="style1">
-        fuzzing
-    </p>
-          
-              
-           
-          </div></li>
-        <li>
-<div>
-    <p class="style1">
-        sniffing
-    </p>
-          
-              
-           
-          </div></li>
-        <li>
-<div>
-    <p class="style1">
-                web-dir
-                                </p>
-          
-              
-           
-          </div></li></ul>
-<p class="style1">Each one is used for saving requests and responses for each corresponding 
-      tab. Within this folder a session folder gets created  
-            using the current timestamp as a name.        
-          
-              
-           
-      </p>
-                    <p class="style1">&nbsp;</p>
-      </td></tr></table>             
-</font>      </h3>
+    </td>
+  </tr>
+</table>
+<hr>
+<p>&nbsp;</p>
 </body>
 </html>
