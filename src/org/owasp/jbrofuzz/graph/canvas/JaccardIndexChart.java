@@ -66,7 +66,7 @@ public class JaccardIndexChart {
 
 		}
 
-		dataset.addValue(y_data[index], "Row 1", x_data[index]);
+		dataset.addValue(y_data[index], "Jaccard Index", x_data[index]);
 
 
 	}

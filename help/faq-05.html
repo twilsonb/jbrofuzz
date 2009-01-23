@@ -1,144 +1,76 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
-<meta name="GENERATOR" content="PageBreeze HTML Editor">
-<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JBroFuzz Frequently Asked Questions</title>
 </head>
 <body bgcolor="#ffffff">
-<h3><font face="Verdana">JBroFuzz 
-    FAQ - What is a Fuzzer?</font></h3>
-    <h3>
-           <br />
-           <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
+<h1>JBroFuzz FAQ - Fuzzers &amp; Payloads </h1>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
 border=0>
-             <tr>
-               <td><p><font size="2" face="Verdana"><strong> Q: What is a Fuzzer?</strong></font></p>
-                 </td>
-             </tr>
-             <tr>
-               <td><p>&nbsp;</p>
-                   <p><font face="Verdana" size="2"> A fuzzer contains a particular character set which will be tested against the specified range of the request. </font> </p>
-                   <p>&nbsp;</p>
-                   <p><font face="Verdana" size="2"> Some examples of fuzzers:</font> </p>
-                           <ul>
-                               <li><font face="Verdana" size="2">Sending all requests of : 0000 to 1111 (binary generator over 4 characters) 
-                                   </font></li>
-                               <li><font face="Verdana" size="2">Sending all requests of : 00 to 99 (decimal generator over 2 characters).</font>
-                               </li>
-                           </ul>
-                   <p>&nbsp;</p>
-                           <p><font face="Verdana" size="2"> To get a better understanding of how fuzzers work, view the tutorial demo that is available for download.</font> </p></td>
-             </tr>
-             <tr>
-               <td>&nbsp;</td>
-             </tr>
-           </table>
-           <font 
-size=2><font face="Verdana"><font >
-    </h3>
-<p>
-    <br />
+  <tr>
+    <td><p>Q: What is a Fuzzer?</p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
-  
   <tr>
-    <td>
-      <p><strong><font face="Verdana" size="2"> Q: Where are all the fuzzer definitions 
-          stored?</td></tr>
-  <tr>
-    <td>
-<p>&nbsp;</p>
-                    <p><font face="Verdana" size="2">    
-              
-                
-                        All fuzzer definitions are loaded at start time, from the fileneed to select the part of 
-      the request that you would like to 
-fuzz.</font>        
-          
-              
-           
-           </p>
-<p>&nbsp;</p>
-                    <p><font face="Verdana" size="2">    
-              
-                
-      This then gives you the ability to add 
-      a number of generators on the specified 
-range.    
-              
-           
-           </p>
-<p>&nbsp;</p>
-                    <p>As a result, the generator gets added to 
-      the generators list on the right hand 
-side.        
-          
-              
-           
-           </p>
-                    <p>&nbsp;</p>
-      </td>
-    </tr>
+    <td><p>A fuzzer is a collection of payloads. A fuzzer contains a particular character set which will be tested against the specified range of the request.</p>
+      <p> </p>
+      <p>Some examples of fuzzers:</p>
+      <p> * Sending all requests of : 0000 to 1111 (binary generator over 4 characters)<br>
+  * Sending all requests of : 00 to 99 (decimal generator over 2 characters).</p>
+      <p> </p>
+      <p>To get a better understanding of how fuzzers work, view the tutorial demo that is available for download.</p></td>
+  </tr>
 </table>
-</p>
-<p>
-    <br />
+<hr>
+<p>&nbsp;</p>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Q: Where are all the fuzzer definitions stored?<br>
+    </p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
-  
   <tr>
-    <td>
-      <p><strong><font face="Verdana" size="2">Q: How do I learn more Q: How do I learn more about this 
-      term fuzzing?</font></strong></p></td></tr>
-  <tr>
-    <td>
-<p>&nbsp;</p>
-        <p><font face="Verdana" size="2">    
-              
-                
-          A fine definition attempt 
-      can be found in the spike mailing 
-list:</font>        
-          
-              
-           
-           </p>
-<p>&nbsp;</p>
-                    <p><font face="Verdana" size="2">http://marc2.theaimsgroup.com/?l=spike&amp;m=105606327823227&amp;w=2    
-              
-                
-              
-             
-    
-              
-           
-           </p>
-<p>&nbsp;</p>
-                    <p>In general though, RTFM. 
-      Here are some 'manuals' to get you 
-going:        
-          
-              
-           
-           </p>
-<p>&nbsp;</p>
-                    <p>http://www.scadasec.net/secwiki/FuzzingTools    
-              
-                
-              
-             
-           </p>
-<p>&nbsp;</p>
-                    <p><font size="2">It might also be worth examining the 
-      sources available at the bottom of the main Help Topics 
-  page.</font>        
-          
-              
-           
-           </p>
-                    <p>&nbsp;</p></td></tr>
+    <td><p>All fuzzer definitions are loaded from the file fuzzers.jbrofuzz</p>
+      <p></p>
+      <p></p>
+      <p>This is an internal file within JBroFuzz and can be found inside the JBroFuzz.jar java archive. </p>
+      <p> </p>
+      <p></p></td>
+  </tr>
 </table>
-           </font></font></font><font size="2"><font 
-face=Verdana><font >         </font></font></font></p>
+<hr>
+<p>&nbsp;</p>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Q: How do I learn more about fuzzing?</p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
+border=0>
+  <tr>
+    <td><p>An attempt to define the term can be found on the spike mailing list:</p>
+      <p> </p>
+      <p>http://marc2.theaimsgroup.com/?l=spike&amp;m=105606327823227&amp;w=2</p>
+      <p>&nbsp;</p>
+      <p>http://www.scadasec.net/secwiki/FuzzingTools</p>
+      <p><br>
+      </p></td>
+  </tr>
+</table>
+<hr>
+<p>&nbsp;</p>
+
 </body>
 </html>

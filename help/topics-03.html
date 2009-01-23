@@ -1,98 +1,31 @@
-    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<meta name="generator" content="HTML Tidy for Linux (vers 1 September 2005), see www.w3.org">
 <title></title>
-
-<style type="text/css">
-        .style1
-        {
-            font-family: Verdana;
-            font-size: x-small;
-        }
-</style>
-
-<style type="text/css">
- body {
-  background-color: #FFFFFF;
- }
- span.c3 {font-family: Verdana; font-size: 80%}
- p.c2 {font-family: Verdana; font-size: 80%}
- h3.c1 {font-family: Verdana}
-</style>
 </head>
-<body>
-<h3 class="c1">Fuzzing Tab </h3>
-<p class="c2">This tab allows you to perform fuzzing, by specifying a URL and clicking "Start". It represents the main tab of JBroFuzz.</p>
-<p class="c2">A number of payloads can be added to the message request being submitted:</p>
-<p>- <span class="c3">Highlight any part of the "Request" panel</span></p>
-<p class="c2">- Click " + " to add a fuzzer and select "Start"</p>
-<p class="c2">JBroFuzz will iterate (either recursively or replacively) through the payloads of the fuzzer selected, producing the results in the "Output" panel at the bottom.</p>
-<p><span class="c3">Details for particular payloads and corresponding fuzzers can be found in the "Payloads" tab.</span> </p>
+<body bgcolor="#ffffff">
+<h1>Headers Tab &nbsp;</h1>
+<p>The headers tab provides a number of browser headers collected from different browsers on a variety of different operating systems. </p>
+<p>&nbsp;</p>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Getting Started: Click on a particular node, on the left hand side, to see its header and corresponding properties<em></em>. </p></td>
+  </tr>
+</table>
 <hr>
 <table cellspacing="0" cellpadding="6" width="100%" align="center" border="0">
-<tbody>
-<tr>
-<td bgcolor="#c0c0c0">
-<h3>HelloGoogle Tutorial</h3>
-<p class="style1">Similarly to HelloWorld examples used in programming, this section demonstrates a HelloGoogle, i.e. how to send a single request to a google web server using (in this case) JBroFuzz.</p>
-<ul>
-<li>
-<div class="style1">In the URL Panel (top left section) replace "http://localhost" with " <a href="http://www.google.com">http://www.google.com</a> "</div>
-<li>
-<div class="style1">From the Toolbar menu select "Start"&lt; icon)&gt;</div>
-</li>
-</ul>
-<p class="style1">That's it! What happened?</p>
-<p class="style1">A connection to <a href="http://www.google.com">www.google.com</a> has been made, supplying as a request, the text in the request field.</p>
-<ul>
-<li>
-<p class="style1">Double-click on the line added to the output panel to examine the request and response received</p>
-<li>
-<p class="style1">Repeat the same exercise, supplying as URL: <a href="https://www.gmail.com">https://www.gmail.com</a></p>
-</li>
-</ul>
-<h3>Fuzzing Workflow Process by Example</h3>
-<p>We have examined how a single request is sent to a web server over a standard port. In order to perform a fuzzing operation, a generator needs to be added to part of the request submitted. JBroFuzz will then iterate through all the possible requests, submitting them sequentially to web server selected.</p>
-<p>Exercise: "Examine which HTTP major protocol versions the URL <a href="https://www.cia.gov">https://www.cia.gov</a> supports</p>
-<ul>
-<li>In the URL Panel (top left section) type <a href="https://www.cia.gov">https://www.cia.gov</a>
-<li>In the Request Panel (top left section) 
-        highlight using the mouse the number '1' in the first line: "GET / 
-        HTTP/1.0" 
-        
-<li>In the Toolbar, select the "Add Generator" 
-        button (labelled with a cross icon) and double click on "NUM-OCT" 
-        
-<li>In the Toolbar, select "Fuzz" (labelled with a play icon)</li>
-</ul>
-<p>What happened?</p>
-<p>We selected to add the number octal generator to the digit '1' that is part of the first line of the request we are submitted to <a href="https://www.cia.gov">https://www.cia.gov</a> .</p>
-<p>Thus a total of 8 requests will be submitted to the web server, consecutively:</p>
-<ul>
-<li>"GET / HTTP/0.0" 
-        
-<li>"GET / HTTP/1.0" 
-        
-<li>.... 
-        
-<li>"GET / HTTP/7.0"</li>
-</ul>
-<p>Notice that we get a response from cia.gov of size 31882 for the first request, being "GET / HTTP/0.0" !!!</p>
-<h3>General How to Use</h3>
-<p class="c2">In order to perform fuzzing, you will need to add one or more generators to the request being submitted:/font&gt;</p>
-<ul>
-<li><strong><span class="c3">Select (highlight) part of the message request</span> </strong>
-<li><strong><span class="c3">Select "Add a Generator"</span></strong>
-<li><strong><span class="c3">Select the type (e.g. DEC for "Decimal Fuzz Type")</span></strong></li>
-</ul>
-<p class="c2">As an example, in the case you selected the above and highlighted a single character from the request, a total of 10 requests iterating through digits 0 to 9 will be sent to the target.</p>
-<ul>
-<li><span class="c3"><strong> <span class="c3">Select "Fuzz!" to begin</span> </strong></span></li>
-</ul>
-</td>
-</tr>
-</tbody>
+  <tbody>
+    <tr>
+      <td width="70%"><p>This tab is provided, as many web applications respond differently to different browser impersonation attacks.</p>
+      <td valign="top" width="30%" bgcolor="#8080ff"><h3>&nbsp;</h3>
+          </tbody>
+  </td>
+  
+  </tr>
+  
 </table>
+<hr>
+<p>&nbsp; </p>
+<hr>
 </body>
 </html>

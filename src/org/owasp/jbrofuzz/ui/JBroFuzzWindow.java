@@ -184,8 +184,8 @@ public class JBroFuzzWindow extends JFrame {
 		tp.add(gp.getName(), gp);
 		tp.add(pp.getName(), pp);
 		tp.add(sp.getName(), sp);
-		
-		tp.setSelectedIndex(3);
+		// The selected tab
+		tp.setSelectedIndex(0);
 		
 		tp.addChangeListener(new ChangeListener() {
 			// Change listener for the tabbed pane

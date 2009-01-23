@@ -1,182 +1,68 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
-<meta name="GENERATOR" content="PageBreeze HTML Editor">
-<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JBroFuzz Frequently Asked Questions</title>
 </head>
 <body bgcolor="#ffffff">
-<h3><font face="Verdana">JBroFuzz 
-Frequently Asked Questions 
-(FAQ)</font>  &nbsp;&nbsp;      </h3>
-<p>
-    <br />
-<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
+<h1>JBroFuzz Frequently Asked Questions (FAQ)&nbsp;</h1>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
 border=0>
-  
   <tr>
-    <td>
-      <p><strong><font face="Verdana" size="2">Q: What can I find within this section?</font></strong></p></td></tr>
-  <tr>
-    <td>
-<p>&nbsp;</p>
-        <p><font face="Verdana" size="2">    
-              
-                
-       Frequently asked questions cover basic guidelines and pointers towards 
-    aspects of using JBroFuzz, it&#39;s purpose and underlying philosophy. </font>&nbsp;</p>
-           &nbsp;<p><font face="Verdana" size="2">    
-              
-                
-                        This section is structured into a number of sub-sections that can be accessed by 
-                        clicking on the panel on the left hand side of this window. </font>        
-          
-              
-           
-      </p>
-                    <p>&nbsp;</p>
-      <p><font face="Verdana" size="2">More detailed information, can be found in the Help 
-          Topics section. </font></p>
-                    <p>&nbsp;</p></td></tr></table>        </p><font ><font 
-><font >
-<p>
-    <br />
-<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
-border=0>
-  
-  <tr>
-    <td>
-      <p><strong><font face="Verdana" size="2">Q: Fancy wording what does JBroFuzz 
-          actually do?</font></strong></p></td></tr>
-  <tr>
-    <td>
-      <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">JBroFuzz has the ability to send intentionally 
-          malformed data to any web server, recording the responses. </font></p>
-        <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">This yields testing certain aspects of the security 
-            of web servers, by crafting corresponding requests and reviewing the responses 
-            received.</font></p>
-        <p>&nbsp;</p>
-      <p><font face="Verdana" size="2">The term stateless simply implies that the 
-          different requests/replies being generated do not depend on previous ones made. </font></p>
-                    <p>&nbsp;</p>
-    </td></tr></table>        
-          
-              
-           
-           </p>
-<p>
-    <br />
-<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
-border=0>
-  
-  <tr>
-    <td>
-      <p><strong><font face="Verdana" size="2">  Q: So what is 
-      the motto?</font></strong></p></td></tr>
-  <tr>
-    <td>
-<p>&nbsp;</p>
-        <p><font face="Verdana" size="2">    
-              
-                
-          If you can't fuzz 
-      with JBroFuzz you probably don't want to 
-fuzz!</font>        
-          
-              
-           
-      </p>
-      <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">Paraphrasing Chet's ending line speech, this 
-      application tries to make fuzzing as simple and less time consuming as 
-      possible. </font></p>
-                    <p>&nbsp;</p></td></tr></table>    
-           
-          
-              
-            
-   </font></font></font><font 
-></font></p>
-<p><font face="Verdana" size="2">
-    <br />
-<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
-border=0>
-  
-  <tr>
-    <td>
-        <font >
-        <strong><font face="Verdana" size="2">  Q: What JBroFuzz is not claiming to 
-        be..</font></strong></font></td>
+    <td><p>Q: What can I find within this section?</p></td>
   </tr>
-  <tr>
-    <td>
+</table>
 <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">    
-              
-               The 
-      automated answer to your problems regarding sending a 
-      bunch of AAA's to a listening daemon 
-service.</font>        
-          
-              
-           
-      </p>
-                    <p>&nbsp;</p>
-                    <p><font face="Verdana" size="2">    
-                        Unfortunately, you still have to know a bit about fuzzing web applications, HTTP 
-                        and HTTPS, headers GET and POST statements, etc. </font>        
-          
-              
-           
-      </p>
-        <p>&nbsp;</p>
-    </td></tr></table></font>        
-          
-              
-           
-           </p>
-    <p>&nbsp;
-        </p>
-    <font face="Verdana" size="2">
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
-  
   <tr>
-    <td><p><font ><strong><font face="Verdana" size="2">Q: Just what is it that you want to do? </font></strong></font></p></td></tr>
-  <tr>
-    <td>
+    <td><p>Frequently asked questions cover basic guidelines and pointers towards aspects of using JBroFuzz, it's purpose and underlying philosophy. </p>
+      <p>&nbsp;</p>
+      <p>This section is structured into a number of sub-sections that can be accessed by clicking on the panel on the left hand side of this window.</p>
+      <p>&nbsp;</p>
+      <p>More detailed information, can be found in the Help Topics section. </p></td>
+  </tr>
+</table>
+<hr>
 <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">    
-              
-               Fuzzing, if done in the right way, can produce extremely successful 
-    results. </font>        
-          
-              
-           
-      </p>
-                <p>&nbsp;</p>
-                <p><font face="Verdana" size="2">    
-              
-                                        What is the key in this often misunderstood process, relates to what 
-    you are trying to achieve while selecting the payloads and categories of fuzzers 
-    that you will use.</font>        
-          
-              
-           
-      </p>
-                <p>&nbsp;</p>
-                <p><font face="Verdana" size="2">    
-                    Try to set a number of goals before you engage with any fuzzing exercise, in 
-                    terms of what you are trying to do, how and in what time-span.</font></p>
-                <p>&nbsp;</p>
-                <p><font face="Verdana" size="2">    
-                    You cannot fuzz 
-                    the entire universe! </font>        
-          
-              
-           
-      </p>
-                <p>&nbsp;</p></td></tr></table></font>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Q: Fancy wording what does JBroFuzz actually do?</p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
+border=0>
+  <tr>
+    <td><p>JBroFuzz has the ability to send intentionally malformed data to any web server, recording the responses.</p>
+      <p>&nbsp;</p>
+      <p>This yields testing certain aspects of the security of web servers, by crafting corresponding requests and reviewing the responses received.</p>
+      <p>&nbsp;</p>
+      <p>The term stateless simply implies that the different requests/replies being generated do not depend on previous ones made. </p></td>
+  </tr>
+</table>
+<hr>
+<p>&nbsp;</p>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Q: What JBroFuzz is not claiming to be..</p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
+border=0>
+  <tr>
+    <td><p> The automated answer to your problems regarding sending a bunch of AAA's to a listening daemon service.</p>
+      <p>&nbsp;</p>
+      <p>Unfortunately, you still have to know a bit about fuzzing web applications, HTTP and HTTPS, headers GET and POST statements, etc. </p></td>
+  </tr>
+</table>
+<hr>
+<p>&nbsp;</p>
+
 </body>
 </html>

@@ -1,133 +1,93 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
-<meta name="GENERATOR" content="PageBreeze HTML Editor">
-<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JBroFuzz Frequently Asked Questions</title>
 </head>
 <body bgcolor="#ffffff">
-<h3><font face="Verdana">JBroFuzz 
-    FAQ - Java Issues</font></h3>
-    <h3><font >
-        <br />
+<h1>JBroFuzz FAQ - Java </h1>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Q: How do I run the .jar file?</p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
-  
   <tr>
-    <td>
-      <p><strong><font face="Verdana" size="2">Q: How do I run&nbsp;the .jar 
-      file?</font></strong></p></td></tr>
+    <td><p>Say the file you want to run is named: JBroFuzz.jar</p>
+      <p>&nbsp;</p>
+      <p>From the command line type the following:<br>
+&gt;&gt;<strong>java -jar JBroFuzz.jar</strong></p>
+      <p>&nbsp;</p>
+      <p>You will need to have Java installed on your system. It's probably worth checking: http://www.java.sun.com</p>
+      <p><br>
+      </p></td>
+  </tr>
+</table>
+<hr>
+<p>&nbsp;</p>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
   <tr>
-    <td>
-      <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">Say the file you want to run is named: 
-          JBroFuzz.jar</font></p>
-        <p>&nbsp;</p>
-      <p><font face="Verdana" size="2">From the command line type the 
-      following:<br>
-      <strong>&gt;&gt;java -jar 
-          JBroFuzz.jar</strong></font></p>
-      <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">You 
-      will need to have Java installed on your system. It's probably worth 
-      checking: <a href="http://www.java.sun.com">http://www.java.sun.com</a></font></p>
-        <p>&nbsp;</p>
-                    </td></tr></table>        
-          
-              
-           
-            
-   </font></h3>
-    <font >
-    <p>
-        <br />
-    </p>
+    <td><p>Q: Do I need a Java Runtime Environment (JRE)?</p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
-  
   <tr>
-    <td>
-      <p><strong><font face="Verdana" size="2">Q: Do I need a Java Runtime Environment 
-          (JRE)?</font></strong></p></td></tr>
-  <tr>
-    <td>
+    <td><p>Yes. JBroFuzz will run on any platform for which a JRE is available.</p>
       <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">Yes. JBroFuzz will on any platform for which a JRE 
-            is implemented. </font></p>
-      <p><font face="Verdana" size="2">JREs for Windows, Linux and Solaris can be obtained 
-          for free from <a href="http://java.sun.com/j2se/downloads.html">
-          http://java.sun.com/j2se/downloads.html</a></font></p>
-        <p><font face="Verdana" size="2">&nbsp;</font></p>
-                    </td></tr></table>        
-          
-              
-           
-            
-   </font><font face="Verdana" size="2" >
-    <p>
-        <br />
-    </p>
-    <p>
-        <font >
+      <p>JREs for Windows, Linux and Solaris can be obtained for free from http://java.sun.com/j2se/downloads.html</p>
+      <p>&nbsp; </p></td>
+  </tr>
+</table>
+<hr>
+<p>&nbsp;  </p>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Q: How much memory should I launch JBroFuzz with?</p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
-  
   <tr>
-    <td>
-      <p><strong><font face="Verdana" size="2">Q: How much memory should I launch JBroFuzz 
-          with?</font></strong></p></td></tr>
+    <td><p>By default the JRE settings are typically limited to 64 Mb of memory. If JBroFuzz is to be used for memory intensive operations, it is advised to use 256 Mb of memory.</p>
+        <p>Say the file you want to run with 256Mb of available memory is named: JBroFuzz.jar</p>
+        <p> </p>
+      <p>From the command line type the following:<br>
+        &gt;&gt;<strong>java -jar -Xmx256m JBroFuzz.jar</strong></p>
+        <p> </p>
+        <p>You will need to have Java installed on your system. It's probably worth checking: http://www.java.sun.com<br>
+        </p>
+        <p>&nbsp; </p></td>
+  </tr>
+</table>
+<hr>
+<p></p>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
   <tr>
-    <td>
-      <p>&nbsp;</p>
-        <font >
-      <p><font face="Verdana" size="2">By default the JRE settings are typically limited 
-          to 64 Mb of memory. If JBroFuzz is to be used for memory intensive operations, 
-          it is advised to use 256 Mb of memory. </font></p>
-        <p><font face="Verdana" size="2">Say the file you want to run with 256Mb of 
-            available memory is named: 
-          JBroFuzz.jar</font></p>
-        <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">From the command line type the 
-      following:<br>
-      <strong>&gt;&gt;java -jar 
-            -Xmx256m JBroFuzz.jar</strong></font></p>
-      <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">You 
-      will need to have Java installed on your system. It's probably worth 
-      checking: <a href="http://www.java.sun.com">http://www.java.sun.com</a></font></p>
-          
-              
-           
-            
-   </font>
-        <p><font face="Verdana" size="2">&nbsp;</font></p>
-                    </td></tr></table>        
-          
-              
-           
-            
-   </font>
-    </p>
-</font>
-    <p>
-        &nbsp;</p>
-    <font >
+    <td><p>Q: What version of Java does JBroFuzz require to run?</p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
-  
   <tr>
-    <td>
-      <p><strong><font face="Verdana" size="2">Q: What version of Java does JBroFuzz 
-          require?</font></strong></p></td></tr>
-  <tr>
-    <td>
-      <p>&nbsp;</p>
-        <p><font face="Verdana" size="2">JDK/JRE 1.6 or later. </font></p>
-                <p><font face="Verdana" size="2">&nbsp;</font></p>
-                    </td></tr></table>        
-          
-              
-           
-            
-   </font>
+    <td><p>&nbsp;</p>
+      <p>JDK/JRE 1.6 or later.</p>
+      <p>&nbsp; </p></td>
+  </tr>
+</table>
+<hr>
+<p></p>
 </body>
 </html>

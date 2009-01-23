@@ -67,7 +67,7 @@ public class Topics extends JFrame implements TreeSelectionListener {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8514525952768016091L;
+	private static final long serialVersionUID = 1726771399839929062L;
 
 	// Dimensions of the about box
 	private static final int x = 650;
@@ -76,7 +76,10 @@ public class Topics extends JFrame implements TreeSelectionListener {
 	private static String FILE_NOT_FOUND = "Help file could not be located.";
 
 	// The final String Array of tree nodes
-	private static final String[] nodeNames = { "Help Topics", "Fuzzing", "Graphing", "Payloads", "Headers", "System" };
+	private static final String[] nodeNames = { 
+		"Help Topics", "Fuzzing", "Graphing", 
+		"Payloads", "Headers", "System" 
+	};
 
 	// The buttons
 	private JButton ok;
@@ -95,7 +98,7 @@ public class Topics extends JFrame implements TreeSelectionListener {
 	 * <p>Boolean is true if Topics are already showing.</p>
 	 */
 	public static boolean topicsShowing = false;
-	
+
 	/**
 	 * <p>The constructor of the help topics JDialog.</p>
 	 * 
@@ -111,30 +114,25 @@ public class Topics extends JFrame implements TreeSelectionListener {
 			return;
 		}
 		topicsShowing = true;
-		
+
 		//super(parent, " JBroFuzz - Help Topics ", true);
 		setTitle(" JBroFuzz - Help Topics ");
-		
+
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		topicsURL = new URL[nodeNames.length];
-		for (int i = 0; i < nodeNames.length; i++) {
-			if (i < 10) {
-				topicsURL[i] = ClassLoader.getSystemClassLoader().getResource(
-						"help/topics-0" + i + ".html");
-			} else {
-				topicsURL[i] = ClassLoader.getSystemClassLoader().getResource(
-						"help/topics-" + i + ".html");
-			}
-		}
-
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
 				nodeNames[0]);
-		for (int i = 1; i < nodeNames.length; i++) {
-			top.add(new DefaultMutableTreeNode(nodeNames[i]));
+		
+		for (int i = 0; i < nodeNames.length; i++) {
+			topicsURL[i] = ClassLoader.getSystemClassLoader().getResource(
+					"help/topics-0" + i + ".html");
+			if(i > 0) {
+				top.add(new DefaultMutableTreeNode(nodeNames[i]));
+			}
 		}
 
 		// Create a tree that allows one selection at a time.
@@ -151,28 +149,28 @@ public class Topics extends JFrame implements TreeSelectionListener {
 		try {
 			helpPane = new JEditorPane(topicsURL[0]);
 		} catch (final IOException e1) {
-			helpPane = new JEditorPane();
-			helpPane.setText(FILE_NOT_FOUND);
+			helpPane = new JEditorPane("text/html", FILE_NOT_FOUND);
+			//helpPane.setText(FILE_NOT_FOUND);
 		}
 		helpPane.setEditable(false);
 		helpScrPane = new JScrollPane(helpPane);
 
 		JEditorPane webdPane;
 		try {
-			webdPane = new JEditorPane(topicsURL[1]);
+			webdPane = new JEditorPane(topicsURL[2]);
 		} catch (final IOException e1) {
-			webdPane = new JEditorPane();
-			webdPane.setText(FILE_NOT_FOUND);
+			webdPane = new JEditorPane("text/html", FILE_NOT_FOUND);
+			//webdPane.setText(FILE_NOT_FOUND);
 		}
 		webdPane.setEditable(false);
 		webdScrPane = new JScrollPane(webdPane);
 
 		JEditorPane tcpfPane;
 		try {
-			tcpfPane = new JEditorPane(topicsURL[2]);
+			tcpfPane = new JEditorPane(topicsURL[1]);
 		} catch (final IOException e1) {
-			tcpfPane = new JEditorPane();
-			tcpfPane.setText(FILE_NOT_FOUND);
+			tcpfPane = new JEditorPane("text/html", FILE_NOT_FOUND);
+			//tcpfPane.setText(FILE_NOT_FOUND);
 		}
 		tcpfPane.setEditable(false);
 		tcpfScrPane = new JScrollPane(tcpfPane);
@@ -181,8 +179,8 @@ public class Topics extends JFrame implements TreeSelectionListener {
 		try {
 			tcpsPane = new JEditorPane(topicsURL[3]);
 		} catch (final IOException e1) {
-			tcpsPane = new JEditorPane();
-			tcpsPane.setText(FILE_NOT_FOUND);
+			tcpsPane = new JEditorPane("text/html", FILE_NOT_FOUND);
+			//tcpsPane.setText(FILE_NOT_FOUND);
 		}
 		tcpsPane.setEditable(false);
 		tcpsScrPane = new JScrollPane(tcpsPane);
@@ -191,8 +189,8 @@ public class Topics extends JFrame implements TreeSelectionListener {
 		try {
 			genePane = new JEditorPane(topicsURL[4]);
 		} catch (final IOException e1) {
-			genePane = new JEditorPane();
-			genePane.setText(FILE_NOT_FOUND);
+			genePane = new JEditorPane("text/html", FILE_NOT_FOUND);
+			//genePane.setText(FILE_NOT_FOUND);
 		}
 		genePane.setEditable(false);
 		geneScrPane = new JScrollPane(genePane);
@@ -201,14 +199,11 @@ public class Topics extends JFrame implements TreeSelectionListener {
 		try {
 			sysmPane = new JEditorPane(topicsURL[5]);
 		} catch (final IOException e1) {
-			sysmPane = new JEditorPane();
-			sysmPane.setText(FILE_NOT_FOUND);
+			sysmPane = new JEditorPane("text/html", FILE_NOT_FOUND);
+			// sysmPane.setText(FILE_NOT_FOUND);
 		}
 		sysmPane.setEditable(false);
 		sysmScrPane = new JScrollPane(sysmPane);
-
-
-		// osrcScrPane = new JScrollPane(osrcPane);
 
 		// Create the top split pane, showing the treeView and the Preferences
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -239,12 +234,10 @@ public class Topics extends JFrame implements TreeSelectionListener {
 
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				//SwingUtilities.invokeLater(new Runnable() {
-				//	public void run() {
-						topicsShowing = false;
-						Topics.this.dispose();
-				//	}
-				// });
+
+				topicsShowing = false;
+				Topics.this.dispose();
+
 			}
 		});
 
@@ -254,13 +247,13 @@ public class Topics extends JFrame implements TreeSelectionListener {
 		splitPane.setDividerLocation(150);
 		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
 				.abs(parent.getLocation().y + 100));
-		
+
 		this.setSize(Topics.x, Topics.y);
 		this.setMinimumSize(new Dimension(x / 2, y / 2));
-		
+
 		setResizable(true);
 		setVisible(true);
-		
+
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
