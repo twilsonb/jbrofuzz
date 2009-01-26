@@ -37,6 +37,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.prefs.Preferences;
 
@@ -46,6 +47,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -55,9 +57,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.util.IPRegexFormatter;
 import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.util.PortRegexFormatter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
@@ -85,21 +91,28 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	// The main split pane
 	private JSplitPane splitPane;
 	// The buttons displayed
-	private JButton ok; // , cancel, apply;
+	private JButton ok, cancel; // , cancel, apply;
 	
 	// The actual preferences object
 	private Preferences prefs;
 
-	private static final String [] nodeNames = {"Preferences", "Directory Locations", "Fuzzing"};
+	private static final String [] nodeNames = {"Preferences", "Directory Locations", "Fuzzing", "Proxy Settings"};
 	
 	private JPanel [] panels = new JPanel[nodeNames.length];
 
+	// The fields to note
+	private JFormattedTextField proxyHostField, proxyPortField;
+	
+	private JBroFuzzWindow parent;
+	
 	public JBroFuzzPrefs(final JBroFuzzWindow parent) {
 
 		super(parent, " JBroFuzz - Preferences ", true);
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 		setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		this.parent = parent;
 
 		// Set the preferences object access
 		prefs = Preferences.userRoot().node("owasp/jbrofuzz");
@@ -107,10 +120,6 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
 				nodeNames[0]);
-		for (int i = 1; i < nodeNames.length; i++) {
-			top.add(new DefaultMutableTreeNode(nodeNames[i]));
-		}
-
 		// Create a tree that allows one selection at a time
 		tree = new JTree(top);
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -125,15 +134,23 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		// Create all the right hand panels
 		for(int i = 0; i < nodeNames.length; i++) {
 			
-			panels[i] = new JPanel();
-			panels[i].setLayout(new BoxLayout(panels[i], BoxLayout.PAGE_AXIS));
-			JLabel header = new JLabel("<HTML><H3>&nbsp;" + nodeNames[i] + "</H3></HTML>");
-			panels[i].add(header);
-			header.add(Box.createRigidArea(new Dimension(0, 20)));
+			if(i != 3) {
+				panels[i] = new JPanel();
+				panels[i].setLayout(new BoxLayout(panels[i], BoxLayout.PAGE_AXIS));
+				JLabel header = new JLabel("<HTML><H3>&nbsp;" + nodeNames[i] + "</H3></HTML>");
+				panels[i].add(header);
+				header.add(Box.createRigidArea(new Dimension(0, 20)));
+			} else {
+				panels[i] = new JPanel(new BorderLayout());
+				panels[i].add(new JLabel("<HTML><H3>&nbsp;" + nodeNames[i] + "</H3></HTML>"), BorderLayout.NORTH);
+			}
+			if(i > 0) {
+				top.add(new DefaultMutableTreeNode(nodeNames[i]));
+			}
 
 		}
 		
-		// Create the options in the preferences panel
+		// Preferences...
 
 		final boolean tabsbottom = prefs.getBoolean(JBroFuzzFormat.PR_2, false);
 		final JCheckBox tabsCheckBox = new JCheckBox(" Show tabs in the main window at the top of the window (requires restart) ", tabsbottom);
@@ -153,26 +170,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[0].add(tabsCheckBox);
 		panels[0].add(Box.createRigidArea(new Dimension(0, 20)));
 		
-		/*
-		HashMap<String, String> prefsHash = new HashMap<String, String>(4);
-		prefsHash.put(nodeNames[1], "Displays the directory locations used by JBroFuzz, also giving the option to delete any directories created at startup that have not being used and are empty");
-		prefsHash.put(nodeNames[2], "Allows for the modification of the socket timeout parameter, while fuzzing, setting its value to 30 seconds");
-		prefsHash.put(nodeNames[3], "Modify whether or not to stored binary content in hexadecimal form");
-		prefsHash.put(nodeNames[4], "Allows for the alteration of the behaviour in stopping a web directory enumeration taking place in the event of the server stopping to respond to the requests made");
-		
-		for(String pr : prefsHash.keySet()) {
-			
-			JLabel box = new JLabel("<html>" + prefsHash.get(pr) + "</html>");
-			box.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-					.createTitledBorder(pr),
-					BorderFactory.createEmptyBorder(1, 1, 1, 5)));
-			panels[0].add(box);
-			panels[0].add(Box.createRigidArea(new Dimension(0, 20)));
-			
-		}
-		*/
-		
-		// Display the directory locations in the Directory Locations panel
+		// Directory Locations...
 		
 		final boolean deletebox = prefs.getBoolean(JBroFuzzFormat.PR_1, false);
 		final JCheckBox deleteCheckBox = new JCheckBox(" On exit, delete any empty directories created at startup ", deletebox);
@@ -206,7 +204,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 			
 		}
 
-		// Fuzzing Panel -> Socket Timeout CheckBox
+		// Fuzzing... -> Socket Timeout
 		
 		final boolean socketbox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
 		final JCheckBox socketCheckBox = new JCheckBox(" Extend the socket timeout from 5 seconds to 30 seconds ", socketbox);
@@ -226,7 +224,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[2].add(socketCheckBox);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 		
-		// Fuzzing Panel -> End of Line Character
+		// Fuzzing... -> End of Line Character
 		
 		final boolean endlinebox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
 		final JCheckBox endlineCheckBox = new JCheckBox(" Use \"\\n\" instead of \"\\r\\n\" as an end of line character ", endlinebox);
@@ -246,7 +244,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[2].add(endlineCheckBox);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 		
-		// Fuzzing Panel -> Show on the wire tab after fuzzing finished
+		// Fuzzing... -> Show on the wire tab after fuzzing finished
 		
 		final boolean showwirebox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
 		final JCheckBox showwireCheckBox = new JCheckBox(" Show \"On The Wire\" tab after fuzzing has stopped or finished ", showwirebox);
@@ -267,13 +265,38 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[2].add(showwireCheckBox);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 		
-		// Create the options in the sniffing panel
+		// Proxy Settings...
 		
-
-		// Create the options in the graphing panel
+		proxyHostField = new JFormattedTextField(new IPRegexFormatter());
+		proxyHostField.setToolTipText(" E.g. 192.168.1.1 ");
+		proxyHostField.setPreferredSize(new Dimension(80, 20));
+		proxyHostField.setEditable(true);
+		
+		final String proxyHost = prefs.get(JBroFuzzFormat.PROXY_HOST, "");
+		proxyHostField.setText(proxyHost);
+		
+		proxyPortField = new JFormattedTextField(new PortRegexFormatter());
+		proxyPortField.setToolTipText(" Range: [1 - 65535] ");
+		proxyPortField.setPreferredSize(new Dimension(40, 20));
+		proxyPortField.setEditable(true);
+		
+		final String proxyPort = prefs.get(JBroFuzzFormat.PROXY_PORT, "");
+		proxyPortField.setText(proxyPort);
 		
 		
+		JPanel proxyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
+		proxyPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder("Configure SOCKS v5 to Access the Internet"),
+				BorderFactory.createEmptyBorder(1, 1, 1, 5)));
+		
+		proxyPanel.add(new JLabel("IP Address: "));
+		proxyPanel.add(proxyHostField);
+		proxyPanel.add(new JLabel("Port: "));
+		proxyPanel.add(proxyPortField);
 				
+		panels[3].add(proxyPanel, BorderLayout.CENTER);
+		panels[3].add(Box.createRigidArea(new Dimension(0, 160)), BorderLayout.SOUTH);
+		
 		// Create the top split pane, showing the treeView and the Preferences
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setLeftComponent(leftScrollPane);
@@ -289,18 +312,24 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		}
 		splitPane.setDividerLocation(150);
 
+		// Traverse tree from root
+		TreeNode root = (TreeNode)tree.getModel().getRoot();
+		parent.getPanelPayloads().expandAll(tree, new TreePath(root), true);
+		// Select the first row
+		tree.setSelectionRow(3);
+		
 		// Bottom three buttons
 		ok = new JButton("  OK  ");
-		// cancel = new JButton("Cancel");
+		cancel = new JButton("Cancel");
 		// apply = new JButton(" Apply ");
 
 		ok.setEnabled(true);
-		// cancel.setEnabled(true);
+		cancel.setEnabled(true);
 		// apply.setEnabled(false);
 		
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
 		buttonPanel.add(ok);
-		// buttonPanel.add(cancel);
+		buttonPanel.add(cancel);
 		// buttonPanel.add(apply);
 
 		// Action Listeners for all three buttons
@@ -309,22 +338,27 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						clickOK();
+
+						saveChanges();
+						JBroFuzzPrefs.this.dispose();
+
+					}
+				});
+			}
+		});
+		
+		cancel.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+
+						JBroFuzzPrefs.this.dispose();
+
 					}
 				});
 			}
 		});
 		/*
-		cancel.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						clickCANCEL();
-					}
-				});
-			}
-		});
-
 		apply.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -342,7 +376,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
-					clickOK();
+					
+					JBroFuzzPrefs.this.dispose();
+					
 				}
 			}
 		});
@@ -360,8 +396,27 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		setVisible(true);
 	}
 
-	private void clickOK() {
-		JBroFuzzPrefs.this.dispose();
+	private void saveChanges() {
+
+		String proxyHostText = (String) proxyHostField.getValue();
+		String proxyPortText = (String) proxyPortField.getValue();
+		
+		if((proxyPortText == null) || (proxyHostText == null)) {
+
+			parent.log("Proxy Setting Have been Reset");
+			
+			prefs.put(JBroFuzzFormat.PROXY_HOST, "");	
+			prefs.put(JBroFuzzFormat.PROXY_PORT, "");	
+
+		} else {
+		
+			parent.log("Proxy Settings are: " + proxyHostText + ":" + proxyPortText);
+			
+			prefs.put(JBroFuzzFormat.PROXY_HOST, proxyHostText);	
+			prefs.put(JBroFuzzFormat.PROXY_PORT, proxyPortText);
+		
+		}
+				
 	}
 
 	public void valueChanged(final TreeSelectionEvent e) {

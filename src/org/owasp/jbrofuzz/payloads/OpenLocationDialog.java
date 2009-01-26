@@ -89,7 +89,17 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 	final JPopupMenu popmenu; 
 
 	JComboBox _url, methodBox, charsetBox, versionBox; 
-	
+
+	/**
+	 * <p>Constructs a dialog box for (Ctrl+L) input of URL
+	 * fields.</p>
+	 * 
+	 * @param parent JBroFuzzWindow The main window
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public OpenLocationDialog(final JBroFuzzWindow parent) {
 
 		super(parent, " Open URL Location ", true);

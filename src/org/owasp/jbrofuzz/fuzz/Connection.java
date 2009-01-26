@@ -54,7 +54,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * of fuzzing through the corresponding socket.
  * 
  * <p>
- * This class gets used to establish each sequencial connection being made on a
+ * This class gets used to establish each connection being made on a
  * given address, port and for a given request.
  * </p>
  * 
@@ -80,6 +80,18 @@ public class Connection {
 
 	private int socketTimeout;
 
+	/**
+	 * 
+	 * 
+	 * @param urlString
+	 * @param message
+	 * @throws ConnectionException
+	 *
+	 * @see 
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public Connection(final String urlString, final String message) throws ConnectionException {
 
 		try {
@@ -103,9 +115,10 @@ public class Connection {
 		if (protocol.equalsIgnoreCase("http") && (port == -1)) {
 			port = 80;
 		}
-
+		
 		// Set the socket timeout from the preferences
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+		
 		boolean maxTimeout = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
 		socketTimeout = maxTimeout ? 30000 : 5000;
 
@@ -113,6 +126,15 @@ public class Connection {
 
 		final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
 
+		// Proxy settings, if any
+		
+		String proxyHostText = prefs.get(JBroFuzzFormat.PROXY_HOST, "");
+		String proxyPortText = prefs.get(JBroFuzzFormat.PROXY_PORT, "");
+
+		if((!proxyHostText.isEmpty()) && (!proxyPortText.isEmpty())) {
+			System.setProperty("socksProxyHost", proxyHostText);
+			System.setProperty("socksProxyPort", proxyPortText);
+		}
 
 		// Create a trust manager that does not validate certificate chains
 		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
