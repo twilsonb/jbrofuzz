@@ -161,7 +161,7 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "1.2";
+	public static final String VERSION = "1.3";
 
 	/**
 	 * <p>
@@ -183,6 +183,17 @@ public class JBroFuzzFormat {
 		+ "Running Under  Java " + System.getProperty("java.version")
 		+ "<BR><BR>" + "<B>A stateless network protocol fuzzer <BR>"
 		+ "for web applications." + "</B><BR></HTML>";
+
+	/**
+	 * <p>The proxy host used in the preferences.</p>
+	 */
+	public static final String PROXY_HOST = "proxy.host";
+	
+	/**
+	 * <p>The proxy port used in the preferences.</p>
+	 */
+	public static final String PROXY_PORT = "proxy.port";
+	
 
 	/**
 	 * <p>
