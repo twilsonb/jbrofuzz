@@ -36,15 +36,16 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
-import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.prefs.Preferences;
 
-import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
@@ -59,7 +60,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.1
+ * @version 1.2
  * @since 0.1
  */
 public class Connection {
@@ -68,12 +69,15 @@ public class Connection {
 	private final static int SEND_BUF_SIZE = 256 * 1024;
 	private final static int RECV_BUF_SIZE = 256 * 1024;
 
+	// Singleton SSLSocket factory used with it's factory
+	private static SSLSocketFactory mSSLSocketFactory;
+
 	private String message;
-	private Socket socket;
+	private Socket mSocket;
 	private String reply;
 	private URL url = null;
 	private int port;
-	private String host, protocol, file, ref;
+	private String host, protocol;
 
 	private InputStream in_stream;
 	private OutputStream out_stream;
@@ -81,16 +85,20 @@ public class Connection {
 	private int socketTimeout;
 
 	/**
+	 * <p>The constructor for the connection, responsible for creating the 
+	 * corresponding socket (or SSL socket) and transmitting/receiving 
+	 * data from the wire.</p>
 	 * 
+	 * @param urlString The url string from which the protocol (e.g. "https"),
+	 * the host (e.g. www.owasp.org) and the port number will be determined.
 	 * 
-	 * @param urlString
-	 * @param message
+	 * @param message of what to put on the wire, once a connection has been
+	 * established.
+	 * 
 	 * @throws ConnectionException
 	 *
-	 * @see 
 	 * @author subere@uncon.org
-	 * @version 1.2
-	 * @since 1.2
+	 * @version 1.3
 	 */
 	public Connection(final String urlString, final String message) throws ConnectionException {
 
@@ -104,21 +112,18 @@ public class Connection {
 		protocol = url == null ? "" : url.getProtocol(); // http
 		host = url == null ? "" : url.getHost(); // host
 		port = url == null ? -1 : url.getPort(); // 443
-		file = url == null ? "" : url.getFile(); // index.jsp
-		ref = url == null ? "" : url.getRef(); // _top_
 
 		// Set default ports
-		//
 		if (protocol.equalsIgnoreCase("https") && (port == -1)) {
 			port = 443;
 		}
 		if (protocol.equalsIgnoreCase("http") && (port == -1)) {
 			port = 80;
 		}
-		
+
 		// Set the socket timeout from the preferences
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-		
+
 		boolean maxTimeout = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
 		socketTimeout = maxTimeout ? 30000 : 5000;
 
@@ -127,7 +132,6 @@ public class Connection {
 		final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
 
 		// Proxy settings, if any
-		
 		String proxyHostText = prefs.get(JBroFuzzFormat.PROXY_HOST, "");
 		String proxyPortText = prefs.get(JBroFuzzFormat.PROXY_PORT, "");
 
@@ -136,261 +140,110 @@ public class Connection {
 			System.setProperty("socksProxyPort", proxyPortText);
 		}
 
-		// Create a trust manager that does not validate certificate chains
-		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-			public void checkClientTrusted(
-					java.security.cert.X509Certificate[] certs, String authType) {
-			}
-
-			public void checkServerTrusted(
-					java.security.cert.X509Certificate[] certs, String authType) {
-			}
-
-			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-				return null;
-			}
-		} };
-
-		// Install the all-trusting trust manager
 		try {
-			SSLContext sc = SSLContext.getInstance("SSL");
-			sc.init(null, trustAllCerts, new java.security.SecureRandom());
-			HttpsURLConnection
-			.setDefaultSSLSocketFactory(sc.getSocketFactory());
-		} catch (Exception e) {
 
-			throw new ConnectionException(
-					"Could not install all-trusting certificates... "
-					+ e.getMessage());
+			if (protocol.equalsIgnoreCase("https")) {
 
-		}
-
-
-		// Create the Socket to the specified address and port
-		if (protocol.equalsIgnoreCase("https")) {
-
-			// Create a normal SSL Socket if HTTP/1.1 is not being used
-			if (!protocolIsHTTP11(message)) {
-				// Creating Client Sockets
-				SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-				SSLSocket sslSocket;
-				try {
-
-					sslSocket = (SSLSocket) sslsocketfactory.createSocket(host, port);
-					sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
-					sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-					sslSocket.setSoTimeout(socketTimeout);
-
-					in_stream = sslSocket.getInputStream();
-					out_stream = sslSocket.getOutputStream();
-
-					out_stream.write(this.message.getBytes());
-
-					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					int got;
-					while ((got = in_stream.read(recv)) > -1) {
-						baos.write(recv, 0, got);
-
-					} // while loop
-
-					in_stream.close();
-					out_stream.close();
-					sslSocket.close();
-
-					final byte[] allbytes = baos.toByteArray();
-					reply = new String(allbytes);
-
-				} catch (UnknownHostException e) {
-					reply = "The IP address of the host could not be determined : "
-						+ e.getMessage() + "\n";
-					throw new ConnectionException(reply);
-
-				} catch (IOException e) {
-					reply = "An IO Error occured on socket : " + e.getMessage()
-					+ "\n";
-					throw new ConnectionException(reply);
-
+				// Make sure we have a factory for the SSL socket
+				if(mSSLSocketFactory == null) {
+					mSSLSocketFactory = getSocketFactory();
 				}
+
+				// Handle HTTPS differently then HTTP -> HTTPS
+				mSocket = (SSLSocket) mSSLSocketFactory.createSocket(host,port);
+
+			} else {
+				
+				// Handle HTTP differently then HTTPS -> HTTP
+				mSocket = new Socket(host, port);
+
 			}
-			else { // SSL: If HTTP/1.1 is being used, handle separately
 
-				try {
+			// Connect, set buffers, streams, smile...
+			mSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+			mSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
+			mSocket.setSoTimeout(socketTimeout);
 
-					SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-					SSLSocket sslSocket;
+			in_stream = mSocket.getInputStream();
+			out_stream = mSocket.getOutputStream();
 
-					sslSocket = (SSLSocket) sslsocketfactory.createSocket(host,port);
-					sslSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
-					sslSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-					sslSocket.setSoTimeout(socketTimeout);
+			out_stream.write(this.message.getBytes());
 
-					in_stream = sslSocket.getInputStream();
-					out_stream = sslSocket.getOutputStream();
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			int got;
 
-					out_stream.write(this.message.getBytes());
+			// Treat HTTP/1.1 differently because of chunked encoding
+			if (protocolIsHTTP11(message)) {
 
-					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					int got;
-					boolean end_reached = false;
-					while ( (!end_reached) && ((got = in_stream.read(recv)) > -1) ) {
+				boolean end_reached = false;
+				while ( (!end_reached) && ((got = in_stream.read(recv)) > -1) ) {
 
-						baos.write(recv, 0, got);
+					baos.write(recv, 0, got);
 
-						// Check if \r\n has come in, in its many shapes and forms
-						final String incoming = new String(baos.toByteArray()); 
-						if(incoming.contains("\r\n\r\n") || incoming.contains("\n\n")|| incoming.contains("\r\r") ) {
+					// Check if \r\n has come in, in its many shapes and forms
+					final String incoming = new String(baos.toByteArray()); 
+					if(incoming.contains("\r\n\r\n") || incoming.contains("\n\n")|| incoming.contains("\r\r") ) {
 
-							// Check if Chunked Encoding is being used
-							if(incoming.contains("Transfer-Encoding: chunked")) {
+						// Check if Chunked Encoding is being used
+						if(incoming.contains("Transfer-Encoding: chunked")) {
 
-								if(incoming.contains("\r\n0\r\n") || incoming.contains("\n0\n")|| incoming.contains("\r0\r") ) {
-									end_reached = true;
-								}
-
-							} else {
+							if(incoming.contains("\r\n0\r\n") || incoming.contains("\n0\n")|| incoming.contains("\r0\r") ) {
 								end_reached = true;
 							}
 
+						} else {
+							end_reached = true;
 						}
 
-
-					} // while loop
-
-					in_stream.close();
-
-					final byte[] allbytes = baos.toByteArray();
-					reply = new String(allbytes);
+					}
 
 
-				} catch (MalformedURLException e) {
-					reply = "Malformed URL: " + e.getMessage() 
-					+ "\n";
-					throw new ConnectionException(reply);
-				} catch (IOException e) {
-					reply = "An IO Error occured on the URL : " + e.getMessage()
-					+ "\n";
-					throw new ConnectionException(reply);
+				} // while loop
 
+
+			} else {
+				
+				// If no HTTP/1.1 just read the stream, until the end
+				while ((got = in_stream.read(recv)) > -1) {
+					baos.write(recv, 0, got);
 				}
-
 
 			}
 
+			in_stream.close();
+			out_stream.close();
+			mSocket.close();
 
-		}
-		// Default protocol is HTTP going over a normal socket
-		else {
-
-			// Create a normal Socket if HTTP/1.1 is not being used
-			if (!protocolIsHTTP11(message)) {
-				try {
-					socket = new Socket(host, port);
-					socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
-					socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-					socket.setSoTimeout(socketTimeout);
-
-					in_stream = socket.getInputStream();
-					out_stream = socket.getOutputStream();
-
-					out_stream.write(this.message.getBytes());
-
-					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					int got;
-					while ((got = in_stream.read(recv)) > -1) {
-						baos.write(recv, 0, got);
-
-					} // while loop
-
-					in_stream.close();
-					out_stream.close();
-					socket.close();
-
-					final byte[] allbytes = baos.toByteArray();
-					reply = new String(allbytes);
-
-				} catch (final IllegalArgumentException e) {
-					reply = "Bad arguments : " + e.getMessage() + "\n";
-					throw new ConnectionException(reply);
-
-				} catch (final UnknownHostException e) {
-					reply = "The IP address of the host could not be determined : "
-						+ e.getMessage() + "\n";
-					throw new ConnectionException(reply);
-
-				} catch (final IOException e) {
-					reply = "An IO Error occured on socket : " + e.getMessage()
-					+ "\n";
-					throw new ConnectionException(reply);
-				}
-			}
-			else { // If HTTP/1.1 is being used, handle separately
-
-				try {
-					socket = new Socket(host, port);
-					socket.setSendBufferSize(Connection.SEND_BUF_SIZE);
-					socket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-					socket.setSoTimeout(socketTimeout);
-
-					in_stream = socket.getInputStream();
-					out_stream = socket.getOutputStream();
-
-					out_stream.write(this.message.getBytes());
-
-					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					int got;
-					boolean end_reached = false;
-					while ( (!end_reached) && ((got = in_stream.read(recv)) > -1) ) {
-
-						baos.write(recv, 0, got);
-
-						// Check if \r\n has come in, in its many shapes and forms
-						final String incoming = new String(baos.toByteArray()); 
-						if(incoming.contains("\r\n\r\n") || incoming.contains("\n\n")|| incoming.contains("\r\r") ) {
-
-							// Check if Chunked Encoding is being used
-							if(incoming.contains("Transfer-Encoding: chunked")) {
-
-								if(incoming.contains("\r\n0\r\n") || incoming.contains("\n0\n")|| incoming.contains("\r0\r") ) {
-									end_reached = true;
-								}
-
-							} else {
-								end_reached = true;
-							}
-
-						}
+			reply = new String(baos.toByteArray());
 
 
-					} // while loop
+		} catch (MalformedURLException e) {
 
-					in_stream.close();
-					out_stream.close();
-					socket.close();
+			reply = "Malformed URL: " + e.getMessage() 
+			+ "\n";
+			throw new ConnectionException(reply);
 
-					final byte[] allbytes = baos.toByteArray();
-					reply = new String(allbytes);
+		} catch (IOException e) {
 
-				} catch (final IllegalArgumentException e) {
-					reply = "Bad arguments : " + e.getMessage() + "\n";
-					throw new ConnectionException(reply);
+			reply = "An IO Error occured on the URL : " + e.getMessage()
+			+ "\n";
+			throw new ConnectionException(reply);
 
-				} catch (final UnknownHostException e) {
-					reply = "The IP address of the host could not be determined : "
-						+ e.getMessage() + "\n";
-					throw new ConnectionException(reply);
-
-				} catch (final IOException e) {
-					reply = "An IO Error occured on socket : " + e.getMessage()
-					+ "\n";
-					throw new ConnectionException(reply);
-				}
+		} 
 
 
-			}
-
-		}
 	}
 
+	/**
+	 * <p>Get the message being put on the wire in this connection.</p>
+	 * 
+	 * @return String message or "[JBROFUZZ REQUEST IS BLANK]" if 
+	 * message is empty.
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public String getMessage() {
 		if (message.isEmpty()) {
 			return "[JBROFUZZ REQUEST IS BLANK]";
@@ -399,6 +252,15 @@ public class Connection {
 		}
 	}
 
+	/**
+	 * <p>Get the port number used in the connection being made.</p>
+	 * 
+	 * @return [1-65535] or "[JBROFUZZ PORT IS INVALID]"
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public String getPort() {
 
 		if (port == -1) {
@@ -431,7 +293,7 @@ public class Connection {
 		} else {
 			return reply;
 		}
-		
+
 
 	}
 
@@ -449,17 +311,17 @@ public class Connection {
 
 		try {
 			final String out = reply.split(" ")[1].substring(0, 3);
-			
+
 			if(StringUtils.isNumeric(out)) {
 				return out;
 			} else {
 				return "000";
 			}
-			
+
 		} catch (Exception e) {
-			
+
 			return "---";
-			
+
 		}
 
 	}
@@ -468,11 +330,11 @@ public class Connection {
 	 * <p>Method for checking if the actual String given is an HTTP/1.1
 	 * request.</p>
 	 * <p>This check entails looking for the first line (as divided by \r\n
-	 * to be finishing with the String literal "HTTP/1.1" in uppercase or
-	 * lowercase.</p>
+	 * to be finishing with the String literal "HTTP/1.1" in upper-case or
+	 * lower-case.</p>
 	 * 
-	 * @param message
-	 * @return
+	 * @param message The input string used
+	 * @return boolean True if HTTP/1.1 is found on the first line
 	 */
 	public boolean protocolIsHTTP11(String message) {
 
@@ -487,6 +349,37 @@ public class Connection {
 			return false;
 		}
 		return false;
+	}
+
+	/**
+	 * <p>Returns a SSL factory instance that trusts all server
+	 * certificates.</p>
+	 * 
+	 * <p>Used by the Connection constructor for the SSL socket.</p>
+	 * 
+	 * <p>In the event of an exception, the factory method defaults
+	 * to a normal SSLSocketFactory.</p>
+	 * 
+	 * @return SSLSocketFactory an SSL socket factory
+	 * 
+	 * @since 1.3
+	 */
+	private static final SSLSocketFactory getSocketFactory()
+	{
+		try {
+			TrustManager[] tm = new TrustManager[] { new FullyTrustingManager() };
+			SSLContext context = SSLContext.getInstance ("SSL");
+			context.init( new KeyManager[0], tm, new SecureRandom( ) );
+
+			return (SSLSocketFactory) context.getSocketFactory ();
+
+		} catch (KeyManagementException e) {
+			System.out.println ("No SSL algorithm support: " + e.getMessage()); 
+		} catch (NoSuchAlgorithmException e) {
+			System.out.println ("Exception when setting up the Naive key management.");
+		}
+
+		return (SSLSocketFactory) SSLSocketFactory.getDefault();
 	}
 
 }

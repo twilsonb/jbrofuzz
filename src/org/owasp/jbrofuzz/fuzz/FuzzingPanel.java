@@ -38,6 +38,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
@@ -682,6 +684,13 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		topRightPanel.setSelectedIndex(1);
 		consoleEvent = 0;
 
+		// Check the certificate
+		/*try {
+			Connection.installCert(getTextURL());
+		} catch (Exception e2) {
+			this.getFrame().log("Certificate Related Exception: " + e2.getMessage());
+		}*/
+		
 		// Increment the session and reset the counter
 		session++;
 		counter = 1;
