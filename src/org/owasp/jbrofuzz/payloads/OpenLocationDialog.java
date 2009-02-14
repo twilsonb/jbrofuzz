@@ -103,7 +103,8 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 	public OpenLocationDialog(final JBroFuzzWindow parent) {
 
 		super(parent, " Open URL Location ", true);
-		setFont(new Font("SansSerif", Font.BOLD, 10));
+		// setFont(new Font("SansSerif", Font.BOLD, 10));
+		setFont(new Font("Verdana", Font.BOLD, 12));
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 
 		setLayout(new BorderLayout());
@@ -117,21 +118,22 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 
 		_url.getEditor().getEditorComponent().addMouseListener(this);
 		_url.setToolTipText("Copy/Paste a URL from your browser");
-		_url.setFont(new Font("Verdana", Font.PLAIN, 12));
+		_url.setFont(new Font("Verdana", Font.BOLD, 12));
 
 		_url.getEditor().getEditorComponent().addKeyListener(this);
-
+		// _url.getEditor().getEditorComponent().setFont(new Font("Verdana", Font.pl));
+		
 		final String methods[] = {"GET", "POST", "HEAD", "PUT", "DELETE", "TRACE", "PROPFIND", "OPTIONS"};		
-		final String versions[] = {"0.9", "1.0", "1.1"};
+		final String versions[] = {"0.9", "1.0", "1.1", "1.2"};
 		final String charsets[] = {"ISO-8859-1"};
 
 		methodBox = new JComboBox(methods);
 		charsetBox = new JComboBox(charsets);
 		versionBox = new JComboBox(versions);
 
-		methodBox.setFont(new Font("SansSerif", Font.BOLD, 10));
-		charsetBox.setFont(new Font("SansSerif", Font.BOLD, 10));
-		versionBox.setFont(new Font("SansSerif", Font.BOLD, 10));
+		methodBox.setFont(new Font("Verdana", Font.BOLD, 10));
+		charsetBox.setFont(new Font("Verdana", Font.BOLD, 10));
+		versionBox.setFont(new Font("Verdana", Font.BOLD, 10));
 		
 		methodBox.addKeyListener(this);
 		charsetBox.addKeyListener(this);
@@ -288,6 +290,11 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 		add(propertiesPanel, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.SOUTH);
 
+		// Set the URL text
+		String url_displaying = parent.getPanelFuzzing().getTextURL();
+		((JTextComponent)_url.getEditor().getEditorComponent()).setText(url_displaying);
+		((JTextComponent)_url.getEditor().getEditorComponent()).selectAll();
+		
 		// Global frame issues
 		setLocation(
 				Math.abs(parent.getLocation().x + 20), 
@@ -356,30 +363,37 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 				out_url.append(":");
 				out_url.append(inputURL.getPort());
 			}
-			
-			// System.out.println(out_url.toString());
-			
+						
 			StringBuffer req_url = new StringBuffer();
 			req_url.append(methodBox.getModel().getElementAt(methodBox.getSelectedIndex()));
 			req_url.append(' ');
 			try {
-				req_url.append(URLDecoder.decode(inputURL.getFile(), "UTF-8" ));
+				// If no file is specified, add a /
+				if(inputURL.getFile().isEmpty()) {
+					req_url.append('/');
+				} else {
+					req_url.append(URLDecoder.decode(inputURL.getFile(), "UTF-8" ));
+				}
+				
 			} catch (UnsupportedEncodingException e) {
 				m.log("Open Location: Unsupported URL Encoding Exception");
-				req_url.append(inputURL.getFile());
+				// If no file is specified, add a /
+				if(inputURL.getFile().isEmpty()) {
+					req_url.append('/');
+				} else {
+					req_url.append(inputURL.getFile());
+				}
 			}
 			req_url.append(' ');
 			req_url.append("HTTP/");
 			req_url.append(versionBox.getModel().getElementAt(versionBox.getSelectedIndex()));
 			req_url.append(JBroFuzzFormat.URL_REQUEST.substring(JBroFuzzFormat.URL_REQUEST.indexOf('\n')));
-			
-			// System.out.println(req_url.toString());
-			
+						
 			m.getPanelFuzzing().setTextURL(out_url.toString());
 			m.getPanelFuzzing().setTextRequest(req_url.toString());
 			
 		} catch (MalformedURLException e) {
-			m.log("Open Location: Could not pass the URL provided");
+			m.log("Open Location: Could not interpret the URL provided");
 		}
 		
 		

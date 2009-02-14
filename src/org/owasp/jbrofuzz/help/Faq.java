@@ -74,7 +74,8 @@ public class Faq extends JFrame implements TreeSelectionListener {
 	// The final String Array of tree nodes
 	private static final String[] nodeNames = { 
 		"FAQ", "System Requirements", "Java",
-		"Installation", "Files & Directories", "Fuzzers & Payloads"
+		"Installation", "Files & Directories", "Fuzzers & Payloads",
+		"Older Features/Versions"
 	};
 	// The buttons
 	private JButton ok;
