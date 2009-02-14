@@ -70,6 +70,13 @@
 		</delete>
 	</target>
 
+	<target name="javadoc">
+	    <javadoc author="true" destdir="doc" package="true" version="true">
+	      <fileset dir="${src.dir}" />
+	      <tag description="To Do:" name="todo" scope="all" />
+	    </javadoc>
+	</target>
+
 	<target depends="clean,init,compile,archive,exe" name="build" />
 
 </project>
