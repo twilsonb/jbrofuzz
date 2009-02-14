@@ -44,7 +44,7 @@ import org.apache.commons.lang.StringUtils;
 
 public class Database {
 
-	private HashMap<String, Generator> generators;
+	private HashMap<String, Prototype> prototypes;
 
 	public Database() {
 
@@ -89,7 +89,7 @@ public class Database {
 		final String[] fileInput = fileContents.toString().split("\n");
 		final int len = fileInput.length;
 
-		generators = new HashMap<String, Generator>(len);
+		prototypes = new HashMap<String, Prototype>(len);
 
 		for (int i = 0; i < len; i++) {
 
@@ -116,7 +116,7 @@ public class Database {
 
 								try {
 									numberOfPayloads = Integer
-											.parseInt(firstLineArray[3]);
+									.parseInt(firstLineArray[3]);
 								} catch (final NumberFormatException e) {
 									numberOfPayloads = 0;
 								}
@@ -143,9 +143,9 @@ public class Database {
 
 							// Finally create the generator if all the checks
 							// pass
-							final Generator myGen = new Generator(firstArray[0]
-									.charAt(0), firstArray[1], /* StringUtils.rightPad( */
-							firstArray[2] /* , 24) */);
+							final Prototype myGen = new Prototype(firstArray[0]
+							                                                 .charAt(0), firstArray[1], /* StringUtils.rightPad( */
+							                                                 firstArray[2] /* , 24) */);
 
 							// If categories do exist in the second line
 							if (line2.contains("|")) {
@@ -154,13 +154,13 @@ public class Database {
 								for (String currentCategory : categoriesArray) {
 									// System.out.println(currentCategory);
 									myGen
-											.addCategory(StringUtils
-													.stripStart(
-															StringUtils
-																	.stripEnd(
-																			currentCategory,
-																			" "),
-															" "));
+									.addCategory(StringUtils
+											.stripStart(
+													StringUtils
+													.stripEnd(
+															currentCategory,
+															" "),
+											" "));
 
 								}
 							}
@@ -182,7 +182,7 @@ public class Database {
 							}
 							// Finally add the generator to the Vector of
 							// generators
-							generators.put(firstArray[1], myGen);
+							prototypes.put(firstArray[1], myGen);
 							// }
 						}
 					}
@@ -196,15 +196,15 @@ public class Database {
 
 	public boolean containsGenerator(String Id) {
 
-		return generators.containsKey(Id);
+		return prototypes.containsKey(Id);
 
 	}
-	
+
 	//TODO
 	/**
 	 *
 	public boolean addGenerator(Generator g) {
-		
+
 		if(this.containsGenerator(g.getId())) {
 			return false;
 		} else {
@@ -215,9 +215,9 @@ public class Database {
 			}
 			return false;
 		}
-		
+
 	}
-	*/
+	 */
 
 	/**
 	 * <p>
@@ -234,8 +234,8 @@ public class Database {
 		String[] ids = getAllIds();
 		for (String id : ids) {
 
-			ArrayList<String> categoriesArrayList = generators.get(id)
-					.getCategories();
+			ArrayList<String> categoriesArrayList = prototypes.get(id)
+			.getCategories();
 			String[] categoriesArray = new String[categoriesArrayList.size()];
 			categoriesArrayList.toArray(categoriesArray);
 
@@ -256,7 +256,7 @@ public class Database {
 
 	public String[] getAllIds() {
 
-		Set<String> set = generators.keySet();
+		Set<String> set = prototypes.keySet();
 		final String[] output = new String[set.size()];
 		return set.toArray(output);
 
@@ -266,21 +266,21 @@ public class Database {
 
 		StringBuffer output = new StringBuffer();
 
-		Set<String> set = generators.keySet();
+		Set<String> set = prototypes.keySet();
 		final String[] input = new String[set.size()];
 		set.toArray(input);
 
 		for (String key : input) {
-			output.append(generators.get(key).getName() + "\n");
+			output.append(prototypes.get(key).getName() + "\n");
 		}
 
 		return output.toString().split("\n");
 
 	}
 
-	public Generator getGenerator(String Id) {
+	public Prototype getGenerator(String Id) {
 
-		return generators.get(Id);
+		return prototypes.get(Id);
 
 	}
 
@@ -291,7 +291,7 @@ public class Database {
 
 		for (String id : ids) {
 
-			Generator g = generators.get(id);
+			Prototype g = prototypes.get(id);
 			if (g.isAMemberOfCategory(category)) {
 				o.add(g.getName());
 			}
@@ -307,7 +307,7 @@ public class Database {
 
 		String[] ids = getAllIds();
 		for (String id : ids) {
-			Generator g = generators.get(id);
+			Prototype g = prototypes.get(id);
 			// System.out.println("In getAllIds() input name is: -" + name + "-
 			// current name is: -" + g.getName() + "-");
 			if (name.equalsIgnoreCase(g.getName())) {
@@ -321,14 +321,14 @@ public class Database {
 
 	public String getName(String id) {
 
-		return generators.get(id).getName();
+		return prototypes.get(id).getName();
 
 	}
 
 	public String[] getPayloads(String id) {
 
 		if (containsGenerator(id)) {
-			Generator g = generators.get(id);
+			Prototype g = prototypes.get(id);
 			final String[] output = new String[g.size()];
 			return g.getPayloads().toArray(output);
 		} else {
@@ -340,7 +340,7 @@ public class Database {
 	public int getSize(String id) {
 
 		if (containsGenerator(id)) {
-			Generator g = generators.get(id);
+			Prototype g = prototypes.get(id);
 			return g.size();
 		} else {
 			return 0;
@@ -350,7 +350,7 @@ public class Database {
 
 	public int size() {
 
-		return generators.size();
+		return prototypes.size();
 
 	}
 

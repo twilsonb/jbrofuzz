@@ -33,70 +33,25 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 
-public class Generator {
+public class Prototype {
 
-	private static String calculatePayload(String param) {
-
-		String beginning;
-		try {
-			beginning = param.substring(0, 5);
-		} catch (IndexOutOfBoundsException e1) {
-			return param;
-		}
-		if (!beginning.startsWith("f(x)=")) {
-			return param;
-		}
-
-		// Get rid of the first characters
-		param = param.substring(5);
-		// Chop at x, the variable of f(x)
-		final String[] paramArray = param.toString().split(" x ");
-
-		// Check to see if you have two elements
-		if (paramArray.length != 2) {
-			return param;
-		}
-		// Define the input string
-		final String input = paramArray[0];
-		// Define the number of times
-		int times;
-		try {
-			times = Integer.parseInt(paramArray[1]);
-		} catch (final NumberFormatException e) {
-			times = 1;
-		}
-
-		// Check that times is positive
-		if (times <= 0) {
-			return param;
-		}
-
-		final int len = input.length() * times;
-
-		final StringBuffer newBuffer = new StringBuffer(len);
-		for (int i = 0; i < times; i++) {
-			newBuffer.append(input);
-		}
-		return newBuffer.toString();
-	}
-
-	private char type;
+	private ArrayList<String> categories;
 
 	private String id;
 
 	private String name;
 
-	private ArrayList<String> categories;
-
 	private ArrayList<String> payloads;
 
-	public Generator(char type, String id, String name) {
+	private char type;
+
+	public Prototype(char type, String id, String name) {
 
 		this(type, id, name, new ArrayList<String>(), new ArrayList<String>());
 
 	}
 
-	public Generator(char type, String id, String name,
+	public Prototype(char type, String id, String name,
 			ArrayList<String> categories, ArrayList<String> payloads) {
 
 		this.type = type;
@@ -119,6 +74,51 @@ public class Generator {
 		payloads.add(calculatePayload(value));
 		payloads.trimToSize();
 
+	}
+
+	private static String calculatePayload(String param) {
+	
+		String beginning;
+		try {
+			beginning = param.substring(0, 5);
+		} catch (IndexOutOfBoundsException e1) {
+			return param;
+		}
+		if (!beginning.startsWith("f(x)=")) {
+			return param;
+		}
+	
+		// Get rid of the first characters
+		param = param.substring(5);
+		// Chop at x, the variable of f(x)
+		final String[] paramArray = param.toString().split(" x ");
+	
+		// Check to see if you have two elements
+		if (paramArray.length != 2) {
+			return param;
+		}
+		// Define the input string
+		final String input = paramArray[0];
+		// Define the number of times
+		int times;
+		try {
+			times = Integer.parseInt(paramArray[1]);
+		} catch (final NumberFormatException e) {
+			times = 1;
+		}
+	
+		// Check that times is positive
+		if (times <= 0) {
+			return param;
+		}
+	
+		final int len = input.length() * times;
+	
+		final StringBuffer newBuffer = new StringBuffer(len);
+		for (int i = 0; i < times; i++) {
+			newBuffer.append(input);
+		}
+		return newBuffer.toString();
 	}
 
 	public ArrayList<String> getCategories() {
