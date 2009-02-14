@@ -42,7 +42,7 @@ public class Fuzzer implements Iterator<String> {
 
 	private Database database;
 
-	private Generator generator;
+	private Prototype prototype;
 
 	private ArrayList<String> payloads;
 
@@ -58,14 +58,14 @@ public class Fuzzer implements Iterator<String> {
 					+ " : No Such Fuzzer Found in the Database ");
 
 		}
-		this.generator = database.getGenerator(generator);
+		this.prototype = database.getGenerator(generator);
 
 		if (generator != null) {
 
 			// System.out.println("Generator Found!");
 
-			payloads = this.generator.getPayloads();
-			if (this.generator.isReplacive()) {
+			payloads = this.prototype.getPayloads();
+			if (this.prototype.isReplacive()) {
 				maxValue = new BigInteger("" + payloads.size());
 			} else {
 				maxValue = new BigInteger("" + payloads.size());
@@ -89,7 +89,7 @@ public class Fuzzer implements Iterator<String> {
 
 	public String getId() {
 
-		return generator.getId();
+		return prototype.getId();
 
 	}
 
@@ -101,7 +101,7 @@ public class Fuzzer implements Iterator<String> {
 
 	public String getName() {
 
-		return generator.getName();
+		return prototype.getName();
 
 	}
 
