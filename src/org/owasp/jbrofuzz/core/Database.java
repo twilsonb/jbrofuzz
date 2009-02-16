@@ -32,6 +32,7 @@ package org.owasp.jbrofuzz.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -40,163 +41,269 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 
 public class Database {
+
+	// The maximum number of chars to be read from file, regardless
+	private static final int MAX_CHARS = Short.MAX_VALUE;
+	// The maximum number of lines allowed to be read from the file
+	private static final int MAX_LINES = 1024;
+	// The maximum length of a line allowed
+	private static final int MAX_LINE_LENGTH = 512;
+
+	// The maximum name length for a prototype
+	private static final int MAX_PROTO_NAME_LENGTH = Byte.MAX_VALUE;
+	// The maximum number of payloads in a prototype
+	private static final int MAX_NO_OF_PAYLOADS = Byte.MAX_VALUE;
+	// The maximum number of categories of a prototype
+	private static final int MAX_NO_OF_CATEGORIES = Byte.MAX_VALUE;
+
 
 	private HashMap<String, Prototype> prototypes;
 
 	public Database() {
 
-		final int maxLines = 1024;
-		final int maxLineLength = 512;
-		final int maxNumberOfPayloads = 64;
-		final int maxFuzzerNameLength = 64;
+		prototypes = new HashMap<String, Prototype>();
+		load();
 
-		int line_counter = 0;
-		BufferedReader in = null;
+	} 
+
+	/**
+	 * <p>Method called from the constructor to load the prototype 
+	 * definitions of fuzzers from file.</p>
+	 * 
+	 * <p>This method has a considerable number of checks for
+	 * loading prototypes from the internal file, which can
+	 * be removed, to speed up reading the file.</p>
+	 * 
+	 * @return 0 if all ok, negative values in case of an error
+	 *
+	 * @see #Database()
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.3
+	 */
+	private int load() {
+
 
 		final StringBuffer fileContents = new StringBuffer();
 
 		// Attempt to read from the jar file
 		final URL fileURL = ClassLoader.getSystemClassLoader().getResource("fuzzers.jbrofuzz");
 
+		if(fileURL == null) {
+			// -1 File not found
+			return -1;
+		}
+
+		// Read the characters from the file
+		BufferedReader in = null;
 		try {
 			final URLConnection connection = fileURL.openConnection();
 			connection.connect();
 
-			in = new BufferedReader(new InputStreamReader(connection
-					.getInputStream()));
-			String line = in.readLine();
-			line_counter++;
-			while ((line != null) && (line_counter < maxLines)) {
+			in = new BufferedReader(
+					new InputStreamReader(connection.getInputStream()));
 
-				if (line.length() > maxLineLength) {
-					line = line.substring(0, maxLineLength);
+			int counter = 0;
+			int c;
+			while( ((c = in.read()) > 0) && (counter < MAX_CHARS) ) {
+				// Allow the character only if its printable ascii or \n
+				if( (CharUtils.isAsciiPrintable((char) c)) || ( ((char) c)=='\n' ) ) {
+					fileContents.append((char) c);
 				}
-				fileContents.append(line + "\n");
-				line = in.readLine();
+				counter++;
 			}
+
 			in.close();
-		} catch (final IOException e1) {
-			System.out.println("Directories file (inside jar): " + fileURL.toString() + " could not be found");
-		} finally {
+
+		} 
+		catch (final IOException e1) {
+			// -2 IOException while reading the file
+			return -2;
+		} 
+		finally {
 			IOUtils.closeQuietly(in);
 		}
 
-		// Parse the contents of the StringBuffer to the array of generators
-
+		// Break down the file contents into lines
 		final String[] fileInput = fileContents.toString().split("\n");
-		final int len = fileInput.length;
 
-		prototypes = new HashMap<String, Prototype>(len);
+		if(fileInput.length > MAX_LINES) {
+			// -3 More lines than you can load
+			return -3;
+		}
 
-		for (int i = 0; i < len; i++) {
+		
+		for (int i = 0; i < fileInput.length; i++) {
 
-			// The number of payloads identified for each category
-			int numberOfPayloads = 0;
+			// Ignore comment lines starting with '#'
+			if(fileInput[i].startsWith("#")) {
+				continue;
+			}
 
-			final String line = fileInput[i];
-			if ((!line.startsWith("#")) && (line.length() > 5)) {
-				// "P:ABC-DEF:" or "P:ABC-DEF-GHI:"
-				if ((line.charAt(1) == ':')
-						&& ((line.charAt(9) == ':') || (line.charAt(13) == ':'))) {
-					final String[] firstLineArray = line.split(":");
-					// Check that there are four fields separated by : in the
-					// first line
-					if (firstLineArray.length == 4) {
-						// Check that the name of the identifier is less than
-						// maxFuzzerNameLength
-						if ((firstLineArray[2].length() < maxFuzzerNameLength)
-								&& (firstLineArray[2].length() > 0)) {
-							// Check that the first character is either a P or
-							// an R
-							if (("P".equals(firstLineArray[0]))
-									|| ("R".equals(firstLineArray[0]))) {
+			// Ignore lines of length greater than MAX_LINE_LENGTH
+			if(fileInput[i].length() > MAX_LINE_LENGTH) {
+				continue;
+			}
 
-								try {
-									numberOfPayloads = Integer
-									.parseInt(firstLineArray[3]);
-								} catch (final NumberFormatException e) {
-									numberOfPayloads = 0;
-								}
-
-							}
-						}
+			// Check 1 indicating a likely prototype candidate
+			try {
+				if(fileInput[i].charAt(1) != ':') {
+					continue;
+				}
+				if( (fileInput[i].charAt(9) != ':') ) {
+					if(fileInput[i].charAt(13) != ':') {
+						continue;
 					}
-				} // First line check
+				}
+			} catch (IndexOutOfBoundsException e1) {
+				continue;
+			}
+			
+			// [0] -> P || R || X
+			// [1] -> HTT-PMT-EDS
+			// [2] -> Uppercase HTTP Methods
+			// [3] -> 8
+			final String[] _fla = fileInput[i].split(":");
 
-				// If a positive number of payloads is claimed in the first line
-				// and the first line is ok
-				if ((numberOfPayloads > 0)
-						&& (numberOfPayloads <= maxNumberOfPayloads)) {
-					final String[] firstArray = line.split(":");
-
-					// Check that there remaining element in the generator
-					// Vector
-					if (i < len - numberOfPayloads - 1) {
-
-						// Check that the second line starts with a >
-						String line2 = fileInput[i + 1];
-						if (line2.startsWith(">")) {
-							line2 = line2.substring(1);
-
-							// Finally create the generator if all the checks
-							// pass
-							final Prototype myGen = new Prototype(firstArray[0]
-							                                                 .charAt(0), firstArray[1], /* StringUtils.rightPad( */
-							                                                 firstArray[2] /* , 24) */);
-
-							// If categories do exist in the second line
-							if (line2.contains("|")) {
-
-								String[] categoriesArray = line2.split("\\|");
-								for (String currentCategory : categoriesArray) {
-									// System.out.println(currentCategory);
-									myGen
-									.addCategory(StringUtils
-											.stripStart(
-													StringUtils
-													.stripEnd(
-															currentCategory,
-															" "),
-											" "));
-
-								}
-							}
-							// If no categories have been specified, add a
-							// default category
-							else {
-
-								myGen.addCategory("Default");
-
-							}
-
-							// Add the values for each element
-							for (int j = 1; j <= numberOfPayloads; j++) {
-
-								final StringBuffer myBuffer = new StringBuffer();
-								myBuffer.append(fileInput[i + 1 + j]);
-								myGen.addPayload(myBuffer.toString());
-
-							}
-							// Finally add the generator to the Vector of
-							// generators
-							prototypes.put(firstArray[1], myGen);
-							// }
-						}
+			// Check that there are four fields separated by : 
+			if(_fla.length != 4) {
+				continue;
+			}
+ 
+			// Check [0] -> P || R || X
+			if(! "P".equals(_fla[0]) ) {
+				if(! "R".equals(_fla[0]) ) {
+					if(! "X".equals(_fla[0]) ) {
+						continue;						
 					}
 				}
 			}
+
+
+			// The Id: SQL-INJ cannot be empty
+			if(_fla[1].isEmpty()) {
+				continue;
+			}
+
+			// The name: "SQL Injection" cannot be empty
+			if(_fla[2].isEmpty()) {
+				continue;
+			}
+
+			// Check the prototype name length
+			if (_fla[2].length() > MAX_PROTO_NAME_LENGTH) {
+				continue;
+			}
+
+			int noPayloads = 0;			
+			try {
+				
+				noPayloads = Integer.parseInt(_fla[3]);
+				
+			} catch (final NumberFormatException e) {
+				continue;
+			}
+
+			// Check how many payloads this prototype has
+			if(noPayloads > MAX_NO_OF_PAYLOADS) {
+				continue;
+			}
+			if(noPayloads == 0) {
+				continue;
+			}
+
+			// Check we have that many payloads left in file
+			if(i + noPayloads > fileInput.length) {
+				continue;
+			}
+
+			try {
+				if(!fileInput[i + 1].startsWith(">")) {
+					continue;
+				}
+			} catch (IndexOutOfBoundsException e) {
+				continue;
+			}
+
+			String line2 = ""; 
+			try {
+				line2 = fileInput[i + 1].substring(1);
+			} catch (IndexOutOfBoundsException e) {
+				continue;
+			}
+
+			// [0] -> HTTP Methods 
+			// [1] -> Replacive Fuzzers 
+			// [2] -> Uppercase Fuzzers
+			final String[] _sla = line2.split("\\|");
+			if(_sla.length > MAX_NO_OF_CATEGORIES) {
+				continue;
+			}
+
+			// Alas! Finally create a prototype
+			final Prototype proto = new Prototype(_fla[0].charAt(0), _fla[1], _fla[2]);
+
+			// If categories do exist in the second line
+			if (line2.contains("|")) {
+
+				for (String categ_ry : _sla) {
+					// add the category to the prototype
+					proto.addCategory(
+						StringUtils.stripStart(
+							StringUtils.stripEnd(
+								categ_ry, " "
+							),
+						" ")
+					);
+
+				}
+			}
+			// If no categories have been identified, 
+			// add a default category
+			else {
+
+				proto.addCategory("Default");
+
+			}
+
+			// Add the values for each element
+			for (int j = 1; j <= noPayloads; j++) {
+
+				try {
+					proto.addPayload(fileInput[i + 1 + j]);
+				} catch (IndexOutOfBoundsException e) {
+					continue;
+				}
+			}
+			
+			// Finally add the prototype to the database
+			prototypes.put(_fla[1], proto);
+			
 		}
 
-		// generators.trimToSize();
+		return 0;
 
-	} // constructor
+	}
+	
+	/**
+	 * <p>Checks if the {@link #Database()} contains a Prototype
+	 * with the given id
+	 * 
+	 * @param prototypeId e.g HTT-PMT-EDS, INT-LOW, or SQL-INJ
+	 * 
+	 * @return true if a Prototype with that prototypeId exists 
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public boolean containsPrototype(String prototypeId) {
 
-	public boolean containsGenerator(String Id) {
-
-		return prototypes.containsKey(Id);
+		return prototypes.containsKey(prototypeId);
 
 	}
 
@@ -220,10 +327,9 @@ public class Database {
 	 */
 
 	/**
-	 * <p>
-	 * Return all the unique categories found in all the Generators that are
-	 * inside the database.
-	 * <p>
+	 * <p>Return all the unique categories found across prototypes that 
+	 * are loaded into the database.</p>
+	 * <p>Category examples include: "Replacive Fuzzers", "Exploits", etc.
 	 * 
 	 * @return String[] uniqueCategories
 	 */
@@ -254,6 +360,16 @@ public class Database {
 
 	}
 
+	/**
+	 * <p>Get all the unique Prototype IDs that are loaded in the 
+	 * database.</p>
+	 * 
+	 * @return String[] e.g. ["FSE-UPP", "HTT-PMT-EDS", ...]
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public String[] getAllIds() {
 
 		Set<String> set = prototypes.keySet();
@@ -262,6 +378,19 @@ public class Database {
 
 	}
 
+	/**
+	 * <p>Get all the names of the Prototypes that are loaded 
+	 * in the database.</p>
+	 * <p>The names are not required to be unique, if that is 
+	 * required, use {@link #getAllIds()}
+	 * 
+	 * @return String[] e.g. ["Uppercase HTTP Methods", ...
+	 *
+	 * @see #getAllIds()
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public String[] getAllNames() {
 
 		StringBuffer output = new StringBuffer();
@@ -278,9 +407,19 @@ public class Database {
 
 	}
 
-	public Prototype getGenerator(String Id) {
+	/**
+	 * <p>Return the Prototype, based on the prototypeID given.</p>
+	 * 
+	 * @param prototypeId e.g. "HTT-PMT-EDS"
+	 * @return Prototype The Prototype for the given prototypeID
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public Prototype getPrototype(String prototypeId) {
 
-		return prototypes.get(Id);
+		return prototypes.get(prototypeId);
 
 	}
 
@@ -327,7 +466,7 @@ public class Database {
 
 	public String[] getPayloads(String id) {
 
-		if (containsGenerator(id)) {
+		if (containsPrototype(id)) {
 			Prototype g = prototypes.get(id);
 			final String[] output = new String[g.size()];
 			return g.getPayloads().toArray(output);
@@ -339,7 +478,7 @@ public class Database {
 
 	public int getSize(String id) {
 
-		if (containsGenerator(id)) {
+		if (containsPrototype(id)) {
 			Prototype g = prototypes.get(id);
 			return g.size();
 		} else {
@@ -352,6 +491,33 @@ public class Database {
 
 		return prototypes.size();
 
+	}
+	
+	/**
+	 * <p>Method responsible for creating a Fuzzer, based on an existing prototypeId
+	 * and length specified.</p>
+	 * 
+	 * @param prototypeId prototypeId e.g HTT-PMT-EDS, INT-LOW, or SQL-INJ
+	 * @param len The length of the fuzzer, used for recursive fuzzers
+	 * @return org.owasp.jbrofuzz.core#Fuzzer()
+	 * @throws NoSuchFuzzerException
+	 *
+	 * @see {@link #containsPrototype(String)}
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public Fuzzer createFuzzer(String prototypeId, int len) throws NoSuchFuzzerException {
+		
+		if(!this.containsPrototype(prototypeId)) {
+
+			throw new NoSuchFuzzerException(
+					StringUtils.abbreviate(prototypeId, 10) + 
+					" : No Such Fuzzer Found in the Database ");
+
+		}
+		
+		return new Fuzzer(getPrototype(prototypeId), len);
 	}
 
 }

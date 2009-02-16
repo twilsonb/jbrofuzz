@@ -745,7 +745,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 				try {
 
-					for (Fuzzer f = new Fuzzer(category, Math.abs(end - start)); f.hasNext();) {
+					for (Fuzzer f = getFrame().getJBroFuzz().getDatabase().createFuzzer(category, Math.abs(end - start)); f.hasNext();) {
 
 						if(stopped) {
 							return;

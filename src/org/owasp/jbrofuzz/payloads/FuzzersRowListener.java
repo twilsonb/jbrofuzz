@@ -85,7 +85,7 @@ class FuzzersRowListener implements ListSelectionListener {
 					+ "\n"
 					+ "Fuzzer Type: "
 					+ ((this.payloadsPanel.getFrame().getJBroFuzz().getDatabase()
-							.getGenerator(id).isRecursive()) ? "Recursive"
+							.getPrototype(id).isRecursive()) ? "Recursive"
 							: "Replacive") + "\n" + "Fuzzer Id:   " + id
 					+ "\n\n" + "Total Number of Payloads: "
 					+ this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getSize(id));

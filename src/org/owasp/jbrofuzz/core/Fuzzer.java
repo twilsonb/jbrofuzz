@@ -48,21 +48,11 @@ public class Fuzzer implements Iterator<String> {
 
 	private BigInteger cValue, maxValue;
 
-	public Fuzzer(String generator, int len) throws NoSuchFuzzerException {
+	protected Fuzzer(Prototype prototype, int len) throws NoSuchFuzzerException {
 
-		database = new Database();
-		if (!database.containsGenerator(generator)) {
+		this.prototype = prototype;
 
-			throw new NoSuchFuzzerException(StringUtils.abbreviate(generator,
-					10)
-					+ " : No Such Fuzzer Found in the Database ");
-
-		}
-		this.prototype = database.getGenerator(generator);
-
-		if (generator != null) {
-
-			// System.out.println("Generator Found!");
+		if (prototype != null) {
 
 			payloads = this.prototype.getPayloads();
 			if (this.prototype.isReplacive()) {
