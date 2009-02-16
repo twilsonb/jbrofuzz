@@ -135,7 +135,7 @@ public class PayloadsDialog extends JDialog {
 
 				payloadsPanel.setBorder(BorderFactory.createCompoundBorder(
 						BorderFactory.createTitledBorder(" "
-								+ ((m.getJBroFuzz().getDatabase().getGenerator(
+								+ ((m.getJBroFuzz().getDatabase().getPrototype(
 										id).isRecursive()) ? "Recursive"
 										: "Replacive") + " ID: " + id + " "),
 						BorderFactory.createEmptyBorder(1, 1, 1, 1)));
@@ -144,7 +144,7 @@ public class PayloadsDialog extends JDialog {
 						+ name
 						+ "\n"
 						+ "Fuzzer Type: "
-						+ ((m.getJBroFuzz().getDatabase().getGenerator(id)
+						+ ((m.getJBroFuzz().getDatabase().getPrototype(id)
 								.isRecursive()) ? "Recursive" : "Replacive")
 						+ "\n" + "Fuzzer Id:   " + id + "\n\n"
 						+ "Total Number of Payloads: "

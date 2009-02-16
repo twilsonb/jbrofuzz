@@ -47,7 +47,7 @@ import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
 public class OpenSession {
 
 	// The maximum number of chars to be read from file, regardless
-	private final static int MAX_CHARS = 16384;
+	private final static int MAX_CHARS = Short.MAX_VALUE;
 
 	public OpenSession(JBroFuzzWindow mWindow) {
 
@@ -170,7 +170,7 @@ public class OpenSession {
 					int start = 0;
 					int end = 0;
 					// The fuzzer id must also exist in the database
-					if(!mWindow.getJBroFuzz().getDatabase().containsGenerator(fuzz_id)) {
+					if(!mWindow.getJBroFuzz().getDatabase().containsPrototype(fuzz_id)) {
 						fuzzer_happy = false;
 					}
 
