@@ -42,10 +42,10 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingWorker;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.util.SwingWorker3;
 
 /**
  * <p>
@@ -140,6 +140,27 @@ public class PropertiesViewer extends JFrame {
 			}
 		});
 
+		final class Starter extends SwingWorker<String, Object> {
+			
+			@Override
+			public String doInBackground() {
+				
+				int n = 0;
+				while (n < text.length()) {
+					listTextArea.append("" + text.charAt(n));
+					progressBar.setValue(n);
+					n++;
+				}
+				progressBar.setValue(n);
+				return "return-worker";
+				
+			}
+
+			
+		}
+
+		(new Starter()).execute();
+		/*
 		SwingWorker3 worker = new SwingWorker3() {
 
 			@Override
@@ -156,7 +177,7 @@ public class PropertiesViewer extends JFrame {
 
 		};
 		worker.start();
-
+		*/
 		listTextArea.setCaretPosition(0);
 		listPanel.add(listTextScrollPane);
 

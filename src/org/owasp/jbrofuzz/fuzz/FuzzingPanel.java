@@ -200,7 +200,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		});
 
 		// Right click: Cut, Copy, Paste, Select All
-		popupText(message, true, true, true, true);
+		popupTargetText(message);
 
 		// The message scroll pane where the message pane sits
 		final JScrollPane messageScrollPane = new JScrollPane(message);
@@ -353,12 +353,14 @@ public class FuzzingPanel extends JBroFuzzPanel {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 
-							final int c = outputTable.getSelectedRow();
-							final String name = (String) outputTable.getModel()
-							.getValueAt(
-									outputTable
-									.convertRowIndexToModel(c),
-									0);
+							int c = outputTable.getSelectedRow();
+							try {
+								c = outputTable.convertRowIndexToModel(c);
+							} catch (IndexOutOfBoundsException e) {
+								return;
+							}
+						
+							final String name = (String) outputTable.getModel().getValueAt(c, 0);
 							new WindowViewer(FuzzingPanel.this, name);
 
 						}
@@ -417,16 +419,14 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 */
 	public void add() {
 		// Check to see what text has been selected
-		String selectedText;
 		try {
-			selectedText = message.getSelectedText();
+			String selectedText = message.getSelectedText();
 		} catch (final IllegalArgumentException e) {
 			JOptionPane
 			.showInputDialog(
 					this,
 					"An exception was thrown while attempting to get the selected text",
-					"Add Generator", JOptionPane.ERROR_MESSAGE);
-			selectedText = "";
+					"Add Fuzzer", JOptionPane.ERROR_MESSAGE);
 		}
 
 		// Find the location of where the text has been selected
@@ -435,8 +435,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		new PayloadsDialog(this, sPoint, fPoint);
 
-		Runtime.getRuntime().gc();
-		Runtime.getRuntime().runFinalization();
+		// Runtime.getRuntime().gc();
+		// Runtime.getRuntime().runFinalization();
 
 	}
 
@@ -658,8 +658,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 */
 	public void start() {
 
-		Runtime.getRuntime().gc();
-		Runtime.getRuntime().runFinalization();
+//		Runtime.getRuntime().gc();
+//		Runtime.getRuntime().runFinalization();
 
 		if (!stopped) {
 			return;
@@ -785,8 +785,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 						getFrame().getJBroFuzz().getHandler().writeFuzzFile(outputMessage);
 
-						Runtime.getRuntime().gc();
-						Runtime.getRuntime().runFinalization();
+//						Runtime.getRuntime().gc();
+//						Runtime.getRuntime().runFinalization();
 					}
 
 				} catch (NoSuchFuzzerException e) {
@@ -798,9 +798,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		} // else statement for no rows
 
-		// Tidy up matters in case threading chills out...
-		stop();
-
 	}
 
 	/**
@@ -810,8 +807,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 */
 	public void stop() {
 
-		Runtime.getRuntime().gc();
-		Runtime.getRuntime().runFinalization();
+//		Runtime.getRuntime().gc();
+//		Runtime.getRuntime().runFinalization();
 
 		// JButton startButton = getFrame().getFrameToolBar().start;
 		// JButton stopButton = getFrame().getFrameToolBar().stop;

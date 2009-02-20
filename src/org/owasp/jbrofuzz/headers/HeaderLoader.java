@@ -53,9 +53,9 @@ public class HeaderLoader {
 
 	private static final int MAX_RECURSION = 1024;
 
-	final int maxLines = 2048;
-	final int maxLineLength = 512;
-	final int maxNumberOfFields = 64;
+	private static final int maxLines = 2048;
+	private static final int maxLineLength = 512;
+	private static final int maxNumberOfFields = 64;
 
 	private int globalCounter;
 
@@ -299,7 +299,7 @@ public class HeaderLoader {
 
 				try {
 										
-					if(path[i+1].toString().equalsIgnoreCase(element[i].toString())) {
+					if(path[i+1].toString().equalsIgnoreCase(element[i])) {
 						success--;
 
 					} else {

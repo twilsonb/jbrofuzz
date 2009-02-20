@@ -166,8 +166,8 @@ public class SystemPanel extends JBroFuzzPanel {
 		// Set the enabled options: Start, Stop, Graph, Add, Remove
 		setOptionsAvailable(false, false, true, false, false);
 
-		Runtime.getRuntime().gc();
-		Runtime.getRuntime().runFinalization();
+//		Runtime.getRuntime().gc();
+//		Runtime.getRuntime().runFinalization();
 
 		final String systemInfo = "[System Info Start]\r\n"
 			+ "  [Java]\r\n" + "    Vendor:  "
@@ -225,8 +225,8 @@ public class SystemPanel extends JBroFuzzPanel {
 
 	public void add() {
 
-		Runtime.getRuntime().gc();
-		Runtime.getRuntime().runFinalization();
+//		Runtime.getRuntime().gc();
+//		Runtime.getRuntime().runFinalization();
 
 		final Date currentTime = new Date();
 		final SimpleDateFormat dateTime = new SimpleDateFormat(

@@ -37,12 +37,12 @@ import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import org.owasp.jbrofuzz.help.Topics;
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.util.SwingWorker3;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 import com.Ostermiller.util.Browser;
@@ -107,49 +107,38 @@ public class JBroFuzzToolBar extends JToolBar {
 		add(remove);
 		this.addSeparator(new Dimension(13, 0));
 		add(help);
-		// this.addSeparator(new Dimension(6, 0));
 		add(website);
 		add(about);
 
 		setFloatable(true);
 		setRollover(true);
-		/*
-		start.setEnabled(true);
-		stop.setEnabled(false);
-		graph.setEnabled(false);
-		*/
+		
 		start.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						final SwingWorker3 worker = new SwingWorker3() {
-							
-							JBroFuzzPanel p;
-							@Override
-							public Object construct() {
-								
-								// Get the current panel inside the tab
-								int c = getFrame().getTp().getSelectedIndex();
-								p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
-								p.start();
-								return "start-menu-bar-return";
-								
-							}
+				final class Starter extends SwingWorker<String, Object> {
 
-							@Override
-							public void finished() {
-								
-								// Make sure while sniffing you don't stop
-								if(!p.getName().equals(" Sniffing ")) {
-									p.stop();
-								}
-								
-							}
-						};
-						worker.start();
+					JBroFuzzPanel p;
+					
+					@Override
+					public String doInBackground() {
+
+						int c = getFrame().getTp().getSelectedIndex();
+						p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
+						p.start();
+						
+						return "start-tool-bar-done";
 					}
-				});
+
+					@Override
+					protected void done() {
+
+						p.stop();
+						
+					}
+				}
+
+				(new Starter()).execute();
 
 			}
 		});
@@ -176,11 +165,6 @@ public class JBroFuzzToolBar extends JToolBar {
 					public void run() {
 						
 						getFrame().setTabShow(JBroFuzzWindow.ID_PANEL_GRAPHING);
-						/*
-						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
-						p.graph();
-						*/
 						
 					}
 				});

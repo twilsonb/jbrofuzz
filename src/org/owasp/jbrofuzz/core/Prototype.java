@@ -33,17 +33,29 @@ import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * <p>A prototype holds the definition of a fuzzer. Based on this 
+ * prototype a fuzzer can be created by means of accessing a 
+ * database factory.</p>
+ *
+ * <p>Effectively, a prototype is a collection of payloads and 
+ * categories, under a unique id value, given a name.</p>
+ *
+ * @author subere@uncon.org
+ * @version 1.2
+ * @since 1.2
+ */
 public class Prototype {
 
 	private ArrayList<String> categories;
 
-	private String id;
+	private ArrayList<String> payloads;
 
 	private String name;
 
-	private ArrayList<String> payloads;
-
 	private char type;
+
+	private String id;
 
 	public Prototype(char type, String id, String name) {
 
@@ -91,7 +103,7 @@ public class Prototype {
 		// Get rid of the first characters
 		param = param.substring(5);
 		// Chop at x, the variable of f(x)
-		final String[] paramArray = param.toString().split(" x ");
+		final String[] paramArray = param.split(" x ");
 	
 		// Check to see if you have two elements
 		if (paramArray.length != 2) {
@@ -138,10 +150,6 @@ public class Prototype {
 		return payloads;
 	}
 
-	public char getType() {
-		return type;
-	}
-
 	public boolean isAMemberOfCategory(String category) {
 
 		String[] categoriesArray = new String[categories.size()];
@@ -155,40 +163,67 @@ public class Prototype {
 
 		return false;
 	}
-
+	
+	/**
+	 * <p>Return the type of fuzzer prototype. Based on the
+	 * character type specified at construction, fuzzer 
+	 * prototypes can have the following types:</p>
+	 * 
+	 * <code>
+	 * Recursive
+	 * Replacive
+	 * Zero
+	 * </code>
+	 * 
+	 * <p>An empty String is returned in case of an error.</p>
+	 * 
+	 * @return String one of "Replacive", "Recursive", "Zero"
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.3
+	 */
+	public String getType() {
+		
+		if (type == 'P') {
+			return "Replacive";
+		}
+		
+		if (type == 'R') {
+			return "Recursive";
+		}
+		
+		if (type == 'Z') {
+			return "Zero";
+		}
+		
+		return "";
+	}
+	
 	public boolean isRecursive() {
-		if (type == 'R')
+		if (type == 'R') {
 			return true;
+		}
+		return false;
+	}
+	
+	public boolean isZero() {
+		if (type == 'Z') {
+			return true;
+		}
 		return false;
 	}
 
-	public boolean isReplacive() {
-		if (type == 'P')
-			return true;
-		return false;
-	}
-
-	public void setCategories(ArrayList<String> categories) {
-		// categories.trimToSize();
-		this.categories = categories;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setPayloads(ArrayList<String> payloads) {
-		this.payloads = payloads;
-	}
-
-	public void setType(char type) {
-		this.type = type;
-	}
-
+	/**
+	 * <p>Return the number of payloads that this 
+	 * prototype has.</p>
+	 * 
+	 * @return int the number of payloads
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public int size() {
 		return payloads.size();
 	}

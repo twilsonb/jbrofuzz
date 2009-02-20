@@ -33,7 +33,7 @@ import javax.swing.BorderFactory;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-class FuzzersRowListener implements ListSelectionListener {
+final class FuzzersRowListener implements ListSelectionListener {
 	
 	/**
 	 * 
@@ -67,13 +67,18 @@ class FuzzersRowListener implements ListSelectionListener {
 			return;
 		}
 
-		final int d = this.payloadsPanel.fuzzersTable.getSelectedRow();
-		final String name = (String) this.payloadsPanel.fuzzersTableModel.getValueAt(this.payloadsPanel.fuzzersTable.convertRowIndexToModel(d), 0);
+		int d = this.payloadsPanel.fuzzersTable.getSelectedRow();
+		d = this.payloadsPanel.fuzzersTable.convertRowIndexToModel(d);
+		if(d < 0) {
+			return;
+		}
+		
+		final String name = (String) this.payloadsPanel.fuzzersTableModel.getValueAt(d, 0);
 		final String id = this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getIdFromName(name);
 
 		this.payloadsPanel.payloadsTableModel.setData(this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getPayloads(id));
 
-		if (this.payloadsPanel.payloadsTableModel.getRowCount() > 0) {
+		if (this.payloadsPanel.payloadsTableModel.getRowCount() >= 0) {
 			
 			this.payloadsPanel.payloadsPanel.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createTitledBorder(" " + name + " - "
@@ -85,8 +90,7 @@ class FuzzersRowListener implements ListSelectionListener {
 					+ "\n"
 					+ "Fuzzer Type: "
 					+ ((this.payloadsPanel.getFrame().getJBroFuzz().getDatabase()
-							.getPrototype(id).isRecursive()) ? "Recursive"
-							: "Replacive") + "\n" + "Fuzzer Id:   " + id
+							.getPrototype(id).getType())) + "\n" + "Fuzzer Id:   " + id
 					+ "\n\n" + "Total Number of Payloads: "
 					+ this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getSize(id));
 			this.payloadsPanel.fuzzerInfoTextArea.setCaretPosition(this.payloadsPanel.fuzzerInfoTextArea

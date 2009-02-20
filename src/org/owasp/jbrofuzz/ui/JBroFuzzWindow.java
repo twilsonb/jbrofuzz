@@ -185,7 +185,7 @@ public class JBroFuzzWindow extends JFrame {
 		tp.add(pp.getName(), pp);
 		tp.add(sp.getName(), sp);
 		// The selected tab
-		tp.setSelectedIndex(0);
+		tp.setSelectedIndex(2);
 		
 		tp.addChangeListener(new ChangeListener() {
 			// Change listener for the tabbed pane
@@ -203,8 +203,8 @@ public class JBroFuzzWindow extends JFrame {
 	         
 	            }
 	            
-	            Runtime.getRuntime().gc();
-	    		Runtime.getRuntime().runFinalization();
+//	            Runtime.getRuntime().gc();
+//	    		Runtime.getRuntime().runFinalization();
 	            
 	        }
 	    });
@@ -240,8 +240,8 @@ public class JBroFuzzWindow extends JFrame {
 	 */
 	public void exitProcedure() {
 
-		Runtime.getRuntime().gc();
-		Runtime.getRuntime().runFinalization();
+//		Runtime.getRuntime().gc();
+//		Runtime.getRuntime().runFinalization();
 
 		fp.stop();
 		gp.stop();

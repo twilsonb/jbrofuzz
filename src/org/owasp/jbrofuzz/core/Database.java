@@ -32,7 +32,6 @@ package org.owasp.jbrofuzz.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -44,6 +43,24 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * <p>A database is a collection of prototypes, as loaded from the 
+ * internal file <code>fuzzers.jbrofuzz</code> residing within the 
+ * JBroFuzz.jar file.</p>
+ * 
+ * <p>Once a database instance has been created, you can obtain any
+ * known fuzzer through the factory method 
+ * {@link #createFuzzer(String, int)}.</p>
+ * 
+ * <p>This class involves a number of further methods for querying 
+ * the number of prototypes available, their corresponding IDs, names,
+ * as well as payload values.</p>
+ * 
+ *
+ * @author subere@uncon.org
+ * @version 1.3
+ * @since 1.2
+ */
 public class Database {
 
 	// The maximum number of chars to be read from file, regardless
@@ -63,11 +80,42 @@ public class Database {
 
 	private HashMap<String, Prototype> prototypes;
 
+	/**
+	 * <p>Constructs a database of prototypes from file and by
+	 * loading other fuzzers as well.</p>
+	 * 
+	 *
+	 * @see #createFuzzer(String, int)
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public Database() {
 
 		prototypes = new HashMap<String, Prototype>();
-		load();
-
+		loadFile();
+		// Add the zero fuzzers
+		Prototype pt1 = new Prototype('Z', "ZERO-1000", "1000 Plain Requests");
+		pt1.addCategory("Zero Fuzzers");
+		for(int i = 0; i < 1000; i++) {
+			pt1.addPayload("");
+		}
+		prototypes.put("ZERO-1000", pt1);
+		
+		Prototype pt2 = new Prototype('Z', "ZERO-100", "100 Plain Requests");
+		pt2.addCategory("Zero Fuzzers");
+		for(int i = 0; i < 100; i++) {
+			pt2.addPayload("");
+		}		
+		prototypes.put("ZERO-100", pt2);
+		
+		Prototype pt3 = new Prototype('Z', "ZERO-10", "10 Plain Requests");
+		pt3.addCategory("Zero Fuzzers");
+		for(int i = 0; i < 10; i++) {
+			pt3.addPayload("");
+		}		
+		prototypes.put("ZERO-10", pt3);
+		
 	} 
 
 	/**
@@ -85,7 +133,7 @@ public class Database {
 	 * @version 1.2
 	 * @since 1.3
 	 */
-	private int load() {
+	private int loadFile() {
 
 
 		final StringBuffer fileContents = new StringBuffer();
@@ -174,12 +222,10 @@ public class Database {
 				continue;
 			}
  
-			// Check [0] -> P || R || X
+			// Check [0] -> P || R
 			if(! "P".equals(_fla[0]) ) {
 				if(! "R".equals(_fla[0]) ) {
-					if(! "X".equals(_fla[0]) ) {
-						continue;						
-					}
+					continue;
 				}
 			}
 
@@ -212,6 +258,8 @@ public class Database {
 			if(noPayloads > MAX_NO_OF_PAYLOADS) {
 				continue;
 			}
+			
+			// Allow only zero fuzzers to have no payloads
 			if(noPayloads == 0) {
 				continue;
 			}
@@ -248,17 +296,16 @@ public class Database {
 			final Prototype proto = new Prototype(_fla[0].charAt(0), _fla[1], _fla[2]);
 
 			// If categories do exist in the second line
-			if (line2.contains("|")) {
+			if (_sla.length > 0) {
 
 				for (String categ_ry : _sla) {
 					// add the category to the prototype
-					proto.addCategory(
-						StringUtils.stripStart(
-							StringUtils.stripEnd(
-								categ_ry, " "
-							),
-						" ")
-					);
+					categ_ry = StringUtils.stripEnd(categ_ry, " ");
+					categ_ry = StringUtils.stripStart(categ_ry, " ");
+					
+					if(!categ_ry.isEmpty()) {
+						proto.addCategory(categ_ry);
+					}
 
 				}
 			}
@@ -266,15 +313,16 @@ public class Database {
 			// add a default category
 			else {
 
-				proto.addCategory("Default");
+				proto.addCategory("JBroFuzz");
 
 			}
 
-			// Add the values for each element
+			// Add the values of each payload
 			for (int j = 1; j <= noPayloads; j++) {
-
 				try {
+					
 					proto.addPayload(fileInput[i + 1 + j]);
+					
 				} catch (IndexOutOfBoundsException e) {
 					continue;
 				}
@@ -337,7 +385,7 @@ public class Database {
 
 		HashSet<String> o = new HashSet<String>();
 
-		String[] ids = getAllIds();
+		String[] ids = getAllPrototypeIDs();
 		for (String id : ids) {
 
 			ArrayList<String> categoriesArrayList = prototypes.get(id)
@@ -370,7 +418,7 @@ public class Database {
 	 * @version 1.2
 	 * @since 1.2
 	 */
-	public String[] getAllIds() {
+	public String[] getAllPrototypeIDs() {
 
 		Set<String> set = prototypes.keySet();
 		final String[] output = new String[set.size()];
@@ -382,16 +430,16 @@ public class Database {
 	 * <p>Get all the names of the Prototypes that are loaded 
 	 * in the database.</p>
 	 * <p>The names are not required to be unique, if that is 
-	 * required, use {@link #getAllIds()}
+	 * required, use {@link #getAllPrototypeIDs()}
 	 * 
 	 * @return String[] e.g. ["Uppercase HTTP Methods", ...
 	 *
-	 * @see #getAllIds()
+	 * @see #getAllPrototypeIDs()
 	 * @author subere@uncon.org
 	 * @version 1.2
 	 * @since 1.2
 	 */
-	public String[] getAllNames() {
+	public String[] getAllPrototypeNames() {
 
 		StringBuffer output = new StringBuffer();
 
@@ -423,10 +471,21 @@ public class Database {
 
 	}
 
-	public String[] getGenerators(String category) {
+	/**
+	 * <p>Given a category, return all prototype names that belong
+	 * to that category.</p>
+	 * 
+	 * @param category the category as a string to check
+	 * @return String[] array of prototype names
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
+	public String[] getPrototypeNamesInCategory(String category) {
 
 		HashSet<String> o = new HashSet<String>();
-		String[] ids = getAllIds();
+		String[] ids = getAllPrototypeIDs();
 
 		for (String id : ids) {
 
@@ -442,28 +501,60 @@ public class Database {
 		return uniqueCategoriesArray;
 	}
 
+	/**
+	 * <p>Returns the Id of a prototype, given its name.</p>
+	 * 
+	 * @param name e.g. "Uppercase HTTP Methods"
+	 * @return String the Id, or "" if the name is not found.
+	 * e.g. "HTT-PMT-EDS"
+	 * 
+	 * @see #getName(String)
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public String getIdFromName(String name) {
 
-		String[] ids = getAllIds();
+		String[] ids = getAllPrototypeIDs();
 		for (String id : ids) {
 			Prototype g = prototypes.get(id);
-			// System.out.println("In getAllIds() input name is: -" + name + "-
-			// current name is: -" + g.getName() + "-");
 			if (name.equalsIgnoreCase(g.getName())) {
-				// System.out.println("Found Match! input -" + name + "- output
-				// is: -" + g.getName() + "-");
 				return id;
 			}
 		}
 		return "";
 	}
 
+	/**
+	 * <p>Returns the name of a prototype, given its Id.</p>
+	 * 
+	 * @param id e.g. "HTT-PMT-EDS"
+	 * @return String e.g. "Uppercase HTTP Methods"
+	 *
+	 * @see #getIdFromName(String) 
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public String getName(String id) {
 
 		return prototypes.get(id).getName();
 
 	}
 
+	/**
+	 * <p>Returns the array of payloads attached to a given 
+	 * prototype Id.</p>
+	 * 
+	 * @param id e.g. "HTT-PMT-EDS"
+	 * @return String[] or String[0] if the prototype does 
+	 * not exist in the database
+	 *
+	 * @see #getSize(String)
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public String[] getPayloads(String id) {
 
 		if (containsPrototype(id)) {
@@ -476,6 +567,18 @@ public class Database {
 
 	}
 
+	/**
+	 * <p>Get the number of payloads the prototype with 
+	 * the given Id has.</p>
+	 * 
+	 * @param id e.g. "SQL-INJ"
+	 * @return int value of size, 0 if Id does not exist.
+	 *
+	 * @see #getPayloads(String)
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public int getSize(String id) {
 
 		if (containsPrototype(id)) {
@@ -487,6 +590,15 @@ public class Database {
 
 	}
 
+	/**
+	 * <p>Return the size of the database.</p>
+	 * 
+	 * @return int the size of the database.
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.2
+	 */
 	public int size() {
 
 		return prototypes.size();
@@ -502,7 +614,7 @@ public class Database {
 	 * @return org.owasp.jbrofuzz.core#Fuzzer()
 	 * @throws NoSuchFuzzerException
 	 *
-	 * @see {@link #containsPrototype(String)}
+	 * @see #containsPrototype(String)
 	 * @author subere@uncon.org
 	 * @version 1.2
 	 * @since 1.2
