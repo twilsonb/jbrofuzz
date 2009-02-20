@@ -289,6 +289,94 @@ public abstract class JBroFuzzPanel extends JPanel {
 			}
 		});
 	}
+	
+	/**
+	 * <p>Method for setting up the right click copy paste cut and select all menu.</p>
+	 * <p>It passes the parameters of which options in the right click menu are enabled.</p>
+	 * @param area
+	 *            JTextArea
+	 */
+	public final void popupTargetText(final JTextComponent area) {
+
+		final JPopupMenu popmenu = new JPopupMenu();
+
+		final JMenuItem i0_add = new JMenuItem("Add");
+		final JMenuItem i1_cut = new JMenuItem("Cut");
+		final JMenuItem i2_copy = new JMenuItem("Copy");
+		final JMenuItem i3_paste = new JMenuItem("Paste");
+		final JMenuItem i4_select = new JMenuItem("Select All");
+
+		i0_add.setIcon(ImageCreator.IMG_ADD);
+		
+		i1_cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+		i2_copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+		i3_paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+		i4_select.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+
+		popmenu.add(i0_add);
+		popmenu.addSeparator();
+		popmenu.add(i1_cut);
+		popmenu.add(i2_copy);
+		popmenu.add(i3_paste);
+		popmenu.addSeparator();
+		popmenu.add(i4_select);
+
+		if (!area.isEditable()) {
+			i3_paste.setEnabled(false);
+		}
+		
+		i0_add.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				add();
+			}
+		});
+
+		i1_cut.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				area.cut();
+			}
+		});
+
+		i2_copy.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				area.copy();
+			}
+		});
+
+		i3_paste.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (area.isEditable()) {
+					area.paste();
+				}
+			}
+		});
+
+		i4_select.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				area.selectAll();
+			}
+		});
+
+		area.addMouseListener(new MouseAdapter() {
+			private void checkForTriggerEvent(final MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					area.requestFocus();
+					popmenu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+
+			@Override
+			public void mousePressed(final MouseEvent e) {
+				checkForTriggerEvent(e);
+			}
+
+			@Override
+			public void mouseReleased(final MouseEvent e) {
+				checkForTriggerEvent(e);
+			}
+		});
+	}
+
 
 	public final void popupTable(final JTable area, boolean open, boolean cut, boolean copy, boolean paste, boolean selectAll, boolean properties) {
 
@@ -435,8 +523,8 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 					if(s.equalsIgnoreCase(getFrame().getPanelSniffing().getName())) {
 
-						Runtime.getRuntime().gc();
-						Runtime.getRuntime().runFinalization();
+//						Runtime.getRuntime().gc();
+//						Runtime.getRuntime().runFinalization();
 
 						final int c = area.getSelectedRow();
 						final String name = (String) area.getModel().getValueAt(c, 0);

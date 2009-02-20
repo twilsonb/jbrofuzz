@@ -110,8 +110,8 @@ public class Connection {
 		}
 
 		protocol = url == null ? "" : url.getProtocol(); // http
-		host = url == null ? "" : url.getHost(); // host
-		port = url == null ? -1 : url.getPort(); // 443
+		host = url.getHost(); // host
+		port = url.getPort(); // 443
 
 		// Set default ports
 		if (protocol.equalsIgnoreCase("https") && (port == -1)) {

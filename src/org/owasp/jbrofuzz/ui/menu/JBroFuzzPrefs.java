@@ -190,19 +190,19 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[1].add(deleteCheckBox);
 		panels[1].add(Box.createRigidArea(new Dimension(0, 20)));
 		
-		HashMap<String, String> dirHash = new HashMap<String, String>(4);
-		dirHash.put(" Fuzzing (where data is saved) ", parent.getJBroFuzz().getHandler().getCanonicalPath());
-		
-		for(String dir : dirHash.keySet()) {
-			
-			JLabel box = new JLabel("<html>" + JBroFuzzFormat.centerAbbreviate(dirHash.get(dir), 70) + "</html>");
-			box.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-					.createTitledBorder(dir),
-					BorderFactory.createEmptyBorder(1, 1, 1, 5)));
-			panels[1].add(box);
-			panels[1].add(Box.createRigidArea(new Dimension(0, 20)));
-			
-		}
+		// HashMap<String, String> dirHash = new HashMap<String, String>(4);
+		// dirHash.put(, );
+
+		String dir = parent.getJBroFuzz().getHandler().getCanonicalPath();
+
+		JLabel box = new JLabel("<html>" + JBroFuzzFormat.centerAbbreviate(dir, 70) + "</html>");
+		box.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Fuzzing (where data is saved) "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 5)));
+		panels[1].add(box);
+		panels[1].add(Box.createRigidArea(new Dimension(0, 20)));
+
+
 
 		// Fuzzing... -> Socket Timeout
 		

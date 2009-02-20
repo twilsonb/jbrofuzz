@@ -97,7 +97,7 @@ public class Topics extends JFrame implements TreeSelectionListener {
 	/**
 	 * <p>Boolean is true if Topics are already showing.</p>
 	 */
-	public static boolean topicsShowing = false;
+	private static boolean topicsShowing = false;
 
 	/**
 	 * <p>The constructor of the help topics JDialog.</p>

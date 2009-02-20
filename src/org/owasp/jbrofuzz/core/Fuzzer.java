@@ -36,11 +36,19 @@ import java.util.Stack;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * <p>A fuzzer is an iterator that is constructed based on a 
+ * prototype, carrying the payloads and the fuzzer type 
+ * information.</p>
+ * 
+ *
+ * @author subere@uncon.org
+ * @version 1.3
+ * @since 1.2
+ */
 public class Fuzzer implements Iterator<String> {
 
 	private int len;
-
-	private Database database;
 
 	private Prototype prototype;
 
@@ -55,11 +63,15 @@ public class Fuzzer implements Iterator<String> {
 		if (prototype != null) {
 
 			payloads = this.prototype.getPayloads();
-			if (this.prototype.isReplacive()) {
-				maxValue = new BigInteger("" + payloads.size());
-			} else {
+
+			if (this.prototype.isRecursive()) {
+			
 				maxValue = new BigInteger("" + payloads.size());
 				maxValue = maxValue.pow(len < 0 ? 0 : len);
+				
+			} else {
+				maxValue = new BigInteger("" + payloads.size());
+
 			}
 
 		} else {
@@ -109,14 +121,14 @@ public class Fuzzer implements Iterator<String> {
 
 		StringBuffer output = new StringBuffer("");
 
-		// Replacive Generator
+		// Replacive Prototype
 		if (maxValue.compareTo(new BigInteger("" + payloads.size())) == 0) {
 
 			output.append(payloads.get(cValue.intValue()));
 			cValue = cValue.add(new BigInteger("1"));
 
 		}
-		// Recursive Generator
+		// Recursive Prototype
 		else {
 
 			BigInteger val = cValue;

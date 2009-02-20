@@ -46,6 +46,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -62,7 +63,6 @@ import org.owasp.jbrofuzz.ui.actions.CutAction;
 import org.owasp.jbrofuzz.ui.actions.PasteAction;
 import org.owasp.jbrofuzz.ui.actions.SelectAllAction;
 import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.util.SwingWorker3;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 import com.Ostermiller.util.Browser;
@@ -398,8 +398,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				}
 				
 				// Run garbage collection as well
-				Runtime.getRuntime().gc();
-				Runtime.getRuntime().runFinalization();
+//				Runtime.getRuntime().gc();
+//				Runtime.getRuntime().runFinalization();
 				
 			}
 		});
@@ -433,8 +433,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				}
 
 				// Run garbage collection as well
-				Runtime.getRuntime().gc();
-				Runtime.getRuntime().runFinalization();
+//				Runtime.getRuntime().gc();
+//				Runtime.getRuntime().runFinalization();
 
 			}
 		});
@@ -472,8 +472,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				}
 
 				// Run garbage collection as well
-				Runtime.getRuntime().gc();
-				Runtime.getRuntime().runFinalization();
+//				Runtime.getRuntime().gc();
+//				Runtime.getRuntime().runFinalization();
 				
 			}
 		});
@@ -509,8 +509,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				}
 
 				// Run garbage collection as well
-				Runtime.getRuntime().gc();
-				Runtime.getRuntime().runFinalization();
+//				Runtime.getRuntime().gc();
+//				Runtime.getRuntime().runFinalization();
 				
 			}
 		});
@@ -545,8 +545,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				}	
 
 				// Run garbage collection as well
-				Runtime.getRuntime().gc();
-				Runtime.getRuntime().runFinalization();
+//				Runtime.getRuntime().gc();
+//				Runtime.getRuntime().runFinalization();
 				
 			}
 		}
@@ -583,8 +583,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				}	
 
 				// Run garbage collection as well
-				Runtime.getRuntime().gc();
-				Runtime.getRuntime().runFinalization();
+//				Runtime.getRuntime().gc();
+//				Runtime.getRuntime().runFinalization();
 								
 			}
 		}
@@ -771,26 +771,30 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		start.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						final SwingWorker3 worker = new SwingWorker3() {
+				final class Starter extends SwingWorker<String, Object> {
 
-							JBroFuzzPanel p;
+					JBroFuzzPanel p;
+					
+					@Override
+					public String doInBackground() {
 
-							@Override
-							public Object construct() {
+						int c = getFrame().getTp().getSelectedIndex();
+						p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
+						p.start();
+						
 
-								int c = getFrame().getTp().getSelectedIndex();
-								p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
-								p.start();
-
-								return "start-menu-bar-return";
-							}
-
-						};
-						worker.start();
+						return "start-menu-bar-done";
 					}
-				});
+
+					@Override
+					protected void done() {
+
+						p.stop();
+						
+					}
+				}
+
+				(new Starter()).execute();
 
 			}
 		});

@@ -95,7 +95,7 @@ public class PayloadsDialog extends JDialog {
 			final String value = (String) categoriesTableModel.getValueAt(categoriesTable.convertRowIndexToModel(c), 0);
 
 			fuzzersTable.setRowSorter(null);
-			fuzzersTableModel.setData(m.getJBroFuzz().getDatabase().getGenerators(value));
+			fuzzersTableModel.setData(m.getJBroFuzz().getDatabase().getPrototypeNamesInCategory(value));
 			sorter2 = new TableRowSorter<SingleColumnModel>(fuzzersTableModel);
 			fuzzersTable.setRowSorter(sorter2);
 			
@@ -135,17 +135,16 @@ public class PayloadsDialog extends JDialog {
 
 				payloadsPanel.setBorder(BorderFactory.createCompoundBorder(
 						BorderFactory.createTitledBorder(" "
-								+ ((m.getJBroFuzz().getDatabase().getPrototype(
-										id).isRecursive()) ? "Recursive"
-										: "Replacive") + " ID: " + id + " "),
+								+ m.getJBroFuzz().getDatabase().getPrototype(
+										id).getType() + " ID: " + id + " "),
 						BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 				fuzzerInfoTextArea.setText("\nFuzzer Name: "
 						+ name
 						+ "\n"
 						+ "Fuzzer Type: "
-						+ ((m.getJBroFuzz().getDatabase().getPrototype(id)
-								.isRecursive()) ? "Recursive" : "Replacive")
+						+ m.getJBroFuzz().getDatabase().getPrototype(id)
+								.getType() 
 						+ "\n" + "Fuzzer Id:   " + id + "\n\n"
 						+ "Total Number of Payloads: "
 						+ m.getJBroFuzz().getDatabase().getSize(id));
@@ -160,7 +159,8 @@ public class PayloadsDialog extends JDialog {
 
 		}
 	}
-	private class PayloadsRowListener implements ListSelectionListener {
+	
+	/*private class PayloadsRowListener implements ListSelectionListener {
 
 		public void valueChanged(final ListSelectionEvent event) {
 			if (event.getValueIsAdjusting()) {
@@ -169,7 +169,7 @@ public class PayloadsDialog extends JDialog {
 
 			// ok.setEnabled(false);
 		}
-	}
+	}*/
 	
 	private static final long serialVersionUID = -1083415577221148132L;
 	
@@ -337,8 +337,8 @@ public class PayloadsDialog extends JDialog {
 		payloadsTable.setFont(new Font("Verdana", Font.BOLD, 10));
 		payloadsTable.setRowHeight(30);
 		payloadsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		payloadsTable.getSelectionModel().addListSelectionListener(
-				new PayloadsRowListener());
+//		payloadsTable.getSelectionModel().addListSelectionListener(
+//				new PayloadsRowListener());
 		payloadsTable.setBackground(Color.BLACK);
 		payloadsTable.setForeground(Color.WHITE);
 

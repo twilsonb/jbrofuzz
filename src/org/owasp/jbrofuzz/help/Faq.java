@@ -93,7 +93,7 @@ public class Faq extends JFrame implements TreeSelectionListener {
 	/**
 	 * <p>Boolean is true if Topics are already showing.</p>
 	 */
-	public static boolean faqShowing = false;
+	private static boolean faqShowing = false;
 
 	public Faq(final JBroFuzzWindow parent) {
 

@@ -34,7 +34,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.commons.lang.StringUtils;
 
-class PayloadsRowListener implements ListSelectionListener {
+final class PayloadsRowListener implements ListSelectionListener {
 	
 	/**
 	 * 
@@ -42,10 +42,11 @@ class PayloadsRowListener implements ListSelectionListener {
 	private final PayloadsPanel payloadsPanel;
 
 	/**
+	 * <p>Constructor for the row listener in the "Payloads" table
+	 * within the "Payloads" tab.</p>
 	 * 
 	 * @param payloadsPanel
 	 *
-	 * @see 
 	 * @author subere@uncon.org
 	 * @version 1.2
 	 * @since 1.2 
@@ -55,9 +56,8 @@ class PayloadsRowListener implements ListSelectionListener {
 	}
 
 	/**
-	 * <p>
-	 * Method for the name table selection row.
-	 * </p>
+	 * <p>Implemented for each row selected in the 
+	 * payloads table.</p>
 	 * 
 	 * @param event
 	 *            ListSelectionEvent
@@ -69,6 +69,10 @@ class PayloadsRowListener implements ListSelectionListener {
 		}
 
 		final int d = this.payloadsPanel.payloadsTable.getSelectedRow();
+		if(d < 0) {
+			return;
+		}
+		
 		final String payload = (String) this.payloadsPanel.payloadsTableModel.getValueAt(d, 0);
 
 		this.payloadsPanel.payloadInfoTextArea.setText("\nPayload Length: " + payload.length()

@@ -36,7 +36,7 @@ import javax.swing.table.TableRowSorter;
 
 import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 
-class CategoriesRowListener implements ListSelectionListener {
+final class CategoriesRowListener implements ListSelectionListener {
 	
 	/**
 	 * 
@@ -68,13 +68,20 @@ class CategoriesRowListener implements ListSelectionListener {
 			return;
 		}
 		
-		final int c = this.payloadsPanel.categoriesTable.getSelectedRow();
-		final String value = (String) this.payloadsPanel.categoriesTableModel.getValueAt(this.payloadsPanel.categoriesTable.convertRowIndexToModel(c), 0);
+		int c = this.payloadsPanel.categoriesTable.getSelectedRow();
+		c = this.payloadsPanel.categoriesTable.convertRowIndexToModel(c);
+		if(c < 0) {
+			return;
+		}
+		final String value = (String) this.payloadsPanel.categoriesTableModel.getValueAt(c, 0);
 
 		this.payloadsPanel.fuzzersTable.setRowSorter(null);
-		this.payloadsPanel.fuzzersTableModel.setData(this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getGenerators(value));
+		this.payloadsPanel.fuzzersTableModel.setData(this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getPrototypeNamesInCategory(value));
 		this.payloadsPanel.sorter2 = new TableRowSorter<SingleColumnModel>(this.payloadsPanel.fuzzersTableModel);
 		this.payloadsPanel.fuzzersTable.setRowSorter(this.payloadsPanel.sorter2);
+
+		this.payloadsPanel.payloadsTable.setRowSorter(null);
+		this.payloadsPanel.payloadsTableModel.setData(null);
 		
 		this.payloadsPanel.fuzzersPanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(" " + value + " "),

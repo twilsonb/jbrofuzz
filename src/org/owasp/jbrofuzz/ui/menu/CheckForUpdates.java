@@ -55,11 +55,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.util.SwingWorker3;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 import com.Ostermiller.util.Browser;
@@ -89,9 +89,6 @@ public class CheckForUpdates extends JDialog {
 
 	// The start/stop and close button
 	private JButton startStop, close;
-
-	// The Swing Worker used
-	private SwingWorker3 worker;
 
 	// The boolean checking for a new version
 	private boolean newVersionExists;
@@ -163,19 +160,28 @@ public class CheckForUpdates extends JDialog {
 
 		startStop.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				worker = new SwingWorker3() {
+				
+				final class Starter extends SwingWorker<String, Object> {
+					
 					@Override
-					public Object construct() {
+					public String doInBackground() {
+						
 						CheckForUpdates.this.startUpdate();
 						return "check-update-return";
 					}
 
 					@Override
-					public void finished() {
+					protected void done() {
+
 						CheckForUpdates.this.finishUpdate();
+						
 					}
-				};
-				worker.start();
+				}
+
+				(new Starter()).execute();
+				
+				
+				
 			}
 		});
 
@@ -270,7 +276,7 @@ public class CheckForUpdates extends JDialog {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						startStop.setEnabled(false);
-						worker.interrupt();
+						//TODO: worker.interrupt();
 						close.setEnabled(true);
 					}
 				});
