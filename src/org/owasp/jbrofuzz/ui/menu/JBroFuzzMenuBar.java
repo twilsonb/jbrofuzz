@@ -62,6 +62,7 @@ import org.owasp.jbrofuzz.ui.actions.CopyAction;
 import org.owasp.jbrofuzz.ui.actions.CutAction;
 import org.owasp.jbrofuzz.ui.actions.PasteAction;
 import org.owasp.jbrofuzz.ui.actions.SelectAllAction;
+import org.owasp.jbrofuzz.update.CheckForUpdates;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 

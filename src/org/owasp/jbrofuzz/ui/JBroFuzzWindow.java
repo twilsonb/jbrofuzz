@@ -41,6 +41,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -53,6 +54,7 @@ import org.owasp.jbrofuzz.payloads.PayloadsPanel;
 import org.owasp.jbrofuzz.system.SystemPanel;
 import org.owasp.jbrofuzz.ui.menu.JBroFuzzMenuBar;
 import org.owasp.jbrofuzz.ui.menu.JBroFuzzToolBar;
+import org.owasp.jbrofuzz.update.StartUpdateChecker;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -185,7 +187,7 @@ public class JBroFuzzWindow extends JFrame {
 		tp.add(pp.getName(), pp);
 		tp.add(sp.getName(), sp);
 		// The selected tab
-		tp.setSelectedIndex(2);
+		tp.setSelectedIndex(0);
 		
 		tp.addChangeListener(new ChangeListener() {
 			// Change listener for the tabbed pane
@@ -202,10 +204,7 @@ public class JBroFuzzWindow extends JFrame {
 	            	mb.setEnabledPanelOptions(b);
 	         
 	            }
-	            
-//	            Runtime.getRuntime().gc();
-//	    		Runtime.getRuntime().runFinalization();
-	            
+	            	            
 	        }
 	    });
 		
@@ -230,6 +229,34 @@ public class JBroFuzzWindow extends JFrame {
 		setVisible(true);
 
 		log("System Launch, Welcome!");
+		
+		// Check for an updated version
+		final class StartUpdateCheck extends SwingWorker<String, Object> {
+			
+			@Override
+			public String doInBackground() {
+
+				new StartUpdateChecker(JBroFuzzWindow.this);
+				return "done-checking-updates";
+				
+			}
+
+			@Override
+			protected void done() {
+				
+			}
+		}
+
+		// The tabbed pane, setup according to preferences
+		boolean checkNewVersion = prefs.getBoolean(JBroFuzzFormat.PR_3, true);
+		if(checkNewVersion) {
+			(new StartUpdateCheck()).execute();
+		} 
+		
+		
+		
+		
+		
 	}
 
 	/**

@@ -67,13 +67,16 @@ final class FuzzersRowListener implements ListSelectionListener {
 			return;
 		}
 
+		String name;
 		int d = this.payloadsPanel.fuzzersTable.getSelectedRow();
-		d = this.payloadsPanel.fuzzersTable.convertRowIndexToModel(d);
-		if(d < 0) {
+		try {
+			
+			d = this.payloadsPanel.fuzzersTable.convertRowIndexToModel(d);
+			name = (String) this.payloadsPanel.fuzzersTableModel.getValueAt(d, 0);
+			
+		} catch (IndexOutOfBoundsException  e) {
 			return;
 		}
-		
-		final String name = (String) this.payloadsPanel.fuzzersTableModel.getValueAt(d, 0);
 		final String id = this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getIdFromName(name);
 
 		this.payloadsPanel.payloadsTableModel.setData(this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getPayloads(id));

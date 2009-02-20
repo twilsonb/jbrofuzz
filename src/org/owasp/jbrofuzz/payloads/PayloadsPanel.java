@@ -448,6 +448,19 @@ public class PayloadsPanel extends JBroFuzzPanel {
 
 	}
 
+	/**
+	 * <p>
+	 * Method for setting the given payload, fuzzer and category name to be displayed
+	 * </p>
+	 * 
+	 * @param payload
+	 * @param fuzzer
+	 * @param category
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.2
+	 * @since 1.0
+	 */
 	public void setPayloadDisplayed(final String payload, final String fuzzer, final String category) {
 
 		int c = 0;

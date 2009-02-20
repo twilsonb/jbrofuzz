@@ -32,7 +32,9 @@ package org.owasp.jbrofuzz.fuzz;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
@@ -66,7 +68,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 public class Connection {
 
 	// The maximum size for the socket I/O
-	private final static int SEND_BUF_SIZE = 256 * 1024;
+	// private final static int SEND_BUF_SIZE = 256 * 1024;
 	private final static int RECV_BUF_SIZE = 256 * 1024;
 
 	// Singleton SSLSocket factory used with it's factory
@@ -83,7 +85,7 @@ public class Connection {
 	private OutputStream out_stream;
 
 	private int socketTimeout;
-
+	
 	/**
 	 * <p>The constructor for the connection, responsible for creating the 
 	 * corresponding socket (or SSL socket) and transmitting/receiving 
@@ -149,27 +151,29 @@ public class Connection {
 					mSSLSocketFactory = getSocketFactory();
 				}
 
-				// Handle HTTPS differently then HTTP -> HTTPS
+				// Handle HTTPS differently then HTTP
 				mSocket = (SSLSocket) mSSLSocketFactory.createSocket(host,port);
-
+				mSocket.setSoTimeout(socketTimeout);
+				
 			} else {
 				
-				// Handle HTTP differently then HTTPS -> HTTP
-				mSocket = new Socket(host, port);
-
+				// Handle HTTP differently then HTTPS
+				mSocket = new Socket();
+				mSocket.connect(new InetSocketAddress(host, port), socketTimeout);
 			}
 
-			// Connect, set buffers, streams, smile...
-			mSocket.setSendBufferSize(Connection.SEND_BUF_SIZE);
+			// Set buffers, streams, smile...
+			mSocket.setSendBufferSize(this.message.getBytes().length);
 			mSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-			mSocket.setSoTimeout(socketTimeout);
 
 			in_stream = mSocket.getInputStream();
 			out_stream = mSocket.getOutputStream();
-
+			
+			// Put message on the wire
 			out_stream.write(this.message.getBytes());
-
-			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			
+			// Read response, see what you have back
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int got;
 
 			// Treat HTTP/1.1 differently because of chunked encoding
@@ -217,16 +221,19 @@ public class Connection {
 			reply = new String(baos.toByteArray());
 
 
-		} catch (MalformedURLException e) {
+		} catch (MalformedURLException e1) {
 
-			reply = "Malformed URL: " + e.getMessage() 
-			+ "\n";
+			reply = "Malformed URL: " + e1.getMessage() + "\n";
 			throw new ConnectionException(reply);
 
-		} catch (IOException e) {
+		} catch (InterruptedIOException e2) {
+			
+			reply = "Connection Timeout after: " + socketTimeout + " ms\n";			
+			throw new ConnectionException(reply);
+			
+		} catch (IOException e3) {
 
-			reply = "An IO Error occured on the URL : " + e.getMessage()
-			+ "\n";
+			reply = "An IO Error occured: " + e3.getMessage() + "\n";
 			throw new ConnectionException(reply);
 
 		} 

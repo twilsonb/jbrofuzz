@@ -37,8 +37,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.net.InetAddress;
-import java.util.HashMap;
 import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
@@ -150,13 +148,13 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		}
 		
-		// Preferences...
+		// Preferences -> Show Tabs
 
 		final boolean tabsbottom = prefs.getBoolean(JBroFuzzFormat.PR_2, false);
 		final JCheckBox tabsCheckBox = new JCheckBox(" Show tabs in the main window at the top of the window (requires restart) ", tabsbottom);
 		
 		tabsCheckBox.setBorderPaintedFlat(true);
-		tabsCheckBox.setToolTipText("Tick this option, if you would like to see the tabs under the tool bar, instead of at the bottom of the window ");
+		tabsCheckBox.setToolTipText(" Tick this option, if you would like to see the tabs under the tool bar, instead of at the bottom of the window ");
 		
 		tabsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -168,6 +166,26 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 			}
 		});
 		panels[0].add(tabsCheckBox);
+		panels[0].add(Box.createRigidArea(new Dimension(0, 20)));
+		
+		// Preferences -> Check for New Version at Startup
+		
+		final boolean newVersionCheck = prefs.getBoolean(JBroFuzzFormat.PR_3, true);
+		final JCheckBox newVCheckBox = new JCheckBox(" Check for a new version at startup ", newVersionCheck);
+		
+		newVCheckBox.setBorderPaintedFlat(true);
+		newVCheckBox.setToolTipText(" Untick this option, if you do not want to be notified about new versions at startup ");
+		
+		newVCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (newVCheckBox.isSelected()) {
+					prefs.putBoolean(JBroFuzzFormat.PR_3, true);
+				} else {
+					prefs.putBoolean(JBroFuzzFormat.PR_3, false);
+				}
+			}
+		});
+		panels[0].add(newVCheckBox);
 		panels[0].add(Box.createRigidArea(new Dimension(0, 20)));
 		
 		// Directory Locations...

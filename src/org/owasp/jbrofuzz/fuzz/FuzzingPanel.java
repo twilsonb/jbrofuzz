@@ -658,9 +658,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 */
 	public void start() {
 
-//		Runtime.getRuntime().gc();
-//		Runtime.getRuntime().runFinalization();
-
 		if (!stopped) {
 			return;
 		}	
@@ -684,13 +681,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		topRightPanel.setSelectedIndex(1);
 		consoleEvent = 0;
 
-		// Check the certificate
-		/*try {
-			Connection.installCert(getTextURL());
-		} catch (Exception e2) {
-			this.getFrame().log("Certificate Related Exception: " + e2.getMessage());
-		}*/
-		
 		// Increment the session and reset the counter
 		session++;
 		counter = 1;
@@ -785,8 +775,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 						getFrame().getJBroFuzz().getHandler().writeFuzzFile(outputMessage);
 
-//						Runtime.getRuntime().gc();
-//						Runtime.getRuntime().runFinalization();
 					}
 
 				} catch (NoSuchFuzzerException e) {
@@ -806,12 +794,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * </p>
 	 */
 	public void stop() {
-
-//		Runtime.getRuntime().gc();
-//		Runtime.getRuntime().runFinalization();
-
-		// JButton startButton = getFrame().getFrameToolBar().start;
-		// JButton stopButton = getFrame().getFrameToolBar().stop;
 
 		if (stopped) {
 			return;

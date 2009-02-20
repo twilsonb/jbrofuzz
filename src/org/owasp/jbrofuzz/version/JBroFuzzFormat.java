@@ -109,13 +109,21 @@ public class JBroFuzzFormat {
 
 
 	/**
-	 * The preferences used for deciding whether or not to alling the tabs
+	 * The preferences used for deciding whether or not to align the tabs
 	 * at the top or bottom of the main window.
 	 * 
 	 * True represents top.
 	 */
 	public static final String PR_2 = "prefs.ui.tabs";;
 
+	/**
+	 * The preferences used for deciding whether or not to check and notify
+	 * a user at startup of a new version.
+	 * 
+	 * True represents yes.
+	 */
+	public static final String PR_3 = "startup.check.new-version";
+	
 	/**
 	 * The preferences used for selecting the timeout in the socket created,
 	 * while fuzzing.
