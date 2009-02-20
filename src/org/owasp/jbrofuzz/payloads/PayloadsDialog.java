@@ -535,10 +535,10 @@ public class PayloadsDialog extends JDialog {
 					PayloadsDialog.this.dispose();
 
 					m.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
+					
 					m.getPanelPayloads().setCategoryDisplayed(category);
 					m.getPanelPayloads().setFuzzerDisplayed(fuzzer, category);
-					m.getPanelPayloads().setPayloadDisplayed(payload, fuzzer,
-							category);
+					m.getPanelPayloads().setPayloadDisplayed(payload, fuzzer, category);
 
 				}
 

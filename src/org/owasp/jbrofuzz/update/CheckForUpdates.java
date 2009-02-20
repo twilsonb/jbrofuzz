@@ -27,7 +27,7 @@
  * is preserved. 
  * 
  */
-package org.owasp.jbrofuzz.ui.menu;
+package org.owasp.jbrofuzz.update;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

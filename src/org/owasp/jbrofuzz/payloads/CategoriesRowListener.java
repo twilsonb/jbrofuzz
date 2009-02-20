@@ -68,12 +68,17 @@ final class CategoriesRowListener implements ListSelectionListener {
 			return;
 		}
 		
+		String value;
 		int c = this.payloadsPanel.categoriesTable.getSelectedRow();
-		c = this.payloadsPanel.categoriesTable.convertRowIndexToModel(c);
-		if(c < 0) {
+		try {
+			
+			c = this.payloadsPanel.categoriesTable.convertRowIndexToModel(c);
+			value = (String) this.payloadsPanel.categoriesTableModel.getValueAt(c, 0);
+			
+		} catch (IndexOutOfBoundsException  e) {
 			return;
 		}
-		final String value = (String) this.payloadsPanel.categoriesTableModel.getValueAt(c, 0);
+		
 
 		this.payloadsPanel.fuzzersTable.setRowSorter(null);
 		this.payloadsPanel.fuzzersTableModel.setData(this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getPrototypeNamesInCategory(value));

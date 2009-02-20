@@ -68,13 +68,16 @@ final class PayloadsRowListener implements ListSelectionListener {
 			return;
 		}
 
+		String payload;
 		final int d = this.payloadsPanel.payloadsTable.getSelectedRow();
-		if(d < 0) {
+		try {
+			
+			payload = (String) this.payloadsPanel.payloadsTableModel.getValueAt(d, 0);
+			
+		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
 		
-		final String payload = (String) this.payloadsPanel.payloadsTableModel.getValueAt(d, 0);
-
 		this.payloadsPanel.payloadInfoTextArea.setText("\nPayload Length: " + payload.length()
 				+ "\n\n" + "Is Numeric? " + StringUtils.isNumeric(payload)
 				+ "\n\n" + "Is Alpha? " + StringUtils.isAlpha(payload)
