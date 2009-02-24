@@ -77,6 +77,6 @@
 	    </javadoc>
 	</target>
 
-	<target depends="clean,init,compile,archive,exe" name="build" />
+	<target depends="clean,init,compile,archive" name="build" />
 
 </project>
