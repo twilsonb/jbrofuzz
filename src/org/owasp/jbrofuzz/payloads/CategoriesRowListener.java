@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -37,66 +37,74 @@ import javax.swing.table.TableRowSorter;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 
 final class CategoriesRowListener implements ListSelectionListener {
-	
+
 	/**
 	 * 
 	 */
-	private final PayloadsPanel payloadsPanel;
+	private final PayloadsPanel	payloadsPanel;
 
 	/**
 	 * 
 	 * @param payloadsPanel
-	 *
-	 * @see 
+	 * 
+	 * @see
 	 * @author subere@uncon.org
-	 * @version 1.2
-	 * @since 1.2 
+	 * @version 1.3
+	 * @since 1.2
 	 */
 	CategoriesRowListener(PayloadsPanel payloadsPanel) {
 		this.payloadsPanel = payloadsPanel;
 	}
 
 	/**
-	 * <p>Method for the categories table selection row.</p>
+	 * <p>
+	 * Method for the categories table selection row.
+	 * </p>
 	 * 
 	 * @param event
-	 *            ListSelectionEvent
+	 *          ListSelectionEvent
 	 */
 	public void valueChanged(final ListSelectionEvent event) {
-		
+
 		if (event.getValueIsAdjusting()) {
 			return;
 		}
-		
+
 		String value;
-		int c = this.payloadsPanel.categoriesTable.getSelectedRow();
+		int c = payloadsPanel.categoriesTable.getSelectedRow();
 		try {
-			
-			c = this.payloadsPanel.categoriesTable.convertRowIndexToModel(c);
-			value = (String) this.payloadsPanel.categoriesTableModel.getValueAt(c, 0);
-			
-		} catch (IndexOutOfBoundsException  e) {
+
+			c = payloadsPanel.categoriesTable.convertRowIndexToModel(c);
+			value = (String) payloadsPanel.categoriesTableModel.getValueAt(c, 0);
+
+		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
-		
 
-		this.payloadsPanel.fuzzersTable.setRowSorter(null);
-		this.payloadsPanel.fuzzersTableModel.setData(this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getPrototypeNamesInCategory(value));
-		this.payloadsPanel.sorter2 = new TableRowSorter<SingleColumnModel>(this.payloadsPanel.fuzzersTableModel);
-		this.payloadsPanel.fuzzersTable.setRowSorter(this.payloadsPanel.sorter2);
+		payloadsPanel.fuzzersTable.setRowSorter(null);
+		payloadsPanel.fuzzersTableModel.setData(payloadsPanel.getFrame()
+				.getJBroFuzz().getDatabase().getPrototypeNamesInCategory(value));
+		payloadsPanel.sorter2 = new TableRowSorter<SingleColumnModel>(
+				payloadsPanel.fuzzersTableModel);
+		payloadsPanel.fuzzersTable.setRowSorter(payloadsPanel.sorter2);
 
-		this.payloadsPanel.payloadsTable.setRowSorter(null);
-		this.payloadsPanel.payloadsTableModel.setData(null);
-		
-		this.payloadsPanel.fuzzersPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" " + value + " "),
-				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		payloadsPanel.payloadsTable.setRowSorter(null);
+		payloadsPanel.payloadsTableModel.setData(null);
 
-		this.payloadsPanel.fuzzerInfoTextArea.setText("");
-		this.payloadsPanel.fuzzerInfoTextArea.setCaretPosition(0);
+		payloadsPanel.fuzzersPanel.setBorder(BorderFactory
+				.createCompoundBorder(BorderFactory.createTitledBorder(" " + value
+						+ " "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-		this.payloadsPanel.payloadInfoTextArea.setText("");
-		this.payloadsPanel.payloadInfoTextArea.setCaretPosition(0);
-		
+		payloadsPanel.payloadsPanel.setBorder(BorderFactory
+				.createCompoundBorder(BorderFactory
+						.createTitledBorder(" Select a Fuzzer "), BorderFactory
+						.createEmptyBorder(1, 1, 1, 1)));
+
+		payloadsPanel.fuzzerInfoTextArea.setText("");
+		payloadsPanel.fuzzerInfoTextArea.setCaretPosition(0);
+
+		payloadsPanel.payloadInfoTextArea.setText("");
+		payloadsPanel.payloadInfoTextArea.setCaretPosition(0);
+
 	}
 }

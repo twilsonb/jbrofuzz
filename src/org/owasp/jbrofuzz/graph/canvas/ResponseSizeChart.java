@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -46,20 +46,23 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.Align;
 import org.owasp.jbrofuzz.util.ImageCreator;
 
-public class ResponseSizeChart  {
-
-	// The x-axis filenames
-	String[] x_data;
-	// The y-axis data
-	int [] y_data;
-	private DefaultCategoryDataset dataset;
+public class ResponseSizeChart {
 
 	/**
-	 * <p>The maximum number of characters that will be 
-	 * read from the stream.</p>
-	 * <p>In this case, 1 Mb.</p>
+	 * <p>
+	 * The maximum number of characters that will be read from the stream.
+	 * </p>
+	 * <p>
+	 * In this case, 1 Mb.
+	 * </p>
 	 */
-	public static final int MAX_CHARS = 1048576;
+	public static final int					MAX_CHARS	= 1048576;
+	// The x-axis filenames
+	String[]												x_data;
+	// The y-axis data
+	int[]														y_data;
+
+	private DefaultCategoryDataset	dataset;
 
 	public ResponseSizeChart() {
 
@@ -69,7 +72,6 @@ public class ResponseSizeChart  {
 
 	public ResponseSizeChart(int size) {
 
-
 		x_data = new String[size];
 		y_data = new int[size];
 
@@ -77,23 +79,9 @@ public class ResponseSizeChart  {
 
 	}
 
-	public void setValueAt(int index, File f) {
-
-		x_data[index] = f.getName();
-		y_data[index] = calculateValue(f);
-
-		dataset.addValue((double)y_data[index], "Row 1", x_data[index]);
-
-	}
-
-	public void createFinalPlotCanvas() {
-
-
-	}
-
 	private int calculateValue(File f) {
 
-		if(f.isDirectory()) {
+		if (f.isDirectory()) {
 			return -1;
 		}
 
@@ -104,12 +92,12 @@ public class ResponseSizeChart  {
 
 			in = new BufferedReader(new FileReader(f));
 
-			StringBuffer one = new StringBuffer(); 
+			StringBuffer one = new StringBuffer();
 			int counter = 0;
 			int c;
-			while( ((c = in.read()) > 0) && (counter < MAX_CHARS) ) {
+			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
 
-				one.append((char)c);
+				one.append((char) c);
 				counter++;
 
 			}
@@ -119,7 +107,8 @@ public class ResponseSizeChart  {
 			one.delete(one.indexOf("\n--"), one.length());
 
 			final String END_SIGNATURE = "--jbrofuzz-->\n";
-			headerLength = (long) (one.indexOf(END_SIGNATURE) + END_SIGNATURE.length());
+			headerLength = (one.indexOf(END_SIGNATURE) + END_SIGNATURE
+					.length());
 
 		} catch (final IOException e1) {
 
@@ -142,6 +131,10 @@ public class ResponseSizeChart  {
 		return (int) (f.length() - headerLength);
 	}
 
+	public void createFinalPlotCanvas() {
+
+	}
+
 	public ChartPanel getPlotCanvas() {
 
 		JFreeChart chart = ChartFactory.createBarChart(
@@ -153,18 +146,26 @@ public class ResponseSizeChart  {
 				false, // include legend
 				true, // tooltips?
 				true // URLs?
-		);
+				);
 
 		Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
-		
-		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();		
+
+		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
 		renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
-		
+
 		return new ChartPanel(chart);
 
 	}
 
+	public void setValueAt(int index, File f) {
+
+		x_data[index] = f.getName();
+		y_data[index] = calculateValue(f);
+
+		dataset.addValue(y_data[index], "Row 1", x_data[index]);
+
+	}
 
 }

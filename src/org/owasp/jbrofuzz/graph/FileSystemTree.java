@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -53,10 +53,11 @@ public class FileSystemTree extends JTree implements MouseListener {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4289004118182074303L;
-	final JPopupMenu popmenu; 
+	private static final long	serialVersionUID	= -4289004118182074303L;
+	final JPopupMenu					popmenu;
 
-	public FileSystemTree(final GraphingPanel graphingPanel, FileSystemTreeModel fileSystemTreeModel) {
+	public FileSystemTree(final GraphingPanel graphingPanel,
+			FileSystemTreeModel fileSystemTreeModel) {
 
 		super(fileSystemTreeModel);
 
@@ -71,7 +72,7 @@ public class FileSystemTree extends JTree implements MouseListener {
 
 		i0_graph.setIcon(ImageCreator.IMG_GRAPH);
 		i5_open.setIcon(ImageCreator.IMG_OPENINBROWSER);
-		
+
 		i0_graph.setEnabled(true);
 		i1_cut.setEnabled(false);
 		i2_copy.setEnabled(true);
@@ -88,7 +89,7 @@ public class FileSystemTree extends JTree implements MouseListener {
 		popmenu.addSeparator();
 		popmenu.add(i5_open);
 
-		// Graph 
+		// Graph
 		i0_graph.addActionListener(new ActionListener() {
 
 			@Override
@@ -96,22 +97,25 @@ public class FileSystemTree extends JTree implements MouseListener {
 
 				final TreePath selectedPath = FileSystemTree.this.getSelectionPath();
 
-				if(selectedPath == null) return;
+				if (selectedPath == null)
+					return;
 				// More than 32 directories chill
-				if(selectedPath.getPathCount() > 32) {
-					graphingPanel.getFrame().log("Graphing Panel: Path has more than 32 locations ");
+				if (selectedPath.getPathCount() > 32) {
+					graphingPanel.getFrame().log(
+							"Graphing Panel: Path has more than 32 locations ", 3);
 					return;
 				}
 
-				Object [] path = selectedPath.getPath();
+				Object[] path = selectedPath.getPath();
 
 				// Get the file path
 
-				StringBuffer stringPath = new StringBuffer(System.getProperty("user.dir"));
+				StringBuffer stringPath = new StringBuffer(System
+						.getProperty("user.dir"));
 				stringPath.append(File.separator);
 				stringPath.append("jbrofuzz");
 
-				for(Object node : path) {
+				for (Object node : path) {
 
 					stringPath.append(System.getProperty("file.separator"));
 					stringPath.append(node.toString());
@@ -120,24 +124,27 @@ public class FileSystemTree extends JTree implements MouseListener {
 
 				File pathFile = new File(stringPath.toString());
 				// If we are talking about something non-existent, we don't want to know
-				if(!pathFile.exists()) {
-					graphingPanel.getFrame().log("Graphing Panel: Path does not exist: " + pathFile);
+				if (!pathFile.exists()) {
+					graphingPanel.getFrame().log(
+							"Graphing Panel: Path does not exist: " + pathFile, 4);
 					return;
 				}
 				// Similar if we cannot execute the location
-				if(!pathFile.canExecute()) {
-					graphingPanel.getFrame().log("Graphing Panel: Path cannot be executed: " + pathFile);
+				if (!pathFile.canExecute()) {
+					graphingPanel.getFrame().log(
+							"Graphing Panel: Path cannot be executed: " + pathFile, 4);
 					return;
 				}
 				// Or if its an individual file
-				if(pathFile.isFile()) {
-					graphingPanel.getFrame().log("Graphing Panel: Cannot graph individual files " );
+				if (pathFile.isFile()) {
+					graphingPanel.getFrame().log(
+							"Graphing Panel: Cannot graph individual files ", 4);
 					return;
 				}
-				
+
 				// Let the graphing begin
 				graphingPanel.getTabbedPlotter().plot(pathFile);
-				
+
 			}
 
 		});
@@ -148,9 +155,11 @@ public class FileSystemTree extends JTree implements MouseListener {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 
-				FileSystemTreeNode selectedNode = (FileSystemTreeNode) FileSystemTree.this.getLastSelectedPathComponent();
+				FileSystemTreeNode selectedNode = (FileSystemTreeNode) FileSystemTree.this
+						.getLastSelectedPathComponent();
 
-				if(selectedNode == null) return;
+				if (selectedNode == null)
+					return;
 
 				final String s = selectedNode.toString();
 				final JTextArea myTempArea = new JTextArea(s);
@@ -168,22 +177,25 @@ public class FileSystemTree extends JTree implements MouseListener {
 
 				final TreePath selectedPath = FileSystemTree.this.getSelectionPath();
 
-				if(selectedPath == null) return;
+				if (selectedPath == null)
+					return;
 				// More than 32 directories chill
-				if(selectedPath.getPathCount() > 32) {
-					graphingPanel.getFrame().log("Graphing Panel: Path has more than 32 locations ");
+				if (selectedPath.getPathCount() > 32) {
+					graphingPanel.getFrame().log(
+							"Graphing Panel: Path has more than 32 locations ", 4);
 					return;
 				}
-				
-				Object [] path = selectedPath.getPath();
+
+				Object[] path = selectedPath.getPath();
 
 				// Get the file path
 
-				StringBuffer stringPath = new StringBuffer(System.getProperty("user.dir"));
+				StringBuffer stringPath = new StringBuffer(System
+						.getProperty("user.dir"));
 				stringPath.append(File.separator);
 				stringPath.append("jbrofuzz");
 
-				for(Object node : path) {
+				for (Object node : path) {
 
 					stringPath.append(System.getProperty("file.separator"));
 					stringPath.append(node.toString());
@@ -192,16 +204,18 @@ public class FileSystemTree extends JTree implements MouseListener {
 
 				File pathFile = new File(stringPath.toString());
 				// If we are talking about something non-existent, we don't want to know
-				if(!pathFile.exists()) {
-					graphingPanel.getFrame().log("Graphing Panel: Path does not exist: " + pathFile);
+				if (!pathFile.exists()) {
+					graphingPanel.getFrame().log(
+							"Graphing Panel: Path does not exist: " + pathFile, 4);
 					return;
 				}
 				// Similar if we cannot execute the location
-				if(!pathFile.canExecute()) {
-					graphingPanel.getFrame().log("Graphing Panel: Path cannot be executed: " + pathFile);
+				if (!pathFile.canExecute()) {
+					graphingPanel.getFrame().log(
+							"Graphing Panel: Path cannot be executed: " + pathFile, 4);
 					return;
 				}
-				
+
 				// Go to the browser
 				URL pathURL;
 				try {
@@ -211,10 +225,12 @@ public class FileSystemTree extends JTree implements MouseListener {
 					Browser.displayURL(pathURL.toString());
 
 				} catch (MalformedURLException e1) {
-					graphingPanel.getFrame().log("Graphing Panel: Could not open location: Bad URL Location ");
+					graphingPanel.getFrame().log(
+							"Graphing Panel: Could not open location: Bad URL Location ", 4);
 					return;
 				} catch (IOException e2) {
-					graphingPanel.getFrame().log("Graphing Panel: Could not open location: IO Issues ");
+					graphingPanel.getFrame().log(
+							"Graphing Panel: Could not open location: IO Issues ", 4);
 					return;
 				}
 
@@ -223,25 +239,15 @@ public class FileSystemTree extends JTree implements MouseListener {
 		});
 
 		addMouseListener(this);
-		
+
 	}
 
 	private void checkForTriggerEvent(final MouseEvent e) {
 		if (e.isPopupTrigger()) {
-			final TreePath selPath = this.getPathForLocation(e.getX(), e.getY());
-			this.setSelectionPath(selPath);
+			final TreePath selPath = getPathForLocation(e.getX(), e.getY());
+			setSelectionPath(selPath);
 			popmenu.show(e.getComponent(), e.getX(), e.getY());
 		}
-	}
-
-	@Override
-	public void mousePressed(final MouseEvent e) {
-		checkForTriggerEvent(e);
-	}
-
-	@Override
-	public void mouseReleased(final MouseEvent e) {
-		checkForTriggerEvent(e);
 	}
 
 	@Override
@@ -262,5 +268,14 @@ public class FileSystemTree extends JTree implements MouseListener {
 
 	}
 
+	@Override
+	public void mousePressed(final MouseEvent e) {
+		checkForTriggerEvent(e);
+	}
+
+	@Override
+	public void mouseReleased(final MouseEvent e) {
+		checkForTriggerEvent(e);
+	}
 
 }

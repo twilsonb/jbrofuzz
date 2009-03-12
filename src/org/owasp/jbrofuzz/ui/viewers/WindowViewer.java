@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -42,11 +42,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
@@ -56,7 +57,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.2
+ * @version 1.3
  * @since 0.2
  */
 public class WindowViewer extends JFrame {
@@ -64,7 +65,7 @@ public class WindowViewer extends JFrame {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2268254810798437349L;
+	private static final long	serialVersionUID	= 2268254810798437349L;
 
 	/**
 	 * <p>
@@ -87,19 +88,27 @@ public class WindowViewer extends JFrame {
 		// Define the Panel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(name + ".html"), BorderFactory
-				.createEmptyBorder(1, 1, 1, 1)));
+				.createTitledBorder(name + ".html"), BorderFactory.createEmptyBorder(1,
+				1, 1, 1)));
 		listPanel.setLayout(new BorderLayout());
-
-		// Define the Text Area
-		final JTextArea listTextArea = new JTextArea();
-		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		listTextArea.setEditable(false);
 
 		// Get the preferences for wrapping lines of text
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 		boolean wrapText = prefs.getBoolean(JBroFuzzFormat.PR_WORD_WRAP, false);
-		listTextArea.setLineWrap(wrapText);
+
+		final JTextPane listTextArea;
+		if (wrapText) {
+
+			listTextArea = new JTextPane();
+
+		} else {
+
+			listTextArea = new NonWrappingTextPane();
+		}
+
+		// Define the Text Area
+		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		listTextArea.setEditable(false);
 
 		// Right click: Cut, Copy, Paste, Select All
 		parent.popupText(listTextArea, false, true, false, true);
@@ -109,7 +118,6 @@ public class WindowViewer extends JFrame {
 		listTextScrollPane.setVerticalScrollBarPolicy(20);
 		listTextScrollPane.setHorizontalScrollBarPolicy(30);
 
-		
 		// Define the progress bar
 		final JProgressBar progressBar = new JProgressBar();
 		progressBar.setString("   ");
@@ -127,7 +135,8 @@ public class WindowViewer extends JFrame {
 		pane.add(listPanel, BorderLayout.CENTER);
 		pane.add(bottomPanel, BorderLayout.SOUTH);
 
-		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math.abs(parent.getLocationOnScreen().y + 20));
+		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math
+				.abs(parent.getLocationOnScreen().y + 20));
 		this.setSize(550, 525);
 
 		setResizable(true);
@@ -150,14 +159,14 @@ public class WindowViewer extends JFrame {
 
 				progressBar.setIndeterminate(true);
 
-				final StringBuffer textBuffer = new StringBuffer(
+				listTextArea.setText(
 
-						parent.getFrame().getJBroFuzz().getHandler().readFuzzFile(name + ".html")
+				parent.getFrame().getJBroFuzz().getHandler().readFuzzFile(
+						name + ".html")
 
 				);
 
-				listTextArea.setText(textBuffer.toString());
-
+		
 				return "done";
 			}
 
@@ -166,6 +175,7 @@ public class WindowViewer extends JFrame {
 
 				progressBar.setIndeterminate(false);
 				progressBar.setValue(100);
+				
 			}
 		}
 

@@ -19,18 +19,22 @@ import org.owasp.jbrofuzz.util.ImageCreator;
 
 public class HammingDistanceChart {
 
+	public static final int					MAX_CHARS	= 1048576;
 	// The x-axis filenames
-	String[] x_data;
+	String[]												x_data;
 	// The y-axis data
-	double [] y_data;
+	double[]												y_data;
 	// The data to be displayed
-	private DefaultCategoryDataset dataset;
+	private DefaultCategoryDataset	dataset;
+
 	// The hash set with all the characters of the first response
-	private StringBuffer firstSet;
+	private StringBuffer						firstSet;
 
+	public HammingDistanceChart() {
 
-	public static final int MAX_CHARS = 1048576;
+		this(0);
 
+	}
 
 	public HammingDistanceChart(int size) {
 
@@ -43,29 +47,47 @@ public class HammingDistanceChart {
 
 	}
 
-	public HammingDistanceChart() {
+	private void calculateFirstSet(File f) {
 
-		this(0);
+		final String END_SIGNATURE = "--jbrofuzz-->\n";
 
-	}
+		BufferedReader in = null;
+		try {
 
-	public void setValueAt(int index, File f) {
+			in = new BufferedReader(new FileReader(f));
 
-		x_data[index] = f.getName();
+			int counter = 0;
+			int check = 0;
+			int c;
+			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
 
-		if(index == 0) {
+				// If we are passed "--jbrofuzz-->\n" in the file
+				if (check == END_SIGNATURE.length()) {
 
-			calculateFirstSet(f);
-			y_data[index] = 0;
+					firstSet.append((char) c);
 
-		} else {
+				}
+				// Else find "--jbrofuzz-->\n" using a counter
+				else {
+					// Increment the counter for each success
+					if (c == END_SIGNATURE.charAt(check)) {
+						check++;
+					} else {
+						check = 0;
+					}
+				}
 
-			y_data[index] = calculateValue(f);
+				counter++;
 
+			}
+			in.close();
+
+		} catch (final IOException e1) {
+
+		} finally {
+
+			IOUtils.closeQuietly(in);
 		}
-
-		dataset.addValue(y_data[index], "Row 1", x_data[index]);
-
 
 	}
 
@@ -85,44 +107,41 @@ public class HammingDistanceChart {
 			int counter = 0;
 			int check = 0;
 			int c;
-			while( ((c = in.read()) > 0) && (counter < MAX_CHARS) ) {
+			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
 
-				// If we are passed "--jbrofuzz-->\n" in the file 
-				if(check == END_SIGNATURE.length()) {
+				// If we are passed "--jbrofuzz-->\n" in the file
+				if (check == END_SIGNATURE.length()) {
 
-					if(counter1 >= firstSet.length()) {
+					if (counter1 >= firstSet.length()) {
 						// For each extra character add to the distance
 						hammingDistance++;
 
 					} else {
 						// The current character is not equal to the
 						// one in the buffer, increment
-						if((char) c != firstSet.charAt(counter1)) {
+						if ((char) c != firstSet.charAt(counter1)) {
 							hammingDistance++;
 						}
 					}
 
 					counter1++;
-				} 
+				}
 				// Else find "--jbrofuzz-->\n" using a counter
 				else {
 					// Increment the counter for each success
-					if(c == END_SIGNATURE.charAt(check)) {
+					if (c == END_SIGNATURE.charAt(check)) {
 						check++;
 					} else {
 						check = 0;
 					}
 				}
 
-
 				counter++;
 
 			}
 			in.close();
 
-
 		} catch (final IOException e1) {
-
 
 		} finally {
 
@@ -133,58 +152,11 @@ public class HammingDistanceChart {
 		return hammingDistance;
 	}
 
-	private void calculateFirstSet(File f) {
-
-		final String END_SIGNATURE = "--jbrofuzz-->\n";
-
-		BufferedReader in = null;
-		try {
-
-			in = new BufferedReader(new FileReader(f));
-
-			int counter = 0;
-			int check = 0;
-			int c;
-			while( ((c = in.read()) > 0) && (counter < MAX_CHARS) ) {
-
-				// If we are passed "--jbrofuzz-->\n" in the file 
-				if(check == END_SIGNATURE.length()) {
-
-					firstSet.append((char) c);
-
-				} 
-				// Else find "--jbrofuzz-->\n" using a counter
-				else {
-					// Increment the counter for each success
-					if(c == END_SIGNATURE.charAt(check)) {
-						check++;
-					} else {
-						check = 0;
-					}
-				}
-
-
-				counter++;
-
-			}
-			in.close();
-
-
-		} catch (final IOException e1) {
-
-		} finally {
-
-			IOUtils.closeQuietly(in);
-		}
-
-	}
-
 	public void createFinalPlotCanvas() {
 
 	}
 
 	public ChartPanel getPlotCanvas() {
-
 
 		JFreeChart chart = ChartFactory.createBarChart(
 				"JBroFuzz Hamming Distance Bar Chart", // chart title
@@ -195,16 +167,35 @@ public class HammingDistanceChart {
 				false, // include legend
 				true, // tooltips?
 				true // URLs?
-		);
+				);
 
 		Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
-		
-		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();		
+
+		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
 		renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
-		
+
 		return new ChartPanel(chart);
+	}
+
+	public void setValueAt(int index, File f) {
+
+		x_data[index] = f.getName();
+
+		if (index == 0) {
+
+			calculateFirstSet(f);
+			y_data[index] = 0;
+
+		} else {
+
+			y_data[index] = calculateValue(f);
+
+		}
+
+		dataset.addValue(y_data[index], "Row 1", x_data[index]);
+
 	}
 
 }

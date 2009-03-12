@@ -21,18 +21,22 @@ import org.owasp.jbrofuzz.util.ImageCreator;
 
 public class JaccardIndexChart {
 
+	public static final int					MAX_CHARS	= 1048576;
 	// The x-axis filenames
-	String[] x_data;
+	String[]												x_data;
 	// The y-axis data
-	double [] y_data;
+	double[]												y_data;
 	// The data to be displayed
-	private DefaultCategoryDataset dataset;
+	private DefaultCategoryDataset	dataset;
+
 	// The hash set with all the characters of the first response
-	private HashSet<Character> firstSet;
+	private HashSet<Character>			firstSet;
 
+	public JaccardIndexChart() {
 
-	public static final int MAX_CHARS = 1048576;
+		this(0);
 
+	}
 
 	public JaccardIndexChart(int size) {
 
@@ -43,90 +47,6 @@ public class JaccardIndexChart {
 
 		firstSet = new HashSet<Character>();
 
-	}
-
-	public JaccardIndexChart() {
-
-		this(0);
-
-	}
-
-	public void setValueAt(int index, File f) {
-
-		x_data[index] = f.getName();
-
-		if(index == 0) {
-
-			calculateFirstSet(f);
-			y_data[index] = 1;
-
-		} else {
-
-			y_data[index] = calculateValue(f);
-
-		}
-
-		dataset.addValue(y_data[index], "Jaccard Index", x_data[index]);
-
-
-	}
-
-	private double calculateValue(File f) {
-
-		final String END_SIGNATURE = "--jbrofuzz-->\n";
-
-		HashSet<Character> secondSet = new HashSet<Character>();
-		
-		BufferedReader in = null;
-		try {
-
-			in = new BufferedReader(new FileReader(f));
-
-			int counter = 0;
-			int check = 0;
-			int c;
-			while( ((c = in.read()) > 0) && (counter < MAX_CHARS) ) {
-
-				// If we are passed "--jbrofuzz-->\n" in the file 
-				if(check == END_SIGNATURE.length()) {
-
-					secondSet.add((char) c);
-
-				} 
-				// Else find "--jbrofuzz-->\n" using a counter
-				else {
-					// Increment the counter for each success
-					if(c == END_SIGNATURE.charAt(check)) {
-						check++;
-					} else {
-						check = 0;
-					}
-				}
-
-
-				counter++;
-
-			}
-			in.close();
-
-
-		} catch (final IOException e1) {
-
-
-		} finally {
-
-			IOUtils.closeQuietly(in);
-
-		}
-		
-		// Calculate the Jaccard Index, between the 2 sets of chars
-		Set<Character> intersectionSet = new HashSet<Character>(firstSet);
-		intersectionSet.retainAll(secondSet);
-		
-		Set<Character> unionSet = new HashSet<Character>(firstSet);
-		unionSet.addAll(secondSet);
-		// The index is the ratio
-		return (double)((double)intersectionSet.size() / (double)unionSet.size() );
 	}
 
 	private void calculateFirstSet(File f) {
@@ -141,30 +61,28 @@ public class JaccardIndexChart {
 			int counter = 0;
 			int check = 0;
 			int c;
-			while( ((c = in.read()) > 0) && (counter < MAX_CHARS) ) {
+			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
 
-				// If we are passed "--jbrofuzz-->\n" in the file 
-				if(check == END_SIGNATURE.length()) {
+				// If we are passed "--jbrofuzz-->\n" in the file
+				if (check == END_SIGNATURE.length()) {
 
 					firstSet.add((char) c);
 
-				} 
+				}
 				// Else find "--jbrofuzz-->\n" using a counter
 				else {
 					// Increment the counter for each success
-					if(c == END_SIGNATURE.charAt(check)) {
+					if (c == END_SIGNATURE.charAt(check)) {
 						check++;
 					} else {
 						check = 0;
 					}
 				}
 
-
 				counter++;
 
 			}
 			in.close();
-
 
 		} catch (final IOException e1) {
 
@@ -173,6 +91,61 @@ public class JaccardIndexChart {
 			IOUtils.closeQuietly(in);
 		}
 
+	}
+
+	private double calculateValue(File f) {
+
+		final String END_SIGNATURE = "--jbrofuzz-->\n";
+
+		HashSet<Character> secondSet = new HashSet<Character>();
+
+		BufferedReader in = null;
+		try {
+
+			in = new BufferedReader(new FileReader(f));
+
+			int counter = 0;
+			int check = 0;
+			int c;
+			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
+
+				// If we are passed "--jbrofuzz-->\n" in the file
+				if (check == END_SIGNATURE.length()) {
+
+					secondSet.add((char) c);
+
+				}
+				// Else find "--jbrofuzz-->\n" using a counter
+				else {
+					// Increment the counter for each success
+					if (c == END_SIGNATURE.charAt(check)) {
+						check++;
+					} else {
+						check = 0;
+					}
+				}
+
+				counter++;
+
+			}
+			in.close();
+
+		} catch (final IOException e1) {
+
+		} finally {
+
+			IOUtils.closeQuietly(in);
+
+		}
+
+		// Calculate the Jaccard Index, between the 2 sets of chars
+		Set<Character> intersectionSet = new HashSet<Character>(firstSet);
+		intersectionSet.retainAll(secondSet);
+
+		Set<Character> unionSet = new HashSet<Character>(firstSet);
+		unionSet.addAll(secondSet);
+		// The index is the ratio
+		return ((double) intersectionSet.size() / (double) unionSet.size());
 	}
 
 	public void createFinalPlotCanvas() {
@@ -190,16 +163,35 @@ public class JaccardIndexChart {
 				false, // include legend
 				true, // tooltips?
 				true // URLs?
-		);
-		
+				);
+
 		Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
-		
-		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();		
+
+		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
 		renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
-				
+
 		return new ChartPanel(chart);
+
+	}
+
+	public void setValueAt(int index, File f) {
+
+		x_data[index] = f.getName();
+
+		if (index == 0) {
+
+			calculateFirstSet(f);
+			y_data[index] = 1;
+
+		} else {
+
+			y_data[index] = calculateValue(f);
+
+		}
+
+		dataset.addValue(y_data[index], "Jaccard Index", x_data[index]);
 
 	}
 

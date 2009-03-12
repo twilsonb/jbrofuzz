@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -59,27 +59,31 @@ import org.owasp.jbrofuzz.util.TextHighlighter;
 
 /**
  * <p>
- * The headers panel showing the headers in their corresponding 
- * categories.
+ * The headers panel showing the headers in their corresponding categories.
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.2
+ * @version 1.3
  */
-public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener {
+public class HeadersPanel extends JBroFuzzPanel implements
+		TreeSelectionListener {
 
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
 	// The split pane at the centre of the screen
-	private JSplitPane mainSplitPanel, rVSplitPanel, rHSplitPanel;
+	private JSplitPane		mainSplitPanel, rVSplitPanel, rHSplitPanel;
 	// The main file tree object
-	private JTree tree;
+	private JTree					tree;
 	// The progress bar displayed
-	private JProgressBar progressBar;
+	private JProgressBar	progressBar;
 	// A boolean to check if we are running or not
-	private boolean stopped;
+	private boolean				stopped;
 	// The header, info and comment text area
-	private NonWrappingTextPane hTxTArea, iTxTArea, cTxTArea;
+	private NonWrappingTextPane	hTxTArea, iTxTArea, cTxTArea;
 	// The header's loader
-	private HeaderLoader mHeadersLoader;
+	private HeaderLoader				mHeadersLoader;
 
 	public HeadersPanel(final JBroFuzzWindow m) {
 
@@ -104,12 +108,9 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 
 		final JPanel treePanel = new JPanel(new BorderLayout());
 		treePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
+				.createTitledBorder(" "), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		treePanel.add(treeScrollPanel);
-
-
 
 		// The right hand side header area
 		hTxTArea = new NonWrappingTextPane();
@@ -130,7 +131,7 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 			/**
 			 * 
 			 */
-			private static final long serialVersionUID = -4550261337511448681L;
+			private static final long	serialVersionUID	= -4550261337511448681L;
 
 			@Override
 			public Document createDefaultDocument() {
@@ -142,19 +143,16 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 		// Right click: Cut, Copy, Paste, Select All
 		popupText(hTxTArea, true, true, true, true);
 
-
-
 		JScrollPane hScrollPane = new JScrollPane(hTxTArea);
 		hScrollPane.setVerticalScrollBarPolicy(20);
 		hScrollPane.setHorizontalScrollBarPolicy(30);
 
 		final JPanel headerPanel = new JPanel(new BorderLayout());
 		headerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Header "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
+				.createTitledBorder(" Header "), BorderFactory.createEmptyBorder(5, 5,
+				5, 5)));
 
 		headerPanel.add(hScrollPane);
-
 
 		// The right hand side information area
 		iTxTArea = new NonWrappingTextPane();
@@ -170,8 +168,8 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 
 		final JPanel infoPanel = new JPanel(new BorderLayout());
 		infoPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Information "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
+				.createTitledBorder(" Information "), BorderFactory.createEmptyBorder(
+				5, 5, 5, 5)));
 
 		infoPanel.add(iScrollPane);
 
@@ -189,8 +187,8 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 
 		final JPanel commentPanel = new JPanel(new BorderLayout());
 		commentPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Comment "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
+				.createTitledBorder(" Comment "), BorderFactory.createEmptyBorder(5, 5,
+				5, 5)));
 
 		commentPanel.add(cScrollPane);
 
@@ -208,7 +206,6 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 		rVSplitPanel.setTopComponent(rHSplitPanel);
 		rVSplitPanel.setBottomComponent(commentPanel);
 
-
 		// The main split pane and friends
 		mainSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		mainSplitPanel.setOneTouchExpandable(false);
@@ -216,14 +213,12 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 		mainSplitPanel.setLeftComponent(treePanel);
 		mainSplitPanel.setRightComponent(rVSplitPanel);
 
-
 		// Allow for all areas to be resized to even not be seen
 		Dimension minimumSize = new Dimension(0, 0);
 		treePanel.setMinimumSize(minimumSize);
 		commentPanel.setMinimumSize(minimumSize);
 		infoPanel.setMinimumSize(minimumSize);
 		headerPanel.setMinimumSize(minimumSize);
-
 
 		// The bottom progress bar and friends
 		progressBar = new JProgressBar();
@@ -235,7 +230,6 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 		final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		bottomPanel.add(progressBar);
 
-
 		// Add all the components to the main pane
 		this.add(mainSplitPanel, BorderLayout.CENTER);
 		this.add(bottomPanel, BorderLayout.SOUTH);
@@ -244,19 +238,91 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 		mHeadersLoader.load();
 		tree.setModel(new DefaultTreeModel(mHeadersLoader.getMasterTreeNode()));
 		// Traverse tree from root
-		TreeNode root = (TreeNode)tree.getModel().getRoot();
+		TreeNode root = (TreeNode) tree.getModel().getRoot();
 		expandAll(tree, new TreePath(root), true);
 		// Select the first row
 		tree.setSelectionRow(0);
 
 	}
 
+	@Override
+	public void add() {
+	}
 
+	@Override
+	public void graph() {
+	}
+
+	@Override
+	public boolean isStoppedEnabled() {
+		return stopped;
+	}
+
+	@Override
+	public void remove() {
+	}
+
+	/**
+	 * <p>
+	 * Set the value to be displayed in the <code>Comment</code> JTextArea.
+	 * </p>
+	 * 
+	 * @param t
+	 *          The input String
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
+	public void setComment(String t) {
+		cTxTArea.setText(t);
+		cTxTArea.setCaretPosition(0);
+	}
+
+	/**
+	 * <p>
+	 * Set the value to be displayed in the <code>Header</code>
+	 * NonWrappingTextPane.
+	 * </p>
+	 * 
+	 * @param t
+	 *          The input String
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
+	public void setHeader(String t) {
+
+		hTxTArea.setText(t);
+		hTxTArea.setCaretPosition(0);
+	}
+
+	/**
+	 * <p>
+	 * Set the value to be displayed in the <code>Information</code> JTextArea.
+	 * </p>
+	 * 
+	 * @param t
+	 *          The input String
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
+	public void setInformation(String t) {
+
+		iTxTArea.setText(t);
+		iTxTArea.setCaretPosition(0);
+
+	}
+
+	@Override
 	public void start() {
 
 		if (!stopped) {
 			return;
-		}	
+		}
 		stopped = false;
 
 		// Set the options in the tool bar enabled at startup
@@ -268,13 +334,13 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 		mHeadersLoader.load();
 		tree.setModel(new DefaultTreeModel(mHeadersLoader.getMasterTreeNode()));
 		// Traverse tree from root
-		TreeNode root = (TreeNode)tree.getModel().getRoot();
+		TreeNode root = (TreeNode) tree.getModel().getRoot();
 		expandAll(tree, new TreePath(root), true);
 		// Select the first row
 		tree.setSelectionRow(0);
 	}
 
-
+	@Override
 	public void stop() {
 
 		if (stopped) {
@@ -290,90 +356,24 @@ public class HeadersPanel extends JBroFuzzPanel implements TreeSelectionListener
 
 	}
 
-
-	public void graph() {
-	}
-
-
-	public void add() {
-	}
-
-
-	public void remove() {
-	}
-
-
-	public boolean isStoppedEnabled() {
-		return stopped;
-	}
-
-
-	/**
-	 * <p>Set the value to be displayed in the 
-	 * <code>Header</code> NonWrappingTextPane.</p>
-	 * 
-	 * @param t The input String
-	 *
-	 * @author subere@uncon.org
-	 * @version 1.2
-	 * @since 1.2
-	 */
-	public void setHeader(String t) {
-
-		hTxTArea.setText(t);
-		hTxTArea.setCaretPosition(0);
-	}
-
-
-	/**
-	 * <p>Set the value to be displayed in the 
-	 * <code>Information</code> JTextArea.</p>
-	 * 
-	 * @param t The input String
-	 *
-	 * @author subere@uncon.org
-	 * @version 1.2
-	 * @since 1.2
-	 */
-	public void setInformation(String t) {
-
-		iTxTArea.setText(t);
-		iTxTArea.setCaretPosition(0);
-
-	}
-
-	/**
-	 * <p>Set the value to be displayed in the 
-	 * <code>Comment</code> JTextArea.</p>
-	 * 
-	 * @param t The input String
-	 *
-	 * @author subere@uncon.org
-	 * @version 1.2
-	 * @since 1.2
-	 */
-	public void setComment(String t) {
-		cTxTArea.setText(t);
-		cTxTArea.setCaretPosition(0);
-	}
-
-
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 
 		final TreePath selectedPath = tree.getSelectionPath();
-		
-		if(selectedPath == null) return;
-		// More than 32 directories chill
-		if(selectedPath.getPathCount() > 32) {
-			HeadersPanel.this.getFrame().log("Headers Panel: Path has more than 32 locations ");
+
+		if (selectedPath == null)
+			return;
+		// More than 127 directories chill
+		if (selectedPath.getPathCount() > Byte.MAX_VALUE) {
+			HeadersPanel.this.getFrame().log(
+					"Headers Panel: Path has more than 127 locations ", 3);
 			return;
 		}
-		
+
 		Header hd = mHeadersLoader.getHeader(selectedPath);
-		this.setHeader(hd.getHeader());
-		this.setInformation(hd.getInfo());
-		this.setComment(hd.getComment());
+		setHeader(hd.getHeader());
+		setInformation(hd.getInfo());
+		setComment(hd.getComment());
 
 	}
 

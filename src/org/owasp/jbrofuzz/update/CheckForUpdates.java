@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -65,12 +65,13 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import com.Ostermiller.util.Browser;
 
 /**
- * <p>Class responsible for checking for a newer version
- * of JBroFuzz by visiting the OWASP website and comparing
- * version numbers.</p>
+ * <p>
+ * Class responsible for checking for a newer version of JBroFuzz by visiting
+ * the OWASP website and comparing version numbers.
+ * </p>
  * 
  * @author subere@uncon.org
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  */
 public class CheckForUpdates extends JDialog {
@@ -78,30 +79,32 @@ public class CheckForUpdates extends JDialog {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1410800645463737781L;
-	
+	private static final long	serialVersionUID	= 1410800645463737781L;
+
 	// Dimensions of the about box
-	private static final int x = 650;
-	private static final int y = 400;
+	private static final int	x									= 650;
+	private static final int	y									= 400;
 
 	// The JPanels inside the main window
-	private JTextArea mainLabel;
+	private JTextArea					mainLabel;
 
 	// The start/stop and close button
-	private JButton startStop, close;
+	private JButton						startStop, close;
 
 	// The boolean checking for a new version
-	private boolean newVersionExists;
+	private boolean						newVersionExists;
 
 	/**
-	 * <p>Constructor used to check for a newer version.</p>
+	 * <p>
+	 * Constructor used to check for a newer version.
+	 * </p>
 	 * 
-	 * @param parent The JBroFuzzPanel from to which this 
-	 * JDialog is attached
-	 *
+	 * @param parent
+	 *          The JBroFuzzPanel from to which this JDialog is attached
+	 * 
 	 * @author subere@uncon.org
-	 * @version 1.2
-	 * @since 1.2 
+	 * @version 1.3
+	 * @since 1.2
 	 */
 	public CheckForUpdates(final JBroFuzzPanel parent) {
 
@@ -112,8 +115,10 @@ public class CheckForUpdates extends JDialog {
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-		final JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
-		final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+		final JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15,
+				15));
+		final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
+				15));
 
 		newVersionExists = false;
 
@@ -124,7 +129,7 @@ public class CheckForUpdates extends JDialog {
 		mainLabel.setForeground(new Color(0, 128, 255));
 		mainLabel.setEditable(false);
 		mainLabel.setVisible(true);
-		
+
 		// Right click: Cut, Copy, Paste, Select All
 		parent.popupText(mainLabel, false, true, false, true);
 
@@ -141,8 +146,7 @@ public class CheckForUpdates extends JDialog {
 		final JScrollPane providersTextScrollPane = new JScrollPane(mainLabel);
 		providersTextScrollPane.setVerticalScrollBarPolicy(20);
 		providersTextScrollPane.setHorizontalScrollBarPolicy(30);
-		providersTextScrollPane
-				.setPreferredSize(new Dimension(x - 150, y - 110));
+		providersTextScrollPane.setPreferredSize(new Dimension(x - 150, y - 110));
 		centerPanel.add(providersTextScrollPane);
 
 		// Bottom buttons
@@ -160,28 +164,26 @@ public class CheckForUpdates extends JDialog {
 
 		startStop.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				
+
 				final class Starter extends SwingWorker<String, Object> {
-					
+
 					@Override
 					public String doInBackground() {
-						
-						CheckForUpdates.this.startUpdate();
+
+						startUpdate();
 						return "check-update-return";
 					}
 
 					@Override
 					protected void done() {
 
-						CheckForUpdates.this.finishUpdate();
-						
+						finishUpdate();
+
 					}
 				}
 
 				(new Starter()).execute();
-				
-				
-				
+
 			}
 		});
 
@@ -201,7 +203,8 @@ public class CheckForUpdates extends JDialog {
 		getContentPane().add(southPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math.abs(parent.getLocationOnScreen().y + 20));
+		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math
+				.abs(parent.getLocationOnScreen().y + 20));
 		this.setSize(CheckForUpdates.x, CheckForUpdates.y);
 		setResizable(false);
 		setVisible(true);
@@ -276,7 +279,7 @@ public class CheckForUpdates extends JDialog {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						startStop.setEnabled(false);
-						//TODO: worker.interrupt();
+						// TODO: worker.interrupt();
 						close.setEnabled(true);
 					}
 				});
@@ -286,66 +289,61 @@ public class CheckForUpdates extends JDialog {
 		String response = "";
 
 		mainLabel.setText("Finding JBroFuzz Website...\t\t\t\t");
-		
+
 		try {
-			
+
 			URL url = new URL(JBroFuzzFormat.URL_WEBSITE);
 			URLConnection urlc = url.openConnection();
-			int statusCode = ((HttpURLConnection)urlc).getResponseCode();
-			
+			int statusCode = ((HttpURLConnection) urlc).getResponseCode();
+
 			if (statusCode != 200) {
 				mainLabel.append("[FAIL]\n"
-						+ "Connection returned the following code: "
-						+ statusCode + "\n");
+						+ "Connection returned the following code: " + statusCode + "\n");
 
 			} else {
 				mainLabel.append("[ OK ]\n" + "Checking JBroFuzz Website...\t\t\t\t");
-				
-                // byte[] buffer = new byte[65535];
-				BufferedReader instream = new BufferedReader(
-						new InputStreamReader(urlc.getInputStream()));
+
+				// byte[] buffer = new byte[65535];
+				BufferedReader instream = new BufferedReader(new InputStreamReader(urlc
+						.getInputStream()));
 
 				if (instream != null) {
-					
-					// Typically returns -1
-	                long contentLength = urlc.getContentLength(); 
 
-	                if (contentLength > Integer.MAX_VALUE) {
-	                	
-	                	throw new IOException("Content too large to be buffered: "+ contentLength +" bytes");
-	                	
-	                }
-	                
-	                int c;
-	                int l = 0;
-	                StringBuffer body = new StringBuffer(131072);
-	                // 
-	                while( ((c = instream.read()) != -1) && (l < 131072) ) {
-	                	body.append((char) c);
-	                	l++;
-	                }	                
-	                instream.close();
-	                
+					// Typically returns -1
+					long contentLength = urlc.getContentLength();
+
+					if (contentLength > Integer.MAX_VALUE) {
+
+						throw new IOException("Content too large to be buffered: "
+								+ contentLength + " bytes");
+
+					}
+
+					int c;
+					int l = 0;
+					StringBuffer body = new StringBuffer(131072);
+					// 
+					while (((c = instream.read()) != -1) && (l < 131072)) {
+						body.append((char) c);
+						l++;
+					}
+					instream.close();
+
 					response = body.toString();
-	            	                
+
 				} // null-check (should really revisit the distro causing this
-				
+
 			} // else statement for a 200 response
 
-		} 
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			mainLabel.append("[FAIL]\n" + "Malformed URL violation: "
 					+ e.getMessage());
 
-		} 
-		catch (UnsupportedEncodingException e) {
-			mainLabel.append("[FAIL]\n" + "Encoding error: "
-					+ e.getMessage());
-		} 
-		catch (IOException e) {
-			mainLabel.append("[FAIL]\n" + "Fatal transport error: "
-					+ e.getMessage());
-		}finally {
+		} catch (UnsupportedEncodingException e) {
+			mainLabel.append("[FAIL]\n" + "Encoding error: " + e.getMessage());
+		} catch (IOException e) {
+			mainLabel.append("[FAIL]\n" + "Fatal transport error: " + e.getMessage());
+		} finally {
 			// 
 		}
 
@@ -366,8 +364,7 @@ public class CheckForUpdates extends JDialog {
 					current = Double.parseDouble(JBroFuzzFormat.VERSION);
 					latest = Double.parseDouble(webVersion);
 
-					mainLabel.append("[ OK ]\n\nWebsite Version is: "
-							+ webVersion);
+					mainLabel.append("[ OK ]\n\nWebsite Version is: " + webVersion);
 					mainLabel.append("\nCurrent Version is: " + JBroFuzzFormat.VERSION
 							+ "\n\n");
 
@@ -378,17 +375,19 @@ public class CheckForUpdates extends JDialog {
 				if (latest != 0.0) {
 
 					if (latest > current) {
-						mainLabel.append("\nJBroFuzz " + latest + " is available for download.");
+						mainLabel.append("\nJBroFuzz " + latest
+								+ " is available for download.");
 						newVersionExists = true;
 					} else if (latest < current) {
-						mainLabel.append("\nYou are running a newer (perhaps experimental) version.");
-					} else {
 						mainLabel
-								.append("\nYou are running the latest version.");
+								.append("\nYou are running a newer (perhaps experimental) version.");
+					} else {
+						mainLabel.append("\nYou are running the latest version.");
 					}
 
 				} else {
-					mainLabel.append("\n"
+					mainLabel
+							.append("\n"
 									+ "Could not interpret JBroFuzz version\nnumbers.\n\nTo check manually, visit:\n\n"
 									+ JBroFuzzFormat.URL_WEBSITE);
 				}

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -30,10 +30,20 @@
 package org.owasp.jbrofuzz.headers;
 
 public class Header {
-	
-	private int id, noOfFields;
-	
-	private String header, comment;
+
+	private int	id, noOfFields;
+
+	private String	header, comment;
+
+	/**
+	 * @param id
+	 */
+	public Header(int id) {
+		this.id = id;
+		noOfFields = 0;
+		header = "";
+		comment = "";
+	}
 
 	/**
 	 * @param id
@@ -47,43 +57,12 @@ public class Header {
 		this.header = header;
 		this.comment = comment;
 	}
-	
-	/**
-	 * @param id
-	 */
-	public Header(int id) {
-		this.id = id;
-		this.noOfFields = 0;
-		this.header = "";
-		this.comment = "";
-	}
-	
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
 
 	/**
-	 * @param id the id to set
+	 * @return the comment
 	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the noOfFields
-	 */
-	public int getNoOfFields() {
-		return noOfFields;
-	}
-
-	/**
-	 * @param noOfFields the noOfFields to set
-	 */
-	public void setNoOfFields(int noOfFields) {
-		this.noOfFields = noOfFields;
+	public String getComment() {
+		return comment;
 	}
 
 	/**
@@ -94,26 +73,12 @@ public class Header {
 	}
 
 	/**
-	 * @param value the value to set
+	 * @return the id
 	 */
-	public void setHeader(String value) {
-		this.header = value;
+	public int getId() {
+		return id;
 	}
 
-	/**
-	 * @return the comment
-	 */
-	public String getComment() {
-		return comment;
-	}
-
-	/**
-	 * @param comment the comment to set
-	 */
-	protected void setComment(String comment) {
-		this.comment = comment;
-	}
-	
 	protected String getInfo() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("\nTotal No of Characters: ");
@@ -121,6 +86,45 @@ public class Header {
 		sb.append("\nTotal No of Fields (lines): ");
 		sb.append(header.split("\n").length);
 		return sb.toString();
+	}
+
+	/**
+	 * @return the noOfFields
+	 */
+	public int getNoOfFields() {
+		return noOfFields;
+	}
+
+	/**
+	 * @param comment
+	 *          the comment to set
+	 */
+	protected void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	/**
+	 * @param value
+	 *          the value to set
+	 */
+	public void setHeader(String value) {
+		header = value;
+	}
+
+	/**
+	 * @param id
+	 *          the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * @param noOfFields
+	 *          the noOfFields to set
+	 */
+	public void setNoOfFields(int noOfFields) {
+		this.noOfFields = noOfFields;
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -34,41 +34,45 @@ import java.net.URL;
 
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 /**
- * <p>Class used for constructing a JScrollPane that displays
- * further help information in the graphing tab.</p>
- *
+ * <p>
+ * Class used for constructing a JScrollPane that displays further help
+ * information in the graphing tab.
+ * </p>
+ * 
  * @author subere@uncon.org
- * @version 1.2
- * @since 1.2 
+ * @version 1.3
+ * @since 1.2
  */
 public class HelpChart extends JScrollPane {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2266326648164756664L;
-	
-	private static String FILE_NOT_FOUND = "Help file could not be located.";
+	private static final long	serialVersionUID	= 2266326648164756664L;
+
+	private static String			FILE_NOT_FOUND		= "Help file could not be located.";
 
 	/**
-	 * <p>A help for displaying further information as part of the 
-	 * graphs available in the graphing tab.</p>
+	 * <p>
+	 * A help for displaying further information as part of the graphs available
+	 * in the graphing tab.
+	 * </p>
 	 * 
-	 *
+	 * 
 	 * @author subere@uncon.org
-	 * @version 1.2
+	 * @version 1.3
 	 * @since 1.2
 	 */
 	public HelpChart() {
-			
+
 		super();
-		
+
 		final URL helpURL = ClassLoader.getSystemClassLoader().getResource(
-				"help/topics-02.html"
-		);
-		
+				"help/topics-02.html");
+
 		JEditorPane tcpfPane;
 		try {
 			tcpfPane = new JEditorPane(helpURL);
@@ -76,17 +80,17 @@ public class HelpChart extends JScrollPane {
 			tcpfPane = new JEditorPane();
 			tcpfPane.setText(FILE_NOT_FOUND);
 		}
-		
+
 		tcpfPane.setEditable(false);
 		JScrollPane helpScrollPane = new JScrollPane(tcpfPane);
-		
-		helpScrollPane.setHorizontalScrollBarPolicy(
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		helpScrollPane.setVerticalScrollBarPolicy(
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		
-		this.setViewportView(tcpfPane);
-		
+
+		helpScrollPane
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		helpScrollPane
+				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+		setViewportView(tcpfPane);
+
 	}
-	
+
 }

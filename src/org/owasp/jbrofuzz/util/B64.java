@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -48,7 +48,7 @@ public class B64 {
 	 * </p>
 	 * 
 	 * @param base64
-	 *            String
+	 *          String
 	 * @return byte[]
 	 */
 	public static byte[] decode(final String base64) {
@@ -79,7 +79,7 @@ public class B64 {
 	 * </p>
 	 * 
 	 * @param raw
-	 *            byte[]
+	 *          byte[]
 	 * @return String
 	 */
 	public static String encode(final byte[] raw) {

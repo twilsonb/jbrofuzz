@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -42,8 +42,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 
@@ -54,22 +57,25 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.2
+ * @version 1.3
  */
 public class SystemPanel extends JBroFuzzPanel {
 
-	private static final long serialVersionUID = 1L;
-	// The JTable that holds all the data
-	private JTextArea listTextArea;
+	private static final long			serialVersionUID	= 1L;
+
+	private JTextPane							listTextArea;
+
+	private DefaultStyledDocument	m_defaultStyledDocument;
+
 	// The line count
-	private int lineCount;
+	private int										lineCount;
 
 	/**
-	 * Constructor for the System Logger Panel of the represented as a tab. Only
-	 * a single instance of this class is constructed.
+	 * Constructor for the System Logger Panel of the represented as a tab. Only a
+	 * single instance of this class is constructed.
 	 * 
 	 * @param m
-	 *            FrameWindow
+	 *          FrameWindow
 	 */
 	public SystemPanel(final JBroFuzzWindow m) {
 
@@ -82,17 +88,17 @@ public class SystemPanel extends JBroFuzzPanel {
 
 		// Define the JPanel
 		final JPanel listPanel = new JPanel(new BorderLayout());
-		
-		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(" System Logger "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-		listTextArea = new JTextArea();
-		listTextArea.setFont(new Font("Verdana", Font.PLAIN, 10));
+		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" System Logger "), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
+
+		m_defaultStyledDocument = new DefaultStyledDocument();
+		listTextArea = new JTextPane(m_defaultStyledDocument);
+		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
-		listTextArea.setLineWrap(true);
-		listTextArea.setWrapStyleWord(true);
-		listTextArea.setBackground(Color.WHITE);
-		listTextArea.setForeground(Color.BLACK);
-		
+		listTextArea.setBackground(Color.BLACK);
+
 		// Right click: Cut, Copy, Paste, Select All
 		popupText(listTextArea, false, true, false, true);
 
@@ -104,9 +110,9 @@ public class SystemPanel extends JBroFuzzPanel {
 
 		// The top and bottom split components
 		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 50, 33));
-		
+
 		// topPanel.add(infoButton);
-		
+
 		JSplitPane mainPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		mainPane.setOneTouchExpandable(false);
 		mainPane.setTopComponent(topPanel);
@@ -117,32 +123,163 @@ public class SystemPanel extends JBroFuzzPanel {
 		Dimension minimumSize = new Dimension(0, 0);
 		topPanel.setMinimumSize(minimumSize);
 		listPanel.setMinimumSize(minimumSize);
-		
+
 		this.add(mainPane, BorderLayout.CENTER);
-		
+
 		listTextArea.setCaretPosition(0);
-		
+
+	}
+
+	@Override
+	public void add() {
+
+		final Date currentTime = new Date();
+		final SimpleDateFormat dateTime = new SimpleDateFormat(
+				"dd.MM.yyyy HH:mm:ss:SSS", new Locale("en"));
+
+		start("JBroFuzz Timestamp --- " + dateTime.format(currentTime)
+				+ " --- JBroFuzz Timestamp", 0);
+
+	}
+
+	@Override
+	public void graph() {
+	}
+
+	@Override
+	public void remove() {
+	}
+
+	@Override
+	public void start() {
+
+		// Set the enabled options: Start, Stop, Graph, Add, Remove
+		setOptionsAvailable(false, false, true, false, false);
+
+		start("[System Health Check Start]", 2);
+
+		final String systemInfo = "[System Info Start]\r\n" + "  [Java]\r\n"
+				+ "    Vendor:  "
+				+ System.getProperty("java.vendor")
+				+ "\r\n"
+				+ "    Version: "
+				+ System.getProperty("java.version")
+				+ "\r\n"
+				+ "    Installed at: "
+				+ System.getProperty("java.home")
+				+ "\r\n"
+				+ "    Website: "
+				+ System.getProperty("java.vendor.url")
+				+ "\r\n"
+				+ "  [User]\r\n"
+				+ "    User: "
+				+ System.getProperty("user.name")
+				+ "\r\n"
+				+ "    Home dir: "
+				+ System.getProperty("user.home")
+				+ "\r\n"
+				+ "    Current dir: "
+				+ System.getProperty("user.dir")
+				+ "\r\n"
+				+ "  [O/S]\r\n"
+				+ "    Name: "
+				+ System.getProperty("os.name")
+				+ "\r\n"
+				+ "    Version: "
+				+ System.getProperty("os.version")
+				+ "\r\n"
+				+ "    Architecture: "
+				+ System.getProperty("os.arch")
+				+ "\r\n"
+				+ "[System Info End]\r\n";
+
+		final String[] info = systemInfo.split("\r\n");
+
+		for (final String element : info) {
+			SystemPanel.this.start(element, 1);
+		}
+
+		start("[Testing Warning Levels Start]", 1);
+		start("  Informational - no issue - no tab counter increment", 0);
+		start("  Opperational - operation changed - no tab counter increment", 1);
+		start(
+				"  Warning - still functional - an operation change did not complete",
+				2);
+		start("  Shout - controlable error occured - bad news but not the worst", 3);
+		start(
+				"  Error - something that was meant to happen, didn't complete as expected",
+				4);
+		start("[Testing Warning Levels End]", 1);
+
+		start("[System Health Check End]", 2);
+
 	}
 
 	/**
 	 * <p>
-	 * Method for setting the text within the JTextArea displayed as part of
-	 * this panel. This method simply appends any string given adding a new line
-	 * (\n) to the end of it.
+	 * Method for setting the text within the JTextArea displayed as part of this
+	 * panel. This method simply appends any string given adding a new line (\n)
+	 * to the end of it.
 	 * </p>
 	 * 
 	 * @param str
-	 *            String
+	 *          String
+	 * 
+	 * @param level
+	 *          The severity level<br> <= 0 => [INFO] Violet Informational<br> ==
+	 *          1 => [OPPR] Blue Operational<br> == 2 => [WARN] Green Warning<br> ==
+	 *          3 => [SHOT] Amber Shout - light error<br> >= 4 => [ERRR] Red
+	 *          Error<br>
 	 */
-	public void start(final String str) {
+	public void start(final String str, int level) {
 
 		final Date currentTime = new Date();
 		final SimpleDateFormat dateTime = new SimpleDateFormat(
 				"dd.MM.yyyy HH:mm:ss", new Locale("en"));
 
-		lineCount++;
-		listTextArea.append("[" + dateTime.format(currentTime) + "] " + str
-				+ "\n");
+		StringBuffer toLog = new StringBuffer();
+		toLog.append('[');
+		toLog.append(dateTime.format(currentTime));
+		toLog.append(']');
+
+		Color c;
+		if (level <= 0) {
+			toLog.append("[INFO]");
+			c = Color.BLUE;
+		} else if (level == 1) {
+			toLog.append("[OPPR]");
+			c = Color.GREEN;
+		} else if (level == 2) {
+			toLog.append("[WARN]");
+			c = Color.YELLOW;
+			lineCount++;
+		} else if (level == 3) {
+			toLog.append("[SHOT]");
+			c = new Color(255, 128, 0);
+			lineCount++;
+		} else {
+			toLog.append("[ERRR]");
+			c = Color.RED;
+			lineCount++;
+		}
+		toLog.append(str);
+		toLog.append('\n');
+
+		try {
+
+			SimpleAttributeSet attr = new SimpleAttributeSet();
+			StyleConstants.setForeground(attr, c);
+			m_defaultStyledDocument.insertString(m_defaultStyledDocument.getLength(),
+					toLog.toString(), attr);
+
+			listTextArea.setCaretPosition(m_defaultStyledDocument.getLength());
+
+		} catch (BadLocationException ex) {
+
+			ex.printStackTrace();
+
+		}
+
 		// Fix the disappearing tab problem
 		int tab = -1;
 		final int totalTabs = getFrame().getTp().getComponentCount();
@@ -153,90 +290,18 @@ public class SystemPanel extends JBroFuzzPanel {
 			}
 		}
 		if ((tab > -1)) {
-			getFrame().getTp().setTitleAt(tab,
-					" System (" + lineCount + ")");
-		}
-		
-		listTextArea.setCaretPosition(listTextArea.getText().length());
-
-	}
-
-	public void start() {
-
-		// Set the enabled options: Start, Stop, Graph, Add, Remove
-		setOptionsAvailable(false, false, true, false, false);
-
-//		Runtime.getRuntime().gc();
-//		Runtime.getRuntime().runFinalization();
-
-		final String systemInfo = "[System Info Start]\r\n"
-			+ "  [Java]\r\n" + "    Vendor:  "
-			+ System.getProperty("java.vendor")
-			+ "\r\n"
-			+ "    Version: "
-			+ System.getProperty("java.version")
-			+ "\r\n"
-			+ "    Installed at: "
-			+ System.getProperty("java.home")
-			+ "\r\n"
-			+ "    Website: "
-			+ System.getProperty("java.vendor.url")
-			+ "\r\n"
-			+ "  [User]\r\n"
-			+ "    User: "
-			+ System.getProperty("user.name")
-			+ "\r\n"
-			+ "    Home dir: "
-			+ System.getProperty("user.home")
-			+ "\r\n"
-			+ "    Current dir: "
-			+ System.getProperty("user.dir")
-			+ "\r\n"
-			+ "  [O/S]\r\n"
-			+ "    Name: "
-			+ System.getProperty("os.name")
-			+ "\r\n"
-			+ "    Version: "
-			+ System.getProperty("os.version")
-			+ "\r\n"
-			+ "    Architecture: "
-			+ System.getProperty("os.arch")
-			+ "\r\n"
-			+ "[System Info End]\r\n";
-
-		final String[] info = systemInfo.split("\r\n");
-
-		for (final String element : info) {
-			SystemPanel.this.start(element);
+			getFrame().getTp().setTitleAt(tab, " System (" + lineCount + ")");
 		}
 
-
+		lineCount %= 10;
 	}
 
+	@Override
 	public void stop() {
 
 		// Set the enabled options: Start, Stop, Graph, Add, Remove
 		setOptionsAvailable(true, false, true, true, false);
 
-	}
-
-	public void graph() {
-	}
-
-	public void add() {
-
-//		Runtime.getRuntime().gc();
-//		Runtime.getRuntime().runFinalization();
-
-		final Date currentTime = new Date();
-		final SimpleDateFormat dateTime = new SimpleDateFormat(
-				"dd.MM.yyyy HH:mm:ss:SSS", new Locale("en"));
-		
-		start("JBroFuzz Timestamp --- " + dateTime.format(currentTime) + " --- JBroFuzz Timestamp");
-
-	}
-
-	public void remove() {
 	}
 
 }

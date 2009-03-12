@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -64,40 +64,45 @@ import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
- * <p>The open location dialog.</p>
+ * <p>
+ * The open location dialog.
+ * </p>
  * 
  * @author subere@uncon.org
- * @version 1.2
+ * @version 1.3
  */
-public class OpenLocationDialog extends JDialog  implements MouseListener, KeyListener {
+public class OpenLocationDialog extends JDialog implements MouseListener,
+		KeyListener {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5815321460026044259L;
-	
+	private static final long	serialVersionUID	= -5815321460026044259L;
+
 	// Dimensions of the generator dialog box
-	private static final int x = 340;
-	private static final int y = 180;
+	private static final int	x									= 340;
+	private static final int	y									= 180;
 
 	// The buttons
-	private JButton ok, cancel;
+	private JButton						ok, cancel;
 
 	// The frame that the sniffing panel is attached
-	private JBroFuzzWindow m;
+	private JBroFuzzWindow		m;
 
-	final JPopupMenu popmenu; 
+	final JPopupMenu					popmenu;
 
-	JComboBox _url, methodBox, charsetBox, versionBox; 
+	JComboBox									_url, methodBox, charsetBox, versionBox;
 
 	/**
-	 * <p>Constructs a dialog box for (Ctrl+L) input of URL
-	 * fields.</p>
+	 * <p>
+	 * Constructs a dialog box for (Ctrl+L) input of URL fields.
+	 * </p>
 	 * 
-	 * @param parent JBroFuzzWindow The main window
-	 *
+	 * @param parent
+	 *          JBroFuzzWindow The main window
+	 * 
 	 * @author subere@uncon.org
-	 * @version 1.2
+	 * @version 1.3
 	 * @since 1.2
 	 */
 	public OpenLocationDialog(final JBroFuzzWindow parent) {
@@ -121,11 +126,11 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 		_url.setFont(new Font("Verdana", Font.BOLD, 12));
 
 		_url.getEditor().getEditorComponent().addKeyListener(this);
-		// _url.getEditor().getEditorComponent().setFont(new Font("Verdana", Font.pl));
-		
-		final String methods[] = {"GET", "POST", "HEAD", "PUT", "DELETE", "TRACE", "PROPFIND", "OPTIONS"};		
-		final String versions[] = {"0.9", "1.0", "1.1", "1.2"};
-		final String charsets[] = {"ISO-8859-1"};
+
+		final String methods[] = { "GET", "POST", "HEAD", "PUT", "DELETE", "TRACE",
+				"PROPFIND", "OPTIONS" };
+		final String versions[] = { "0.9", "1.0", "1.1", "1.2" };
+		final String charsets[] = { "ISO-8859-1" };
 
 		methodBox = new JComboBox(methods);
 		charsetBox = new JComboBox(charsets);
@@ -134,23 +139,23 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 		methodBox.setFont(new Font("Verdana", Font.BOLD, 10));
 		charsetBox.setFont(new Font("Verdana", Font.BOLD, 10));
 		versionBox.setFont(new Font("Verdana", Font.BOLD, 10));
-		
+
 		methodBox.addKeyListener(this);
 		charsetBox.addKeyListener(this);
 		versionBox.addKeyListener(this);
-		
+
 		methodBox.setMaximumRowCount(3);
 		charsetBox.setMaximumRowCount(3);
 		versionBox.setMaximumRowCount(3);
-		
+
 		methodBox.setBackground(Color.BLACK);
 		charsetBox.setBackground(Color.BLACK);
 		versionBox.setBackground(Color.BLACK);
-		
+
 		methodBox.setForeground(Color.WHITE);
 		charsetBox.setForeground(Color.WHITE);
 		versionBox.setForeground(Color.WHITE);
-		
+
 		versionBox.setSelectedIndex(1);
 
 		// Buttons
@@ -204,38 +209,36 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 		// Cut
 		i1.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				
+
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 				Transferable clipData = clipboard.getContents(clipboard);
-				
+
 				if (clipData != null) {
 					try {
 						if (clipData.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-							((JTextComponent)_url.getEditor().getEditorComponent()).cut();
+							((JTextComponent) _url.getEditor().getEditorComponent()).cut();
 						}
-					}
-					catch (Exception e1) {
-						parent.log("Open Location: An error occured while cutting");
+					} catch (Exception e1) {
+						parent.log("Open Location: An error occured while cutting", 2);
 					}
 				}
 			}
 		});
-		
+
 		// Copy
 		i2.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				
+
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 				Transferable clipData = clipboard.getContents(clipboard);
-				
+
 				if (clipData != null) {
 					try {
 						if (clipData.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-							((JTextComponent)_url.getEditor().getEditorComponent()).copy();
+							((JTextComponent) _url.getEditor().getEditorComponent()).copy();
 						}
-					}
-					catch (Exception e1) {
-						parent.log("Open Location: An error occured while copying");
+					} catch (Exception e1) {
+						parent.log("Open Location: An error occured while copying", 2);
 					}
 				}
 			}
@@ -247,16 +250,16 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 				Transferable clipData = clipboard.getContents(clipboard);
-				
+
 				if (clipData != null) {
 					try {
 						if (clipData.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-							((JTextComponent)_url.getEditor().getEditorComponent()).replaceSelection(
-									(String)(clipData.getTransferData(DataFlavor.stringFlavor)));
+							((JTextComponent) _url.getEditor().getEditorComponent())
+									.replaceSelection((String) (clipData
+											.getTransferData(DataFlavor.stringFlavor)));
 						}
-					}
-					catch (Exception e1) {
-						parent.log("Open Location: An error occured while pasting");
+					} catch (Exception e1) {
+						parent.log("Open Location: An error occured while pasting", 2);
 					}
 				}
 			}
@@ -273,16 +276,19 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 
 		// Final panels
 
-		final JPanel targetPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+		final JPanel targetPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
+				15));
 		targetPanel.add(new JLabel("URL:"));
 		targetPanel.add(_url);
 
-		final JPanel propertiesPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+		final JPanel propertiesPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		propertiesPanel.add(methodBox);
 		propertiesPanel.add(charsetBox);
 		propertiesPanel.add(versionBox);
 
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
+				15));
 		buttonPanel.add(ok);
 		buttonPanel.add(cancel);
 
@@ -292,14 +298,13 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 
 		// Set the URL text
 		String url_displaying = parent.getPanelFuzzing().getTextURL();
-		((JTextComponent)_url.getEditor().getEditorComponent()).setText(url_displaying);
-		((JTextComponent)_url.getEditor().getEditorComponent()).selectAll();
-		
+		((JTextComponent) _url.getEditor().getEditorComponent())
+				.setText(url_displaying);
+		((JTextComponent) _url.getEditor().getEditorComponent()).selectAll();
+
 		// Global frame issues
-		setLocation(
-				Math.abs(parent.getLocation().x + 20), 
-				Math.abs(parent.getLocation().y + 20)
-		);
+		setLocation(Math.abs(parent.getLocation().x + 20), Math.abs(parent
+				.getLocation().y + 20));
 
 		setSize(OpenLocationDialog.x, OpenLocationDialog.y);
 		setResizable(true);
@@ -312,7 +317,89 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 		if (e.isPopupTrigger()) {
 			popmenu.show(e.getComponent(), e.getX(), e.getY());
 		}
-		
+
+	}
+
+	private void clickOK() {
+
+		try {
+			URL inputURL = new URL(((JTextComponent) _url.getEditor()
+					.getEditorComponent()).getText());
+
+			StringBuffer out_url = new StringBuffer();
+			out_url.append(inputURL.getProtocol());
+			out_url.append("://");
+			out_url.append(inputURL.getHost());
+			if (inputURL.getPort() > 0) {
+				out_url.append(":");
+				out_url.append(inputURL.getPort());
+			}
+
+			StringBuffer req_url = new StringBuffer();
+			req_url.append(methodBox.getModel().getElementAt(
+					methodBox.getSelectedIndex()));
+			req_url.append(' ');
+			try {
+				// If no file is specified, add a /
+				if (inputURL.getFile().isEmpty()) {
+					req_url.append('/');
+				} else {
+					req_url.append(URLDecoder.decode(inputURL.getFile(), "UTF-8"));
+				}
+
+			} catch (UnsupportedEncodingException e) {
+				m.log("Open Location: Unsupported URL Encoding Exception", 3);
+				// If no file is specified, add a /
+				if (inputURL.getFile().isEmpty()) {
+					req_url.append('/');
+				} else {
+					req_url.append(inputURL.getFile());
+				}
+			}
+			req_url.append(' ');
+			req_url.append("HTTP/");
+			req_url.append(versionBox.getModel().getElementAt(
+					versionBox.getSelectedIndex()));
+
+			// Host: localhost
+			req_url.append('\n');
+			req_url.append("Host: ");
+			req_url.append(inputURL.getHost());
+			req_url.append('\n');
+
+			int lc_one = JBroFuzzFormat.URL_REQUEST.indexOf("User-Agent:");
+			req_url.append(JBroFuzzFormat.URL_REQUEST.substring(lc_one));
+
+			m.getPanelFuzzing().setTextURL(out_url.toString());
+			m.getPanelFuzzing().setTextRequest(req_url.toString());
+
+		} catch (MalformedURLException e) {
+			m.log("Open Location: Could not interpret the URL provided", 3);
+		}
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent ke) {
+
+		if (ke.getKeyCode() == 27) {
+			OpenLocationDialog.this.dispose();
+		}
+		if (ke.getKeyCode() == 10) {
+			clickOK();
+			OpenLocationDialog.this.dispose();
+		}
+
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+
 	}
 
 	@Override
@@ -348,78 +435,6 @@ public class OpenLocationDialog extends JDialog  implements MouseListener, KeyLi
 
 		checkForTriggerEvent(e);
 
-	}
-	
-	private void clickOK() {
-		
-		try {
-			URL inputURL = new URL(((JTextComponent)_url.getEditor().getEditorComponent()).getText());
-			
-			StringBuffer out_url = new StringBuffer();
-			out_url.append(inputURL.getProtocol());
-			out_url.append("://");
-			out_url.append(inputURL.getHost());
-			if(inputURL.getPort() > 0) {
-				out_url.append(":");
-				out_url.append(inputURL.getPort());
-			}
-						
-			StringBuffer req_url = new StringBuffer();
-			req_url.append(methodBox.getModel().getElementAt(methodBox.getSelectedIndex()));
-			req_url.append(' ');
-			try {
-				// If no file is specified, add a /
-				if(inputURL.getFile().isEmpty()) {
-					req_url.append('/');
-				} else {
-					req_url.append(URLDecoder.decode(inputURL.getFile(), "UTF-8" ));
-				}
-				
-			} catch (UnsupportedEncodingException e) {
-				m.log("Open Location: Unsupported URL Encoding Exception");
-				// If no file is specified, add a /
-				if(inputURL.getFile().isEmpty()) {
-					req_url.append('/');
-				} else {
-					req_url.append(inputURL.getFile());
-				}
-			}
-			req_url.append(' ');
-			req_url.append("HTTP/");
-			req_url.append(versionBox.getModel().getElementAt(versionBox.getSelectedIndex()));
-			req_url.append(JBroFuzzFormat.URL_REQUEST.substring(JBroFuzzFormat.URL_REQUEST.indexOf('\n')));
-						
-			m.getPanelFuzzing().setTextURL(out_url.toString());
-			m.getPanelFuzzing().setTextRequest(req_url.toString());
-			
-		} catch (MalformedURLException e) {
-			m.log("Open Location: Could not interpret the URL provided");
-		}
-		
-		
-	}
-
-	@Override
-	public void keyPressed(KeyEvent ke) {
-		
-		if (ke.getKeyCode() == 27) {
-			OpenLocationDialog.this.dispose();
-		}
-		if (ke.getKeyCode() == 10) {
-			clickOK();
-			OpenLocationDialog.this.dispose();
-		}
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		
 	}
 
 }

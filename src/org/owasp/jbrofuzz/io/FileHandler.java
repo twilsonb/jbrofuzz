@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -29,25 +29,59 @@
  */
 package org.owasp.jbrofuzz.io;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.MessageWriter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
+/**
+ * <p>
+ * Class responsible for generating all the file I/O required for an instance of
+ * JBroFuzz to function correctly.
+ * </p>
+ * 
+ * 
+ * @author subere@uncon.org
+ * @version 1.3
+ * @since 1.2
+ */
 public class FileHandler {
 
+	// The max value in bytes of the file being read 32 Mbytes
+	public static final int	MAX_BYTES	= 33554432;
+
 	// The main window frame gui
-	private JBroFuzz g;
+	private JBroFuzz				g;
 
 	// The fuzz directory of operation
-	private File fuzzDirectory;
-	
-	// The /jbrofuzz directory created at launch
-	private File DIR_JBROFUZZ;
+	private File						fuzzDirectory;
 
+	// The /jbrofuzz directory created at launch
+	private File						DIR_JBROFUZZ;
+
+	/**
+	 * <p>
+	 * Constructor for the file handler, having as parameter the main instance of
+	 * JBroFuzz.
+	 * </p>
+	 * <p>
+	 * It will attempt to create the 'fuzz' directory from the current unique
+	 * time-stamp.
+	 * </p>
+	 * 
+	 * @param g
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
 	public FileHandler(final JBroFuzz g) {
 
 		this.g = g;
@@ -58,29 +92,18 @@ public class FileHandler {
 
 		// Create the necessary directory with the corresponding timestamp
 		fuzzDirectory = new File(baseDir + File.separator + "jbrofuzz"
-				+ File.separator + "fuzz" + File.separator
-				+ JBroFuzzFormat.DATE);
-
-		int failedDirCounter = 0;
+				+ File.separator + "fuzz" + File.separator + JBroFuzzFormat.DATE);
 
 		if (!fuzzDirectory.exists()) {
 			boolean success = fuzzDirectory.mkdirs();
 			if (!success) {
-				g.getWindow().log("Failed to create \"fuzz\" directory");
-				failedDirCounter++;
+				g.getWindow().log("Failed to create \"fuzz\" directory", 4);
+				g.getWindow()
+						.log(
+								"\tTry running JBroFuzz with \"java -jar jbrofuzz-"
+										+ JBroFuzzFormat.VERSION
+										+ ".jar\" from the command line...", 0);
 			}
-		}
-
-
-		if (failedDirCounter >= 4) {
-			g
-			.getWindow()
-			.log(
-					"\tToo many directories could not be created! Are you launching me through your browser?");
-			g.getWindow().log(
-					"\tTry \"java -jar jbrofuzz-" + JBroFuzzFormat.VERSION
-					+ ".jar\" on command line...");
-			failedDirCounter = 0;
 		}
 
 	}
@@ -93,11 +116,11 @@ public class FileHandler {
 	public void deleteEmptryDirectories() {
 
 		if (!fuzzDirectory.exists()) {
-			System.out.println("Could not find directory: "
-					+ fuzzDirectory.getName());
+			System.out
+					.println("Could not find directory: " + fuzzDirectory.getName());
 			return;
 		}
-		
+
 		if (FileUtils.sizeOfDirectory(fuzzDirectory) == 0L) {
 			try {
 				FileUtils.deleteDirectory(fuzzDirectory);
@@ -111,27 +134,24 @@ public class FileHandler {
 		final File parent = fuzzDirectory.getParentFile();
 
 		if (!parent.exists()) {
-			System.out.println("Could not find directory: "
-					+ parent.getName());
+			System.out.println("Could not find directory: " + parent.getName());
 			return;
 		}
-		
+
 		if (FileUtils.sizeOfDirectory(parent) == 0L) {
 			try {
 				FileUtils.deleteDirectory(parent);
 
 			} catch (final IOException e) {
-				System.out.println("Could not delete directory: " 
-						+ parent.getName());
+				System.out.println("Could not delete directory: " + parent.getName());
 			}
 		}
 
 		if (!DIR_JBROFUZZ.exists()) {
-			System.out.println("Could not find directory: "
-					+ DIR_JBROFUZZ.getName());
+			System.out.println("Could not find directory: " + DIR_JBROFUZZ.getName());
 			return;
 		}
-		
+
 		if (FileUtils.sizeOfDirectory(DIR_JBROFUZZ) == 0L) {
 			try {
 				FileUtils.deleteDirectory(DIR_JBROFUZZ);
@@ -145,49 +165,112 @@ public class FileHandler {
 
 	}
 
+	/**
+	 * <p>
+	 * Return the canonical path of the directory location of the 'fuzz'
+	 * directory.
+	 * </p>
+	 * 
+	 * @return String the path of the 'fuzz' directory
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
+	public String getCanonicalPath() {
+
+		try {
+			return fuzzDirectory.getCanonicalPath();
+		} catch (IOException e) {
+			return "";
+		}
+
+	}
+
 	public File getFuzzFile(String fileName) {
 
 		return new File(fuzzDirectory, fileName);
 
 	}
 
-	public StringBuffer readFuzzFile(String fileName) {
-		StringBuffer out = new StringBuffer();
+	/**
+	 * <p>
+	 * Method for returning the contents of a file in the 'fuzz' directory,
+	 * created during startup.
+	 * </p>
+	 * 
+	 * @param fileName
+	 *          The name of the file, e.g. 01-0000001.html
+	 * @return String The contents of the file as a string
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
+	public String readFuzzFile(String fileName) {
 
-		File f = new File(fuzzDirectory, fileName);
-		try {
-			out.append(FileUtils.readFileToString(f));
-		} catch (IOException e) {
-			g.getWindow().log("An error reading the fuzz file: " + fileName);
+		final File file = new File(fuzzDirectory, fileName);
+		if (file.exists()) {
+			if (file.isDirectory()) {
+				g.getWindow().log("File '" + file + "' exists but is a directory", 3);
+				return ""; // new String();
+			}
+			if (file.canRead() == false) {
+				g.getWindow().log("File '" + file + "' cannot be read", 3);
+				return ""; // new String();
+			}
+		} else {
+			g.getWindow().log("File '" + file + "' does not exist", 3);
+			return ""; // new String();
 		}
 
-		return out;
+		InputStream in = null;
+		FileInputStream fis = null;
+		StringBuffer fileContents = new StringBuffer();
+		try {
+			fis = new FileInputStream(file);
+			in = new BufferedInputStream(fis);
+
+			int counter = 0;
+			int c;
+			// Read, having as upper maximum the int maximum
+			while (((c = in.read()) > 0) && (counter <= MAX_BYTES)) {
+				fileContents.append((char) c);
+				counter++;
+				if (counter == Integer.MAX_VALUE) {
+					g.getWindow().log(
+							"Only displaying the first 2^31-1 bytes of the file '"
+									+ file.getName(), 3);
+				}
+			}
+
+			in.close();
+			fis.close();
+
+		} catch (IOException e) {
+			g.getWindow().log(
+					"Opening File '" + file.getName() + "' caused an I/O error", 4);
+
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(fis);
+		}
+
+		return fileContents.toString();
 	}
 
 	public void writeFuzzFile(MessageWriter outputMessage) {
 
 		final String fileName = outputMessage.getFileName() + ".html";
-		
+
 		File toWrite = new File(fuzzDirectory, fileName);
-		
+
 		try {
 			FileUtils.touch(toWrite);
 			FileUtils.writeStringToFile(toWrite, outputMessage.toString());
 		} catch (IOException e) {
-			g.getWindow().log("Error writting fuzz file: " + fileName);
+			g.getWindow().log("Error writting fuzz file: " + fileName, 3);
 		}
 	}
-
-	public String getCanonicalPath() {
-		
-		try {
-			return fuzzDirectory.getCanonicalPath();
-		} catch (IOException e) {
-			return "";
-		}
-			
-	}
-
-	
 
 }

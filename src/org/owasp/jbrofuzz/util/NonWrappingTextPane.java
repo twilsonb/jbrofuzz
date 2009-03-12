@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -35,38 +35,42 @@ import javax.swing.JTextPane;
 import javax.swing.plaf.ComponentUI;
 
 /**
- * <p>The implementation of a text pane that does not wrap the
- * text, preserving its full width.</p>
+ * <p>
+ * The implementation of a text pane that does not wrap the text, preserving its
+ * full width.
+ * </p>
  * 
- * <p>The overriding method was inspired from the book Core Swing 
- * Advanced Programming by Kim Topley, where a similar implementation
- * resides.</p>
+ * <p>
+ * The overriding method was inspired from the book Core Swing Advanced
+ * Programming by Kim Topley, where a similar implementation resides.
+ * </p>
  * 
  * @author subere@uncon.org
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  */
 public class NonWrappingTextPane extends JTextPane {
 
-	private static final long serialVersionUID = -6032784558789430963L;
+	private static final long	serialVersionUID	= -6032784558789430963L;
 
 	/**
-	 * <p>This method overrides #getScrollableTracksViewportWidth to 
-	 * preserve the full width of the text displayed within the 
-	 * text pane.</p>
+	 * <p>
+	 * This method overrides #getScrollableTracksViewportWidth to preserve the
+	 * full width of the text displayed within the text pane.
+	 * </p>
 	 * 
 	 */
 	@Override
 	public boolean getScrollableTracksViewportWidth() {
-		
+
 		final Component parent = getParent();
 		final ComponentUI ui = getUI();
 
-		if(parent != null) {
+		if (parent != null) {
 			return (ui.getPreferredSize(this).width <= parent.getSize().width);
 		}
 
 		return true;
-		
+
 	}
 }

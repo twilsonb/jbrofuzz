@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -34,44 +34,43 @@ import java.util.Arrays;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * <p>
+ * Table model dedicated to tables with multiple rows, but single columns.
+ * </p>
+ * 
+ * 
+ * @author subere@uncon.org
+ * @version 1.3
+ * @since 1.2
+ */
 public class SingleColumnModel extends AbstractTableModel {
 
+	private static final long	serialVersionUID	= 7819538656432704429L;
+
+	private String						columnName;
+
+	private ArrayList<String>	dataVector;
+
 	/**
+	 * <p>
+	 * Constructor passing as argument the name of the column.
+	 * </p>
 	 * 
+	 * @param columnName
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
 	 */
-	private static final long serialVersionUID = 7819538656432704429L;
-
-	private String columnName;
-
-	private ArrayList<String> dataVector;
-
 	public SingleColumnModel(final String columnName) {
 
 		this.columnName = columnName;
 		dataVector = new ArrayList<String>();
 
 	}
-    
-	public int getRowCount() { return dataVector.size(); }
-    
-	public int getColumnCount() { return 1; }
-	
-    public Object getValueAt(int row, int col) {
-        return dataVector.get(row);
-    }
-    
-    public boolean isCellEditable(int row, int col) { return false; }
-    
-    public String getColumnName(int col) {
-        return columnName;
-    }
-    
-    public void setValueAt(Object value, int row, int col) {
-        dataVector.set(row, value.toString()); 
-        fireTableCellUpdated(row, col);
-    }
-    
-    /**
+
+	/**
 	 * Return all rows as a string array
 	 * 
 	 * @return String[]
@@ -81,7 +80,29 @@ public class SingleColumnModel extends AbstractTableModel {
 		final String[] outputCategories = new String[dataVector.size()];
 		return dataVector.toArray(outputCategories);
 	}
-	
+
+	public int getColumnCount() {
+		return 1;
+	}
+
+	@Override
+	public String getColumnName(int col) {
+		return columnName;
+	}
+
+	public int getRowCount() {
+		return dataVector.size();
+	}
+
+	public Object getValueAt(int row, int col) {
+		return dataVector.get(row);
+	}
+
+	@Override
+	public boolean isCellEditable(int row, int col) {
+		return false;
+	}
+
 	/**
 	 * <p>
 	 * Method for setting, from scratch all the data within the model.
@@ -93,14 +114,20 @@ public class SingleColumnModel extends AbstractTableModel {
 
 		fireTableRowsDeleted(0, getRowCount());
 		dataVector.clear();
-		
-		if(values == null) {
+
+		if (values == null) {
 			return;
 		}
-		
+
 		dataVector.addAll(Arrays.asList(values));
 		fireTableRowsInserted(0, values.length);
 		dataVector.trimToSize();
+	}
+
+	@Override
+	public void setValueAt(Object value, int row, int col) {
+		dataVector.set(row, value.toString());
+		fireTableCellUpdated(row, col);
 	}
 
 }

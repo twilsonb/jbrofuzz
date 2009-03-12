@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -33,7 +33,7 @@ import java.io.IOException;
 
 public class ConnectionException extends IOException {
 
-	private static final long serialVersionUID = 73278167420801202L;
+	private static final long	serialVersionUID	= 73278167420801202L;
 
 	public ConnectionException(final String message) {
 

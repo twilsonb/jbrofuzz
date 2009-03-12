@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -46,15 +46,15 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.Align;
 import org.owasp.jbrofuzz.util.ImageCreator;
 
-public class ResponseTimeChart  {
+public class ResponseTimeChart {
 
+	public static final int					MAX_CHARS	= 32;
 	// The x-axis filenames
-	String[] x_data;
+	String[]												x_data;
 	// The y-axis data
-	int [] y_data;
-	private DefaultCategoryDataset dataset;
+	int[]														y_data;
 
-	public static final int MAX_CHARS = 32;
+	private DefaultCategoryDataset	dataset;
 
 	public ResponseTimeChart() {
 
@@ -64,40 +64,16 @@ public class ResponseTimeChart  {
 
 	public ResponseTimeChart(int size) {
 
-
 		x_data = new String[size];
 		y_data = new int[size];
 
 		dataset = new DefaultCategoryDataset();
-		
-	}
 
-	public void setValueAt(int index, File f) {
-
-		x_data[index] = f.getName();
-		y_data[index] = calculateValue(f);
-
-		dataset.addValue((double)y_data[index], "Row 1", x_data[index]);
-		
-	}
-
-	/**
-	 * <p>Method for creating the final Chart.</p>
-	 * 
-	 *
-	 * @see #ResponseTimeChart(int)
-	 * @author subere@uncon.org
-	 * @version 1.2
-	 * @since 1.2
-	 */
-	public void createFinalPlotCanvas() {
-
-		
 	}
 
 	private int calculateValue(File f) {
 
-		if(f.isDirectory()) {
+		if (f.isDirectory()) {
 			return -1;
 		}
 
@@ -107,21 +83,21 @@ public class ResponseTimeChart  {
 		try {
 
 			in = new BufferedReader(new FileReader(f));
-			
-			StringBuffer one = new StringBuffer(MAX_CHARS); 
+
+			StringBuffer one = new StringBuffer(MAX_CHARS);
 			int counter = 0;
 			int c;
-			while( ((c = in.read()) > 0) && (counter < MAX_CHARS) ) {
+			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
 
-				one.append((char)c);
+				one.append((char) c);
 				counter++;
 
 			}
 			in.close();
-			
+
 			one.delete(0, 5);
 			one.delete(one.indexOf("\n--"), one.length());
-			
+
 			responseTime = Integer.parseInt(one.toString());
 
 		} catch (final IOException e1) {
@@ -129,13 +105,13 @@ public class ResponseTimeChart  {
 			return -2;
 
 		} catch (final StringIndexOutOfBoundsException e2) {
-			
+
 			return -3;
-			
+
 		} catch (final NumberFormatException e3) {
 
 			return -4;
-			
+
 		} finally {
 
 			IOUtils.closeQuietly(in);
@@ -143,6 +119,21 @@ public class ResponseTimeChart  {
 		}
 
 		return responseTime;
+	}
+
+	/**
+	 * <p>
+	 * Method for creating the final Chart.
+	 * </p>
+	 * 
+	 * 
+	 * @see #ResponseTimeChart(int)
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
+	public void createFinalPlotCanvas() {
+
 	}
 
 	public ChartPanel getPlotCanvas() {
@@ -157,17 +148,25 @@ public class ResponseTimeChart  {
 				true, // tooltips?
 				true // URLs?
 				);
-		
-		Plot plot = chart.getPlot();		
+
+		Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
-		
-		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();		
+
+		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
 		renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
-		
+
 		return new ChartPanel(chart);
 
 	}
 
+	public void setValueAt(int index, File f) {
+
+		x_data[index] = f.getName();
+		y_data[index] = calculateValue(f);
+
+		dataset.addValue(y_data[index], "Row 1", x_data[index]);
+
+	}
 
 }

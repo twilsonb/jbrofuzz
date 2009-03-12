@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -37,7 +37,7 @@ import javax.swing.text.TextAction;
 
 public class PasteAction extends TextAction {
 
-	private static final long serialVersionUID = 3717026181563513713L;
+	private static final long	serialVersionUID	= 3717026181563513713L;
 
 	public PasteAction() {
 		super("Paste");
@@ -47,8 +47,7 @@ public class PasteAction extends TextAction {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				final JTextComponent text = PasteAction.this
-						.getTextComponent(evt);
+				final JTextComponent text = PasteAction.this.getTextComponent(evt);
 				if (text != null) {
 					if (text.isEditable()) {
 						text.paste();

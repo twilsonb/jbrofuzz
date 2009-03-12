@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -31,86 +31,85 @@ package org.owasp.jbrofuzz.graph;
 
 import java.io.File;
 
-
 public class JohnyWalker {
 
-	private FileSystemTreeNode master;
-	
-	private File directory;
-	
-	private GraphingPanel x3;
-	
+	private FileSystemTreeNode	master;
+
+	private File								directory;
+
+	private GraphingPanel				x3;
+
 	//
-	
-	private int fileCount, dirCount;
-	
+
+	private int									fileCount, dirCount;
+
 	public JohnyWalker(GraphingPanel x3) {
-		
-		this.directory = new File(System.getProperty("user.dir") + File.separator + "jbrofuzz" + File.separator + "fuzz");
+
+		directory = new File(System.getProperty("user.dir") + File.separator
+				+ "jbrofuzz" + File.separator + "fuzz");
 		this.x3 = x3;
-		
-		if(this.directory.canRead()) {
-			master = new FileSystemTreeNode(this.directory.getName());
+
+		if (directory.canRead()) {
+			master = new FileSystemTreeNode(directory.getName());
 			master.setAsDirectory();
 		} else {
-			this.x3.toConsole("Cannot read: " + this.directory.getPath(), true);
+			this.x3.toConsole("Cannot read: " + directory.getPath(), true);
 		}
-		
+
 		fileCount = 0;
 		dirCount = 0;
-		
+
 	}
-	
-	public void run() {
-		
-		listAllFiles(this.directory, this.master);
-		
-		this.x3.toConsole("Total Files: " + fileCount, true);
-		this.x3.toConsole("Total Directories: " + dirCount, true);
-		
+
+	public FileSystemTreeNode getFileSystemTreeNode() {
+		return master;
 	}
-	
+
+	public int getMaximum() {
+
+		return directory.listFiles().length;
+
+	}
+
 	private void listAllFiles(File directory, FileSystemTreeNode parent) {
-		
-		if(!directory.canRead()) {
-			this.x3.toConsole("Could not read: " + directory.getPath(), true);
+
+		if (!directory.canRead()) {
+			x3.toConsole("Could not read: " + directory.getPath(), true);
 			return;
 		}
-		
-		if(this.x3.isStoppedEnabled()) {
+
+		if (x3.isStoppedEnabled()) {
 			return;
 		}
-		
+
 		dirCount++;
-		
-		File [] children = directory.listFiles();
-		
-		for(File f : children) {
-			
+
+		File[] children = directory.listFiles();
+
+		for (File f : children) {
+
 			FileSystemTreeNode node = new FileSystemTreeNode(f.getName());
-			
-			if(f.isDirectory()) {
+
+			if (f.isDirectory()) {
 				node.setAsDirectory();
 				parent.add(node);
 				dirCount++;
 				listAllFiles(f, node);
-			} 
-			else if(!f.isDirectory()) {
+			} else if (!f.isDirectory()) {
 				parent.add(node);
 				fileCount++;
 			}
 		}
-		
+
 	}
-		
-	public FileSystemTreeNode getFileSystemTreeNode() {
-		return master;
-	}
-	
-	public int getMaximum() {
-		
-		return this.directory.listFiles().length;
-		
+
+	public void run() {
+
+		listAllFiles(directory, master);
+
+		x3.toConsole("Total Files: " + fileCount, true);
+		x3.toConsole("Total Directories: " + dirCount, true);
+
 	}
 
 }
