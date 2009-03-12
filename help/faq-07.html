@@ -1,0 +1,37 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JBroFuzz Frequently Asked Questions</title>
+</head>
+<body bgcolor="#ffffff">
+<h1>JBroFuzz FAQ - Proxy Settings</h1>
+<hr>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#c0c0c0" 
+border=0>
+  <tr>
+    <td><p>Q: Does JBroFuzz offer any proxy support?</p></td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
+border=0>
+  <tr>
+    <td><p>Yes, this is SOCKSv5 proxy support. You will have to use the JBroFuzz.jar file to have the ability to proxy.</p>
+      <p>&nbsp;</p>
+	  <p>As JBroFuzz uses java sockets, you can specify at command-line the SOCKS parameters that allow proxying. There are 2 system properties related to SOCKS: 
+	  <p>&nbsp;</p>
+      <p><b>* socksProxyHost</b> for the host name of the SOCKS proxy server</p>
+	  <p><b>* socksProxyPort</b> for the port number, the default value being 1080</p>
+      <p>&nbsp;</p>
+	  <p>Say your SOCKS server is 192.168.1.100. At command-line, type:
+	  <p>&nbsp;</p>
+	  <p><b><code>>java -DsocksProxyHost=192.168.1.100 -DsocksProxyPort=1080 -jar JBroFuzz.jar</code></b></p>
+	  <p>&nbsp;</p>
+      <p>This setting works for all sockets created, with the exception of DNS lookups, which are not proxied.</p>
+	</td>
+  </tr>
+</table>
+<hr>
+<p>&nbsp;</p>
+</body>
+</html>

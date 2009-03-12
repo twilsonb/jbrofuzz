@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -47,13 +47,13 @@ import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
 public class OpenSession {
 
 	// The maximum number of chars to be read from file, regardless
-	private final static int MAX_CHARS = Short.MAX_VALUE;
+	private final static int	MAX_CHARS	= Short.MAX_VALUE;
 
 	public OpenSession(JBroFuzzWindow mWindow) {
 
 		// Set the Fuzzing Panel as the one to view
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-		mWindow.log("Open Fuzzing Session");
+		mWindow.log("Open Fuzzing Session", 1);
 
 		JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
@@ -64,11 +64,11 @@ public class OpenSession {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 
 			File file = fc.getSelectedFile();
-			mWindow.log("Opening: " + file.getName());
+			mWindow.log("Opening: " + file.getName(), 1);
 
 			String path = file.getAbsolutePath().toLowerCase();
 			// If the file does not end in .jbrofuzz, return
-			if (!path.endsWith(".jbrofuzz") ) {
+			if (!path.endsWith(".jbrofuzz")) {
 
 				JOptionPane.showMessageDialog(fc,
 						"The file selected is not a valid .jbrofuzz file",
@@ -78,39 +78,39 @@ public class OpenSession {
 
 			// Clear up the display
 			mWindow.getPanelFuzzing().clearAllFields();
-			
-			// Start opening the file 
+
+			// Start opening the file
 			final StringBuffer fileContents = new StringBuffer();
 
 			BufferedReader in = null;
 			try {
-				
+
 				in = new BufferedReader(new FileReader(file));
 
 				int counter = 0;
 				int c;
-				while( ((c = in.read()) > 0) && (counter < MAX_CHARS) ) {
+				while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
 					// Allow the character only if its printable ascii or \n
-					if( (CharUtils.isAsciiPrintable((char) c)) || ( ((char) c)=='\n' ) ) {
+					if ((CharUtils.isAsciiPrintable((char) c)) || (((char) c) == '\n')) {
 						fileContents.append((char) c);
 					}
 					counter++;
 				}
 
 				in.close();
-				
+
 			} catch (FileNotFoundException e) {
-				
-				mWindow.log("FileNotFoundException");
-				
+
+				mWindow.log("FileNotFoundException", 3);
+
 			} catch (IOException e) {
-				
-				mWindow.log("IOException");
-				
+
+				mWindow.log("IOException", 3);
+
 			} finally {
-				
+
 				IOUtils.closeQuietly(in);
-				
+
 			}
 
 			// Validate it to extremes
@@ -118,26 +118,32 @@ public class OpenSession {
 			final int len = fileInput.length;
 
 			// Check the number of lines
-			if(len < 8) return;
+			if (len < 8)
+				return;
 			// Check the location of each of the fields
-			if(!fileInput[0].equals("[JBroFuzz]")) return;
-			if(!fileInput[2].equals("[Fuzzing]")) return;
-			if(!fileInput[4].equals("[Comment]")) return;
-			if(!fileInput[6].equals("[URL]")) return;			
-			if(!fileInput[8].equals("[Request]")) return;
+			if (!fileInput[0].equals("[JBroFuzz]"))
+				return;
+			if (!fileInput[2].equals("[Fuzzing]"))
+				return;
+			if (!fileInput[4].equals("[Comment]"))
+				return;
+			if (!fileInput[6].equals("[URL]"))
+				return;
+			if (!fileInput[8].equals("[Request]"))
+				return;
 			// Check that the file finishes with an 'End'
-			if(!fileInput[len - 1].equals("[End]")) return;
+			if (!fileInput[len - 1].equals("[End]"))
+				return;
 
 			// Find the line where the 'Payloads' are
 			int payloadsLine = 0;
-			for(int i = len - 1; i >= 0; i--) {
+			for (int i = len - 1; i >= 0; i--) {
 
-				if(fileInput[i].equals("[Payloads]")) {
+				if (fileInput[i].equals("[Payloads]")) {
 					// Check that there is only 1 instance
-					if(payloadsLine != 0) {
+					if (payloadsLine != 0) {
 						return;
-					}
-					else {
+					} else {
 						payloadsLine = i;
 					}
 
@@ -146,31 +152,33 @@ public class OpenSession {
 			}
 
 			// If you can't find the 'Payloads' line, return
-			if(payloadsLine == 0) return;
+			if (payloadsLine == 0)
+				return;
 
 			// Get the request from the file
 			StringBuffer _reqBuffer = new StringBuffer();
-			for(int i = 9; i < payloadsLine; i++) {
+			for (int i = 9; i < payloadsLine; i++) {
 				_reqBuffer.append(fileInput[i] + "\n");
 			}
 
 			// If the number of available payload lines is greater than 1024, return
-			if(len - 1 - payloadsLine - 1 > 1024) return;
+			if (len - 1 - payloadsLine - 1 > 1024)
+				return;
 
 			// Get the payloads from the file
-			for(int i = payloadsLine + 1; i < len - 1; i++) {
+			for (int i = payloadsLine + 1; i < len - 1; i++) {
 
 				boolean fuzzer_happy = true;
 
-				String [] payloadArray = fileInput[i].split(",");
+				String[] payloadArray = fileInput[i].split(",");
 				// Each line must have 3 elements
-				if(payloadArray.length == 3) {
+				if (payloadArray.length == 3) {
 
 					String fuzz_id = payloadArray[0];
 					int start = 0;
 					int end = 0;
 					// The fuzzer id must also exist in the database
-					if(!mWindow.getJBroFuzz().getDatabase().containsPrototype(fuzz_id)) {
+					if (!mWindow.getJBroFuzz().getDatabase().containsPrototype(fuzz_id)) {
 						fuzzer_happy = false;
 					}
 
@@ -179,27 +187,27 @@ public class OpenSession {
 						start = Integer.parseInt(payloadArray[1]);
 						end = Integer.parseInt(payloadArray[2]);
 						// Numbers must be positive
-						if( (start < 0) || (end < 0) ) {
+						if ((start < 0) || (end < 0)) {
 							fuzzer_happy = false;
 						}
 						// Numbers must be less than the length of the request
-						if( (start > _reqBuffer.length()) || (end > _reqBuffer.length()) ) {
+						if ((start > _reqBuffer.length()) || (end > _reqBuffer.length())) {
 							fuzzer_happy = false;
 						}
 					} catch (NumberFormatException e) {
 						fuzzer_happy = false;
 					}
 
-					if(!fuzzer_happy) {
-						mWindow.log("Could not open and add Fuzzer: " + fileInput[i]);
-					}
-					else {
+					if (!fuzzer_happy) {
+						mWindow.log("Could not open and add Fuzzer: " + fileInput[i], 3);
+					} else {
 						mWindow.getPanelFuzzing().addPayload(fuzz_id, start, end);
 					}
 				}
 			}
 
-			// These max values of abbreviation are also used in the Fuzzing Panel geters
+			// These max values of abbreviation are also used in the Fuzzing Panel
+			// geters
 			String _req = StringUtils.abbreviate(_reqBuffer.toString(), 16384);
 			String _url = StringUtils.abbreviate(fileInput[7], 1024);
 

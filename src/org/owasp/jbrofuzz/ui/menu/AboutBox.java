@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -55,60 +55,71 @@ import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
- * <p>The about box used in the FrameWindow.</p>
+ * <p>
+ * The about box used in the FrameWindow.
+ * </p>
  * 
  * @author subere@uncon.org
- * @version 1.2
+ * @version 1.3
  */
 public class AboutBox extends JDialog {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7515292150164781290L;
-	
+	private static final long	serialVersionUID	= -7515292150164781290L;
+
 	/**
-	 * <p>Constant for the about tab to be displayed.</p>
+	 * <p>
+	 * Constant for the about tab to be displayed.
+	 * </p>
 	 */
-	public static final int ABOUT = 0;
-	
+	public static final int		ABOUT							= 0;
+
 	/**
-	 * <p>Constant for the license tab to be displayed.</p>
+	 * <p>
+	 * Constant for the license tab to be displayed.
+	 * </p>
 	 */
-	public static final int LICENSE = 1;
-	
+	public static final int		LICENSE						= 1;
+
 	/**
-	 * <p>Constant for the disclaimer tab to be displayed.</p>
+	 * <p>
+	 * Constant for the disclaimer tab to be displayed.
+	 * </p>
 	 */
-	public static final int DISCLAIMER = 2;
-	
+	public static final int		DISCLAIMER				= 2;
+
 	/**
-	 * <p>Constant for the acknowledgements tab to be displayed.</p>
+	 * <p>
+	 * Constant for the acknowledgements tab to be displayed.
+	 * </p>
 	 */
-	public static final int ACKNOWLEDGEMENTS = 3;
+	public static final int		ACKNOWLEDGEMENTS	= 3;
 
 	// Dimensions of the about box
-	private static final int x = 450;
-	private static final int y = 300;
-	
+	private static final int	x									= 450;
+	private static final int	y									= 300;
+
 	// The tabbed pane, holding all the different panels and labels
-	private JTabbedPane tabbedPane;
-	
+	private JTabbedPane				tabbedPane;
+
 	// The ok button at the bottom of the box
-	private JButton ok;
+	private JButton						ok;
 
 	/**
 	 * <p>
 	 * The main constructor for the AboutBox. This method is private as it is
 	 * being called through the singleton method get instance.
 	 * </p>
-	 * @param parent 
-	 * @param tab 
+	 * 
+	 * @param parent
+	 * @param tab
 	 */
 	public AboutBox(final JFrame parent, final int tab) {
-		
+
 		super(parent, " JBroFuzz - About ", true);
-		
+
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -117,15 +128,15 @@ public class AboutBox extends JDialog {
 
 		final URL licenseURL = ClassLoader.getSystemClassLoader().getResource(
 				"LICENSE/gpl-license.txt");
-		final URL disclaimerURL = ClassLoader.getSystemClassLoader()
-				.getResource("LICENSE/NOTICE.txt");
+		final URL disclaimerURL = ClassLoader.getSystemClassLoader().getResource(
+				"LICENSE/NOTICE.txt");
 
 		// The about editor label
 		final JLabel about = new JLabel(JBroFuzzFormat.ABOUT,
 				ImageCreator.IMG_OWASP, SwingConstants.LEFT);
 		about.setIconTextGap(20);
 		about.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-		
+
 		// The license editor pane
 		JEditorPane license;
 		try {
@@ -142,10 +153,11 @@ public class AboutBox extends JDialog {
 		lcsScrollPane.setHorizontalScrollBarPolicy(30);
 
 		// The disclaimer editor label
-		final JLabel disclaimer = new JLabel(JBroFuzzFormat.DISCLAIMER, ImageCreator.IMG_OWASP, SwingConstants.LEFT);
+		final JLabel disclaimer = new JLabel(JBroFuzzFormat.DISCLAIMER,
+				ImageCreator.IMG_OWASP, SwingConstants.LEFT);
 		disclaimer.setIconTextGap(20);
 		disclaimer.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-		
+
 		// The acknoledgement editor pane
 		JEditorPane acknoledgements;
 		try {
@@ -155,7 +167,7 @@ public class AboutBox extends JDialog {
 			acknoledgements.setText("Acknoledgements file cannot be found");
 		}
 		acknoledgements.setEditable(false);
-		
+
 		final JScrollPane ackScrollPane = new JScrollPane(acknoledgements);
 		ackScrollPane.setVerticalScrollBarPolicy(20);
 		ackScrollPane.setHorizontalScrollBarPolicy(30);
@@ -165,16 +177,16 @@ public class AboutBox extends JDialog {
 		tabbedPane.add(about, " About ");
 		tabbedPane.add(lcsScrollPane, " License ");
 		tabbedPane.add(disclaimer, " Disclaimer ");
-		tabbedPane.add(ackScrollPane, " Acknowledgements ");  
+		tabbedPane.add(ackScrollPane, " Acknowledgements ");
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
-		
+
 		// Set the tab to be displayed
 		setTab(tab);
-		
+
 		// OK Button
 		ok = new JButton("  OK  ");
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
-				15, 15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
+				15));
 		buttonPanel.add(ok);
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -188,10 +200,10 @@ public class AboutBox extends JDialog {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent
+				.getLocation().y + 100));
 		this.setSize(AboutBox.x, AboutBox.y);
-		this.setMinimumSize(new Dimension(x, y));
+		setMinimumSize(new Dimension(x, y));
 		setResizable(true);
 		setVisible(true);
 	}

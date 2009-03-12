@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -34,20 +34,20 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 final class FuzzersRowListener implements ListSelectionListener {
-	
+
 	/**
 	 * 
 	 */
-	private final PayloadsPanel payloadsPanel;
+	private final PayloadsPanel	payloadsPanel;
 
 	/**
 	 * 
 	 * @param payloadsPanel
-	 *
-	 * @see 
+	 * 
+	 * @see
 	 * @author subere@uncon.org
-	 * @version 1.2
-	 * @since 1.2 
+	 * @version 1.3
+	 * @since 1.2
 	 */
 	FuzzersRowListener(PayloadsPanel payloadsPanel) {
 		this.payloadsPanel = payloadsPanel;
@@ -59,50 +59,58 @@ final class FuzzersRowListener implements ListSelectionListener {
 	 * </p>
 	 * 
 	 * @param event
-	 *            ListSelectionEvent
+	 *          ListSelectionEvent
 	 */
 	public void valueChanged(final ListSelectionEvent event) {
-		
+
 		if (event.getValueIsAdjusting()) {
 			return;
 		}
 
 		String name;
-		int d = this.payloadsPanel.fuzzersTable.getSelectedRow();
+		int d = payloadsPanel.fuzzersTable.getSelectedRow();
 		try {
-			
-			d = this.payloadsPanel.fuzzersTable.convertRowIndexToModel(d);
-			name = (String) this.payloadsPanel.fuzzersTableModel.getValueAt(d, 0);
-			
-		} catch (IndexOutOfBoundsException  e) {
+
+			d = payloadsPanel.fuzzersTable.convertRowIndexToModel(d);
+			name = (String) payloadsPanel.fuzzersTableModel.getValueAt(d, 0);
+
+		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
-		final String id = this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getIdFromName(name);
+		final String id = payloadsPanel.getFrame().getJBroFuzz().getDatabase()
+				.getIdFromName(name);
 
-		this.payloadsPanel.payloadsTableModel.setData(this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getPayloads(id));
+		payloadsPanel.payloadsTableModel.setData(payloadsPanel.getFrame()
+				.getJBroFuzz().getDatabase().getPayloads(id));
 
-		if (this.payloadsPanel.payloadsTableModel.getRowCount() >= 0) {
-			
-			this.payloadsPanel.payloadsPanel.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createTitledBorder(" " + name + " - "
-							+ id + " "), BorderFactory.createEmptyBorder(1,
-							1, 1, 1)));
+		if (payloadsPanel.payloadsTableModel.getRowCount() >= 0) {
 
-			this.payloadsPanel.fuzzerInfoTextArea.setText("\nFuzzer Name: "
+			payloadsPanel.payloadsPanel
+					.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+							.createTitledBorder(" " + name + " - " + id + " "), BorderFactory
+							.createEmptyBorder(1, 1, 1, 1)));
+
+			payloadsPanel.fuzzerInfoTextArea.setText("\nFuzzer Name: "
 					+ name
 					+ "\n"
 					+ "Fuzzer Type: "
-					+ ((this.payloadsPanel.getFrame().getJBroFuzz().getDatabase()
-							.getPrototype(id).getType())) + "\n" + "Fuzzer Id:   " + id
-					+ "\n\n" + "Total Number of Payloads: "
-					+ this.payloadsPanel.getFrame().getJBroFuzz().getDatabase().getSize(id));
-			this.payloadsPanel.fuzzerInfoTextArea.setCaretPosition(this.payloadsPanel.fuzzerInfoTextArea
-					.getText().length());
-			
+					+ ((payloadsPanel.getFrame().getJBroFuzz().getDatabase()
+							.getPrototype(id).getType()))
+					+ "\n"
+					+ "Fuzzer Id:   "
+					+ id
+					+ "\n\n"
+					+ "Total Number of Payloads: "
+					+ payloadsPanel.getFrame().getJBroFuzz().getDatabase().getSize(
+							id));
+			payloadsPanel.fuzzerInfoTextArea
+					.setCaretPosition(payloadsPanel.fuzzerInfoTextArea.getText()
+							.length());
+
 		}
 
-		this.payloadsPanel.payloadInfoTextArea.setText("");
-		this.payloadsPanel.payloadInfoTextArea.setCaretPosition(0);
+		payloadsPanel.payloadInfoTextArea.setText("");
+		payloadsPanel.payloadInfoTextArea.setCaretPosition(0);
 
 	}
 }

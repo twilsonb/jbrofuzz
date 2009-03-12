@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -43,33 +43,61 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * 
  * 
  * @author subere@uncon.org
- * @version 1.2
+ * @version 1.3
  */
 public class MessageCreator {
 
-	private String message, payload;
+	/**
+	 * TODO Should really write this a bit better..
+	 */
+	private static String stringReplace(final String toFind,
+			final String original, final String substitute) {
+
+		if (toFind.equals(substitute)) {
+			return original;
+		}
+
+		int found = 0;
+		int start = 0;
+		String returnString = original;
+		while (found != -1) {
+			found = returnString.indexOf(toFind, start);
+			if (found != -1) {
+				returnString = returnString.substring(0, found).concat(substitute)
+						.concat(returnString.substring(found + toFind.length()));
+			}
+			start = found + substitute.length();
+		}
+		return returnString;
+	}
+
+	private String	message, payload;
 
 	/**
-	 * <p>The end of line delimeter to used for messages put on the wire.</p>
-	 * <p>This value is '\n' or '\r\n'.</p>
+	 * <p>
+	 * The end of line delimeter to used for messages put on the wire.
+	 * </p>
+	 * <p>
+	 * This value is '\n' or '\r\n'.
+	 * </p>
 	 */
-	public String END_LINE;
-	
-	private int start, finish;
+	public String		END_LINE;
+
+	private int			start, finish;
 
 	public MessageCreator(String message, String payload, int start, int finish) {
-		
+
 		// Set the end of line character from the preferences
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 		boolean endLineChar = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
 		END_LINE = endLineChar ? "\n" : "\r\n";
-	
-		// Message is not a valid message
-		if ((message == null) || (payload == null) || (start < 0)
-				|| (finish < 0) || (start > message.length())
-				|| (finish > message.length())) {
 
-			this.message = message == null ? "" : stringReplace("\n", message, END_LINE);
+		// Message is not a valid message
+		if ((message == null) || (payload == null) || (start < 0) || (finish < 0)
+				|| (start > message.length()) || (finish > message.length())) {
+
+			this.message = message == null ? "" : stringReplace("\n", message,
+					END_LINE);
 			this.payload = payload == null ? "" : payload;
 
 		}
@@ -104,13 +132,13 @@ public class MessageCreator {
 			// location
 
 			if ((this.message.startsWith("GET")) || (this.message.startsWith("HEAD"))) {
-				
+
 				if (!this.message.endsWith(END_LINE + END_LINE)) {
-				
+
 					this.message += END_LINE + END_LINE;
-					
+
 				}
-				
+
 			}
 
 			if (this.message.startsWith("POST")) {
@@ -125,17 +153,18 @@ public class MessageCreator {
 					if (ctl != -1) {
 
 						int contentLength = 0;
-						String postValue = this.message.substring(eoh + (END_LINE + END_LINE).length());
+						String postValue = this.message.substring(eoh
+								+ (END_LINE + END_LINE).length());
 
 						// Find the next end of line
 						int neol = this.message.indexOf(END_LINE, ctl);
 						if (neol != -1) {
 							// Retrieve the value until the next "\r\n"
 							// character
-							String contentLengthString = this.message.substring(ctl + "Content-Length:".length(), neol);
+							String contentLengthString = this.message.substring(ctl
+									+ "Content-Length:".length(), neol);
 							try {
-								contentLength = Integer
-										.parseInt(contentLengthString);
+								contentLength = Integer.parseInt(contentLengthString);
 							} catch (NumberFormatException e) {
 								contentLength = 0;
 							}
@@ -145,28 +174,24 @@ public class MessageCreator {
 							if (contentLength != postValue.getBytes().length) {
 
 								StringBuffer newMessageBuffer = new StringBuffer();
-								newMessageBuffer.append(this.message.substring(
-										0, ctl + "Content-Length:".length()));
+								newMessageBuffer.append(this.message.substring(0, ctl
+										+ "Content-Length:".length()));
 								try {
 
-									newMessageBuffer
-											.append(" "
-													+ postValue
-															.getBytes("ISO-8859-1").length);
+									newMessageBuffer.append(" "
+											+ postValue.getBytes("ISO-8859-1").length);
 
 								} catch (UnsupportedEncodingException e) {
 
-									newMessageBuffer.append(" "
-											+ postValue.getBytes().length);
+									newMessageBuffer.append(" " + postValue.getBytes().length);
 
 								}
 
 								// If the remaining header starts with "\r\n"
 								// then the "Content-Length was the last header
 								// line
-								String remainingHeader = this.message
-										.substring(neol, eoh
-												+ (END_LINE + END_LINE).length());
+								String remainingHeader = this.message.substring(neol, eoh
+										+ (END_LINE + END_LINE).length());
 								if (remainingHeader.startsWith(END_LINE)) {
 									newMessageBuffer.append(END_LINE + END_LINE);
 								} else {
@@ -203,13 +228,16 @@ public class MessageCreator {
 	}
 
 	/**
-	 * <p>Method for returning the message as constructed by the {@link #MessageCreator(String, String, int, int)}.</p>
+	 * <p>
+	 * Method for returning the message as constructed by the
+	 * {@link #MessageCreator(String, String, int, int)}.
+	 * </p>
 	 * 
 	 * @return The message after it has been processed by the constructor
-	 *
+	 * 
 	 * @see #getMessageForDisplayPurposes()
 	 * @author subere@uncon.org
-	 * @version 1.2
+	 * @version 1.3
 	 * @since 1.2
 	 */
 	public String getMessage() {
@@ -219,29 +247,37 @@ public class MessageCreator {
 	}
 
 	/**
-	 * <p>Method returning the message as constructed by the {@link #MessageCreator(String, String, int, int)}, 
-	 * but processed so that to show special characters.</p>
-	 * <p>This method will display a '\n' character as \\n and also a '\r' character as a \\r.</p>
-	 * <p>It can act unexpectedly if {@link #END_LINE} is not a '\n' or a '\r\n'.</p>
+	 * <p>
+	 * Method returning the message as constructed by the
+	 * {@link #MessageCreator(String, String, int, int)}, but processed so that
+	 * to show special characters.
+	 * </p>
+	 * <p>
+	 * This method will display a '\n' character as \\n and also a '\r' character
+	 * as a \\r.
+	 * </p>
+	 * <p>
+	 * It can act unexpectedly if {@link #END_LINE} is not a '\n' or a '\r\n'.
+	 * </p>
 	 * 
 	 * @return The message also showing any special characters
-	 *
+	 * 
 	 * @see #getMessage()
 	 * @author subere@uncon.org
-	 * @version 1.2
+	 * @version 1.3
 	 * @since 1.2
 	 */
 	public String getMessageForDisplayPurposes() {
 		// END_LINE can be either a \n or a \r\n
-		if(END_LINE.equals("\n")) {
+		if (END_LINE.equals("\n")) {
 			// \n
 			return stringReplace("\n", message, "\\n\n");
-			
+
 		} else {
 			// \r\n
 			return stringReplace("\r\n", message, "\\r\\n\n");
 		}
-		
+
 	}
 
 	/**
@@ -262,7 +298,7 @@ public class MessageCreator {
 
 	/**
 	 * @param finish
-	 *            the finish to set
+	 *          the finish to set
 	 */
 	public void setFinish(int finish) {
 		this.finish = finish;
@@ -270,7 +306,7 @@ public class MessageCreator {
 
 	/**
 	 * @param message
-	 *            the message to set
+	 *          the message to set
 	 */
 	public void setMessage(String message) {
 
@@ -280,7 +316,7 @@ public class MessageCreator {
 
 	/**
 	 * @param fuzzer
-	 *            the payload to set
+	 *          the payload to set
 	 */
 	public void setPayload(String payload) {
 		this.payload = payload;
@@ -288,34 +324,10 @@ public class MessageCreator {
 
 	/**
 	 * @param start
-	 *            the start to set
+	 *          the start to set
 	 */
 	public void setStart(int start) {
 		this.start = start;
-	}
-
-	/**
-	 * TODO Should really write this a bit better..
-	 */
-	private static String stringReplace(final String toFind, final String original, final String substitute) {
-		
-		if(toFind.equals(substitute)) {
-			return original;
-		}
-		
-		int found = 0;
-		int start = 0;
-		String returnString = original;
-		while (found != -1) {
-			found = returnString.indexOf(toFind, start);
-			if (found != -1) {
-				returnString = returnString.substring(0, found).concat(
-						substitute).concat(
-						returnString.substring(found + toFind.length()));
-			}
-			start = found + substitute.length();
-		}
-		return returnString;
 	}
 
 }

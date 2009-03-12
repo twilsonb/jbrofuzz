@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -42,7 +42,6 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-
 /**
  * Syntax Highlighting Test using a JTextPane
  * 
@@ -70,10 +69,10 @@ public class TextHighlighter extends DefaultStyledDocument {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3812224127502539817L;
-	
-	private HashMap<String, Color> keywords;
-	private MutableAttributeSet style;
+	private static final long				serialVersionUID	= 3812224127502539817L;
+
+	private HashMap<String, Color>	keywords;
+	private MutableAttributeSet			style;
 
 	/**
 	 * Default Constructor for the TextHighlighter, extending the DefaultStyled
@@ -89,7 +88,6 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("TRACE", Color.black);
 		keywords.put("HTTP/\\d.\\d", Color.black);
 
-
 		keywords.put("Windows", Color.gray);
 		keywords.put("Windows NT \\d.\\d", Color.gray);
 		keywords.put("Mozilla/\\d.\\d", Color.gray);
@@ -98,19 +96,17 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Gecko", Color.gray);
 		keywords.put("keep-alive", Color.gray);
 		keywords.put("localhost", Color.gray);
-		
+
 		keywords.put("ISO-[0-9]{4}-[0-9]", Color.gray);
 		keywords.put("[-\\w]+/[\\w\\.\\+]+", Color.gray);
 		keywords.put("utf-8", Color.gray);
-		
+
 		keywords.put("[\\d\\.]+", Color.orange);
-		
-		
+
 		keywords.put("[\\w]+=", Color.magenta);
-		
 
 		keywords.put("&", Color.red);
-		
+
 		keywords.put("Accept", Color.blue);
 		keywords.put("Accept-Charset", Color.blue);
 		keywords.put("Accept-Encoding", Color.blue);
@@ -148,6 +144,9 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Set-cookie", Color.blue);
 		keywords.put("Transfer-Encoding", Color.blue);
 		keywords.put("UA-CPU", Color.blue);
+		keywords.put("UA-color", Color.blue);
+		keywords.put("UA-pixel", Color.blue);
+		keywords.put("UA-OS", Color.blue);
 		keywords.put("User-Agent", Color.blue);
 		keywords.put("Vary", Color.blue);
 		keywords.put("Via", Color.blue);
@@ -175,6 +174,13 @@ public class TextHighlighter extends DefaultStyledDocument {
 
 	}
 
+	@Override
+	public void insertString(final int offset, final String str,
+			final AttributeSet attr) throws BadLocationException {
+		super.insertString(offset, str, attr);
+		processChangedLines(offset, str.length());
+	}
+
 	private void processChangedLines(final int offset, final int length)
 			throws BadLocationException {
 		final String text = this.getText(0, getLength());
@@ -192,13 +198,6 @@ public class TextHighlighter extends DefaultStyledDocument {
 			}
 		}
 
-	}
-
-	@Override
-	public void insertString(final int offset, final String str,
-			final AttributeSet attr) throws BadLocationException {
-		super.insertString(offset, str, attr);
-		processChangedLines(offset, str.length());
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -35,55 +35,58 @@ import javax.swing.event.ListSelectionListener;
 import org.apache.commons.lang.StringUtils;
 
 final class PayloadsRowListener implements ListSelectionListener {
-	
+
 	/**
 	 * 
 	 */
-	private final PayloadsPanel payloadsPanel;
+	private final PayloadsPanel	payloadsPanel;
 
 	/**
-	 * <p>Constructor for the row listener in the "Payloads" table
-	 * within the "Payloads" tab.</p>
+	 * <p>
+	 * Constructor for the row listener in the "Payloads" table within the
+	 * "Payloads" tab.
+	 * </p>
 	 * 
 	 * @param payloadsPanel
-	 *
+	 * 
 	 * @author subere@uncon.org
-	 * @version 1.2
-	 * @since 1.2 
+	 * @version 1.3
+	 * @since 1.2
 	 */
 	PayloadsRowListener(PayloadsPanel payloadsPanel) {
 		this.payloadsPanel = payloadsPanel;
 	}
 
 	/**
-	 * <p>Implemented for each row selected in the 
-	 * payloads table.</p>
+	 * <p>
+	 * Implemented for each row selected in the payloads table.
+	 * </p>
 	 * 
 	 * @param event
-	 *            ListSelectionEvent
+	 *          ListSelectionEvent
 	 */
 	public void valueChanged(final ListSelectionEvent event) {
-		
+
 		if (event.getValueIsAdjusting()) {
 			return;
 		}
 
 		String payload;
-		final int d = this.payloadsPanel.payloadsTable.getSelectedRow();
+		final int d = payloadsPanel.payloadsTable.getSelectedRow();
 		try {
-			
-			payload = (String) this.payloadsPanel.payloadsTableModel.getValueAt(d, 0);
-			
+
+			payload = (String) payloadsPanel.payloadsTableModel.getValueAt(d, 0);
+
 		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
-		
-		this.payloadsPanel.payloadInfoTextArea.setText("\nPayload Length: " + payload.length()
-				+ "\n\n" + "Is Numeric? " + StringUtils.isNumeric(payload)
-				+ "\n\n" + "Is Alpha? " + StringUtils.isAlpha(payload)
-				+ "\n\n" + "Has whitespaces? "
+
+		payloadsPanel.payloadInfoTextArea.setText("\nPayload Length: "
+				+ payload.length() + "\n\n" + "Is Numeric? "
+				+ StringUtils.isNumeric(payload) + "\n\n" + "Is Alpha? "
+				+ StringUtils.isAlpha(payload) + "\n\n" + "Has whitespaces? "
 				+ StringUtils.isWhitespace(payload) + "\n\n");
-		this.payloadsPanel.payloadInfoTextArea.setCaretPosition(0);
+		payloadsPanel.payloadInfoTextArea.setCaretPosition(0);
 
 	}
 }

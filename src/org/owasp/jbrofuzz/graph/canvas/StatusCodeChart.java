@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -46,15 +46,15 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.ui.Align;
 import org.owasp.jbrofuzz.util.ImageCreator;
 
-public class StatusCodeChart  {
+public class StatusCodeChart {
 
+	public static final int		MAX_CHARS	= 32;
 	// The x-axis filenames
-	String[] x_data;
+	String[]									x_data;
 	// The y-axis data
-	int [] y_data;
-	private DefaultPieDataset dataset;
+	int[]											y_data;
 
-	public static final int MAX_CHARS = 32;
+	private DefaultPieDataset	dataset;
 
 	public StatusCodeChart() {
 
@@ -63,7 +63,6 @@ public class StatusCodeChart  {
 	}
 
 	public StatusCodeChart(int size) {
-
 
 		x_data = new String[size];
 		y_data = new int[size];
@@ -75,73 +74,9 @@ public class StatusCodeChart  {
 		dataset.setValue("200", 25);
 	}
 
-	public void setValueAt(int index, File f) {
-
-		x_data[index] = f.getName();
-		y_data[index] = calculateValue(f);
-
-	}
-
-	/**
-	 * <p>Method for creating the final Chart.</p>
-	 * 
-	 *
-	 * @see #StatusCodeChart(int)
-	 * @author subere@uncon.org
-	 * @version 1.2
-	 * @since 1.2
-	 */
-	public void createFinalPlotCanvas() {
-
-		final String ERROR = "---";
-		final String ZERO = "000";
-
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
-
-		for(int n : y_data) {
-			
-			if( n > 0) {
-				
-				final String value = "" + n;
-				
-				if (map.containsKey(value))
-					map.put(value, map.get(value) + 1);
-				else
-					map.put(value, 1);
-				
-			}
-			// Got response but no number identified
-			else if( (n == 0) ) {
-				if (map.containsKey(ZERO))
-					map.put(ZERO, map.get(ZERO) + 1);
-				else
-					map.put(ZERO, 1);
-
-			}
-			// Directory, IOException, String out of bounds
-			else  {
-				if (map.containsKey(ERROR))
-					map.put(ERROR, map.get(ERROR) + 1);
-				else
-					map.put(ERROR, 1);
-
-			}
-
-		}
-
-		dataset = new DefaultPieDataset();
-
-		for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
-			Map.Entry<String, Integer> entry = (Map.Entry)it.next();
-						
-			dataset.setValue((String)entry.getKey(), (double) entry.getValue() / (double) y_data.length);
-	
-    	}
-	}
-
 	private int calculateValue(File f) {
 
-		if(f.isDirectory()) {
+		if (f.isDirectory()) {
 			return -1;
 		}
 
@@ -152,12 +87,12 @@ public class StatusCodeChart  {
 
 			in = new BufferedReader(new FileReader(f));
 
-			StringBuffer one = new StringBuffer(MAX_CHARS); 
+			StringBuffer one = new StringBuffer(MAX_CHARS);
 			int counter = 0;
 			int c;
-			while( ((c = in.read()) > 0) && (counter < MAX_CHARS) ) {
+			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
 
-				one.append((char)c);
+				one.append((char) c);
 				counter++;
 
 			}
@@ -165,7 +100,7 @@ public class StatusCodeChart  {
 
 			one.delete(0, one.indexOf("\n--\n") + 4);
 			one.delete(one.indexOf("\n--"), one.length());
-			
+
 			status = Integer.parseInt(one.toString());
 
 		} catch (final IOException e1) {
@@ -189,17 +124,74 @@ public class StatusCodeChart  {
 		return status;
 	}
 
+	/**
+	 * <p>
+	 * Method for creating the final Chart.
+	 * </p>
+	 * 
+	 * 
+	 * @see #StatusCodeChart(int)
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
+	public void createFinalPlotCanvas() {
+
+		final String ERROR = "---";
+		final String ZERO = "000";
+
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+
+		for (int n : y_data) {
+
+			if (n > 0) {
+
+				final String value = "" + n;
+
+				if (map.containsKey(value))
+					map.put(value, map.get(value) + 1);
+				else
+					map.put(value, 1);
+
+			}
+			// Got response but no number identified
+			else if ((n == 0)) {
+				if (map.containsKey(ZERO))
+					map.put(ZERO, map.get(ZERO) + 1);
+				else
+					map.put(ZERO, 1);
+
+			}
+			// Directory, IOException, String out of bounds
+			else {
+				if (map.containsKey(ERROR))
+					map.put(ERROR, map.get(ERROR) + 1);
+				else
+					map.put(ERROR, 1);
+
+			}
+
+		}
+
+		dataset = new DefaultPieDataset();
+
+		for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
+			Map.Entry<String, Integer> entry = (Map.Entry) it.next();
+
+			dataset.setValue(entry.getKey(), (double) entry.getValue()
+					/ (double) y_data.length);
+
+		}
+	}
+
 	public ChartPanel getPlotCanvas() {
 
-		JFreeChart chart = 
-			ChartFactory.createPieChart(
-					"JBroFuzz Status Code Pie Chart",
-					dataset,
-					true, // legend?
-					true, // tooltips?
-					false // URLs?
-			);
-				
+		JFreeChart chart = ChartFactory.createPieChart(
+				"JBroFuzz Status Code Pie Chart", dataset, true, // legend?
+				true, // tooltips?
+				false // URLs?
+				);
+
 		Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
@@ -208,5 +200,11 @@ public class StatusCodeChart  {
 
 	}
 
+	public void setValueAt(int index, File f) {
+
+		x_data[index] = f.getName();
+		y_data[index] = calculateValue(f);
+
+	}
 
 }

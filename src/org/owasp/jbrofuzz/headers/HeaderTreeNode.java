@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -32,34 +32,33 @@ package org.owasp.jbrofuzz.headers;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- *
+ * 
  * @author subere@uncon.org
  */
 public class HeaderTreeNode extends DefaultMutableTreeNode {
 
-	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1419679735344469281L;
-	
-	private boolean nodeIsDirectory;
-    
-    public HeaderTreeNode(Object o) {
-        super(o);
-        nodeIsDirectory = false;
-    }
-    
-    public HeaderTreeNode(Object o, boolean isDirectory) {
-        super(o);
-        nodeIsDirectory = isDirectory;
-    }
-    
-    public boolean isDirectory() {
-        return nodeIsDirectory;
-    }
-    
-    public void setAsDirectory() {
-        nodeIsDirectory = true;
-    }
+	private static final long	serialVersionUID	= -1419679735344469281L;
+
+	private boolean						nodeIsDirectory;
+
+	public HeaderTreeNode(Object o) {
+		super(o);
+		nodeIsDirectory = false;
+	}
+
+	public HeaderTreeNode(Object o, boolean isDirectory) {
+		super(o);
+		nodeIsDirectory = isDirectory;
+	}
+
+	public boolean isDirectory() {
+		return nodeIsDirectory;
+	}
+
+	public void setAsDirectory() {
+		nodeIsDirectory = true;
+	}
 }

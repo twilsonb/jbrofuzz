@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -37,7 +37,7 @@ import javax.swing.text.TextAction;
 
 public class CutAction extends TextAction {
 
-	private static final long serialVersionUID = -4536111278468156391L;
+	private static final long	serialVersionUID	= -4536111278468156391L;
 
 	public CutAction() {
 		super("Cut");
@@ -47,8 +47,7 @@ public class CutAction extends TextAction {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				final JTextComponent text = CutAction.this
-						.getTextComponent(evt);
+				final JTextComponent text = CutAction.this.getTextComponent(evt);
 				if (text != null) {
 					text.cut();
 					text.requestFocus();

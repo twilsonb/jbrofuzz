@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -40,45 +40,46 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.text.BadLocationException;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 
 /**
- * <p>The graphing panel, attached to the main panel.</p>
+ * <p>
+ * The graphing panel, attached to the main panel.
+ * </p>
  * 
  * @author subere@uncon.org
- * @version 1.2
+ * @version 1.3
  * @since 1.2
  */
 public class GraphingPanel extends JBroFuzzPanel {
 
-
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3962672183042644437L;
+	private static final long	serialVersionUID	= -3962672183042644437L;
 
 	// The split pane at the centre of the screen
-	private JSplitPane mainSplitPanel;
+	private JSplitPane				mainSplitPanel;
 	// The main file tree object
-	private FileSystemTree tree;
+	private FileSystemTree		tree;
 	// The progress bar displayed
-	private JProgressBar progressBar;
+	private JProgressBar			progressBar;
 	// A boolean to check if we are running or not
-	private boolean stopped;
+	private boolean						stopped;
 	// Console related trends
-	private JTextArea console;
+	private JTextArea					console;
 	// The right tabs holding the graphs
-	private TabbedPlotter rightPanel;
-
+	private TabbedPlotter			rightPanel;
 
 	/**
-	 * The constructor for the Graphing Panel. This constructor spawns the
-	 * main panel involving web directories.
+	 * The constructor for the Graphing Panel. This constructor spawns the main
+	 * panel involving web directories.
 	 * 
-	 * @param m 
+	 * @param m
 	 * 
 	 */
 	public GraphingPanel(final JBroFuzzWindow m) {
@@ -91,8 +92,7 @@ public class GraphingPanel extends JBroFuzzPanel {
 		// Set the options in the toolbar enabled at startup
 		setOptionsAvailable(true, false, true, false, false);
 
-
-		// The right hand side console and friends 
+		// The right hand side console and friends
 		console = new JTextArea();
 
 		JScrollPane consoleScrollPanel = new JScrollPane(console);
@@ -101,13 +101,14 @@ public class GraphingPanel extends JBroFuzzPanel {
 
 		final JPanel consolePanel = new JPanel(new BorderLayout());
 		consolePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Console "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
+				.createTitledBorder(" Console "), BorderFactory.createEmptyBorder(5, 5,
+				5, 5)));
 
 		consolePanel.add(consoleScrollPanel);
 
 		// The right hand side tree and friends
-		tree = new FileSystemTree(this, new FileSystemTreeModel(new FileSystemTreeNode("...")));
+		tree = new FileSystemTree(this, new FileSystemTreeModel(
+				new FileSystemTreeNode("...")));
 
 		JScrollPane treeScrollPanel = new JScrollPane(tree);
 		treeScrollPanel.setVerticalScrollBarPolicy(20);
@@ -115,13 +116,13 @@ public class GraphingPanel extends JBroFuzzPanel {
 
 		final JPanel treePanel = new JPanel(new BorderLayout());
 		treePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Tree View "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
+				.createTitledBorder(" Tree View "), BorderFactory.createEmptyBorder(5,
+				5, 5, 5)));
 
 		treePanel.add(treeScrollPanel);
 
 		// The left hand side tab and friends
-		JTabbedPane leftPanel = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane leftPanel = new JTabbedPane(SwingConstants.TOP);
 		leftPanel.add(" Tree ", treePanel);
 		leftPanel.add(" Console ", consolePanel);
 
@@ -130,7 +131,6 @@ public class GraphingPanel extends JBroFuzzPanel {
 
 		// The main split pane and friends
 		mainSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-
 
 		mainSplitPanel.setOneTouchExpandable(false);
 		mainSplitPanel.setDividerLocation(300);
@@ -156,17 +156,21 @@ public class GraphingPanel extends JBroFuzzPanel {
 		this.add(mainSplitPanel, BorderLayout.CENTER);
 		this.add(bottomPanel, BorderLayout.SOUTH);
 
+	}
 
+	@Override
+	public void add() {
 	}
 
 	/**
-	 * <p>Method for returning the tabbed plotter within
-	 * the Graphing Panel.</p>
+	 * <p>
+	 * Method for returning the tabbed plotter within the Graphing Panel.
+	 * </p>
 	 * 
 	 * @return TabbedPlotter used in the Graphing Panel
-	 *
+	 * 
 	 * @author subere@uncon.org
-	 * @version 1.2
+	 * @version 1.3
 	 * @since 1.2
 	 */
 	public TabbedPlotter getTabbedPlotter() {
@@ -174,21 +178,40 @@ public class GraphingPanel extends JBroFuzzPanel {
 		return rightPanel;
 	}
 
+	@Override
+	public void graph() {
+	}
 
+	@Override
+	public boolean isStoppedEnabled() {
+		return stopped;
+	}
 
+	@Override
+	public void remove() {
+	}
 
+	public void setProgressBarStart() {
 
+		progressBar.setIndeterminate(true);
 
+	}
 
+	public void setProgressBarStop() {
+
+		progressBar.setIndeterminate(false);
+
+	}
 
 	/**
 	 * Method triggered when the start button is pressed.
 	 */
+	@Override
 	public void start() {
 
 		if (!stopped) {
 			return;
-		}	
+		}
 		stopped = false;
 
 		// Set the options in the tool bar enabled at startup
@@ -197,20 +220,18 @@ public class GraphingPanel extends JBroFuzzPanel {
 		// Start to do what you need to do
 		setProgressBarStart();
 
-		JohnyWalker j = new JohnyWalker( this );
+		JohnyWalker j = new JohnyWalker(this);
 		j.run();
 		tree.setModel(new FileSystemTreeModel(j.getFileSystemTreeNode()));
 
-		// Tidy up matters in case threading chills out...
-		stop();
 	}
-
 
 	/**
 	 * <p>
 	 * Method for stopping the request iterator.
 	 * </p>
 	 */
+	@Override
 	public void stop() {
 
 		if (stopped) {
@@ -226,44 +247,18 @@ public class GraphingPanel extends JBroFuzzPanel {
 
 	}
 
-
-	public void graph() {
-	}
-
-	public void add() {
-	}
-
-	public void remove() {
-	}
-
-	public void setProgressBarStart() {
-		
-		progressBar.setIndeterminate(true);
-		
-	}
-	
-	public void setProgressBarStop() {
-		
-		progressBar.setIndeterminate(false);
-		
-	}
-	
-	public boolean isStoppedEnabled() {
-		return stopped;
-	}
-
 	public void toConsole(String input, boolean include) {
 
 		// Use a FILO for the output to the console, never exceeding 500 lines
 		if (console.getLineCount() > 500) {
 			try {
-				console.select(console.getLineStartOffset(0), console.getLineEndOffset( console.getLineCount() - 500 ));
+				console.select(console.getLineStartOffset(0), console
+						.getLineEndOffset(console.getLineCount() - 500));
 				console.replaceSelection("...\n");
-			}
-			catch (BadLocationException e) {
+			} catch (BadLocationException e) {
 				toConsole("Could not clear the console", true);
 			}
-		} 
+		}
 
 		console.append("> " + input + "\n");
 		console.setCaretPosition(console.getText().length());

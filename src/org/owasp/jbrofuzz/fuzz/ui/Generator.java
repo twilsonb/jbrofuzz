@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -30,10 +30,10 @@
 package org.owasp.jbrofuzz.fuzz.ui;
 
 public class Generator {
-	
-	private String type;
-	private Integer start;
-	private Integer end;
+
+	private String	type;
+	private Integer	start;
+	private Integer	end;
 
 	public Generator(final String generator, final int start, final int end) {
 

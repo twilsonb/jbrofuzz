@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -37,24 +37,25 @@ import java.util.Stack;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * <p>A fuzzer is an iterator that is constructed based on a 
- * prototype, carrying the payloads and the fuzzer type 
- * information.</p>
+ * <p>
+ * A fuzzer is an iterator that is constructed based on a prototype, carrying
+ * the payloads and the fuzzer type information.
+ * </p>
  * 
- *
+ * 
  * @author subere@uncon.org
  * @version 1.3
  * @since 1.2
  */
 public class Fuzzer implements Iterator<String> {
 
-	private int len;
+	private int								len;
 
-	private Prototype prototype;
+	private Prototype					prototype;
 
-	private ArrayList<String> payloads;
+	private ArrayList<String>	payloads;
 
-	private BigInteger cValue, maxValue;
+	private BigInteger				cValue, maxValue;
 
 	protected Fuzzer(Prototype prototype, int len) throws NoSuchFuzzerException {
 
@@ -65,10 +66,10 @@ public class Fuzzer implements Iterator<String> {
 			payloads = this.prototype.getPayloads();
 
 			if (this.prototype.isRecursive()) {
-			
+
 				maxValue = new BigInteger("" + payloads.size());
 				maxValue = maxValue.pow(len < 0 ? 0 : len);
-				
+
 			} else {
 				maxValue = new BigInteger("" + payloads.size());
 
@@ -143,8 +144,8 @@ public class Fuzzer implements Iterator<String> {
 			}
 			// Append the relevant empty positions with the first element
 			// identified
-			output.append(StringUtils.leftPad(payloads.get((val.intValue())),
-					len - stack.size(), payloads.get(0)));
+			output.append(StringUtils.leftPad(payloads.get((val.intValue())), len
+					- stack.size(), payloads.get(0)));
 			while (!stack.isEmpty())
 				output.append(payloads.get((stack.pop()).intValue()));
 

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -35,25 +35,32 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
- * <p>Filename: JBroFuzz.java</p>
+ * <p>
+ * Filename: JBroFuzz.java
+ * </p>
  * 
- * <p>Description: This class launches JBroFuzz. It instantiates 
- * a database of fuzzers, a format object, the main frame window 
- * and a file IO handler.</p>
+ * <p>
+ * Description: This class launches JBroFuzz. It instantiates a database of
+ * fuzzers, a format object, the main frame window and a file IO handler.
+ * </p>
  * 
- * <p>The order in which the last four are instantiated should not 
- * be altered.</p>
+ * <p>
+ * The order in which the last four are instantiated should not be altered.
+ * </p>
  * 
  * @author subere@uncon.org
- * @version 1.2
+ * @version 1.3
  * @since 0.1
  */
 public class JBroFuzz {
 
 	/**
-	 * <p>The main method launching the constructor of JBroFuzz.</p>
+	 * <p>
+	 * The main method launching the constructor of JBroFuzz.
+	 * </p>
 	 * 
-	 * @param args String[]
+	 * @param args
+	 *          String[]
 	 */
 	public static void main(final String[] args) {
 
@@ -62,27 +69,31 @@ public class JBroFuzz {
 			public void run() {
 
 				new JBroFuzz();
-				
+
 			}
 
 		});
 
 	}
 
-	private FileHandler mHandler;
+	private FileHandler			mHandler;
 
-	private JBroFuzzFormat mFormat;
+	private JBroFuzzFormat	mFormat;
 
-	private JBroFuzzWindow mWindow;
+	private JBroFuzzWindow	mWindow;
 
-	private Database mDatabase;
-	
+	private Database				mDatabase;
+
 	/**
-	 * <p>The main creation object, instantiating a Database, a Format 
-	 * Object, a Window, and a File Hander</p>
+	 * <p>
+	 * The main creation object, instantiating a Database, a Format Object, a
+	 * Window, and a File Hander
+	 * </p>
 	 * 
-	 * <p>The order in which construction takes place is rather
-	 * important and should not be altered.</p>
+	 * <p>
+	 * The order in which construction takes place is rather important and should
+	 * not be altered.
+	 * </p>
 	 */
 	public JBroFuzz() {
 
@@ -96,8 +107,10 @@ public class JBroFuzz {
 	}
 
 	/**
-	 * <p>Return the main database of exploits loaded, thus giving access to
-	 * fuzzers and the payloads.</p>
+	 * <p>
+	 * Return the main database of exploits loaded, thus giving access to fuzzers
+	 * and the payloads.
+	 * </p>
 	 * 
 	 * @return The Database of Fuzzers
 	 */
@@ -108,8 +121,10 @@ public class JBroFuzz {
 	}
 
 	/**
-	 * <p>Return the main format object, thus allowing on top of static, 
-	 * also dynamic access to various constant variables, methods, etc.</p>
+	 * <p>
+	 * Return the main format object, thus allowing on top of static, also dynamic
+	 * access to various constant variables, methods, etc.
+	 * </p>
 	 * 
 	 * @return The Format Object of JBroFuzz
 	 */
@@ -120,8 +135,10 @@ public class JBroFuzz {
 	}
 
 	/**
-	 * <p>Return the main file handler, thus allowing access to the various
-	 * read/write IO methods and functions used at runtime.</p>
+	 * <p>
+	 * Return the main file handler, thus allowing access to the various
+	 * read/write IO methods and functions used at runtime.
+	 * </p>
 	 * 
 	 * @return The file IO Object of JBroFuzz
 	 */
@@ -132,8 +149,9 @@ public class JBroFuzz {
 	}
 
 	/**
-	 * <p>Return the main window, thus allowing access to various GUI 
-	 * components.</p>
+	 * <p>
+	 * Return the main window, thus allowing access to various GUI components.
+	 * </p>
 	 * 
 	 * @return The main frame window displayed
 	 */

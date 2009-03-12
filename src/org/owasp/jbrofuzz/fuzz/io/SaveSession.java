@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.2
+ * JBroFuzz 1.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -46,13 +46,12 @@ public class SaveSession {
 
 		// Set the Fuzzing Panel as the one to view
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-		mWindow.log("Save Fuzzing Session");
-
+		mWindow.log("Save Fuzzing Session", 1);
 
 		File file = mWindow.getCurrentFileOpened();
 
 		// If there is no file opened, show a dialog
-		if(!mWindow.isCurrentFileOpened()) {
+		if (!mWindow.isCurrentFileOpened()) {
 
 			JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
@@ -63,18 +62,16 @@ public class SaveSession {
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 
 				file = fc.getSelectedFile();
-				mWindow.log("Saving: " + file.getName());
+				mWindow.log("Saving: " + file.getName(), 1);
 
-				String path = file.getAbsolutePath ().toLowerCase ();
-				if (!path.endsWith(".jbrofuzz") )
-					file = new File (path += ".jbrofuzz");
+				String path = file.getAbsolutePath().toLowerCase();
+				if (!path.endsWith(".jbrofuzz"))
+					file = new File(path += ".jbrofuzz");
 
 				if (file.exists()) {
-					int choice =  JOptionPane.
-					showConfirmDialog (fc,
+					int choice = JOptionPane.showConfirmDialog(fc,
 							"File already exists. Do you \nwant to replace it?",
-							" JBroFuzz - Save ",
-							JOptionPane.YES_NO_OPTION);
+							" JBroFuzz - Save ", JOptionPane.YES_NO_OPTION);
 
 					if (choice == JOptionPane.NO_OPTION)
 						return;
@@ -82,7 +79,6 @@ public class SaveSession {
 
 			}
 		} // if file opened
-		
 
 		// Get the values from the frame
 		String _url = mWindow.getPanelFuzzing().getTextURL();
@@ -108,8 +104,8 @@ public class SaveSession {
 			out.println(_pld);
 			out.println("[End]");
 
-			if(out.checkError()) {
-				mWindow.log("An Error Occured while saving");
+			if (out.checkError()) {
+				mWindow.log("An Error Occured while saving", 4);
 			}
 
 			out.close();
@@ -117,12 +113,10 @@ public class SaveSession {
 			mWindow.setOpenFileTo(file);
 
 		} catch (FileNotFoundException e) {
-			mWindow.log("FileNotFoundException");
+			mWindow.log("FileNotFoundException", 4);
 		} catch (SecurityException e) {
-			mWindow.log("SecurityException");
+			mWindow.log("SecurityException", 4);
 		}
-
-
 
 	}
 }
