@@ -236,7 +236,7 @@ public class JBroFuzzWindow extends JFrame {
 		setResizable(true);
 		setVisible(true);
 
-		log("System Launch, Welcome!", 0);
+		log("System Launch, Welcome!", 1);
 
 		// Check for an updated version
 		final class StartUpdateCheck extends SwingWorker<String, Object> {
