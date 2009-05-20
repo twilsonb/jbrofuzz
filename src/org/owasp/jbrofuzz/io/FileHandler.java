@@ -97,12 +97,11 @@ public class FileHandler {
 		if (!fuzzDirectory.exists()) {
 			boolean success = fuzzDirectory.mkdirs();
 			if (!success) {
-				g.getWindow().log("Failed to create \"fuzz\" directory", 4);
-				g.getWindow()
-						.log(
-								"\tTry running JBroFuzz with \"java -jar jbrofuzz-"
-										+ JBroFuzzFormat.VERSION
-										+ ".jar\" from the command line...", 0);
+							
+				g.getWindow().log("Failed to create \"fuzz\" directory, no data will be written to file.", 4);
+				g.getWindow().log("Run JBroFuzz from the command line: \"java -jar JBroFuzz.jar\"", 0);
+				g.getWindow().log("Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"", 0);
+				
 			}
 		}
 
