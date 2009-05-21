@@ -157,8 +157,8 @@ public class SystemPanel extends JBroFuzzPanel {
 		setOptionsAvailable(false, false, true, false, false);
 
 		start("[System Health Check Start]", 2);
-
-		final String systemInfo = "[System Info Start]\r\n" + "  [Java]\r\n"
+		start("[System Info Start]", 1);
+		final String systemInfo = "  [Java]\r\n"
 				+ "    Vendor:  "
 				+ System.getProperty("java.vendor")
 				+ "\r\n"
@@ -190,15 +190,15 @@ public class SystemPanel extends JBroFuzzPanel {
 				+ "\r\n"
 				+ "    Architecture: "
 				+ System.getProperty("os.arch")
-				+ "\r\n"
-				+ "[System Info End]\r\n";
+				+ "\r\n";
 
 		final String[] info = systemInfo.split("\r\n");
 
 		for (final String element : info) {
-			SystemPanel.this.start(element, 1);
+			SystemPanel.this.start(element, 0);
 		}
-
+		start("[System Info End]", 1);
+		
 		start("[Testing Warning Levels Start]", 1);
 		start("  Informational - no issue - no tab counter increment", 0);
 		start("  Opperational - operation changed - no tab counter increment", 1);
