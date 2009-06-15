@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -29,6 +29,7 @@
  */
 package org.owasp.jbrofuzz.payloads;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -37,6 +38,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -50,6 +52,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -57,61 +60,48 @@ import org.owasp.jbrofuzz.util.NonWrappingTextPane;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.0
+ * @version 1.4
  */
 public class PayloadsPanel extends JBroFuzzPanel {
 
-	private static final long									serialVersionUID	= -5848191307114097542L;
-
+	
+	// The split pane at the centre of the screen
+	private JSplitPane mainSplitPanel, rightSplitPanel;
+	
 	// The JPanels carrying the components
-	private JPanel														categoriesPanel;
-
-	JPanel																		payloadsPanel;
-
-	JPanel																		fuzzersPanel;
+	protected final JPanel categoriesPanel, payloadsPanel, fuzzersPanel;
 
 	// The JTables carrying the data
-	JTable																		payloadsTable;
-
-	JTable																		fuzzersTable;
-
-	JTable																		categoriesTable;
+	protected final JTable payloadsTable, fuzzersTable, categoriesTable;
 
 	// The Table Models with a single column
-	SingleColumnModel													payloadsTableModel;
-
-	SingleColumnModel													fuzzersTableModel;
-
-	SingleColumnModel													categoriesTableModel;
+	protected final SingleColumnModel payloadsTableModel, fuzzersTableModel, categoriesTableModel;
 
 	// The row sorters for the two tables
-	private TableRowSorter<SingleColumnModel>	sorter;
+	protected TableRowSorter<SingleColumnModel> sorter, sorter2;
 
-	TableRowSorter<SingleColumnModel>					sorter2;
-
-	NonWrappingTextPane												payloadInfoTextArea;
-
-	NonWrappingTextPane												fuzzerInfoTextArea;
+	protected final NonWrappingTextPane payloadInfoTextArea, fuzzerInfoTextArea;
 
 	/**
 	 * Constructor for the Payloads Panel.
 	 * 
 	 * @param m
-	 *          FrameWindow
+	 *            FrameWindow
 	 */
 	public PayloadsPanel(final JBroFuzzWindow m) {
 
 		super(" Payloads ", m);
-		setLayout(null);
+		setLayout(new BorderLayout());
 
-		// Categories: First table with one column of all the different categories
+		// Categories: First table with one column of all the different
+		// categories
 
-		categoriesPanel = new JPanel();
-		categoriesPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Categories "), BorderFactory.createEmptyBorder(1,
-				1, 1, 1)));
-		categoriesPanel.setBounds(10, 20, 220, 430);
-		this.add(categoriesPanel);
+		categoriesPanel = new JPanel(new BorderLayout());
+		categoriesPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(" Categories "), BorderFactory
+						.createEmptyBorder(1, 1, 1, 1)));
+		// categoriesPanel.setBounds(10, 20, 220, 430);
+		// this.add(categoriesPanel);
 
 		categoriesTableModel = new SingleColumnModel(" Category Name ");
 		categoriesTableModel.setData(m.getJBroFuzz().getDatabase()
@@ -125,7 +115,8 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		categoriesTable.getTableHeader().setToolTipText("Click to sort by row");
 		categoriesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		categoriesTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
+		categoriesTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD,
+				14));
 		categoriesTable.setRowHeight(30);
 		categoriesTable.getSelectionModel().addListSelectionListener(
 				new CategoriesRowListener(this));
@@ -136,22 +127,21 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		// Right click: Open, Cut, Copy, Paste, Select All, Properties
 		popupTable(categoriesTable, false, false, true, false, false, false);
 
-		final JScrollPane categoryTableScrollPane = new JScrollPane(categoriesTable);
+		final JScrollPane categoryTableScrollPane = new JScrollPane(
+				categoriesTable);
 		categoryTableScrollPane.setVerticalScrollBarPolicy(20);
 		categoryTableScrollPane.setHorizontalScrollBarPolicy(30);
-		categoryTableScrollPane.setPreferredSize(new Dimension(200, 390));
+		// categoryTableScrollPane.setPreferredSize(new Dimension(200, 390));
 		categoriesPanel.add(categoryTableScrollPane);
 
-		// Generators: Second table with one column of all the generators of the
-		// selected category
+		// Fuzzers: Second table with one column of all the generators of the
+		// 
 
-		fuzzersPanel = new JPanel();
+		fuzzersPanel = new JPanel(new BorderLayout());
 		fuzzersPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Select a Category "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
-		fuzzersPanel.setBounds(235, 100, 220, 350);
-		this.add(fuzzersPanel);
-
+		
 		fuzzersTableModel = new SingleColumnModel(" Fuzzer Name ");
 
 		fuzzersTable = new JTable(fuzzersTableModel);
@@ -172,13 +162,16 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		// Right click: Open, Cut, Copy, Paste, Select All, Properties
 		popupTable(fuzzersTable, false, false, true, false, false, false);
 
-		final JScrollPane nameTextAreaTextScrollPane = new JScrollPane(fuzzersTable);
+		final JScrollPane nameTextAreaTextScrollPane = new JScrollPane(
+				fuzzersTable);
 		nameTextAreaTextScrollPane.setVerticalScrollBarPolicy(20);
 		nameTextAreaTextScrollPane.setHorizontalScrollBarPolicy(30);
-		nameTextAreaTextScrollPane.setPreferredSize(new Dimension(200, 310));
-		fuzzersPanel.add(nameTextAreaTextScrollPane);
+		// nameTextAreaTextScrollPane.setPreferredSize(new Dimension(200, 310));
+		fuzzersPanel.add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.NORTH );
+		fuzzersPanel.add(nameTextAreaTextScrollPane, BorderLayout.CENTER);
 
-		// Payloads Table: Payload table with one column of all the generators of
+		// Payloads Table: Payload table with one column of all the generators
+		// of
 		// the selected category
 
 		payloadsTableModel = new SingleColumnModel(" Payloads ");
@@ -186,10 +179,13 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		payloadsTable = new JTable(payloadsTableModel);
 		payloadsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		payloadsTable.getTableHeader().setToolTipText(
-				"Click to specify sorting; Control-Click to specify secondary sorting");
+		payloadsTable
+				.getTableHeader()
+				.setToolTipText(
+						"Click to specify sorting; Control-Click to specify secondary sorting");
 
-		payloadsTable.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
+		payloadsTable
+				.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
 		payloadsTable.setRowHeight(30);
 		payloadsTable.getSelectionModel().addListSelectionListener(
 				new PayloadsRowListener(this));
@@ -200,10 +196,10 @@ public class PayloadsPanel extends JBroFuzzPanel {
 			public void mouseClicked(final MouseEvent e) {
 				if (e.getClickCount() == 2) {
 
-					final String payload = (String) payloadsTable.getModel().getValueAt(
-							payloadsTable.getSelectedRow(), 0);
-					new PropertiesViewer(PayloadsPanel.this, "Payload Information",
-							payload);
+					final String payload = (String) payloadsTable.getModel()
+							.getValueAt(payloadsTable.getSelectedRow(), 0);
+					new PropertiesViewer(PayloadsPanel.this,
+							"Payload Information", payload);
 
 				}
 			}
@@ -212,24 +208,25 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		// Right click: Open, Cut, Copy, Paste, Select All, Properties
 		popupTable(payloadsTable, false, false, true, false, false, true);
 
-		final JScrollPane payloadTableScrollPane = new JScrollPane(payloadsTable);
+		final JScrollPane payloadTableScrollPane = new JScrollPane(
+				payloadsTable);
 		payloadTableScrollPane.setVerticalScrollBarPolicy(20);
 		payloadTableScrollPane.setHorizontalScrollBarPolicy(30);
-		payloadTableScrollPane.setPreferredSize(new Dimension(200, 310));
+		// payloadTableScrollPane.setPreferredSize(new Dimension(200, 310));
 
 		// Views inside the payloads Panel
 
-		payloadsPanel = new JPanel();
-		payloadsPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Select a Fuzzer "), BorderFactory
-				.createEmptyBorder(1, 1, 1, 1)));
-		payloadsPanel.setBounds(460, 150, 420, 300);
-		this.add(payloadsPanel);
+		payloadsPanel = new JPanel(new BorderLayout());
+		payloadsPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(" Select a Fuzzer "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		// payloadsPanel.setBounds(460, 150, 420, 300);
+		// this.add(payloadsPanel);
 
 		fuzzerInfoTextArea = new NonWrappingTextPane();
 		fuzzerInfoTextArea.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" Fuzzer Information "), BorderFactory
-						.createEmptyBorder(1, 1, 1, 1)));
+				BorderFactory.createTitledBorder(" Fuzzer Information "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		fuzzerInfoTextArea.putClientProperty("charset", "UTF-8");
 		fuzzerInfoTextArea.setEditable(false);
 		fuzzerInfoTextArea.setVisible(true);
@@ -241,15 +238,16 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		// Right click: Cut, Copy, Paste, Select All
 		popupText(fuzzerInfoTextArea, false, true, false, true);
 
-		final JScrollPane viewTextScrollPane = new JScrollPane(fuzzerInfoTextArea);
+		final JScrollPane viewTextScrollPane = new JScrollPane(
+				fuzzerInfoTextArea);
 		viewTextScrollPane.setVerticalScrollBarPolicy(20);
 		viewTextScrollPane.setHorizontalScrollBarPolicy(30);
-		viewTextScrollPane.setPreferredSize(new Dimension(400, 100));
+		// viewTextScrollPane.setPreferredSize(new Dimension(400, 100));
 
 		payloadInfoTextArea = new NonWrappingTextPane();
 		payloadInfoTextArea.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" Payload Properties "), BorderFactory
-						.createEmptyBorder(1, 1, 1, 1)));
+				BorderFactory.createTitledBorder(" Payload Properties "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		payloadInfoTextArea.setEditable(false);
 
 		payloadInfoTextArea.setFont(new Font("Verdana", Font.BOLD, 10));
@@ -263,48 +261,108 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		commentLabelScrollPane
 				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		commentLabelScrollPane.setPreferredSize(new Dimension(400, 150));
+		// commentLabelScrollPane.setPreferredSize(new Dimension(400, 150));
 
-		JSplitPane bottomSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		JSplitPane bottomSplitPanel = new JSplitPane(
+				JSplitPane.HORIZONTAL_SPLIT);
 		bottomSplitPanel.setOneTouchExpandable(false);
 		bottomSplitPanel.setRightComponent(commentLabelScrollPane);
 		bottomSplitPanel.setLeftComponent(payloadTableScrollPane);
 
-		JSplitPane payloadsSplitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		JSplitPane payloadsSplitPanel = new JSplitPane(
+				JSplitPane.VERTICAL_SPLIT);
 		payloadsSplitPanel.setOneTouchExpandable(false);
-		payloadsSplitPanel.setPreferredSize(new Dimension(410, 260));
+		// payloadsSplitPanel.setPreferredSize(new Dimension(410, 260));
 
 		payloadsSplitPanel.setTopComponent(viewTextScrollPane);
 		payloadsSplitPanel.setBottomComponent(bottomSplitPanel);
 
-		payloadsPanel.add(payloadsSplitPanel);
+		payloadsPanel.add(Box.createRigidArea(new Dimension(0, 100)), BorderLayout.NORTH );
+		payloadsPanel.add(payloadsSplitPanel, BorderLayout.CENTER);
 
-		payloadsSplitPanel.setDividerLocation(60);
-		bottomSplitPanel.setDividerLocation(250);
+		payloadsSplitPanel.setDividerLocation(100);
+		bottomSplitPanel.setDividerLocation(300);
 
+		
+		// The right split pane and friends
+		rightSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		rightSplitPanel.setOneTouchExpandable(false);
+		rightSplitPanel.setLeftComponent(fuzzersPanel);
+		rightSplitPanel.setRightComponent(payloadsPanel);
+		
+		
+		// The main split pane and friends
+		mainSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		mainSplitPanel.setOneTouchExpandable(false);
+		mainSplitPanel.setLeftComponent(categoriesPanel);
+		mainSplitPanel.setRightComponent(rightSplitPanel);
+		
+		
+		// Set the divider locations, relative to the screen size
+		final Dimension scr_res = JBroFuzzFormat.getScreenSize();
+		if( (scr_res.width == 0) || (scr_res.height == 0) ) {
+			
+			mainSplitPanel.setDividerLocation(250);
+			rightSplitPanel.setDividerLocation(250);
+			
+		} else {
+			
+			final int window_width = scr_res.width - 200;
+			final int window_height = scr_res.height - 200;
+			// Check that the screen is width/length is +tive
+			if( (window_width > 0) && (window_height > 0) ) {
+				
+				rightSplitPanel.setDividerLocation( window_width * 1 / 5 );
+				mainSplitPanel.setDividerLocation( window_width * 1 / 5 );
+
+
+				// topPane.setDividerLocation( window_width * 2 / 3 );
+				// mainPane.setDividerLocation( window_height / 2 );
+				
+			} else {
+								
+				mainSplitPanel.setDividerLocation(250);
+				rightSplitPanel.setDividerLocation(250);
+				
+			}
+		}
+		
+		
 		// Allow for all areas to be resized to even not be seen
 		Dimension minimumSize = new Dimension(0, 0);
+
 		viewTextScrollPane.setMinimumSize(minimumSize);
 		bottomSplitPanel.setMinimumSize(minimumSize);
 		commentLabelScrollPane.setMinimumSize(minimumSize);
 		payloadTableScrollPane.setMinimumSize(minimumSize);
 
+		categoriesPanel.setMinimumSize(minimumSize);
+		fuzzersPanel.setMinimumSize(minimumSize);
+		payloadsPanel.setMinimumSize(minimumSize);
+		rightSplitPanel.setMinimumSize(minimumSize);
+
+		
+		// Add all the components to the main pane
+		this.add(mainSplitPanel, BorderLayout.CENTER);
+		
+
 	}
 
 	/**
 	 * <p>
-	 * Method for setting up the right click copy, select all and properties menu.
+	 * Method for setting up the right click copy, select all and properties
+	 * menu.
 	 * </p>
 	 * 
 	 * @param area
-	 *          JTextArea
+	 *            JTextArea
 	 */
 	/*
 	 * protected void popup(final JTable area) {
 	 * 
 	 * final JPopupMenu popmenu = new JPopupMenu(); /* final JMenuItem i1 = new
-	 * JMenuItem() final JMenuItem i2 = new JMenuItem("Copy"); final JMenuItem i4 =
-	 * new JMenuItem("Select All"); final JMenuItem i5 = new
+	 * JMenuItem() final JMenuItem i2 = new JMenuItem("Copy"); final JMenuItem
+	 * i4 = new JMenuItem("Select All"); final JMenuItem i5 = new
 	 * JMenuItem("Properties");
 	 * 
 	 * i2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
@@ -312,7 +370,8 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	 * i4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
 	 * ActionEvent.CTRL_MASK));
 	 * 
-	 * popmenu.add(i2); popmenu.add(i4); popmenu.addSeparator(); popmenu.add(i5);
+	 * popmenu.add(i2); popmenu.add(i4); popmenu.addSeparator();
+	 * popmenu.add(i5);
 	 */
 	/*
 	 * final JMenuItem i1 = new JMenuItem("Cut"); final JMenuItem i2 = new
@@ -340,10 +399,11 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	 */
 	/*
 	 * i5.addActionListener(new ActionListener() { public void
-	 * actionPerformed(final ActionEvent e) { // Properties final String tableName =
-	 * area.getName(); if(tableName.equalsIgnoreCase("Name")) { final String
-	 * exploit = (String) area.getModel().getValueAt(area.getSelectedRow(), 0);
-	 * new ExploitViewer(getFrame(), exploit, ExploitViewer.VIEW_EXPLOIT); }
+	 * actionPerformed(final ActionEvent e) { // Properties final String
+	 * tableName = area.getName(); if(tableName.equalsIgnoreCase("Name")) {
+	 * final String exploit = (String)
+	 * area.getModel().getValueAt(area.getSelectedRow(), 0); new
+	 * ExploitViewer(getFrame(), exploit, ExploitViewer.VIEW_EXPLOIT); }
 	 * if(tableName.equalsIgnoreCase("Category")) { final String exploit =
 	 * (String) area.getModel().getValueAt(area.getSelectedRow(), 0); new
 	 * ExploitViewer(getFrame(), exploit, ExploitViewer.VIEW_CATEGORY); } } });
@@ -351,7 +411,8 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	/*
 	 * area.addMouseListener(new MouseAdapter() { private void
 	 * checkForTriggerEvent(final MouseEvent e) { if (e.isPopupTrigger()) {
-	 * area.requestFocus(); popmenu.show(e.getComponent(), e.getX(), e.getY()); } }
+	 * area.requestFocus(); popmenu.show(e.getComponent(), e.getX(), e.getY());
+	 * } }
 	 * 
 	 * @Override public void mousePressed(final MouseEvent e) {
 	 * checkForTriggerEvent(e); }

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -56,13 +56,13 @@ public class ResponseHeaderSizeChart {
 	 * In this case, 1 Mb.
 	 * </p>
 	 */
-	public static final int					MAX_CHARS	= 1048576;
+	public static final int MAX_CHARS = 1048576;
 	// The x-axis filenames
-	String[]												x_data;
+	String[] x_data;
 	// The y-axis data
-	int[]														y_data;
+	int[] y_data;
 
-	private DefaultCategoryDataset	dataset;
+	private DefaultCategoryDataset dataset;
 
 	public ResponseHeaderSizeChart() {
 
@@ -158,7 +158,8 @@ public class ResponseHeaderSizeChart {
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
 
 		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
-		renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+		renderer
+				.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
 
 		return new ChartPanel(chart);
 

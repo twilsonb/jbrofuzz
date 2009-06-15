@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -67,45 +67,45 @@ public class AboutBox extends JDialog {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= -7515292150164781290L;
+	private static final long serialVersionUID = -7515292150164781290L;
 
 	/**
 	 * <p>
 	 * Constant for the about tab to be displayed.
 	 * </p>
 	 */
-	public static final int		ABOUT							= 0;
+	public static final int ABOUT = 0;
 
 	/**
 	 * <p>
 	 * Constant for the license tab to be displayed.
 	 * </p>
 	 */
-	public static final int		LICENSE						= 1;
+	public static final int LICENSE = 1;
 
 	/**
 	 * <p>
 	 * Constant for the disclaimer tab to be displayed.
 	 * </p>
 	 */
-	public static final int		DISCLAIMER				= 2;
+	public static final int DISCLAIMER = 2;
 
 	/**
 	 * <p>
 	 * Constant for the acknowledgements tab to be displayed.
 	 * </p>
 	 */
-	public static final int		ACKNOWLEDGEMENTS	= 3;
+	public static final int ACKNOWLEDGEMENTS = 3;
 
 	// Dimensions of the about box
-	private static final int	x									= 450;
-	private static final int	y									= 300;
+	private static final int x = 450;
+	private static final int y = 300;
 
 	// The tabbed pane, holding all the different panels and labels
-	private JTabbedPane				tabbedPane;
+	private JTabbedPane tabbedPane;
 
 	// The ok button at the bottom of the box
-	private JButton						ok;
+	private JButton ok;
 
 	/**
 	 * <p>
@@ -128,8 +128,8 @@ public class AboutBox extends JDialog {
 
 		final URL licenseURL = ClassLoader.getSystemClassLoader().getResource(
 				"LICENSE/gpl-license.txt");
-		final URL disclaimerURL = ClassLoader.getSystemClassLoader().getResource(
-				"LICENSE/NOTICE.txt");
+		final URL disclaimerURL = ClassLoader.getSystemClassLoader()
+				.getResource("LICENSE/NOTICE.txt");
 
 		// The about editor label
 		final JLabel about = new JLabel(JBroFuzzFormat.ABOUT,
@@ -185,8 +185,8 @@ public class AboutBox extends JDialog {
 
 		// OK Button
 		ok = new JButton("  OK  ");
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		buttonPanel.add(ok);
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -200,8 +200,8 @@ public class AboutBox extends JDialog {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent
-				.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
+				.abs(parent.getLocation().y + 100));
 		this.setSize(AboutBox.x, AboutBox.y);
 		setMinimumSize(new Dimension(x, y));
 		setResizable(true);

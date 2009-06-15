@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -61,21 +61,21 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
  */
 public class SystemPanel extends JBroFuzzPanel {
 
-	private static final long			serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
-	private JTextPane							listTextArea;
+	private JTextPane listTextArea;
 
-	private DefaultStyledDocument	m_defaultStyledDocument;
+	private DefaultStyledDocument m_defaultStyledDocument;
 
 	// The line count
-	private int										lineCount;
+	private int lineCount;
 
 	/**
-	 * Constructor for the System Logger Panel of the represented as a tab. Only a
-	 * single instance of this class is constructed.
+	 * Constructor for the System Logger Panel of the represented as a tab. Only
+	 * a single instance of this class is constructed.
 	 * 
 	 * @param m
-	 *          FrameWindow
+	 *            FrameWindow
 	 */
 	public SystemPanel(final JBroFuzzWindow m) {
 
@@ -117,7 +117,7 @@ public class SystemPanel extends JBroFuzzPanel {
 		mainPane.setOneTouchExpandable(false);
 		mainPane.setTopComponent(topPanel);
 		mainPane.setBottomComponent(listPanel);
-		mainPane.setDividerLocation(100);
+		mainPane.setDividerLocation(50);
 
 		// Allow for all areas to be resized to even not be seen
 		Dimension minimumSize = new Dimension(0, 0);
@@ -158,38 +158,19 @@ public class SystemPanel extends JBroFuzzPanel {
 
 		start("[System Health Check Start]", 2);
 		start("[System Info Start]", 1);
-		final String systemInfo = "  [Java]\r\n"
-				+ "    Vendor:  "
-				+ System.getProperty("java.vendor")
-				+ "\r\n"
-				+ "    Version: "
-				+ System.getProperty("java.version")
-				+ "\r\n"
-				+ "    Installed at: "
-				+ System.getProperty("java.home")
-				+ "\r\n"
-				+ "    Website: "
-				+ System.getProperty("java.vendor.url")
-				+ "\r\n"
-				+ "  [User]\r\n"
-				+ "    User: "
-				+ System.getProperty("user.name")
-				+ "\r\n"
-				+ "    Home dir: "
-				+ System.getProperty("user.home")
-				+ "\r\n"
-				+ "    Current dir: "
-				+ System.getProperty("user.dir")
-				+ "\r\n"
-				+ "  [O/S]\r\n"
-				+ "    Name: "
-				+ System.getProperty("os.name")
-				+ "\r\n"
-				+ "    Version: "
-				+ System.getProperty("os.version")
-				+ "\r\n"
-				+ "    Architecture: "
-				+ System.getProperty("os.arch")
+		final String systemInfo = "  [Java]\r\n" + "    Vendor:  "
+				+ System.getProperty("java.vendor") + "\r\n" + "    Version: "
+				+ System.getProperty("java.version") + "\r\n"
+				+ "    Installed at: " + System.getProperty("java.home")
+				+ "\r\n" + "    Website: "
+				+ System.getProperty("java.vendor.url") + "\r\n"
+				+ "  [User]\r\n" + "    User: "
+				+ System.getProperty("user.name") + "\r\n" + "    Home dir: "
+				+ System.getProperty("user.home") + "\r\n"
+				+ "    Current dir: " + System.getProperty("user.dir") + "\r\n"
+				+ "  [O/S]\r\n" + "    Name: " + System.getProperty("os.name")
+				+ "\r\n" + "    Version: " + System.getProperty("os.version")
+				+ "\r\n" + "    Architecture: " + System.getProperty("os.arch")
 				+ "\r\n";
 
 		final String[] info = systemInfo.split("\r\n");
@@ -198,14 +179,17 @@ public class SystemPanel extends JBroFuzzPanel {
 			SystemPanel.this.start(element, 0);
 		}
 		start("[System Info End]", 1);
-		
+
 		start("[Testing Warning Levels Start]", 1);
 		start("  Informational - no issue - no tab counter increment", 0);
-		start("  Opperational - operation changed - no tab counter increment", 1);
+		start("  Opperational - operation changed - no tab counter increment",
+				1);
 		start(
 				"  Warning - still functional - an operation change did not complete",
 				2);
-		start("  Shout - controlable error occured - bad news but not the worst", 3);
+		start(
+				"  Shout - controlable error occured - bad news but not the worst",
+				3);
 		start(
 				"  Error - something that was meant to happen, didn't complete as expected",
 				4);
@@ -217,19 +201,21 @@ public class SystemPanel extends JBroFuzzPanel {
 
 	/**
 	 * <p>
-	 * Method for setting the text within the JTextArea displayed as part of this
-	 * panel. This method simply appends any string given adding a new line (\n)
-	 * to the end of it.
+	 * Method for setting the text within the JTextArea displayed as part of
+	 * this panel. This method simply appends any string given adding a new line
+	 * (\n) to the end of it.
 	 * </p>
 	 * 
 	 * @param str
-	 *          String
+	 *            String
 	 * 
 	 * @param level
-	 *          The severity level<br> <= 0 => [INFO] Violet Informational<br> ==
-	 *          1 => [OPPR] Blue Operational<br> == 2 => [WARN] Green Warning<br> ==
-	 *          3 => [SHOT] Amber Shout - light error<br> >= 4 => [ERRR] Red
-	 *          Error<br>
+	 *            The severity level<br>
+	 *            <= 0 => [INFO] Violet Informational<br>
+	 *            == 1 => [OPPR] Blue Operational<br>
+	 *            == 2 => [WARN] Green Warning<br>
+	 *            == 3 => [SHOT] Amber Shout - light error<br>
+	 *            >= 4 => [ERRR] Red Error<br>
 	 */
 	public void start(final String str, int level) {
 
@@ -269,8 +255,8 @@ public class SystemPanel extends JBroFuzzPanel {
 
 			SimpleAttributeSet attr = new SimpleAttributeSet();
 			StyleConstants.setForeground(attr, c);
-			m_defaultStyledDocument.insertString(m_defaultStyledDocument.getLength(),
-					toLog.toString(), attr);
+			m_defaultStyledDocument.insertString(m_defaultStyledDocument
+					.getLength(), toLog.toString(), attr);
 
 			listTextArea.setCaretPosition(m_defaultStyledDocument.getLength());
 

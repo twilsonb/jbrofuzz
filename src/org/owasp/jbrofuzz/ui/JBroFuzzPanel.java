@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -73,11 +73,11 @@ import com.Ostermiller.util.Browser;
  */
 public abstract class JBroFuzzPanel extends JPanel {
 
-	private JBroFuzzWindow	frame;
+	private JBroFuzzWindow frame;
 
-	private String					name;
+	private String name;
 
-	private boolean[]				optionsAvailable;
+	private boolean[] optionsAvailable;
 
 	/**
 	 * <p>
@@ -106,7 +106,8 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 	/**
 	 * <p>
-	 * Method describing what happens in a panel when the 'add' button is pressed.
+	 * Method describing what happens in a panel when the 'add' button is
+	 * pressed.
 	 * </p>
 	 * 
 	 * @author subere@uncon.org
@@ -116,18 +117,18 @@ public abstract class JBroFuzzPanel extends JPanel {
 	public abstract void add();
 
 	/**
-	 * <p>
-	 * Method for completely expanding or collapsing a given <code>JTree</code>.
-	 * </p>
-	 * <p>
-	 * Originally from the Java Developers Almanac 1.4
+	 * <p>Method for completely expanding or collapsing a 
+	 * given <code>JTree</code>.</p>
+	 * 
+	 * <p>Originally, from the Java Developers Almanac 1.4.</p>
 	 * 
 	 * @param tree
-	 *          The JTree to be expanded/collapsed
+	 *            The JTree to be expanded/collapsed
 	 * @param parent
-	 *          The parent TreePath from which to begin
+	 *            The parent TreePath from which to begin
 	 * @param expand
-	 *          If true, expands all nodes in the tree, else collapse all nodes.
+	 *            If true, expands all nodes in the tree, else collapse all
+	 *            nodes.
 	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3
@@ -150,6 +151,32 @@ public abstract class JBroFuzzPanel extends JPanel {
 		} else {
 			tree.collapsePath(parent);
 		}
+	}
+	
+	/**
+	 * <p>Method for completely expanding the first layer of a 
+	 * given <code>JTree</code>.</p>
+	 * 
+	 * @param tree
+	 *            The JTree to be expanded/collapsed
+	 * @param parent
+	 *            The parent TreePath from which to begin
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.4
+	 * @since 1.4
+	 */
+	public void expandOne(JTree tree, TreePath parent) {
+		
+		TreeNode node = (TreeNode) parent.getLastPathComponent();
+		if(node.getChildCount() >= 0) {
+			for(Enumeration e = node.children(); e.hasMoreElements();) {
+				TreeNode n = (TreeNode) e.nextElement();
+				TreePath path = parent.pathByAddingChild(n);
+			}
+		}
+		
+		tree.expandPath(parent);
 	}
 
 	/**
@@ -260,23 +287,27 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 					String s = ((JBroFuzzPanel) pane.getComponent(d)).getName();
 
-					if (s.equalsIgnoreCase(getFrame().getPanelFuzzing().getName())) {
+					if (s.equalsIgnoreCase(getFrame().getPanelFuzzing()
+							.getName())) {
 
 						final int c = area.getSelectedRow();
 						if (c < 0) {
 							return;
 						}
-						final String fileName = (String) area.getModel().getValueAt(
-								area.convertRowIndexToModel(c), 0)
+						final String fileName = (String) area.getModel()
+								.getValueAt(area.convertRowIndexToModel(c), 0)
 								+ ".html";
-						final File f = getFrame().getJBroFuzz().getHandler().getFuzzFile(
-								fileName);
+						final File f = getFrame().getJBroFuzz().getHandler()
+								.getFuzzFile(fileName);
 
 						Browser.init();
 						try {
 							Browser.displayURL(f.toURI().toString());
 						} catch (final IOException ex) {
-							getFrame().log("Could not launch link in external browser", 3);
+							getFrame()
+									.log(
+											"Could not launch link in external browser",
+											3);
 						}
 					}
 
@@ -344,40 +375,46 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 					String s = ((JBroFuzzPanel) pane.getComponent(d)).getName();
 
-					if (s.equalsIgnoreCase(getFrame().getPanelFuzzing().getName())) {
+					if (s.equalsIgnoreCase(getFrame().getPanelFuzzing()
+							.getName())) {
 
-						// If multiple rows are selected the first row is the one
+						// If multiple rows are selected the first row is the
+						// one
 						final int c = area.getSelectedRow();
 						if (c < 0) {
 							return;
 						}
-						final String name = (String) area.getModel().getValueAt(
-								area.convertRowIndexToModel(c), 0);
+						final String name = (String) area.getModel()
+								.getValueAt(area.convertRowIndexToModel(c), 0);
 						new WindowViewer(JBroFuzzPanel.this, name);
 
 					}
 
-					if (s.equalsIgnoreCase(getFrame().getPanelPayloads().getName())) {
+					if (s.equalsIgnoreCase(getFrame().getPanelPayloads()
+							.getName())) {
 
-						final String payload = (String) area.getModel().getValueAt(
-								area.getSelectedRow(), 0);
-						new PropertiesViewer(JBroFuzzPanel.this, "Payload Information",
-								payload);
+						final String payload = (String) area.getModel()
+								.getValueAt(area.getSelectedRow(), 0);
+						new PropertiesViewer(JBroFuzzPanel.this,
+								"Payload Information", payload);
 
 					}
 
-					if (s.equalsIgnoreCase(getFrame().getPanelSniffing().getName())) {
+					if (s.equalsIgnoreCase(getFrame().getPanelSniffing()
+							.getName())) {
 
 						// Runtime.getRuntime().gc();
 						// Runtime.getRuntime().runFinalization();
 
 						final int c = area.getSelectedRow();
-						final String name = (String) area.getModel().getValueAt(c, 0);
+						final String name = (String) area.getModel()
+								.getValueAt(c, 0);
 						new WindowViewer(JBroFuzzPanel.this, name.split(" ")[0]);
 
 					}
 
-					if (s.equalsIgnoreCase(getFrame().getPanelWebDirectories().getName())) {
+					if (s.equalsIgnoreCase(getFrame().getPanelWebDirectories()
+							.getName())) {
 
 						StringBuffer output = new StringBuffer();
 
@@ -385,12 +422,13 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 							output.append(area.getColumnName(i) + ": ");
 							output.append(area.getModel().getValueAt(
-									area.convertRowIndexToModel(area.getSelectedRow()), i));
+									area.convertRowIndexToModel(area
+											.getSelectedRow()), i));
 							output.append("\n");
 						}
 
-						new PropertiesViewer(JBroFuzzPanel.this, "Properties", output
-								.toString());
+						new PropertiesViewer(JBroFuzzPanel.this, "Properties",
+								output.toString());
 
 					}
 				}
@@ -438,7 +476,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 	 * </p>
 	 * 
 	 * @param area
-	 *          JTextArea
+	 *            JTextArea
 	 */
 	public final void popupTargetText(final JTextComponent area) {
 
@@ -535,7 +573,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 	 * </p>
 	 * 
 	 * @param area
-	 *          JTextArea
+	 *            JTextArea
 	 */
 	public final void popupText(final JTextComponent area, boolean cut,
 			boolean copy, boolean paste, boolean selectAll) {

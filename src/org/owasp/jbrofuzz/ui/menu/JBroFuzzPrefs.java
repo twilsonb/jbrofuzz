@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -63,33 +63,33 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
- * The preferences panel. This is the panel the user sees when selecting Options ->
- * Preferences from the main menu bar.
+ * The preferences panel. This is the panel the user sees when selecting Options
+ * -> Preferences from the main menu bar.
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.4
  */
 public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
-	private static final long			serialVersionUID	= -335514965523117410L;
+	private static final long serialVersionUID = -335514965523117410L;
 	// Dimensions of the about box
-	private static final int			x									= 650;
-	private static final int			y									= 400;
-	private static final String[]	nodeNames					= { "Preferences",
-			"Directory Locations", "Fuzzing"						};
+	private static final int x = 650;
+	private static final int y = 400;
+	private static final String[] nodeNames = { "Preferences",
+			"Directory Locations", "Fuzzing" };
 	// The tree
-	private JTree									tree;
+	private JTree tree;
 	// The main split pane
-	private JSplitPane						splitPane;
+	private JSplitPane splitPane;
 
 	// The buttons displayed
-	private JButton								ok, cancel;
+	private JButton ok, cancel;
 
 	// The actual preferences object
-	private Preferences						prefs;
+	private Preferences prefs;
 
-	private JPanel[]							panels						= new JPanel[nodeNames.length];
+	private JPanel[] panels = new JPanel[nodeNames.length];
 
 	/**
 	 * <p>
@@ -99,7 +99,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	 * @param parent
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.4
 	 * @since 1.2
 	 */
 	public JBroFuzzPrefs(final JBroFuzzWindow parent) {
@@ -113,7 +113,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 
 		// Create the nodes
-		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(nodeNames[0]);
+		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
+				nodeNames[0]);
 		// Create a tree that allows one selection at a time
 		tree = new JTree(top);
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -130,7 +131,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 			if (i != 3) {
 				panels[i] = new JPanel();
-				panels[i].setLayout(new BoxLayout(panels[i], BoxLayout.PAGE_AXIS));
+				panels[i].setLayout(new BoxLayout(panels[i],
+						BoxLayout.PAGE_AXIS));
 				JLabel header = new JLabel("<HTML><H3>&nbsp;" + nodeNames[i]
 						+ "</H3></HTML>");
 				panels[i].add(header);
@@ -171,7 +173,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Preferences -> Check for New Version at Startup
 
-		final boolean newVersionCheck = prefs.getBoolean(JBroFuzzFormat.PR_3, true);
+		final boolean newVersionCheck = prefs.getBoolean(JBroFuzzFormat.PR_3,
+				true);
 		final JCheckBox newVCheckBox = new JCheckBox(
 				" Check for a new version at startup ", newVersionCheck);
 
@@ -195,7 +198,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		final boolean deletebox = prefs.getBoolean(JBroFuzzFormat.PR_1, false);
 		final JCheckBox deleteCheckBox = new JCheckBox(
-				" On exit, delete any empty directories created at startup ", deletebox);
+				" On exit, delete any empty directories created at startup ",
+				deletebox);
 
 		deleteCheckBox.setBorderPaintedFlat(true);
 		deleteCheckBox
@@ -215,19 +219,21 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		String dir = parent.getJBroFuzz().getHandler().getCanonicalPath();
 
-		JLabel box = new JLabel("<html>" + JBroFuzzFormat.centerAbbreviate(dir, 70)
-				+ "</html>");
+		JLabel box = new JLabel("<html>"
+				+ JBroFuzzFormat.centerAbbreviate(dir, 70) + "</html>");
 		box.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Fuzzing (where data is saved) "), BorderFactory
-				.createEmptyBorder(1, 1, 1, 5)));
+				.createTitledBorder(" Fuzzing (where data is saved) "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 5)));
 		panels[1].add(box);
 		panels[1].add(Box.createRigidArea(new Dimension(0, 20)));
 
 		// Fuzzing... -> Socket Timeout
 
-		final boolean socketbox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
+		final boolean socketbox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1,
+				false);
 		final JCheckBox socketCheckBox = new JCheckBox(
-				" Extend the socket timeout from 5 seconds to 30 seconds ", socketbox);
+				" Extend the socket timeout from 5 seconds to 30 seconds ",
+				socketbox);
 
 		socketCheckBox.setBorderPaintedFlat(true);
 		socketCheckBox
@@ -247,8 +253,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Fuzzing... -> End of Line Character
 
-		final boolean endlinebox = prefs
-				.getBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
+		final boolean endlinebox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_2,
+				false);
 		final JCheckBox endlineCheckBox = new JCheckBox(
 				" Use \"\\n\" instead of \"\\r\\n\" as an end of line character ",
 				endlinebox);
@@ -293,7 +299,51 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		panels[2].add(showwireCheckBox);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
+		
+		// Fuzzing... -> Word wrap request text panel
+		
+		final boolean wrap_req_box = prefs.getBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
+		final JCheckBox wrap_req_check_box = new JCheckBox(
+				" Word wrap text in the \"Request\" area (requires restart) ", wrap_req_box);
+		wrap_req_check_box.setBorderPaintedFlat(true);
+		wrap_req_check_box.setToolTipText(
+				"If ticked, the request text area will wrap the text to fit the size of the area");
+		
+		wrap_req_check_box.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (wrap_req_check_box.isSelected()) {
+					prefs.putBoolean(JBroFuzzFormat.WRAP_REQUEST, true);
+				} else {
+					prefs.putBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
+				}
+			}
+		});
 
+		panels[2].add(wrap_req_check_box);
+		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
+		
+		// Fuzzing... -> Word wrap response text panel
+		
+		final boolean wrap_res_bool = prefs.getBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
+		final JCheckBox wrap_res_check_box = new JCheckBox(
+				" Word wrap text in the \"Response\" window (requires restart) ", wrap_res_bool);
+		wrap_res_check_box.setBorderPaintedFlat(true);
+		wrap_res_check_box.setToolTipText(
+				"Tick this box, to see all output text wrapped to the size of the response window");
+		
+		wrap_res_check_box.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (wrap_res_check_box.isSelected()) {
+					prefs.putBoolean(JBroFuzzFormat.WRAP_RESPONSE, true);
+				} else {
+					prefs.putBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
+				}
+			}
+		});
+		
+		panels[2].add(wrap_res_check_box);
+		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
+		
 		// Create the top split pane, showing the treeView and the Preferences
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setLeftComponent(leftScrollPane);
@@ -322,8 +372,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		ok.setEnabled(true);
 		cancel.setEnabled(true);
 
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		buttonPanel.add(ok);
 		buttonPanel.add(cancel);
 
@@ -393,7 +443,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 			if (s.equalsIgnoreCase(nodeNames[i])) {
 				splitPane.setRightComponent(panels[i]);
-				splitPane.setDividerLocation(150);
+				splitPane.setDividerLocation(splitPane.getDividerLocation());
 			}
 
 		} // for loop

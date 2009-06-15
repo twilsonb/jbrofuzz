@@ -1,0 +1,26 @@
+[JBroFuzz]
+1.2
+[Fuzzing]
+023 2009-01-23 12-32-04
+[Comment]
+Fuzzing the X-SDCH Header with recursive and replasive fuzzers
+[URL]
+http://localhost
+[Request]
+GET / HTTP/1.1
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.19 (KHTML, like Gecko) Chrome/0.4.154.25 Safari/525.19
+Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+Accept-Encoding: gzip,deflate,bzip2,sdch
+X-SDCH: Chrome 0.4.154.25
+Accept-Language: en-GB,en-US,en
+Accept-Charset: ISO-8859-1,*,utf-8
+Host: localhost
+Connection: Keep-Alive
+
+
+[Payloads]
+NUM-HEX-LOW,318,320
+B10-DEC,314,317
+B64-RFC,312,313
+INT-UPP,310,311
+[End]

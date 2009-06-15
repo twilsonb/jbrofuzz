@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -41,7 +41,7 @@ final class CategoriesRowListener implements ListSelectionListener {
 	/**
 	 * 
 	 */
-	private final PayloadsPanel	payloadsPanel;
+	private final PayloadsPanel payloadsPanel;
 
 	/**
 	 * 
@@ -62,7 +62,7 @@ final class CategoriesRowListener implements ListSelectionListener {
 	 * </p>
 	 * 
 	 * @param event
-	 *          ListSelectionEvent
+	 *            ListSelectionEvent
 	 */
 	public void valueChanged(final ListSelectionEvent event) {
 
@@ -75,15 +75,17 @@ final class CategoriesRowListener implements ListSelectionListener {
 		try {
 
 			c = payloadsPanel.categoriesTable.convertRowIndexToModel(c);
-			value = (String) payloadsPanel.categoriesTableModel.getValueAt(c, 0);
+			value = (String) payloadsPanel.categoriesTableModel
+					.getValueAt(c, 0);
 
 		} catch (IndexOutOfBoundsException e) {
 			return;
 		}
 
 		payloadsPanel.fuzzersTable.setRowSorter(null);
-		payloadsPanel.fuzzersTableModel.setData(payloadsPanel.getFrame()
-				.getJBroFuzz().getDatabase().getPrototypeNamesInCategory(value));
+		payloadsPanel.fuzzersTableModel
+				.setData(payloadsPanel.getFrame().getJBroFuzz().getDatabase()
+						.getPrototypeNamesInCategory(value));
 		payloadsPanel.sorter2 = new TableRowSorter<SingleColumnModel>(
 				payloadsPanel.fuzzersTableModel);
 		payloadsPanel.fuzzersTable.setRowSorter(payloadsPanel.sorter2);
@@ -92,8 +94,9 @@ final class CategoriesRowListener implements ListSelectionListener {
 		payloadsPanel.payloadsTableModel.setData(null);
 
 		payloadsPanel.fuzzersPanel.setBorder(BorderFactory
-				.createCompoundBorder(BorderFactory.createTitledBorder(" " + value
-						+ " "), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+				.createCompoundBorder(BorderFactory.createTitledBorder(" "
+						+ value + " "), BorderFactory.createEmptyBorder(1, 1,
+						1, 1)));
 
 		payloadsPanel.payloadsPanel.setBorder(BorderFactory
 				.createCompoundBorder(BorderFactory

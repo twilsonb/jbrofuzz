@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -29,6 +29,10 @@
  */
 package org.owasp.jbrofuzz.version;
 
+import java.awt.AWTError;
+import java.awt.Dimension;
+import java.awt.HeadlessException;
+import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -63,25 +67,25 @@ public class JBroFuzzFormat {
 	 * variable.
 	 * </p>
 	 */
-	public static String				CODENAME			= getCodeName(JBroFuzzFormat.VERSION);
+	public static String CODENAME = getCodeName(JBroFuzzFormat.VERSION);
 
 	/**
 	 * Formatting the date in ISO8601 standard format.
 	 */
-	public static final String	DATE					= getDate();
+	public static final String DATE = getDate();
 
 	/**
 	 * <p>
 	 * The text, in html format, shown in the disclaimer box.
 	 * </p>
 	 */
-	public static final String	DISCLAIMER		= "<HTML>JBroFuzz generates requests and records the responses. It does not attempt to identify if a particular "
-																								+ "site is vulnerable or not; this requires further human analysis. <BR><BR>However, certain payload categories, like XSS, "
-																								+ "are crafted to try to successfully exploit flaws. Thus the human analyst would have to review the results "
-																								+ "in order to recognize if exploitation succeeded or not.<BR><BR>"
-																								+ "The author of JBroFuzz takes no "
-																								+ "legal or other responsibility for any problems that "
-																								+ "might occur while running this program.<BR></HTML>";
+	public static final String DISCLAIMER = "<HTML>JBroFuzz generates requests and records the responses. It does not attempt to identify if a particular "
+			+ "site is vulnerable or not; this requires further human analysis. <BR><BR>However, certain payload categories, like XSS, "
+			+ "are crafted to try to successfully exploit flaws. Thus the human analyst would have to review the results "
+			+ "in order to recognize if exploitation succeeded or not.<BR><BR>"
+			+ "The author of JBroFuzz takes no "
+			+ "legal or other responsibility for any problems that "
+			+ "might occur while running this program.<BR></HTML>";
 
 	/**
 	 * <p>
@@ -89,20 +93,20 @@ public class JBroFuzzFormat {
 	 * be included within the jar/exe file of JBroFuzz.
 	 * </p>
 	 */
-	public static final String	FILE_GNU			= "generators.jbrofuzz";
+	public static final String FILE_GNU = "generators.jbrofuzz";
 
 	/**
 	 * <p>
 	 * The default ISO language code, set to English (en).
 	 * </p>
 	 */
-	public static final String	ISO_LAN_CODE	= "en";
+	public static final String ISO_LAN_CODE = "en";
 
 	/**
 	 * The preferences used for deciding whether or not to delete any blank
 	 * directories while exiting.
 	 */
-	public static final String	PR_1					= "prefs.dir.delete";
+	public static final String PR_1 = "prefs.dir.delete";
 
 	/**
 	 * The preferences used for deciding whether or not to align the tabs at the
@@ -110,61 +114,51 @@ public class JBroFuzzFormat {
 	 * 
 	 * True represents top.
 	 */
-	public static final String	PR_2					= "prefs.ui.tabs";																					;
+	public static final String PR_2 = "prefs.ui.tabs";;
 
 	/**
-	 * The preferences used for deciding whether or not to check and notify a user
-	 * at startup of a new version.
+	 * The preferences used for deciding whether or not to check and notify a
+	 * user at startup of a new version.
 	 * 
 	 * True represents yes.
 	 */
-	public static final String	PR_3					= "startup.check.new-version";
+	public static final String PR_3 = "startup.check.new-version";
 
 	/**
-	 * The preferences used for selecting the timeout in the socket created, while
-	 * fuzzing.
+	 * The preferences used for selecting the timeout in the socket created,
+	 * while fuzzing.
 	 */
-	public static final String	PR_FUZZ_1			= "fuzz.socket.timeout.max";
+	public static final String PR_FUZZ_1 = "fuzz.socket.timeout.max";
 
 	/**
-	 * The preferences used for selecting the end of line character to be appended
-	 * to each line sent on the wire.
+	 * The preferences used for selecting the end of line character to be
+	 * appended to each line sent on the wire.
 	 */
-	public static final String	PR_FUZZ_2			= "fuzz.end.of.line";
+	public static final String PR_FUZZ_2 = "fuzz.end.of.line";
 
 	/**
 	 * The preferences used for keeping the "On The Wire" tab always selected.
 	 */
-	public static final String	PR_FUZZ_3			= "fuzz.ui.show.wire";
+	public static final String PR_FUZZ_3 = "fuzz.ui.show.wire";
 
 	/**
-	 * If true the panels displaying text will wrap.
+	 * If true, the response will wrap when opened in a new window
 	 */
-	public static final String	PR_WORD_WRAP	= "prefs.word.wrap";
-
+	public static final String WRAP_RESPONSE = "wrap.response";
+	
 	/**
-	 * The String displaying within the Fuzzing Request text area
+	 * If true, the request will wrap when viewed in the fuzzing panel
 	 */
-	public static final String	URL_REQUEST		= "GET /index.php/Main_Page HTTP/1.1\n"
-																								+ "Host: localhost\n"
-																								+ "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1\n"
-																								+ "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5\n"
-																								+ "Accept-Language: en-gb,en;q=0.5\n"
-																								+ "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\n\n";
+	public static final String WRAP_REQUEST = "wrap.request";
 
-	/**
-	 * The web site used via means of the selecting "JBroFuzz Website on the About
-	 * menu.
-	 */
-	public static final String	URL_WEBSITE		= "http://www.owasp.org/index.php/Category:OWASP_JBroFuzz";
-
+	
 	/**
 	 * <p>
-	 * The version of JBroFuzz in String format and always of the form "x.x" where
-	 * 'x' is a single digit in the range of [0-9].
+	 * The version of JBroFuzz in String format and always of the form "x.x"
+	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String	VERSION				= "1.4";
+	public static final String VERSION = "1.4";
 
 	/**
 	 * <p>
@@ -172,32 +166,30 @@ public class JBroFuzzFormat {
 	 * released.
 	 * </p>
 	 */
-	public static final String	YEAR					= "2009";
+	public static final String YEAR = "2009";
+
+			
+	/**
+	 * The web site used via means of the selecting "JBroFuzz Website on the
+	 * About menu.
+	 * 
+	 */
+	public static final String URL_WEBSITE = "http://www.owasp.org/index.php/Category:OWASP_JBroFuzz";
 
 	/**
 	 * <p>
 	 * The text, in html format, shown in the about box.
 	 * </p>
 	 */
-	public static final String	ABOUT					=
+	public static final String ABOUT =
 
-																						"<HTML><B>JBroFuzz Version:  "
-																								+ VERSION
-																								+ "<BR>"
-																								+ "Codename: "
-																								+ JBroFuzzFormat
-																										.getCodeName(JBroFuzzFormat.VERSION)
-																								+ "</B><BR><BR>"
-																								+ "<B>Copyright &copy; "
-																								+ YEAR
-																								+ " subere@uncon.org</B><BR><BR>"
-																								+ "Running Under  Java "
-																								+ System
-																										.getProperty("java.version")
-																								+ "<BR><BR>"
-																								+ "<B>A stateless network protocol fuzzer <BR>"
-																								+ "for web applications."
-																								+ "</B><BR></HTML>";
+	"<HTML><B>JBroFuzz Version:  " + VERSION + "<BR>" + "Codename: "
+			+ JBroFuzzFormat.getCodeName(JBroFuzzFormat.VERSION)
+			+ "</B><BR><BR>" + "<B>Copyright &copy; " + YEAR
+			+ " subere@uncon.org</B><BR><BR>" + "Running Under  Java "
+			+ System.getProperty("java.version") + "<BR><BR>"
+			+ "<B>A stateless network protocol fuzzer <BR>"
+			+ "for web applications." + "</B><BR></HTML>";
 
 	/**
 	 * <p>
@@ -225,7 +217,8 @@ public class JBroFuzzFormat {
 		if (s.length() < len) {
 			return s;
 		} else {
-			return StringUtils.abbreviate(s, len / 2) + StringUtils.right(s, len / 2);
+			return StringUtils.abbreviate(s, len / 2)
+					+ StringUtils.right(s, len / 2);
 		}
 	}
 
@@ -306,8 +299,8 @@ public class JBroFuzzFormat {
 
 		final String DATE_FORMAT = "DDD yyyy-MM-dd HH-mm-ss";
 
-		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT, new Locale(
-				ISO_LAN_CODE));
+		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT,
+				new Locale(ISO_LAN_CODE));
 
 		return SDF.format(new Date());
 	}
@@ -320,7 +313,7 @@ public class JBroFuzzFormat {
 	 * </p>
 	 * 
 	 * @param mJBroFuzz
-	 *          JBroFuzz
+	 *            JBroFuzz
 	 */
 	private static final int setLookAndFeel(final JBroFuzz mJBroFuzz) {
 		try {
@@ -350,24 +343,56 @@ public class JBroFuzzFormat {
 		}
 		return 0;
 	}
+	
+	/**
+	 * <p>Method for returning the dimension (width & height) of the
+	 * screen size.</p>
+	 * <p>In the event of an error it returns a dimension of (0,0).</p>
+	 * 
+	 * @return Dimension
+	 * 
+	 * @version 1.4
+	 * @since 1.4
+	 */
+	public static Dimension getScreenSize() {
+		
+		try {
+
+			return Toolkit.getDefaultToolkit().getScreenSize();
+
+		} catch (AWTError e1) {
+			
+			return new Dimension(0,0);
+			
+		} catch (HeadlessException e1) {
+			
+			return new Dimension (0,0);
+		}
+	    
+	  }
 
 	/**
 	 * <p>
-	 * The main constructor of this class, setting a number of variables, prior to
-	 * the launch of the graphical user interface.
+	 * The main constructor of this class, setting a number of variables, prior
+	 * to the launch of the graphical user interface.
 	 * </p>
 	 * 
-	 * @param mJBroFuzz
-	 *          JBroFuzz
+	 * @param mJBroFuzz JBroFuzz
+	 * 
+	 * @version 1.4
 	 */
 	public JBroFuzzFormat(final JBroFuzz mJBroFuzz) {
 
 		// Set the look and feel
 		JBroFuzzFormat.setLookAndFeel(mJBroFuzz);
+		
 		// Set some preferences for the mac
-		System.setProperty("apple.laf.useScreenMenuBar", "true");
-		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-				"JBroFuzz");
+		System
+		.setProperty("apple.laf.useScreenMenuBar", 
+					 "true");
+		System
+		.setProperty("com.apple.mrj.application.apple.menu.about.name", 
+					 "JBroFuzz");
 
 	}
 

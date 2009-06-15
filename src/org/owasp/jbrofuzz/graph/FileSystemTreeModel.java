@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -36,7 +36,7 @@ public class FileSystemTreeModel extends DefaultTreeModel {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 9140676458241640432L;
+	private static final long serialVersionUID = 9140676458241640432L;
 
 	public FileSystemTreeModel(FileSystemTreeNode root) {
 		super(root, true);

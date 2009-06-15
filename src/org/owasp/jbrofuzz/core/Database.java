@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -68,25 +68,25 @@ import org.apache.commons.lang.StringUtils;
 public class Database {
 
 	// The maximum number of chars to be read from file, regardless
-	private static final int						MAX_CHARS							= Short.MAX_VALUE;
+	private static final int MAX_CHARS = Short.MAX_VALUE;
 	// The maximum number of lines allowed to be read from the file
-	private static final int						MAX_LINES							= 1024;
+	private static final int MAX_LINES = 1024;
 	// The maximum length of a line allowed
-	private static final int						MAX_LINE_LENGTH				= 512;
+	private static final int MAX_LINE_LENGTH = 512;
 
 	// The maximum name length for a prototype
-	private static final int						MAX_PROTO_NAME_LENGTH	= Byte.MAX_VALUE;
+	private static final int MAX_PROTO_NAME_LENGTH = Byte.MAX_VALUE;
 	// The maximum number of payloads in a prototype
-	private static final int						MAX_NO_OF_PAYLOADS		= Byte.MAX_VALUE;
+	private static final int MAX_NO_OF_PAYLOADS = Byte.MAX_VALUE;
 	// The maximum number of categories of a prototype
-	private static final int						MAX_NO_OF_CATEGORIES	= Byte.MAX_VALUE;
+	private static final int MAX_NO_OF_CATEGORIES = Byte.MAX_VALUE;
 
-	private HashMap<String, Prototype>	prototypes;
+	private HashMap<String, Prototype> prototypes;
 
 	/**
 	 * <p>
-	 * Constructs a database of prototypes from file and by loading other fuzzers
-	 * as well.
+	 * Constructs a database of prototypes from file and by loading other
+	 * fuzzers as well.
 	 * </p>
 	 * 
 	 * 
@@ -134,7 +134,7 @@ public class Database {
 	 * Checks if the {@link #Database()} contains a Prototype with the given id
 	 * 
 	 * @param prototypeId
-	 *          e.g HTT-PMT-EDS, INT-LOW, or SQL-INJ
+	 *            e.g HTT-PMT-EDS, INT-LOW, or SQL-INJ
 	 * 
 	 * @return true if a Prototype with that prototypeId exists
 	 * 
@@ -150,14 +150,14 @@ public class Database {
 
 	/**
 	 * <p>
-	 * Method responsible for creating a Fuzzer, based on an existing prototypeId
-	 * and length specified.
+	 * Method responsible for creating a Fuzzer, based on an existing
+	 * prototypeId and length specified.
 	 * </p>
 	 * 
 	 * @param prototypeId
-	 *          prototypeId e.g HTT-PMT-EDS, INT-LOW, or SQL-INJ
+	 *            prototypeId e.g HTT-PMT-EDS, INT-LOW, or SQL-INJ
 	 * @param len
-	 *          The length of the fuzzer, used for recursive fuzzers
+	 *            The length of the fuzzer, used for recursive fuzzers
 	 * @return org.owasp.jbrofuzz.core#Fuzzer()
 	 * @throws NoSuchFuzzerException
 	 * 
@@ -171,7 +171,8 @@ public class Database {
 
 		if (!containsPrototype(prototypeId)) {
 
-			throw new NoSuchFuzzerException(StringUtils.abbreviate(prototypeId, 10)
+			throw new NoSuchFuzzerException(StringUtils.abbreviate(prototypeId,
+					10)
 					+ " : No Such Fuzzer Found in the Database ");
 
 		}
@@ -282,7 +283,7 @@ public class Database {
 	 * </p>
 	 * 
 	 * @param name
-	 *          e.g. "Uppercase HTTP Methods"
+	 *            e.g. "Uppercase HTTP Methods"
 	 * @return String the Id, or "" if the name is not found. e.g. "HTT-PMT-EDS"
 	 * 
 	 * @see #getName(String)
@@ -308,7 +309,7 @@ public class Database {
 	 * </p>
 	 * 
 	 * @param id
-	 *          e.g. "HTT-PMT-EDS"
+	 *            e.g. "HTT-PMT-EDS"
 	 * @return String e.g. "Uppercase HTTP Methods"
 	 * 
 	 * @see #getIdFromName(String)
@@ -328,7 +329,7 @@ public class Database {
 	 * </p>
 	 * 
 	 * @param id
-	 *          e.g. "HTT-PMT-EDS"
+	 *            e.g. "HTT-PMT-EDS"
 	 * @return String[] or String[0] if the prototype does not exist in the
 	 *         database
 	 * 
@@ -355,7 +356,7 @@ public class Database {
 	 * </p>
 	 * 
 	 * @param prototypeId
-	 *          e.g. "HTT-PMT-EDS"
+	 *            e.g. "HTT-PMT-EDS"
 	 * @return Prototype The Prototype for the given prototypeID
 	 * 
 	 * @author subere@uncon.org
@@ -370,11 +371,12 @@ public class Database {
 
 	/**
 	 * <p>
-	 * Given a category, return all prototype names that belong to that category.
+	 * Given a category, return all prototype names that belong to that
+	 * category.
 	 * </p>
 	 * 
 	 * @param category
-	 *          the category as a string to check
+	 *            the category as a string to check
 	 * @return String[] array of prototype names
 	 * 
 	 * @author subere@uncon.org
@@ -406,7 +408,7 @@ public class Database {
 	 * </p>
 	 * 
 	 * @param id
-	 *          e.g. "SQL-INJ"
+	 *            e.g. "SQL-INJ"
 	 * @return int value of size, 0 if Id does not exist.
 	 * 
 	 * @see #getPayloads(String)
@@ -432,8 +434,9 @@ public class Database {
 	 * </p>
 	 * 
 	 * <p>
-	 * This method has a considerable number of checks for loading prototypes from
-	 * the internal file, which can be removed, to speed up reading the file.
+	 * This method has a considerable number of checks for loading prototypes
+	 * from the internal file, which can be removed, to speed up reading the
+	 * file.
 	 * </p>
 	 * 
 	 * @return 0 if all ok, negative values in case of an error
@@ -462,14 +465,15 @@ public class Database {
 			final URLConnection connection = fileURL.openConnection();
 			connection.connect();
 
-			in = new BufferedReader(
-					new InputStreamReader(connection.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(connection
+					.getInputStream()));
 
 			int counter = 0;
 			int c;
 			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
 				// Allow the character only if its printable ascii or \n
-				if ((CharUtils.isAsciiPrintable((char) c)) || (((char) c) == '\n')) {
+				if ((CharUtils.isAsciiPrintable((char) c))
+						|| (((char) c) == '\n')) {
 					fileContents.append((char) c);
 				}
 				counter++;
@@ -599,7 +603,8 @@ public class Database {
 			}
 
 			// Alas! Finally create a prototype
-			final Prototype proto = new Prototype(_fla[0].charAt(0), _fla[1], _fla[2]);
+			final Prototype proto = new Prototype(_fla[0].charAt(0), _fla[1],
+					_fla[2]);
 
 			// If categories do exist in the second line
 			if (_sla.length > 0) {

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -33,15 +33,15 @@ import java.io.File;
 
 public class JohnyWalker {
 
-	private FileSystemTreeNode	master;
+	private FileSystemTreeNode master;
 
-	private File								directory;
+	private File directory;
 
-	private GraphingPanel				x3;
+	private GraphingPanel x3;
 
 	//
 
-	private int									fileCount, dirCount;
+	private int fileCount, dirCount;
 
 	public JohnyWalker(GraphingPanel x3) {
 

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -31,9 +31,9 @@ package org.owasp.jbrofuzz.headers;
 
 public class Header {
 
-	private int	id, noOfFields;
+	private int id, noOfFields;
 
-	private String	header, comment;
+	private String header, comment;
 
 	/**
 	 * @param id
@@ -97,7 +97,7 @@ public class Header {
 
 	/**
 	 * @param comment
-	 *          the comment to set
+	 *            the comment to set
 	 */
 	protected void setComment(String comment) {
 		this.comment = comment;
@@ -105,7 +105,7 @@ public class Header {
 
 	/**
 	 * @param value
-	 *          the value to set
+	 *            the value to set
 	 */
 	public void setHeader(String value) {
 		header = value;
@@ -113,7 +113,7 @@ public class Header {
 
 	/**
 	 * @param id
-	 *          the id to set
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -121,7 +121,7 @@ public class Header {
 
 	/**
 	 * @param noOfFields
-	 *          the noOfFields to set
+	 *            the noOfFields to set
 	 */
 	public void setNoOfFields(int noOfFields) {
 		this.noOfFields = noOfFields;

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -39,7 +39,7 @@ final class PayloadsRowListener implements ListSelectionListener {
 	/**
 	 * 
 	 */
-	private final PayloadsPanel	payloadsPanel;
+	private final PayloadsPanel payloadsPanel;
 
 	/**
 	 * <p>
@@ -63,7 +63,7 @@ final class PayloadsRowListener implements ListSelectionListener {
 	 * </p>
 	 * 
 	 * @param event
-	 *          ListSelectionEvent
+	 *            ListSelectionEvent
 	 */
 	public void valueChanged(final ListSelectionEvent event) {
 
@@ -75,7 +75,8 @@ final class PayloadsRowListener implements ListSelectionListener {
 		final int d = payloadsPanel.payloadsTable.getSelectedRow();
 		try {
 
-			payload = (String) payloadsPanel.payloadsTableModel.getValueAt(d, 0);
+			payload = (String) payloadsPanel.payloadsTableModel
+					.getValueAt(d, 0);
 
 		} catch (IndexOutOfBoundsException e) {
 			return;

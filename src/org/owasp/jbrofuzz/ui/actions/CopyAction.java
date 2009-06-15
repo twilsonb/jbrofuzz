@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -39,7 +39,7 @@ import javax.swing.text.TextAction;
 
 public class CopyAction extends TextAction {
 
-	private static final long	serialVersionUID	= 3537881376042160461L;
+	private static final long serialVersionUID = 3537881376042160461L;
 
 	public CopyAction() {
 		super("Copy");
@@ -64,8 +64,13 @@ public class CopyAction extends TextAction {
 						for (final int element : selection) {
 							for (int i = 0; i < table.getColumnCount(); i++) {
 
-								selectionBuffer.append(table.getModel().getValueAt(
-										table.convertRowIndexToModel(element), i));
+								selectionBuffer
+										.append(table
+												.getModel()
+												.getValueAt(
+														table
+																.convertRowIndexToModel(element),
+														i));
 								if (i < table.getColumnCount() - 1) {
 									selectionBuffer.append(",");
 								}
@@ -78,7 +83,8 @@ public class CopyAction extends TextAction {
 						myTempArea.setText(selectionBuffer.toString());
 						myTempArea.selectAll();
 						myTempArea.copy();
-						table.removeRowSelectionInterval(0, table.getRowCount() - 1);
+						table.removeRowSelectionInterval(0,
+								table.getRowCount() - 1);
 
 					}
 

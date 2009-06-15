@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -70,10 +70,10 @@ public class Connection {
 
 	// The maximum size for the socket I/O
 	// private final static int SEND_BUF_SIZE = 256 * 1024;
-	private final static int				RECV_BUF_SIZE	= 256 * 1024;
+	private final static int RECV_BUF_SIZE = 256 * 1024;
 
 	// Singleton SSLSocket factory used with it's factory
-	private static SSLSocketFactory	mSSLSocketFactory;
+	private static SSLSocketFactory mSSLSocketFactory;
 
 	/**
 	 * <p>
@@ -104,23 +104,25 @@ public class Connection {
 		} catch (KeyManagementException e) {
 			System.out.println("No SSL algorithm support: " + e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
-			System.out.println("Exception when setting up the Naive key management.");
+			System.out
+					.println("Exception when setting up the Naive key management.");
 		}
 
 		return (SSLSocketFactory) SSLSocketFactory.getDefault();
 	}
-	private String									message;
-	private Socket									mSocket;
-	private String									reply;
-	private URL											url						= null;
-	private int											port;
 
-	private String									host, protocol;
-	private InputStream							in_stream;
+	private String message;
+	private Socket mSocket;
+	private String reply;
+	private URL url = null;
+	private int port;
 
-	private OutputStream						out_stream;
+	private String host, protocol;
+	private InputStream in_stream;
 
-	private int											socketTimeout;
+	private OutputStream out_stream;
+
+	private int socketTimeout;
 
 	/**
 	 * <p>
@@ -130,12 +132,13 @@ public class Connection {
 	 * </p>
 	 * 
 	 * @param urlString
-	 *          The url string from which the protocol (e.g. "https"), the host
-	 *          (e.g. www.owasp.org) and the port number will be determined.
+	 *            The url string from which the protocol (e.g. "https"), the
+	 *            host (e.g. www.owasp.org) and the port number will be
+	 *            determined.
 	 * 
 	 * @param message
-	 *          of what to put on the wire, once a connection has been
-	 *          established.
+	 *            of what to put on the wire, once a connection has been
+	 *            established.
 	 * 
 	 * @throws ConnectionException
 	 * 
@@ -198,7 +201,8 @@ public class Connection {
 
 				// Handle HTTP differently then HTTPS
 				mSocket = new Socket();
-				mSocket.connect(new InetSocketAddress(host, port), socketTimeout);
+				mSocket.connect(new InetSocketAddress(host, port),
+						socketTimeout);
 			}
 
 			// Set buffers, streams, smile...
@@ -225,13 +229,15 @@ public class Connection {
 
 					// Check if \r\n has come in, in its many shapes and forms
 					final String incoming = new String(baos.toByteArray());
-					if (incoming.contains("\r\n\r\n") || incoming.contains("\n\n")
+					if (incoming.contains("\r\n\r\n")
+							|| incoming.contains("\n\n")
 							|| incoming.contains("\r\r")) {
 
 						// Check if Chunked Encoding is being used
 						if (incoming.contains("Transfer-Encoding: chunked")) {
 
-							if (incoming.contains("\r\n0\r\n") || incoming.contains("\n0\n")
+							if (incoming.contains("\r\n0\r\n")
+									|| incoming.contains("\n0\n")
 									|| incoming.contains("\r0\r")) {
 								end_reached = true;
 							}
@@ -331,9 +337,9 @@ public class Connection {
 	 * message that has been transmitted during construction.
 	 * </p>
 	 * <p>
-	 * Revisited this method in JBroFuzz 1.3 in order NOT to throw an exception if
-	 * the reply string is empty, see {@link #getMessage()} for old implementation
-	 * logic.
+	 * Revisited this method in JBroFuzz 1.4 in order NOT to throw an exception
+	 * if the reply string is empty, see {@link #getMessage()} for old
+	 * implementation logic.
 	 * </p>
 	 * 
 	 * @return String The reply string
@@ -395,7 +401,7 @@ public class Connection {
 	 * </p>
 	 * 
 	 * @param message
-	 *          The input string used
+	 *            The input string used
 	 * @return boolean True if HTTP/1.1 is found on the first line
 	 */
 	public boolean protocolIsHTTP11(String message) {

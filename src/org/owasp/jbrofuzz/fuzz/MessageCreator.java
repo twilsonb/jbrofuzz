@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -63,15 +63,16 @@ public class MessageCreator {
 		while (found != -1) {
 			found = returnString.indexOf(toFind, start);
 			if (found != -1) {
-				returnString = returnString.substring(0, found).concat(substitute)
-						.concat(returnString.substring(found + toFind.length()));
+				returnString = returnString.substring(0, found).concat(
+						substitute).concat(
+						returnString.substring(found + toFind.length()));
 			}
 			start = found + substitute.length();
 		}
 		return returnString;
 	}
 
-	private String	message, payload;
+	private String message, payload;
 
 	/**
 	 * <p>
@@ -81,9 +82,9 @@ public class MessageCreator {
 	 * This value is '\n' or '\r\n'.
 	 * </p>
 	 */
-	public String		END_LINE;
+	public String END_LINE;
 
-	private int			start, finish;
+	private int start, finish;
 
 	public MessageCreator(String message, String payload, int start, int finish) {
 
@@ -93,8 +94,9 @@ public class MessageCreator {
 		END_LINE = endLineChar ? "\n" : "\r\n";
 
 		// Message is not a valid message
-		if ((message == null) || (payload == null) || (start < 0) || (finish < 0)
-				|| (start > message.length()) || (finish > message.length())) {
+		if ((message == null) || (payload == null) || (start < 0)
+				|| (finish < 0) || (start > message.length())
+				|| (finish > message.length())) {
 
 			this.message = message == null ? "" : stringReplace("\n", message,
 					END_LINE);
@@ -126,12 +128,14 @@ public class MessageCreator {
 			messageBuffer.append(payload);
 			messageBuffer.append(message.substring(this.finish));
 
-			this.message = stringReplace("\n", messageBuffer.toString(), END_LINE);
+			this.message = stringReplace("\n", messageBuffer.toString(),
+					END_LINE);
 
 			// By now we have the complete message with the payload in the right
 			// location
 
-			if ((this.message.startsWith("GET")) || (this.message.startsWith("HEAD"))) {
+			if ((this.message.startsWith("GET"))
+					|| (this.message.startsWith("HEAD"))) {
 
 				if (!this.message.endsWith(END_LINE + END_LINE)) {
 
@@ -161,10 +165,13 @@ public class MessageCreator {
 						if (neol != -1) {
 							// Retrieve the value until the next "\r\n"
 							// character
-							String contentLengthString = this.message.substring(ctl
-									+ "Content-Length:".length(), neol);
+							String contentLengthString = this.message
+									.substring(
+											ctl + "Content-Length:".length(),
+											neol);
 							try {
-								contentLength = Integer.parseInt(contentLengthString);
+								contentLength = Integer
+										.parseInt(contentLengthString);
 							} catch (NumberFormatException e) {
 								contentLength = 0;
 							}
@@ -174,26 +181,32 @@ public class MessageCreator {
 							if (contentLength != postValue.getBytes().length) {
 
 								StringBuffer newMessageBuffer = new StringBuffer();
-								newMessageBuffer.append(this.message.substring(0, ctl
-										+ "Content-Length:".length()));
+								newMessageBuffer.append(this.message.substring(
+										0, ctl + "Content-Length:".length()));
 								try {
 
-									newMessageBuffer.append(" "
-											+ postValue.getBytes("ISO-8859-1").length);
+									newMessageBuffer
+											.append(" "
+													+ postValue
+															.getBytes("ISO-8859-1").length);
 
 								} catch (UnsupportedEncodingException e) {
 
-									newMessageBuffer.append(" " + postValue.getBytes().length);
+									newMessageBuffer.append(" "
+											+ postValue.getBytes().length);
 
 								}
 
 								// If the remaining header starts with "\r\n"
 								// then the "Content-Length was the last header
 								// line
-								String remainingHeader = this.message.substring(neol, eoh
-										+ (END_LINE + END_LINE).length());
+								String remainingHeader = this.message
+										.substring(neol, eoh
+												+ (END_LINE + END_LINE)
+														.length());
 								if (remainingHeader.startsWith(END_LINE)) {
-									newMessageBuffer.append(END_LINE + END_LINE);
+									newMessageBuffer
+											.append(END_LINE + END_LINE);
 								} else {
 									newMessageBuffer.append(remainingHeader);
 								}
@@ -253,8 +266,8 @@ public class MessageCreator {
 	 * to show special characters.
 	 * </p>
 	 * <p>
-	 * This method will display a '\n' character as \\n and also a '\r' character
-	 * as a \\r.
+	 * This method will display a '\n' character as \\n and also a '\r'
+	 * character as a \\r.
 	 * </p>
 	 * <p>
 	 * It can act unexpectedly if {@link #END_LINE} is not a '\n' or a '\r\n'.
@@ -298,7 +311,7 @@ public class MessageCreator {
 
 	/**
 	 * @param finish
-	 *          the finish to set
+	 *            the finish to set
 	 */
 	public void setFinish(int finish) {
 		this.finish = finish;
@@ -306,7 +319,7 @@ public class MessageCreator {
 
 	/**
 	 * @param message
-	 *          the message to set
+	 *            the message to set
 	 */
 	public void setMessage(String message) {
 
@@ -316,7 +329,7 @@ public class MessageCreator {
 
 	/**
 	 * @param fuzzer
-	 *          the payload to set
+	 *            the payload to set
 	 */
 	public void setPayload(String payload) {
 		this.payload = payload;
@@ -324,7 +337,7 @@ public class MessageCreator {
 
 	/**
 	 * @param start
-	 *          the start to set
+	 *            the start to set
 	 */
 	public void setStart(int start) {
 		this.start = start;

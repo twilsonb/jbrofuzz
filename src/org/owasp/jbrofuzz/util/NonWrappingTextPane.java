@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -51,7 +51,7 @@ import javax.swing.plaf.ComponentUI;
  */
 public class NonWrappingTextPane extends JTextPane {
 
-	private static final long	serialVersionUID	= -6032784558789430963L;
+	private static final long serialVersionUID = -6032784558789430963L;
 
 	/**
 	 * <p>

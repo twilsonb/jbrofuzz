@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -61,16 +61,17 @@ public class JBroFuzzToolBar extends JToolBar {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
-	private final JBroFuzzWindow	mFrameWindow;
+	private final JBroFuzzWindow mFrameWindow;
 
-	private final JButton					start, stop, graph, add, remove, help, about,
+	private final JButton start, stop, graph, add, remove, help, about,
 			website;
 
 	/**
 	 * <p>
-	 * The constructor of the tool bar, taking as parameter the main frame window.
+	 * The constructor of the tool bar, taking as parameter the main frame
+	 * window.
 	 * </p>
 	 * 
 	 * @param mFrameWindow
@@ -121,7 +122,7 @@ public class JBroFuzzToolBar extends JToolBar {
 
 				final class Starter extends SwingWorker<String, Object> {
 
-					JBroFuzzPanel	p;
+					JBroFuzzPanel p;
 
 					@Override
 					public String doInBackground() {
@@ -151,7 +152,8 @@ public class JBroFuzzToolBar extends JToolBar {
 			public void actionPerformed(final ActionEvent e) {
 
 				int c = getFrame().getTp().getSelectedIndex();
-				JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
+				JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						.getComponent(c);
 				p.stop();
 
 			}
@@ -219,7 +221,8 @@ public class JBroFuzzToolBar extends JToolBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new AboutBox(JBroFuzzToolBar.this.getFrame(), AboutBox.ABOUT);
+						new AboutBox(JBroFuzzToolBar.this.getFrame(),
+								AboutBox.ABOUT);
 					}
 				});
 			}
@@ -234,8 +237,11 @@ public class JBroFuzzToolBar extends JToolBar {
 						try {
 							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 						} catch (final IOException ex) {
-							JBroFuzzToolBar.this.getFrame().log(
-									"Could not launch link in external browser", 3);
+							JBroFuzzToolBar.this
+									.getFrame()
+									.log(
+											"Could not launch link in external browser",
+											3);
 						}
 					}
 				});
@@ -268,7 +274,7 @@ public class JBroFuzzToolBar extends JToolBar {
 	 * </p>
 	 * 
 	 * @param b
-	 *          A boolean array of five elements
+	 *            A boolean array of five elements
 	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3

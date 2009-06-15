@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -47,10 +47,10 @@ import javax.swing.filechooser.FileFilter;
  */
 public class JBroFuzzFileFilter extends FileFilter {
 
-	private Hashtable<String, JBroFuzzFileFilter>	filters											= null;
-	private String																description									= null;
-	private String																fullDescription							= null;
-	private boolean																useExtensionsInDescription	= true;
+	private Hashtable<String, JBroFuzzFileFilter> filters = null;
+	private String description = null;
+	private String fullDescription = null;
+	private boolean useExtensionsInDescription = true;
 
 	/**
 	 * Creates a file filter. If no filters are added, then all files are
@@ -67,13 +67,13 @@ public class JBroFuzzFileFilter extends FileFilter {
 	}
 
 	/**
-	 * Return true if this file should be shown in the directory pane, false if it
-	 * shouldn't.
+	 * Return true if this file should be shown in the directory pane, false if
+	 * it shouldn't.
 	 * 
 	 * Files that begin with "." are ignored.
 	 * 
 	 * @param f
-	 *          The file that should be checked
+	 *            The file that should be checked
 	 * @return true if this file should be shown
 	 * 
 	 * @see #getExtension
@@ -126,7 +126,8 @@ public class JBroFuzzFileFilter extends FileFilter {
 	public String getDescription() {
 		if (fullDescription == null) {
 			if (description == null || isExtensionListInDescription()) {
-				fullDescription = description == null ? "(" : description + " (";
+				fullDescription = description == null ? "(" : description
+						+ " (";
 				// build the description from the extension list
 				Enumeration<String> extensions = filters.keys();
 				if (extensions != null) {
@@ -162,8 +163,8 @@ public class JBroFuzzFileFilter extends FileFilter {
 	}
 
 	/**
-	 * Returns whether the extension list (.jpg, .gif, etc) should show up in the
-	 * human readable description.
+	 * Returns whether the extension list (.jpg, .gif, etc) should show up in
+	 * the human readable description.
 	 * 
 	 * Only relevant if a description was provided in the constructor or using
 	 * setDescription();

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -38,7 +38,7 @@ final class FuzzersRowListener implements ListSelectionListener {
 	/**
 	 * 
 	 */
-	private final PayloadsPanel	payloadsPanel;
+	private final PayloadsPanel payloadsPanel;
 
 	/**
 	 * 
@@ -59,7 +59,7 @@ final class FuzzersRowListener implements ListSelectionListener {
 	 * </p>
 	 * 
 	 * @param event
-	 *          ListSelectionEvent
+	 *            ListSelectionEvent
 	 */
 	public void valueChanged(final ListSelectionEvent event) {
 
@@ -85,9 +85,9 @@ final class FuzzersRowListener implements ListSelectionListener {
 
 		if (payloadsPanel.payloadsTableModel.getRowCount() >= 0) {
 
-			payloadsPanel.payloadsPanel
-					.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-							.createTitledBorder(" " + name + " - " + id + " "), BorderFactory
+			payloadsPanel.payloadsPanel.setBorder(BorderFactory
+					.createCompoundBorder(BorderFactory.createTitledBorder(" "
+							+ name + " - " + id + " "), BorderFactory
 							.createEmptyBorder(1, 1, 1, 1)));
 
 			payloadsPanel.fuzzerInfoTextArea.setText("\nFuzzer Name: "
@@ -101,11 +101,11 @@ final class FuzzersRowListener implements ListSelectionListener {
 					+ id
 					+ "\n\n"
 					+ "Total Number of Payloads: "
-					+ payloadsPanel.getFrame().getJBroFuzz().getDatabase().getSize(
-							id));
+					+ payloadsPanel.getFrame().getJBroFuzz().getDatabase()
+							.getSize(id));
 			payloadsPanel.fuzzerInfoTextArea
-					.setCaretPosition(payloadsPanel.fuzzerInfoTextArea.getText()
-							.length());
+					.setCaretPosition(payloadsPanel.fuzzerInfoTextArea
+							.getText().length());
 
 		}
 

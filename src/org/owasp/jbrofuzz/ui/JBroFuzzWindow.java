@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -75,64 +75,64 @@ public class JBroFuzzWindow extends JFrame {
 	/**
 	 * 
 	 */
-	private static final long			serialVersionUID	= -8055724052613595729L;
+	private static final long serialVersionUID = -8055724052613595729L;
 
 	/**
 	 * Unique int identifier for the Graphing Panel
 	 */
-	public static final int				ID_PANEL_GRAPHING	= 121;
+	public static final int ID_PANEL_GRAPHING = 121;
 
 	/**
 	 * Unique int identifier for the Headers Panel
 	 */
-	public static final int				ID_PANEL_HEADERS	= 123;
+	public static final int ID_PANEL_HEADERS = 123;
 
 	/**
 	 * Unique int identifier for the Fuzzing Panel
 	 */
-	public static final int				ID_PANEL_FUZZING	= 124;
+	public static final int ID_PANEL_FUZZING = 124;
 
 	/**
 	 * Unique int identifier for the Payloads Panel
 	 */
-	public static final int				ID_PANEL_PAYLOADS	= 125;
+	public static final int ID_PANEL_PAYLOADS = 125;
 
 	/**
 	 * Unique int identifier for the System Panel
 	 */
-	public static final int				ID_PANEL_SYSTEM		= 126;
+	public static final int ID_PANEL_SYSTEM = 126;
 
 	// The main Object behind it all...
-	private final JBroFuzz				mJBroFuzz;
+	private final JBroFuzz mJBroFuzz;
 
 	// The main menu bar attached to this window frame...
-	private final JBroFuzzMenuBar	mb;
+	private final JBroFuzzMenuBar mb;
 
 	// The tabbed pane holding the different views
-	private JTabbedPane						tp;
+	private JTabbedPane tp;
 
 	// The web directories panel
-	private final GraphingPanel		gp;
+	private final GraphingPanel gp;
 
 	// The main sniffing panel
-	private final HeadersPanel		sp;
+	private final HeadersPanel sp;
 
 	// The main definitions panel
-	private final PayloadsPanel		pp;
+	private final PayloadsPanel pp;
 
 	// The main fuzzing panel
-	private final FuzzingPanel		fp;
+	private final FuzzingPanel fp;
 
 	// The system logger panel
-	private final SystemPanel			cp;
+	private final SystemPanel cp;
 
 	// The toolbar of the window
-	private JBroFuzzToolBar				tb;
+	private JBroFuzzToolBar tb;
 
 	// The file to which the window saves to
-	private File									currentFile;
+	private File currentFile;
 	// A boolean to see if the current file is set
-	private boolean								isCurrentFileSet;
+	private boolean isCurrentFileSet;
 
 	/**
 	 * <p>
@@ -140,15 +140,15 @@ public class JBroFuzzWindow extends JFrame {
 	 * </p>
 	 * 
 	 * @param mJBroFuzz
-	 *          JBroFuzz
+	 *            JBroFuzz
 	 */
 	public JBroFuzzWindow(final JBroFuzz mJBroFuzz) {
 
 		// The frame
 		super(" JBroFuzz - Untitled ");
 		this.mJBroFuzz = mJBroFuzz;
-		currentFile = new File(System.getProperty("user.home")
-				+ File.separator + "Untitled.jbrofuzz");
+		currentFile = new File(System.getProperty("user.home") + File.separator
+				+ "Untitled.jbrofuzz");
 		isCurrentFileSet = false;
 
 		// The container pane
@@ -201,11 +201,16 @@ public class JBroFuzzWindow extends JFrame {
 				if (c >= 0) {
 
 					boolean[] b = new boolean[5];
-					b[0] = ((JBroFuzzPanel) pane.getComponent(c)).isStartedEnabled();
-					b[1] = ((JBroFuzzPanel) pane.getComponent(c)).isStoppedEnabled();
-					b[2] = ((JBroFuzzPanel) pane.getComponent(c)).isGraphedEnabled();
-					b[3] = ((JBroFuzzPanel) pane.getComponent(c)).isAddedEnabled();
-					b[4] = ((JBroFuzzPanel) pane.getComponent(c)).isRemovedEnabled();
+					b[0] = ((JBroFuzzPanel) pane.getComponent(c))
+							.isStartedEnabled();
+					b[1] = ((JBroFuzzPanel) pane.getComponent(c))
+							.isStoppedEnabled();
+					b[2] = ((JBroFuzzPanel) pane.getComponent(c))
+							.isGraphedEnabled();
+					b[3] = ((JBroFuzzPanel) pane.getComponent(c))
+							.isAddedEnabled();
+					b[4] = ((JBroFuzzPanel) pane.getComponent(c))
+							.isRemovedEnabled();
 
 					// Set the toolbar/menubar options which are enabled
 					tb.setEnabledPanelOptions(b);
@@ -219,22 +224,6 @@ public class JBroFuzzWindow extends JFrame {
 		pane.add(tb, BorderLayout.PAGE_START);
 		pane.add(tp, BorderLayout.CENTER);
 
-		// The image icon and min size
-		setIconImage(ImageCreator.IMG_FRAME.getImage());
-		setMinimumSize(new Dimension(400, 300));
-
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(final WindowEvent e) {
-				exitProcedure();
-			}
-		});
-
-		this.setLocation(50, 100);
-		this.setSize(950, 600);
-		setResizable(true);
-		setVisible(true);
 
 		log("System Launch, Welcome!", 1);
 
@@ -261,6 +250,51 @@ public class JBroFuzzWindow extends JFrame {
 			(new StartUpdateCheck()).execute();
 		}
 
+	}
+	
+	public static void createAndShowGUI(final JBroFuzzWindow mJBroFuzzWindow) {
+		
+		final Dimension min_size = new Dimension(400, 300);
+		
+		// The image icon and minimum size
+		mJBroFuzzWindow.setIconImage(ImageCreator.IMG_FRAME.getImage());
+		mJBroFuzzWindow.setMinimumSize(min_size);
+
+		mJBroFuzzWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		mJBroFuzzWindow.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(final WindowEvent e) {
+				mJBroFuzzWindow.exitProcedure();
+			}
+		});
+
+		// Set the location of the window
+		mJBroFuzzWindow.setLocation(50, 100);
+		// mJBroFuzzWindow.setSize(950, 600);
+		
+		// Set the size of the window, relative to the screen size
+		final Dimension scr_res = JBroFuzzFormat.getScreenSize();
+		if( (scr_res.width == 0) || (scr_res.height == 0) ) {
+			
+			mJBroFuzzWindow.setSize(min_size);
+			
+		} else {
+			
+			final int window_width = scr_res.width - 200;
+			final int window_height = scr_res.height - 200;
+			// Check that the screen is width/length is +tive
+			if( (window_width > 0) && (window_height > 0) ) {
+				
+				mJBroFuzzWindow.setSize(window_width, window_height);
+				
+			} else {
+				
+				mJBroFuzzWindow.setSize(min_size);
+				
+			}
+		}
+		mJBroFuzzWindow.setResizable(true);
+		mJBroFuzzWindow.setVisible(true);
 	}
 
 	/**
@@ -319,8 +353,8 @@ public class JBroFuzzWindow extends JFrame {
 
 	/**
 	 * <p>
-	 * Method for returning the m menu bar that is being instantiated through the
-	 * m window.
+	 * Method for returning the m menu bar that is being instantiated through
+	 * the m window.
 	 * </p>
 	 * 
 	 * @return mMenuBar
@@ -361,8 +395,8 @@ public class JBroFuzzWindow extends JFrame {
 
 	/**
 	 * <p>
-	 * Method returning the m definitions panel that is being instantiated through
-	 * the m window.
+	 * Method returning the m definitions panel that is being instantiated
+	 * through the m window.
 	 * </p>
 	 * 
 	 * @return mDefinitionsPanel
@@ -429,7 +463,7 @@ public class JBroFuzzWindow extends JFrame {
 	 * </p>
 	 * 
 	 * @param name
-	 *          The name of the tab, e.g. " Fuzzing ", " Payloads ", ...
+	 *            The name of the tab, e.g. " Fuzzing ", " Payloads ", ...
 	 * @return True if tab with that name is open
 	 * 
 	 * @author subere@uncon.org
@@ -457,11 +491,11 @@ public class JBroFuzzWindow extends JFrame {
 	 * </p>
 	 * 
 	 * @param str
-	 *          String The text to be logged
+	 *            String The text to be logged
 	 * @param level
-	 *          The severity level <= 0 => [INFO] Violet Informational == 1 =>
-	 *          [OPPR] Blue Operational == 2 => [WARN] Green Warning == 3 =>
-	 *          [SHOT] Amber Shout - light error >= 4 => [ERRR] Red Error
+	 *            The severity level <= 0 => [INFO] Violet Informational == 1 =>
+	 *            [OPPR] Blue Operational == 2 => [WARN] Green Warning == 3 =>
+	 *            [SHOT] Amber Shout - light error >= 4 => [ERRR] Red Error
 	 * 
 	 */
 	public void log(final String str, final int level) {
@@ -477,17 +511,17 @@ public class JBroFuzzWindow extends JFrame {
 	 * 
 	 * @see #setOpenFileTo(File)
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.4
 	 * @since 1.2
 	 */
 	public void setCloseFile() {
 
 		isCurrentFileSet = false;
 
-		currentFile = new File(System.getProperty("user.home")
-				+ File.separator + "Untitled.jbrofuzz");
-		getPanelFuzzing().setTextURL("https://www.owasp.org");
-		getPanelFuzzing().setTextRequest(JBroFuzzFormat.URL_REQUEST);
+		currentFile = new File(System.getProperty("user.home") + File.separator
+				+ "Untitled.jbrofuzz");
+		// getPanelFuzzing().setTextURL("https://www.owasp.org");
+		// getPanelFuzzing().setTextRequest(JBroFuzzFormat.URL_REQUEST);
 
 	}
 
@@ -519,11 +553,11 @@ public class JBroFuzzWindow extends JFrame {
 	}
 
 	/**
-	 * Set which tab to hide based on the int n of ID values. These are taken from
-	 * the FrameWindow.
+	 * Set which tab to hide based on the int n of ID values. These are taken
+	 * from the FrameWindow.
 	 * 
 	 * @param n
-	 *          int
+	 *            int
 	 */
 	public void setTabHide(final int n) {
 
@@ -568,17 +602,18 @@ public class JBroFuzzWindow extends JFrame {
 
 	/**
 	 * <p>
-	 * Set which tab to show based on the int n of ID values. These are taken from
-	 * the JBroFuzzWindow.
+	 * Set which tab to show based on the int n of ID values. These are taken
+	 * from the JBroFuzzWindow.
 	 * </p>
 	 * <p>
-	 * If the tab is already present and does not need to be added, set the tab as
-	 * the selected component.
+	 * If the tab is already present and does not need to be added, set the tab
+	 * as the selected component.
 	 * </p>
 	 * 
 	 * 
 	 * @param n
-	 *          The integer value representing each panel, defined in this class.
+	 *            The integer value representing each panel, defined in this
+	 *            class.
 	 */
 	public void setTabShow(final int n) {
 
@@ -627,7 +662,9 @@ public class JBroFuzzWindow extends JFrame {
 	@Override
 	public void setTitle(String s) {
 
-		super.setTitle(" JBroFuzz - " + JBroFuzzFormat.centerAbbreviate(s, 256));
+		super
+				.setTitle(" JBroFuzz - "
+						+ JBroFuzzFormat.centerAbbreviate(s, 256));
 
 	}
 

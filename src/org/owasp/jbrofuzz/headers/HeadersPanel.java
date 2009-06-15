@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -56,6 +56,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -63,7 +64,7 @@ import org.owasp.jbrofuzz.util.TextHighlighter;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.4
  */
 public class HeadersPanel extends JBroFuzzPanel implements
 		TreeSelectionListener {
@@ -71,19 +72,19 @@ public class HeadersPanel extends JBroFuzzPanel implements
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1835892912239470843L;
 	// The split pane at the centre of the screen
-	private JSplitPane		mainSplitPanel, rVSplitPanel, rHSplitPanel;
+	private JSplitPane mainSplitPanel, rVSplitPanel, rHSplitPanel;
 	// The main file tree object
-	private JTree					tree;
+	private JTree tree;
 	// The progress bar displayed
-	private JProgressBar	progressBar;
+	private JProgressBar progressBar;
 	// A boolean to check if we are running or not
-	private boolean				stopped;
+	private boolean stopped;
 	// The header, info and comment text area
-	private NonWrappingTextPane	hTxTArea, iTxTArea, cTxTArea;
+	private NonWrappingTextPane hTxTArea, iTxTArea, cTxTArea;
 	// The header's loader
-	private HeaderLoader				mHeadersLoader;
+	private HeaderLoader mHeadersLoader;
 
 	public HeadersPanel(final JBroFuzzWindow m) {
 
@@ -108,7 +109,8 @@ public class HeadersPanel extends JBroFuzzPanel implements
 
 		final JPanel treePanel = new JPanel(new BorderLayout());
 		treePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" "), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+				.createTitledBorder(" "), BorderFactory.createEmptyBorder(5, 5,
+				5, 5)));
 
 		treePanel.add(treeScrollPanel);
 
@@ -131,7 +133,7 @@ public class HeadersPanel extends JBroFuzzPanel implements
 			/**
 			 * 
 			 */
-			private static final long	serialVersionUID	= -4550261337511448681L;
+			private static final long serialVersionUID = -4550261337511448681L;
 
 			@Override
 			public Document createDefaultDocument() {
@@ -149,8 +151,8 @@ public class HeadersPanel extends JBroFuzzPanel implements
 
 		final JPanel headerPanel = new JPanel(new BorderLayout());
 		headerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Header "), BorderFactory.createEmptyBorder(5, 5,
-				5, 5)));
+				.createTitledBorder(" Header "), BorderFactory
+				.createEmptyBorder(5, 5, 5, 5)));
 
 		headerPanel.add(hScrollPane);
 
@@ -168,8 +170,8 @@ public class HeadersPanel extends JBroFuzzPanel implements
 
 		final JPanel infoPanel = new JPanel(new BorderLayout());
 		infoPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Information "), BorderFactory.createEmptyBorder(
-				5, 5, 5, 5)));
+				.createTitledBorder(" Information "), BorderFactory
+				.createEmptyBorder(5, 5, 5, 5)));
 
 		infoPanel.add(iScrollPane);
 
@@ -187,32 +189,63 @@ public class HeadersPanel extends JBroFuzzPanel implements
 
 		final JPanel commentPanel = new JPanel(new BorderLayout());
 		commentPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Comment "), BorderFactory.createEmptyBorder(5, 5,
-				5, 5)));
+				.createTitledBorder(" Comment "), BorderFactory
+				.createEmptyBorder(5, 5, 5, 5)));
 
 		commentPanel.add(cScrollPane);
 
 		// The right horizontal split panel
 		rHSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		rHSplitPanel.setOneTouchExpandable(false);
-		rHSplitPanel.setDividerLocation(430);
 		rHSplitPanel.setLeftComponent(headerPanel);
 		rHSplitPanel.setRightComponent(infoPanel);
 
 		// The right vertical split panel
 		rVSplitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		rVSplitPanel.setOneTouchExpandable(false);
-		rVSplitPanel.setDividerLocation(350);
 		rVSplitPanel.setTopComponent(rHSplitPanel);
 		rVSplitPanel.setBottomComponent(commentPanel);
 
 		// The main split pane and friends
 		mainSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		mainSplitPanel.setOneTouchExpandable(false);
-		mainSplitPanel.setDividerLocation(300);
 		mainSplitPanel.setLeftComponent(treePanel);
 		mainSplitPanel.setRightComponent(rVSplitPanel);
 
+		// Set the divider locations, relative to the screen size
+		final Dimension scr_res = JBroFuzzFormat.getScreenSize();
+		if( (scr_res.width == 0) || (scr_res.height == 0) ) {
+			
+			rHSplitPanel.setDividerLocation(430);
+			rVSplitPanel.setDividerLocation(350);
+			mainSplitPanel.setDividerLocation(300);
+
+			
+		} else {
+			
+			final int window_width = scr_res.width - 200;
+			final int window_height = scr_res.height - 200;
+			// Check that the screen is width/length is +tive
+			if( (window_width > 0) && (window_height > 0) ) {
+				
+				rHSplitPanel.setDividerLocation( window_width * 2 / 5 );
+				rVSplitPanel.setDividerLocation( window_height / 2 );
+				mainSplitPanel.setDividerLocation( window_height / 2 );
+
+
+				// topPane.setDividerLocation( window_width * 2 / 3 );
+				// mainPane.setDividerLocation( window_height / 2 );
+				
+			} else {
+				
+				rHSplitPanel.setDividerLocation(430);
+				rVSplitPanel.setDividerLocation(350);
+				mainSplitPanel.setDividerLocation(300);
+				
+			}
+		}
+		
+		
 		// Allow for all areas to be resized to even not be seen
 		Dimension minimumSize = new Dimension(0, 0);
 		treePanel.setMinimumSize(minimumSize);
@@ -239,7 +272,7 @@ public class HeadersPanel extends JBroFuzzPanel implements
 		tree.setModel(new DefaultTreeModel(mHeadersLoader.getMasterTreeNode()));
 		// Traverse tree from root
 		TreeNode root = (TreeNode) tree.getModel().getRoot();
-		expandAll(tree, new TreePath(root), true);
+		expandOne(tree, new TreePath(root));
 		// Select the first row
 		tree.setSelectionRow(0);
 
@@ -268,7 +301,7 @@ public class HeadersPanel extends JBroFuzzPanel implements
 	 * </p>
 	 * 
 	 * @param t
-	 *          The input String
+	 *            The input String
 	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3
@@ -286,7 +319,7 @@ public class HeadersPanel extends JBroFuzzPanel implements
 	 * </p>
 	 * 
 	 * @param t
-	 *          The input String
+	 *            The input String
 	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3
@@ -304,7 +337,7 @@ public class HeadersPanel extends JBroFuzzPanel implements
 	 * </p>
 	 * 
 	 * @param t
-	 *          The input String
+	 *            The input String
 	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3

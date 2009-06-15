@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -100,15 +100,15 @@ public class Prototype {
 		return newBuffer.toString();
 	}
 
-	private ArrayList<String>	categories;
+	private ArrayList<String> categories;
 
-	private ArrayList<String>	payloads;
+	private ArrayList<String> payloads;
 
-	private String						name;
+	private String name;
 
-	private char							type;
+	private char type;
 
-	private String						id;
+	private String id;
 
 	public Prototype(char type, String id, String name) {
 
@@ -160,8 +160,9 @@ public class Prototype {
 
 	/**
 	 * <p>
-	 * Return the type of fuzzer prototype. Based on the character type specified
-	 * at construction, fuzzer prototypes can have the following types:
+	 * Return the type of fuzzer prototype. Based on the character type
+	 * specified at construction, fuzzer prototypes can have the following
+	 * types:
 	 * </p>
 	 * 
 	 * <code>

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -49,7 +49,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.4
  * @since 0.1
  */
 public class JBroFuzz {
@@ -60,7 +60,7 @@ public class JBroFuzz {
 	 * </p>
 	 * 
 	 * @param args
-	 *          String[]
+	 *            String[]
 	 */
 	public static void main(final String[] args) {
 
@@ -76,13 +76,13 @@ public class JBroFuzz {
 
 	}
 
-	private FileHandler			mHandler;
+	private FileHandler mHandler;
 
-	private JBroFuzzFormat	mFormat;
+	private JBroFuzzFormat mFormat;
 
-	private JBroFuzzWindow	mWindow;
+	private JBroFuzzWindow mWindow;
 
-	private Database				mDatabase;
+	private Database mDatabase;
 
 	/**
 	 * <p>
@@ -91,8 +91,8 @@ public class JBroFuzz {
 	 * </p>
 	 * 
 	 * <p>
-	 * The order in which construction takes place is rather important and should
-	 * not be altered.
+	 * The order in which construction takes place is rather important and
+	 * should not be altered.
 	 * </p>
 	 */
 	public JBroFuzz() {
@@ -101,15 +101,16 @@ public class JBroFuzz {
 
 		mFormat = new JBroFuzzFormat(this);
 		mWindow = new JBroFuzzWindow(this);
-
+		JBroFuzzWindow.createAndShowGUI(mWindow);
+		
 		mHandler = new FileHandler(this);
 
 	}
 
 	/**
 	 * <p>
-	 * Return the main database of exploits loaded, thus giving access to fuzzers
-	 * and the payloads.
+	 * Return the main database of exploits loaded, thus giving access to
+	 * fuzzers and the payloads.
 	 * </p>
 	 * 
 	 * @return The Database of Fuzzers
@@ -122,8 +123,8 @@ public class JBroFuzz {
 
 	/**
 	 * <p>
-	 * Return the main format object, thus allowing on top of static, also dynamic
-	 * access to various constant variables, methods, etc.
+	 * Return the main format object, thus allowing on top of static, also
+	 * dynamic access to various constant variables, methods, etc.
 	 * </p>
 	 * 
 	 * @return The Format Object of JBroFuzz

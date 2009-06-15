@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -51,9 +51,9 @@ public class HelpChart extends JScrollPane {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 2266326648164756664L;
+	private static final long serialVersionUID = 2266326648164756664L;
 
-	private static String			FILE_NOT_FOUND		= "Help file could not be located.";
+	private static String FILE_NOT_FOUND = "Help file could not be located.";
 
 	/**
 	 * <p>

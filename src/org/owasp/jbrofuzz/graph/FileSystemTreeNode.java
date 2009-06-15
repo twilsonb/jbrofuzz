@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -37,9 +37,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public class FileSystemTreeNode extends DefaultMutableTreeNode {
 
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
-	private boolean						nodeIsDirectory;
+	private boolean nodeIsDirectory;
 
 	public FileSystemTreeNode(Object o) {
 		super(o);

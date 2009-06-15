@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -46,24 +46,24 @@ import org.apache.commons.lang.StringUtils;
 
 public class HeaderLoader {
 
-	private static final String				HEADER						= "JBroFuzz Headers Collection";
+	private static final String HEADER = "JBroFuzz Headers Collection";
 
-	private static final int					MAX_RECURSION			= 1024;
+	private static final int MAX_RECURSION = 1024;
 
 	// The maximum number of chars to be read from file, regardless
-	private static final int					MAX_CHARS					= Short.MAX_VALUE;
+	private static final int MAX_CHARS = Short.MAX_VALUE;
 
 	// The maximum number of lines allowed to be read from the file
-	private static final int					MAX_LINES					= 1024;
+	private static final int MAX_LINES = 1024;
 
 	// The maximum number of fields allowed for each header
-	private static final int					MAX_NO_OF_FIELDS	= Byte.MAX_VALUE;
-	private HashMap<String[], Header>	headers;
-	private HeaderTreeNode						myNode;
+	private static final int MAX_NO_OF_FIELDS = Byte.MAX_VALUE;
+	private HashMap<String[], Header> headers;
+	private HeaderTreeNode myNode;
 
-	private int												globalCounter;
+	private int globalCounter;
 
-	private StringBuffer							fileContents;
+	private StringBuffer fileContents;
 
 	public HeaderLoader() {
 
@@ -86,14 +86,15 @@ public class HeaderLoader {
 			final URLConnection connection = fileURL.openConnection();
 			connection.connect();
 
-			in = new BufferedReader(
-					new InputStreamReader(connection.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(connection
+					.getInputStream()));
 
 			int counter = 0;
 			int c;
 			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
 				// Allow the character only if its printable ascii or \n
-				if ((CharUtils.isAsciiPrintable((char) c)) || (((char) c) == '\n')) {
+				if ((CharUtils.isAsciiPrintable((char) c))
+						|| (((char) c) == '\n')) {
 					fileContents.append((char) c);
 				}
 				counter++;
@@ -123,9 +124,9 @@ public class HeaderLoader {
 	 * </p>
 	 * 
 	 * @param categoriesArray
-	 *          The array of nodes to be added.
+	 *            The array of nodes to be added.
 	 * @param dn
-	 *          The tree node on which to be added.
+	 *            The tree node on which to be added.
 	 * 
 	 * @see #getMasterHeader()
 	 * @author subere@uncon.org
@@ -260,11 +261,13 @@ public class HeaderLoader {
 								|| ("U".equals(firstLineArray[0]))
 								|| ("Z".equals(firstLineArray[0]))) {
 
-							// Check that the ID contains a '-' after 3 characters
+							// Check that the ID contains a '-' after 3
+							// characters
 							if (firstLineArray[1].charAt(3) == '-') {
 
 								try {
-									numberOfFields = Integer.parseInt(firstLineArray[2]);
+									numberOfFields = Integer
+											.parseInt(firstLineArray[2]);
 								} catch (final NumberFormatException e) {
 									numberOfFields = 0;
 								}
@@ -276,7 +279,8 @@ public class HeaderLoader {
 
 				// If a positive number of fields is claimed in the first line
 				// and the first line is OK
-				if ((numberOfFields > 0) && (numberOfFields <= MAX_NO_OF_FIELDS)) {
+				if ((numberOfFields > 0)
+						&& (numberOfFields <= MAX_NO_OF_FIELDS)) {
 					// final String[] firstArray = line.split(":");
 
 					// Check that there is enough space to actually
@@ -302,8 +306,13 @@ public class HeaderLoader {
 									globalCounter = 0;
 									categoriesArray = line2.split("\\|");
 									for (int xa = 0; xa < categoriesArray.length; xa++) {
-										categoriesArray[xa] = StringUtils.stripStart(StringUtils
-												.stripEnd(categoriesArray[xa], " "), " ");
+										categoriesArray[xa] = StringUtils
+												.stripStart(
+														StringUtils
+																.stripEnd(
+																		categoriesArray[xa],
+																		" "),
+														" ");
 									}
 									addNodes(categoriesArray, myNode);
 
@@ -312,9 +321,11 @@ public class HeaderLoader {
 								// default category
 								else {
 
-									categoriesArray = new String[] { "<unknown " + i + ">" };
+									categoriesArray = new String[] { "<unknown "
+											+ i + ">" };
 
-									myNode.add(new HeaderTreeNode("<unknown " + i + ">"));
+									myNode.add(new HeaderTreeNode("<unknown "
+											+ i + ">"));
 
 								}
 
