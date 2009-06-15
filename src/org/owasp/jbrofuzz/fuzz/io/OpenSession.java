@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -47,7 +47,7 @@ import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
 public class OpenSession {
 
 	// The maximum number of chars to be read from file, regardless
-	private final static int	MAX_CHARS	= Short.MAX_VALUE;
+	private final static int MAX_CHARS = Short.MAX_VALUE;
 
 	public OpenSession(JBroFuzzWindow mWindow) {
 
@@ -57,7 +57,7 @@ public class OpenSession {
 
 		JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
-		JFileChooser fc = new JFileChooser(System.getProperty("user.home"));
+		JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
 		fc.setFileFilter(filter);
 
 		int returnVal = fc.showOpenDialog(mWindow);
@@ -91,7 +91,8 @@ public class OpenSession {
 				int c;
 				while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
 					// Allow the character only if its printable ascii or \n
-					if ((CharUtils.isAsciiPrintable((char) c)) || (((char) c) == '\n')) {
+					if ((CharUtils.isAsciiPrintable((char) c))
+							|| (((char) c) == '\n')) {
 						fileContents.append((char) c);
 					}
 					counter++;
@@ -161,7 +162,8 @@ public class OpenSession {
 				_reqBuffer.append(fileInput[i] + "\n");
 			}
 
-			// If the number of available payload lines is greater than 1024, return
+			// If the number of available payload lines is greater than 1024,
+			// return
 			if (len - 1 - payloadsLine - 1 > 1024)
 				return;
 
@@ -178,7 +180,8 @@ public class OpenSession {
 					int start = 0;
 					int end = 0;
 					// The fuzzer id must also exist in the database
-					if (!mWindow.getJBroFuzz().getDatabase().containsPrototype(fuzz_id)) {
+					if (!mWindow.getJBroFuzz().getDatabase().containsPrototype(
+							fuzz_id)) {
 						fuzzer_happy = false;
 					}
 
@@ -191,7 +194,8 @@ public class OpenSession {
 							fuzzer_happy = false;
 						}
 						// Numbers must be less than the length of the request
-						if ((start > _reqBuffer.length()) || (end > _reqBuffer.length())) {
+						if ((start > _reqBuffer.length())
+								|| (end > _reqBuffer.length())) {
 							fuzzer_happy = false;
 						}
 					} catch (NumberFormatException e) {
@@ -199,14 +203,17 @@ public class OpenSession {
 					}
 
 					if (!fuzzer_happy) {
-						mWindow.log("Could not open and add Fuzzer: " + fileInput[i], 3);
+						mWindow.log("Could not open and add Fuzzer: "
+								+ fileInput[i], 3);
 					} else {
-						mWindow.getPanelFuzzing().addPayload(fuzz_id, start, end);
+						mWindow.getPanelFuzzing().addPayload(fuzz_id, start,
+								end);
 					}
 				}
 			}
 
-			// These max values of abbreviation are also used in the Fuzzing Panel
+			// These max values of abbreviation are also used in the Fuzzing
+			// Panel
 			// geters
 			String _req = StringUtils.abbreviate(_reqBuffer.toString(), 16384);
 			String _url = StringUtils.abbreviate(fileInput[7], 1024);

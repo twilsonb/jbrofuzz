@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -49,18 +49,18 @@ public class ResponseTableModel extends AbstractTableModel {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 	// The names of the columns within the table of generators
-	private static final String[]		COLUMNNAMES	= { "No", "Target", "Timestamp",
+	private static final String[] COLUMNNAMES = { "No", "Target", "Timestamp",
 			"Status", "Response Time", "Response Size" };
 	// The vector of ResponseOutputs
-	private Vector<ResponseOutput>	dataVector;
+	private Vector<ResponseOutput> dataVector;
 	// The integer counter
-	private int											counter;
+	private int counter;
 
 	/**
-	 * Default constructor for this web directory model. This is to be attached to
-	 * a JTable.
+	 * Default constructor for this web directory model. This is to be attached
+	 * to a JTable.
 	 */
 	public ResponseTableModel() {
 
@@ -76,7 +76,7 @@ public class ResponseTableModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param outputMessage
-	 *          The message to be outputed
+	 *            The message to be outputed
 	 * 
 	 * @return int the count of elements in the model
 	 * 
@@ -89,7 +89,8 @@ public class ResponseTableModel extends AbstractTableModel {
 		dataVector.add(new ResponseOutput(
 
 		outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
-				.getStartDateShort(), "Sending  - ...", "000000 ms", "00000000 bytes"
+				.getStartDateShort(), "Sending  - ...", "000000 ms",
+				"00000000 bytes"
 
 		));
 
@@ -135,9 +136,9 @@ public class ResponseTableModel extends AbstractTableModel {
 	 * Method for returning a particular value within the existing table model.
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
@@ -189,8 +190,8 @@ public class ResponseTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object o, int rowIndex, int columnIndex) {
 
-		if ((rowIndex < dataVector.size()) && (rowIndex >= 0) && (columnIndex < 6)
-				&& (columnIndex >= 0)) {
+		if ((rowIndex < dataVector.size()) && (rowIndex >= 0)
+				&& (columnIndex < 6) && (columnIndex >= 0)) {
 
 			ResponseOutput current = dataVector.get(rowIndex);
 			switch (columnIndex) {
@@ -226,10 +227,11 @@ public class ResponseTableModel extends AbstractTableModel {
 		ResponseOutput response = new ResponseOutput(
 
 		outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
-				.getStartDateShort(), "Finished - " + outputMessage.getStatus(),
-				StringUtils.leftPad("" + outputMessage.getResponseTime(), 6, '0')
-						+ " ms", StringUtils.leftPad("" + outputMessage.getByteCount(), 8,
-						'0')
+				.getStartDateShort(),
+				"Finished - " + outputMessage.getStatus(), StringUtils.leftPad(
+						"" + outputMessage.getResponseTime(), 6, '0')
+						+ " ms", StringUtils.leftPad(""
+						+ outputMessage.getByteCount(), 8, '0')
 						+ " bytes"
 
 		);
@@ -244,10 +246,12 @@ public class ResponseTableModel extends AbstractTableModel {
 		ResponseOutput response = new ResponseOutput(
 
 		outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
-				.getStartDateShort(), "[Error]  - " + e.getMessage(), StringUtils
-				.leftPad("" + outputMessage.getResponseTime(), 6, '0')
-				+ " ms", StringUtils.leftPad("" + outputMessage.getByteCount(), 8, '0')
-				+ " bytes"
+				.getStartDateShort(), "[Error]  - " + e.getMessage(),
+				StringUtils.leftPad("" + outputMessage.getResponseTime(), 6,
+						'0')
+						+ " ms", StringUtils.leftPad(""
+						+ outputMessage.getByteCount(), 8, '0')
+						+ " bytes"
 
 		);
 

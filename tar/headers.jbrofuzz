@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2009 
 # subere@uncon.org
-# Version 1.3
+# Version 1.4
 #
 
 J:NTA-AAA:5
@@ -247,15 +247,27 @@ User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; (R1 1.6))
 Host: localhost
 Connection: Keep-Alive
 
-J:AAA-AAG:6
+J:JBR-F12:6
 > JBroFuzz | 1.2
->>The header used by JBroFuzz in its current version
+>>The header used by JBroFuzz in its older, 1.2 version
 GET / HTTP/1.1
 Host: localhost
 User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1
 Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
 Accept-Language: en-gb,en;q=0.5
 Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+
+J:JBR-F14:8
+> JBroFuzz | 1.4
+>>The header of JBroFuzz in version 1.4
+GET / HTTP/1.1
+Host: localhost
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.10) Gecko/2009042316 Firefox/3.0.10 (.NET CLR 3.5.30729) JBroFuzz/1.4
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-gb,en;q=0.5
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Keep-Alive: 300
+Proxy-Connection: keep-alive
 
 J:AAA-AAH:8
 >Windows | Vista SP1 | IE | 7.0.6001.18000

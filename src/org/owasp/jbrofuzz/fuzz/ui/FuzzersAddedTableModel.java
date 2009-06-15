@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -49,28 +49,27 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	/**
 	 * 
 	 */
-	private static final long			serialVersionUID	= 6995264785224510555L;
+	private static final long serialVersionUID = 6995264785224510555L;
 
 	/**
 	 * <p>
-	 * The String used to separate columns when a toString representation of a set
-	 * number of columns or rows is required. This is typically used in method
-	 * getRow() that returns a String.
+	 * The String used to separate columns when a toString representation of a
+	 * set number of columns or rows is required. This is typically used in
+	 * method getRow() that returns a String.
 	 * </p>
 	 */
-	public static final String		STRING_SEPARATOR	= "          ";
+	public static final String STRING_SEPARATOR = "          ";
 
-	private static final int			INDEX_GENERATOR		= 0;
-	private static final int			INDEX_START				= 1;
-	private static final int			INDEX_END					= 2;
+	private static final int INDEX_GENERATOR = 0;
+	private static final int INDEX_START = 1;
+	private static final int INDEX_END = 2;
 
 	// The names of the columns within the table of generators
-	private static final String[]	COLUMNNAMES				= { "Category", "Start",
-			"End"																			};
+	private static final String[] COLUMNNAMES = { "Fuzzer", "Start", "End" };
 	// The vector of data
-	private Vector<Generator>			dataVector;
+	private Vector<Generator> dataVector;
 	// The panel that the model is attached to
-	private JBroFuzzWindow				fPanel;
+	private JBroFuzzWindow fPanel;
 
 	/**
 	 * <p>
@@ -78,7 +77,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param fPanel
-	 *          FuzzingPanel
+	 *            FuzzingPanel
 	 */
 	public FuzzersAddedTableModel(final JBroFuzzWindow fPanel) {
 		this.fPanel = fPanel;
@@ -91,11 +90,11 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param generator
-	 *          String
+	 *            String
 	 * @param start
-	 *          int
+	 *            int
 	 * @param end
-	 *          int
+	 *            int
 	 */
 	public void addRow(final String generator, final int start, final int end) {
 		final Generator addingGenerator = new Generator(generator, start, end);
@@ -117,7 +116,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * Get a given column name.
 	 * 
 	 * @param column
-	 *          int
+	 *            int
 	 * @return String
 	 */
 	@Override
@@ -131,7 +130,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @return String
 	 */
 	public String getRow(final int row) {
@@ -156,14 +155,14 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 
 	/**
 	 * <p>
-	 * Get the value within the generator table at a given location of column and
-	 * row.
+	 * Get the value within the generator table at a given location of column
+	 * and row.
 	 * </p>
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
@@ -204,9 +203,9 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * Check to see if a generator table is editable
 	 * 
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 * @return boolean
 	 */
 	@Override
@@ -224,7 +223,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param row
-	 *          The row to remove
+	 *            The row to remove
 	 * 
 	 * @see
 	 * @author subere@uncon.org
@@ -245,18 +244,18 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param generator
-	 *          String
+	 *            String
 	 * @param start
-	 *          int
+	 *            int
 	 * @param end
-	 *          int
+	 *            int
 	 */
 	public void removeRow(final String generator, final int start, final int end) {
 		int rowToRemove = -1;
 		for (int i = 0; i < dataVector.size(); i++) {
 			final Generator record = dataVector.get(i);
-			if (record.getType().equals(generator) && (record.getStart() == start)
-					&& (record.getEnd() == end)) {
+			if (record.getType().equals(generator)
+					&& (record.getStart() == start) && (record.getEnd() == end)) {
 				rowToRemove = i;
 			}
 		}
@@ -272,11 +271,11 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * </p>
 	 * 
 	 * @param value
-	 *          Object
+	 *            Object
 	 * @param row
-	 *          int
+	 *            int
 	 * @param column
-	 *          int
+	 *            int
 	 */
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {

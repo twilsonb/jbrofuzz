@@ -21,16 +21,16 @@ import org.owasp.jbrofuzz.util.ImageCreator;
 
 public class JaccardIndexChart {
 
-	public static final int					MAX_CHARS	= 1048576;
+	public static final int MAX_CHARS = 1048576;
 	// The x-axis filenames
-	String[]												x_data;
+	String[] x_data;
 	// The y-axis data
-	double[]												y_data;
+	double[] y_data;
 	// The data to be displayed
-	private DefaultCategoryDataset	dataset;
+	private DefaultCategoryDataset dataset;
 
 	// The hash set with all the characters of the first response
-	private HashSet<Character>			firstSet;
+	private HashSet<Character> firstSet;
 
 	public JaccardIndexChart() {
 
@@ -170,7 +170,8 @@ public class JaccardIndexChart {
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
 
 		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
-		renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+		renderer
+				.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
 
 		return new ChartPanel(chart);
 

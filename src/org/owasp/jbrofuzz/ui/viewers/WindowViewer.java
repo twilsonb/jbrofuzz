@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -65,7 +65,7 @@ public class WindowViewer extends JFrame {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 2268254810798437349L;
+	private static final long serialVersionUID = 2268254810798437349L;
 
 	/**
 	 * <p>
@@ -88,13 +88,13 @@ public class WindowViewer extends JFrame {
 		// Define the Panel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(name + ".html"), BorderFactory.createEmptyBorder(1,
-				1, 1, 1)));
+				.createTitledBorder(name + ".html"), BorderFactory
+				.createEmptyBorder(1, 1, 1, 1)));
 		listPanel.setLayout(new BorderLayout());
 
 		// Get the preferences for wrapping lines of text
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-		boolean wrapText = prefs.getBoolean(JBroFuzzFormat.PR_WORD_WRAP, false);
+		boolean wrapText = prefs.getBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
 
 		final JTextPane listTextArea;
 		if (wrapText) {
@@ -166,7 +166,6 @@ public class WindowViewer extends JFrame {
 
 				);
 
-		
 				return "done";
 			}
 
@@ -175,7 +174,7 @@ public class WindowViewer extends JFrame {
 
 				progressBar.setIndeterminate(false);
 				progressBar.setValue(100);
-				
+
 			}
 		}
 

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -69,16 +69,16 @@ public class Topics extends JFrame implements TreeSelectionListener {
 	/**
 	 * 
 	 */
-	private static final long			serialVersionUID	= 1726771399839929062L;
+	private static final long serialVersionUID = 1726771399839929062L;
 
 	// Dimensions of the about box
-	private static final int			x									= 650;
-	private static final int			y									= 400;
+	private static final int x = 650;
+	private static final int y = 400;
 	//
-	private static String					FILE_NOT_FOUND		= "Help file could not be located.";
+	private static String FILE_NOT_FOUND = "Help file could not be located.";
 
 	// The final String Array of tree nodes
-	private static final String[]	nodeNames					= { "Help Topics", "Fuzzing",
+	private static final String[] nodeNames = { "Help Topics", "Fuzzing",
 			"Graphing", "Payloads", "Headers", "System" };
 
 	/**
@@ -86,20 +86,20 @@ public class Topics extends JFrame implements TreeSelectionListener {
 	 * Boolean is true if Topics are already showing.
 	 * </p>
 	 */
-	private static boolean				topicsShowing			= false;
+	private static boolean topicsShowing = false;
 	// The buttons
-	private JButton								ok;
+	private JButton ok;
 	// The tree
-	private JTree									tree;
+	private JTree tree;
 	// The corresponding scroll panels
-	private JScrollPane						helpScrPane, webdScrPane, tcpsScrPane,
-			tcpfScrPane, geneScrPane, sysmScrPane;
+	private JScrollPane helpScrPane, webdScrPane, tcpsScrPane, tcpfScrPane,
+			geneScrPane, sysmScrPane;
 
 	// The main split pane
-	private JSplitPane						splitPane;
+	private JSplitPane splitPane;
 
 	// The list of URLs
-	private URL[]									topicsURL;
+	private URL[] topicsURL;
 
 	/**
 	 * <p>
@@ -128,7 +128,8 @@ public class Topics extends JFrame implements TreeSelectionListener {
 
 		topicsURL = new URL[nodeNames.length];
 		// Create the nodes
-		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(nodeNames[0]);
+		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
+				nodeNames[0]);
 
 		for (int i = 0; i < nodeNames.length; i++) {
 			topicsURL[i] = ClassLoader.getSystemClassLoader().getResource(
@@ -231,8 +232,8 @@ public class Topics extends JFrame implements TreeSelectionListener {
 		// Bottom button
 		ok = new JButton("  OK  ");
 
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		buttonPanel.add(ok);
 
 		ok.addActionListener(new ActionListener() {
@@ -248,8 +249,8 @@ public class Topics extends JFrame implements TreeSelectionListener {
 
 		// Global frame issues
 		splitPane.setDividerLocation(150);
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent
-				.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
+				.abs(parent.getLocation().y + 100));
 
 		this.setSize(Topics.x, Topics.y);
 		setMinimumSize(new Dimension(x / 2, y / 2));

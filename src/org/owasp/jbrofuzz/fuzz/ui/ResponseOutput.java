@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -39,15 +39,16 @@ package org.owasp.jbrofuzz.fuzz.ui;
  */
 public class ResponseOutput {
 
-	protected String	one;
-	protected String	two;
-	protected String	three;
-	protected String	four;
-	protected String	five;
-	protected String	six;
+	protected String one;
+	protected String two;
+	protected String three;
+	protected String four;
+	protected String five;
+	protected String six;
 
-	public ResponseOutput(final String one, final String two, final String three,
-			final String four, final String five, final String six) {
+	public ResponseOutput(final String one, final String two,
+			final String three, final String four, final String five,
+			final String six) {
 
 		this.one = one;
 		this.two = two;

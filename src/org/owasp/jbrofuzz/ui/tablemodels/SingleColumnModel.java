@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -46,11 +46,11 @@ import javax.swing.table.AbstractTableModel;
  */
 public class SingleColumnModel extends AbstractTableModel {
 
-	private static final long	serialVersionUID	= 7819538656432704429L;
+	private static final long serialVersionUID = 7819538656432704429L;
 
-	private String						columnName;
+	private String columnName;
 
-	private ArrayList<String>	dataVector;
+	private ArrayList<String> dataVector;
 
 	/**
 	 * <p>

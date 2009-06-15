@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -49,13 +49,13 @@ import org.apache.commons.lang.StringUtils;
  */
 public class Fuzzer implements Iterator<String> {
 
-	private int								len;
+	private int len;
 
-	private Prototype					prototype;
+	private Prototype prototype;
 
-	private ArrayList<String>	payloads;
+	private ArrayList<String> payloads;
 
-	private BigInteger				cValue, maxValue;
+	private BigInteger cValue, maxValue;
 
 	protected Fuzzer(Prototype prototype, int len) throws NoSuchFuzzerException {
 
@@ -144,8 +144,8 @@ public class Fuzzer implements Iterator<String> {
 			}
 			// Append the relevant empty positions with the first element
 			// identified
-			output.append(StringUtils.leftPad(payloads.get((val.intValue())), len
-					- stack.size(), payloads.get(0)));
+			output.append(StringUtils.leftPad(payloads.get((val.intValue())),
+					len - stack.size(), payloads.get(0)));
 			while (!stack.isEmpty())
 				output.append(payloads.get((stack.pop()).intValue()));
 

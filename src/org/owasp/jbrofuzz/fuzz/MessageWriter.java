@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -34,20 +34,20 @@ import java.util.Date;
 
 public class MessageWriter {
 
-	private static final SimpleDateFormat	SD_Format	= new SimpleDateFormat(
-																											"zzz-yyyy-MM-dd-HH-mm-ss-SSS");
-	private static final SimpleDateFormat	SH_Format	= new SimpleDateFormat(
-																											"DDD-HH-mm-ss-SSS");
+	private static final SimpleDateFormat SD_Format = new SimpleDateFormat(
+			"zzz-yyyy-MM-dd-HH-mm-ss-SSS");
+	private static final SimpleDateFormat SH_Format = new SimpleDateFormat(
+			"DDD-HH-mm-ss-SSS");
 
-	private StringBuffer									message;
+	private StringBuffer message;
 
-	private String												filename;
-	private String												textURL;
-	private final Date										start;
-	private Date													end;
-	private String												status;
+	private String filename;
+	private String textURL;
+	private final Date start;
+	private Date end;
+	private String status;
 
-	private int														replyByteLength;
+	private int replyByteLength;
 
 	public MessageWriter(final MessageCreator currentMessage,
 			final FuzzingPanel fuzzingPanel) {

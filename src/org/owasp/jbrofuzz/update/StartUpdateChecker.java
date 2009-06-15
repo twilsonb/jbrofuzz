@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -70,11 +70,11 @@ import com.Ostermiller.util.Browser;
  */
 public class StartUpdateChecker extends JDialog {
 
-	private static final long	serialVersionUID	= 5920384008550160901L;
+	private static final long serialVersionUID = 5920384008550160901L;
 
 	// Dimensions of the about box
-	private static final int	x									= 420;
-	private static final int	y									= 200;
+	private static final int x = 420;
+	private static final int y = 200;
 
 	/**
 	 * <p>
@@ -170,15 +170,15 @@ public class StartUpdateChecker extends JDialog {
 	}
 
 	// The download and close button
-	private JButton						download, close;
+	private JButton download, close;
 
 	/**
 	 * <p>
-	 * Main constructor that displays a JDialog if a new version is identified on
-	 * the website.</p.
+	 * Main constructor that displays a JDialog if a new version is identified
+	 * on the website.</p.
 	 * 
 	 * @param parent
-	 *          JBroFuzzwindow the main window
+	 *            JBroFuzzwindow the main window
 	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3
@@ -206,7 +206,9 @@ public class StartUpdateChecker extends JDialog {
 		}
 
 		String text = "<html><b>A new version of JBroFuzz is available:&nbsp;"
-				+ latest + "<br><br>You are currently running version:&nbsp;" + current
+				+ latest
+				+ "<br><br>You are currently running version:&nbsp;"
+				+ current
 				+ "<br><br>Do you wish to download the <br>new version now?</b></html>";
 
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
@@ -214,10 +216,10 @@ public class StartUpdateChecker extends JDialog {
 		setLayout(new BorderLayout());
 		setFont(new Font("Verdana", Font.PLAIN, 12));
 
-		final JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15,
-				15));
-		final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+		final JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,
+				15, 15));
+		final JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 
 		// The about editor label
 		final JLabel mainLabel = new JLabel(text, ImageCreator.IMG_OWASP,
@@ -270,10 +272,10 @@ public class StartUpdateChecker extends JDialog {
 		getContentPane().add(southPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		int xLocation = parent.getLocationOnScreen().x - (StartUpdateChecker.x / 2)
-				+ (parent.getWidth() / 2);
-		int yLocation = parent.getLocationOnScreen().y - (StartUpdateChecker.y / 2)
-				+ (parent.getHeight() / 2);
+		int xLocation = parent.getLocationOnScreen().x
+				- (StartUpdateChecker.x / 2) + (parent.getWidth() / 2);
+		int yLocation = parent.getLocationOnScreen().y
+				- (StartUpdateChecker.y / 2) + (parent.getHeight() / 2);
 		this.setSize(StartUpdateChecker.x, StartUpdateChecker.y);
 		this.setLocation(xLocation, yLocation);
 		setResizable(false);

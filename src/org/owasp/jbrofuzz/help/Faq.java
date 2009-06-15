@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -65,15 +65,15 @@ import org.owasp.jbrofuzz.util.ImageCreator;
  */
 public class Faq extends JFrame implements TreeSelectionListener {
 
-	private static final long			serialVersionUID	= 4301858021356404678L;
+	private static final long serialVersionUID = 4301858021356404678L;
 
 	// Dimensions of the about box
-	private static final int			x									= 650;
-	private static final int			y									= 400;
+	private static final int x = 650;
+	private static final int y = 400;
 
 	// The final String Array of tree nodes
-	private static final String[]	nodeNames					= { "FAQ",
-			"System Requirements", "Java", "Installation", "Files & Directories",
+	private static final String[] nodeNames = { "FAQ", "System Requirements",
+			"Java", "Installation", "Files & Directories",
 			"Fuzzers & Payloads", "Older Features/Versions", "Proxy Settings" };
 
 	/**
@@ -81,20 +81,20 @@ public class Faq extends JFrame implements TreeSelectionListener {
 	 * Boolean is true if FAQ is already showing.
 	 * </p>
 	 */
-	private static boolean				faqShowing				= false;
+	private static boolean faqShowing = false;
 	// The button
-	private JButton								ok;
+	private JButton ok;
 	// The tree
-	private JTree									tree;
+	private JTree tree;
 	// The JEditorPane
-	private JEditorPane						faqEditorPane;
+	private JEditorPane faqEditorPane;
 	// The corresponding scroll pane
-	private JScrollPane						faqScrollPane;
+	private JScrollPane faqScrollPane;
 	// The main split pane
-	private JSplitPane						splitPane;
+	private JSplitPane splitPane;
 
 	// The list of URLs
-	private URL[]									faqURL;
+	private URL[] faqURL;
 
 	/**
 	 * <p>
@@ -122,7 +122,8 @@ public class Faq extends JFrame implements TreeSelectionListener {
 
 		faqURL = new URL[nodeNames.length];
 		// Create the nodes
-		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(nodeNames[0]);
+		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
+				nodeNames[0]);
 
 		for (int i = 0; i < nodeNames.length; i++) {
 			faqURL[i] = ClassLoader.getSystemClassLoader().getResource(
@@ -169,8 +170,8 @@ public class Faq extends JFrame implements TreeSelectionListener {
 		// Bottom button
 		ok = new JButton("  OK  ");
 
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		buttonPanel.add(ok);
 
 		ok.addActionListener(new ActionListener() {
@@ -186,8 +187,8 @@ public class Faq extends JFrame implements TreeSelectionListener {
 
 		// Global frame issues
 		splitPane.setDividerLocation(150);
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent
-				.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
+				.abs(parent.getLocation().y + 100));
 
 		this.setSize(Faq.x, Faq.y);
 		setMinimumSize(new Dimension(x / 2, y / 2));

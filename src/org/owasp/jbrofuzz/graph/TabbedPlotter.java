@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -48,17 +48,17 @@ public class TabbedPlotter extends JTabbedPane {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long serialVersionUID = 1L;
 
-	private GraphingPanel						graphingPanel;
+	private GraphingPanel graphingPanel;
 
-	private StatusCodeChart					st_Chart;
-	private ResponseTimeChart				rt_Canvas;
-	private ResponseSizeChart				fs_Canvas;
-	private JaccardIndexChart				hv_Canvas;
-	private HammingDistanceChart		cr_Canvas;
-	private ResponseHeaderSizeChart	rh_Canvas;
-	private HelpChart								hl_Canvas;
+	private StatusCodeChart st_Chart;
+	private ResponseTimeChart rt_Canvas;
+	private ResponseSizeChart fs_Canvas;
+	private JaccardIndexChart hv_Canvas;
+	private HammingDistanceChart cr_Canvas;
+	private ResponseHeaderSizeChart rh_Canvas;
+	private HelpChart hl_Canvas;
 
 	public TabbedPlotter(GraphingPanel graphingPanel) {
 
@@ -86,8 +86,8 @@ public class TabbedPlotter extends JTabbedPane {
 
 	/**
 	 * <p>
-	 * Method for plotting on all the graphs available in the tabs of the Graphing
-	 * Panel.
+	 * Method for plotting on all the graphs available in the tabs of the
+	 * Graphing Panel.
 	 * </p>
 	 * 
 	 * @param directory

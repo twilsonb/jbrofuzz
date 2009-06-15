@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -60,20 +60,20 @@ public class GraphingPanel extends JBroFuzzPanel {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= -3962672183042644437L;
+	private static final long serialVersionUID = -3962672183042644437L;
 
 	// The split pane at the centre of the screen
-	private JSplitPane				mainSplitPanel;
+	private JSplitPane mainSplitPanel;
 	// The main file tree object
-	private FileSystemTree		tree;
+	private FileSystemTree tree;
 	// The progress bar displayed
-	private JProgressBar			progressBar;
+	private JProgressBar progressBar;
 	// A boolean to check if we are running or not
-	private boolean						stopped;
+	private boolean stopped;
 	// Console related trends
-	private JTextArea					console;
+	private JTextArea console;
 	// The right tabs holding the graphs
-	private TabbedPlotter			rightPanel;
+	private TabbedPlotter rightPanel;
 
 	/**
 	 * The constructor for the Graphing Panel. This constructor spawns the main
@@ -101,8 +101,8 @@ public class GraphingPanel extends JBroFuzzPanel {
 
 		final JPanel consolePanel = new JPanel(new BorderLayout());
 		consolePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Console "), BorderFactory.createEmptyBorder(5, 5,
-				5, 5)));
+				.createTitledBorder(" Console "), BorderFactory
+				.createEmptyBorder(5, 5, 5, 5)));
 
 		consolePanel.add(consoleScrollPanel);
 
@@ -116,8 +116,8 @@ public class GraphingPanel extends JBroFuzzPanel {
 
 		final JPanel treePanel = new JPanel(new BorderLayout());
 		treePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Tree View "), BorderFactory.createEmptyBorder(5,
-				5, 5, 5)));
+				.createTitledBorder(" Tree View "), BorderFactory
+				.createEmptyBorder(5, 5, 5, 5)));
 
 		treePanel.add(treeScrollPanel);
 

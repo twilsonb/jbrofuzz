@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -55,21 +55,21 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 public class FileHandler {
 
 	// The max value in bytes of the file being read 32 Mbytes
-	public static final int	MAX_BYTES	= 33554432;
+	public static final int MAX_BYTES = 33554432;
 
 	// The main window frame gui
-	private JBroFuzz				g;
+	private JBroFuzz g;
 
 	// The fuzz directory of operation
-	private File						fuzzDirectory;
+	private File fuzzDirectory;
 
 	// The /jbrofuzz directory created at launch
-	private File						DIR_JBROFUZZ;
+	private File DIR_JBROFUZZ;
 
 	/**
 	 * <p>
-	 * Constructor for the file handler, having as parameter the main instance of
-	 * JBroFuzz.
+	 * Constructor for the file handler, having as parameter the main instance
+	 * of JBroFuzz.
 	 * </p>
 	 * <p>
 	 * It will attempt to create the 'fuzz' directory from the current unique
@@ -92,16 +92,29 @@ public class FileHandler {
 
 		// Create the necessary directory with the corresponding timestamp
 		fuzzDirectory = new File(baseDir + File.separator + "jbrofuzz"
-				+ File.separator + "fuzz" + File.separator + JBroFuzzFormat.DATE);
+				+ File.separator + "fuzz" + File.separator
+				+ JBroFuzzFormat.DATE);
 
 		if (!fuzzDirectory.exists()) {
 			boolean success = fuzzDirectory.mkdirs();
 			if (!success) {
-							
-				g.getWindow().log("Failed to create \"fuzz\" directory, no data will be written to file.", 4);
-				g.getWindow().log("Run JBroFuzz from the command line: \"java -jar JBroFuzz.jar\"", 0);
-				g.getWindow().log("Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"", 0);
-				
+
+				g
+						.getWindow()
+						.log(
+								"Failed to create \"fuzz\" directory, no data will be written to file.",
+								4);
+				g
+						.getWindow()
+						.log(
+								"Run JBroFuzz from the command line: \"java -jar JBroFuzz.jar\"",
+								0);
+				g
+						.getWindow()
+						.log(
+								"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
+								0);
+
 			}
 		}
 
@@ -115,8 +128,8 @@ public class FileHandler {
 	public void deleteEmptryDirectories() {
 
 		if (!fuzzDirectory.exists()) {
-			System.out
-					.println("Could not find directory: " + fuzzDirectory.getName());
+			System.out.println("Could not find directory: "
+					+ fuzzDirectory.getName());
 			return;
 		}
 
@@ -142,12 +155,14 @@ public class FileHandler {
 				FileUtils.deleteDirectory(parent);
 
 			} catch (final IOException e) {
-				System.out.println("Could not delete directory: " + parent.getName());
+				System.out.println("Could not delete directory: "
+						+ parent.getName());
 			}
 		}
 
 		if (!DIR_JBROFUZZ.exists()) {
-			System.out.println("Could not find directory: " + DIR_JBROFUZZ.getName());
+			System.out.println("Could not find directory: "
+					+ DIR_JBROFUZZ.getName());
 			return;
 		}
 
@@ -199,7 +214,7 @@ public class FileHandler {
 	 * </p>
 	 * 
 	 * @param fileName
-	 *          The name of the file, e.g. 01-0000001.html
+	 *            The name of the file, e.g. 01-0000001.html
 	 * @return String The contents of the file as a string
 	 * 
 	 * @author subere@uncon.org
@@ -211,7 +226,8 @@ public class FileHandler {
 		final File file = new File(fuzzDirectory, fileName);
 		if (file.exists()) {
 			if (file.isDirectory()) {
-				g.getWindow().log("File '" + file + "' exists but is a directory", 3);
+				g.getWindow().log(
+						"File '" + file + "' exists but is a directory", 3);
 				return ""; // new String();
 			}
 			if (file.canRead() == false) {
@@ -247,8 +263,10 @@ public class FileHandler {
 			fis.close();
 
 		} catch (IOException e) {
-			g.getWindow().log(
-					"Opening File '" + file.getName() + "' caused an I/O error", 4);
+			g.getWindow()
+					.log(
+							"Opening File '" + file.getName()
+									+ "' caused an I/O error", 4);
 
 		} finally {
 			IOUtils.closeQuietly(in);

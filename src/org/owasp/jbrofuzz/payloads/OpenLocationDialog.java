@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -77,21 +77,21 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= -5815321460026044259L;
+	private static final long serialVersionUID = -5815321460026044259L;
 
 	// Dimensions of the generator dialog box
-	private static final int	x									= 340;
-	private static final int	y									= 180;
+	private static final int x = 340;
+	private static final int y = 180;
 
 	// The buttons
-	private JButton						ok, cancel;
+	private JButton ok, cancel;
 
 	// The frame that the sniffing panel is attached
-	private JBroFuzzWindow		m;
+	private JBroFuzzWindow m;
 
-	final JPopupMenu					popmenu;
+	final JPopupMenu popmenu;
 
-	JComboBox									_url, methodBox, charsetBox, versionBox;
+	JComboBox _url, methodBox, charsetBox, versionBox;
 
 	/**
 	 * <p>
@@ -99,10 +99,10 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 	 * </p>
 	 * 
 	 * @param parent
-	 *          JBroFuzzWindow The main window
+	 *            JBroFuzzWindow The main window
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.4
 	 * @since 1.2
 	 */
 	public OpenLocationDialog(final JBroFuzzWindow parent) {
@@ -127,8 +127,8 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 
 		_url.getEditor().getEditorComponent().addKeyListener(this);
 
-		final String methods[] = { "GET", "POST", "HEAD", "PUT", "DELETE", "TRACE",
-				"PROPFIND", "OPTIONS" };
+		final String methods[] = { "GET", "POST", "HEAD", "PUT", "DELETE",
+				"TRACE", "PROPFIND", "OPTIONS" };
 		final String versions[] = { "0.9", "1.0", "1.1", "1.2" };
 		final String charsets[] = { "ISO-8859-1" };
 
@@ -159,6 +159,7 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 		versionBox.setSelectedIndex(1);
 
 		// Buttons
+		
 		ok = new JButton("  OK  ");
 		ok.setBounds(515, 305, 140, 40);
 		ok.setToolTipText("Open the URL location in JBroFuzz");
@@ -210,16 +211,21 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 		i1.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				Clipboard clipboard = Toolkit.getDefaultToolkit()
+						.getSystemClipboard();
 				Transferable clipData = clipboard.getContents(clipboard);
 
 				if (clipData != null) {
 					try {
-						if (clipData.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-							((JTextComponent) _url.getEditor().getEditorComponent()).cut();
+						if (clipData
+								.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+							((JTextComponent) _url.getEditor()
+									.getEditorComponent()).cut();
 						}
 					} catch (Exception e1) {
+						
 						parent.log("Open Location: An error occured while cutting", 2);
+						
 					}
 				}
 			}
@@ -229,16 +235,21 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 		i2.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				Clipboard clipboard = Toolkit.getDefaultToolkit()
+						.getSystemClipboard();
 				Transferable clipData = clipboard.getContents(clipboard);
 
 				if (clipData != null) {
 					try {
-						if (clipData.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-							((JTextComponent) _url.getEditor().getEditorComponent()).copy();
+						if (clipData
+								.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+							((JTextComponent) _url.getEditor()
+									.getEditorComponent()).copy();
 						}
 					} catch (Exception e1) {
+						
 						parent.log("Open Location: An error occured while copying", 2);
+						
 					}
 				}
 			}
@@ -248,18 +259,24 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 		i3.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				Clipboard clipboard = Toolkit.getDefaultToolkit()
+						.getSystemClipboard();
 				Transferable clipData = clipboard.getContents(clipboard);
 
 				if (clipData != null) {
 					try {
-						if (clipData.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-							((JTextComponent) _url.getEditor().getEditorComponent())
+						if (clipData
+								.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+							((JTextComponent) _url.getEditor()
+									.getEditorComponent())
 									.replaceSelection((String) (clipData
 											.getTransferData(DataFlavor.stringFlavor)));
 						}
 					} catch (Exception e1) {
-						parent.log("Open Location: An error occured while pasting", 2);
+						parent
+								.log(
+										"Open Location: An error occured while pasting",
+										2);
 					}
 				}
 			}
@@ -276,19 +293,18 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 
 		// Final panels
 
-		final JPanel targetPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+		final JPanel targetPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
 		targetPanel.add(new JLabel("URL:"));
 		targetPanel.add(_url);
 
-		final JPanel propertiesPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
-				15, 15));
+		final JPanel propertiesPanel = new JPanel(new FlowLayout(
+				FlowLayout.RIGHT, 15, 15));
 		propertiesPanel.add(methodBox);
 		propertiesPanel.add(charsetBox);
 		propertiesPanel.add(versionBox);
 
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15,
-				15));
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		buttonPanel.add(ok);
 		buttonPanel.add(cancel);
 
@@ -322,9 +338,16 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 
 	private void clickOK() {
 
+		String in_url_s = ((JTextComponent) _url.getEditor()
+				.getEditorComponent()).getText();
+		
+		if( (!in_url_s.startsWith("http://")) && (!in_url_s.startsWith("https://")) ) {
+			
+			in_url_s = "http://" + in_url_s;
+			
+		}
 		try {
-			URL inputURL = new URL(((JTextComponent) _url.getEditor()
-					.getEditorComponent()).getText());
+			URL inputURL = new URL(in_url_s);
 
 			StringBuffer out_url = new StringBuffer();
 			out_url.append(inputURL.getProtocol());
@@ -344,7 +367,8 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 				if (inputURL.getFile().isEmpty()) {
 					req_url.append('/');
 				} else {
-					req_url.append(URLDecoder.decode(inputURL.getFile(), "UTF-8"));
+					req_url.append(URLDecoder.decode(inputURL.getFile(),
+							"UTF-8"));
 				}
 
 			} catch (UnsupportedEncodingException e) {
@@ -367,9 +391,33 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 			req_url.append(inputURL.getHost());
 			req_url.append('\n');
 
-			int lc_one = JBroFuzzFormat.URL_REQUEST.indexOf("User-Agent:");
-			req_url.append(JBroFuzzFormat.URL_REQUEST.substring(lc_one));
-
+			// User-Agent: 
+			req_url.append("User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.10) Gecko/2009042316 Firefox/3.0.10 (.NET CLR 3.5.30729) JBroFuzz/");
+			req_url.append(JBroFuzzFormat.VERSION);
+			req_url.append('\n');
+			
+			// Accept:
+			req_url.append("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+			req_url.append('\n');
+			
+			// Accept-Language:
+			req_url.append("Accept-Language: en-gb,en;q=0.5");
+			req_url.append('\n');
+			
+			// Accept-Charset:
+			req_url.append("Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+			req_url.append('\n');
+			
+			// Keep-Alive:
+			req_url.append("Keep-Alive: 300");
+			req_url.append('\n');
+			
+			// Proxy-Connection:
+			req_url.append("Proxy-Connection: keep-alive");
+			req_url.append('\n');
+			req_url.append('\n');
+			
+			
 			m.getPanelFuzzing().setTextURL(out_url.toString());
 			m.getPanelFuzzing().setTextRequest(req_url.toString());
 

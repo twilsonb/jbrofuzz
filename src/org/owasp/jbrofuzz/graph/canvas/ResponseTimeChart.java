@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -48,13 +48,13 @@ import org.owasp.jbrofuzz.util.ImageCreator;
 
 public class ResponseTimeChart {
 
-	public static final int					MAX_CHARS	= 32;
+	public static final int MAX_CHARS = 32;
 	// The x-axis filenames
-	String[]												x_data;
+	String[] x_data;
 	// The y-axis data
-	int[]														y_data;
+	int[] y_data;
 
-	private DefaultCategoryDataset	dataset;
+	private DefaultCategoryDataset dataset;
 
 	public ResponseTimeChart() {
 
@@ -154,7 +154,8 @@ public class ResponseTimeChart {
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
 
 		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
-		renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+		renderer
+				.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
 
 		return new ChartPanel(chart);
 

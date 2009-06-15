@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -58,7 +58,7 @@ import org.owasp.jbrofuzz.util.ImageCreator;
  */
 public class PropertiesViewer extends JFrame {
 
-	private static final long	serialVersionUID	= 2145212672855056458L;
+	private static final long serialVersionUID = 2145212672855056458L;
 
 	/**
 	 * <p>
@@ -66,11 +66,11 @@ public class PropertiesViewer extends JFrame {
 	 * </p>
 	 * 
 	 * @param parent
-	 *          The JBroFuzzPanel related to this new window.
+	 *            The JBroFuzzPanel related to this new window.
 	 * @param header
-	 *          The header to be displayed
+	 *            The header to be displayed
 	 * @param text
-	 *          The text to be displayed inside the area of the window
+	 *            The text to be displayed inside the area of the window
 	 */
 	public PropertiesViewer(final JBroFuzzPanel parent, final String header,
 			final String text) {
@@ -84,7 +84,8 @@ public class PropertiesViewer extends JFrame {
 		// Define the JPanel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1,
+				1, 1)));
 		listPanel.setBounds(10, 10, 520, 250);
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" " + header + " "), BorderFactory
@@ -116,8 +117,8 @@ public class PropertiesViewer extends JFrame {
 		progressBar.setBounds(410, 265, 120, 20);
 
 		// Global Frame Issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math.abs(parent
-				.getLocation().y + 100));
+		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
+				.abs(parent.getLocation().y + 100));
 		this.setSize(550, 325);
 		this.add(listPanel);
 		this.add(progressBar);

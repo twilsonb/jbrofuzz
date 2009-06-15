@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -31,7 +31,7 @@ package org.owasp.jbrofuzz.core;
 
 public class NoSuchFuzzerException extends Exception {
 
-	private static final long	serialVersionUID	= 8529955831182129925L;
+	private static final long serialVersionUID = 8529955831182129925L;
 
 	public NoSuchFuzzerException(String message) {
 

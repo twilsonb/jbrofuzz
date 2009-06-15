@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -53,8 +53,8 @@ public class FileSystemTree extends JTree implements MouseListener {
 	/**
 	 * 
 	 */
-	private static final long	serialVersionUID	= -4289004118182074303L;
-	final JPopupMenu					popmenu;
+	private static final long serialVersionUID = -4289004118182074303L;
+	final JPopupMenu popmenu;
 
 	public FileSystemTree(final GraphingPanel graphingPanel,
 			FileSystemTreeModel fileSystemTreeModel) {
@@ -95,14 +95,16 @@ public class FileSystemTree extends JTree implements MouseListener {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 
-				final TreePath selectedPath = FileSystemTree.this.getSelectionPath();
+				final TreePath selectedPath = FileSystemTree.this
+						.getSelectionPath();
 
 				if (selectedPath == null)
 					return;
 				// More than 32 directories chill
 				if (selectedPath.getPathCount() > 32) {
 					graphingPanel.getFrame().log(
-							"Graphing Panel: Path has more than 32 locations ", 3);
+							"Graphing Panel: Path has more than 32 locations ",
+							3);
 					return;
 				}
 
@@ -123,22 +125,28 @@ public class FileSystemTree extends JTree implements MouseListener {
 				}
 
 				File pathFile = new File(stringPath.toString());
-				// If we are talking about something non-existent, we don't want to know
+				// If we are talking about something non-existent, we don't want
+				// to know
 				if (!pathFile.exists()) {
 					graphingPanel.getFrame().log(
-							"Graphing Panel: Path does not exist: " + pathFile, 4);
+							"Graphing Panel: Path does not exist: " + pathFile,
+							4);
 					return;
 				}
 				// Similar if we cannot execute the location
 				if (!pathFile.canExecute()) {
 					graphingPanel.getFrame().log(
-							"Graphing Panel: Path cannot be executed: " + pathFile, 4);
+							"Graphing Panel: Path cannot be executed: "
+									+ pathFile, 4);
 					return;
 				}
 				// Or if its an individual file
 				if (pathFile.isFile()) {
-					graphingPanel.getFrame().log(
-							"Graphing Panel: Cannot graph individual files ", 4);
+					graphingPanel
+							.getFrame()
+							.log(
+									"Graphing Panel: Cannot graph individual files ",
+									4);
 					return;
 				}
 
@@ -175,14 +183,16 @@ public class FileSystemTree extends JTree implements MouseListener {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 
-				final TreePath selectedPath = FileSystemTree.this.getSelectionPath();
+				final TreePath selectedPath = FileSystemTree.this
+						.getSelectionPath();
 
 				if (selectedPath == null)
 					return;
 				// More than 32 directories chill
 				if (selectedPath.getPathCount() > 32) {
 					graphingPanel.getFrame().log(
-							"Graphing Panel: Path has more than 32 locations ", 4);
+							"Graphing Panel: Path has more than 32 locations ",
+							4);
 					return;
 				}
 
@@ -203,16 +213,19 @@ public class FileSystemTree extends JTree implements MouseListener {
 				}
 
 				File pathFile = new File(stringPath.toString());
-				// If we are talking about something non-existent, we don't want to know
+				// If we are talking about something non-existent, we don't want
+				// to know
 				if (!pathFile.exists()) {
 					graphingPanel.getFrame().log(
-							"Graphing Panel: Path does not exist: " + pathFile, 4);
+							"Graphing Panel: Path does not exist: " + pathFile,
+							4);
 					return;
 				}
 				// Similar if we cannot execute the location
 				if (!pathFile.canExecute()) {
 					graphingPanel.getFrame().log(
-							"Graphing Panel: Path cannot be executed: " + pathFile, 4);
+							"Graphing Panel: Path cannot be executed: "
+									+ pathFile, 4);
 					return;
 				}
 
@@ -225,12 +238,18 @@ public class FileSystemTree extends JTree implements MouseListener {
 					Browser.displayURL(pathURL.toString());
 
 				} catch (MalformedURLException e1) {
-					graphingPanel.getFrame().log(
-							"Graphing Panel: Could not open location: Bad URL Location ", 4);
+					graphingPanel
+							.getFrame()
+							.log(
+									"Graphing Panel: Could not open location: Bad URL Location ",
+									4);
 					return;
 				} catch (IOException e2) {
-					graphingPanel.getFrame().log(
-							"Graphing Panel: Could not open location: IO Issues ", 4);
+					graphingPanel
+							.getFrame()
+							.log(
+									"Graphing Panel: Could not open location: IO Issues ",
+									4);
 					return;
 				}
 

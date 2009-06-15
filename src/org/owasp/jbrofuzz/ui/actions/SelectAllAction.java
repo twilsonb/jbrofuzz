@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -37,7 +37,7 @@ import javax.swing.text.TextAction;
 
 public class SelectAllAction extends TextAction {
 
-	private static final long	serialVersionUID	= 3152401791511169338L;
+	private static final long serialVersionUID = 3152401791511169338L;
 
 	public SelectAllAction() {
 		super("Select All");
@@ -47,7 +47,8 @@ public class SelectAllAction extends TextAction {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				final JTextComponent text = SelectAllAction.this.getTextComponent(evt);
+				final JTextComponent text = SelectAllAction.this
+						.getTextComponent(evt);
 				if (text != null) {
 					text.selectAll();
 					text.requestFocus();

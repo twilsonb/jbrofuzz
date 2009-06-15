@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.3
+ * JBroFuzz 1.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -69,10 +69,10 @@ public class TextHighlighter extends DefaultStyledDocument {
 	/**
 	 * 
 	 */
-	private static final long				serialVersionUID	= 3812224127502539817L;
+	private static final long serialVersionUID = 3812224127502539817L;
 
-	private HashMap<String, Color>	keywords;
-	private MutableAttributeSet			style;
+	private HashMap<String, Color> keywords;
+	private MutableAttributeSet style;
 
 	/**
 	 * Default Constructor for the TextHighlighter, extending the DefaultStyled
@@ -89,7 +89,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("HTTP/\\d.\\d", Color.black);
 
 		final Color lightBlue = new Color(51, 102, 102);
-		
+
 		keywords.put("Apache", lightBlue);
 		keywords.put("Windows", lightBlue);
 		keywords.put("Windows NT \\d.\\d", lightBlue);
@@ -106,9 +106,9 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Safari", lightBlue);
 		keywords.put("Linux", lightBlue);
 		keywords.put("Android", lightBlue);
-		
+
 		final Color darkGreen = new Color(0, 128, 0);
-		
+
 		keywords.put("ISO-[0-9]{4}-[0-9]", darkGreen);
 		keywords.put("iso-[0-9]{4}-[0-9]", darkGreen);
 		keywords.put("utf-[0-9]{2}", darkGreen);
@@ -124,7 +124,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("application", darkGreen);
 		keywords.put("HttpOnly", darkGreen);
 		keywords.put("CLR", darkGreen);
-		
+
 		keywords.put("html", Color.green);
 		keywords.put("gif", Color.green);
 		keywords.put("pjpeg", Color.green);
@@ -133,9 +133,9 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("x-xbitmap", Color.green);
 		keywords.put("plain", Color.green);
 		keywords.put("iPhone", Color.green);
-		
+
 		final Color dateColor = new Color(153, 0, 153);
-		
+
 		keywords.put("Mon", dateColor);
 		keywords.put("Tue", dateColor);
 		keywords.put("Wed", dateColor);
@@ -143,7 +143,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Fri", dateColor);
 		keywords.put("Sat", dateColor);
 		keywords.put("Sun", dateColor);
-		
+
 		keywords.put("Jan", dateColor);
 		keywords.put("Feb", dateColor);
 		keywords.put("Mar", dateColor);
@@ -156,26 +156,26 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Oct", dateColor);
 		keywords.put("Nov", dateColor);
 		keywords.put("Dec", dateColor);
-		
+
 		final Color keramidi = new Color(204, 51, 0);
-		
+
 		keywords.put("en", keramidi);
 		keywords.put("en-us", keramidi);
 		keywords.put("en-gb", keramidi);
 		keywords.put("en-GB", keramidi);
 		keywords.put("en-US", keramidi);
-		
+
 		keywords.put("gzip", keramidi);
 		keywords.put("x-gzip", keramidi);
 		keywords.put("x86", keramidi);
 		keywords.put("localhost", keramidi);
 		keywords.put("identity", keramidi);
 		keywords.put("compatible", keramidi);
-		
+
 		keywords.put("deflate", Color.orange);
 		keywords.put("sdch", Color.orange);
 		keywords.put("bzip2", Color.orange);
-		
+
 		// keywords.put("[-\\w]+/[\\w\\.\\+]+", lightBlue);
 		// keywords.put("utf-8", lightBlue);
 
