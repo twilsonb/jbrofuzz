@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.4
+ * JBroFuzz 1.5
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -337,7 +337,7 @@ public class Connection {
 	 * message that has been transmitted during construction.
 	 * </p>
 	 * <p>
-	 * Revisited this method in JBroFuzz 1.4 in order NOT to throw an exception
+	 * Revisited this method in JBroFuzz 1.5 in order NOT to throw an exception
 	 * if the reply string is empty, see {@link #getMessage()} for old
 	 * implementation logic.
 	 * </p>

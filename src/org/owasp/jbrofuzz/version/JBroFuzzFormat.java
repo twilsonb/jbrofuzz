@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.4
+ * JBroFuzz 1.5
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -158,7 +158,7 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "1.4";
+	public static final String VERSION = "1.5";
 
 	/**
 	 * <p>

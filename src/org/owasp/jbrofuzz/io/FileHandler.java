@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.4
+ * JBroFuzz 1.5
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -65,6 +65,9 @@ public class FileHandler {
 
 	// The /jbrofuzz directory created at launch
 	private File DIR_JBROFUZZ;
+	
+	// A counter for any File -> New directories created
+	private int count; 
 
 	/**
 	 * <p>
@@ -85,16 +88,39 @@ public class FileHandler {
 	public FileHandler(final JBroFuzz g) {
 
 		this.g = g;
+		count = 0;
+		createNewDirectory();
 
-		final String baseDir = System.getProperty("user.dir");
+	}
+	
+	/**
+	 * <p>Method for creating a new directory with the date/time stamp.</p>
+	 * <p>If one exists, a number is padded to the timestamp and a new
+	 * directory is created.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.5
+	 * @since 1.5
+	 */
+	public void createNewDirectory() {
+		
+		StringBuffer directoryLocation = new StringBuffer();
+		directoryLocation.append(System.getProperty("user.dir"));
+		directoryLocation.append(File.separator);
+		directoryLocation.append("jbrofuzz");
+		
 		// Create the /jbrofuzz directory in the current folder
-		DIR_JBROFUZZ = new File(baseDir + File.separator + "jbrofuzz");
+		DIR_JBROFUZZ = new File(directoryLocation.toString());
 
+		directoryLocation.append(File.separator);
+		directoryLocation.append("fuzz");
+		directoryLocation.append(File.separator);
+		directoryLocation.append(JBroFuzzFormat.DATE);
+		
 		// Create the necessary directory with the corresponding timestamp
-		fuzzDirectory = new File(baseDir + File.separator + "jbrofuzz"
-				+ File.separator + "fuzz" + File.separator
-				+ JBroFuzzFormat.DATE);
+		fuzzDirectory = new File(directoryLocation.toString());
 
+		// If the directory does not exist, create it
 		if (!fuzzDirectory.exists()) {
 			boolean success = fuzzDirectory.mkdirs();
 			if (!success) {
@@ -116,8 +142,44 @@ public class FileHandler {
 								0);
 
 			}
-		}
+		// If the directory is already present, create a directory with a number at the end
+		} else {
+			
+			count++;
+			count %= 100;
+			
+			directoryLocation.append('.');
+			
+			if (count < 10) {
+				directoryLocation.append('0');					
+			} 
+			directoryLocation.append(count);
+			
+			// Create the necessary directory with the corresponding timestamp
+			fuzzDirectory = new File(directoryLocation.toString());
+			
+			if(fuzzDirectory.exists()) {
+				
+				g.getWindow().log("The \"fuzz\" directory being used, already exists", 1);
+				
+			}
+						
+			boolean success = fuzzDirectory.mkdirs();
+			if (!success) {
 
+				g
+						.getWindow()
+						.log(
+								"Failed to create new \"fuzz\" directory, no data will be written to file.",
+								4);
+				g
+						.getWindow()
+						.log(
+								"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
+								0);
+			}
+			
+		}
 	}
 
 	/**
