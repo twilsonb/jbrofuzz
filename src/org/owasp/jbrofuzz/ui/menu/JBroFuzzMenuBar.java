@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.4
+ * JBroFuzz 1.5
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -35,7 +35,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
-import java.util.prefs.Preferences;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -74,7 +73,7 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.5
  */
 public class JBroFuzzMenuBar extends JMenuBar {
 
@@ -86,8 +85,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 	// Used under the Panel JMenu as items
 	private JMenuItem showAll, hideAll, start, graph, stop, add, remove;
 	// Used under the view JMenu as items
-	private JCheckBoxMenuItem graphing, fuzzing, headers, payloads, system,
-			wordWrap_res, wordWrap_req;
+	private JCheckBoxMenuItem graphing, fuzzing, headers, payloads, system;
 
 	/**
 	 * 
@@ -100,7 +98,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		file = new JMenu("File");
 		edit = new JMenu("Edit");
-//		format = new JMenu("Format");
 		view = new JMenu("View");
 		panel = new JMenu("Panel");
 		options = new JMenu("Options");
@@ -108,7 +105,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		this.add(file);
 		this.add(edit);
-//		this.add(format);
 		this.add(view);
 		this.add(panel);
 		this.add(options);
@@ -180,33 +176,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		edit.addSeparator();
 		edit.add(selectAll);
 
-		// Format
 
-//		final JMenu requests = new JMenu("Requests");
-//		final JMenu responses = new JMenu("Responses");
-
-		// Get the two preferences for wrapping lines of text
-		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-		boolean wrapRequest = prefs.getBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
-		boolean wrapResponse = prefs.getBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
-
-		wordWrap_req = new JCheckBoxMenuItem("Word Wrap", wrapRequest);
-		wordWrap_res = new JCheckBoxMenuItem("Word Wrap", wrapResponse);
-
-		final JMenuItem font_resp = new JMenuItem("Font...");
-		final JMenuItem font_requ = new JMenuItem("Font...");
-		
-//		requests.add(wordWrap_req);
-//		requests.add(font_requ);
-//		
-//		responses.add(wordWrap_res);
-//		responses.add(font_resp);
-
-//		font_resp.setEnabled(false);
-//		font_requ.setEnabled(false);
-//		
-//		format.add(requests);
-//		format.add(responses);
 
 		// View
 		final JMenu showHide = new JMenu("Show/Hide");
@@ -242,7 +212,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final JMenu lookAndFeel = new JMenu("Look and Feel");
 		lookAndFeel.setIcon(ImageCreator.IMG_LKF);
 		final UIManager.LookAndFeelInfo[] installedFeels = UIManager
-				.getInstalledLookAndFeels();
+		.getInstalledLookAndFeels();
 		final ButtonGroup group = new ButtonGroup();
 
 		for (int i = 0; i < Math.min(installedFeels.length, 10); i++) {
@@ -258,11 +228,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			rb.addItemListener(new ItemListener() {
 				public void itemStateChanged(final ItemEvent ie) {
 					final JRadioButtonMenuItem rbi = (JRadioButtonMenuItem) ie
-							.getSource();
+					.getSource();
 
 					if (rbi.isSelected()) {
 						final UIManager.LookAndFeelInfo info = (UIManager.LookAndFeelInfo) rbi
-								.getClientProperty("Look and Feel Name");
+						.getClientProperty("Look and Feel Name");
 
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run() {
@@ -271,32 +241,32 @@ public class JBroFuzzMenuBar extends JMenuBar {
 									UIManager.setLookAndFeel(info
 											.getClassName());
 									SwingUtilities
-											.updateComponentTreeUI(JBroFuzzMenuBar.this
-													.getFrame());
+									.updateComponentTreeUI(JBroFuzzMenuBar.this
+											.getFrame());
 								} catch (final UnsupportedLookAndFeelException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel",
-													5);
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel",
+											5);
 								} catch (final IllegalAccessException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel",
-													5);
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel",
+											5);
 								} catch (final ClassNotFoundException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel",
-													5);
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel",
+											5);
 								} catch (final InstantiationException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel",
-													5);
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel",
+											5);
 								}
 
 							}
@@ -364,7 +334,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		help.add(topics);
 		help.add(faq);
 		help.addSeparator();
-		// help.add(tutorial);
 		help.add(website);
 		help.addSeparator();
 		help.add(disclaimer);
@@ -376,6 +345,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		// File -> New
 		newFile.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 
 				fuzzing.setSelected(true);
@@ -390,21 +360,26 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						mFrameWindow.getPanelFuzzing().clearAllFields();
 						mFrameWindow.setTitle("Untitled");
+						// Create a new directory to store all data
+						mFrameWindow.getJBroFuzz().getHandler().createNewDirectory();
 					}
 
 				} else {
 
 					mFrameWindow.getPanelFuzzing().clearAllFields();
 					mFrameWindow.setTitle("Untitled");
-
+					// Create a new directory to store all data
+					mFrameWindow.getJBroFuzz().getHandler().createNewDirectory();
+					
 				}
 
-							}
+			}
+			
 		});
 
 		// File -> Open
@@ -423,7 +398,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						new OpenSession(mFrameWindow);
@@ -433,10 +408,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				} else {
 					new OpenSession(mFrameWindow);
 				}
-
-				// Run garbage collection as well
-				// Runtime.getRuntime().gc();
-				// Runtime.getRuntime().runFinalization();
 
 			}
 		});
@@ -457,7 +428,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						getFrame().setCloseFile();
@@ -471,10 +442,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					mFrameWindow.setTitle("Untitled");
 
 				}
-
-				// Run garbage collection as well
-				// Runtime.getRuntime().gc();
-				// Runtime.getRuntime().runFinalization();
 
 			}
 		});
@@ -495,7 +462,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						new OpenLocationDialog(getFrame());
@@ -507,10 +474,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					new OpenLocationDialog(getFrame());
 
 				}
-
-				// Run garbage collection as well
-				// Runtime.getRuntime().gc();
-				// Runtime.getRuntime().runFinalization();
 
 			}
 		});
@@ -531,7 +494,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						new SaveSession(mFrameWindow);
@@ -542,10 +505,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					new SaveSession(mFrameWindow);
 
 				}
-
-				// Run garbage collection as well
-				// Runtime.getRuntime().gc();
-				// Runtime.getRuntime().runFinalization();
 
 			}
 		});
@@ -566,7 +525,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						new SaveAsSession(mFrameWindow);
@@ -578,10 +537,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					new SaveAsSession(mFrameWindow);
 
 				}
-
-				// Run garbage collection as well
-				// Runtime.getRuntime().gc();
-				// Runtime.getRuntime().runFinalization();
 
 			}
 		});
@@ -596,45 +551,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				});
 			}
 		});
-
-//		wordWrap_req.addActionListener(new ActionListener() {
-//			public void actionPerformed(final ActionEvent e) {
-//				SwingUtilities.invokeLater(new Runnable() {
-//
-//					public void run() {
-//
-//						
-//					}
-//
-//				});
-//			}
-//		});
-		
-//		wordWrap_res.addActionListener(new ActionListener() {
-//			public void actionPerformed(final ActionEvent e) {
-//				SwingUtilities.invokeLater(new Runnable() {
-//
-//					public void run() {
-//
-//						final Preferences prefs = Preferences.userRoot().node(
-//								"owasp/jbrofuzz");
-//
-//						if (wordWrap_res.getState()) {
-//
-//							prefs.putBoolean(JBroFuzzFormat.WRAP_RESPONSE, true);
-//
-//						} else {
-//
-//							prefs
-//									.putBoolean(JBroFuzzFormat.WRAP_RESPONSE,
-//											false);
-//
-//						}
-//					}
-//
-//				});
-//			}
-//		});
 
 		graphing.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -818,7 +734,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 					}
@@ -847,7 +763,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.add();
 
 					}
@@ -877,8 +793,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					public void run() {
 
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
 						p.remove();
 
 					}
@@ -898,6 +813,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 			}
 		});
+
 		faq.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
@@ -929,11 +845,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 						try {
 							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 						} catch (final IOException ex) {
-							JBroFuzzMenuBar.this
-									.getFrame()
-									.log(
-											"Could not launch link in external browser",
-											3);
+
+							JBroFuzzMenuBar.this.getFrame().log(
+									"Could not launch link in external browser", 3
+							);
+
 						}
 					}
 				});

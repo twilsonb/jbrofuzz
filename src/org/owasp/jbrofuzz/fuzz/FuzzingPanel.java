@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.4
+ * JBroFuzz 1.5
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -31,7 +31,6 @@ package org.owasp.jbrofuzz.fuzz;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -55,7 +54,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.plaf.ComponentUI;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.BadLocationException;
@@ -72,7 +70,6 @@ import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.util.RequestTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -441,28 +438,29 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		this.add(mainPane, BorderLayout.CENTER);
 
-		// Some value defaults
-		// url_textField.setText("https://www.owasp.org");
-		// setTextRequest(JBroFuzzFormat.URL_REQUEST);
-
 	}
 
 	/**
-	 * <p>
-	 * Method for adding a fuzzer.
-	 * </p>
+	 * <p>Method for adding a fuzzer in the payloads table.</p>
+	 * 
+	 * @version 1.5
 	 */
 	@Override
 	public void add() {
+		
 		// Check to see what text has been selected
 		try {
-			String selectedText = request_textPane.getSelectedText();
+			
+			request_textPane.getSelectedText();
+			
 		} catch (final IllegalArgumentException e) {
-			JOptionPane
-					.showInputDialog(
-							this,
-							"An exception was thrown while attempting to get the selected text",
-							"Add Fuzzer", JOptionPane.ERROR_MESSAGE);
+			
+			JOptionPane.showInputDialog(
+				this,
+				"An exception was thrown while attempting to get the selected text",
+				"Add Fuzzer", JOptionPane.ERROR_MESSAGE
+			);
+			
 		}
 
 		// Find the location of where the text has been selected
@@ -470,9 +468,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		final int fPoint = request_textPane.getSelectionEnd();
 
 		new PayloadsDialog(this, sPoint, fPoint);
-
-		// Runtime.getRuntime().gc();
-		// Runtime.getRuntime().runFinalization();
 
 	}
 
