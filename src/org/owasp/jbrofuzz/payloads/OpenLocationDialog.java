@@ -409,13 +409,13 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 			req_url.append('\n');
 			
 			// Keep-Alive:
-			req_url.append("Keep-Alive: 300");
-			req_url.append('\n');
+			// req_url.append("Keep-Alive: 300");
+			// req_url.append('\n');
 			
 			// Proxy-Connection:
-			req_url.append("Proxy-Connection: keep-alive");
-			req_url.append('\n');
-			req_url.append('\n');
+			// req_url.append("Proxy-Connection: keep-alive");
+			// req_url.append('\n');
+			// req_url.append('\n');
 			
 			
 			m.getPanelFuzzing().setTextURL(out_url.toString());

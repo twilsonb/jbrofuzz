@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.jfree.chart.ChartFactory;
@@ -52,7 +53,7 @@ public class StatusCodeChart {
 	// The x-axis filenames
 	String[] x_data;
 	// The y-axis data
-	int[] y_data;
+	String[] y_data;
 
 	private DefaultPieDataset dataset;
 
@@ -65,7 +66,7 @@ public class StatusCodeChart {
 	public StatusCodeChart(int size) {
 
 		x_data = new String[size];
-		y_data = new int[size];
+		y_data = new String[size];
 
 		dataset = new DefaultPieDataset();
 		dataset.setValue("501", 25);
@@ -74,13 +75,16 @@ public class StatusCodeChart {
 		dataset.setValue("200", 25);
 	}
 
-	private int calculateValue(File f) {
+	private String calculateValue(File f) {
+
+		final String ERROR = "---";
 
 		if (f.isDirectory()) {
-			return -1;
+			// return -1;
+			return ERROR;
 		}
 
-		int status = 0;
+		String status = ERROR;
 
 		BufferedReader in = null;
 		try {
@@ -101,19 +105,23 @@ public class StatusCodeChart {
 			one.delete(0, one.indexOf("\n--\n") + 4);
 			one.delete(one.indexOf("\n--"), one.length());
 
-			status = Integer.parseInt(one.toString());
+			// status = Integer.parseInt(one.toString());
+			status = one.toString();
 
 		} catch (final IOException e1) {
 
-			return -2;
+			// return -2;
+			return ERROR;
 
 		} catch (final StringIndexOutOfBoundsException e2) {
 
-			return -3;
+			// return -3;
+			return ERROR;
 
 		} catch (final NumberFormatException e3) {
 
-			return 0;
+			// return 0;
+			return ERROR;
 
 		} finally {
 
@@ -132,51 +140,53 @@ public class StatusCodeChart {
 	 * 
 	 * @see #StatusCodeChart(int)
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.5
 	 * @since 1.2
 	 */
 	public void createFinalPlotCanvas() {
 
-		final String ERROR = "---";
-		final String ZERO = "000";
-
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 
-		for (int n : y_data) {
+		for (String n : y_data) {
 
-			if (n > 0) {
-
-				final String value = "" + n;
-
-				if (map.containsKey(value))
-					map.put(value, map.get(value) + 1);
-				else
-					map.put(value, 1);
-
-			}
-			// Got response but no number identified
-			else if ((n == 0)) {
-				if (map.containsKey(ZERO))
-					map.put(ZERO, map.get(ZERO) + 1);
-				else
-					map.put(ZERO, 1);
-
-			}
-			// Directory, IOException, String out of bounds
-			else {
-				if (map.containsKey(ERROR))
-					map.put(ERROR, map.get(ERROR) + 1);
-				else
-					map.put(ERROR, 1);
-
-			}
+			if (map.containsKey(n))
+				map.put(n, map.get(n) + 1);
+			else
+				map.put(n, 1);
+			
+//			if (n > 0) {
+//
+//				final String value = "" + n;
+//
+//				if (map.containsKey(value))
+//					map.put(value, map.get(value) + 1);
+//				else
+//					map.put(value, 1);
+//
+//			}
+//			// Got response but no number identified
+//			else if ((n == 0)) {
+//				if (map.containsKey(ZERO))
+//					map.put(ZERO, map.get(ZERO) + 1);
+//				else
+//					map.put(ZERO, 1);
+//
+//			}
+//			// Directory, IOException, String out of bounds
+//			else {
+//				if (map.containsKey(ERROR))
+//					map.put(ERROR, map.get(ERROR) + 1);
+//				else
+//					map.put(ERROR, 1);
+//
+//			}
 
 		}
 
 		dataset = new DefaultPieDataset();
 
-		for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
-			Map.Entry<String, Integer> entry = (Map.Entry) it.next();
+		for (Iterator<Entry<String, Integer>> it = map.entrySet().iterator(); it.hasNext();) {
+			Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) it.next();
 
 			dataset.setValue(entry.getKey(), (double) entry.getValue()
 					/ (double) y_data.length);
