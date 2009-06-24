@@ -57,7 +57,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.5
  * @since 0.2
  */
 public class WindowViewer extends JFrame {

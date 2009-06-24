@@ -161,24 +161,25 @@ public class FileHandler {
 			if(fuzzDirectory.exists()) {
 				
 				g.getWindow().log("The \"fuzz\" directory being used, already exists", 1);
-				
-			}
-						
-			boolean success = fuzzDirectory.mkdirs();
-			if (!success) {
 
-				g
-						.getWindow()
-						.log(
-								"Failed to create new \"fuzz\" directory, no data will be written to file.",
-								4);
-				g
-						.getWindow()
-						.log(
-								"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
-								0);
+			} else {
+
+				boolean success = fuzzDirectory.mkdirs();
+				if (!success) {
+
+					g
+					.getWindow()
+					.log(
+							"Failed to create new \"fuzz\" directory, no data will be written to file.",
+							4);
+					g
+					.getWindow()
+					.log(
+							"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
+							0);
+				}
+
 			}
-			
 		}
 	}
 

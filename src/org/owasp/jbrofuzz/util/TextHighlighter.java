@@ -215,6 +215,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Cookie", Color.blue);
 		keywords.put("Date", Color.blue);
 		keywords.put("ETag", Color.blue);
+		keywords.put("Expect", Color.blue);
 		keywords.put("Expires", Color.blue);
 		keywords.put("Host", Color.blue);
 		keywords.put("^Keep-Alive", Color.blue);

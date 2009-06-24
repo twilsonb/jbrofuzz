@@ -46,7 +46,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
@@ -56,8 +55,10 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Element;
 import javax.swing.text.StyledEditorKit;
 
 import org.apache.commons.lang.StringUtils;
@@ -86,7 +87,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * the bottom part of the panel inside the output table.</p>
  * 
  * @author subere@uncon.org
- * @version 1.4
+ * @version 1.5
  */
 public class FuzzingPanel extends JBroFuzzPanel {
 
@@ -149,7 +150,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	private int counter, session;
 
 	// The "On The Wire" console
-	private JTextArea onTheWire_textArea;
+	private JTextPane onTheWire_textArea;
 
 	// The frame window
 	private JBroFuzzWindow jbrofuzz_MainFrame;
@@ -289,16 +290,23 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				.createTitledBorder(" Requests "), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
 
-		onTheWire_textArea = new JTextArea();
+		onTheWire_textArea = new JTextPane();
 		onTheWire_textArea.setFont(new Font("Verdana", Font.PLAIN, 10));
 		onTheWire_textArea.setEditable(false);
+		onTheWire_textArea.setBackground(Color.BLACK);
+		onTheWire_textArea.setForeground(Color.GREEN);
 
 		// Right click: Cut, Copy, Paste, Select All
 		popupText(onTheWire_textArea, false, true, false, true);
 
 		onTheWireEvent = 0;
 
-		JScrollPane consoleScrollPane = new JScrollPane(onTheWire_textArea);
+		JScrollPane consoleScrollPane = new JScrollPane(
+				onTheWire_textArea,
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+		);
+		
 		onTheWirePanel.setLayout(new BorderLayout());
 		onTheWirePanel.add(consoleScrollPane, BorderLayout.CENTER);
 
@@ -734,8 +742,22 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		url_textField.setBackground(Color.BLACK);
 		url_textField.setForeground(Color.WHITE);
 
-		onTheWire_textArea.append("\n--> JBroFuzz Fuzzing Session: " + (session + 1)
-				+ " -->\n\n");
+//		onTheWire_textArea.append("\n--> JBroFuzz Fuzzing Session: " + (session + 1)+ " -->\n\n");
+		Document doc = (Document) onTheWire_textArea.getDocument();
+		Element e = doc.getDefaultRootElement();
+		// Copy attribute Set
+		AttributeSet attr = e.getAttributes().copyAttributes();
+		try {
+			doc.insertString(
+					doc.getLength(),
+					"\n--> JBroFuzz Fuzzing Session: " + (session + 1)+ " -->\n\n", 
+					attr);
+		} catch (BadLocationException e2) {
+			// TODO Auto-generated catch block
+			// e2.printStackTrace();
+		}
+
+		
 		onTheWire_textArea.setBackground(Color.BLACK);
 		onTheWire_textArea.setForeground(Color.WHITE);
 
@@ -807,6 +829,12 @@ public class FuzzingPanel extends JBroFuzzPanel {
 						// Connect
 						Connection connection = new Connection(getTextURL(),
 								currentMessage.getMessage());
+						
+						// If a 100 Continue is encountered, print what you put
+						// on the wire, typically the post data from the message
+						if(connection.isResponse100Continue()) {
+							toConsole(currentMessage.getPostDataForDisplayPurposes());
+						}
 						// Update the message writer
 						outputMessage.setConnection(connection);
 						// Update the last row, indicating success
@@ -826,7 +854,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 				}
 
-			} catch (NoSuchFuzzerException e) {
+			} catch (NoSuchFuzzerException exp) {
 
 				getFrame().log("The fuzzer could not be found...", 3);
 			}
@@ -870,8 +898,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		url_textField.setEditable(true);
 		url_textField.setBackground(Color.WHITE);
 		url_textField.setForeground(Color.BLACK);
-		onTheWire_textArea.setBackground(Color.WHITE);
-		onTheWire_textArea.setForeground(Color.BLACK);
+		onTheWire_textArea.setBackground(Color.BLACK);
+		onTheWire_textArea.setForeground(Color.GREEN);
 
 		// Get the preference for showing the "On The Wire" tab
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
@@ -885,24 +913,54 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 	}
 
+	/**
+	 * <p>Method for writing content to the "On The Wire" console.</p>
+	 * <p>Content is written as a 1000 character FILO, i.e. a maximum of 
+	 * 1000 characters is displayed at any one time.</p>
+	 *  
+	 * @param input The input string.
+	 * @version 1.5
+	 */
 	public void toConsole(String input) {
 
 		onTheWireEvent++;
 		topRightPanel.setTitleAt(1, " On The Wire (" + onTheWireEvent + ") ");
 
 		// Use a FILO for the output to the console, never exceeding 500 lines
-		if (onTheWire_textArea.getLineCount() > 500) {
-			try {
-				onTheWire_textArea.select(onTheWire_textArea.getLineStartOffset(0), onTheWire_textArea
-						.getLineEndOffset(onTheWire_textArea.getLineCount() - 500));
-				onTheWire_textArea.replaceSelection(null);
-			} catch (BadLocationException e) {
-				jbrofuzz_MainFrame.log("Fuzzing Panel: Could not clear the console", 3);
+//		if (onTheWire_textArea.getLineCount() > 500) {
+//			try {
+//				onTheWire_textArea.select(onTheWire_textArea.getLineStartOffset(0), onTheWire_textArea
+//						.getLineEndOffset(onTheWire_textArea.getLineCount() - 500));
+//				onTheWire_textArea.replaceSelection(null);
+//			} catch (BadLocationException e) {
+//				jbrofuzz_MainFrame.log("Fuzzing Panel: Could not clear the console", 3);
+//			}
+//		}
+		
+
+		final Document doc = (Document) onTheWire_textArea.getDocument();
+		final Element e = doc.getDefaultRootElement();
+		// Copy attribute Set
+		final AttributeSet attr = e.getAttributes().copyAttributes();
+		
+		
+		try {
+			// Use a FILO for the output to the console, never exceeding 1000 characters
+			final int totLength = doc.getLength() - 80 * 24;
+			if(totLength > 1) {
+				doc.remove(0, totLength);
 			}
+			
+			doc.insertString(
+					doc.getLength(),
+					input, 
+					attr);
+			
+		} catch (BadLocationException e2) {
+			jbrofuzz_MainFrame.log("Fuzzing Panel: Could not clear the \"On the Wire\" console", 3);
 		}
 
-		onTheWire_textArea.append(input);
-		onTheWire_textArea.setCaretPosition(onTheWire_textArea.getText().length());
+		onTheWire_textArea.setCaretPosition(doc.getLength());
 
 	}
 }

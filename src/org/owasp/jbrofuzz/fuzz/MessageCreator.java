@@ -292,6 +292,39 @@ public class MessageCreator {
 		}
 
 	}
+	
+	/**
+	 * <p>This method has the same algorithm as Connection.getPostDataInMessage()</p>
+	 * 
+	 * @since 1.5
+	 * @version 1.5
+	 * @return
+	 */
+	public String getPostDataForDisplayPurposes() {
+		
+		String postDataString; 
+		
+		try {
+
+			postDataString = message.split("\r\n\r\n")[1];
+
+		} catch (Exception e1) {
+
+			postDataString =  message;
+
+		}
+		
+		// END_LINE can be either a \n or a \r\n
+		if (END_LINE.equals("\n")) {
+			// \n
+			return stringReplace("\n", postDataString, "\\n\n");
+
+		} else {
+			// \r\n
+			return stringReplace("\r\n", postDataString, "\\r\\n\n");
+		}
+		
+	}
 
 	/**
 	 * @return the payload

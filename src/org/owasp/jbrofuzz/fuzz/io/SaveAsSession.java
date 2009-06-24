@@ -50,7 +50,7 @@ public class SaveAsSession {
 
 		JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
-		JFileChooser fc = new JFileChooser(System.getProperty("user.home"));
+		JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
 		fc.setFileFilter(filter);
 
 		int returnVal = fc.showSaveDialog(mWindow);
