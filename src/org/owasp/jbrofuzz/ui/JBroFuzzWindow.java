@@ -311,12 +311,19 @@ public class JBroFuzzWindow extends JFrame {
 		sp.stop();
 		cp.stop();
 
-		// Get the prefences on deleting empty dirs on exit
+		// Get the prefences the global preferences
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+		
+		// Delete empty dirs created
 		boolean deleteBlankDirs = prefs.getBoolean(JBroFuzzFormat.PR_1, true);
 		if (deleteBlankDirs) {
 			getJBroFuzz().getHandler().deleteEmptryDirectories();
 		}
+		
+		// Save the values of the url/request as a preference
+		prefs.put(JBroFuzzFormat.TEXT_URL, fp.getTextURL());
+		prefs.put(JBroFuzzFormat.TEXT_REQUEST, fp.getTextRequest());
+		
 		dispose();
 
 	}

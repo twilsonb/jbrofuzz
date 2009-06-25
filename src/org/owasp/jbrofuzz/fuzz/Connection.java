@@ -253,44 +253,59 @@ public class Connection {
 
 						// Check if a 100 Continue has come back
 						if (incoming.contains("HTTP/1.1 100 Continue")) {
+							
+							// Check if the preferences are set to re-send the POST Data if a 100 continue
+							boolean follow100Continue = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_4, true);
 
-							isResponse100Continue = true;
+							
+							if (follow100Continue) {
+								
+								isResponse100Continue = true;
 
-							// Put the POST data of the message on the wire, also 
-							// write them as output
-							final byte[] postData = ( getPostDataInMessage()).getBytes();
-							out_stream.write( postData );
-							baos.write(postData, 0, postData.length);
+								// Put the POST data of the message on the wire, also 
+								// write them as output
+								final byte[] postData = (getPostDataInMessage())
+										.getBytes();
+								out_stream.write(postData);
+								baos.write(postData, 0, postData.length);
+								// If so, check for chunked encoding again (not tidy)
+								boolean end_reached2 = false;
+								while ((!end_reached2)
+										&& ((got = in_stream.read(recv)) > -1)) {
 
-							// If so, check for chunked encoding again (not tidy)
-							boolean end_reached2 = false;
-							while ((!end_reached2) && ((got = in_stream.read(recv)) > -1)) {
+									final String cont_100_mark = "\r\n--jbrofuzz--100-continue-->\r\n";
+									baos.write(cont_100_mark.getBytes(), 0,
+											cont_100_mark.getBytes().length);
 
-								final String cont_100_mark = "\r\n--jbrofuzz--100-continue-->\r\n";
-								baos.write(cont_100_mark.getBytes(), 0, cont_100_mark.getBytes().length);
+									baos.write(recv, 0, got);
 
-								baos.write(recv, 0, got);
+									// Check if \r\n has come in, in its many shapes and forms
+									final String incoming2 = new String(baos
+											.toByteArray());
+									if (incoming.contains("\r\n\r\n")
+											|| incoming2.contains("\n\n")
+											|| incoming2.contains("\r\r")) {
 
-								// Check if \r\n has come in, in its many shapes and forms
-								final String incoming2 = new String(baos.toByteArray());
-								if (incoming.contains("\r\n\r\n")
-										|| incoming2.contains("\n\n")
-										|| incoming2.contains("\r\r")) {
+										// Check if Chunked Encoding is being used
+										if (incoming2
+												.contains("Transfer-Encoding: chunked")) {
 
-									// Check if Chunked Encoding is being used
-									if (incoming2.contains("Transfer-Encoding: chunked")) {
+											if (incoming2.contains("\r\n0\r\n")
+													|| incoming2
+															.contains("\n0\n")
+													|| incoming2
+															.contains("\r0\r")) {
+												end_reached2 = true;
+											}
 
-										if (incoming2.contains("\r\n0\r\n")
-												|| incoming2.contains("\n0\n")
-												|| incoming2.contains("\r0\r")) {
+										} else {
 											end_reached2 = true;
 										}
-
-									} else {
-										end_reached2 = true;
 									}
-								}
-							}
+									
+								} // while loop for chunked encoding
+								
+							} // if 100 continue is true 
 						}
 
 					}
