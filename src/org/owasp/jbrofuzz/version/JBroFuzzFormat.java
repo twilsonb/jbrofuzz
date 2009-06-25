@@ -142,6 +142,10 @@ public class JBroFuzzFormat {
 	public static final String PR_FUZZ_3 = "fuzz.ui.show.wire";
 
 	/**
+	 * The preferences used for "Re-send POST Data if 100 Continue is received" 
+	 */
+	public static final String PR_FUZZ_4 = "fuzz.100.continue";
+	/**
 	 * If true, the response will wrap when opened in a new window
 	 */
 	public static final String WRAP_RESPONSE = "wrap.response";
@@ -151,6 +155,15 @@ public class JBroFuzzFormat {
 	 */
 	public static final String WRAP_REQUEST = "wrap.request";
 
+	/**
+	 * The url text saved as a preference
+	 */
+	public static final String TEXT_URL = "fuzz.ui.url_text";
+	
+	/**
+	 * The request text saved as a preference
+	 */
+	public static final String TEXT_REQUEST = "fuzz.ui.request_text";
 	
 	/**
 	 * <p>

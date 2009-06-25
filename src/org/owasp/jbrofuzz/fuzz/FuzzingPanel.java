@@ -446,6 +446,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		this.add(mainPane, BorderLayout.CENTER);
 
+		// Display the last displayed url/request
+		this.setTextURL(prefs.get(JBroFuzzFormat.TEXT_URL, ""));
+		this.setTextRequest(prefs.get(JBroFuzzFormat.TEXT_REQUEST, ""));
 	}
 
 	/**
@@ -925,18 +928,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		onTheWireEvent++;
 		topRightPanel.setTitleAt(1, " On The Wire (" + onTheWireEvent + ") ");
-
-		// Use a FILO for the output to the console, never exceeding 500 lines
-//		if (onTheWire_textArea.getLineCount() > 500) {
-//			try {
-//				onTheWire_textArea.select(onTheWire_textArea.getLineStartOffset(0), onTheWire_textArea
-//						.getLineEndOffset(onTheWire_textArea.getLineCount() - 500));
-//				onTheWire_textArea.replaceSelection(null);
-//			} catch (BadLocationException e) {
-//				jbrofuzz_MainFrame.log("Fuzzing Panel: Could not clear the console", 3);
-//			}
-//		}
-		
 
 		final Document doc = (Document) onTheWire_textArea.getDocument();
 		final Element e = doc.getDefaultRootElement();

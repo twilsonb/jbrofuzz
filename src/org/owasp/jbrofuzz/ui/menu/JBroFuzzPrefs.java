@@ -68,7 +68,8 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.4
+ * @since 1.2
+ * @version 1.5
  */
 public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
@@ -99,7 +100,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	 * @param parent
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.4
+	 * @version 1.5
 	 * @since 1.2
 	 */
 	public JBroFuzzPrefs(final JBroFuzzWindow parent) {
@@ -342,6 +343,27 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		});
 		
 		panels[2].add(wrap_res_check_box);
+		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
+		
+		// Fuzzing ...-> "Re-send POST Data if 100 Continue is received"
+		final boolean cont_bool = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_4, true);
+		final JCheckBox cont_check_box = new JCheckBox(
+				"Re-send POST Data if 100 Continue is received", cont_bool);
+		cont_check_box.setBorderPaintedFlat(true);
+		cont_check_box.setToolTipText(
+				"Tick this box, to re-send the POST Data in a HTTP/1.1 message, if a 100 continue is received");
+		
+		cont_check_box.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent event5) {
+				if(cont_check_box.isSelected()) {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_4, true);
+				} else {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_4, false);
+				}
+			}
+		});
+		
+		panels[2].add(cont_check_box);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 		
 		// Create the top split pane, showing the treeView and the Preferences
