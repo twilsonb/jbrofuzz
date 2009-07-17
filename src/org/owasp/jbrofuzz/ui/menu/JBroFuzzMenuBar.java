@@ -49,6 +49,7 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.owasp.jbrofuzz.encode.EncoderHash;
 import org.owasp.jbrofuzz.fuzz.io.OpenSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveAsSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveSession;
@@ -305,14 +306,16 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		panel.add(remove);
 
 		// Options
-		final JMenuItem preferences = new JMenuItem("Preferences",
-				ImageCreator.IMG_PREFERENCES);
+		final JMenuItem encoderHash = new JMenuItem("Encoder/Hash...");
 		final JMenuItem updates = new JMenuItem("Check for Updates...",
 				ImageCreator.IMG_UPDATE);
-
+		final JMenuItem preferences = new JMenuItem("Preferences",
+				ImageCreator.IMG_PREFERENCES);
+		
 		preferences.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
+		options.add(encoderHash);
 		options.add(updates);
 		options.addSeparator();
 		options.add(preferences);
@@ -802,6 +805,17 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			}
 		});
 
+		encoderHash.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						new EncoderHash(JBroFuzzMenuBar.this.getFrame());
+					}
+				});
+			}
+		});
+		
 		preferences.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 

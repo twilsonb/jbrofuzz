@@ -50,10 +50,8 @@ import com.Ostermiller.util.Browser;
 
 public class FileSystemTree extends JTree implements MouseListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4289004118182074303L;
+
 	final JPopupMenu popmenu;
 
 	public FileSystemTree(final GraphingPanel graphingPanel,

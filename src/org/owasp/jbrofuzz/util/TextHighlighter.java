@@ -164,6 +164,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("en-gb", keramidi);
 		keywords.put("en-GB", keramidi);
 		keywords.put("en-US", keramidi);
+		keywords.put("XMLHttpRequest", keramidi);
 
 		keywords.put("gzip", keramidi);
 		keywords.put("x-gzip", keramidi);
@@ -254,6 +255,8 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("X-SDCH", Color.blue);
 		keywords.put("x-ps3-browser", Color.blue);
 		keywords.put("x-wap-profile", Color.blue);
+		keywords.put("x-prototype-version", Color.blue);
+		keywords.put("x-requested-with", Color.blue);
 
 		style = new SimpleAttributeSet();
 	}
