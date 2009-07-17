@@ -33,11 +33,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * 
- * @author yiannis
+ * @author subere@uncon.org
+ * @version 1.5
  */
 public class FileSystemTreeNode extends DefaultMutableTreeNode {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5086899959196495566L;
 
 	private boolean nodeIsDirectory;
 
