@@ -2,21 +2,33 @@
 	Launch4j (http://launch4j.sourceforge.net/)
 	Cross-platform Java application wrapper for creating Windows native executables.
 
-	Copyright (C) 2004, 2006 Grzegorz Kowal
+	Copyright (c) 2004, 2007 Grzegorz Kowal
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+	All rights reserved.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	    * Redistributions of source code must retain the above copyright notice,
+	      this list of conditions and the following disclaimer.
+	    * Redistributions in binary form must reproduce the above copyright notice,
+	      this list of conditions and the following disclaimer in the documentation
+	      and/or other materials provided with the distribution.
+	    * Neither the name of the Launch4j nor the names of its contributors
+	      may be used to endorse or promote products derived from this software without
+	      specific prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+	EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+	PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+	LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /*
@@ -28,6 +40,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import net.sf.launch4j.binding.InvariantViolationException;
 import net.sf.launch4j.config.Config;
@@ -38,9 +54,16 @@ import net.sf.launch4j.config.ConfigPersister;
  */
 public class Builder {
 	private final Log _log;
+	private final File _basedir;
 
 	public Builder(Log log) {
 		_log = log;
+		_basedir = Util.getJarBasedir();
+	}
+
+	public Builder(Log log, File basedir) {
+		_log = log;
+		_basedir = basedir;
 	}
 
 	/**
@@ -60,47 +83,46 @@ public class Builder {
 		FileOutputStream os = null;
 		final RcBuilder rcb = new RcBuilder();
 		try {
-			File basedir = Util.getJarBasedir();
 			rc = rcb.build(c);
-			ro = Util.createTempFile("o"); //$NON-NLS-1$
+			ro = Util.createTempFile("o");
 			outfile = ConfigPersister.getInstance().getOutputFile();
 
-			Cmd resCmd = new Cmd(basedir);
-			resCmd.addExe("windres") //$NON-NLS-1$
-					.add(Util.WINDOWS_OS ? "--preprocessor=type" : "--preprocessor=cat") //$NON-NLS-1$ //$NON-NLS-2$
-					.add("-J rc -O coff -F pe-i386") //$NON-NLS-1$
+			Cmd resCmd = new Cmd(_basedir);
+			resCmd.addExe("windres")
+					.add(Util.WINDOWS_OS ? "--preprocessor=type" : "--preprocessor=cat")
+					.add("-J rc -O coff -F pe-i386")
 					.addAbsFile(rc)
 					.addAbsFile(ro);
-			_log.append(Messages.getString("Builder.compiling.resources")); //$NON-NLS-1$
+			_log.append(Messages.getString("Builder.compiling.resources"));
 			resCmd.exec(_log);
 
-			Cmd ldCmd = new Cmd(basedir);
-			ldCmd.addExe("ld") //$NON-NLS-1$
-					.add("-mi386pe") //$NON-NLS-1$
-					.add("--oformat pei-i386") //$NON-NLS-1$
-					.add((c.getHeaderType() == Config.GUI_HEADER)
-							? "--subsystem windows" : "--subsystem console") //$NON-NLS-1$ //$NON-NLS-2$
-					.add("-s")		// strip symbols //$NON-NLS-1$
+			Cmd ldCmd = new Cmd(_basedir);
+			ldCmd.addExe("ld")
+					.add("-mi386pe")
+					.add("--oformat pei-i386")
+					.add((c.getHeaderType().equals(Config.GUI_HEADER))
+							? "--subsystem windows" : "--subsystem console")
+					.add("-s")		// strip symbols
 					.addFiles(c.getHeaderObjects())
 					.addAbsFile(ro)
 					.addFiles(c.getLibs())
-					.add("-o") //$NON-NLS-1$
+					.add("-o")
 					.addAbsFile(outfile);
-			_log.append(Messages.getString("Builder.linking")); //$NON-NLS-1$
+			_log.append(Messages.getString("Builder.linking"));
 			ldCmd.exec(_log);
 
 			if (!c.isDontWrapJar()) {
-				_log.append(Messages.getString("Builder.wrapping")); //$NON-NLS-1$
+				_log.append(Messages.getString("Builder.wrapping"));
 				int len;
 				byte[] buffer = new byte[1024];
-				is = new FileInputStream(
-						Util.getAbsoluteFile(ConfigPersister.getInstance().getConfigPath(),	c.getJar()));
+				is = new FileInputStream(Util.getAbsoluteFile(
+						ConfigPersister.getInstance().getConfigPath(),	c.getJar()));
 				os = new FileOutputStream(outfile, true);
 				while ((len = is.read(buffer)) > 0) {
 					os.write(buffer, 0, len);
 				}
 			}
-			_log.append(Messages.getString("Builder.success") + outfile.getPath()); //$NON-NLS-1$
+			_log.append(Messages.getString("Builder.success") + outfile.getPath());
 			return outfile;
 		} catch (IOException e) {
 			Util.delete(outfile);
@@ -109,9 +131,15 @@ public class Builder {
 		} catch (ExecException e) {
 			Util.delete(outfile);
 			String msg = e.getMessage(); 
-			if (msg != null && msg.indexOf("windres") != -1) { //$NON-NLS-1$
-				_log.append(Messages.getString("Builder.generated.resource.file")); //$NON-NLS-1$
-				_log.append(rcb.getContent());
+			if (msg != null && msg.indexOf("windres") != -1) {
+				if (e.getErrLine() != -1) {
+					_log.append(Messages.getString("Builder.line.has.errors",
+							String.valueOf(e.getErrLine())));
+					_log.append(rcb.getLine(e.getErrLine()));
+				} else {
+					_log.append(Messages.getString("Builder.generated.resource.file"));
+					_log.append(rcb.getContent());
+				}
 			}
 			throw new BuilderException(e);
 		} finally {
@@ -124,14 +152,12 @@ public class Builder {
 }
 
 class Cmd {
-	private final StringBuffer _sb = new StringBuffer();
+	private final List _cmd = new ArrayList();
 	private final File _basedir;
 	private final File _bindir;
-	private final boolean _quote;
 
 	public Cmd(File basedir) {
 		_basedir = basedir;
-		_quote = basedir.getPath().indexOf(' ') != -1;
 		String path = System.getProperty("launch4j.bindir");
 		if (path == null) {
 			_bindir = new File(basedir, "bin");
@@ -142,69 +168,40 @@ class Cmd {
 	}
 
 	public Cmd add(String s) {
-		space();
-		_sb.append(s);
+		StringTokenizer st = new StringTokenizer(s);
+		while (st.hasMoreTokens()) {
+			_cmd.add(st.nextToken());
+		}
 		return this;
 	}
 
 	public Cmd addAbsFile(File file) {
-		space();
-		boolean quote = file.getPath().indexOf(' ') != -1;
-		if (quote) {
-			_sb.append('"');
-		}
-		_sb.append(file.getPath());
-		if (quote) {
-			_sb.append('"');
-		}
+		_cmd.add(file.getPath());
 		return this;
 	}
 
 	public Cmd addFile(String pathname) {
-		space();
-		if (_quote) {
-			_sb.append('"');
-		}
-		_sb.append(new File(_basedir, pathname).getPath());
-		if (_quote) {
-			_sb.append('"');
-		}
+		_cmd.add(new File(_basedir, pathname).getPath());
 		return this;
 	}
 
 	public Cmd addExe(String pathname) {
-		space();
-		if (_quote) {
-			_sb.append('"');
-		}
 		if (Util.WINDOWS_OS) {
-			pathname += ".exe";	//$NON-NLS-1$
+			pathname += ".exe";
 		}
-		_sb.append(new File(_bindir, pathname).getPath());
-		if (_quote) {
-			_sb.append('"');
-		}
+		_cmd.add(new File(_bindir, pathname).getPath());
 		return this;
 	}
 
-	public Cmd addFiles(String[] files) {
-		for (int i = 0; i < files.length; i++) {
-			addFile(files[i]);
+	public Cmd addFiles(List files) {
+		for (Iterator iter = files.iterator(); iter.hasNext();) {
+			addFile((String) iter.next());
 		}
 		return this;
-	}
-
-	private void space() {
-		if (_sb.length() > 0) {
-			_sb.append(' ');
-		}
-	}
-	
-	public String toString() {
-		return _sb.toString();
 	}
 
 	public void exec(Log log) throws ExecException {
-		Util.exec(_sb.toString(), log);
+		String[] cmd = (String[]) _cmd.toArray(new String[_cmd.size()]);
+		Util.exec(cmd, log);
 	}
 }

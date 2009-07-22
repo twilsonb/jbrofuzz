@@ -84,6 +84,7 @@ public class Fuzzer implements Iterator<String> {
 
 	}
 
+	
 	public String getCurrectValue() {
 
 		return cValue.toString();

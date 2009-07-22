@@ -9,21 +9,26 @@
 		<fileset dir="launch4j">
 			<include name="*.jar" />
 		</fileset>
+		<fileset dir="launch4j/lib">
+			<include name="xstream.jar" />
+		</fileset>
 	</path>
 	
-	<target name="init" description="Setup for Build">
+	<target name="init" description="Setup for Build: Checking Directories">
 		<tstamp />
-		<echo>Checking Directories</echo>
+		<echo>Setup for Build: Checking Directories</echo>
 		<mkdir dir="bin" />
 		<mkdir dir="jar" />
 	</target>
 
-	<target depends="init" name="compile" description="Compilation of Java Classes">
+	<target depends="init" name="compile" description="Compiling Java Files">
 		<echo>Compiling Java Files</echo>
-		<javac srcdir="src" destdir="bin" debug="true" failonerror="true" classpathref="master-classpath" deprecation="true" source="1.6" target="1.6" />
+		<javac srcdir="src" destdir="bin" debug="true" failonerror="true" classpathref="master-classpath" deprecation="true" source="1.6" target="1.6">
+			 <compilerarg value="-Xlint"/>
+		</javac>
 	</target>
 
-	<target depends="compile" name="archive" description="Creation of the Main JAR File">
+	<target depends="compile" name="archive" description="Creating Java Archive: JBroFuzz.jar">
 		<echo>Creating Java Archive</echo>
 		<jar compress="true" destfile="jar/${app.name}.jar">
 			<fileset dir="bin">
@@ -44,8 +49,8 @@
 			<zipfileset src="lib/commons-logging-1.1.jar" />
 			<zipfileset src="lib/junit-4.5.jar" />
 			<zipfileset src="lib/ostermillerutils_1_07_00.jar" />
-			<zipfileset src="lib/jcommon-1.0.15.jar" />
-			<zipfileset src="lib/jfreechart-1.0.12.jar" />
+			<zipfileset src="lib/jcommon-1.0.16.jar" />
+			<zipfileset src="lib/jfreechart-1.0.13.jar" />
 			<manifest>
 				<attribute name="Main-Class" value="org.owasp.jbrofuzz.JBroFuzz" />
 				<attribute name="Build-By" value="subere@uncon.org" />
@@ -54,13 +59,14 @@
 		</jar>
 	</target>
 	
-	<target name="exe" depends="archive" description="Creation of the Main EXE File">
-		<echo>Creating Executable</echo>
+	<target name="exe" depends="archive" description="Creating Executable: JBroFuzz.exe">
+		<echo>Creating Executable: JBroFuzz.exe</echo>
 		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpathref="master-classpath" />
 		<launch4j configFile="./release/launch4j.xml" />
 	</target>
-
+	
 	<target name="clean" description="Removing the /bin and /jar directory contents">
+		<echo>Removing the /bin and /jar directory contents</echo>
 		<delete verbose="true" failonerror="false" includeemptydirs="true">
 			<fileset dir="bin" />
 			<fileset dir="jar" >
@@ -70,7 +76,8 @@
 		</delete>
 	</target>
 
-	<target name="javadoc">
+	<target name="javadoc" depends="compile" description="Generating javadoc">
+		<echo>Generating javadoc</echo>
 	    <javadoc author="true" destdir="doc" package="true" version="true">
 	      <fileset dir="${src.dir}" />
 	      <tag description="To Do:" name="todo" scope="all" />

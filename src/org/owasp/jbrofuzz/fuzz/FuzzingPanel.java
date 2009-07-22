@@ -745,8 +745,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		url_textField.setBackground(Color.BLACK);
 		url_textField.setForeground(Color.WHITE);
 
-//		onTheWire_textArea.append("\n--> JBroFuzz Fuzzing Session: " + (session + 1)+ " -->\n\n");
-		Document doc = (Document) onTheWire_textArea.getDocument();
+		Document doc = onTheWire_textArea.getDocument();
 		Element e = doc.getDefaultRootElement();
 		// Copy attribute Set
 		AttributeSet attr = e.getAttributes().copyAttributes();
@@ -819,10 +818,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 					final int co_k = outputTableModel.addNewRow(outputMessage);
 
-					/*
-					 * outputTable.scrollRectToVisible(outputTable.getCellRect(
-					 * outputTable.getModel().getColumnCount() * 16 , 0, true));
-					 */
 
 					// Put the message on the console as it goes out on the wire
 					toConsole(currentMessage.getMessageForDisplayPurposes());
@@ -864,7 +859,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		}
 
-		// } // else statement for no rows
 
 	}
 
@@ -929,7 +923,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		onTheWireEvent++;
 		topRightPanel.setTitleAt(1, " On The Wire (" + onTheWireEvent + ") ");
 
-		final Document doc = (Document) onTheWire_textArea.getDocument();
+		final Document doc = onTheWire_textArea.getDocument();
 		final Element e = doc.getDefaultRootElement();
 		// Copy attribute Set
 		final AttributeSet attr = e.getAttributes().copyAttributes();
