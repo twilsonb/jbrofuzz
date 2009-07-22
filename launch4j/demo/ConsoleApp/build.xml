@@ -42,7 +42,8 @@
 		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar
 		    :${launch4j.dir}/lib/xstream.jar" />
 		<launch4j>
-			<config headerType="1" jar="ConsoleApp.jar" outfile="ConsoleApp.exe" errTitle="ConsoleApp" chdir="." customProcName="true" icon="l4j/ConsoleApp.ico">
+			<config headerType="console" jar="ConsoleApp.jar" outfile="ConsoleApp.exe" errTitle="ConsoleApp" chdir="." customProcName="true" icon="l4j/ConsoleApp.ico">
+				<singleInstance mutexName="net.sf.launch4j.example.ConsoleApp" />
 				<jre minVersion="1.4.0" />
 			</config>
 		</launch4j>

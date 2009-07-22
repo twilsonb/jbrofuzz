@@ -2,21 +2,33 @@
 	Launch4j (http://launch4j.sourceforge.net/)
 	Cross-platform Java application wrapper for creating Windows native executables.
 
-	Copyright (C) 2004, 2006 Grzegorz Kowal
+	Copyright (c) 2004, 2007 Grzegorz Kowal
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+	All rights reserved.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	    * Redistributions of source code must retain the above copyright notice,
+	      this list of conditions and the following disclaimer.
+	    * Redistributions in binary form must reproduce the above copyright notice,
+	      this list of conditions and the following disclaimer in the documentation
+	      and/or other materials provided with the distribution.
+	    * Neither the name of the Launch4j nor the names of its contributors
+	      may be used to endorse or promote products derived from this software without
+	      specific prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+	EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+	PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+	LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /*
@@ -31,8 +43,7 @@ import net.sf.launch4j.binding.Validator;
  * @author Copyright (C) 2005 Grzegorz Kowal
  */
 public class VersionInfo implements IValidatable {
-	public static final String VERSION_PATTERN = "(\\d+\\.){3}\\d+"; //$NON-NLS-1$
-	private static final int MAX_LEN = 150;
+	public static final String VERSION_PATTERN = "(\\d+\\.){3}\\d+";
 
 	private String fileVersion;
 	private String txtFileVersion;
@@ -47,31 +58,32 @@ public class VersionInfo implements IValidatable {
 
 	public void checkInvariants() {
 		Validator.checkString(fileVersion, 20, VERSION_PATTERN,
-				"versionInfo.fileVersion", Messages.getString("VersionInfo.file.version")); //$NON-NLS-1$ //$NON-NLS-2$
-		Validator.checkString(txtFileVersion, 50,
-				"versionInfo.txtFileVersion", Messages.getString("VersionInfo.txt.file.version")); //$NON-NLS-1$ //$NON-NLS-2$
-		Validator.checkString(fileDescription, MAX_LEN,
-				"versionInfo.fileDescription", Messages.getString("VersionInfo.file.description")); //$NON-NLS-1$ //$NON-NLS-2$
-		Validator.checkString(copyright, MAX_LEN,
-				"versionInfo.copyright", Messages.getString("VersionInfo.copyright")); //$NON-NLS-1$ //$NON-NLS-2$
+				"versionInfo.fileVersion",
+				Messages.getString("VersionInfo.file.version"));
+		Validator.checkString(txtFileVersion, 50, "versionInfo.txtFileVersion",
+				Messages.getString("VersionInfo.txt.file.version"));
+		Validator.checkString(fileDescription, 150, "versionInfo.fileDescription",
+				Messages.getString("VersionInfo.file.description"));
+		Validator.checkString(copyright, 150, "versionInfo.copyright",
+				Messages.getString("VersionInfo.copyright"));
 		Validator.checkString(productVersion, 20, VERSION_PATTERN,
-				"versionInfo.productVersion", Messages.getString("VersionInfo.product.version")); //$NON-NLS-1$ //$NON-NLS-2$
-		Validator.checkString(txtProductVersion, 50,
-				"versionInfo.txtProductVersion", Messages.getString("VersionInfo.txt.product.version")); //$NON-NLS-1$ //$NON-NLS-2$
-		Validator.checkString(productName, MAX_LEN,
-				"versionInfo.productName", Messages.getString("VersionInfo.product.name")); //$NON-NLS-1$ //$NON-NLS-2$
-		Validator.checkOptString(companyName, MAX_LEN,
-				"versionInfo.companyName", Messages.getString("VersionInfo.company.name")); //$NON-NLS-1$ //$NON-NLS-2$
-		Validator.checkString(internalName, 50,
-				"versionInfo.internalName", Messages.getString("VersionInfo.internal.name")); //$NON-NLS-1$ //$NON-NLS-2$
-		Validator.checkTrue(!internalName.endsWith(".exe"), //$NON-NLS-1$
-				"versionInfo.internalName", //$NON-NLS-1$
-				Messages.getString("VersionInfo.internal.name.not.exe")); //$NON-NLS-1$
-		Validator.checkString(originalFilename, 50,
-				"versionInfo.originalFilename", Messages.getString("VersionInfo.original.filename")); //$NON-NLS-1$ //$NON-NLS-2$
-		Validator.checkTrue(originalFilename.endsWith(".exe"), //$NON-NLS-1$
-				"versionInfo.originalFilename", //$NON-NLS-1$
-				Messages.getString("VersionInfo.original.filename.exe")); //$NON-NLS-1$
+				"versionInfo.productVersion",
+				Messages.getString("VersionInfo.product.version"));
+		Validator.checkString(txtProductVersion, 50, "versionInfo.txtProductVersion",
+				Messages.getString("VersionInfo.txt.product.version"));
+		Validator.checkString(productName, 150, "versionInfo.productName",
+				Messages.getString("VersionInfo.product.name"));
+		Validator.checkOptString(companyName, 150, "versionInfo.companyName",
+				Messages.getString("VersionInfo.company.name"));
+		Validator.checkString(internalName, 50, 	"versionInfo.internalName",
+				Messages.getString("VersionInfo.internal.name"));
+		Validator.checkTrue(!internalName.endsWith(".exe"), "versionInfo.internalName",
+				Messages.getString("VersionInfo.internal.name.not.exe"));
+		Validator.checkString(originalFilename, 50, "versionInfo.originalFilename",
+				Messages.getString("VersionInfo.original.filename"));
+		Validator.checkTrue(originalFilename.endsWith(".exe"),
+				"versionInfo.originalFilename",
+				Messages.getString("VersionInfo.original.filename.exe"));
 	}
 
 	public String getCompanyName() {

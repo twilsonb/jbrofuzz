@@ -1,35 +1,40 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
-  <headerType>0</headerType>
-    <headerObjects>
-    <file>w32api/crt2.o</file>
-    <file>head/guihead.o</file>
-    <file>head/head.o</file>
-  </headerObjects>
-  <libs>
-    <file>w32api/libmingw32.a</file>
-    <file>w32api/libgcc.a</file>
-    <file>w32api/libmsvcrt.a</file>
-    <file>w32api/libkernel32.a</file>
-    <file>w32api/libuser32.a</file>
-    <file>w32api/libadvapi32.a</file>
-    <file>w32api/libshell32.a</file>
-  </libs>
-  <jar>../jar/JBroFuzz.jar</jar>
-  <outfile>../jar/JBroFuzz.exe</outfile>
+  <headerType>gui</headerType>
+  <obj>w32api\crt2.o</obj>
+  <obj>head\guihead.o</obj>
+  <obj>head\head.o</obj>
+  <lib>w32api\libmingw32.a</lib>
+  <lib>w32api\libgcc.a</lib>
+  <lib>w32api\libmsvcrt.a</lib>
+  <lib>w32api\libkernel32.a</lib>
+  <lib>w32api\libuser32.a</lib>
+  <lib>w32api\libadvapi32.a</lib>
+  <lib>w32api\libshell32.a</lib>
+  <jar>..\jar\JBroFuzz.jar</jar>
+  <outfile>..\jar\JBroFuzz.exe</outfile>
   <errTitle>JBroFuzz</errTitle>
+  <cmdLine></cmdLine>
   <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
   <customProcName>true</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
   <icon>icon.ico</icon>
   <jre>
+    <path></path>
     <minVersion>1.6.0</minVersion>
-	<initialHeapSize>64</initialHeapSize>
-    <maxHeapSize>128</maxHeapSize>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <initialHeapSize>128</initialHeapSize>
+    <maxHeapSize>512</maxHeapSize>
   </jre>
-    <versionInfo>
+  <versionInfo>
     <fileVersion>1.5.0.0</fileVersion>
     <txtFileVersion>1.5.0.0</txtFileVersion>
-    <fileDescription>Java Broswer Fuzzer</fileDescription>
+    <fileDescription>Java Browser Fuzzer</fileDescription>
     <copyright>Copyright 2009 (c)</copyright>
     <productVersion>1.5.0.0</productVersion>
     <txtProductVersion>1.5.0.0</txtProductVersion>

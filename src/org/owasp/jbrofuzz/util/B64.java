@@ -29,6 +29,8 @@
  */
 package org.owasp.jbrofuzz.util;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * <p>
  * Class responsible for encoding and decoding a given byte array to a Base64
@@ -36,9 +38,9 @@ package org.owasp.jbrofuzz.util;
  * the encode and decode methods.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
+ * @author subere@uncon.org
  * @since 0.1
- * @version 0.6
+ * @version 1.5
  */
 public class B64 {
 
@@ -72,6 +74,31 @@ public class B64 {
 		}
 		return raw;
 	}
+	
+	/**
+	 * <p>Method for decoding an input String into normal characters 
+	 * from Base64 format.</p>
+	 * <p>If the input is not in Base64 format, a blank String is 
+	 * returned "".</p>
+	 * 
+	 * @param input
+	 * @return String or an empty String "" in case of 
+	 * an error.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.5
+	 * @since 1.5
+	 * 
+	 */
+	public static String decodeString(final String input) {
+		
+		try {
+			return new String(B64.decode(input));
+		} catch (StringIndexOutOfBoundsException e) {
+			return "";
+		}
+		
+	}
 
 	/**
 	 * <p>
@@ -90,6 +117,33 @@ public class B64 {
 		}
 		return encoded.toString();
 	}
+	
+	/**
+	 * <p>Method for encoding an input String into Base64 format.
+	 * </p>
+	 * <p>The input String is converted into a byte array and 
+	 * then encoded into Base64.</p>
+	 * <p>The encoding for the input array is "ISO-8859-1".</p>
+	 * 
+	 * @param input
+	 * @return A Base64 input String or an empty String in the
+	 * event that the encoding of "ISO-8859-1 cannot be found.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.5
+	 * @since 1.5
+	 * 
+	 */
+	public static String encodeString(final String input) {
+		
+		try {
+			return encode(input.getBytes("iso-8859-1"));
+		} catch (UnsupportedEncodingException e) {
+			return "";
+		}
+		
+	}
+	
 
 	private static char[] encodeBlock(final byte[] raw, final int offset) {
 		int block = 0;

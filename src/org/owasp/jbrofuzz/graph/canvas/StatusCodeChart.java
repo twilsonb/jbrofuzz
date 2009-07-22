@@ -186,7 +186,7 @@ public class StatusCodeChart {
 		dataset = new DefaultPieDataset();
 
 		for (Iterator<Entry<String, Integer>> it = map.entrySet().iterator(); it.hasNext();) {
-			Map.Entry<String, Integer> entry = (Map.Entry<String, Integer>) it.next();
+			Map.Entry<String, Integer> entry = it.next();
 
 			dataset.setValue(entry.getKey(), (double) entry.getValue()
 					/ (double) y_data.length);

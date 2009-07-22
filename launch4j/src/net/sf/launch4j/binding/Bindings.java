@@ -2,21 +2,33 @@
 	Launch4j (http://launch4j.sourceforge.net/)
 	Cross-platform Java application wrapper for creating Windows native executables.
 
-	Copyright (C) 2004, 2006 Grzegorz Kowal
+	Copyright (c) 2004, 2007 Grzegorz Kowal
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+	All rights reserved.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	    * Redistributions of source code must retain the above copyright notice,
+	      this list of conditions and the following disclaimer.
+	    * Redistributions in binary form must reproduce the above copyright notice,
+	      this list of conditions and the following disclaimer in the documentation
+	      and/or other materials provided with the distribution.
+	    * Neither the name of the Launch4j nor the names of its contributors
+	      may be used to endorse or promote products derived from this software without
+	      specific prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+	EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+	PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+	LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /*
@@ -30,7 +42,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
@@ -52,8 +66,10 @@ public class Bindings implements PropertyChangeListener {
 	 * Used to track component modifications.
 	 */
 	public void propertyChange(PropertyChangeEvent evt) {
-		if ("AccessibleValue".equals(evt.getPropertyName()) //$NON-NLS-1$
-				|| "AccessibleText".equals(evt.getPropertyName())) { //$NON-NLS-1$
+		String prop = evt.getPropertyName();
+		if ("AccessibleValue".equals(prop)
+				|| "AccessibleText".equals(prop)
+				|| "AccessibleVisibleData".equals(prop)) {
 			_modified = true;
 		}
 	}
@@ -158,7 +174,8 @@ public class Bindings implements PropertyChangeListener {
 			bean.checkInvariants();
 			for (Iterator iter = _optComponents.keySet().iterator(); iter.hasNext();) {
 				String property = (String) iter.next();
-				IValidatable component = (IValidatable) PropertyUtils.getProperty(bean, property);
+				IValidatable component = (IValidatable) PropertyUtils.getProperty(bean,
+						property);
 				if (component != null) {
 					component.checkInvariants();
 				}
@@ -174,7 +191,7 @@ public class Bindings implements PropertyChangeListener {
 
 	private Bindings add(Binding b) {
 		if (_bindings.containsKey(b.getProperty())) {
-			throw new BindingException(Messages.getString("Bindings.duplicate.binding")); //$NON-NLS-1$
+			throw new BindingException(Messages.getString("Bindings.duplicate.binding"));
 		}
 		_bindings.put(b.getProperty(), b);
 		return this;
@@ -187,7 +204,7 @@ public class Bindings implements PropertyChangeListener {
 			boolean enabledByDefault) {
 		Binding b = new OptComponentBinding(this, property, clazz, c, enabledByDefault);
 		if (_optComponents.containsKey(property)) {
-			throw new BindingException(Messages.getString("Bindings.duplicate.binding")); //$NON-NLS-1$
+			throw new BindingException(Messages.getString("Bindings.duplicate.binding"));
 		}
 		_optComponents.put(property, b);
 		return this;
@@ -213,7 +230,7 @@ public class Bindings implements PropertyChangeListener {
 	 */
 	public Bindings add(String property, JTextComponent c) {
 		registerPropertyChangeListener(c);
-		return add(new JTextComponentBinding(property, c, "")); //$NON-NLS-1$
+		return add(new JTextComponentBinding(property, c, ""));
 	}
 
 	/**
@@ -247,11 +264,54 @@ public class Bindings implements PropertyChangeListener {
 		registerPropertyChangeListener(cs);
 		return add(new JRadioButtonBinding(property, cs, 0));
 	}
-	
+
+	/**
+	 * Handles JTextArea
+	 */
+	public Bindings add(String property, JTextArea textArea, String defaultValue) {
+		registerPropertyChangeListener(textArea);
+		return add(new JTextComponentBinding(property, textArea, defaultValue));
+	}
+
+	/**
+	 * Handles JTextArea lists
+	 */
+	public Bindings add(String property, JTextArea textArea) {
+		registerPropertyChangeListener(textArea);
+		return add(new JTextAreaBinding(property, textArea));
+	}
+
+	/**
+	 * Handles Optional JTextArea lists
+	 */
 	public Bindings add(String property, String stateProperty, 
 			JToggleButton button, JTextArea textArea) {
 		registerPropertyChangeListener(button);
 		registerPropertyChangeListener(textArea);
-		return add(new OptListBinding(property, stateProperty, button, textArea));
+		return add(new OptJTextAreaBinding(property, stateProperty, button, textArea));
+	}
+
+	/**
+	 * Handles JList
+	 */
+	public Bindings add(String property, JList list) {
+		registerPropertyChangeListener(list);
+		return add(new JListBinding(property, list));
+	}
+
+	/**
+	 * Handles JComboBox
+	 */
+	public Bindings add(String property, JComboBox combo, int defaultValue) {
+		registerPropertyChangeListener(combo);
+		return add(new JComboBoxBinding(property, combo, defaultValue));
+	}
+
+	/**
+	 * Handles JComboBox
+	 */
+	public Bindings add(String property, JComboBox combo) {
+		registerPropertyChangeListener(combo);
+		return add(new JComboBoxBinding(property, combo, 0));
 	}
 }

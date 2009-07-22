@@ -11,7 +11,7 @@
 	<body>
 		<div id="container">
 			<div id="top">
-				<img style="width: 249px; height: 58px;" src="launch4j.gif" alt="launch4j"> <span class="version">2.1.5</span>
+				<img style="width: 249px; height: 58px;" src="launch4j.gif" alt="launch4j"> <span class="version">3.0.1</span>
 			</div>
 			<div id="leftnav">
 				<ul>
@@ -19,24 +19,122 @@
 					<li><a href="docs.html">Docs</a></li>
 					<li><a href="changelog.html">Changelog</a></li>
 					<li><a href="http://sourceforge.net/project/screenshots.php?group_id=95944">Screenshots</a></li>
-					<li><a href="http://sourceforge.net/project/showfiles.php?group_id=95944&amp;package_id=152236">Download</a></li>
+					<li><a href="http://sourceforge.net/project/showfiles.php?group_id=95944&amp;package_id=192323">Download</a></li>
 					<li><a href="http://sourceforge.net/forum/?group_id=95944">Support</a></li>
 					<li><a href="http://sourceforge.net/projects/launch4j">Project summary</a></li>
 					<li><a href="http://sourceforge.net/tracker/?atid=613100&amp;group_id=95944">Bug tracker</a></li>
 					<li><a href="links.html">Links</a></li>
 				</ul>
-				<ul style="margin-top: 20px; font-size: 75%">
-					<li><a href="index.html">English</a></li>
-					<li><a href="index_es.html">Español</a></li>
-				</ul>
+				<!--
+					*** Spanish docs are outdated ***
+					<ul style="margin-top: 20px; font-size: 75%">
+						<li><a href="index.html">English</a></li>
+						<li><a href="index_es.html">Español</a></li>
+					</ul>
+				-->
 			</div>
 			<div id="content">
 <h2>Changelog</h2>
 
-<h4>Changes in version 2.1.5 (19-07-2006)</h4>
+<h4>Changes in version 3.0.1 (20-07-2008)</h4>
+<ul class="changes">
+	<li>Enhanced the runtime logging (--l4j-debug).</li>
+	<li>Fixed critical bug #1925387 64-bit JDK detection problem caused a runtime search error (found by Stivo).</li>
+	<li>Fixed bug #1919406, #1989479 Not every option is loaded from saved xml file (found by Robert Lachner, Jan-Philipp Rathje).</li>
+	<li>Fixed bug #1930222 Simple typo (found by Daniel).</li>
+</ul>
+
+<h4>Changes in version 3.0.0 (16-03-2008)</h4>
+<ul class="changes">
+	<li>FR #1390075 Added dynamic initial/max heap values.</li>
+	<li>FR #1707827 Allow to prefer JDK private runtimes over JREs (Ian Roberts).</li>
+	<li>FR #1730245 Allow to run only a single aplication instance (Sylvain Mina).</li>
+	<li>FR #1391610 Added IBM JRE/JDK support.</li>
+	<li>Added environment variable expansion in bundled JRE path.</li>
+	<li>Fixed critical bug #1882524 JRE detection problem on 64-bit Windows.</li>
+	<li>Fixed bug #1758912 Vista elevation to full administrator privileges.</li>
+	<li>Fixed bug #1784341 Problems with spaces in paths under linux (Michael Piefel).</li>
+	<li>Fixed bug where /bin was appended to path environment variable instead of jre_path/bin.</li>
+</ul>
+
+<h4>Changed license to BSD, MIT (26-01-2008)</h4>
+<ul class="changes">
+	<li>
+		The upcoming Launch4j 3.0.0 release will be licensed under the much more
+		liberal new BSD license. The head subproject (the binary header attached to wrapped jars)
+		will be licensed under the similar MIT license.
+	</li>
+</ul>
+
+<h4>Changes in version 3.0.0-pre2 (29-10-2006)</h4>
+<ul class="changes">
+	<li>Enhanced GUI.</li>
+	<li>Redesigned error reporting.</li>
+	<li>Added custom error messages.</li>
+	<li>Added support website feature.</li>
+	<li>Added PWD and OLDPWD special variables and access to the registry.</li>
+	<li>Runtime ini file extension changed to .l4j.ini, added comments (#).</li>
+	<li>FR #1427811 Initial process priority.</li>
+	<li>FR #1547339 Added VarFileInfo structure to Version Info (Stephan Laertz).</li>
+	<li>FR #1584295 Updated documentation for --l4j-debug.
+	<li>Fixed &lt;jarArgs/&gt; and &lt;args/&gt; config conversion bug (found by Dafe Simonek).</li>
+	<li>Fixed the Ant task exception reporting bug, added tmpdir and bindir attributes.</li>
+	<li>Fixed bug #1563415 Problem with launching application when ini file exists (found by mojomax).</li>
+	<li>Fixed bug #1527619 Console header wildcard expansion (found by erikjv).</li>
+	<li>Fixed bug #1544167 NPE when dontwrap and only classpath given (found by Hendrik Schreiber).</li>
+	<li>Fixed bug #1584264 Dropdown boxes get mixed up (found by Larsen).</li>
+</ul>
+
+<h4>News (17-10-2006)</h4>
+<ul class="changes">
+	<li><a href="http://9stmaryrd.com/tools/launch4j-maven-plugin/">Launch4j Maven Plugin by Paul A. Jungwirth</a></li>
+</ul>
+
+<h4>Changes in version 3.0.0-pre1 (21-07-2006)</h4>
+<ul class="changes">
+	<li>Improved configuration file format and embedded Ant config.</li>
+	<li>Launch executable jars, regular jars and class files.</li>
+	<li>Added dynamic classpath resolution with environment variable references and wildcards.</li>
+	<li>Added option to set environment variables before launching the application.</li>
+	<li>New command line switches to change the compiled options.</li>
+	<li>Improved debug information.</li>
+	<li>Added support for XP visual style manifests.</li>
+	<li>Added option to disable use of private JREs.</li>
+	<li>Many small fixes and improvements...</li>
+</ul>
+
+<h4 class="warn">Configuration file changes in 3.x</h4>
+<ul class="changes">
+	<li>Previous formats (1.x and 2.x) are supported.</li>
+	<li><em>&lt;headerType&gt;</em> accepts gui|console</li>
+	<li><em>&lt;jarArgs&gt;</em> was changed to <em>&lt;cmdLine&gt;</em></li>
+	<li>
+		<em>&lt;launch4jConfig&gt;&lt;headerObjects&gt;&lt;file&gt;</em> was changed to
+		<em>&lt;launch4jConfig&gt;&lt;obj&gt;</em>
+	</li>
+	<li>
+		<em>&lt;launch4jConfig&gt;&lt;libs&gt;&lt;file&gt;</em> was changed to
+		<em>&lt;launch4jConfig&gt;&lt;lib&gt;</em>
+	</li>
+	<li>
+		<em>&lt;launch4jConfig&gt;&lt;jre&gt;&lt;args&gt;</em> was changed to multiple
+		<em>&lt;launch4jConfig&gt;&lt;jre&gt;&lt;opt&gt;</em>
+	</li>
+</ul>
+
+<h4 class="warn">Embedded Ant configuration changes in 3.x</h4>
+<ul class="changes">
+	<li>
+		<em>&lt;jre args="value"&gt;</em> was changed to
+		<em>&lt;jre&gt;&lt;opt&gt;value&lt;/opt&gt;&lt;/jre&gt;</em>
+	</li>
+	<li>Now it's possible to define headerObjects, libs and classpath.</li>
+</ul>
+
+<h4>Changes in version 2.1.5 (21-07-2006)</h4>
 <ul class="changes">
 	<li>Changed the Java download site to http://java.com/download.</li>
-	<li>Now it's possible to use absolute and relative paths to specify the embedded JRE.</li>
+	<li>Now it's possible to use absolute and relative paths to specify the bundled JRE.</li>
 </ul>
 
 <h4>Changes in version 2.1.4 (15-06-2006)</h4>
@@ -123,7 +221,7 @@
 		<em>&lt;chdir&gt;true&lt;/chdir&gt;</em>
 		is now <em>&lt;chdir&gt;.&lt;/chdir&gt;</em>.
 	</li>
-	<li>Embedded JRE path no longer depends on chdir function.</li>
+	<li>Bundled JRE path no longer depends on chdir function.</li>
 	<li>Fixed Ant task bug, build files outside launch4j's directory
 		wouldn't work. Josh Elsasser submitted a patch that works without
 		setting launch4j's home dir in the build file. Thanks!
@@ -245,7 +343,8 @@
 </ul>
 			</div>
 			<div class="footer">
-            	Copyright &copy; 2005-2006 Grzegorz Kowal
+			    All trademarks mentioned are properties of their respective owners.<br />
+            	Copyright &copy; 2005-2008 Grzegorz Kowal
             	<p style="margin-top: 2em">
             		<a href="http://sourceforge.net"><img style="width: 125px; height: 37px; border: none" src="http://sourceforge.net/sflogo.php?group_id=95944&amp;type=4" alt="sf.net"></a>
             		<a href="http://www.nosoftwarepatents.com"><img style="width: 90px; height: 40px; border: none; margin-left: 5%" src="http://www.nosoftwarepatents.com/banners/90x40_3.jpg" alt=""></a>

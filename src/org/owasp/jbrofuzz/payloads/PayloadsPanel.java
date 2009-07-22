@@ -60,11 +60,12 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.4
+ * @version 1.5
  */
 public class PayloadsPanel extends JBroFuzzPanel {
 
-	
+	private static final long serialVersionUID = 1234567890L;
+
 	// The split pane at the centre of the screen
 	private JSplitPane mainSplitPanel, rightSplitPanel;
 	

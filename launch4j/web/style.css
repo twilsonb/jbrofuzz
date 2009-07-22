@@ -23,6 +23,10 @@ pre {
 .attrib {
 	color: #404040;
 }
+.option {
+	font-family: "Courier New", Courier, monospace;
+	font-weight: bold;
+}
 
 
 dt {
@@ -36,7 +40,7 @@ dd {
 }
 
 
-ul.changes em {
+.warn, ul.changes em {
 	color: #ff0000;
 }
 

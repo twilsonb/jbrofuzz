@@ -1,5 +1,5 @@
 <launch4jConfig>
-  <headerType>0</headerType>
+  <headerType>gui</headerType>
   <jar>../SimpleApp.jar</jar>
   <outfile>../SimpleApp.exe</outfile>
   <errTitle>SimpleApp</errTitle>

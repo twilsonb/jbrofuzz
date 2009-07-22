@@ -148,7 +148,7 @@ public class HeaderLoader {
 		// Use the index to know its position
 		int index = 0;
 		boolean exists = false;
-		for (Enumeration<HeaderTreeNode> e = dn.children(); e.hasMoreElements()
+		for (Enumeration<HeaderTreeNode> e = extracted(dn); e.hasMoreElements()
 				&& !exists;) {
 
 			String currentElement = e.nextElement().toString();
@@ -177,6 +177,11 @@ public class HeaderLoader {
 
 		addNodes(temp, nemp);
 
+	}
+
+	@SuppressWarnings("unchecked")
+	private Enumeration<HeaderTreeNode> extracted(HeaderTreeNode dn) {
+		return dn.children();
 	}
 
 	public Header getHeader(final TreePath treePath) {
