@@ -45,7 +45,6 @@ import java.util.prefs.Preferences;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
@@ -105,7 +104,7 @@ public class Connection {
 			System.out.println("No SSL algorithm support: " + e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
 			System.out
-			.println("Exception when setting up the Naive key management.");
+					.println("Exception when setting up the Naive key management.");
 		}
 
 		return (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -149,7 +148,7 @@ public class Connection {
 	 * @since 0.1
 	 */
 	public Connection(final String urlString, final String message)
-	throws ConnectionException {
+			throws ConnectionException {
 
 		isResponse100Continue = false;
 
@@ -253,22 +252,25 @@ public class Connection {
 
 						// Check if a 100 Continue has come back
 						if (incoming.contains("HTTP/1.1 100 Continue")) {
-							
-							// Check if the preferences are set to re-send the POST Data if a 100 continue
-							boolean follow100Continue = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_4, true);
 
-							
+							// Check if the preferences are set to re-send the
+							// POST Data if a 100 continue
+							boolean follow100Continue = prefs.getBoolean(
+									JBroFuzzFormat.PR_FUZZ_4, true);
+
 							if (follow100Continue) {
-								
+
 								isResponse100Continue = true;
 
-								// Put the POST data of the message on the wire, also 
+								// Put the POST data of the message on the wire,
+								// also
 								// write them as output
 								final byte[] postData = (getPostDataInMessage())
 										.getBytes();
 								out_stream.write(postData);
 								baos.write(postData, 0, postData.length);
-								// If so, check for chunked encoding again (not tidy)
+								// If so, check for chunked encoding again (not
+								// tidy)
 								boolean end_reached2 = false;
 								while ((!end_reached2)
 										&& ((got = in_stream.read(recv)) > -1)) {
@@ -279,14 +281,16 @@ public class Connection {
 
 									baos.write(recv, 0, got);
 
-									// Check if \r\n has come in, in its many shapes and forms
+									// Check if \r\n has come in, in its many
+									// shapes and forms
 									final String incoming2 = new String(baos
 											.toByteArray());
 									if (incoming.contains("\r\n\r\n")
 											|| incoming2.contains("\n\n")
 											|| incoming2.contains("\r\r")) {
 
-										// Check if Chunked Encoding is being used
+										// Check if Chunked Encoding is being
+										// used
 										if (incoming2
 												.contains("Transfer-Encoding: chunked")) {
 
@@ -302,10 +306,10 @@ public class Connection {
 											end_reached2 = true;
 										}
 									}
-									
+
 								} // while loop for chunked encoding
-								
-							} // if 100 continue is true 
+
+							} // if 100 continue is true
 						}
 
 					}
@@ -421,12 +425,16 @@ public class Connection {
 	}
 
 	/**
-	 * <p>Return the HTTP status code, e.g. 200, 404, etc.
+	 * <p>
+	 * Return the HTTP status code, e.g. 200, 404, etc.
 	 * </p>
-	 * <p>In case of a non-existant code, return "---".
+	 * <p>
+	 * In case of a non-existant code, return "---".
 	 * </p>
-	 * <p>In the case of a "100-Continue", return "100/xxx" 
-	 * where "xxx" is defined above.</p>
+	 * <p>
+	 * In the case of a "100-Continue", return "100/xxx" where "xxx" is defined
+	 * above.
+	 * </p>
 	 * 
 	 * @return String of 3 or 7 characters with the code value.
 	 * 
@@ -436,8 +444,8 @@ public class Connection {
 	 */
 	public String getStatus() {
 		// If the response was not a 100 continue
-		if(!isResponse100Continue) {
-			
+		if (!isResponse100Continue) {
+
 			try {
 				final String out = reply.split(" ")[1].substring(0, 3);
 
@@ -454,21 +462,22 @@ public class Connection {
 			}
 			// else we have received a 100 continue
 		} else {
-			
+
 			try {
-				final String out2 = reply.split("\r\n--jbrofuzz--100-continue-->\r\n")[1];
+				final String out2 = reply
+						.split("\r\n--jbrofuzz--100-continue-->\r\n")[1];
 				final String out3 = out2.split(" ")[1].substring(0, 3);
-				
+
 				if (StringUtils.isNumeric(out3)) {
 					return "100/" + out3;
 				} else {
 					return "100/000";
 				}
 			} catch (Exception exception2) {
-				
+
 				return "100/---";
 			}
-			
+
 		}
 
 	}
@@ -502,8 +511,12 @@ public class Connection {
 	}
 
 	/**
-	 * <p>Method for returning the POST Data being submitted.</p>
-	 * <p>If no POST Data is found the input message is returned.</p>
+	 * <p>
+	 * Method for returning the POST Data being submitted.
+	 * </p>
+	 * <p>
+	 * If no POST Data is found the input message is returned.
+	 * </p>
 	 * 
 	 * @param message
 	 * @version 1.5
@@ -523,12 +536,11 @@ public class Connection {
 		}
 
 	}
-	
-	public boolean isResponse100Continue() {
-		
-		return isResponse100Continue;
-		
-	}
 
+	public boolean isResponse100Continue() {
+
+		return isResponse100Continue;
+
+	}
 
 }

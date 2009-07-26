@@ -57,7 +57,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.5
  */
 public class JBroFuzzFormat {
 
@@ -142,14 +142,14 @@ public class JBroFuzzFormat {
 	public static final String PR_FUZZ_3 = "fuzz.ui.show.wire";
 
 	/**
-	 * The preferences used for "Re-send POST Data if 100 Continue is received" 
+	 * The preferences used for "Re-send POST Data if 100 Continue is received"
 	 */
 	public static final String PR_FUZZ_4 = "fuzz.100.continue";
 	/**
 	 * If true, the response will wrap when opened in a new window
 	 */
 	public static final String WRAP_RESPONSE = "wrap.response";
-	
+
 	/**
 	 * If true, the request will wrap when viewed in the fuzzing panel
 	 */
@@ -159,11 +159,21 @@ public class JBroFuzzFormat {
 	 * The url text saved as a preference
 	 */
 	public static final String TEXT_URL = "fuzz.ui.url_text";
-	
+
 	/**
 	 * The request text saved as a preference
 	 */
 	public static final String TEXT_REQUEST = "fuzz.ui.request_text";
+
+	/**
+	 * The encode text saved as a preference
+	 */
+	public static final String TEXT_ENCODE = "encode.text";
+	
+	/**
+	 * The decoded/hashed text saved as a preference
+	 */
+	public static final String TEXT_DECODE = "decode.text";
 	
 	/**
 	 * <p>
@@ -181,7 +191,6 @@ public class JBroFuzzFormat {
 	 */
 	public static final String YEAR = "2009";
 
-			
 	/**
 	 * The web site used via means of the selecting "JBroFuzz Website on the
 	 * About menu.
@@ -356,11 +365,14 @@ public class JBroFuzzFormat {
 		}
 		return 0;
 	}
-	
+
 	/**
-	 * <p>Method for returning the dimension (width & height) of the
-	 * screen size.</p>
-	 * <p>In the event of an error it returns a dimension of (0,0).</p>
+	 * <p>
+	 * Method for returning the dimension (width & height) of the screen size.
+	 * </p>
+	 * <p>
+	 * In the event of an error it returns a dimension of (0,0).
+	 * </p>
 	 * 
 	 * @return Dimension
 	 * 
@@ -368,21 +380,21 @@ public class JBroFuzzFormat {
 	 * @since 1.4
 	 */
 	public static Dimension getScreenSize() {
-		
+
 		try {
 
 			return Toolkit.getDefaultToolkit().getScreenSize();
 
 		} catch (AWTError e1) {
-			
-			return new Dimension(0,0);
-			
+
+			return new Dimension(0, 0);
+
 		} catch (HeadlessException e1) {
-			
-			return new Dimension (0,0);
+
+			return new Dimension(0, 0);
 		}
-	    
-	  }
+
+	}
 
 	/**
 	 * <p>
@@ -390,7 +402,8 @@ public class JBroFuzzFormat {
 	 * to the launch of the graphical user interface.
 	 * </p>
 	 * 
-	 * @param mJBroFuzz JBroFuzz
+	 * @param mJBroFuzz
+	 *            JBroFuzz
 	 * 
 	 * @version 1.4
 	 */
@@ -398,14 +411,11 @@ public class JBroFuzzFormat {
 
 		// Set the look and feel
 		JBroFuzzFormat.setLookAndFeel(mJBroFuzz);
-		
+
 		// Set some preferences for the mac
-		System
-		.setProperty("apple.laf.useScreenMenuBar", 
-					 "true");
-		System
-		.setProperty("com.apple.mrj.application.apple.menu.about.name", 
-					 "JBroFuzz");
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
+				"JBroFuzz");
 
 	}
 

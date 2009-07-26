@@ -153,39 +153,40 @@ public class StatusCodeChart {
 				map.put(n, map.get(n) + 1);
 			else
 				map.put(n, 1);
-			
-//			if (n > 0) {
-//
-//				final String value = "" + n;
-//
-//				if (map.containsKey(value))
-//					map.put(value, map.get(value) + 1);
-//				else
-//					map.put(value, 1);
-//
-//			}
-//			// Got response but no number identified
-//			else if ((n == 0)) {
-//				if (map.containsKey(ZERO))
-//					map.put(ZERO, map.get(ZERO) + 1);
-//				else
-//					map.put(ZERO, 1);
-//
-//			}
-//			// Directory, IOException, String out of bounds
-//			else {
-//				if (map.containsKey(ERROR))
-//					map.put(ERROR, map.get(ERROR) + 1);
-//				else
-//					map.put(ERROR, 1);
-//
-//			}
+
+			// if (n > 0) {
+			//
+			// final String value = "" + n;
+			//
+			// if (map.containsKey(value))
+			// map.put(value, map.get(value) + 1);
+			// else
+			// map.put(value, 1);
+			//
+			// }
+			// // Got response but no number identified
+			// else if ((n == 0)) {
+			// if (map.containsKey(ZERO))
+			// map.put(ZERO, map.get(ZERO) + 1);
+			// else
+			// map.put(ZERO, 1);
+			//
+			// }
+			// // Directory, IOException, String out of bounds
+			// else {
+			// if (map.containsKey(ERROR))
+			// map.put(ERROR, map.get(ERROR) + 1);
+			// else
+			// map.put(ERROR, 1);
+			//
+			// }
 
 		}
 
 		dataset = new DefaultPieDataset();
 
-		for (Iterator<Entry<String, Integer>> it = map.entrySet().iterator(); it.hasNext();) {
+		for (Iterator<Entry<String, Integer>> it = map.entrySet().iterator(); it
+				.hasNext();) {
 			Map.Entry<String, Integer> entry = it.next();
 
 			dataset.setValue(entry.getKey(), (double) entry.getValue()

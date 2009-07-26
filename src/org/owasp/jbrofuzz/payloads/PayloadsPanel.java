@@ -68,7 +68,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 
 	// The split pane at the centre of the screen
 	private JSplitPane mainSplitPanel, rightSplitPanel;
-	
+
 	// The JPanels carrying the components
 	protected final JPanel categoriesPanel, payloadsPanel, fuzzersPanel;
 
@@ -76,12 +76,14 @@ public class PayloadsPanel extends JBroFuzzPanel {
 	protected final JTable payloadsTable, fuzzersTable, categoriesTable;
 
 	// The Table Models with a single column
-	protected final SingleColumnModel payloadsTableModel, fuzzersTableModel, categoriesTableModel;
+	protected final SingleColumnModel payloadsTableModel, fuzzersTableModel,
+			categoriesTableModel;
 
 	// The row sorters for the two tables
 	protected TableRowSorter<SingleColumnModel> sorter, sorter2;
 
-	protected final NonWrappingTextPane payloadInfoTextArea, fuzzerInfoTextArea;
+	protected final NonWrappingTextPane payloadInfoTextArea,
+			fuzzerInfoTextArea;
 
 	/**
 	 * Constructor for the Payloads Panel.
@@ -142,7 +144,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		fuzzersPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Select a Category "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
-		
+
 		fuzzersTableModel = new SingleColumnModel(" Fuzzer Name ");
 
 		fuzzersTable = new JTable(fuzzersTableModel);
@@ -168,7 +170,8 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		nameTextAreaTextScrollPane.setVerticalScrollBarPolicy(20);
 		nameTextAreaTextScrollPane.setHorizontalScrollBarPolicy(30);
 		// nameTextAreaTextScrollPane.setPreferredSize(new Dimension(200, 310));
-		fuzzersPanel.add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.NORTH );
+		fuzzersPanel.add(Box.createRigidArea(new Dimension(0, 50)),
+				BorderLayout.NORTH);
 		fuzzersPanel.add(nameTextAreaTextScrollPane, BorderLayout.CENTER);
 
 		// Payloads Table: Payload table with one column of all the generators
@@ -278,57 +281,53 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		payloadsSplitPanel.setTopComponent(viewTextScrollPane);
 		payloadsSplitPanel.setBottomComponent(bottomSplitPanel);
 
-		payloadsPanel.add(Box.createRigidArea(new Dimension(0, 100)), BorderLayout.NORTH );
+		payloadsPanel.add(Box.createRigidArea(new Dimension(0, 100)),
+				BorderLayout.NORTH);
 		payloadsPanel.add(payloadsSplitPanel, BorderLayout.CENTER);
 
 		payloadsSplitPanel.setDividerLocation(100);
 		bottomSplitPanel.setDividerLocation(300);
 
-		
 		// The right split pane and friends
 		rightSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		rightSplitPanel.setOneTouchExpandable(false);
 		rightSplitPanel.setLeftComponent(fuzzersPanel);
 		rightSplitPanel.setRightComponent(payloadsPanel);
-		
-		
+
 		// The main split pane and friends
 		mainSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		mainSplitPanel.setOneTouchExpandable(false);
 		mainSplitPanel.setLeftComponent(categoriesPanel);
 		mainSplitPanel.setRightComponent(rightSplitPanel);
-		
-		
+
 		// Set the divider locations, relative to the screen size
 		final Dimension scr_res = JBroFuzzFormat.getScreenSize();
-		if( (scr_res.width == 0) || (scr_res.height == 0) ) {
-			
+		if ((scr_res.width == 0) || (scr_res.height == 0)) {
+
 			mainSplitPanel.setDividerLocation(250);
 			rightSplitPanel.setDividerLocation(250);
-			
+
 		} else {
-			
+
 			final int window_width = scr_res.width - 200;
 			final int window_height = scr_res.height - 200;
 			// Check that the screen is width/length is +tive
-			if( (window_width > 0) && (window_height > 0) ) {
-				
-				rightSplitPanel.setDividerLocation( window_width * 1 / 5 );
-				mainSplitPanel.setDividerLocation( window_width * 1 / 5 );
+			if ((window_width > 0) && (window_height > 0)) {
 
+				rightSplitPanel.setDividerLocation(window_width * 1 / 5);
+				mainSplitPanel.setDividerLocation(window_width * 1 / 5);
 
 				// topPane.setDividerLocation( window_width * 2 / 3 );
 				// mainPane.setDividerLocation( window_height / 2 );
-				
+
 			} else {
-								
+
 				mainSplitPanel.setDividerLocation(250);
 				rightSplitPanel.setDividerLocation(250);
-				
+
 			}
 		}
-		
-		
+
 		// Allow for all areas to be resized to even not be seen
 		Dimension minimumSize = new Dimension(0, 0);
 
@@ -342,10 +341,8 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		payloadsPanel.setMinimumSize(minimumSize);
 		rightSplitPanel.setMinimumSize(minimumSize);
 
-		
 		// Add all the components to the main pane
 		this.add(mainSplitPanel, BorderLayout.CENTER);
-		
 
 	}
 

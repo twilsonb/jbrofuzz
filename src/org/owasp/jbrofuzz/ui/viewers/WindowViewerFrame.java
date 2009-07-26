@@ -30,21 +30,36 @@
 package org.owasp.jbrofuzz.ui.viewers;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.prefs.Preferences;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
 
+import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
@@ -60,12 +75,23 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * @version 1.5
  * @since 0.2
  */
-public class WindowViewer extends JFrame {
+public class WindowViewerFrame extends JFrame implements DocumentListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2268254810798437349L;
+
+	private static final long serialVersionUID = -4765698531680118534L;
+
+	final static Color  HILIT_COLOR = Color.LIGHT_GRAY;
+	final static Color  ERROR_COLOR = Color.PINK;
+	final static String CANCEL_ACTION = "cancel-search";
+
+	final Color entryBg;
+	final Highlighter hilit;
+	final Highlighter.HighlightPainter painter;
+
+	final JTextPane listTextArea;
+	private JTextField entry;
+	private JLabel status;
+
 
 	/**
 	 * <p>
@@ -76,7 +102,7 @@ public class WindowViewer extends JFrame {
 	 * @param parent
 	 * @param name
 	 */
-	public WindowViewer(final JBroFuzzPanel parent, final String name) {
+	public WindowViewerFrame(final JBroFuzzPanel parent, final String name) {
 
 		super("JBroFuzz - File Viewer - " + name + ".html");
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
@@ -94,9 +120,9 @@ public class WindowViewer extends JFrame {
 
 		// Get the preferences for wrapping lines of text
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-		boolean wrapText = prefs.getBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
+		boolean wrapText = prefs
+		.getBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
 
-		final JTextPane listTextArea;
 		if (wrapText) {
 
 			listTextArea = new JTextPane();
@@ -106,9 +132,26 @@ public class WindowViewer extends JFrame {
 			listTextArea = new NonWrappingTextPane();
 		}
 
-		// Define the Text Area
+		// Refine the Text Area
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
+
+		// Define the search area
+		entry = new JTextField(10);
+		status = new JLabel("Enter text to search:");
+
+		// Initialise the highlighter on the text area
+		hilit = new DefaultHighlighter();
+		painter = new DefaultHighlighter.DefaultHighlightPainter(HILIT_COLOR);
+		listTextArea.setHighlighter(hilit);
+
+		entryBg = entry.getBackground();
+		entry.getDocument().addDocumentListener(this);
+
+		InputMap im = entry.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap am = entry.getActionMap();
+		im.put(KeyStroke.getKeyStroke("ESCAPE"), CANCEL_ACTION);
+		am.put(CANCEL_ACTION, new CancelAction());
 
 		// Right click: Cut, Copy, Paste, Select All
 		parent.popupText(listTextArea, false, true, false, true);
@@ -122,10 +165,12 @@ public class WindowViewer extends JFrame {
 		final JProgressBar progressBar = new JProgressBar();
 		progressBar.setString("   ");
 		progressBar.setStringPainted(true);
-		progressBar.setBounds(410, 265, 120, 20);
+		// progressBar.setBounds(410, 265, 120, 20);
 
 		// Define the bottom panel with the progress bar
-		final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+		bottomPanel.add(status);
+		bottomPanel.add(entry);
 		bottomPanel.add(progressBar);
 
 		listTextArea.setCaretPosition(0);
@@ -147,7 +192,7 @@ public class WindowViewer extends JFrame {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
-					WindowViewer.this.dispose();
+					WindowViewerFrame.this.dispose();
 				}
 			}
 		});
@@ -161,8 +206,8 @@ public class WindowViewer extends JFrame {
 
 				listTextArea.setText(
 
-				parent.getFrame().getJBroFuzz().getHandler().readFuzzFile(
-						name + ".html")
+						parent.getFrame().getJBroFuzz().getHandler().readFuzzFile(
+								name + ".html")
 
 				);
 
@@ -181,5 +226,67 @@ public class WindowViewer extends JFrame {
 		(new FileLoader()).execute();
 
 	}
+
+	public void search() {
+		hilit.removeAllHighlights();
+
+		String s = entry.getText();
+		if (s.length() <= 0) {
+			message("Nothing to search");
+			return;
+		}
+
+
+		try {
+			String content = listTextArea.getDocument().getText(0, listTextArea.getDocument().getLength());
+			int index = content.indexOf(s, 0);
+
+			if (index >= 0) {   // match found
+				int end = index + s.length();
+				hilit.addHighlight(index, end, painter);
+				listTextArea.setCaretPosition(index);
+				entry.setBackground(entryBg);
+				message("Phrase found: '" + s + "'");
+
+			} else {
+				entry.setBackground(ERROR_COLOR);
+				message("Phrase not found...");
+			}
+
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	void message(String msg) {
+		status.setText(StringUtils.abbreviate(msg, 40));
+	}
+
+	// DocumentListener methods
+
+	public void insertUpdate(DocumentEvent ev) {
+		search();
+	}
+
+	public void removeUpdate(DocumentEvent ev) {
+		search();
+	}
+
+	public void changedUpdate(DocumentEvent ev) {
+	}
+
+	class CancelAction extends AbstractAction {
+
+		private static final long serialVersionUID = 9875234L;
+
+		public void actionPerformed(ActionEvent ev) {
+			hilit.removeAllHighlights();
+			entry.setText("");
+			entry.setBackground(entryBg);
+		}
+
+	}
+
 
 } // Frame class

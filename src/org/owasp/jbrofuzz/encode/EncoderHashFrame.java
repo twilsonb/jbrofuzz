@@ -49,6 +49,7 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
+import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -73,49 +74,50 @@ import javax.swing.tree.TreePath;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.B64;
 import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
- * <p>Window inspired from Paros Proxy, in terms of providing
- * an encoder/decoder for a variety of diffferent scheme, as
- * well as hashing functionality.</p>
- *  
+ * <p>
+ * Window inspired from Paros Proxy, in terms of providing an encoder/decoder
+ * for a variety of diffferent scheme, as well as hashing functionality.
+ * </p>
+ * 
  * @author subere@uncon.org
  * @version 1.5
  * @since 1.5
- *
+ * 
  */
-public class EncoderHash extends JFrame {
+public class EncoderHashFrame extends JFrame {
 
-	private static final long serialVersionUID = 190887239533L;
-	
+	private static final long serialVersionUID = -4894610871648357355L;
 	// Dimensions of the frame
 	private static final int x = 650;
 	private static final int y = 400;
-	
-	private static final String[] codes = { "Codes/Hashes",
-		"URL UTF-8", "Base64", "MD5 Hash", "SHA1 Hash", "SHA-256", "SHA-384", "SHA-512" };
-	
+
+	private static final String[] codes = { "Codes/Hashes", "URL UTF-8",
+			"Base64", "MD5 Hash", "SHA1 Hash", "SHA-256", "SHA-384", "SHA-512" };
+
 	private JSplitPane verticalSplitPane, horizontalSplitPane;
-	
+
 	private JTextPane enTextPane, deTextPane;
-	
+
 	// The tree
 	private JTree tree;
-	
+
 	private JButton encode, decode, close;
-	
+
 	private static boolean encoderHashIsShowing = false;
 	
-	public EncoderHash(final JBroFuzzWindow parent) {
-		
-		if(encoderHashIsShowing) {
+	public EncoderHashFrame(final JBroFuzzWindow parent) {
+
+		if (encoderHashIsShowing) {
 			return;
 		}
 		encoderHashIsShowing = true;
-		
+
 		// really inspired from Paros Proxy, but as a frame
 		setTitle(" JBroFuzz - Encoder/Hash ");
-		
+
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
@@ -127,11 +129,10 @@ public class EncoderHash extends JFrame {
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		// Selection can only contain one path at a time
 		tree.getSelectionModel().setSelectionMode(1);
-		
-		
+
 		// Create the scroll pane and add the tree to it.
 		final JScrollPane leftScrollPane = new JScrollPane(tree);
-		
+
 		// Create all the right hand panels
 		for (int i = 0; i < codes.length; i++) {
 
@@ -140,21 +141,24 @@ public class EncoderHash extends JFrame {
 			}
 
 		}
-		
+
 		final JPanel encoderPanel = new JPanel(new BorderLayout());
 		final JPanel decoderPanel = new JPanel(new BorderLayout());
-		
-		encoderPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Enter the plain text below to be encoded / hashed "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
-		
+
+		encoderPanel
+				.setBorder(BorderFactory
+						.createCompoundBorder(
+								BorderFactory
+										.createTitledBorder(" Enter the plain text below to be encoded / hashed "),
+								BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+
 		decoderPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Enter the text below to be decoded "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
-		
+				.createTitledBorder(" Enter the text below to be decoded "),
+				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+
 		// Text panes -> Encode
 		enTextPane = new JTextPane();
-		
+
 		enTextPane.putClientProperty("charset", "UTF-8");
 		enTextPane.setEditable(true);
 		enTextPane.setVisible(true);
@@ -162,30 +166,17 @@ public class EncoderHash extends JFrame {
 
 		enTextPane.setMargin(new Insets(1, 1, 1, 1));
 		enTextPane.setBackground(Color.WHITE);
-		enTextPane.setForeground(Color.BLACK);
-		
-		// Set the editor kit responsible for highlighting
-		enTextPane.setEditorKit(new StyledEditorKit() {
+		enTextPane.setForeground(new Color(51, 102, 102));
 
-			private static final long serialVersionUID = -6085642347022880064L;
-
-			@Override
-			public Document createDefaultDocument() {
-				return new EncoderHashHighlighter();
-			}
-
-		});
 		// Set the right click for the encode text area
 		popupText(enTextPane);
-		
-		final JScrollPane encodeScrollPane = new JScrollPane(
-				enTextPane, 
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-		);
-		
+
+		final JScrollPane encodeScrollPane = new JScrollPane(enTextPane,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
 		encoderPanel.add(encodeScrollPane, BorderLayout.CENTER);
-		
+
 		// Text panes -> Decode
 		deTextPane = new JTextPane();
 
@@ -196,39 +187,23 @@ public class EncoderHash extends JFrame {
 
 		deTextPane.setMargin(new Insets(1, 1, 1, 1));
 		deTextPane.setBackground(Color.WHITE);
-		deTextPane.setForeground(Color.BLACK);
-		
-		// Set the editor kit responsible for highlighting
-		deTextPane.setEditorKit(new StyledEditorKit() {
+		deTextPane.setForeground(new Color(204, 51, 0));
 
-			private static final long serialVersionUID = -6085642347022880064L;
-
-			@Override
-			public Document createDefaultDocument() {
-				return new EncoderHashHighlighter();
-			}
-
-		});
-		
 		// Set the right click for the decode text area
 		popupText(deTextPane);
-		
-		final JScrollPane decodeScrollPane = new JScrollPane(
-				deTextPane, 
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-		);
-		
+
+		final JScrollPane decodeScrollPane = new JScrollPane(deTextPane,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
 		decoderPanel.add(decodeScrollPane, BorderLayout.CENTER);
-		
-		
-		
+
 		horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		
+
 		horizontalSplitPane.setLeftComponent(leftScrollPane);
 		horizontalSplitPane.setRightComponent(verticalSplitPane);
-		
+
 		verticalSplitPane.setTopComponent(encoderPanel);
 		verticalSplitPane.setBottomComponent(decoderPanel);
 
@@ -238,13 +213,16 @@ public class EncoderHash extends JFrame {
 		verticalSplitPane.setMinimumSize(minimumSize);
 		encoderPanel.setMinimumSize(minimumSize);
 		decoderPanel.setMinimumSize(minimumSize);
-		
+
 		horizontalSplitPane.setDividerLocation(150);
 		verticalSplitPane.setDividerLocation(y / 2);
-		
+
 		// Traverse tree from root
 		TreeNode root = (TreeNode) tree.getModel().getRoot();
 		parent.getPanelPayloads().expandAll(tree, new TreePath(root), true);
+
+		// Get the preferences for saving the encode/decode values
+		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 
 		// Bottom three buttons
 		encode = new JButton(" Encode/Hash ");
@@ -254,44 +232,49 @@ public class EncoderHash extends JFrame {
 		final String desc = "Select an encoding or hashing scheme from the left hard side";
 		encode.setToolTipText(desc);
 		decode.setToolTipText(desc);
-		
+
 		encode.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
 						calculate(true);
-						
+
 					}
 				});
 			}
 		});
-		
+
 		decode.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
 						calculate(false);
-						
+
 					}
 				});
 			}
 		});
-		
+
 		close.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
 						encoderHashIsShowing = false;
-						dispose();
 						
+						// Save the values of the encode/decode as a preference
+						prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+						prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+						
+						dispose();
+
 					}
 				});
 			}
 		});
-		
+
 		// Keyboard listener on the treeView for escape to cancel
 		tree.addKeyListener(new KeyAdapter() {
 			@Override
@@ -299,17 +282,21 @@ public class EncoderHash extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					encoderHashIsShowing = false;
-					dispose();
 					
+					// Save the values of the encode/decode as a preference
+					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					
+					dispose();
+
 				}
 			}
 		});
 
-		
-				
 		// Bottom buttons
-		
-		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+
+		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		buttonPanel.add(encode);
 		buttonPanel.add(decode);
 		buttonPanel.add(close);
@@ -317,12 +304,12 @@ public class EncoderHash extends JFrame {
 		// Add the split pane to this panel
 		getContentPane().add(horizontalSplitPane, BorderLayout.CENTER);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-		
+
 		// Global frame issues
 		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
 				.abs(parent.getLocation().y + 100));
 
-		this.setSize(EncoderHash.x, EncoderHash.y);
+		this.setSize(EncoderHashFrame.x, EncoderHashFrame.y);
 		setMinimumSize(new Dimension(x / 2, y / 2));
 
 		setResizable(true);
@@ -333,26 +320,37 @@ public class EncoderHash extends JFrame {
 			@Override
 			public void windowClosing(final WindowEvent e) {
 				encoderHashIsShowing = false;
+				
+				// Save the values of the encode/decode as a preference
+				prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+				prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+				
 				dispose();
 			}
 		});
+		
+		// Load the values of encode/decode from the preferences
+		enTextPane.setText(prefs.get(JBroFuzzFormat.TEXT_ENCODE, ""));
+		deTextPane.setText(prefs.get(JBroFuzzFormat.TEXT_DECODE, ""));
+
 	}
 	
 	/**
-	 * <p>Calculate the value to be encoded/decoded, based on the selected
-	 * scheme from the left hand side tree.</p>
+	 * <p>
+	 * Calculate the value to be encoded/decoded, based on the selected scheme
+	 * from the left hand side tree.
+	 * </p>
 	 * 
 	 * @param enDecode
-	 * false implies decode
-	 * true implies encode
+	 *            false implies decode true implies encode
 	 * 
 	 * @version 1.5
 	 * @since 1.5
 	 */
 	public void calculate(boolean isToEncode) {
 
-		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) 
-			tree.getLastSelectedPathComponent();
+		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+				.getLastSelectedPathComponent();
 
 		if (node == null) {
 			return;
@@ -365,200 +363,221 @@ public class EncoderHash extends JFrame {
 
 				final String encodeText = enTextPane.getText();
 				final String decodeText = deTextPane.getText();
-				
+
 				// 1 implies URL Encode/Decode
-				if(i == 1) {
-					
+				if (i == 1) {
+
 					try {
-						if(isToEncode) {
-							
-							deTextPane.setText(URLEncoder.encode(encodeText, "UTF-8"));
-							
+						if (isToEncode) {
+
+							deTextPane.setText(URLEncoder.encode(encodeText,
+									"UTF-8"));
+
 						} else {
-							
-							enTextPane.setText(URLDecoder.decode(decodeText, "UTF-8"));
+
+							enTextPane.setText(URLDecoder.decode(decodeText,
+									"UTF-8"));
 						}
 					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
 						// e.printStackTrace();
 					}
 				}
-				
+
 				// 2 implies Base64
-				if(i == 2) {
-					
-					if(isToEncode) {
-						
+				if (i == 2) {
+
+					if (isToEncode) {
+
 						deTextPane.setText(B64.encodeString(encodeText));
-						
+
 					} else {
-						
+
 						enTextPane.setText(B64.decodeString(decodeText));
-						
+
 					}
 				}
-				
+
 				// 3 implies MD5Sum
-				if(i == 3) {
-					
-					if(isToEncode) {
-						
+				if (i == 3) {
+
+					if (isToEncode) {
+
 						try {
-							
-							MessageDigest md5 = MessageDigest.getInstance("MD5");
-							md5.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
-							
+
+							MessageDigest md5 = MessageDigest
+									.getInstance("MD5");
+							md5.update(encodeText.getBytes("iso-8859-1"), 0,
+									encodeText.length());
+
 							byte[] md5hash = new byte[32];
 							md5hash = md5.digest();
 
 							final String md5Value = convertToHex(md5hash);
 							deTextPane.setText(md5Value);
-							
+
 						} catch (NoSuchAlgorithmException exception1) {
-							
-							deTextPane.setText("Error: MD5 could not be found...");
-							
+
+							deTextPane
+									.setText("Error: MD5 could not be found...");
+
 						} catch (UnsupportedEncodingException exception2) {
-							
-							deTextPane.setText("Error: MD5 String cannot be encoded...");
-							
+
+							deTextPane
+									.setText("Error: MD5 String cannot be encoded...");
+
 						}
 					}
 				}
-				
+
 				// 4 implies SHA-1
-				if(i == 4) {
-					
-					if(isToEncode) {
-						
+				if (i == 4) {
+
+					if (isToEncode) {
+
 						try {
-							
-							MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
-							sha1.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+
+							MessageDigest sha1 = MessageDigest
+									.getInstance("SHA-1");
+							sha1.update(encodeText.getBytes("iso-8859-1"), 0,
+									encodeText.length());
 
 							byte[] sha1hash = new byte[40];
 							sha1hash = sha1.digest();
 
 							final String sha1Value = convertToHex(sha1hash);
 							deTextPane.setText(sha1Value);
-							
+
 						} catch (NoSuchAlgorithmException exception1) {
-							
-							deTextPane.setText("Error: SHA-1 could not be found...");
-							
+
+							deTextPane
+									.setText("Error: SHA-1 could not be found...");
+
 						} catch (UnsupportedEncodingException exception2) {
-							
-							deTextPane.setText("Error: SHA-1 String cannot be encoded...");
-							
+
+							deTextPane
+									.setText("Error: SHA-1 String cannot be encoded...");
+
 						}
 					}
 				}
-				
+
 				// 5 implies SHA-256
-				if(i == 5) {
-					
-					if(isToEncode) {
-						
+				if (i == 5) {
+
+					if (isToEncode) {
+
 						try {
-							
-							MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-							sha256.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
-							
+
+							MessageDigest sha256 = MessageDigest
+									.getInstance("SHA-256");
+							sha256.update(encodeText.getBytes("iso-8859-1"), 0,
+									encodeText.length());
+
 							byte[] sha256hash = new byte[64];
 							sha256hash = sha256.digest();
-							
+
 							final String sha256Value = convertToHex(sha256hash);
 							deTextPane.setText(sha256Value);
-							
+
 						} catch (NoSuchAlgorithmException exception2) {
-								
-							deTextPane.setText("Error: SHA-256 could not be found...");
-							
+
+							deTextPane
+									.setText("Error: SHA-256 could not be found...");
+
 						} catch (UnsupportedEncodingException exception2) {
-							
-							deTextPane.setText("Error: SHA-256 String cannot be encoded...");
-							
+
+							deTextPane
+									.setText("Error: SHA-256 String cannot be encoded...");
+
 						}
 					}
 				}
-				
+
 				// 6 implies SHA-384
-				if(i == 6) {
-					
-					if(isToEncode) {
-						
+				if (i == 6) {
+
+					if (isToEncode) {
+
 						try {
-							
-							MessageDigest sha384 = MessageDigest.getInstance("SHA-384");
-							sha384.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
-							
+
+							MessageDigest sha384 = MessageDigest
+									.getInstance("SHA-384");
+							sha384.update(encodeText.getBytes("iso-8859-1"), 0,
+									encodeText.length());
+
 							byte[] sha384hash = new byte[96];
 							sha384hash = sha384.digest();
-							
+
 							final String sha256Value = convertToHex(sha384hash);
 							deTextPane.setText(sha256Value);
-							
+
 						} catch (NoSuchAlgorithmException exception2) {
-								
-							deTextPane.setText("Error: SHA-384 could not be found...");
-							
+
+							deTextPane
+									.setText("Error: SHA-384 could not be found...");
+
 						} catch (UnsupportedEncodingException exception2) {
-							
-							deTextPane.setText("Error: SHA-384 String cannot be encoded...");
-							
+
+							deTextPane
+									.setText("Error: SHA-384 String cannot be encoded...");
+
 						}
 					}
 				}
-				
+
 				// 7 implies SHA-512
-				if(i == 7) {
-					
-					if(isToEncode) {
-						
+				if (i == 7) {
+
+					if (isToEncode) {
+
 						try {
-							
-							MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
-							sha512.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
-							
+
+							MessageDigest sha512 = MessageDigest
+									.getInstance("SHA-512");
+							sha512.update(encodeText.getBytes("iso-8859-1"), 0,
+									encodeText.length());
+
 							byte[] sha512hash = new byte[128];
 							sha512hash = sha512.digest();
-							
+
 							final String sha256Value = convertToHex(sha512hash);
 							deTextPane.setText(sha256Value);
-							
+
 						} catch (NoSuchAlgorithmException exception2) {
-								
-							deTextPane.setText("Error: SHA-512 could not be found...");
-							
+
+							deTextPane
+									.setText("Error: SHA-512 could not be found...");
+
 						} catch (UnsupportedEncodingException exception2) {
-							
-							deTextPane.setText("Error: SHA-512 String cannot be encoded...");
-							
+
+							deTextPane
+									.setText("Error: SHA-512 String cannot be encoded...");
+
 						}
 					}
 				}
-				
+
 			}
 
 		} // for loop
 	}
-	
-	private static String convertToHex(byte[] data) {
-        StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < data.length; i++) {
-        	int halfbyte = (data[i] >>> 4) & 0x0F;
-        	int two_halfs = 0;
-        	do {
-	            if ((0 <= halfbyte) && (halfbyte <= 9))
-	                buf.append((char) ('0' + halfbyte));
-	            else
-	            	buf.append((char) ('a' + (halfbyte - 10)));
-	            halfbyte = data[i] & 0x0F;
-        	} while(two_halfs++ < 1);
-        }
-        return buf.toString().toUpperCase(Locale.ENGLISH);
-    }
 
+	private static String convertToHex(byte[] data) {
+		StringBuffer buf = new StringBuffer();
+		for (int i = 0; i < data.length; i++) {
+			int halfbyte = (data[i] >>> 4) & 0x0F;
+			int two_halfs = 0;
+			do {
+				if ((0 <= halfbyte) && (halfbyte <= 9))
+					buf.append((char) ('0' + halfbyte));
+				else
+					buf.append((char) ('a' + (halfbyte - 10)));
+				halfbyte = data[i] & 0x0F;
+			} while (two_halfs++ < 1);
+		}
+		return buf.toString().toUpperCase(Locale.ENGLISH);
+	}
 
 	/**
 	 * <p>
@@ -569,7 +588,8 @@ public class EncoderHash extends JFrame {
 	 * enabled.
 	 * </p>
 	 * 
-	 * @param area JTextComponent
+	 * @param area
+	 *            JTextComponent
 	 */
 	public final void popupText(final JTextComponent area) {
 
@@ -594,8 +614,6 @@ public class EncoderHash extends JFrame {
 		popmenu.add(i3_paste);
 		popmenu.addSeparator();
 		popmenu.add(i4_select);
-
-		
 
 		i1_cut.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {

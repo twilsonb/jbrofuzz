@@ -62,7 +62,7 @@ import org.apache.commons.lang.StringUtils;
  * 
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.5
  * @since 1.2
  */
 public class Database {
@@ -92,41 +92,53 @@ public class Database {
 	 * 
 	 * @see #createFuzzer(String, int)
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.5
 	 * @since 1.2
 	 */
 	public Database() {
 
 		prototypes = new HashMap<String, Prototype>();
 		loadFile();
-		// Add the zero fuzzers
+		
+		// Add the Zero Fuzzers
+		Prototype pt0 = new Prototype('Z', "ZERO-10000", "10000 Plain Requests");
 		Prototype pt1 = new Prototype('Z', "ZERO-1000", "1000 Plain Requests");
-		pt1.addCategory("Zero Fuzzers");
-		for (int i = 0; i < 1000; i++) {
-			pt1.addPayload("");
-		}
-		prototypes.put("ZERO-1000", pt1);
-
 		Prototype pt2 = new Prototype('Z', "ZERO-100", "100 Plain Requests");
-		pt2.addCategory("Zero Fuzzers");
-		for (int i = 0; i < 100; i++) {
-			pt2.addPayload("");
-		}
-		prototypes.put("ZERO-100", pt2);
-
 		Prototype pt3 = new Prototype('Z', "ZERO-10", "10 Plain Requests");
-		pt3.addCategory("Zero Fuzzers");
-		for (int i = 0; i < 10; i++) {
-			pt3.addPayload("");
-		}
-		prototypes.put("ZERO-10", pt3);
-
 		Prototype pt4 = new Prototype('Z', "ZERO-1", "1 Plain Request");
-		pt4.addCategory("Zero Fuzzers");
-		pt4.addPayload("");
 
+		final String zeroFuzzerName = "Zero Fuzzers";
+		
+		pt0.addCategory(zeroFuzzerName);
+		pt1.addCategory(zeroFuzzerName);
+		pt2.addCategory(zeroFuzzerName);
+		pt3.addCategory(zeroFuzzerName);
+		pt4.addCategory(zeroFuzzerName);
+
+		for (int i = 0; i < 10000; i++) {
+			
+			pt0.addPayload("");
+			
+			if(i < 1000) {
+				pt1.addPayload("");
+			}
+			if(i < 100) {
+				pt2.addPayload("");
+			}
+			if(i < 10) {
+				pt3.addPayload("");
+			}
+			if(i < 1) {
+				pt4.addPayload("");
+			}
+		}
+		
+		prototypes.put("ZERO-10000", pt0);
+		prototypes.put("ZERO-1000", pt1);
+		prototypes.put("ZERO-100", pt2);
+		prototypes.put("ZERO-10", pt3);
 		prototypes.put("ZERO-1", pt4);
-
+		
 	}
 
 	/**
@@ -139,7 +151,7 @@ public class Database {
 	 * @return true if a Prototype with that prototypeId exists
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.5
 	 * @since 1.2
 	 */
 	public boolean containsPrototype(String prototypeId) {
@@ -162,6 +174,7 @@ public class Database {
 	 * @throws NoSuchFuzzerException
 	 * 
 	 * @see #containsPrototype(String)
+	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3
 	 * @since 1.2
@@ -180,25 +193,17 @@ public class Database {
 		return new Fuzzer(getPrototype(prototypeId), len);
 	}
 
-	// TODO
 	/**
+	 * <p>Return all the unique categories found across prototypes that are loaded
+	 * into the database.</p>
 	 * 
-	 * public boolean addGenerator(Generator g) {
-	 * 
-	 * if(this.containsGenerator(g.getId())) { return false; } else {
-	 * g.addCategory("Default"); if(!g.getPayloads().isEmpty()) {
-	 * generators.put(g.getId(), g); return true; } return false; } }
-	 */
-
-	/**
-	 * <p>
-	 * Return all the unique categories found across prototypes that are loaded
-	 * into the database.
-	 * </p>
-	 * <p>
-	 * Category examples include: "Replacive Fuzzers", "Exploits", etc.
+	 * <p>Category examples include: "Replacive Fuzzers", "Exploits", etc.</p>
 	 * 
 	 * @return String[] uniqueCategories
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.5
+	 * @since 1.2
 	 */
 	public String[] getAllCategories() {
 
@@ -228,14 +233,14 @@ public class Database {
 	}
 
 	/**
-	 * <p>
-	 * Get all the unique Prototype IDs that are loaded in the database.
-	 * </p>
+	 * <p>Get all the unique Prototype IDs that are loaded in the database.</p>
 	 * 
 	 * @return String[] e.g. ["FSE-UPP", "HTT-PMT-EDS", ...]
 	 * 
+	 * @see #getAllFuzzerIDs()
+	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.5
 	 * @since 1.2
 	 */
 	public String[] getAllPrototypeIDs() {
@@ -244,6 +249,23 @@ public class Database {
 		final String[] output = new String[set.size()];
 		return set.toArray(output);
 
+	}
+	
+	/**
+	 * <p>Get all the unique Fuzzer IDs that are loaded in the database.</p>
+	 * 
+	 * @return String[] e.g. ["FSE-UPP", "HTT-PMT-EDS", ...]
+	 * 
+	 * @see #getAllPrototypeIDs()
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.5
+	 * @since 1.5
+	 */
+	public String[] getAllFuzzerIDs() {
+		
+		return getAllPrototypeIDs();
+		
 	}
 
 	/**
@@ -287,6 +309,7 @@ public class Database {
 	 * @return String the Id, or "" if the name is not found. e.g. "HTT-PMT-EDS"
 	 * 
 	 * @see #getName(String)
+	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3
 	 * @since 1.2
@@ -313,6 +336,7 @@ public class Database {
 	 * @return String e.g. "Uppercase HTTP Methods"
 	 * 
 	 * @see #getIdFromName(String)
+	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3
 	 * @since 1.2
@@ -334,6 +358,7 @@ public class Database {
 	 *         database
 	 * 
 	 * @see #getSize(String)
+	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3
 	 * @since 1.2

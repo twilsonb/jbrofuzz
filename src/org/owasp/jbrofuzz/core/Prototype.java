@@ -41,16 +41,35 @@ import org.owasp.jbrofuzz.io.FileHandler;
  * </p>
  * 
  * <p>
- * Effectively, a prototype is a collection of payloads and categories, under a
- * unique id value, given a name.
+ * Effectively, like a fuzzer, a prototype is a collection of payloads and 
+ * categories, under a unique id value, given a name.
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.5
  * @since 1.2
  */
 public class Prototype {
 
+	/**
+	 * <p>Private method for calculating the expansion
+	 * of a payload.</p>
+	 * 
+	 * <p>As an example 'f(x)= A x 3' would output: 'AAA'</p>
+	 * 
+	 * <p>The maximum return length of the payload is
+	 * MAX_BYTE i.e. 33554432 
+	 * 
+	 * @param param The payload as String to calculate a 
+	 * potential expansion
+	 * 
+	 * @return Either the original String or the calculated
+	 * value
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
 	private static String calculatePayload(String param) {
 
 		String beginning;
@@ -110,6 +129,32 @@ public class Prototype {
 
 	private String id;
 
+	/**
+	 * <p>A Prototype constuctor, effectively building the fuzzer
+	 * to be placed into the Database of Fuzzers.</p>
+	 * <p>A Prototype represents a fuzzer in its unborn form, i.e.
+	 * the type of fuzzer that it is (e.g. 'R' for Recursive, 'P' for 
+	 * Replacive, or 'Z' for a Zero Fuzzer), the unique ID that it has (
+	 * e.g. 'XSS-101' or 'SQL-MS2-008') and its name (e.g. 'MS 2008 SQL 
+	 * Injection').</p> 
+	 * 
+	 * <p>Prototypes belong to one or more categories, this is represented
+	 * by an array list.</p>
+	 * <p>Also, Prototypes, hold a number of payloads; these represent the 
+	 * basic alphabet that will construct the full list for the fuzzer.</p>
+	 * 
+	 * @param type 'R' for Recursive, 'P' for Replacive, or 'Z' for a 
+	 * Zero Fuzzer
+	 * 
+	 * @param id e.g. 'XSS-101' or 'SQL-MS2-008'
+	 * 
+	 * @param name e.g. 'MS 2008 SQL 
+	 * Injection'
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
 	public Prototype(char type, String id, String name) {
 
 		this(type, id, name, new ArrayList<String>(), new ArrayList<String>());
@@ -127,32 +172,103 @@ public class Prototype {
 
 	}
 
-	public void addCategory(String value) {
+	/**
+	 * <p>Add the Prototype to a particular category e.g. 'Cross 
+	 * Site Scripting'.</p>
+	 * 
+	 * @param category
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
+	public void addCategory(final String category) {
 
-		categories.add(value);
+		categories.add(category);
 		categories.trimToSize();
 
 	}
 
-	public void addPayload(String value) {
+	/**
+	 * <p>Add an additional payload, as String to the current
+	 * Prototype.</p>
+	 * 
+	 * @param payload
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
+	public void addPayload(String payload) {
 
-		payloads.add(calculatePayload(value));
+		payloads.add(calculatePayload(payload));
 		payloads.trimToSize();
 
 	}
 
+	/**
+	 * <p>Get all the categories, as an array list,
+	 * that the Prototype is affiliated to.</p>
+	 * 
+	 * @return ArrayList<String>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
 	protected ArrayList<String> getCategories() {
 		return categories;
 	}
 
+	/**
+	 * <p>Get the ID of the Prototype; this is a unique
+	 * identifier, also common in the Database and in the
+	 * construction of a new Fuzzer.</p>
+	 * 
+	 * <p>Examples include 'ZERO-10000' 'XSS-101', etc.)</p>
+	 * 
+	 * @return The ID as String
+	 * 
+	 * @see org.owasp.jbrofuzz.core.#Database()
+	 * @see org.owasp.jbrofuzz.core.#Fuzzer()
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
 	protected String getId() {
 		return id;
 	}
 
+	/**
+	 * <p>Get the name of the Prototype; this is not necessarily
+	 * unique, but represents the actual name value, also common
+	 * in the Database and in the Fuzzer class.</p>
+	 * 
+	 * @return The name as String
+	 * 
+	 * @see org.owasp.jbrofuzz.core.#Database()
+	 * @see org.owasp.jbrofuzz.core.#Fuzzer()
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
 	protected String getName() {
 		return name;
 	}
 
+	/**
+	 * <p>Get the alphabet of payloads associated with this
+	 * Prototype.</p>
+	 *  
+	 * @return An array list of Strings, totalling the 
+	 * payloads
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
 	protected ArrayList<String> getPayloads() {
 		payloads.trimToSize();
 		return payloads;
@@ -198,6 +314,18 @@ public class Prototype {
 		return "";
 	}
 
+	/**
+	 * <p>Check if a particular prototype of already a member of 
+	 * a particular category.</p>
+	 * 
+	 * @param category e.g 'Cross Site Scripting'
+	 * 
+	 * @return true if it is a member of that category
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
 	protected boolean isAMemberOfCategory(String category) {
 
 		String[] categoriesArray = new String[categories.size()];
@@ -212,6 +340,20 @@ public class Prototype {
 		return false;
 	}
 
+	/**
+	 * <p>Is the Prototype that of a recursive Fuzzer?</p>
+	 * 
+	 * <p>A recursive Fuzzer iterates through the 
+	 * payloads it carries by joining them all to make the
+	 * corresponding value in the number system of the 
+	 * total payloads it carries.</p>
+	 * 
+	 * @return true if it is a recursive Fuzzer.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
 	public boolean isRecursive() {
 		if (type == 'R') {
 			return true;
@@ -219,6 +361,21 @@ public class Prototype {
 		return false;
 	}
 
+	/**
+	 * <p>Is the Prototype that of a zero Fuzzer?</p>
+	 * 
+	 * <p>A zero Fuzzer does not alter the value of the
+	 * message being transmitted.</p>
+	 * 
+	 * <p>If you want to transmit 1000 identical requests,
+	 * you need a zero Fuzzer with 1000 payloads.</p>
+	 * 
+	 * @return true if it is a zero Fuzzer.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.3
+	 * @since 1.2
+	 */
 	public boolean isZero() {
 		if (type == 'Z') {
 			return true;
