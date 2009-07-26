@@ -69,22 +69,30 @@ import org.owasp.jbrofuzz.fuzz.ui.ResponseTableModel;
 import org.owasp.jbrofuzz.payloads.PayloadsDialog;
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
+import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
- * <p>The "Fuzzing" panel, displayed within the main frame window.</p>
+ * <p>
+ * The "Fuzzing" panel, displayed within the main frame window.
+ * </p>
  * 
- * <p>This panel performs all HTTP and HTTPS related fuzzing operations.</p>
+ * <p>
+ * This panel performs all HTTP and HTTPS related fuzzing operations.
+ * </p>
  * 
- * <p>A user can select their request, specify the target URL and proceed to
- * add and remove any particular fuzzing payloads, using the "Add", "Remove"
- * buttons.</p>
- *
- * <p>Finally, all output (apart from being saved to file) is presented in 
- * the bottom part of the panel inside the output table.</p>
+ * <p>
+ * A user can select their request, specify the target URL and proceed to add
+ * and remove any particular fuzzing payloads, using the "Add", "Remove"
+ * buttons.
+ * </p>
+ * 
+ * <p>
+ * Finally, all output (apart from being saved to file) is presented in the
+ * bottom part of the panel inside the output table.
+ * </p>
  * 
  * @author subere@uncon.org
  * @version 1.5
@@ -210,13 +218,13 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		// Get the preferences for wrapping lines of text
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 		boolean wrapText = prefs.getBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
-		
-		if(!wrapText) {
+
+		if (!wrapText) {
 			request_textPane = new NonWrappingTextPane();
 		} else {
 			request_textPane = new JTextPane();
 		}
-		
+
 		request_textPane.putClientProperty("charset", "UTF-8");
 		request_textPane.setEditable(true);
 		request_textPane.setVisible(true);
@@ -225,7 +233,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		request_textPane.setMargin(new Insets(1, 1, 1, 1));
 		request_textPane.setBackground(Color.WHITE);
 		request_textPane.setForeground(Color.BLACK);
-		
+
 		// Set the editor kit responsible for highlighting
 		request_textPane.setEditorKit(new StyledEditorKit() {
 
@@ -242,11 +250,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		popupTargetText(request_textPane);
 
 		// The message scroll pane where the message pane sits
-		final JScrollPane requestScrollPane = new JScrollPane(
-				request_textPane, 
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED
-		);
+		final JScrollPane requestScrollPane = new JScrollPane(request_textPane,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		requestPanel.add(requestScrollPane);
 
 		// The generator panel
@@ -282,13 +288,14 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		fuzzersScrollPane.setVerticalScrollBarPolicy(20);
 
 		generatorPanel.add(fuzzersScrollPane, BorderLayout.CENTER);
-		generatorPanel.add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.SOUTH );
-		
+		generatorPanel.add(Box.createRigidArea(new Dimension(0, 50)),
+				BorderLayout.SOUTH);
+
 		// The on the wire panel
 		JPanel onTheWirePanel = new JPanel();
-		onTheWirePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Requests "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
+		onTheWirePanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(" Requests "), BorderFactory
+						.createEmptyBorder(5, 5, 5, 5)));
 
 		onTheWire_textArea = new JTextPane();
 		onTheWire_textArea.setFont(new Font("Verdana", Font.PLAIN, 10));
@@ -301,12 +308,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		onTheWireEvent = 0;
 
-		JScrollPane consoleScrollPane = new JScrollPane(
-				onTheWire_textArea,
+		JScrollPane consoleScrollPane = new JScrollPane(onTheWire_textArea,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
-		);
-		
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
 		onTheWirePanel.setLayout(new BorderLayout());
 		onTheWirePanel.add(consoleScrollPane, BorderLayout.CENTER);
 
@@ -378,7 +383,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 							final String name = (String) outputTable.getModel()
 									.getValueAt(c, 0);
-							new WindowViewer(FuzzingPanel.this, name);
+							new WindowViewerFrame(FuzzingPanel.this, name);
 
 						}
 					});
@@ -411,29 +416,28 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		mainPane.setTopComponent(topPane);
 		mainPane.setBottomComponent(outputPanel);
 
-		
 		// Set the divider locations, relative to the screen size
 		final Dimension scr_res = JBroFuzzFormat.getScreenSize();
-		if( (scr_res.width == 0) || (scr_res.height == 0) ) {
-			
-			topPane.setDividerLocation( 200 );
-			mainPane.setDividerLocation( 150 );
-			
+		if ((scr_res.width == 0) || (scr_res.height == 0)) {
+
+			topPane.setDividerLocation(200);
+			mainPane.setDividerLocation(150);
+
 		} else {
-			
+
 			final int window_width = scr_res.width - 200;
 			final int window_height = scr_res.height - 200;
 			// Check that the screen is width/length is +tive
-			if( (window_width > 0) && (window_height > 0) ) {
-				
-				topPane.setDividerLocation( window_width * 2 / 3 );
-				mainPane.setDividerLocation( window_height / 2 );
-				
+			if ((window_width > 0) && (window_height > 0)) {
+
+				topPane.setDividerLocation(window_width * 2 / 3);
+				mainPane.setDividerLocation(window_height / 2);
+
 			} else {
-				
-				topPane.setDividerLocation( 200 );
-				mainPane.setDividerLocation( 150 );
-				
+
+				topPane.setDividerLocation(200);
+				mainPane.setDividerLocation(150);
+
 			}
 		}
 
@@ -452,26 +456,28 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	}
 
 	/**
-	 * <p>Method for adding a fuzzer in the payloads table.</p>
+	 * <p>
+	 * Method for adding a fuzzer in the payloads table.
+	 * </p>
 	 * 
 	 * @version 1.5
 	 */
 	@Override
 	public void add() {
-		
+
 		// Check to see what text has been selected
 		try {
-			
+
 			request_textPane.getSelectedText();
-			
+
 		} catch (final IllegalArgumentException e) {
-			
-			JOptionPane.showInputDialog(
-				this,
-				"An exception was thrown while attempting to get the selected text",
-				"Add Fuzzer", JOptionPane.ERROR_MESSAGE
-			);
-			
+
+			JOptionPane
+					.showInputDialog(
+							this,
+							"An exception was thrown while attempting to get the selected text",
+							"Add Fuzzer", JOptionPane.ERROR_MESSAGE);
+
 		}
 
 		// Find the location of where the text has been selected
@@ -611,7 +617,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		return StringUtils.abbreviate(request_textPane.getText(), 16384);
 
 	}
-	
 
 	/**
 	 * <p>
@@ -750,16 +755,14 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		// Copy attribute Set
 		AttributeSet attr = e.getAttributes().copyAttributes();
 		try {
-			doc.insertString(
-					doc.getLength(),
-					"\n--> JBroFuzz Fuzzing Session: " + (session + 1)+ " -->\n\n", 
-					attr);
+			doc.insertString(doc.getLength(),
+					"\n--> JBroFuzz Fuzzing Session: " + (session + 1)
+							+ " -->\n\n", attr);
 		} catch (BadLocationException e2) {
 			// TODO Auto-generated catch block
 			// e2.printStackTrace();
 		}
 
-		
 		onTheWire_textArea.setBackground(Color.BLACK);
 		onTheWire_textArea.setForeground(Color.WHITE);
 
@@ -818,7 +821,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 					final int co_k = outputTableModel.addNewRow(outputMessage);
 
-
 					// Put the message on the console as it goes out on the wire
 					toConsole(currentMessage.getMessageForDisplayPurposes());
 
@@ -827,11 +829,12 @@ public class FuzzingPanel extends JBroFuzzPanel {
 						// Connect
 						Connection connection = new Connection(getTextURL(),
 								currentMessage.getMessage());
-						
+
 						// If a 100 Continue is encountered, print what you put
 						// on the wire, typically the post data from the message
-						if(connection.isResponse100Continue()) {
-							toConsole(currentMessage.getPostDataForDisplayPurposes());
+						if (connection.isResponse100Continue()) {
+							toConsole(currentMessage
+									.getPostDataForDisplayPurposes());
 						}
 						// Update the message writer
 						outputMessage.setConnection(connection);
@@ -859,7 +862,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		}
 
-
 	}
 
 	/**
@@ -879,7 +881,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		int total = 0;
 		total = fuzzersTable.getRowCount();
 		if (total > 0) {
-			//buttonRemGen.setEnabled(true);
+			// buttonRemGen.setEnabled(true);
 			setOptionRemove(true);
 
 		} else {
@@ -911,11 +913,16 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	}
 
 	/**
-	 * <p>Method for writing content to the "On The Wire" console.</p>
-	 * <p>Content is written as a 1000 character FILO, i.e. a maximum of 
-	 * 1000 characters is displayed at any one time.</p>
-	 *  
-	 * @param input The input string.
+	 * <p>
+	 * Method for writing content to the "On The Wire" console.
+	 * </p>
+	 * <p>
+	 * Content is written as a 1000 character FILO, i.e. a maximum of 1000
+	 * characters is displayed at any one time.
+	 * </p>
+	 * 
+	 * @param input
+	 *            The input string.
 	 * @version 1.5
 	 */
 	public void toConsole(String input) {
@@ -927,22 +934,22 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		final Element e = doc.getDefaultRootElement();
 		// Copy attribute Set
 		final AttributeSet attr = e.getAttributes().copyAttributes();
-		
-		
+
 		try {
-			// Use a FILO for the output to the console, never exceeding 1000 characters
+			// Use a FILO for the output to the console, never exceeding 1000
+			// characters
 			final int totLength = doc.getLength() - 80 * 24;
-			if(totLength > 1) {
+			if (totLength > 1) {
 				doc.remove(0, totLength);
 			}
-			
-			doc.insertString(
-					doc.getLength(),
-					input, 
-					attr);
-			
+
+			doc.insertString(doc.getLength(), input, attr);
+
 		} catch (BadLocationException e2) {
-			jbrofuzz_MainFrame.log("Fuzzing Panel: Could not clear the \"On the Wire\" console", 3);
+			jbrofuzz_MainFrame
+					.log(
+							"Fuzzing Panel: Could not clear the \"On the Wire\" console",
+							3);
 		}
 
 		onTheWire_textArea.setCaretPosition(doc.getLength());

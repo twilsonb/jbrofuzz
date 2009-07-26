@@ -58,7 +58,7 @@ import org.owasp.jbrofuzz.ui.actions.CutAction;
 import org.owasp.jbrofuzz.ui.actions.PasteAction;
 import org.owasp.jbrofuzz.ui.actions.SelectAllAction;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
-import org.owasp.jbrofuzz.ui.viewers.WindowViewer;
+import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.util.ImageCreator;
 
 import com.Ostermiller.util.Browser;
@@ -69,9 +69,11 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.1
+ * @version 1.5
  */
 public abstract class JBroFuzzPanel extends JPanel {
+
+	private static final long serialVersionUID = -4932876100272401793L;
 
 	private JBroFuzzWindow frame;
 
@@ -117,10 +119,13 @@ public abstract class JBroFuzzPanel extends JPanel {
 	public abstract void add();
 
 	/**
-	 * <p>Method for completely expanding or collapsing a 
-	 * given <code>JTree</code>.</p>
+	 * <p>
+	 * Method for completely expanding or collapsing a given <code>JTree</code>.
+	 * </p>
 	 * 
-	 * <p>Originally, from the Java Developers Almanac 1.4.</p>
+	 * <p>
+	 * Originally, from the Java Developers Almanac 1.4.
+	 * </p>
 	 * 
 	 * @param tree
 	 *            The JTree to be expanded/collapsed
@@ -131,15 +136,17 @@ public abstract class JBroFuzzPanel extends JPanel {
 	 *            nodes.
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.5
 	 * @since 1.2
 	 */
+	@SuppressWarnings("unchecked")
 	public void expandAll(JTree tree, TreePath parent, boolean expand) {
 		// Traverse children
 		TreeNode node = (TreeNode) parent.getLastPathComponent();
 		if (node.getChildCount() >= 0) {
-			for (Enumeration e = node.children(); e.hasMoreElements();) {
-				TreeNode n = (TreeNode) e.nextElement();
+			for (Enumeration<TreeNode> e = (Enumeration<TreeNode>) node
+					.children(); e.hasMoreElements();) {
+				TreeNode n = e.nextElement();
 				TreePath path = parent.pathByAddingChild(n);
 				expandAll(tree, path, expand);
 			}
@@ -152,10 +159,12 @@ public abstract class JBroFuzzPanel extends JPanel {
 			tree.collapsePath(parent);
 		}
 	}
-	
+
 	/**
-	 * <p>Method for completely expanding the first layer of a 
-	 * given <code>JTree</code>.</p>
+	 * <p>
+	 * Method for completely expanding the first layer of a given
+	 * <code>JTree</code>.
+	 * </p>
 	 * 
 	 * @param tree
 	 *            The JTree to be expanded/collapsed
@@ -163,19 +172,11 @@ public abstract class JBroFuzzPanel extends JPanel {
 	 *            The parent TreePath from which to begin
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.4
+	 * @version 1.5
 	 * @since 1.4
 	 */
 	public void expandOne(JTree tree, TreePath parent) {
-		
-		TreeNode node = (TreeNode) parent.getLastPathComponent();
-		if(node.getChildCount() >= 0) {
-			for(Enumeration e = node.children(); e.hasMoreElements();) {
-				TreeNode n = (TreeNode) e.nextElement();
-				TreePath path = parent.pathByAddingChild(n);
-			}
-		}
-		
+
 		tree.expandPath(parent);
 	}
 
@@ -386,7 +387,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 						}
 						final String name = (String) area.getModel()
 								.getValueAt(area.convertRowIndexToModel(c), 0);
-						new WindowViewer(JBroFuzzPanel.this, name);
+						new WindowViewerFrame(JBroFuzzPanel.this, name);
 
 					}
 
@@ -409,7 +410,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 						final int c = area.getSelectedRow();
 						final String name = (String) area.getModel()
 								.getValueAt(c, 0);
-						new WindowViewer(JBroFuzzPanel.this, name.split(" ")[0]);
+						new WindowViewerFrame(JBroFuzzPanel.this, name.split(" ")[0]);
 
 					}
 

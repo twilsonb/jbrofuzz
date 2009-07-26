@@ -49,7 +49,7 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.owasp.jbrofuzz.encode.EncoderHash;
+import org.owasp.jbrofuzz.encode.EncoderHashFrame;
 import org.owasp.jbrofuzz.fuzz.io.OpenSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveAsSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveSession;
@@ -177,8 +177,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		edit.addSeparator();
 		edit.add(selectAll);
 
-
-
 		// View
 		final JMenu showHide = new JMenu("Show/Hide");
 
@@ -213,7 +211,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final JMenu lookAndFeel = new JMenu("Look and Feel");
 		lookAndFeel.setIcon(ImageCreator.IMG_LKF);
 		final UIManager.LookAndFeelInfo[] installedFeels = UIManager
-		.getInstalledLookAndFeels();
+				.getInstalledLookAndFeels();
 		final ButtonGroup group = new ButtonGroup();
 
 		for (int i = 0; i < Math.min(installedFeels.length, 10); i++) {
@@ -229,11 +227,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			rb.addItemListener(new ItemListener() {
 				public void itemStateChanged(final ItemEvent ie) {
 					final JRadioButtonMenuItem rbi = (JRadioButtonMenuItem) ie
-					.getSource();
+							.getSource();
 
 					if (rbi.isSelected()) {
 						final UIManager.LookAndFeelInfo info = (UIManager.LookAndFeelInfo) rbi
-						.getClientProperty("Look and Feel Name");
+								.getClientProperty("Look and Feel Name");
 
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run() {
@@ -242,32 +240,32 @@ public class JBroFuzzMenuBar extends JMenuBar {
 									UIManager.setLookAndFeel(info
 											.getClassName());
 									SwingUtilities
-									.updateComponentTreeUI(JBroFuzzMenuBar.this
-											.getFrame());
+											.updateComponentTreeUI(JBroFuzzMenuBar.this
+													.getFrame());
 								} catch (final UnsupportedLookAndFeelException e) {
 									JBroFuzzMenuBar.this
-									.getFrame()
-									.log(
-											"An error occured while setting the Look & Feel",
-											5);
+											.getFrame()
+											.log(
+													"An error occured while setting the Look & Feel",
+													5);
 								} catch (final IllegalAccessException e) {
 									JBroFuzzMenuBar.this
-									.getFrame()
-									.log(
-											"An error occured while setting the Look & Feel",
-											5);
+											.getFrame()
+											.log(
+													"An error occured while setting the Look & Feel",
+													5);
 								} catch (final ClassNotFoundException e) {
 									JBroFuzzMenuBar.this
-									.getFrame()
-									.log(
-											"An error occured while setting the Look & Feel",
-											5);
+											.getFrame()
+											.log(
+													"An error occured while setting the Look & Feel",
+													5);
 								} catch (final InstantiationException e) {
 									JBroFuzzMenuBar.this
-									.getFrame()
-									.log(
-											"An error occured while setting the Look & Feel",
-											5);
+											.getFrame()
+											.log(
+													"An error occured while setting the Look & Feel",
+													5);
 								}
 
 							}
@@ -311,7 +309,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				ImageCreator.IMG_UPDATE);
 		final JMenuItem preferences = new JMenuItem("Preferences",
 				ImageCreator.IMG_PREFERENCES);
-		
+
 		preferences.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
@@ -348,7 +346,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		// File -> New
 		newFile.addActionListener(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent e) {
 
 				fuzzing.setSelected(true);
@@ -363,13 +361,14 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-						.getComponent(c);
+								.getComponent(c);
 						p.stop();
 
 						mFrameWindow.getPanelFuzzing().clearAllFields();
 						mFrameWindow.setTitle("Untitled");
 						// Create a new directory to store all data
-						mFrameWindow.getJBroFuzz().getHandler().createNewDirectory();
+						mFrameWindow.getJBroFuzz().getHandler()
+								.createNewDirectory();
 					}
 
 				} else {
@@ -377,12 +376,13 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					mFrameWindow.getPanelFuzzing().clearAllFields();
 					mFrameWindow.setTitle("Untitled");
 					// Create a new directory to store all data
-					mFrameWindow.getJBroFuzz().getHandler().createNewDirectory();
-					
+					mFrameWindow.getJBroFuzz().getHandler()
+							.createNewDirectory();
+
 				}
 
 			}
-			
+
 		});
 
 		// File -> Open
@@ -401,7 +401,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-						.getComponent(c);
+								.getComponent(c);
 						p.stop();
 
 						new OpenSession(mFrameWindow);
@@ -431,7 +431,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-						.getComponent(c);
+								.getComponent(c);
 						p.stop();
 
 						getFrame().setCloseFile();
@@ -465,7 +465,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-						.getComponent(c);
+								.getComponent(c);
 						p.stop();
 
 						new OpenLocationDialog(getFrame());
@@ -497,7 +497,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-						.getComponent(c);
+								.getComponent(c);
 						p.stop();
 
 						new SaveSession(mFrameWindow);
@@ -528,7 +528,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-						.getComponent(c);
+								.getComponent(c);
 						p.stop();
 
 						new SaveAsSession(mFrameWindow);
@@ -737,7 +737,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-						.getComponent(c);
+								.getComponent(c);
 						p.stop();
 
 					}
@@ -766,7 +766,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-						.getComponent(c);
+								.getComponent(c);
 						p.add();
 
 					}
@@ -796,7 +796,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					public void run() {
 
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+								.getComponent(c);
 						p.remove();
 
 					}
@@ -810,12 +811,12 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new EncoderHash(JBroFuzzMenuBar.this.getFrame());
+						new EncoderHashFrame(JBroFuzzMenuBar.this.getFrame());
 					}
 				});
 			}
 		});
-		
+
 		preferences.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
@@ -860,9 +861,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 						} catch (final IOException ex) {
 
-							JBroFuzzMenuBar.this.getFrame().log(
-									"Could not launch link in external browser", 3
-							);
+							JBroFuzzMenuBar.this
+									.getFrame()
+									.log(
+											"Could not launch link in external browser",
+											3);
 
 						}
 					}

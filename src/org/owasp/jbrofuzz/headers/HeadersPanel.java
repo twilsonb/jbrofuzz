@@ -214,38 +214,35 @@ public class HeadersPanel extends JBroFuzzPanel implements
 
 		// Set the divider locations, relative to the screen size
 		final Dimension scr_res = JBroFuzzFormat.getScreenSize();
-		if( (scr_res.width == 0) || (scr_res.height == 0) ) {
-			
+		if ((scr_res.width == 0) || (scr_res.height == 0)) {
+
 			rHSplitPanel.setDividerLocation(430);
 			rVSplitPanel.setDividerLocation(350);
 			mainSplitPanel.setDividerLocation(300);
 
-			
 		} else {
-			
+
 			final int window_width = scr_res.width - 200;
 			final int window_height = scr_res.height - 200;
 			// Check that the screen is width/length is +tive
-			if( (window_width > 0) && (window_height > 0) ) {
-				
-				rHSplitPanel.setDividerLocation( window_width * 2 / 5 );
-				rVSplitPanel.setDividerLocation( window_height / 2 );
-				mainSplitPanel.setDividerLocation( window_height / 2 );
+			if ((window_width > 0) && (window_height > 0)) {
 
+				rHSplitPanel.setDividerLocation(window_width * 2 / 5);
+				rVSplitPanel.setDividerLocation(window_height / 2);
+				mainSplitPanel.setDividerLocation(window_height / 2);
 
 				// topPane.setDividerLocation( window_width * 2 / 3 );
 				// mainPane.setDividerLocation( window_height / 2 );
-				
+
 			} else {
-				
+
 				rHSplitPanel.setDividerLocation(430);
 				rVSplitPanel.setDividerLocation(350);
 				mainSplitPanel.setDividerLocation(300);
-				
+
 			}
 		}
-		
-		
+
 		// Allow for all areas to be resized to even not be seen
 		Dimension minimumSize = new Dimension(0, 0);
 		treePanel.setMinimumSize(minimumSize);

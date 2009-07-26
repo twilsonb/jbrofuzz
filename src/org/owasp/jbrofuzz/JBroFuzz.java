@@ -49,7 +49,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.4
+ * @version 1.5
  * @since 0.1
  */
 public class JBroFuzz {
@@ -102,7 +102,7 @@ public class JBroFuzz {
 		mFormat = new JBroFuzzFormat(this);
 		mWindow = new JBroFuzzWindow(this);
 		JBroFuzzWindow.createAndShowGUI(mWindow);
-		
+
 		mHandler = new FileHandler(this);
 
 	}

@@ -65,9 +65,9 @@ public class FileHandler {
 
 	// The /jbrofuzz directory created at launch
 	private File DIR_JBROFUZZ;
-	
+
 	// A counter for any File -> New directories created
-	private int count; 
+	private int count;
 
 	/**
 	 * <p>
@@ -92,23 +92,27 @@ public class FileHandler {
 		createNewDirectory();
 
 	}
-	
+
 	/**
-	 * <p>Method for creating a new directory with the date/time stamp.</p>
-	 * <p>If one exists, a number is padded to the timestamp and a new
-	 * directory is created.</p>
+	 * <p>
+	 * Method for creating a new directory with the date/time stamp.
+	 * </p>
+	 * <p>
+	 * If one exists, a number is padded to the timestamp and a new directory is
+	 * created.
+	 * </p>
 	 * 
 	 * @author subere@uncon.org
 	 * @version 1.5
 	 * @since 1.5
 	 */
 	public void createNewDirectory() {
-		
+
 		StringBuffer directoryLocation = new StringBuffer();
 		directoryLocation.append(System.getProperty("user.dir"));
 		directoryLocation.append(File.separator);
 		directoryLocation.append("jbrofuzz");
-		
+
 		// Create the /jbrofuzz directory in the current folder
 		DIR_JBROFUZZ = new File(directoryLocation.toString());
 
@@ -116,7 +120,7 @@ public class FileHandler {
 		directoryLocation.append("fuzz");
 		directoryLocation.append(File.separator);
 		directoryLocation.append(JBroFuzzFormat.DATE);
-		
+
 		// Create the necessary directory with the corresponding timestamp
 		fuzzDirectory = new File(directoryLocation.toString());
 
@@ -142,25 +146,27 @@ public class FileHandler {
 								0);
 
 			}
-		// If the directory is already present, create a directory with a number at the end
+			// If the directory is already present, create a directory with a
+			// number at the end
 		} else {
-			
+
 			count++;
 			count %= 100;
-			
+
 			directoryLocation.append('.');
-			
+
 			if (count < 10) {
-				directoryLocation.append('0');					
-			} 
+				directoryLocation.append('0');
+			}
 			directoryLocation.append(count);
-			
+
 			// Create the necessary directory with the corresponding timestamp
 			fuzzDirectory = new File(directoryLocation.toString());
-			
-			if(fuzzDirectory.exists()) {
-				
-				g.getWindow().log("The \"fuzz\" directory being used, already exists", 1);
+
+			if (fuzzDirectory.exists()) {
+
+				g.getWindow().log(
+						"The \"fuzz\" directory being used, already exists", 1);
 
 			} else {
 
@@ -168,15 +174,15 @@ public class FileHandler {
 				if (!success) {
 
 					g
-					.getWindow()
-					.log(
-							"Failed to create new \"fuzz\" directory, no data will be written to file.",
-							4);
+							.getWindow()
+							.log(
+									"Failed to create new \"fuzz\" directory, no data will be written to file.",
+									4);
 					g
-					.getWindow()
-					.log(
-							"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
-							0);
+							.getWindow()
+							.log(
+									"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
+									0);
 				}
 
 			}

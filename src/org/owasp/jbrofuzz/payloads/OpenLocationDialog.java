@@ -159,7 +159,7 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 		versionBox.setSelectedIndex(1);
 
 		// Buttons
-		
+
 		ok = new JButton("  OK  ");
 		ok.setBounds(515, 305, 140, 40);
 		ok.setToolTipText("Open the URL location in JBroFuzz");
@@ -223,9 +223,12 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 									.getEditorComponent()).cut();
 						}
 					} catch (Exception e1) {
-						
-						parent.log("Open Location: An error occured while cutting", 2);
-						
+
+						parent
+								.log(
+										"Open Location: An error occured while cutting",
+										2);
+
 					}
 				}
 			}
@@ -247,9 +250,12 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 									.getEditorComponent()).copy();
 						}
 					} catch (Exception e1) {
-						
-						parent.log("Open Location: An error occured while copying", 2);
-						
+
+						parent
+								.log(
+										"Open Location: An error occured while copying",
+										2);
+
 					}
 				}
 			}
@@ -293,7 +299,8 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 
 		// Final panels
 
-		final JPanel targetPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+		final JPanel targetPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
+				15, 15));
 		targetPanel.add(new JLabel("URL:"));
 		targetPanel.add(_url);
 
@@ -340,11 +347,12 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 
 		String in_url_s = ((JTextComponent) _url.getEditor()
 				.getEditorComponent()).getText();
-		
-		if( (!in_url_s.startsWith("http://")) && (!in_url_s.startsWith("https://")) ) {
-			
+
+		if ((!in_url_s.startsWith("http://"))
+				&& (!in_url_s.startsWith("https://"))) {
+
 			in_url_s = "http://" + in_url_s;
-			
+
 		}
 		try {
 			URL inputURL = new URL(in_url_s);
@@ -391,33 +399,34 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 			req_url.append(inputURL.getHost());
 			req_url.append('\n');
 
-			// User-Agent: 
-			req_url.append("User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.10) Gecko/2009042316 Firefox/3.0.10 (.NET CLR 3.5.30729) JBroFuzz/");
+			// User-Agent:
+			req_url
+					.append("User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.10) Gecko/2009042316 Firefox/3.0.10 (.NET CLR 3.5.30729) JBroFuzz/");
 			req_url.append(JBroFuzzFormat.VERSION);
 			req_url.append('\n');
-			
+
 			// Accept:
-			req_url.append("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+			req_url
+					.append("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 			req_url.append('\n');
-			
+
 			// Accept-Language:
 			req_url.append("Accept-Language: en-gb,en;q=0.5");
 			req_url.append('\n');
-			
+
 			// Accept-Charset:
 			req_url.append("Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7");
 			req_url.append('\n');
-			
+
 			// Keep-Alive:
 			// req_url.append("Keep-Alive: 300");
 			// req_url.append('\n');
-			
+
 			// Proxy-Connection:
 			// req_url.append("Proxy-Connection: keep-alive");
 			// req_url.append('\n');
 			// req_url.append('\n');
-			
-			
+
 			m.getPanelFuzzing().setTextURL(out_url.toString());
 			m.getPanelFuzzing().setTextRequest(req_url.toString());
 

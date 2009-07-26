@@ -300,16 +300,18 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		panels[2].add(showwireCheckBox);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
-		
+
 		// Fuzzing... -> Word wrap request text panel
-		
-		final boolean wrap_req_box = prefs.getBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
+
+		final boolean wrap_req_box = prefs.getBoolean(
+				JBroFuzzFormat.WRAP_REQUEST, false);
 		final JCheckBox wrap_req_check_box = new JCheckBox(
-				" Word wrap text in the \"Request\" area (requires restart) ", wrap_req_box);
+				" Word wrap text in the \"Request\" area (requires restart) ",
+				wrap_req_box);
 		wrap_req_check_box.setBorderPaintedFlat(true);
-		wrap_req_check_box.setToolTipText(
-				"If ticked, the request text area will wrap the text to fit the size of the area");
-		
+		wrap_req_check_box
+				.setToolTipText("If ticked, the request text area will wrap the text to fit the size of the area");
+
 		wrap_req_check_box.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (wrap_req_check_box.isSelected()) {
@@ -322,16 +324,18 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		panels[2].add(wrap_req_check_box);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
-		
+
 		// Fuzzing... -> Word wrap response text panel
-		
-		final boolean wrap_res_bool = prefs.getBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
+
+		final boolean wrap_res_bool = prefs.getBoolean(
+				JBroFuzzFormat.WRAP_RESPONSE, false);
 		final JCheckBox wrap_res_check_box = new JCheckBox(
-				" Word wrap text in the \"Response\" window (requires restart) ", wrap_res_bool);
+				" Word wrap text in the \"Response\" window (requires restart) ",
+				wrap_res_bool);
 		wrap_res_check_box.setBorderPaintedFlat(true);
-		wrap_res_check_box.setToolTipText(
-				"Tick this box, to see all output text wrapped to the size of the response window");
-		
+		wrap_res_check_box
+				.setToolTipText("Tick this box, to see all output text wrapped to the size of the response window");
+
 		wrap_res_check_box.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (wrap_res_check_box.isSelected()) {
@@ -341,31 +345,32 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 				}
 			}
 		});
-		
+
 		panels[2].add(wrap_res_check_box);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
-		
+
 		// Fuzzing ...-> "Re-send POST Data if 100 Continue is received"
-		final boolean cont_bool = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_4, true);
+		final boolean cont_bool = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_4,
+				true);
 		final JCheckBox cont_check_box = new JCheckBox(
 				"Re-send POST Data if 100 Continue is received", cont_bool);
 		cont_check_box.setBorderPaintedFlat(true);
-		cont_check_box.setToolTipText(
-				"Tick this box, to re-send the POST Data in a HTTP/1.1 message, if a 100 continue is received");
-		
+		cont_check_box
+				.setToolTipText("Tick this box, to re-send the POST Data in a HTTP/1.1 message, if a 100 continue is received");
+
 		cont_check_box.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent event5) {
-				if(cont_check_box.isSelected()) {
+				if (cont_check_box.isSelected()) {
 					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_4, true);
 				} else {
 					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_4, false);
 				}
 			}
 		});
-		
+
 		panels[2].add(cont_check_box);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
-		
+
 		// Create the top split pane, showing the treeView and the Preferences
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setLeftComponent(leftScrollPane);

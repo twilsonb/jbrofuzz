@@ -224,7 +224,6 @@ public class JBroFuzzWindow extends JFrame {
 		pane.add(tb, BorderLayout.PAGE_START);
 		pane.add(tp, BorderLayout.CENTER);
 
-
 		log("System Launch, Welcome!", 1);
 
 		// Check for an updated version
@@ -251,16 +250,17 @@ public class JBroFuzzWindow extends JFrame {
 		}
 
 	}
-	
+
 	public static void createAndShowGUI(final JBroFuzzWindow mJBroFuzzWindow) {
-		
+
 		final Dimension min_size = new Dimension(400, 300);
-		
+
 		// The image icon and minimum size
 		mJBroFuzzWindow.setIconImage(ImageCreator.IMG_FRAME.getImage());
 		mJBroFuzzWindow.setMinimumSize(min_size);
 
-		mJBroFuzzWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		mJBroFuzzWindow
+				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		mJBroFuzzWindow.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(final WindowEvent e) {
@@ -271,26 +271,26 @@ public class JBroFuzzWindow extends JFrame {
 		// Set the location of the window
 		mJBroFuzzWindow.setLocation(50, 100);
 		// mJBroFuzzWindow.setSize(950, 600);
-		
+
 		// Set the size of the window, relative to the screen size
 		final Dimension scr_res = JBroFuzzFormat.getScreenSize();
-		if( (scr_res.width == 0) || (scr_res.height == 0) ) {
-			
+		if ((scr_res.width == 0) || (scr_res.height == 0)) {
+
 			mJBroFuzzWindow.setSize(min_size);
-			
+
 		} else {
-			
+
 			final int window_width = scr_res.width - 200;
 			final int window_height = scr_res.height - 200;
 			// Check that the screen is width/length is +tive
-			if( (window_width > 0) && (window_height > 0) ) {
-				
+			if ((window_width > 0) && (window_height > 0)) {
+
 				mJBroFuzzWindow.setSize(window_width, window_height);
-				
+
 			} else {
-				
+
 				mJBroFuzzWindow.setSize(min_size);
-				
+
 			}
 		}
 		mJBroFuzzWindow.setResizable(true);
@@ -313,17 +313,17 @@ public class JBroFuzzWindow extends JFrame {
 
 		// Get the prefences the global preferences
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-		
+
 		// Delete empty dirs created
 		boolean deleteBlankDirs = prefs.getBoolean(JBroFuzzFormat.PR_1, true);
 		if (deleteBlankDirs) {
 			getJBroFuzz().getHandler().deleteEmptryDirectories();
 		}
-		
+
 		// Save the values of the url/request as a preference
 		prefs.put(JBroFuzzFormat.TEXT_URL, fp.getTextURL());
 		prefs.put(JBroFuzzFormat.TEXT_REQUEST, fp.getTextRequest());
-		
+
 		dispose();
 
 	}
@@ -402,8 +402,8 @@ public class JBroFuzzWindow extends JFrame {
 
 	/**
 	 * <p>
-	 * Method returning the payloads panel that is being instantiated
-	 * through the main window.
+	 * Method returning the payloads panel that is being instantiated through
+	 * the main window.
 	 * </p>
 	 * 
 	 * @return PayloadsPanel
