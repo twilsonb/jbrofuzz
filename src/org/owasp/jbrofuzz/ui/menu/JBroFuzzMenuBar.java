@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.5
+ * JBroFuzz 1.6
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -305,6 +305,9 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		// Options
 		final JMenuItem encoderHash = new JMenuItem("Encoder/Hash...");
+		encoderHash.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+
 		final JMenuItem updates = new JMenuItem("Check for Updates...",
 				ImageCreator.IMG_UPDATE);
 		final JMenuItem preferences = new JMenuItem("Preferences",

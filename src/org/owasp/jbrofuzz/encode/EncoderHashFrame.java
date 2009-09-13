@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.5
+ * JBroFuzz 1.6
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -64,13 +64,18 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-import javax.swing.text.StyledEditorKit;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.binary.BinaryCodec;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.net.QuotedPrintableCodec;
+import org.apache.commons.codec.net.URLCodec;
+import org.apache.commons.lang.CharEncoding;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.B64;
 import org.owasp.jbrofuzz.util.ImageCreator;
@@ -79,23 +84,26 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 /**
  * <p>
  * Window inspired from Paros Proxy, in terms of providing an encoder/decoder
- * for a variety of diffferent scheme, as well as hashing functionality.
+ * for a variety of different scheme, as well as hashing functionality.
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.5
+ * @version 1.6
  * @since 1.5
  * 
  */
 public class EncoderHashFrame extends JFrame {
 
-	private static final long serialVersionUID = -4894610871648357355L;
+	private static final long serialVersionUID = 8808832051334720865L;
 	// Dimensions of the frame
 	private static final int x = 650;
 	private static final int y = 400;
 
-	private static final String[] codes = { "Codes/Hashes", "URL UTF-8",
-			"Base64", "MD5 Hash", "SHA1 Hash", "SHA-256", "SHA-384", "SHA-512" };
+	private static final String[] codes = { "Codes/Hashes", "URL US-ASCII",
+		"URL ISO-8859-1", "URL Cp1252", "URL UTF-8", "URL UTF-16BE", 
+		"URL UTF-16LE", "Base64", "MD5 Hash", "SHA1 Hash", "SHA-256",
+		"SHA-384", "SHA-512", "Hexadecimal (low)", "Hexadecimal (UPP)", 
+		"Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)"};
 
 	private JSplitPane verticalSplitPane, horizontalSplitPane;
 
@@ -214,7 +222,7 @@ public class EncoderHashFrame extends JFrame {
 		encoderPanel.setMinimumSize(minimumSize);
 		decoderPanel.setMinimumSize(minimumSize);
 
-		horizontalSplitPane.setDividerLocation(150);
+		horizontalSplitPane.setDividerLocation(180);
 		verticalSplitPane.setDividerLocation(y / 2);
 
 		// Traverse tree from root
@@ -292,6 +300,94 @@ public class EncoderHashFrame extends JFrame {
 				}
 			}
 		});
+		
+		// Keyboard listener on the decoded text pane for escape to cancel
+		deTextPane.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+
+					encoderHashIsShowing = false;
+					
+					// Save the values of the encode/decode as a preference
+					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					
+					dispose();
+
+				}
+			}
+		});
+		
+		// Keyboard listener on the encoded text pane for escape to cancel
+		enTextPane.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+
+					encoderHashIsShowing = false;
+					
+					// Save the values of the encode/decode as a preference
+					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					
+					dispose();
+
+				}
+			}
+		});
+		
+		// Keyboard listeners on the buttons for escape to cancel
+		encode.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+
+					encoderHashIsShowing = false;
+					
+					// Save the values of the encode/decode as a preference
+					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					
+					dispose();
+
+				}
+			}
+		});
+		
+		decode.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+
+					encoderHashIsShowing = false;
+					
+					// Save the values of the encode/decode as a preference
+					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					
+					dispose();
+
+				}
+			}
+		});
+		
+		close.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+
+					encoderHashIsShowing = false;
+					
+					// Save the values of the encode/decode as a preference
+					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					
+					dispose();
+
+				}
+			}
+		});
 
 		// Bottom buttons
 
@@ -344,7 +440,7 @@ public class EncoderHashFrame extends JFrame {
 	 * @param enDecode
 	 *            false implies decode true implies encode
 	 * 
-	 * @version 1.5
+	 * @version 1.6
 	 * @since 1.5
 	 */
 	public void calculate(boolean isToEncode) {
@@ -364,8 +460,83 @@ public class EncoderHashFrame extends JFrame {
 				final String encodeText = enTextPane.getText();
 				final String decodeText = deTextPane.getText();
 
-				// 1 implies URL Encode/Decode
+				// 1 implies URL Encode/Decode (US-ASCII)
 				if (i == 1) {
+
+					try {
+						if (isToEncode) {
+
+							deTextPane.setText(URLEncoder.encode(encodeText,
+									"US-ASCII"));
+
+						} else {
+
+							enTextPane.setText(URLDecoder.decode(decodeText,
+									"US-ASCII"));
+						}
+					} catch (UnsupportedEncodingException e) {
+						
+						if (isToEncode) {
+							deTextPane.setText("Error: String cannot be encoded...");
+						} else {
+							enTextPane.setText("Error: String cannot be decoded...");
+						}
+						
+					}
+				}
+				
+				// 2 implies URL Encode/Decode (ISO-8859-1)
+				if (i == 2) {
+
+					try {
+						if (isToEncode) {
+
+							deTextPane.setText(URLEncoder.encode(encodeText,
+									"ISO-8859-1"));
+
+						} else {
+
+							enTextPane.setText(URLDecoder.decode(decodeText,
+									"ISO-8859-1"));
+						}
+					} catch (UnsupportedEncodingException e) {
+
+						if (isToEncode) {
+							deTextPane.setText("Error: String cannot be encoded...");
+						} else {
+							enTextPane.setText("Error: String cannot be decoded...");
+						}
+						
+					}
+				}
+				
+				// 3 implies URL Encode/Decode (windows-1252)
+				if (i == 3) {
+
+					try {
+						if (isToEncode) {
+
+							deTextPane.setText(URLEncoder.encode(encodeText,
+									"windows-1252"));
+
+						} else {
+
+							enTextPane.setText(URLDecoder.decode(decodeText,
+									"windows-1252"));
+						}
+					} catch (UnsupportedEncodingException e) {
+						
+						if (isToEncode) {
+							deTextPane.setText("Error: String cannot be encoded...");
+						} else {
+							enTextPane.setText("Error: String cannot be decoded...");
+						}
+						
+					}
+				}
+				
+				// 4 implies URL Encode/Decode (UTF-8)
+				if (i == 4) {
 
 					try {
 						if (isToEncode) {
@@ -379,13 +550,70 @@ public class EncoderHashFrame extends JFrame {
 									"UTF-8"));
 						}
 					} catch (UnsupportedEncodingException e) {
-						// TODO Auto-generated catch block
-						// e.printStackTrace();
+						
+						if (isToEncode) {
+							deTextPane.setText("Error: String cannot be encoded...");
+						} else {
+							enTextPane.setText("Error: String cannot be decoded...");
+						}
+						
 					}
 				}
-
-				// 2 implies Base64
-				if (i == 2) {
+								
+				// 5 implies URL Encode/Decode (UTF-16BE)
+				if (i == 5) {
+					
+					try {
+						if (isToEncode) {
+							
+							deTextPane.setText(URLEncoder.encode(encodeText,
+									"UTF-16BE"));
+						} else {
+							
+							enTextPane.setText(URLDecoder.decode(decodeText,
+									"UTF-16BE"));
+							
+						}
+						
+					} catch (UnsupportedEncodingException ech) {
+						if (isToEncode) {
+							deTextPane.setText("Error: String cannot be encoded...");
+						} else {
+							enTextPane.setText("Error: String cannot be decoded...");
+						}
+						
+					}
+				}
+				
+				// 6 implies: Sixteen-bit Unicode Transformation Format, 
+				// little endian UTF-16LE
+				if (i == 6) {
+					
+					try {
+						if (isToEncode) {
+							
+							deTextPane.setText(URLEncoder.encode(encodeText,
+									"UTF-16LE"));
+						} else {
+							
+							enTextPane.setText(URLDecoder.decode(decodeText,
+									"UTF-16LE"));
+							
+						}
+						
+					} catch (UnsupportedEncodingException ech) {
+						
+						if (isToEncode) {
+							deTextPane.setText("Error: String cannot be encoded...");
+						} else {
+							enTextPane.setText("Error: String cannot be decoded...");
+						}
+						
+					}
+				}
+				
+				// 7 implies Base64
+				if (i == 7) {
 
 					if (isToEncode) {
 
@@ -398,8 +626,8 @@ public class EncoderHashFrame extends JFrame {
 					}
 				}
 
-				// 3 implies MD5Sum
-				if (i == 3) {
+				// 8 implies MD5Sum
+				if (i == 8) {
 
 					if (isToEncode) {
 
@@ -430,8 +658,8 @@ public class EncoderHashFrame extends JFrame {
 					}
 				}
 
-				// 4 implies SHA-1
-				if (i == 4) {
+				// 9 implies SHA-1
+				if (i == 9) {
 
 					if (isToEncode) {
 
@@ -462,8 +690,8 @@ public class EncoderHashFrame extends JFrame {
 					}
 				}
 
-				// 5 implies SHA-256
-				if (i == 5) {
+				// 10 implies SHA-256
+				if (i == 10) {
 
 					if (isToEncode) {
 
@@ -494,8 +722,8 @@ public class EncoderHashFrame extends JFrame {
 					}
 				}
 
-				// 6 implies SHA-384
-				if (i == 6) {
+				// 11 implies SHA-384
+				if (i == 11) {
 
 					if (isToEncode) {
 
@@ -526,8 +754,8 @@ public class EncoderHashFrame extends JFrame {
 					}
 				}
 
-				// 7 implies SHA-512
-				if (i == 7) {
+				// 12 implies SHA-512
+				if (i == 12) {
 
 					if (isToEncode) {
 
@@ -557,6 +785,141 @@ public class EncoderHashFrame extends JFrame {
 						}
 					}
 				}
+				
+				// 13 implies Hexadecimal lowercase
+				if (i == 13) {					
+					
+					if (isToEncode) {
+
+						try {
+							final String hexValue = new String(Hex.encodeHex(encodeText.getBytes("iso-8859-1")));
+							deTextPane.setText(hexValue);
+
+						} catch (UnsupportedEncodingException e) {
+							deTextPane.setText("Error: String input cannot be encoded...");
+						} 
+
+					} else {
+
+						try {
+							final String normalValue = new String(Hex.decodeHex(decodeText.toCharArray()));
+							enTextPane.setText(normalValue);
+
+						} catch (DecoderException e) {
+							deTextPane.setText("Error: Hex value cannot be decoded...");
+						} 
+
+					}
+				}
+				
+				// 14 implies Hexadecimal Uppercase
+				if (i == 14) {					
+					
+					if (isToEncode) {
+
+						try {
+							final String hexValue = new String(Hex.encodeHex(encodeText.getBytes("iso-8859-1")));
+							deTextPane.setText(hexValue.toUpperCase());
+
+						} catch (UnsupportedEncodingException e) {
+							deTextPane.setText("Error: String input cannot be encoded...");
+						} 
+
+					} else {
+
+						try {
+							final String normalValue = new String(Hex.decodeHex(decodeText.toCharArray()));
+							enTextPane.setText(normalValue);
+
+						} catch (DecoderException e) {
+							deTextPane.setText("Error: Hex value cannot be decoded...");
+						} 
+
+					}
+				}
+				
+				// 15 implies Binary
+				if (i == 15) {					
+					
+					if (isToEncode) {
+
+						try {
+							final String binValue = new String(BinaryCodec.toAsciiChars(encodeText.getBytes("iso-8859-1")));
+							deTextPane.setText(binValue.toUpperCase());
+
+						} catch (UnsupportedEncodingException e) {
+							deTextPane.setText("Error: String input cannot be encoded...");
+						} 
+
+					} else {
+
+						try {
+							final String normalValue = new String(BinaryCodec.fromAscii(decodeText.getBytes("iso-8859-1")));
+							enTextPane.setText(normalValue);
+
+						} catch (UnsupportedEncodingException e) {
+							deTextPane.setText("Error: Binary value cannot be decoded...");
+						} 
+
+					}
+				}
+				
+				// 16 implies www-form-urlencoded
+				if (i == 16) {					
+					
+					final URLCodec codec = new URLCodec();
+
+					if (isToEncode) {
+
+						try {
+							deTextPane.setText(codec.encode(encodeText, "UTF-8"));
+
+						} catch (UnsupportedEncodingException e) {
+							deTextPane.setText("Error: Sting input cannot be decoded");
+						}
+
+					} else {
+
+						try {
+							enTextPane.setText(codec.decode(decodeText, "UTF-8"));
+
+						} catch (DecoderException e) {
+							deTextPane.setText("Error: www-form-urlencoded value cannot be decoded...");
+						}
+						catch (UnsupportedEncodingException e) {
+							deTextPane.setText("Error: www-form-urlencoded value cannot be decoded...");
+						} 
+
+					}
+				}
+				
+				// 17 implies RFC 1521 MIME (Multipurpose Internet Mail Extensions) 
+				// Part One. Rules #3, #4, and #5 of the quoted-printable spec are not implemented yet
+				if (i == 17) {					
+					
+					final QuotedPrintableCodec codec = new QuotedPrintableCodec();
+
+					if (isToEncode) {
+
+						try {
+							deTextPane.setText(codec.encode(encodeText));
+
+						} catch (EncoderException e) {
+							deTextPane.setText("Error: Sting input cannot be decoded");
+						}
+
+					} else {
+
+						try {
+							enTextPane.setText(codec.decode(decodeText));
+
+						} catch (DecoderException e) {
+							deTextPane.setText("Error: RFC 1521 MIME value cannot be decoded...");
+						}
+
+					}
+				}
+
 
 			}
 

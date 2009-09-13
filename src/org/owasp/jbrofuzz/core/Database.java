@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.5
+ * JBroFuzz 1.6
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -62,7 +62,7 @@ import org.apache.commons.lang.StringUtils;
  * 
  * 
  * @author subere@uncon.org
- * @version 1.5
+ * @version 1.6
  * @since 1.2
  */
 public class Database {
@@ -70,7 +70,7 @@ public class Database {
 	// The maximum number of chars to be read from file, regardless
 	private static final int MAX_CHARS = Short.MAX_VALUE;
 	// The maximum number of lines allowed to be read from the file
-	private static final int MAX_LINES = 1024;
+	private static final int MAX_LINES = 2048;
 	// The maximum length of a line allowed
 	private static final int MAX_LINE_LENGTH = 512;
 

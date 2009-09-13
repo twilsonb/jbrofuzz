@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.5
+ * JBroFuzz 1.6
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -217,7 +217,9 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Date", Color.blue);
 		keywords.put("ETag", Color.blue);
 		keywords.put("Expect", Color.blue);
+		keywords.put("expect", Color.blue);
 		keywords.put("Expires", Color.blue);
+		keywords.put("expires", Color.blue);
 		keywords.put("Host", Color.blue);
 		keywords.put("^Keep-Alive", Color.blue);
 		keywords.put("Last-Modified", Color.blue);
@@ -244,6 +246,8 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Vary", Color.blue);
 		keywords.put("Via", Color.blue);
 		keywords.put("X-AspNet-Version", Color.blue);
+		keywords.put("x-aspnet-version", Color.blue);
+		keywords.put("x-aspnetmvc-version", Color.blue);
 		keywords.put("X-Cache-TTL", Color.blue);
 		keywords.put("X-Cached-Time", Color.blue);
 		keywords.put("X-Content-Type-Options", Color.blue);
