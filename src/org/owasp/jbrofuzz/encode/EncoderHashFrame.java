@@ -75,7 +75,7 @@ import org.apache.commons.codec.binary.BinaryCodec;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 import org.apache.commons.codec.net.URLCodec;
-import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.B64;
 import org.owasp.jbrofuzz.util.ImageCreator;
@@ -103,7 +103,9 @@ public class EncoderHashFrame extends JFrame {
 		"URL ISO-8859-1", "URL Cp1252", "URL UTF-8", "URL UTF-16BE", 
 		"URL UTF-16LE", "Base64", "MD5 Hash", "SHA1 Hash", "SHA-256",
 		"SHA-384", "SHA-512", "Hexadecimal (low)", "Hexadecimal (UPP)", 
-		"Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)"};
+		"Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)",
+		"Escape: HTML", "Escape: CSV", "Escape: Java", "Escape: Javascript",
+		"Escape: SQL", "Escape: XML" };
 
 	private JSplitPane verticalSplitPane, horizontalSplitPane;
 
@@ -919,6 +921,85 @@ public class EncoderHashFrame extends JFrame {
 
 					}
 				}
+				
+				// 18 implies HTML Encode
+				if (i == 18) {
+					
+					if (isToEncode) {
+						
+						deTextPane.setText(StringEscapeUtils.escapeHtml(encodeText));
+						
+					} else {
+						
+						enTextPane.setText(StringEscapeUtils.unescapeHtml(decodeText));
+					}
+				}
+				
+				// 19 implies CSV Encode
+				if (i == 19) {
+					
+					if (isToEncode) {
+						
+						deTextPane.setText(StringEscapeUtils.escapeCsv(encodeText));
+						
+					} else {
+						
+						enTextPane.setText(StringEscapeUtils.unescapeCsv(decodeText));
+					}
+				}
+				
+				// 20 implies Java
+				if (i == 20) {
+					
+					if (isToEncode) {
+						
+						deTextPane.setText(StringEscapeUtils.escapeJava(encodeText));
+						
+					} else {
+						
+						enTextPane.setText(StringEscapeUtils.unescapeJava(decodeText));
+					}
+				}
+				
+				// 21 implies JavaScript
+				if (i == 21) {
+					
+					if (isToEncode) {
+						
+						deTextPane.setText(StringEscapeUtils.escapeJavaScript(encodeText));
+						
+					} else {
+						
+						enTextPane.setText(StringEscapeUtils.unescapeJavaScript(decodeText));
+					}
+				}
+
+				// 22 implies SQL
+				if (i == 22) {
+					
+					if (isToEncode) {
+						
+						deTextPane.setText(StringEscapeUtils.escapeSql(encodeText));
+						
+					} else {
+						// No reverse method exists within String Escape Utils
+						// enTextPane.setText(StringEscapeUtils.unescapeSql(decodeText));
+					}
+				}
+				
+				// 23 implies XML
+				if (i == 23) {
+					
+					if (isToEncode) {
+						
+						deTextPane.setText(StringEscapeUtils.escapeXml(encodeText));
+						
+					} else {
+						
+						enTextPane.setText(StringEscapeUtils.unescapeXml(decodeText));
+					}
+				}
+
 
 
 			}
