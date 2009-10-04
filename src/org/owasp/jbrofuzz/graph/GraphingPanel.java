@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.6
+ * JBroFuzz 1.7
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -247,7 +247,12 @@ public class GraphingPanel extends JBroFuzzPanel {
 
 	}
 
-	public void toConsole(String input, boolean include) {
+	/**
+	 * <p>Write output to the console of the Graphing Panel.</p>
+	 * 
+	 * @param input
+	 */
+	public void toConsole(final String input) {
 
 		// Use a FILO for the output to the console, never exceeding 500 lines
 		if (console.getLineCount() > 500) {
@@ -256,7 +261,7 @@ public class GraphingPanel extends JBroFuzzPanel {
 						.getLineEndOffset(console.getLineCount() - 500));
 				console.replaceSelection("...\n");
 			} catch (BadLocationException e) {
-				toConsole("Could not clear the console", true);
+				getFrame().log("Could not clear the console", 3);
 			}
 		}
 

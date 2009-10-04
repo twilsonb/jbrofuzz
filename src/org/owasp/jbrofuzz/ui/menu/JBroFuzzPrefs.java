@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.6
+ * JBroFuzz 1.7
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -78,7 +78,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	private static final int x = 650;
 	private static final int y = 400;
 	private static final String[] nodeNames = { "Preferences",
-			"Directory Locations", "Fuzzing" };
+			"Directory Locations", "Fuzzing", "Fuzzing: On The Wire" };
 	// The tree
 	private JTree tree;
 	// The main split pane
@@ -130,19 +130,14 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		// Create all the right hand panels
 		for (int i = 0; i < nodeNames.length; i++) {
 
-			if (i != 3) {
-				panels[i] = new JPanel();
-				panels[i].setLayout(new BoxLayout(panels[i],
-						BoxLayout.PAGE_AXIS));
-				JLabel header = new JLabel("<HTML><H3>&nbsp;" + nodeNames[i]
-						+ "</H3></HTML>");
-				panels[i].add(header);
-				header.add(Box.createRigidArea(new Dimension(0, 20)));
-			} else {
-				panels[i] = new JPanel(new BorderLayout());
-				panels[i].add(new JLabel("<HTML><H3>&nbsp;" + nodeNames[i]
-						+ "</H3></HTML>"), BorderLayout.NORTH);
-			}
+			panels[i] = new JPanel();
+			panels[i].setLayout(new BoxLayout(panels[i],
+					BoxLayout.PAGE_AXIS));
+			JLabel header = new JLabel("<HTML><H3>&nbsp;" + nodeNames[i]
+			                                                          + "</H3></HTML>");
+			panels[i].add(header);
+			header.add(Box.createRigidArea(new Dimension(0, 20)));
+
 			if (i > 0) {
 				top.add(new DefaultMutableTreeNode(nodeNames[i]));
 			}
@@ -158,7 +153,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		tabsCheckBox.setBorderPaintedFlat(true);
 		tabsCheckBox
-				.setToolTipText(" Tick this option, if you would like to see the tabs under the tool bar, instead of at the bottom of the window ");
+				.setToolTipText(" Tick this option, if you would like to see the tabs under " +
+						"the tool bar, instead of at the bottom of the window ");
 
 		tabsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -276,31 +272,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[2].add(endlineCheckBox);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 
-		// Fuzzing... -> Show on the wire tab after fuzzing finished
-
-		final boolean showwirebox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3,
-				false);
-		final JCheckBox showwireCheckBox = new JCheckBox(
-				" Show \"On The Wire\" tab after fuzzing has stopped or finished ",
-				showwirebox);
-
-		showwireCheckBox.setBorderPaintedFlat(true);
-		showwireCheckBox
-				.setToolTipText("Tick this box, if you want to always see the \"On The Wire\" tab");
-
-		showwireCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				if (showwireCheckBox.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3, true);
-				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
-				}
-			}
-		});
-
-		panels[2].add(showwireCheckBox);
-		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
-
+		
 		// Fuzzing... -> Word wrap request text panel
 
 		final boolean wrap_req_box = prefs.getBoolean(
@@ -371,6 +343,54 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[2].add(cont_check_box);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 
+		
+		// Fuzzing: On The Wire... -> Show on the wire tab after fuzzing finished
+		final boolean showwirebox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3,
+				false);
+		final JCheckBox showwireCheckBox = new JCheckBox(
+				" Show \"On The Wire\" tab after fuzzing has stopped or finished ",
+				showwirebox);
+
+		showwireCheckBox.setBorderPaintedFlat(true);
+		showwireCheckBox
+				.setToolTipText("Tick this box, if you want to always see the \"On The Wire\" tab");
+
+		showwireCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (showwireCheckBox.isSelected()) {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3, true);
+				} else {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
+				}
+			}
+		});
+
+		panels[3].add(showwireCheckBox);
+		panels[3].add(Box.createRigidArea(new Dimension(0, 20)));
+
+		// Fuzzing: On The Wire... -> Display responses inside the On The Wire text area
+		final boolean displayResponseBox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
+		final JCheckBox displayResponseCheckBox = new JCheckBox(
+				" Display the Requests as well as the Responses received ",
+				displayResponseBox);
+		
+		displayResponseCheckBox.setBorderPaintedFlat(true);
+		displayResponseCheckBox.setToolTipText(
+				"Tick this box to display the responses received for each request sent within the \"On The Wire\" tab");
+		
+		displayResponseCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (displayResponseCheckBox.isSelected()) {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3_1, true);
+				} else {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
+				}
+			}
+		});
+		
+		panels[3].add(displayResponseCheckBox);
+		panels[3].add(Box.createRigidArea(new Dimension(0, 20)));
+		
 		// Create the top split pane, showing the treeView and the Preferences
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setLeftComponent(leftScrollPane);

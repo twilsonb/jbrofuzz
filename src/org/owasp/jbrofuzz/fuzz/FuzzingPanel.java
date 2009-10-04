@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.6
+ * JBroFuzz 1.7
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -95,7 +95,8 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.5
+ * @version 1.7
+ * @since 0.2
  */
 public class FuzzingPanel extends JBroFuzzPanel {
 
@@ -167,8 +168,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 	private JTabbedPane topRightPanel;
 
-	private int onTheWireEvent;
-
+	private final Preferences prefs;
+	
 	private boolean stopped;
 
 	/**
@@ -216,7 +217,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				.createEmptyBorder(5, 5, 5, 5)));
 
 		// Get the preferences for wrapping lines of text
-		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+		prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 		boolean wrapText = prefs.getBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
 
 		if (!wrapText) {
@@ -306,7 +307,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		// Right click: Cut, Copy, Paste, Select All
 		popupText(onTheWire_textArea, false, true, false, true);
 
-		onTheWireEvent = 0;
+		// onTheWireEvent = 0;
 
 		JScrollPane consoleScrollPane = new JScrollPane(onTheWire_textArea,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -403,7 +404,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		topRightPanel = new JTabbedPane(2);
 		topRightPanel.add(" Payloads ", generatorPanel);
-		topRightPanel.add(" On The Wire (0) ", onTheWirePanel);
+		topRightPanel.add(" On The Wire ", onTheWirePanel);
 		topRightPanel.setTabPlacement(SwingConstants.TOP);
 
 		mainPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -514,8 +515,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		request_textPane.setText("");
 		onTheWire_textArea.setText("");
 
-		topRightPanel.setTitleAt(1, " On The Wire (0) ");
-		topRightPanel.setSelectedIndex(0);
+		// topRightPanel.setTitleAt(1, " On The Wire ");
+		// topRightPanel.setSelectedIndex(0);
 
 		while (fuzzersTable.getRowCount() > 0) {
 			mFuzzingTableModel.removeRow(0);
@@ -732,6 +733,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * <p>
 	 * Method trigered when the fuzz button is pressed in the current panel.
 	 * </p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.7
 	 */
 	@Override
 	public void start() {
@@ -743,36 +747,22 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		// Start, Stop, Graph, Add, Remove
 		setOptionsAvailable(false, true, true, false, false);
-		// buttonAddGen.setEnabled(false);
-		// buttonRemGen.setEnabled(false);
 
 		url_textField.setEditable(false);
 		url_textField.setBackground(Color.BLACK);
 		url_textField.setForeground(Color.WHITE);
 
-		Document doc = onTheWire_textArea.getDocument();
-		Element e = doc.getDefaultRootElement();
-		// Copy attribute Set
-		AttributeSet attr = e.getAttributes().copyAttributes();
-		try {
-			doc.insertString(doc.getLength(),
-					"\n--> JBroFuzz Fuzzing Session: " + (session + 1)
-							+ " -->\n\n", attr);
-		} catch (BadLocationException e2) {
-			// TODO Auto-generated catch block
-			// e2.printStackTrace();
-		}
+		toConsole("\n--> [JBROFUZZ FUZZING START] " + (session + 1) + " -->\n\n");
 
 		onTheWire_textArea.setBackground(Color.BLACK);
 		onTheWire_textArea.setForeground(Color.WHITE);
 
-		topRightPanel.setTitleAt(1, " On The Wire (0) ");
+		topRightPanel.setTitleAt(1, " On The Wire ");
 		topRightPanel.setSelectedIndex(1);
-		onTheWireEvent = 0;
 
-		// Increment the session and reset the counter
-		session++;
+		// Update the counter
 		counter = 1;
+		
 		// Update the border of the output panel
 		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output  " + "Logging in folder ("
@@ -824,6 +814,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 					// Put the message on the console as it goes out on the wire
 					toConsole(currentMessage.getMessageForDisplayPurposes());
 
+					final boolean showResponsesOnWire = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
+
 					try {
 
 						// Connect
@@ -838,18 +830,34 @@ public class FuzzingPanel extends JBroFuzzPanel {
 						}
 						// Update the message writer
 						outputMessage.setConnection(connection);
+						
+						// Update the console (on the wire tab) with the output
+						if(showResponsesOnWire) {
+							toConsole("\n-->\n--> [JBROFUZZ FUZZING RESPONSE] -->\n-->\n");
+							toConsole(connection.getReply());
+						}
+						
 						// Update the last row, indicating success
 						outputTableModel.updateRow(outputMessage, co_k);
-
+						
 					} catch (ConnectionException e1) {
 
 						// Update the message writer
 						outputMessage.setException(e1);
+						
+						// Update the console (on the wire tab) with the exception
+						if(showResponsesOnWire) {
+							toConsole("\n--> [JBROFUZZ FUZZING RESPONSE] <--\n");
+							toConsole(e1.getMessage());
+						}
+						
 						// Update the last row, indicating an error
 						outputTableModel.updateRow(outputMessage, co_k, e1);
 
 					}
 
+					toConsole("\n--> [JBROFUZZ FUZZING STOP] " + (session + 1) + " -->\n\n");
+					session++;
 					getFrame().getJBroFuzz().getHandler().writeFuzzFile(
 							outputMessage);
 
@@ -901,7 +909,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		onTheWire_textArea.setForeground(Color.GREEN);
 
 		// Get the preference for showing the "On The Wire" tab
-		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 		boolean showWireTab = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
 
 		if (showWireTab) {
@@ -923,12 +930,15 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * 
 	 * @param input
 	 *            The input string.
-	 * @version 1.5
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.7
+	 * @since 1.5
 	 */
 	public void toConsole(String input) {
 
-		onTheWireEvent++;
-		topRightPanel.setTitleAt(1, " On The Wire (" + onTheWireEvent + ") ");
+		// onTheWireEvent++;
+		// topRightPanel.setTitleAt(1, " On The Wire (" + onTheWireEvent + ") ");
 
 		final Document doc = onTheWire_textArea.getDocument();
 		final Element e = doc.getDefaultRootElement();

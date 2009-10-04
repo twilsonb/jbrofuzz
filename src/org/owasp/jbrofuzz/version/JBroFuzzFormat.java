@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.6
+ * JBroFuzz 1.7
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -114,7 +114,7 @@ public class JBroFuzzFormat {
 	 * 
 	 * True represents top.
 	 */
-	public static final String PR_2 = "prefs.ui.tabs";;
+	public static final String PR_2 = "prefs.ui.tabs";
 
 	/**
 	 * The preferences used for deciding whether or not to check and notify a
@@ -141,6 +141,11 @@ public class JBroFuzzFormat {
 	 */
 	public static final String PR_FUZZ_3 = "fuzz.ui.show.wire";
 
+	/**
+	 * The preferences used for also showing the responses received "On The Wire" tab.
+	 */
+	public static final String PR_FUZZ_3_1 = "fuzz.ui.wire.responses";
+	
 	/**
 	 * The preferences used for "Re-send POST Data if 100 Continue is received"
 	 */
@@ -181,7 +186,7 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "1.6";
+	public static final String VERSION = "1.7";
 
 	/**
 	 * <p>

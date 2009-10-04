@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.6
+ * JBroFuzz 1.7
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -144,8 +144,9 @@ public abstract class JBroFuzzPanel extends JPanel {
 		// Traverse children
 		TreeNode node = (TreeNode) parent.getLastPathComponent();
 		if (node.getChildCount() >= 0) {
-			for (Enumeration<TreeNode> e = (Enumeration<TreeNode>) node
-					.children(); e.hasMoreElements();) {
+			
+			for (Enumeration<TreeNode> e = node.children(); e.hasMoreElements();) {
+				
 				TreeNode n = e.nextElement();
 				TreePath path = parent.pathByAddingChild(n);
 				expandAll(tree, path, expand);

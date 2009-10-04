@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.6
+ * JBroFuzz 1.7
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -350,7 +350,6 @@ public class Connection {
 
 			IOUtils.closeQuietly(in_stream);
 			IOUtils.closeQuietly(out_stream);
-			// SocketUtils.closeQuietly(mSocket);
 
 		}
 
@@ -403,7 +402,7 @@ public class Connection {
 	 * message that has been transmitted during construction.
 	 * </p>
 	 * <p>
-	 * Revisited this method in JBroFuzz 1.6 in order NOT to throw an exception
+	 * Revisited this method in JBroFuzz 1.7 in order NOT to throw an exception
 	 * if the reply string is empty, see {@link #getMessage()} for old
 	 * implementation logic.
 	 * </p>
