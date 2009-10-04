@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.6
+ * JBroFuzz 1.7
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 

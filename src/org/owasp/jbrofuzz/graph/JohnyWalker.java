@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.6
+ * JBroFuzz 1.7
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -53,7 +53,7 @@ public class JohnyWalker {
 			master = new FileSystemTreeNode(directory.getName());
 			master.setAsDirectory();
 		} else {
-			this.x3.toConsole("Cannot read: " + directory.getPath(), true);
+			this.x3.toConsole("Cannot read: " + directory.getPath());
 		}
 
 		fileCount = 0;
@@ -74,7 +74,7 @@ public class JohnyWalker {
 	private void listAllFiles(File directory, FileSystemTreeNode parent) {
 
 		if (!directory.canRead()) {
-			x3.toConsole("Could not read: " + directory.getPath(), true);
+			x3.toConsole("Could not read: " + directory.getPath());
 			return;
 		}
 
@@ -107,8 +107,8 @@ public class JohnyWalker {
 
 		listAllFiles(directory, master);
 
-		x3.toConsole("Total Files: " + fileCount, true);
-		x3.toConsole("Total Directories: " + dirCount, true);
+		x3.toConsole("Total Files: " + fileCount);
+		x3.toConsole("Total Directories: " + dirCount);
 
 	}
 

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.6
+ * JBroFuzz 1.7
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -30,6 +30,7 @@
 package org.owasp.jbrofuzz.update;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -59,13 +60,14 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import com.Ostermiller.util.Browser;
 
 /**
- * <p>
- * Class responsible for checking for a later release at startup.
- * </p>
+ * <p>Class responsible for checking for a later release at 
+ * startup.</p>
  * 
+ * <p>The constructor of this class displays a JDialog if a new 
+ * version is identified on the website.</p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.7
  * @since 1.3
  */
 public class StartUpdateChecker extends JDialog {
@@ -73,8 +75,8 @@ public class StartUpdateChecker extends JDialog {
 	private static final long serialVersionUID = 5920384008550160901L;
 
 	// Dimensions of the about box
-	private static final int x = 420;
-	private static final int y = 200;
+	private static final int x = 440;
+	private static final int y = 220;
 
 	/**
 	 * <p>
@@ -181,7 +183,7 @@ public class StartUpdateChecker extends JDialog {
 	 *            JBroFuzzwindow the main window
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.7
 	 * @since 1.3
 	 */
 	public StartUpdateChecker(final JBroFuzzWindow parent) {
@@ -205,11 +207,13 @@ public class StartUpdateChecker extends JDialog {
 			return;
 		}
 
-		String text = "<html><b>A new version of JBroFuzz is available:&nbsp;"
-				+ latest
-				+ "<br><br>You are currently running version:&nbsp;"
-				+ current
-				+ "<br><br>Do you wish to download the <br>new version now?</b></html>";
+		final String text = 
+			"<html><b>A new version of JBroFuzz is available:&nbsp;"
+			+ latest
+			+ "<br><br>You are currently running version:&nbsp;"
+			+ current
+			+ "<br><br>Do you wish to download the <br>new version now?" 
+			+ "</b></html>";
 
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 
@@ -226,6 +230,8 @@ public class StartUpdateChecker extends JDialog {
 				SwingConstants.LEFT);
 		mainLabel.setIconTextGap(20);
 		mainLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+		
+		
 		centerPanel.add(mainLabel);
 
 		// Bottom buttons
@@ -272,13 +278,16 @@ public class StartUpdateChecker extends JDialog {
 		getContentPane().add(southPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		int xLocation = parent.getLocationOnScreen().x
+		final int xLocation = parent.getLocationOnScreen().x
 				- (StartUpdateChecker.x / 2) + (parent.getWidth() / 2);
-		int yLocation = parent.getLocationOnScreen().y
+		final int yLocation = parent.getLocationOnScreen().y
 				- (StartUpdateChecker.y / 2) + (parent.getHeight() / 2);
-		this.setSize(StartUpdateChecker.x, StartUpdateChecker.y);
-		this.setLocation(xLocation, yLocation);
-		setResizable(false);
+		
+		setSize(StartUpdateChecker.x, StartUpdateChecker.y);
+		setLocation(xLocation, yLocation);
+		
+		setMinimumSize(new Dimension(StartUpdateChecker.x, StartUpdateChecker.y));
+		setResizable(true);
 		setVisible(true);
 
 	}

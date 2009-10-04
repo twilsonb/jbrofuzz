@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.6
+ * JBroFuzz 1.7
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -72,7 +72,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.5
+ * @version 1.7
  * @since 0.2
  */
 public class WindowViewerFrame extends JFrame implements DocumentListener {
@@ -85,8 +85,8 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 	final static String CANCEL_ACTION = "cancel-search";
 
 	final Color entryBg;
-	final Highlighter hilit;
-	final Highlighter.HighlightPainter painter;
+	final transient Highlighter hilit;
+	final transient Highlighter.HighlightPainter painter;
 
 	final JTextPane listTextArea;
 	private JTextField entry;
