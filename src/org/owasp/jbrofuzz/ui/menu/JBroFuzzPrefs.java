@@ -78,7 +78,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	private static final int x = 650;
 	private static final int y = 400;
 	private static final String[] nodeNames = { "Preferences",
-			"Directory Locations", "Fuzzing", "Fuzzing: On The Wire" };
+			"Directory Locations", "Fuzzing", "Fuzzing: On The Wire",
+			"Fuzzing: Output"};
 	// The tree
 	private JTree tree;
 	// The main split pane
@@ -390,6 +391,29 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		
 		panels[3].add(displayResponseCheckBox);
 		panels[3].add(Box.createRigidArea(new Dimension(0, 20)));
+		
+		// Fuzzing: Output -> Double click opens up browser or panel
+		final boolean fuzzingResponseDoubleClickBox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
+		final JCheckBox fuzzingResponseDoubleClickCheckBox = new JCheckBox(
+				" Double click on a Response opens it up in a Browser ",
+				fuzzingResponseDoubleClickBox);
+		
+		fuzzingResponseDoubleClickCheckBox.setBorderPainted(false);
+		fuzzingResponseDoubleClickCheckBox.setToolTipText(
+				"Tick this box to open up response in a browser, instead of a text-based window");
+		
+		fuzzingResponseDoubleClickCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (fuzzingResponseDoubleClickCheckBox.isSelected()) {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
+				} else {
+					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, false);
+				}
+			}
+		});
+		
+		panels[4].add(fuzzingResponseDoubleClickCheckBox);
+		panels[4].add(Box.createRigidArea(new Dimension(0, 20)));
 		
 		// Create the top split pane, showing the treeView and the Preferences
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);

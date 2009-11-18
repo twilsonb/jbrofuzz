@@ -150,6 +150,12 @@ public class JBroFuzzFormat {
 	 * The preferences used for "Re-send POST Data if 100 Continue is received"
 	 */
 	public static final String PR_FUZZ_4 = "fuzz.100.continue";
+	
+	/**
+	 * The preference for double clicking on an output line and displaying it in a browser
+	 */
+	public static final String PR_FUZZ_OUTPUT_1 = "fuzz.output.browser";
+
 	/**
 	 * If true, the response will wrap when opened in a new window
 	 */
@@ -322,9 +328,13 @@ public class JBroFuzzFormat {
 		return "Zeus ";
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private static final String getDate() {
 
-		final String DATE_FORMAT = "DDD yyyy-MM-dd HH-mm-ss";
+		final String DATE_FORMAT = "DDD-yyyy-MM-dd-HH-mm-ss";
 
 		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT,
 				new Locale(ISO_LAN_CODE));

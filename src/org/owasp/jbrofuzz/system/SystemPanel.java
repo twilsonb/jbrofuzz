@@ -61,8 +61,6 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
  */
 public class SystemPanel extends JBroFuzzPanel {
 
-	private static final long serialVersionUID = 1L;
-
 	private JTextPane listTextArea;
 
 	private DefaultStyledDocument m_defaultStyledDocument;
@@ -216,6 +214,9 @@ public class SystemPanel extends JBroFuzzPanel {
 	 *            == 2 => [WARN] Green Warning<br>
 	 *            == 3 => [SHOT] Amber Shout - light error<br>
 	 *            >= 4 => [ERRR] Red Error<br>
+	 *            
+	 * @author subere@uncon.org
+	 * @version 1.8
 	 */
 	public void start(final String str, int level) {
 
@@ -232,9 +233,11 @@ public class SystemPanel extends JBroFuzzPanel {
 		if (level <= 0) {
 			toLog.append("[INFO]");
 			c = Color.BLUE;
+			lineCount++;
 		} else if (level == 1) {
 			toLog.append("[OPPR]");
 			c = Color.GREEN;
+			lineCount++;
 		} else if (level == 2) {
 			toLog.append("[WARN]");
 			c = Color.YELLOW;

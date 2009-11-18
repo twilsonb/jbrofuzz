@@ -84,11 +84,11 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 /**
  * <p>
  * Window inspired from Paros Proxy, in terms of providing an encoder/decoder
- * for a variety of different scheme, as well as hashing functionality.
+ * for a variety of different schemes, as well as hashing functionality.
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.6
+ * @version 1.8
  * @since 1.5
  * 
  */
@@ -110,7 +110,7 @@ public class EncoderHashFrame extends JFrame {
 	private JSplitPane verticalSplitPane, horizontalSplitPane;
 
 	private JTextPane enTextPane, deTextPane;
-
+	
 	// The tree
 	private JTree tree;
 
@@ -302,6 +302,25 @@ public class EncoderHashFrame extends JFrame {
 				}
 			}
 		});
+		
+		// Keyboard listener on the treeView for Ctrl+Return to Encode
+		tree.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+
+					encoderHashIsShowing = false;
+					
+					// Save the values of the encode/decode as a preference
+					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					
+					dispose();
+
+				}
+			}
+		});
+
 		
 		// Keyboard listener on the decoded text pane for escape to cancel
 		deTextPane.addKeyListener(new KeyAdapter() {

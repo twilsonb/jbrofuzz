@@ -285,6 +285,8 @@ public class Prototype {
 	 * Recursive
 	 * Replacive
 	 * Zero
+	 * Double
+	 * Cross Product
 	 * </code>
 	 * 
 	 * <p>
@@ -294,7 +296,7 @@ public class Prototype {
 	 * @return String one of "Replacive", "Recursive", "Zero"
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.8
 	 * @since 1.3
 	 */
 	public String getType() {
@@ -309,6 +311,12 @@ public class Prototype {
 
 		if (type == 'Z') {
 			return "Zero";
+		}
+		if (type == 'D') {
+			return "Double";
+		}
+		if (type == 'X') {
+			return "Cross Product";
 		}
 
 		return "";

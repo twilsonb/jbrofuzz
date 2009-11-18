@@ -415,15 +415,18 @@ public class PayloadsDialog extends JDialog {
 						final String name = (String) fuzzersTableModel
 								.getValueAt(fuzzersTable
 										.convertRowIndexToModel(c), 0);
-						final String id = m.getJBroFuzz().getDatabase()
-								.getIdFromName(name);
-						m.getPanelFuzzing().addPayload(id, start, end);
+						
+						final String id = m.getJBroFuzz().
+										getDatabase().getIdFromName(name);
+						
+						m.getPanelFuzzing().addFuzzer(id, start, end);
 						PayloadsDialog.this.dispose();
 
 					}
 				});
 			}
 		});
+		
 		ok.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {

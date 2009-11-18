@@ -62,7 +62,7 @@ import org.apache.commons.lang.StringUtils;
  * 
  * 
  * @author subere@uncon.org
- * @version 1.6
+ * @version 1.8
  * @since 1.2
  */
 public class Database {
@@ -688,6 +688,35 @@ public class Database {
 
 		return prototypes.size();
 
+	}
+
+	/**
+	 * <p>Return the type of fuzzer e.g. Replacive, Recursive, etc.
+	 * based on the name provided.</p>
+	 * 
+	 * @param name The fuzzer name
+	 * @return e.g. Replacive
+	 */
+	public String getTypeFromName(String name) {
+		
+		return prototypes.get(getIdFromName(name)).getType();
+		
+	}
+
+	/**
+	 * <p>Return the prototype type, based on the id value.</p>
+	 * 
+	 * @param id
+	 * @return e.g. "Recursive", "Cross Product"
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.8
+	 * @since 1.8
+	 */
+	public String getType(String id) {
+		
+		return prototypes.get(id).getType();
+		
 	}
 
 }
