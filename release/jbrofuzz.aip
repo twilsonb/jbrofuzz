@@ -14,10 +14,10 @@
     <ROW Property="BannerBitmap" MultiBuildValue="DefaultBuild:default_banner.bmp" Type="1"/>
     <ROW Property="DialogBitmap" MultiBuildValue="DefaultBuild:default_dialog.bmp" Type="1"/>
     <ROW Property="Manufacturer" Value="OWASP" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{E7D62A95-3A65-46F4-84C5-DC0FBEF88133} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{B21ECB67-D7AD-400E-B09F-60AEE3A597AF} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="JBroFuzz" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="1.6.0"/>
+    <ROW Property="ProductVersion" Value="1.7.0"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{8563E053-CB25-42AF-BAC9-B42EE0F78B49}"/>
     <ROW Property="WindowsFamily9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>

@@ -94,16 +94,14 @@ public class FileHandler {
 	}
 
 	/**
-	 * <p>
-	 * Method for creating a new directory with the date/time stamp.
-	 * </p>
-	 * <p>
-	 * If one exists, a number is padded to the timestamp and a new directory is
-	 * created.
-	 * </p>
+	 * <p>Method for creating a new directory with the date/time stamp.</p>
+	 * 
+	 * <p>If the directory with the current timestamp exists, a number from 
+	 * 000 to 999 is padded to the current timestamp and a new directory 
+	 * is created.</p>
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.5
+	 * @version 1.8
 	 * @since 1.5
 	 */
 	public void createNewDirectory() {
@@ -151,11 +149,14 @@ public class FileHandler {
 		} else {
 
 			count++;
-			count %= 100;
+			count %= 1000;
 
 			directoryLocation.append('.');
 
 			if (count < 10) {
+				directoryLocation.append('0');
+			}
+			if (count < 100) {
 				directoryLocation.append('0');
 			}
 			directoryLocation.append(count);
@@ -274,6 +275,17 @@ public class FileHandler {
 
 		return new File(fuzzDirectory, fileName);
 
+	}
+	
+	/**
+	 * <p>Return the directory which is currently being used 
+	 * for fuzz data</p>
+	 * 
+	 * @return File
+	 */
+	public File getFuzzDirectory() {
+		
+		return fuzzDirectory;
 	}
 
 	/**

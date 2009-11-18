@@ -206,8 +206,9 @@ public class OpenSession {
 						mWindow.log("Could not open and add Fuzzer: "
 								+ fileInput[i], 3);
 					} else {
-						mWindow.getPanelFuzzing().addPayload(fuzz_id, start,
-								end);
+						
+						mWindow.getPanelFuzzing().addFuzzer(fuzz_id, start, end);
+						
 					}
 				}
 			}

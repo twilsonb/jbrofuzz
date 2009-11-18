@@ -36,6 +36,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
@@ -66,6 +68,7 @@ import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersAddedTableModel;
 import org.owasp.jbrofuzz.fuzz.ui.ResponseTableModel;
+import org.owasp.jbrofuzz.fuzz.ui.RightClickPopups;
 import org.owasp.jbrofuzz.payloads.PayloadsDialog;
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
@@ -73,6 +76,8 @@ import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+
+import com.Ostermiller.util.Browser;
 
 /**
  * <p>
@@ -95,7 +100,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.7
+ * @version 1.8
  * @since 0.2
  */
 public class FuzzingPanel extends JBroFuzzPanel {
@@ -260,11 +265,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		final JPanel generatorPanel = new JPanel(new BorderLayout());
 
 		generatorPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" Added Payloads Table"),
+				BorderFactory.createTitledBorder(" Added Fuzzers Table"),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		// The fuzzing table and model
-		mFuzzingTableModel = new FuzzersAddedTableModel(getFrame());
+		mFuzzingTableModel = new FuzzersAddedTableModel();
 		fuzzersTable = new JTable();
 		fuzzersTable.setBackground(Color.BLACK);
 		fuzzersTable.setForeground(Color.WHITE);
@@ -318,10 +323,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		// The output panel
 		outputPanel = new JPanel(new BorderLayout());
-
+		
+		// Update the border of the output panel
 		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Output "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
+				.createTitledBorder(" Output "),
+				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		outputTableModel = new ResponseTableModel();
 
@@ -332,8 +338,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		outputTable.setRowSorter(sorter);
 
 		outputTable.setBackground(Color.white);
-		// Right click: Open, Cut, Copy, Paste, Select All, Properties
-		popupTable(outputTable, true, false, true, false, true, true);
+		RightClickPopups.rightClickOutputTable(this, outputTable);
 
 		outputTable.setColumnSelectionAllowed(false);
 		outputTable.setRowSelectionAllowed(true);
@@ -381,10 +386,34 @@ public class FuzzingPanel extends JBroFuzzPanel {
 							} catch (IndexOutOfBoundsException e) {
 								return;
 							}
-
 							final String name = (String) outputTable.getModel()
-									.getValueAt(c, 0);
-							new WindowViewerFrame(FuzzingPanel.this, name);
+							.getValueAt(c, 0);
+
+
+							// Get the preferences for the double click
+							final boolean openInBrowser = prefs.getBoolean(
+									JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
+							
+							if(openInBrowser) {
+								
+								final String fileName = name + ".html";
+								final File f = getFrame().getJBroFuzz().getHandler()
+								.getFuzzFile(fileName);
+
+								Browser.init();
+								try {
+									Browser.displayURL(f.toURI().toString());
+								} catch (final IOException ex) {
+									getFrame()
+									.log(
+											"Could not launch link in external browser",
+											3);
+								}
+							} else {
+						
+								new WindowViewerFrame(FuzzingPanel.this, name);
+								
+							}
 
 						}
 					});
@@ -489,9 +518,32 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 	}
 
-	public void addPayload(String Id, int start, int end) {
+	/**
+	 * <p>Add a fuzzer to the table of fuzzers.</p>
+	 * 
+	 * @param name
+	 * @param type
+	 * @param id
+	 * @param point1
+	 * @param point2
+	 * @param point3
+	 * @param point4
+	 */
+	public void addFuzzer(String name, String type, String id, int point1,
+			int point2, int point3, int point4) {
 
-		mFuzzingTableModel.addRow(Id, start, end);
+		mFuzzingTableModel.addRow( name,  type,  id,  point1,
+				 point2,  point3,  point4);
+
+	}
+	
+	public void addFuzzer(String id, int point1, int point2) {
+
+		String name = getFrame().getJBroFuzz().getDatabase().getName(id);
+		String type = getFrame().getJBroFuzz().getDatabase().getType(id);
+		
+		mFuzzingTableModel.addRow(name,  type,  id,  point1,
+				 point2,  0,  0);
 
 	}
 
@@ -526,6 +578,54 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		}
 
 		url_textField.requestFocusInWindow();
+	}
+	
+	/**
+	 * <p>
+	 * Clear the Responses Table. Also, set
+	 * the focus on the URL area.
+	 * </p>
+	 * <p>
+	 * Used when right clicking on the output table, or with a File -> Clear Output.
+	 * </p>
+	 * 
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.8
+	 * @since 1.8
+	 */
+	public void clearOutputTable() {
+		
+		while(outputTable.getRowCount() > 0) {
+			outputTableModel.removeRow(0);
+		}
+		
+		url_textField.requestFocusInWindow();
+
+	}
+	
+	/**
+	 * <p>
+	 * Clear the Fuzzers Table. Also, set
+	 * the focus on the URL area.
+	 * </p>
+	 * <p>
+	 * Used when right clicking on the fuzzers table, or with a File -> Clear Fuzzers.
+	 * </p>
+	 * 
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.8
+	 * @since 1.8
+	 */
+	public void clearFuzzersTable() {
+		
+		while (fuzzersTable.getRowCount() > 0) {
+			mFuzzingTableModel.removeRow(0);
+		}
+		
+		url_textField.requestFocusInWindow();
+
 	}
 
 	/**
@@ -669,6 +769,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		if (rows < 1) {
 			return;
 		}
+		
 		final String[] fuzzPoints = new String[rows];
 		for (int i = 0; i < rows; i++) {
 			fuzzPoints[i] = mFuzzingTableModel.getRow(i);
@@ -680,12 +781,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				fuzzPoints[0]);
 
 		if (selectedFuzzPoint != null) {
-			final String[] splitString = selectedFuzzPoint
-					.split(FuzzersAddedTableModel.STRING_SEPARATOR);
-			mFuzzingTableModel
-					.removeRow(splitString[0],
-							Integer.parseInt(splitString[1]), Integer
-									.parseInt(splitString[2]));
+			
+			mFuzzingTableModel.removeRow(Integer.parseInt(selectedFuzzPoint.split(" - ")[0]));
+			
 		}
 	}
 
@@ -762,12 +860,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		// Update the counter
 		counter = 1;
-		
-		// Update the border of the output panel
-		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Output  " + "Logging in folder ("
-						+ JBroFuzzFormat.DATE + ") Session " + session),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		final int fuzzers_added = fuzzersTable.getRowCount();
 

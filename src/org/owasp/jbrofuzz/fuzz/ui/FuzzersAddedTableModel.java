@@ -33,43 +33,27 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-
 /**
  * <p>
  * The fuzzing table model used within the generators table of the "TCP Fuzzing"
  * panel.
  * </p>
  * 
- * @author subere (at) uncon (dot) org
- * @version 0.6
+ * @author subere@uncon.org
+ * @version 1.8
+ * @since 0.6
  */
 public class FuzzersAddedTableModel extends AbstractTableModel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6995264785224510555L;
-
-	/**
-	 * <p>
-	 * The String used to separate columns when a toString representation of a
-	 * set number of columns or rows is required. This is typically used in
-	 * method getRow() that returns a String.
-	 * </p>
-	 */
-	public static final String STRING_SEPARATOR = "          ";
-
-	private static final int INDEX_GENERATOR = 0;
-	private static final int INDEX_START = 1;
-	private static final int INDEX_END = 2;
-
 	// The names of the columns within the table of generators
-	private static final String[] COLUMNNAMES = { "Fuzzer", "Start", "End" };
+	private static final String[] COLUMNNAMES = 
+		{ "Name", "Encoding", "Type", "ID", 
+		  "1st Start", "1st End", "2nd Start", "2nd End"
+		};
 	// The vector of data
-	private Vector<Generator> dataVector;
+	private Vector<FuzzerRow> dataVector;
 	// The panel that the model is attached to
-	private JBroFuzzWindow fPanel;
+	// private JBroFuzzWindow fPanel;
 
 	/**
 	 * <p>
@@ -79,26 +63,19 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * @param fPanel
 	 *            FuzzingPanel
 	 */
-	public FuzzersAddedTableModel(final JBroFuzzWindow fPanel) {
-		this.fPanel = fPanel;
-		dataVector = new Vector<Generator>();
+	public FuzzersAddedTableModel() {
+		dataVector = new Vector<FuzzerRow>();
 	}
-
+	
 	/**
-	 * <p>
-	 * Add a row to the generator list.
-	 * </p>
-	 * 
-	 * @param generator
-	 *            String
-	 * @param start
-	 *            int
-	 * @param end
-	 *            int
+	 * <p>Add a fuzzer row to the table</p>
 	 */
-	public void addRow(final String generator, final int start, final int end) {
-		final Generator addingGenerator = new Generator(generator, start, end);
-		dataVector.add(addingGenerator);
+	public void addRow(String name, String encoding, String type, String id, int point1,
+			int point2, int point3, int point4) {
+		
+		dataVector.add(new FuzzerRow(name, encoding, type, id, point1, point2, 
+				point3, point4));
+		
 		dataVector.trimToSize();
 		fireTableRowsInserted(dataVector.size(), dataVector.size());
 	}
@@ -134,20 +111,15 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * @return String
 	 */
 	public String getRow(final int row) {
-		final StringBuffer output = new StringBuffer();
-		if ((row > -1) && (row < dataVector.size())) {
-			for (int i = 0; i < FuzzersAddedTableModel.COLUMNNAMES.length; i++) {
-				output.append(getValueAt(row, i)
-						+ FuzzersAddedTableModel.STRING_SEPARATOR);
-			}
-		}
-		return output.toString();
+		
+		return row + " - " + getValueAt(row, 0);
+		
 	}
 
 	/**
 	 * Get a complete row count of the generator table.
 	 * 
-	 * @return int
+	 * @return int The number of rows present in the table
 	 */
 	public int getRowCount() {
 		return dataVector.size();
@@ -158,63 +130,38 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * Get the value within the generator table at a given location of column
 	 * and row.
 	 * </p>
-	 * 
-	 * @param row
-	 *            int
-	 * @param column
-	 *            int
-	 * @return Object
 	 */
 	public Object getValueAt(final int row, final int column) {
-		final Generator record = dataVector.get(row);
+		
+		final FuzzerRow record = dataVector.get(row);
 		switch (column) {
-		case INDEX_GENERATOR:
+		case 0:
+			return record.getName();
+		case 1:
+			return record.getEncoding();
+		case 2:
 			return record.getType();
-		case INDEX_START:
-			return Integer.valueOf(record.getStart());
-		case INDEX_END:
-			return Integer.valueOf(record.getEnd());
+		case 3:
+			return record.getId();
+		case 4:
+			return Integer.valueOf(record.getPoint1());
+		case 5:
+			return Integer.valueOf(record.getPoint2());
+		case 6:
+			return Integer.valueOf(record.getPoint3());
+		case 7:
+			return Integer.valueOf(record.getPoint4());
 		default:
-			return new Object();
+			return null;
 		}
 	}
 
 	/**
-	 * <p>
-	 * Check to see if an empty row exists within the generator table.
-	 * </p>
-	 * 
-	 * @return boolean
-	 */
-	public boolean hasEmptyRow() {
-		if (dataVector.size() == 0) {
-			return false;
-		}
-		final Generator gen = dataVector.get(dataVector.size() - 1);
-		if (gen.getType().trim().equalsIgnoreCase("") && (gen.getStart() == 0)
-				&& (gen.getEnd() == 0)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Check to see if a generator table is editable
-	 * 
-	 * @param row
-	 *            int
-	 * @param column
-	 *            int
-	 * @return boolean
+	 * <p>A cell is always editable within the fuzzers table.</p>
 	 */
 	@Override
 	public boolean isCellEditable(final int row, final int column) {
-		if (column == FuzzersAddedTableModel.INDEX_GENERATOR) {
-			return true;
-		} else {
-			return false;
-		}
+		return true;
 	}
 
 	/**
@@ -238,61 +185,37 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 		}
 	}
 
-	/**
-	 * <p>
-	 * Remove a row from the generator list.
-	 * </p>
-	 * 
-	 * @param generator
-	 *            String
-	 * @param start
-	 *            int
-	 * @param end
-	 *            int
-	 */
-	public void removeRow(final String generator, final int start, final int end) {
-		int rowToRemove = -1;
-		for (int i = 0; i < dataVector.size(); i++) {
-			final Generator record = dataVector.get(i);
-			if (record.getType().equals(generator)
-					&& (record.getStart() == start) && (record.getEnd() == end)) {
-				rowToRemove = i;
-			}
-		}
-		if (rowToRemove > -1) {
-			dataVector.removeElementAt(rowToRemove);
-			fireTableRowsDeleted(0, rowToRemove);
-		}
-	}
+
 
 	/**
 	 * <p>
 	 * Set a value at the corresponding row and column location.
 	 * </p>
-	 * 
-	 * @param value
-	 *            Object
-	 * @param row
-	 *            int
-	 * @param column
-	 *            int
 	 */
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
-		final Generator record = dataVector.get(row);
+		
+		final FuzzerRow record = dataVector.get(row);
+
 		switch (column) {
-		case INDEX_GENERATOR:
+		case 0:
+			record.setName((String) value);
+		case 1:
+			record.setEncoding((String) value);
+		case 2:
 			record.setType((String) value);
-			break;
-		case INDEX_START:
-			record.setStart(((Integer) value).intValue());
-			break;
-		case INDEX_END:
-			record.setEnd(((Integer) value).intValue());
-			break;
-		default:
-			fPanel.log("Fuzzing Panel: Invalid index ", 3);
+		case 3:
+			record.setId((String) value);
+		case 4:
+			record.setPoint1(((Integer) value).intValue());
+		case 5:
+			record.setPoint2(((Integer) value).intValue());
+		case 6:
+			record.setPoint3(((Integer) value).intValue());
+		case 7:
+			record.setPoint4(((Integer) value).intValue());
 		}
+
 		fireTableCellUpdated(row, column);
 	}
 }

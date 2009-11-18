@@ -117,7 +117,9 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final JMenuItem close = new JMenuItem("Close");
 
 		final JMenuItem openLocation = new JMenuItem("Open Location...");
-
+		final JMenuItem clearOutput = new JMenuItem("Clear Output");
+		final JMenuItem clearFuzzers = new JMenuItem("Clear Fuzzers");
+		
 		final JMenuItem save = new JMenuItem("Save", ImageCreator.IMG_SAVE);
 		final JMenuItem saveAs = new JMenuItem("Save as...");
 		final JMenuItem exit = new JMenuItem("Exit", ImageCreator.IMG_EXIT);
@@ -134,6 +136,9 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		openLocation.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
+		clearOutput.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+
 		save.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
@@ -145,6 +150,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		file.add(close);
 		file.addSeparator();
 		file.add(openLocation);
+		file.add(clearOutput);
+		file.add(clearFuzzers);
 		file.addSeparator();
 		file.add(save);
 		file.add(saveAs);
@@ -483,6 +490,81 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 			}
 		});
+		
+		
+		// File -> Clear Output
+		clearOutput.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				fuzzing.setSelected(true);
+				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
+
+				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
+
+					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+							"Fuzzing Session Running. Stop Fuzzing?",
+							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
+
+					if (choice == JOptionPane.YES_OPTION) {
+						int c = getFrame().getTp().getSelectedIndex();
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+								.getComponent(c);
+						p.stop();
+
+						mFrameWindow.getPanelFuzzing().clearOutputTable();
+						// Create a new directory to store all data
+						mFrameWindow.getJBroFuzz().getHandler()
+								.createNewDirectory();
+					}
+
+				} else {
+
+					mFrameWindow.getPanelFuzzing().clearOutputTable();
+					// Create a new directory to store all data
+					mFrameWindow.getJBroFuzz().getHandler()
+							.createNewDirectory();
+
+				}
+
+			}
+
+		});
+
+		// File -> Clear Fuzzers
+		clearFuzzers.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				fuzzing.setSelected(true);
+				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
+
+				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
+
+					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+							"Fuzzing Session Running. Stop Fuzzing?",
+							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
+
+					if (choice == JOptionPane.YES_OPTION) {
+						int c = getFrame().getTp().getSelectedIndex();
+						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+								.getComponent(c);
+						p.stop();
+
+						mFrameWindow.getPanelFuzzing().clearFuzzersTable();
+						
+					}
+
+				} else {
+
+					mFrameWindow.getPanelFuzzing().clearFuzzersTable();
+
+				}
+
+			}
+
+		});
+
 
 		// File -> Save
 		save.addActionListener(new ActionListener() {
