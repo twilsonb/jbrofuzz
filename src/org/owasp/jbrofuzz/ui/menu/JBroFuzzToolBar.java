@@ -53,19 +53,16 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.8
  * @since 1.2
  */
 public class JBroFuzzToolBar extends JToolBar {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8897142041231978024L;
 
 	private final JBroFuzzWindow mFrameWindow;
 
-	private final JButton start, stop, graph, add, remove, help, about,
+	private final JButton start, pause, stop, add, remove, help, about,
 			website;
 
 	/**
@@ -86,10 +83,10 @@ public class JBroFuzzToolBar extends JToolBar {
 
 		start = new JButton(ImageCreator.IMG_START);
 		start.setToolTipText("Start");
+		pause = new JButton(ImageCreator.IMG_PAUSE);
+		pause.setToolTipText("Pause");
 		stop = new JButton(ImageCreator.IMG_STOP);
 		stop.setToolTipText("Stop");
-		graph = new JButton(ImageCreator.IMG_GRAPH);
-		graph.setToolTipText("Graphing Panel");
 		add = new JButton(ImageCreator.IMG_ADD);
 		add.setToolTipText("Add");
 		remove = new JButton(ImageCreator.IMG_REMOVE);
@@ -103,9 +100,9 @@ public class JBroFuzzToolBar extends JToolBar {
 
 		this.addSeparator(new Dimension(13, 0));
 		add(start);
+		add(pause);
 		add(stop);
-		this.addSeparator(new Dimension(6, 0));
-		add(graph);
+		// this.addSeparator(new Dimension(6, 0));
 		this.addSeparator(new Dimension(13, 0));
 		add(add);
 		add(remove);
@@ -159,7 +156,7 @@ public class JBroFuzzToolBar extends JToolBar {
 			}
 		});
 
-		graph.addActionListener(new ActionListener() {
+		pause.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -285,7 +282,7 @@ public class JBroFuzzToolBar extends JToolBar {
 		if (b.length == 5) {
 			start.setEnabled(b[0]);
 			stop.setEnabled(b[1]);
-			graph.setEnabled(b[2]);
+			pause.setEnabled(b[2]);
 			add.setEnabled(b[3]);
 			remove.setEnabled(b[4]);
 		}

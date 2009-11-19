@@ -529,10 +529,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * @param point3
 	 * @param point4
 	 */
-	public void addFuzzer(String name, String type, String id, int point1,
-			int point2, int point3, int point4) {
+	public void addFuzzer(String name, String encoding, String type, String id,
+			int point1, int point2, int point3, int point4) {
 
-		mFuzzingTableModel.addRow( name,  type,  id,  point1,
+		mFuzzingTableModel.addRow( name,  encoding, type,  id,  point1,
 				 point2,  point3,  point4);
 
 	}
@@ -542,7 +542,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		String name = getFrame().getJBroFuzz().getDatabase().getName(id);
 		String type = getFrame().getJBroFuzz().getDatabase().getType(id);
 		
-		mFuzzingTableModel.addRow(name,  type,  id,  point1,
+		mFuzzingTableModel.addRow(name,  "ASCII", type,  id,  point1,
 				 point2,  0,  0);
 
 	}

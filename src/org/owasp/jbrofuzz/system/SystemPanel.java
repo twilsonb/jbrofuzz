@@ -57,9 +57,11 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.8
  */
 public class SystemPanel extends JBroFuzzPanel {
+
+	private static final long serialVersionUID = 6122485751450521994L;
 
 	private JTextPane listTextArea;
 
