@@ -74,7 +74,8 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.5
+ * @version 1.8
+ * @since 0.1
  */
 public class JBroFuzzMenuBar extends JMenuBar {
 
@@ -84,7 +85,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 	// The menu items
 	private final JMenu file, edit, view, panel, options, help;
 	// Used under the Panel JMenu as items
-	private JMenuItem showAll, hideAll, start, graph, stop, add, remove;
+	private JMenuItem showAll, hideAll, start, pause, stop, add, remove;
 	// Used under the view JMenu as items
 	private JCheckBoxMenuItem graphing, fuzzing, headers, payloads, system;
 
@@ -112,16 +113,16 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		this.add(help);
 
 		// File
-		final JMenuItem newFile = new JMenuItem("New");
-		final JMenuItem open = new JMenuItem("Open File...");
+		final JMenuItem newFile = new JMenuItem("New", ImageCreator.IMG_NEW);
+		final JMenuItem open = new JMenuItem("Open File...", ImageCreator.IMG_OPEN);
 		final JMenuItem close = new JMenuItem("Close");
 
 		final JMenuItem openLocation = new JMenuItem("Open Location...");
-		final JMenuItem clearOutput = new JMenuItem("Clear Output");
-		final JMenuItem clearFuzzers = new JMenuItem("Clear Fuzzers");
+		final JMenuItem clearOutput = new JMenuItem("Clear Output", ImageCreator.IMG_CLEAR);
+		final JMenuItem clearFuzzers = new JMenuItem("Clear Fuzzers", ImageCreator.IMG_CLEAR);
 		
 		final JMenuItem save = new JMenuItem("Save", ImageCreator.IMG_SAVE);
-		final JMenuItem saveAs = new JMenuItem("Save as...");
+		final JMenuItem saveAs = new JMenuItem("Save as...", ImageCreator.IMG_SAVE_AS);
 		final JMenuItem exit = new JMenuItem("Exit", ImageCreator.IMG_EXIT);
 
 		newFile.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit
@@ -186,6 +187,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		// View
 		final JMenu showHide = new JMenu("Show/Hide");
+		showHide.setIcon(ImageCreator.IMG_SHOW_HIDE);
 
 		graphing = new JCheckBoxMenuItem("Graphing", true);
 		fuzzing = new JCheckBoxMenuItem("Fuzzing", true);
@@ -193,7 +195,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		payloads = new JCheckBoxMenuItem("Payloads", false);
 		system = new JCheckBoxMenuItem("System", false);
 
-		showAll = new JMenuItem("Show All");
+		showAll = new JMenuItem("Show All", ImageCreator.IMG_SHOW_ALL);
 		hideAll = new JMenuItem("Hide All");
 
 		showHide.add(fuzzing);
@@ -286,7 +288,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		// Panel
 		start = new JMenuItem("Start", ImageCreator.IMG_START);
-		graph = new JMenuItem("Graphing Panel", ImageCreator.IMG_GRAPH);
+		pause = new JMenuItem("Pause", ImageCreator.IMG_PAUSE);
 		stop = new JMenuItem("Stop", ImageCreator.IMG_STOP);
 		add = new JMenuItem("Add", ImageCreator.IMG_ADD);
 		remove = new JMenuItem("Remove", ImageCreator.IMG_REMOVE);
@@ -295,7 +297,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 		remove.setAccelerator(KeyStroke.getKeyStroke('-', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-		graph.setAccelerator(KeyStroke.getKeyStroke('G', Toolkit
+		pause.setAccelerator(KeyStroke.getKeyStroke('J', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 		start.setAccelerator(KeyStroke.getKeyStroke('\n', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
@@ -303,9 +305,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
 		panel.add(start);
+		panel.add(pause);
 		panel.add(stop);
-		panel.addSeparator();
-		panel.add(graph);
 		panel.addSeparator();
 		panel.add(add);
 		panel.add(remove);
@@ -831,7 +832,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			}
 		});
 
-		graph.addActionListener(new ActionListener() {
+		pause.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -1012,7 +1013,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			start.setEnabled(b[0]);
 			stop.setEnabled(b[1]);
 
-			graph.setEnabled(b[2]);
+			pause.setEnabled(b[2]);
 
 			add.setEnabled(b[3]);
 			remove.setEnabled(b[4]);

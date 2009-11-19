@@ -68,7 +68,7 @@ public class FileSystemTree extends JTree implements MouseListener {
 		final JMenuItem i4_select = new JMenuItem("Select All");
 		final JMenuItem i5_open = new JMenuItem("Open in Browser");
 
-		i0_graph.setIcon(ImageCreator.IMG_GRAPH);
+		i0_graph.setIcon(ImageCreator.IMG_PAUSE);
 		i5_open.setIcon(ImageCreator.IMG_OPENINBROWSER);
 
 		i0_graph.setEnabled(true);

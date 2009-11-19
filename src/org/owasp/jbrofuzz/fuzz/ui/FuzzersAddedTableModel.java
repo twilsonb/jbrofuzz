@@ -45,6 +45,8 @@ import javax.swing.table.AbstractTableModel;
  */
 public class FuzzersAddedTableModel extends AbstractTableModel {
 
+	private static final long serialVersionUID = -2073798761991443962L;
+	
 	// The names of the columns within the table of generators
 	private static final String[] COLUMNNAMES = 
 		{ "Name", "Encoding", "Type", "ID", 
