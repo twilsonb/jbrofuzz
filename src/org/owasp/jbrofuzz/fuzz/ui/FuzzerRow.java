@@ -45,7 +45,7 @@ public class FuzzerRow {
 	// The encoding of the fuzzer
 	private String encoding;
 	// The fuzzer type, e.g. Replacive, Recursive, Double Fuzzer, Zero Fuzzer, Cross Product Fuzzer, Power Fuzzer
-	private String type;
+	// private String type;
 	// The fuzzer id, e.g. LDP-INJ
 	private String id;
 	// The fuzzer entry start point
@@ -53,9 +53,9 @@ public class FuzzerRow {
 	// The fuzzer end point
 	private int point2;
 	// For double fuzzers, cross product fuzzers, the 2nd start point
-	private int point3;
+	// private int point3;
 	// For double fuzzers, cross product fuzzers, the 2nd end point
-	private int point4;
+	// private int point4;
 	
 	/**
 	 * <p>The main constructor for each Fuzzer Row.</p>
@@ -68,16 +68,16 @@ public class FuzzerRow {
 	 * @param point3 The fuzzer second start point (if e.g. Double Fuzzer)
 	 * @param point4 The fuzzer second end point (if e.g. Double Fuzzer)
 	 */
-	public FuzzerRow(String name, String encoding, String type, String id, int point1,
-			int point2, int point3, int point4) {
-		this.name = name;
+	public FuzzerRow(String id, String encoding, int point1,
+			int point2) {
+		// this.name = name;
 		this.encoding = encoding;
-		this.type = type;
+		// this.type = type;
 		this.id = id;
 		this.point1 = point1;
 		this.point2 = point2;
-		this.point3 = point3;
-		this.point4 = point4;
+//		this.point3 = point3;
+//		this.point4 = point4;
 	}
 
 	/**
@@ -93,16 +93,15 @@ public class FuzzerRow {
 	 * @param point1 The fuzzer start point
 	 * @param point2 The fuzzer end point
 	 */
-	public FuzzerRow(String name, String type, String id, int point1,
-			int point2) {
+	public FuzzerRow(String id, int point1, int point2) {
 		this.name = name;
 		this.encoding = "ASCII";
-		this.type = type;
+		// this.type = type;
 		this.id = id;
 		this.point1 = point1;
 		this.point2 = point2;
-		this.point3 = 0;
-		this.point4 = 0;
+//		this.point3 = 0;
+//		this.point4 = 0;
 	}
 
 	/**
@@ -136,16 +135,16 @@ public class FuzzerRow {
 	/**
 	 * @return the type
 	 */
-	public String getType() {
-		return type;
-	}
+//	public String getType() {
+//		return type;
+//	}
 
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+//	public void setType(String type) {
+//		this.type = type;
+//	}
 
 	/**
 	 * @return the id
@@ -192,30 +191,30 @@ public class FuzzerRow {
 	/**
 	 * @return the point3
 	 */
-	public int getPoint3() {
-		return point3;
-	}
+//	public int getPoint3() {
+//		return point3;
+//	}
 
 	/**
 	 * @param point3 the point3 to set
 	 */
-	public void setPoint3(int point3) {
-		this.point3 = point3;
-	}
+//	public void setPoint3(int point3) {
+//		this.point3 = point3;
+//	}
 
 	/**
 	 * @return the point4
 	 */
-	public int getPoint4() {
-		return point4;
-	}
+//	public int getPoint4() {
+//		return point4;
+//	}
 
 	/**
 	 * @param point4 the point4 to set
 	 */
-	public void setPoint4(int point4) {
-		this.point4 = point4;
-	}
+//	public void setPoint4(int point4) {
+//		this.point4 = point4;
+//	}
 	
 	
 }
