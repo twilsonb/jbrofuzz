@@ -390,6 +390,48 @@ public class Prototype {
 		}
 		return false;
 	}
+	
+	/**
+	 * <p>Method to confirm if a fuzzer type specified in the 
+	 * form of a single character, is valid.</p>
+	 * 
+	 * @param inputType The fuzzer type character e.g. 'Z' for
+	 * a Zero Fuzzer.
+	 * @return true if the fuzzer type exists, else false.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.8
+	 * @since 1.8
+	 */
+	public static boolean isValidFuzzerType(final char inputType) {
+		
+		// Replacive Fuzzer Type
+		if (inputType == 'P') {
+			return true;
+		}
+		// Recursive Fuzzer Type
+		if (inputType == 'R') {
+			return true;
+		}
+		// Zero Fuzzer Type
+		if (inputType == 'Z') {
+			return true;
+		}
+		// Double Fuzzer Type
+		if (inputType == 'D') {
+			return true;
+		}
+		// Cross Product Fuzzer Type
+		if (inputType == 'X') {
+			return true;
+		}
+		// Power Fuzzer Type
+		if (inputType == 'P') {
+			return true;
+		}
+		
+		return false;
+	}
 
 	/**
 	 * <p>

@@ -29,7 +29,6 @@
  */
 package org.owasp.jbrofuzz.core;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
@@ -44,7 +43,7 @@ import org.apache.commons.lang.StringUtils;
  * 
  * 
  * @author subere@uncon.org
- * @version 1.5
+ * @version 1.8
  * @since 1.2
  */
 public class Fuzzer implements Iterator<String> {
@@ -55,7 +54,7 @@ public class Fuzzer implements Iterator<String> {
 
 	private ArrayList<String> payloads;
 
-	private BigInteger cValue, maxValue;
+	private long cValue, maxValue;
 
 	/**
 	 * <p>This constructor is available through the factory method, createFuzzer(), 
@@ -72,7 +71,7 @@ public class Fuzzer implements Iterator<String> {
 	 * @throws NoSuchFuzzerException
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.5
+	 * @version 1.8
 	 * @since 1.2
 	 */
 	protected Fuzzer(Prototype prototype, int len) throws NoSuchFuzzerException {
@@ -84,20 +83,19 @@ public class Fuzzer implements Iterator<String> {
 			payloads = this.prototype.getPayloads();
 
 			if (this.prototype.isRecursive()) {
-
-				maxValue = new BigInteger("" + payloads.size());
-				maxValue = maxValue.pow(len < 0 ? 0 : len);
+				
+				maxValue = Fuzzer.pow(payloads.size(), len);
 
 			} else {
-				maxValue = new BigInteger("" + payloads.size());
+				maxValue = payloads.size();
 
 			}
 
 		} else {
-			maxValue = new BigInteger("0");
+			maxValue = 0L;
 		}
 
-		cValue = new BigInteger("0");
+		cValue = 0L;
 		this.len = len;
 
 	}
@@ -116,17 +114,17 @@ public class Fuzzer implements Iterator<String> {
 	 * @return as String, the numeric value, e.g. '1048576'
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.5
+	 * @version 1.8
 	 * @since 1.2
 	 */
-	public String getCurrectValue() {
+	public long getCurrectValue() {
 
-		return cValue.toString();
+		return cValue;
 
 	}
 
 	/**
-	 * <p>Returns the Fuzzer unique ID, in the format of, say, 'XSS-101'.</p>
+	 * <p>Returns the Fuzzer unique ID, in the format of, say, '024-XSS-101'.</p>
 	 * 
 	 * <p>This is also the unique ID used by the Prototype and the Database.</p>
 	 * 
@@ -152,12 +150,12 @@ public class Fuzzer implements Iterator<String> {
 	 * @return as String, the numeric value, e.g. '1048576'
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.5
+	 * @version 1.8
 	 * @since 1.2
 	 */
-	public String getMaximumValue() {
+	public long getMaximumValue() {
 
-		return maxValue.toString();
+		return maxValue;
 
 	}
 
@@ -178,7 +176,7 @@ public class Fuzzer implements Iterator<String> {
 
 	public boolean hasNext() {
 
-		if (cValue.compareTo(maxValue) < 0) {
+		if (cValue < maxValue) {
 			return true;
 		} else {
 			return false;
@@ -188,49 +186,69 @@ public class Fuzzer implements Iterator<String> {
 
 	public String next() {
 
-		StringBuffer output = new StringBuffer("");
-
 		// Replacive Prototype
-		if (maxValue.compareTo(new BigInteger("" + payloads.size())) == 0) {
+		if (maxValue == payloads.size()) {
 
-			output.append(payloads.get(cValue.intValue()));
-			cValue = cValue.add(new BigInteger("1"));
+			cValue++;
+			return payloads.get((int) cValue - 1);
 
 		}
 		// Recursive Prototype
 		else {
 
-			BigInteger val = cValue;
-			// Perform division on a stack
-			Stack<BigInteger> stack = new Stack<BigInteger>();
-			while (val.compareTo(new BigInteger("" + payloads.size())) >= 0) {
+			StringBuffer output = new StringBuffer("");
 
-				stack.push(new BigInteger(""
-						+ (val.mod(new BigInteger("" + payloads.size())))));
-				val = val.divide(new BigInteger("" + payloads.size()));
+			long val = cValue;
+			// Perform division on a stack
+			Stack<Integer> stack = new Stack<Integer>();
+			
+			while (val >= payloads.size()) {
+
+				stack.push( new Integer((int) val % payloads.size()) );
+				
+				val = val / payloads.size();
 
 			}
 			// Append the relevant empty positions with the first element
 			// identified
-			output.append(StringUtils.leftPad(payloads.get((val.intValue())),
+			output.append(StringUtils.leftPad(payloads.get((int)val),
 					len - stack.size(), payloads.get(0)));
 			while (!stack.isEmpty())
 				output.append(payloads.get((stack.pop()).intValue()));
 
-			cValue = cValue.add(new BigInteger("1"));
+			cValue++;
+			return output.toString();
 
 		}
 
-		return output.toString();
 
 	}
 
 	public void remove() {
+		cValue--;
+	}
 
-		// No subtraction needed for fuzzing, 
-		// just skip a value :)
-		cValue = cValue.add(new BigInteger("1"));
+	/**
+	 * <p>Static method calculating the result of: x^y</p>
+	 * <p>If x^y > Long.MAX_VALUE return 0.</p>
+	 * 
+	 * @param x The base
+	 * @param y The power
+	 * @return x^y as a long value
+	 */
+	private static long pow(int x, int y) {
 
+		long b=((long)y)&0x00000000ffffffffL;
+		long result = 1L;
+		long powerN=x;
+		
+		while(b!=0){
+			if((b&1)!=0) result*=powerN;
+			b>>>=1;
+			powerN=powerN*powerN;
+		}
+
+		return result;
 	}
 
 }

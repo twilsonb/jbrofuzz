@@ -101,11 +101,11 @@ public class Database {
 		loadFile();
 		
 		// Add the Zero Fuzzers
-		Prototype pt0 = new Prototype('Z', "ZERO-10000", "10000 Plain Requests");
-		Prototype pt1 = new Prototype('Z', "ZERO-1000", "1000 Plain Requests");
-		Prototype pt2 = new Prototype('Z', "ZERO-100", "100 Plain Requests");
-		Prototype pt3 = new Prototype('Z', "ZERO-10", "10 Plain Requests");
-		Prototype pt4 = new Prototype('Z', "ZERO-1", "1 Plain Request");
+		Prototype pt0 = new Prototype('Z', "999-ZER-10K", "10000 Plain Requests");
+		Prototype pt1 = new Prototype('Z', "999-ZER-1KI", "1000 Plain Requests");
+		Prototype pt2 = new Prototype('Z', "999-ZER-100", "100 Plain Requests");
+		Prototype pt3 = new Prototype('Z', "999-ZER-TEN", "10 Plain Requests");
+		Prototype pt4 = new Prototype('Z', "999-ZER-ONE", "1 Plain Request");
 
 		final String zeroFuzzerName = "Zero Fuzzers";
 		
@@ -133,11 +133,11 @@ public class Database {
 			}
 		}
 		
-		prototypes.put("ZERO-10000", pt0);
-		prototypes.put("ZERO-1000", pt1);
-		prototypes.put("ZERO-100", pt2);
-		prototypes.put("ZERO-10", pt3);
-		prototypes.put("ZERO-1", pt4);
+		prototypes.put("999-ZER-10K", pt0);
+		prototypes.put("999-ZER-1KI", pt1);
+		prototypes.put("999-ZER-100", pt2);
+		prototypes.put("999-ZER-TEN", pt3);
+		prototypes.put("999-ZER-ONE", pt4);
 		
 	}
 
@@ -146,12 +146,12 @@ public class Database {
 	 * Checks if the {@link #Database()} contains a Prototype with the given id
 	 * 
 	 * @param prototypeId
-	 *            e.g HTT-PMT-EDS, INT-LOW, or SQL-INJ
+	 *            e.g 001-HTT-MTH or 032-SQL-INJ
 	 * 
 	 * @return true if a Prototype with that prototypeId exists
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.5
+	 * @version 1.8
 	 * @since 1.2
 	 */
 	public boolean containsPrototype(String prototypeId) {
@@ -167,7 +167,7 @@ public class Database {
 	 * </p>
 	 * 
 	 * @param prototypeId
-	 *            prototypeId e.g HTT-PMT-EDS, INT-LOW, or SQL-INJ
+	 *            prototypeId e.g 001-HTT-MTH or 032-SQL-INJ
 	 * @param len
 	 *            The length of the fuzzer, used for recursive fuzzers
 	 * @return org.owasp.jbrofuzz.core#Fuzzer()
@@ -176,7 +176,7 @@ public class Database {
 	 * @see #containsPrototype(String)
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.8
 	 * @since 1.2
 	 */
 	public Fuzzer createFuzzer(String prototypeId, int len)
@@ -192,7 +192,7 @@ public class Database {
 
 		return new Fuzzer(getPrototype(prototypeId), len);
 	}
-
+	
 	/**
 	 * <p>Return all the unique categories found across prototypes that are loaded
 	 * into the database.</p>
@@ -235,7 +235,7 @@ public class Database {
 	/**
 	 * <p>Get all the unique Prototype IDs that are loaded in the database.</p>
 	 * 
-	 * @return String[] e.g. ["FSE-UPP", "HTT-PMT-EDS", ...]
+	 * @return String[] e.g. ["001-HTT-MTH", "032-SQL-INJ", ...]
 	 * 
 	 * @see #getAllFuzzerIDs()
 	 * 
@@ -332,7 +332,7 @@ public class Database {
 	 * </p>
 	 * 
 	 * @param id
-	 *            e.g. "HTT-PMT-EDS"
+	 *            e.g. "001-HTT-MTH"
 	 * @return String e.g. "Uppercase HTTP Methods"
 	 * 
 	 * @see #getIdFromName(String)
@@ -353,7 +353,7 @@ public class Database {
 	 * </p>
 	 * 
 	 * @param id
-	 *            e.g. "HTT-PMT-EDS"
+	 *            e.g. "001-HTT-MTH"
 	 * @return String[] or String[0] if the prototype does not exist in the
 	 *         database
 	 * 
@@ -381,7 +381,7 @@ public class Database {
 	 * </p>
 	 * 
 	 * @param prototypeId
-	 *            e.g. "HTT-PMT-EDS"
+	 *            e.g. "001-HTT-MTH"
 	 * @return Prototype The Prototype for the given prototypeID
 	 * 
 	 * @author subere@uncon.org
@@ -433,7 +433,7 @@ public class Database {
 	 * </p>
 	 * 
 	 * @param id
-	 *            e.g. "SQL-INJ"
+	 *            e.g. "001-HTT-MTH"
 	 * @return int value of size, 0 if Id does not exist.
 	 * 
 	 * @see #getPayloads(String)
@@ -538,17 +538,16 @@ public class Database {
 				if (fileInput[i].charAt(1) != ':') {
 					continue;
 				}
-				if ((fileInput[i].charAt(9) != ':')) {
-					if (fileInput[i].charAt(13) != ':') {
-						continue;
-					}
+				if (fileInput[i].charAt(13) != ':') {
+					continue;
 				}
+				
 			} catch (IndexOutOfBoundsException e1) {
 				continue;
 			}
 
 			// [0] -> P || R || X
-			// [1] -> HTT-PMT-EDS
+			// [1] -> "001-HTT-MTH"
 			// [2] -> Uppercase HTTP Methods
 			// [3] -> 8
 			final String[] _fla = fileInput[i].split(":");
@@ -558,13 +557,13 @@ public class Database {
 				continue;
 			}
 
-			// Check [0] -> P || R
-			if (!"P".equals(_fla[0])) {
-				if (!"R".equals(_fla[0])) {
-					continue;
-				}
+			final char inputTypeChar = _fla[0].charAt(0);
+			
+			// Check [0] -> Fuzzer Type 'Z' or 'P', etc..
+			if(!Prototype.isValidFuzzerType(inputTypeChar)) {
+				continue;
 			}
-
+			
 			// The Id: SQL-INJ cannot be empty
 			if (_fla[1].isEmpty()) {
 				continue;
@@ -582,7 +581,6 @@ public class Database {
 
 			int noPayloads = 0;
 			try {
-
 				noPayloads = Integer.parseInt(_fla[3]);
 
 			} catch (final NumberFormatException e) {
@@ -628,8 +626,8 @@ public class Database {
 			}
 
 			// Alas! Finally create a prototype
-			final Prototype proto = new Prototype(_fla[0].charAt(0), _fla[1],
-					_fla[2]);
+			final Prototype proto = 
+				new Prototype(inputTypeChar, _fla[1], _fla[2]);
 
 			// If categories do exist in the second line
 			if (_sla.length > 0) {
