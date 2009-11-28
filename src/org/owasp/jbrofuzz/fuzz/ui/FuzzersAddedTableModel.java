@@ -49,8 +49,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	
 	// The names of the columns within the table of generators
 	private static final String[] COLUMNNAMES = 
-		{ "Name", "Encoding", "Type", "ID", 
-		  "1st Start", "1st End", "2nd Start", "2nd End"
+		{ "Fuzzer ID", "Encoding", "Start", "End"
 		};
 	// The vector of data
 	private Vector<FuzzerRow> dataVector;
@@ -73,10 +72,9 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * <p>Add a fuzzer row to the table</p>
 	 */
 	public void addRow(String name, String encoding, String type, String id, int point1,
-			int point2, int point3, int point4) {
+			int point2) {
 		
-		dataVector.add(new FuzzerRow(name, encoding, type, id, point1, point2, 
-				point3, point4));
+		dataVector.add(new FuzzerRow(id, encoding, point1, point2));
 		
 		dataVector.trimToSize();
 		fireTableRowsInserted(dataVector.size(), dataVector.size());
@@ -138,21 +136,17 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 		final FuzzerRow record = dataVector.get(row);
 		switch (column) {
 		case 0:
-			return record.getName();
+			return record.getId();
 		case 1:
 			return record.getEncoding();
 		case 2:
-			return record.getType();
-		case 3:
-			return record.getId();
-		case 4:
 			return Integer.valueOf(record.getPoint1());
-		case 5:
+		case 3:
 			return Integer.valueOf(record.getPoint2());
-		case 6:
-			return Integer.valueOf(record.getPoint3());
-		case 7:
-			return Integer.valueOf(record.getPoint4());
+//		case 6:
+//			return Integer.valueOf(record.getPoint3());
+//		case 7:
+//			return Integer.valueOf(record.getPoint4());
 		default:
 			return null;
 		}
@@ -201,21 +195,17 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 
 		switch (column) {
 		case 0:
-			record.setName((String) value);
+			record.setId((String) value);
 		case 1:
 			record.setEncoding((String) value);
 		case 2:
-			record.setType((String) value);
-		case 3:
-			record.setId((String) value);
-		case 4:
 			record.setPoint1(((Integer) value).intValue());
-		case 5:
+		case 3:
 			record.setPoint2(((Integer) value).intValue());
-		case 6:
-			record.setPoint3(((Integer) value).intValue());
-		case 7:
-			record.setPoint4(((Integer) value).intValue());
+//		case 6:
+//			record.setPoint3(((Integer) value).intValue());
+//		case 7:
+//			record.setPoint4(((Integer) value).intValue());
 		}
 
 		fireTableCellUpdated(row, column);

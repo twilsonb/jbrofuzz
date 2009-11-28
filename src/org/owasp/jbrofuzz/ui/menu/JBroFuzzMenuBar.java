@@ -118,8 +118,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final JMenuItem close = new JMenuItem("Close");
 
 		final JMenuItem openLocation = new JMenuItem("Open Location...");
-		final JMenuItem clearOutput = new JMenuItem("Clear Output", ImageCreator.IMG_CLEAR);
-		final JMenuItem clearFuzzers = new JMenuItem("Clear Fuzzers", ImageCreator.IMG_CLEAR);
+		final JMenuItem clearOutput = new JMenuItem("Clear All Output", ImageCreator.IMG_CLEAR);
+		final JMenuItem clearFuzzers = new JMenuItem("Clear All Fuzzers", ImageCreator.IMG_CLEAR);
 		
 		final JMenuItem save = new JMenuItem("Save", ImageCreator.IMG_SAVE);
 		final JMenuItem saveAs = new JMenuItem("Save as...", ImageCreator.IMG_SAVE_AS);

@@ -253,7 +253,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		});
 
 		// Right click: Cut, Copy, Paste, Select All
-		popupTargetText(request_textPane);
+		RightClickPopups.rightClickRequestTextComponent(this, request_textPane);
 
 		// The message scroll pane where the message pane sits
 		final JScrollPane requestScrollPane = new JScrollPane(request_textPane,
@@ -282,14 +282,15 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		TableColumn column = null;
 		for (int i = 0; i < mFuzzingTableModel.getColumnCount(); i++) {
 			column = fuzzersTable.getColumnModel().getColumn(i);
-			if (i == 0) {
-				column.setPreferredWidth(100);
+			if (i == 0 || i == 1) {
+				column.setPreferredWidth(40);
 			} else {
-				column.setPreferredWidth(50);
+				column.setPreferredWidth(20);
 			}
 		}
 		fuzzersTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
-
+		RightClickPopups.rightClickFuzzersTable(this, fuzzersTable);
+		
 		final JScrollPane fuzzersScrollPane = new JScrollPane(fuzzersTable);
 		fuzzersScrollPane.setVerticalScrollBarPolicy(20);
 
@@ -532,8 +533,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	public void addFuzzer(String name, String encoding, String type, String id,
 			int point1, int point2, int point3, int point4) {
 
-		mFuzzingTableModel.addRow( name,  encoding, type,  id,  point1,
-				 point2,  point3,  point4);
+		mFuzzingTableModel.addRow( id,  encoding, type,  id,  point1,
+				 point2);
 
 	}
 	
@@ -542,8 +543,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		String name = getFrame().getJBroFuzz().getDatabase().getName(id);
 		String type = getFrame().getJBroFuzz().getDatabase().getType(id);
 		
-		mFuzzingTableModel.addRow(name,  "ASCII", type,  id,  point1,
-				 point2,  0,  0);
+		mFuzzingTableModel.addRow(id,  "ASCII", type,  id,  point1,
+				 point2);
 
 	}
 
@@ -877,10 +878,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 			} else {
 
-				category = (String) mFuzzingTableModel.getValueAt(i, 3);
-				start = ((Integer) mFuzzingTableModel.getValueAt(i, 4))
+				category = (String) mFuzzingTableModel.getValueAt(i, 0);
+				start = ((Integer) mFuzzingTableModel.getValueAt(i, 2))
 						.intValue();
-				end = ((Integer) mFuzzingTableModel.getValueAt(i, 5))
+				end = ((Integer) mFuzzingTableModel.getValueAt(i, 3))
 						.intValue();
 
 			}
