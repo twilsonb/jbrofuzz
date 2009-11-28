@@ -869,18 +869,18 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			int start;
 			int end;
 			// If no fuzzers have been added, send a single plain request
-			if (fuzzers_added == 0) {
+			if (fuzzers_added < 1) {
 
-				category = "ZERO-1";
+				category = "999-ZER-ONE";
 				start = 0;
 				end = 0;
 
 			} else {
 
-				category = (String) mFuzzingTableModel.getValueAt(i, 0);
-				start = ((Integer) mFuzzingTableModel.getValueAt(i, 1))
+				category = (String) mFuzzingTableModel.getValueAt(i, 3);
+				start = ((Integer) mFuzzingTableModel.getValueAt(i, 4))
 						.intValue();
-				end = ((Integer) mFuzzingTableModel.getValueAt(i, 2))
+				end = ((Integer) mFuzzingTableModel.getValueAt(i, 5))
 						.intValue();
 
 			}
