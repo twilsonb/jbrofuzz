@@ -47,16 +47,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableRowSorter;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -66,7 +62,9 @@ import javax.swing.text.StyledEditorKit;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersAddedTableModel;
+import org.owasp.jbrofuzz.fuzz.ui.OutputTable;
 import org.owasp.jbrofuzz.fuzz.ui.ResponseTableModel;
 import org.owasp.jbrofuzz.fuzz.ui.RightClickPopups;
 import org.owasp.jbrofuzz.payloads.PayloadsDialog;
@@ -149,19 +147,19 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	private JTextPane request_textPane;
 
 	// The JTable were results are outputted
-	private JTable outputTable;
+	private OutputTable mOutputTable;
 
 	// And the table model that goes with it
 	private ResponseTableModel outputTableModel;
 
 	// The JTable of the generator
-	private JTable fuzzersTable;
+	private FuzzerTable fuzzersTable;
 
 	// And the table model that goes with it
 	private FuzzersAddedTableModel mFuzzingTableModel;
 
 	// A counter for the number of times fuzz has been clicked
-	private int counter, session;
+	private int counter;
 
 	// The "On The Wire" console
 	private JTextPane onTheWire_textArea;
@@ -190,7 +188,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		this.jbrofuzz_MainFrame = m;
 		counter = 1;
-		session = 0;
 
 		stopped = true;
 		// Set the enabled options: Start, Stop, Graph, Add, Remove
@@ -270,25 +267,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		// The fuzzing table and model
 		mFuzzingTableModel = new FuzzersAddedTableModel();
-		fuzzersTable = new JTable();
-		fuzzersTable.setBackground(Color.BLACK);
-		fuzzersTable.setForeground(Color.WHITE);
-
-		fuzzersTable.setModel(mFuzzingTableModel);
+		fuzzersTable = new FuzzerTable(mFuzzingTableModel);
 		fuzzersTable.getModel().addTableModelListener(
 				new PayloadsModelListener());
 
-		// Set the column widths
-		TableColumn column = null;
-		for (int i = 0; i < mFuzzingTableModel.getColumnCount(); i++) {
-			column = fuzzersTable.getColumnModel().getColumn(i);
-			if (i == 0 || i == 1) {
-				column.setPreferredWidth(40);
-			} else {
-				column.setPreferredWidth(20);
-			}
-		}
-		fuzzersTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		// fuzzersTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		RightClickPopups.rightClickFuzzersTable(this, fuzzersTable);
 		
 		final JScrollPane fuzzersScrollPane = new JScrollPane(fuzzersTable);
@@ -331,63 +314,23 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		outputTableModel = new ResponseTableModel();
+		mOutputTable = new OutputTable(outputTableModel);
+		RightClickPopups.rightClickOutputTable(this, mOutputTable);
 
-		outputTable = new JTable(outputTableModel);
-
-		TableRowSorter<ResponseTableModel> sorter = new TableRowSorter<ResponseTableModel>(
-				outputTableModel);
-		outputTable.setRowSorter(sorter);
-
-		outputTable.setBackground(Color.white);
-		RightClickPopups.rightClickOutputTable(this, outputTable);
-
-		outputTable.setColumnSelectionAllowed(false);
-		outputTable.setRowSelectionAllowed(true);
-
-		outputTable.setFont(new Font("Monospaced", Font.BOLD, 12));
-		outputTable.setBackground(Color.BLACK);
-		outputTable.setForeground(Color.WHITE);
-		outputTable.setSurrendersFocusOnKeystroke(true);
-		outputTable
-				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-		// Set the column widths
-		for (int i = 0; i < outputTableModel.getColumnCount(); i++) {
-			column = outputTable.getColumnModel().getColumn(i);
-			if (i == 0) {
-				column.setPreferredWidth(30);
-			}
-			if (i == 1) {
-				column.setPreferredWidth(150);
-			}
-			if (i == 2) {
-				column.setPreferredWidth(120);
-			}
-			if (i == 3) {
-				column.setPreferredWidth(80);
-			}
-			if (i == 4) {
-				column.setPreferredWidth(20);
-			}
-			if (i == 5) {
-				column.setPreferredWidth(60);
-			}
-		}
-
-		outputTable.addMouseListener(new MouseAdapter() {
+		mOutputTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 
-							int c = outputTable.getSelectedRow();
+							int c = mOutputTable.getSelectedRow();
 							try {
-								c = outputTable.convertRowIndexToModel(c);
+								c = mOutputTable.convertRowIndexToModel(c);
 							} catch (IndexOutOfBoundsException e) {
 								return;
 							}
-							final String name = (String) outputTable.getModel()
+							final String name = (String) mOutputTable.getModel()
 							.getValueAt(c, 0);
 
 
@@ -422,7 +365,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			}
 		});
 
-		final JScrollPane outputScrollPane = new JScrollPane(outputTable);
+		final JScrollPane outputScrollPane = new JScrollPane(mOutputTable);
 		outputScrollPane.setVerticalScrollBarPolicy(20);
 		// outputScrollPane.setPreferredSize(new Dimension(840, 130));
 		outputPanel.add(outputScrollPane);
@@ -540,7 +483,6 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	
 	public void addFuzzer(String id, int point1, int point2) {
 
-		String name = getFrame().getJBroFuzz().getDatabase().getName(id);
 		String type = getFrame().getJBroFuzz().getDatabase().getType(id);
 		
 		mFuzzingTableModel.addRow(id,  "ASCII", type,  id,  point1,
@@ -574,11 +516,23 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		while (fuzzersTable.getRowCount() > 0) {
 			mFuzzingTableModel.removeRow(0);
 		}
-		while (outputTable.getRowCount() > 0) {
+		while (mOutputTable.getRowCount() > 0) {
 			outputTableModel.removeRow(0);
 		}
 
 		url_textField.requestFocusInWindow();
+	}
+	
+	/**
+	 * <p>Method for setting the counter value to 1
+	 * again.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.8
+	 * @since 1.8
+	 */
+	public void resetCounter() {
+		counter = 1;
 	}
 	
 	/**
@@ -597,7 +551,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 */
 	public void clearOutputTable() {
 		
-		while(outputTable.getRowCount() > 0) {
+		while(mOutputTable.getRowCount() > 0) {
 			outputTableModel.removeRow(0);
 		}
 		
@@ -636,32 +590,18 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * method is used for generating unique sequential file name and row counts.
 	 * </p>
 	 * 
-	 * @param newCount
-	 *            boolean Increment the counter by 1
+	 * @param newCount boolean Increment the counter by 1
 	 * @return String
 	 */
-	public String getCounter(final boolean newCount) {
-		String s = "";
-		// Integrity checks and loop calls...
-		if ((counter < 0) || (counter > 1000000)) {
+	public String getCounter() {
+
+		// Loop the counter after 1 billion requests
+		if ((counter < 0) || (counter > 1000000000)) {
 			counter = 1;
 		}
-		if ((session < 0) || (session > 100)) {
-			session = 1;
-		}
 
-		// Append zeros to the session [0 - 99]
-		if (session < 10) {
-			s += "0";
-		}
-		s += session + "-";
-
-		s += StringUtils.leftPad("" + counter, 8, '0');
-
-		if (newCount) {
-			counter++;
-		}
-
+		final String s = StringUtils.leftPad("" + counter, 10, '0');
+		counter++;
 		return s;
 	}
 
@@ -851,16 +791,13 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		url_textField.setBackground(Color.BLACK);
 		url_textField.setForeground(Color.WHITE);
 
-		toConsole("\n--> [JBROFUZZ FUZZING START] " + (session + 1) + " -->\n\n");
+		toConsole("\n--> [JBROFUZZ FUZZING START] -->\n\n");
 
 		onTheWire_textArea.setBackground(Color.BLACK);
 		onTheWire_textArea.setForeground(Color.WHITE);
 
 		topRightPanel.setTitleAt(1, " On The Wire ");
 		topRightPanel.setSelectedIndex(1);
-
-		// Update the counter
-		counter = 1;
 
 		final int fuzzers_added = fuzzersTable.getRowCount();
 
@@ -949,8 +886,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 					}
 
-					toConsole("\n--> [JBROFUZZ FUZZING STOP] " + (session + 1) + " -->\n\n");
-					session++;
+					toConsole("\n--> [JBROFUZZ FUZZING STOP] -->\n\n");
 					getFrame().getJBroFuzz().getHandler().writeFuzzFile(
 							outputMessage);
 
