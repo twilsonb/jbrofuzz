@@ -56,7 +56,7 @@ public class MessageWriter {
 		start = new Date();
 		end = start;
 		// Set the filename
-		filename = fuzzingPanel.getCounter(true);
+		filename = fuzzingPanel.getCounter();
 		// Set the text URL
 		textURL = fuzzingPanel.getTextURL();
 		// Set the default status

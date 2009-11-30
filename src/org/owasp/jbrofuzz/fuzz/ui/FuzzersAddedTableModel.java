@@ -46,11 +46,11 @@ import javax.swing.table.AbstractTableModel;
 public class FuzzersAddedTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = -2073798761991443962L;
-	
+
 	// The names of the columns within the table of generators
 	private static final String[] COLUMNNAMES = 
-		{ "Fuzzer ID", "Encoding", "Start", "End"
-		};
+	{ "Fuzzer ID", "Encoding", "Start", "End" };
+	
 	// The vector of data
 	private Vector<FuzzerRow> dataVector;
 	// The panel that the model is attached to
@@ -67,15 +67,15 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	public FuzzersAddedTableModel() {
 		dataVector = new Vector<FuzzerRow>();
 	}
-	
+
 	/**
 	 * <p>Add a fuzzer row to the table</p>
 	 */
 	public void addRow(String name, String encoding, String type, String id, int point1,
 			int point2) {
-		
+
 		dataVector.add(new FuzzerRow(id, encoding, point1, point2));
-		
+
 		dataVector.trimToSize();
 		fireTableRowsInserted(dataVector.size(), dataVector.size());
 	}
@@ -111,9 +111,9 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * @return String
 	 */
 	public String getRow(final int row) {
-		
+
 		return row + " - " + getValueAt(row, 0);
-		
+
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * </p>
 	 */
 	public Object getValueAt(final int row, final int column) {
-		
+
 		final FuzzerRow record = dataVector.get(row);
 		switch (column) {
 		case 0:
@@ -140,13 +140,13 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 		case 1:
 			return record.getEncoding();
 		case 2:
-			return Integer.valueOf(record.getPoint1());
+			return Integer.valueOf(record.getStartPoint());
 		case 3:
-			return Integer.valueOf(record.getPoint2());
-//		case 6:
-//			return Integer.valueOf(record.getPoint3());
-//		case 7:
-//			return Integer.valueOf(record.getPoint4());
+			return Integer.valueOf(record.getEndPoint());
+			//		case 6:
+			//			return Integer.valueOf(record.getPoint3());
+			//		case 7:
+			//			return Integer.valueOf(record.getPoint4());
 		default:
 			return null;
 		}
@@ -157,7 +157,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public boolean isCellEditable(final int row, final int column) {
-		return true;
+		return column == 1;
 	}
 
 	/**
@@ -190,24 +190,23 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
-		
-		final FuzzerRow record = dataVector.get(row);
 
-		switch (column) {
-		case 0:
+		FuzzerRow record = dataVector.get(row);
+		
+		if(column == 0) {
 			record.setId((String) value);
-		case 1:
+		}
+		if(column == 1) {
 			record.setEncoding((String) value);
-		case 2:
-			record.setPoint1(((Integer) value).intValue());
-		case 3:
-			record.setPoint2(((Integer) value).intValue());
-//		case 6:
-//			record.setPoint3(((Integer) value).intValue());
-//		case 7:
-//			record.setPoint4(((Integer) value).intValue());
+		}
+		if(column == 2) {
+			record.setStartPoint(((Integer) value).intValue());
+		}
+		if(column == 3) {
+			record.setEndPoint(((Integer) value).intValue());
 		}
 
 		fireTableCellUpdated(row, column);
 	}
+
 }
