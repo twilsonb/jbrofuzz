@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -85,6 +85,9 @@ public class JBroFuzzToolBar extends JToolBar {
 		start.setToolTipText("Start");
 		pause = new JButton(ImageCreator.IMG_PAUSE);
 		pause.setToolTipText("Pause");
+		
+		pause.setEnabled(false);
+		
 		stop = new JButton(ImageCreator.IMG_STOP);
 		stop.setToolTipText("Stop");
 		add = new JButton(ImageCreator.IMG_ADD);
@@ -161,7 +164,7 @@ public class JBroFuzzToolBar extends JToolBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						getFrame().setTabShow(JBroFuzzWindow.ID_PANEL_GRAPHING);
+						getFrame().log("Pause functionality has not yet being implemented", 2);
 
 					}
 				});

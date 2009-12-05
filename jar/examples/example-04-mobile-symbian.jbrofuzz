@@ -18,5 +18,5 @@ x-wap-profile: "http://nds1.nds.nokia.com/uaprof/NE90-1r100.xml"
 
 
 [Payloads]
-B10-DEC,571,572
+032-B10-DEC,Standard,571,572
 [End]

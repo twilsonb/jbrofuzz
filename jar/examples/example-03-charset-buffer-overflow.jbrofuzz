@@ -1,5 +1,5 @@
 [JBroFuzz]
-1.2
+1.8
 [Fuzzing]
 023 2009-01-23 12-32-04
 [Comment]
@@ -16,5 +16,5 @@ Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
 
 
 [Payloads]
-BFO-UPP,294,298
+041-BFO-EXP,Uppercase,294,298
 [End]

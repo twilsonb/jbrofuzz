@@ -1,6 +1,12 @@
-JBroFuzz is licensed under the GNU General Public License; 
+JBroFuzz is licensed under the GNU General Public License v3; 
 a copy should be included within this distribution; if not 
 you can find it at http://www.gnu.org/licenses/gpl.txt
+
+Most of the icons used within the JBroFuzz are from the 
+Tango Icon Library, part of the Tango Desktop Project. 
+The Tango Desktop Project exists to create a consistent 
+user experience for Open Source software. See:
+http://tango.freedesktop.org for further information.
 
 Some of the XSS generators included and their respective
 payloads come from XSSDB. Many thanks to GNUCITIZEN 

@@ -1,5 +1,5 @@
 [JBroFuzz]
-1.2
+1.8
 [Fuzzing]
 017 2009-01-17 17-52-30
 [Comment]
@@ -16,6 +16,6 @@ Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
 
 
 [Payloads]
-NUM-HEX-LOW,13,14
-B02-BIN,11,12
+032-B10-DEC,Standard,13,14
+034-B02-BIN,Standard,11,12
 [End]

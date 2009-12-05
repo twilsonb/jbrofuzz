@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -41,6 +41,7 @@ import javax.swing.JOptionPane;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
 
@@ -173,10 +174,11 @@ public class OpenSession {
 				boolean fuzzer_happy = true;
 
 				String[] payloadArray = fileInput[i].split(",");
-				// Each line must have 3 elements
-				if (payloadArray.length == 3) {
+				// Each line must have 4 elements
+				if (payloadArray.length == 4) {
 
 					String fuzz_id = payloadArray[0];
+					String encoding_ = payloadArray[1];
 					int start = 0;
 					int end = 0;
 					// The fuzzer id must also exist in the database
@@ -184,11 +186,25 @@ public class OpenSession {
 							fuzz_id)) {
 						fuzzer_happy = false;
 					}
-
+					
+					// Work on the encoding you are reading in
+					boolean encoding_found = false;
+					for (String lamda : FuzzerTable.ENCODINGS) {
+						if(lamda.equalsIgnoreCase(encoding_)) {
+							encoding_found = true;
+						}
+					}
+										
+					// Set the default encoding, the first one
+					if(!encoding_found) {
+						encoding_ = FuzzerTable.ENCODINGS[0];
+					}
+					
+					
 					// The start and end integers should be happy
 					try {
-						start = Integer.parseInt(payloadArray[1]);
-						end = Integer.parseInt(payloadArray[2]);
+						start = Integer.parseInt(payloadArray[2]);
+						end = Integer.parseInt(payloadArray[3]);
 						// Numbers must be positive
 						if ((start < 0) || (end < 0)) {
 							fuzzer_happy = false;
@@ -207,7 +223,7 @@ public class OpenSession {
 								+ fileInput[i], 3);
 					} else {
 						
-						mWindow.getPanelFuzzing().addFuzzer(fuzz_id, start, end);
+						mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_, start, end);
 						
 					}
 				}

@@ -1,5 +1,5 @@
 [JBroFuzz]
-1.2
+1.8
 [Fuzzing]
 023 2009-01-23 12-32-04
 [Comment]
@@ -20,7 +20,7 @@ Connection: Keep-Alive
 
 [Payloads]
 NUM-HEX-LOW,318,320
-B10-DEC,314,317
-B64-RFC,312,313
-INT-UPP,310,311
+032-B10-DEC,Standard,314,317
+037-B64-RFC,Standard,312,313
+002-INT-OVF,Standard,310,311
 [End]

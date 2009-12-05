@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -68,7 +68,11 @@ public class FileSystemTree extends JTree implements MouseListener {
 		final JMenuItem i4_select = new JMenuItem("Select All");
 		final JMenuItem i5_open = new JMenuItem("Open in Browser");
 
-		i0_graph.setIcon(ImageCreator.IMG_PAUSE);
+		// i0_graph.setIcon(ImageCreator.IMG_PAUSE);
+		i1_cut.setIcon(ImageCreator.IMG_CUT);
+		i2_copy.setIcon(ImageCreator.IMG_COPY);
+		i3_paste.setIcon(ImageCreator.IMG_PASTE);
+		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
 		i5_open.setIcon(ImageCreator.IMG_OPENINBROWSER);
 
 		i0_graph.setEnabled(true);

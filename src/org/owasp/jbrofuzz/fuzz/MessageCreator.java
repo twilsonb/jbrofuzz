@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -30,8 +30,12 @@
 package org.owasp.jbrofuzz.fuzz;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.prefs.Preferences;
 
+import org.apache.commons.codec.net.URLCodec;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
@@ -43,36 +47,15 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * 
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.8
+ * @since 1.3
  */
 public class MessageCreator {
-
-	/**
-	 * TODO Should really write this a bit better..
-	 */
-	private static String stringReplace(final String toFind,
-			final String original, final String substitute) {
-
-		if (toFind.equals(substitute)) {
-			return original;
-		}
-
-		int found = 0;
-		int start = 0;
-		String returnString = original;
-		while (found != -1) {
-			found = returnString.indexOf(toFind, start);
-			if (found != -1) {
-				returnString = returnString.substring(0, found).concat(
-						substitute).concat(
-						returnString.substring(found + toFind.length()));
-			}
-			start = found + substitute.length();
-		}
-		return returnString;
-	}
-
-	private String message, payload;
+	
+	// The message that will be placed on the wire
+	private String message;
+	// The actual payload that will be incorporated into the original message
+	private String payload;
 
 	/**
 	 * <p>
@@ -84,160 +67,160 @@ public class MessageCreator {
 	 */
 	public String END_LINE;
 
-	private int start, finish;
-
-	public MessageCreator(String message, String payload, int start, int finish) {
+	public MessageCreator(String message, String encoding, String payload, int start, int finish) {
 
 		// Set the end of line character from the preferences
 		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 		boolean endLineChar = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
 		END_LINE = endLineChar ? "\n" : "\r\n";
 
-		// Message is not a valid message
-		if ((message == null) || (payload == null) || (start < 0)
-				|| (finish < 0) || (start > message.length())
-				|| (finish > message.length())) {
+		// Perform the necessary encoding on the payload specified
 
-			this.message = message == null ? "" : stringReplace("\n", message,
-					END_LINE);
-			this.payload = payload == null ? "" : payload;
+		// Encoding 1: Uppercase
+		if(encoding.equals(FuzzerTable.ENCODINGS[1])) {
+			this.payload = payload.toUpperCase();
+		} else 
+			// Encoding 2: Lowercase
+			if(encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[2])) {
+				this.payload = payload.toLowerCase();
+			} else
+				// Encoding 3: www-form-urlencoded 
+				if(encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[3])) {
+					final URLCodec codec = new URLCodec();
 
-		}
-		// Message is a valid message
-		else {
-
-			// Check if positive and less than the message length
-			if ((start >= 0) && (start < message.length())) {
-				this.start = start;
-			} else {
-				this.start = 0;
-			}
-
-			// Check if positive and less than|equal the message length
-			if ((finish > 0) && (finish <= message.length())) {
-				this.finish = finish;
-			} else {
-				this.finish = 0;
-			}
-
-			this.payload = payload;
-
-			// Split the message and add in-between
-			StringBuffer messageBuffer = new StringBuffer();
-			messageBuffer.append(message.substring(0, this.start));
-			messageBuffer.append(payload);
-			messageBuffer.append(message.substring(this.finish));
-
-			this.message = stringReplace("\n", messageBuffer.toString(),
-					END_LINE);
-
-			// By now we have the complete message with the payload in the right
-			// location
-
-			if ((this.message.startsWith("GET"))
-					|| (this.message.startsWith("HEAD"))) {
-
-				if (!this.message.endsWith(END_LINE + END_LINE)) {
-
-					this.message += END_LINE + END_LINE;
-
-				}
-
-			}
-
-			if (this.message.startsWith("POST")) {
-				// Find the position of "\r\n\r\n"
-				int eoh = this.message.indexOf(END_LINE + END_LINE);
-				// Provided an ending character sequence has been found
-				if (eoh != -1) {
-					// Find the location of the "Content-Length:"
-					int ctl = this.message.indexOf("Content-Length:");
-					// Provided a content length character sequence exists in
-					// the request
-					if (ctl != -1) {
-
-						int contentLength = 0;
-						String postValue = this.message.substring(eoh
-								+ (END_LINE + END_LINE).length());
-
-						// Find the next end of line
-						int neol = this.message.indexOf(END_LINE, ctl);
-						if (neol != -1) {
-							// Retrieve the value until the next "\r\n"
-							// character
-							String contentLengthString = this.message
-									.substring(
-											ctl + "Content-Length:".length(),
-											neol);
+					try {
+						this.payload = codec.encode(payload, "UTF-8");
+					} catch (UnsupportedEncodingException e) {
+						this.payload = payload;
+						e.printStackTrace();
+					} 
+				} else 
+					// Encoding 4: HTML encode	
+					if (encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[4])) {
+						this.payload = StringEscapeUtils.escapeHtml(payload);
+					} else 
+						// Encoding 5: UTF-8
+						if (encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[5])) {
 							try {
-								contentLength = Integer
-										.parseInt(contentLengthString);
-							} catch (NumberFormatException e) {
-								contentLength = 0;
+								this.payload = URLEncoder.encode(payload, "UTF-8");
+							} catch (UnsupportedEncodingException e) {
+								this.payload = payload;
+								e.printStackTrace();
 							}
-
-							// If the content length is not the same as the
-							// postValue in bytes
-							if (contentLength != postValue.getBytes().length) {
-
-								StringBuffer newMessageBuffer = new StringBuffer();
-								newMessageBuffer.append(this.message.substring(
-										0, ctl + "Content-Length:".length()));
-								try {
-
-									newMessageBuffer
-											.append(" "
-													+ postValue
-															.getBytes("ISO-8859-1").length);
-
-								} catch (UnsupportedEncodingException e) {
-
-									newMessageBuffer.append(" "
-											+ postValue.getBytes().length);
-
-								}
-
-								// If the remaining header starts with "\r\n"
-								// then the "Content-Length was the last header
-								// line
-								String remainingHeader = this.message
-										.substring(neol, eoh
-												+ (END_LINE + END_LINE)
-														.length());
-								if (remainingHeader.startsWith(END_LINE)) {
-									newMessageBuffer
-											.append(END_LINE + END_LINE);
-								} else {
-									newMessageBuffer.append(remainingHeader);
-								}
-
-								newMessageBuffer.append(postValue);
-								// System.out.println("--------" + postValue +
-								// "------");
-
-								this.message = newMessageBuffer.toString();
-
-							}
+						} else {
+							this.payload = payload;
 						}
 
-					}
-					// The message does not contain the Content-Length line and
-					// this needs to be added
-					else {
-						// TODO Add the Content-Length line
-					}
-				}
-			} // if it's a POST request
+
+		// Split the message and add in-between
+		StringBuffer messageBuffer = new StringBuffer();
+		messageBuffer.append(message.substring(0, start));
+		messageBuffer.append(this.payload);
+		messageBuffer.append(message.substring(finish));
+
+		this.message = stringReplace("\n", messageBuffer.toString(),
+				END_LINE);
+
+		// By now we have the complete message with the payload in the right
+		// location
+
+		if ((this.message.startsWith("GET"))
+				|| (this.message.startsWith("HEAD"))) {
+
+			if (!this.message.endsWith(END_LINE + END_LINE)) {
+
+				this.message += END_LINE + END_LINE;
+
+			}
 
 		}
 
-	}
+		if (this.message.startsWith("POST")) {
+			// Find the position of "\r\n\r\n"
+			int eoh = this.message.indexOf(END_LINE + END_LINE);
+			// Provided an ending character sequence has been found
+			if (eoh != -1) {
+				// Find the location of the "Content-Length:"
+				int ctl = this.message.indexOf("Content-Length:");
+				// Provided a content length character sequence exists in
+				// the request
+				if (ctl != -1) {
 
-	/**
-	 * @return the finish
-	 */
-	public int getFinish() {
-		return finish;
+					int contentLength = 0;
+					String postValue = this.message.substring(eoh
+							+ (END_LINE + END_LINE).length());
+
+					// Find the next end of line
+					int neol = this.message.indexOf(END_LINE, ctl);
+					if (neol != -1) {
+						// Retrieve the value until the next "\r\n"
+						// character
+						String contentLengthString = this.message
+						.substring(
+								ctl + "Content-Length:".length(),
+								neol);
+						try {
+							contentLength = Integer
+							.parseInt(contentLengthString);
+						} catch (NumberFormatException e) {
+							contentLength = 0;
+						}
+
+						// If the content length is not the same as the
+						// postValue in bytes
+						if (contentLength != postValue.getBytes().length) {
+
+							StringBuffer newMessageBuffer = new StringBuffer();
+							newMessageBuffer.append(this.message.substring(
+									0, ctl + "Content-Length:".length()));
+							try {
+
+								newMessageBuffer
+								.append(" "
+										+ postValue
+										.getBytes("ISO-8859-1").length);
+
+							} catch (UnsupportedEncodingException e) {
+
+								newMessageBuffer.append(" "
+										+ postValue.getBytes().length);
+
+							}
+
+							// If the remaining header starts with "\r\n"
+							// then the "Content-Length was the last header
+							// line
+							String remainingHeader = this.message
+							.substring(neol, eoh
+									+ (END_LINE + END_LINE)
+									.length());
+							if (remainingHeader.startsWith(END_LINE)) {
+								newMessageBuffer
+								.append(END_LINE + END_LINE);
+							} else {
+								newMessageBuffer.append(remainingHeader);
+							}
+
+							newMessageBuffer.append(postValue);
+							// System.out.println("--------" + postValue +
+							// "------");
+
+							this.message = newMessageBuffer.toString();
+
+						}
+					}
+
+				}
+				// The message does not contain the Content-Length line and
+				// this needs to be added
+				else {
+					// TODO Add the Content-Length line
+				}
+			}
+		} // if it's a POST request
+
+		//		}
+
 	}
 
 	/**
@@ -337,45 +320,32 @@ public class MessageCreator {
 
 	}
 
+	
 	/**
-	 * @return the start
+	 * TODO Should really write this a bit better..
 	 */
-	public int getStart() {
-		return start;
+	private static String stringReplace(final String toFind,
+			final String original, final String substitute) {
+
+		if (toFind.equals(substitute)) {
+			return original;
+		}
+
+		int found = 0;
+		int start = 0;
+		String returnString = original;
+		while (found != -1) {
+			found = returnString.indexOf(toFind, start);
+			if (found != -1) {
+				returnString = returnString.substring(0, found).concat(
+						substitute).concat(
+								returnString.substring(found + toFind.length()));
+			}
+			start = found + substitute.length();
+		}
+		return returnString;
 	}
 
-	/**
-	 * @param finish
-	 *            the finish to set
-	 */
-	public void setFinish(int finish) {
-		this.finish = finish;
-	}
 
-	/**
-	 * @param message
-	 *            the message to set
-	 */
-	public void setMessage(String message) {
-
-		this.message = message;
-
-	}
-
-	/**
-	 * @param fuzzer
-	 *            the payload to set
-	 */
-	public void setPayload(String payload) {
-		this.payload = payload;
-	}
-
-	/**
-	 * @param start
-	 *            the start to set
-	 */
-	public void setStart(int start) {
-		this.start = start;
-	}
 
 }
