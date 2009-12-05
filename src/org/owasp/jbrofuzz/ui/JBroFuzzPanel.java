@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -102,7 +102,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 		setOpaque(false);
 		this.name = name;
 		this.frame = frame;
-		optionsAvailable = new boolean[] { false, false, true, false, false };
+		optionsAvailable = new boolean[] { false, false, false, false, false };
 
 	}
 
@@ -210,15 +210,15 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 	/**
 	 * <p>
-	 * Method describing what happens in a panel when the 'graph' button is
+	 * Method describing what happens in a panel when the 'pause' button is
 	 * pressed.
 	 * </p>
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
-	 * @since 1.2
+	 * @version 1.8
+	 * @since 1.8
 	 */
-	public abstract void graph();
+	public abstract void pause();
 
 	public boolean isAddedEnabled() {
 
@@ -226,7 +226,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 	}
 
-	public boolean isGraphedEnabled() {
+	public boolean isPauseEnabled() {
 
 		return optionsAvailable[2];
 
@@ -262,7 +262,11 @@ public abstract class JBroFuzzPanel extends JPanel {
 		final JMenuItem i5_props = new JMenuItem("Properties");
 
 		i0_open.setIcon(ImageCreator.IMG_OPENINBROWSER);
-
+		i1_cut.setIcon(ImageCreator.IMG_CUT);
+		i2_copy.setIcon(ImageCreator.IMG_COPY);
+		i3_paste.setIcon(ImageCreator.IMG_PASTE);
+		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
+		
 		i0_open.setEnabled(open);
 		i1_cut.setEnabled(cut);
 		i2_copy.setEnabled(copy);
@@ -596,16 +600,16 @@ public abstract class JBroFuzzPanel extends JPanel {
 	 * 
 	 * @param start
 	 * @param stop
-	 * @param graph
+	 * @param pause
 	 * @param add
 	 * @param remove
 	 */
 	public final void setOptionsAvailable(boolean start, boolean stop,
-			boolean graph, boolean add, boolean remove) {
+			boolean pause, boolean add, boolean remove) {
 
 		optionsAvailable[0] = start;
 		optionsAvailable[1] = stop;
-		optionsAvailable[2] = graph;
+		// optionsAvailable[2] = graph;
 		optionsAvailable[3] = add;
 		optionsAvailable[4] = remove;
 

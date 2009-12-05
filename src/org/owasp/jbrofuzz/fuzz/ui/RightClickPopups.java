@@ -257,7 +257,8 @@ public class RightClickPopups {
 		i0_add.setIcon(ImageCreator.IMG_ADD);
 		i1_cut.setIcon(ImageCreator.IMG_CUT);
 		i2_copy.setIcon(ImageCreator.IMG_COPY);
-		i3_paste.setIcon(ImageCreator.IMG_SELECTALL);
+		i3_paste.setIcon(ImageCreator.IMG_PASTE);
+		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
 		
 		i1_cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
 				ActionEvent.CTRL_MASK));

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -59,6 +59,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
+import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
@@ -419,7 +420,7 @@ public class PayloadsDialog extends JDialog {
 						final String id = m.getJBroFuzz().
 										getDatabase().getIdFromName(name);
 						
-						m.getPanelFuzzing().addFuzzer(id, start, end);
+						m.getPanelFuzzing().addFuzzer(id, FuzzerTable.ENCODINGS[0], start, end);
 						PayloadsDialog.this.dispose();
 
 					}

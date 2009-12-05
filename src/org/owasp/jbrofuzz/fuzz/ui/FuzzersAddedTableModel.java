@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -150,6 +150,11 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 		default:
 			return null;
 		}
+	}
+	
+	public int getStart(final int row) {
+		final FuzzerRow rec_ = dataVector.get(row);
+		return Integer.valueOf(rec_.getStartPoint());
 	}
 
 	/**

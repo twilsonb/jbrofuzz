@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -314,7 +314,7 @@ public class JBroFuzzFormat {
 			return "Saturn "; /* - God of Time */
 		}
 		if (versionNumber.equalsIgnoreCase("1.8")) {
-			return "Janus "; /* - God of Doors */
+			return "Chrome "; /* - God of Doors */
 		}
 		if (versionNumber.equalsIgnoreCase("1.9")) {
 			return "Uranus "; /* - Father of Saturn */
@@ -323,7 +323,7 @@ public class JBroFuzzFormat {
 			return "Maia "; /* - Goddess of Growth */
 		}
 		if (versionNumber.equalsIgnoreCase("2.1")) {
-			return "Zeus ";
+			return "Janus ";
 		}
 		return "Zeus ";
 	}

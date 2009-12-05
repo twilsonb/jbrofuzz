@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -179,7 +179,7 @@ public class GraphingPanel extends JBroFuzzPanel {
 	}
 
 	@Override
-	public void graph() {
+	public void pause() {
 	}
 
 	@Override

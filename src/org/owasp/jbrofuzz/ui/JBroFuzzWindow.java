@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -206,7 +206,7 @@ public class JBroFuzzWindow extends JFrame {
 					b[1] = ((JBroFuzzPanel) pane.getComponent(c))
 							.isStoppedEnabled();
 					b[2] = ((JBroFuzzPanel) pane.getComponent(c))
-							.isGraphedEnabled();
+							.isPauseEnabled();
 					b[3] = ((JBroFuzzPanel) pane.getComponent(c))
 							.isAddedEnabled();
 					b[4] = ((JBroFuzzPanel) pane.getComponent(c))

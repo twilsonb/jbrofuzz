@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -40,6 +40,14 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
+/**
+ * <p>Class Responsible for saving the fuzzing session a user 
+ * sees in the "Fuzzing" tab.</p>
+ * 
+ * @author subere@uncon.org
+ * @version 1.8
+ * @since 1.2
+ */
 public class SaveSession {
 
 	public SaveSession(final JBroFuzzWindow mWindow) {

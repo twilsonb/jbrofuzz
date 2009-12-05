@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -86,6 +86,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("POST", Color.black);
 		keywords.put("HEAD", Color.black);
 		keywords.put("TRACE", Color.black);
+		keywords.put("PROPFIND", Color.black);
 		keywords.put("HTTP/\\d.\\d", Color.black);
 
 		final Color lightBlue = new Color(51, 102, 102);

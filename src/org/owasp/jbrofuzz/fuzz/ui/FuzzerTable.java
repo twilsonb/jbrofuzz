@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.7
+ * JBroFuzz 1.8
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -56,7 +56,7 @@ public class FuzzerTable extends JTable {
 	private static final long serialVersionUID = 1876543211323L;
 	
 	// The types of encodings allowed within the encoding column
-	protected static final String[] ENCODINGS = {"Standard", "Uppercase", "Lowercase"};
+	public static final String[] ENCODINGS = {"Standard", "Uppercase", "Lowercase", "URL Encode", "HTML Encode", "UTF-8"};
 
 	public FuzzerTable(final FuzzersAddedTableModel model) {
 
