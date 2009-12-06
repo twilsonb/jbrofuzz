@@ -1,0 +1,15 @@
+=================================================
+Prerequisites:
+=================================================
+
+The following programs must be installed 
+independent of which JBroFuzz you download:
+
+- Java 1.6 or later
+  
+Java can be downloaded at 
+http://java.sun.com/javase/downloads/index.jsp
+
+You only need to download and install the 
+"Java Runtime Environment (JRE)"
+=================================================
