@@ -1,0 +1,15 @@
+=================================================
+Thank you for downloading JBroFuzz!
+=================================================
+
+This program is a fuzzer for web applications
+that use HTTP and/or HTTPS. 
+
+- Running JBroFuzz
+
+There is a shell script (jbrofuzz.sh) available.
+
+This script needs to be chmod-ed in order for 
+JBroFuzz to run correctly.
+
+=================================================
