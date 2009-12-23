@@ -194,6 +194,48 @@ public class Database {
 	}
 	
 	/**
+	 * <p>
+	 * This factory method should be used instead of the #createFuzzer() if the
+	 * recursive payloads are more than 16^16 long.
+	 * </p>
+	 * <p>
+	 * As a Fuzzer is an iterator using a long datatype for counting, 
+	 * FuzzerBigInteger is an iterator using the BigInteger datatype and thus not
+	 * limited to 16^16 number of iterator payloads. 
+	 * </p>
+	 * <p>
+	 * Method responsible for creating a FuzzerBigInteger, based on an existing
+	 * prototypeId and length specified.
+	 * </p>
+	 * 
+	 * @param prototypeId
+	 *            prototypeId e.g 001-HTT-MTH or 032-SQL-INJ
+	 * @param len
+	 *            The length of the fuzzer, used for recursive fuzzers
+	 * @return org.owasp.jbrofuzz.core#FuzzerBigInteger()
+	 * @throws NoSuchFuzzerException
+	 * 
+	 * @see #containsPrototype(String)
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.9
+	 * @since 1.9
+	 */
+	public FuzzerBigInteger createFuzzerBigInteger(String prototypeId, int len) 
+			throws NoSuchFuzzerException {
+		
+		if (!containsPrototype(prototypeId)) {
+
+			throw new NoSuchFuzzerException(StringUtils.abbreviate(prototypeId,
+					10)
+					+ " : No Such Fuzzer Found in the Database ");
+
+		}
+
+		return new FuzzerBigInteger(getPrototype(prototypeId), len);
+	}
+	
+	/**
 	 * <p>Return all the unique categories found across prototypes that are loaded
 	 * into the database.</p>
 	 * 
