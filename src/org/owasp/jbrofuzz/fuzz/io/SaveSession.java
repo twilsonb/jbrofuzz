@@ -78,11 +78,11 @@ public class SaveSession {
 
 				if (file.exists()) {
 					int choice = JOptionPane
-							.showConfirmDialog(
-									fc,
-									"File already exists. Do you \nwant to replace it?",
-									" JBroFuzz - Save ",
-									JOptionPane.YES_NO_OPTION);
+					.showConfirmDialog(
+							fc,
+							"File already exists. Do you \nwant to replace it?",
+							" JBroFuzz - Save ",
+							JOptionPane.YES_NO_OPTION);
 
 					if (choice == JOptionPane.NO_OPTION)
 						return;

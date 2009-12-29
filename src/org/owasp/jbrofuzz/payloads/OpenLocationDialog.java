@@ -72,7 +72,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * @version 1.3
  */
 public class OpenLocationDialog extends JDialog implements MouseListener,
-		KeyListener {
+KeyListener {
 
 	/**
 	 * 
@@ -212,7 +212,7 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 			public void actionPerformed(final ActionEvent e) {
 
 				Clipboard clipboard = Toolkit.getDefaultToolkit()
-						.getSystemClipboard();
+				.getSystemClipboard();
 				Transferable clipData = clipboard.getContents(clipboard);
 
 				if (clipData != null) {
@@ -225,9 +225,9 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 					} catch (Exception e1) {
 
 						parent
-								.log(
-										"Open Location: An error occured while cutting",
-										2);
+						.log(
+								"Open Location: An error occured while cutting",
+								2);
 
 					}
 				}
@@ -239,7 +239,7 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 			public void actionPerformed(final ActionEvent e) {
 
 				Clipboard clipboard = Toolkit.getDefaultToolkit()
-						.getSystemClipboard();
+				.getSystemClipboard();
 				Transferable clipData = clipboard.getContents(clipboard);
 
 				if (clipData != null) {
@@ -252,9 +252,9 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 					} catch (Exception e1) {
 
 						parent
-								.log(
-										"Open Location: An error occured while copying",
-										2);
+						.log(
+								"Open Location: An error occured while copying",
+								2);
 
 					}
 				}
@@ -266,7 +266,7 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 			public void actionPerformed(final ActionEvent e) {
 
 				Clipboard clipboard = Toolkit.getDefaultToolkit()
-						.getSystemClipboard();
+				.getSystemClipboard();
 				Transferable clipData = clipboard.getContents(clipboard);
 
 				if (clipData != null) {
@@ -280,9 +280,9 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 						}
 					} catch (Exception e1) {
 						parent
-								.log(
-										"Open Location: An error occured while pasting",
-										2);
+						.log(
+								"Open Location: An error occured while pasting",
+								2);
 					}
 				}
 			}
@@ -322,7 +322,7 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 		// Set the URL text
 		String url_displaying = parent.getPanelFuzzing().getTextURL();
 		((JTextComponent) _url.getEditor().getEditorComponent())
-				.setText(url_displaying);
+		.setText(url_displaying);
 		((JTextComponent) _url.getEditor().getEditorComponent()).selectAll();
 
 		// Global frame issues
@@ -376,7 +376,7 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 					req_url.append('/');
 				} else {
 					req_url.append(URLDecoder.decode(inputURL.getFile(),
-							"UTF-8"));
+					"UTF-8"));
 				}
 
 			} catch (UnsupportedEncodingException e) {
@@ -401,13 +401,13 @@ public class OpenLocationDialog extends JDialog implements MouseListener,
 
 			// User-Agent:
 			req_url
-					.append("User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.10) Gecko/2009042316 Firefox/3.0.10 (.NET CLR 3.5.30729) JBroFuzz/");
+			.append("User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.10) Gecko/2009042316 Firefox/3.0.10 (.NET CLR 3.5.30729) JBroFuzz/");
 			req_url.append(JBroFuzzFormat.VERSION);
 			req_url.append('\n');
 
 			// Accept:
 			req_url
-					.append("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+			.append("Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 			req_url.append('\n');
 
 			// Accept-Language:

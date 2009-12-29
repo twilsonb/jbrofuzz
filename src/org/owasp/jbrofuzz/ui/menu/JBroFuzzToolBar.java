@@ -63,7 +63,7 @@ public class JBroFuzzToolBar extends JToolBar {
 	private final JBroFuzzWindow mFrameWindow;
 
 	private final JButton start, pause, stop, add, remove, help, about,
-			website;
+	website;
 
 	/**
 	 * <p>
@@ -85,9 +85,9 @@ public class JBroFuzzToolBar extends JToolBar {
 		start.setToolTipText("Start");
 		pause = new JButton(ImageCreator.IMG_PAUSE);
 		pause.setToolTipText("Pause");
-		
+
 		pause.setEnabled(false);
-		
+
 		stop = new JButton(ImageCreator.IMG_STOP);
 		stop.setToolTipText("Stop");
 		add = new JButton(ImageCreator.IMG_ADD);
@@ -153,7 +153,7 @@ public class JBroFuzzToolBar extends JToolBar {
 
 				int c = getFrame().getTp().getSelectedIndex();
 				JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-						.getComponent(c);
+				.getComponent(c);
 				p.stop();
 
 			}
@@ -179,7 +179,7 @@ public class JBroFuzzToolBar extends JToolBar {
 
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.add();
 
 					}
@@ -196,7 +196,7 @@ public class JBroFuzzToolBar extends JToolBar {
 
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.remove();
 
 					}
@@ -238,10 +238,10 @@ public class JBroFuzzToolBar extends JToolBar {
 							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 						} catch (final IOException ex) {
 							JBroFuzzToolBar.this
-									.getFrame()
-									.log(
-											"Could not launch link in external browser",
-											3);
+							.getFrame()
+							.log(
+									"Could not launch link in external browser",
+									3);
 						}
 					}
 				});

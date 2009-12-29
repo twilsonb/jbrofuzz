@@ -67,7 +67,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * @version 1.4
  */
 public class HeadersPanel extends JBroFuzzPanel implements
-		TreeSelectionListener {
+TreeSelectionListener {
 
 	/**
 	 * 
@@ -110,7 +110,7 @@ public class HeadersPanel extends JBroFuzzPanel implements
 		final JPanel treePanel = new JPanel(new BorderLayout());
 		treePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" "), BorderFactory.createEmptyBorder(5, 5,
-				5, 5)));
+						5, 5)));
 
 		treePanel.add(treeScrollPanel);
 

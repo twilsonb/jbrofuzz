@@ -35,9 +35,9 @@ import java.util.Date;
 public class MessageWriter {
 
 	private static final SimpleDateFormat SD_Format = new SimpleDateFormat(
-			"zzz-yyyy-MM-dd-HH-mm-ss-SSS");
+	"zzz-yyyy-MM-dd-HH-mm-ss-SSS");
 	private static final SimpleDateFormat SH_Format = new SimpleDateFormat(
-			"DDD-HH-mm-ss-SSS");
+	"DDD-HH-mm-ss-SSS");
 
 	private StringBuffer message;
 

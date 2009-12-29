@@ -48,7 +48,7 @@ public class SelectAllAction extends TextAction {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				final JTextComponent text = SelectAllAction.this
-						.getTextComponent(evt);
+				.getTextComponent(evt);
 				if (text != null) {
 					text.selectAll();
 					text.requestFocus();

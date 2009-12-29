@@ -91,7 +91,7 @@ public class FuzzerBigInteger implements Iterator<String> {
 
 	}
 
-	
+
 	public String getCurrectValue() {
 
 		return cValue.toString();

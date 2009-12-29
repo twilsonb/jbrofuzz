@@ -202,15 +202,15 @@ public class JBroFuzzWindow extends JFrame {
 
 					boolean[] b = new boolean[5];
 					b[0] = ((JBroFuzzPanel) pane.getComponent(c))
-							.isStartedEnabled();
+					.isStartedEnabled();
 					b[1] = ((JBroFuzzPanel) pane.getComponent(c))
-							.isStoppedEnabled();
+					.isStoppedEnabled();
 					b[2] = ((JBroFuzzPanel) pane.getComponent(c))
-							.isPauseEnabled();
+					.isPauseEnabled();
 					b[3] = ((JBroFuzzPanel) pane.getComponent(c))
-							.isAddedEnabled();
+					.isAddedEnabled();
 					b[4] = ((JBroFuzzPanel) pane.getComponent(c))
-							.isRemovedEnabled();
+					.isRemovedEnabled();
 
 					// Set the toolbar/menubar options which are enabled
 					tb.setEnabledPanelOptions(b);
@@ -260,7 +260,7 @@ public class JBroFuzzWindow extends JFrame {
 		mJBroFuzzWindow.setMinimumSize(min_size);
 
 		mJBroFuzzWindow
-				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		mJBroFuzzWindow.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(final WindowEvent e) {
@@ -670,8 +670,8 @@ public class JBroFuzzWindow extends JFrame {
 	public void setTitle(String s) {
 
 		super
-				.setTitle(" JBroFuzz - "
-						+ JBroFuzzFormat.centerAbbreviate(s, 256));
+		.setTitle(" JBroFuzz - "
+				+ JBroFuzzFormat.centerAbbreviate(s, 256));
 
 	}
 

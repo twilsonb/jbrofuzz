@@ -128,20 +128,20 @@ public class FileHandler {
 			if (!success) {
 
 				g
-						.getWindow()
-						.log(
-								"Failed to create \"fuzz\" directory, no data will be written to file.",
-								4);
+				.getWindow()
+				.log(
+						"Failed to create \"fuzz\" directory, no data will be written to file.",
+						4);
 				g
-						.getWindow()
-						.log(
-								"Run JBroFuzz from the command line: \"java -jar JBroFuzz.jar\"",
-								0);
+				.getWindow()
+				.log(
+						"Run JBroFuzz from the command line: \"java -jar JBroFuzz.jar\"",
+						0);
 				g
-						.getWindow()
-						.log(
-								"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
-								0);
+				.getWindow()
+				.log(
+						"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
+						0);
 
 			}
 			// If the directory is already present, create a directory with a
@@ -175,15 +175,15 @@ public class FileHandler {
 				if (!success) {
 
 					g
-							.getWindow()
-							.log(
-									"Failed to create new \"fuzz\" directory, no data will be written to file.",
-									4);
+					.getWindow()
+					.log(
+							"Failed to create new \"fuzz\" directory, no data will be written to file.",
+							4);
 					g
-							.getWindow()
-							.log(
-									"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
-									0);
+					.getWindow()
+					.log(
+							"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
+							0);
 				}
 
 			}
@@ -276,7 +276,7 @@ public class FileHandler {
 		return new File(fuzzDirectory, fileName);
 
 	}
-	
+
 	/**
 	 * <p>Return the directory which is currently being used 
 	 * for fuzz data</p>
@@ -284,7 +284,7 @@ public class FileHandler {
 	 * @return File
 	 */
 	public File getFuzzDirectory() {
-		
+
 		return fuzzDirectory;
 	}
 
@@ -336,7 +336,7 @@ public class FileHandler {
 				if (counter == Integer.MAX_VALUE) {
 					g.getWindow().log(
 							"Only displaying the first 2^31-1 bytes of the file '"
-									+ file.getName(), 3);
+							+ file.getName(), 3);
 				}
 			}
 
@@ -345,9 +345,9 @@ public class FileHandler {
 
 		} catch (IOException e) {
 			g.getWindow()
-					.log(
-							"Opening File '" + file.getName()
-									+ "' caused an I/O error", 4);
+			.log(
+					"Opening File '" + file.getName()
+					+ "' caused an I/O error", 4);
 
 		} finally {
 			IOUtils.closeQuietly(in);

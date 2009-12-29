@@ -120,7 +120,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final JMenuItem openLocation = new JMenuItem("Open Location...");
 		final JMenuItem clearOutput = new JMenuItem("Clear All Output", ImageCreator.IMG_CLEAR);
 		final JMenuItem clearFuzzers = new JMenuItem("Clear All Fuzzers", ImageCreator.IMG_CLEAR);
-		
+
 		final JMenuItem save = new JMenuItem("Save", ImageCreator.IMG_SAVE);
 		final JMenuItem saveAs = new JMenuItem("Save as...", ImageCreator.IMG_SAVE_AS);
 		final JMenuItem exit = new JMenuItem("Exit", ImageCreator.IMG_EXIT);
@@ -220,7 +220,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final JMenu lookAndFeel = new JMenu("Look and Feel");
 		lookAndFeel.setIcon(ImageCreator.IMG_LKF);
 		final UIManager.LookAndFeelInfo[] installedFeels = UIManager
-				.getInstalledLookAndFeels();
+		.getInstalledLookAndFeels();
 		final ButtonGroup group = new ButtonGroup();
 
 		for (int i = 0; i < Math.min(installedFeels.length, 10); i++) {
@@ -236,11 +236,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			rb.addItemListener(new ItemListener() {
 				public void itemStateChanged(final ItemEvent ie) {
 					final JRadioButtonMenuItem rbi = (JRadioButtonMenuItem) ie
-							.getSource();
+					.getSource();
 
 					if (rbi.isSelected()) {
 						final UIManager.LookAndFeelInfo info = (UIManager.LookAndFeelInfo) rbi
-								.getClientProperty("Look and Feel Name");
+						.getClientProperty("Look and Feel Name");
 
 						SwingUtilities.invokeLater(new Runnable() {
 							public void run() {
@@ -249,32 +249,32 @@ public class JBroFuzzMenuBar extends JMenuBar {
 									UIManager.setLookAndFeel(info
 											.getClassName());
 									SwingUtilities
-											.updateComponentTreeUI(JBroFuzzMenuBar.this
-													.getFrame());
+									.updateComponentTreeUI(JBroFuzzMenuBar.this
+											.getFrame());
 								} catch (final UnsupportedLookAndFeelException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel",
-													5);
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel",
+											5);
 								} catch (final IllegalAccessException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel",
-													5);
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel",
+											5);
 								} catch (final ClassNotFoundException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel",
-													5);
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel",
+											5);
 								} catch (final InstantiationException e) {
 									JBroFuzzMenuBar.this
-											.getFrame()
-											.log(
-													"An error occured while setting the Look & Feel",
-													5);
+									.getFrame()
+									.log(
+											"An error occured while setting the Look & Feel",
+											5);
 								}
 
 							}
@@ -289,9 +289,9 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		// Panel
 		start = new JMenuItem("Start", ImageCreator.IMG_START);
 		pause = new JMenuItem("Pause", ImageCreator.IMG_PAUSE);
-		
+
 		pause.setEnabled(false);
-		
+
 		stop = new JMenuItem("Stop", ImageCreator.IMG_STOP);
 		add = new JMenuItem("Add", ImageCreator.IMG_ADD);
 		remove = new JMenuItem("Remove", ImageCreator.IMG_REMOVE);
@@ -375,14 +375,14 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						mFrameWindow.getPanelFuzzing().clearAllFields();
 						mFrameWindow.setTitle("Untitled");
 						// Create a new directory to store all data
 						mFrameWindow.getJBroFuzz().getHandler()
-								.createNewDirectory();
+						.createNewDirectory();
 					}
 
 				} else {
@@ -391,7 +391,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					mFrameWindow.setTitle("Untitled");
 					// Create a new directory to store all data
 					mFrameWindow.getJBroFuzz().getHandler()
-							.createNewDirectory();
+					.createNewDirectory();
 
 				}
 
@@ -415,7 +415,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						new OpenSession(mFrameWindow);
@@ -445,7 +445,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						getFrame().setCloseFile();
@@ -479,7 +479,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						new OpenLocationDialog(getFrame());
@@ -494,8 +494,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 			}
 		});
-		
-		
+
+
 		// File -> Clear Output
 		clearOutput.addActionListener(new ActionListener() {
 
@@ -513,13 +513,13 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						mFrameWindow.getPanelFuzzing().clearOutputTable();
 						// Create a new directory to store all data
 						mFrameWindow.getJBroFuzz().getHandler()
-								.createNewDirectory();
+						.createNewDirectory();
 					}
 
 				} else {
@@ -527,7 +527,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					mFrameWindow.getPanelFuzzing().clearOutputTable();
 					// Create a new directory to store all data
 					mFrameWindow.getJBroFuzz().getHandler()
-							.createNewDirectory();
+					.createNewDirectory();
 
 				}
 
@@ -552,11 +552,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						mFrameWindow.getPanelFuzzing().clearFuzzersTable();
-						
+
 					}
 
 				} else {
@@ -586,7 +586,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						new SaveSession(mFrameWindow);
@@ -617,7 +617,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 						new SaveAsSession(mFrameWindow);
@@ -826,7 +826,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.stop();
 
 					}
@@ -855,7 +855,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.add();
 
 					}
@@ -886,7 +886,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 						int c = getFrame().getTp().getSelectedIndex();
 						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
-								.getComponent(c);
+						.getComponent(c);
 						p.remove();
 
 					}
@@ -951,10 +951,10 @@ public class JBroFuzzMenuBar extends JMenuBar {
 						} catch (final IOException ex) {
 
 							JBroFuzzMenuBar.this
-									.getFrame()
-									.log(
-											"Could not launch link in external browser",
-											3);
+							.getFrame()
+							.log(
+									"Could not launch link in external browser",
+									3);
 
 						}
 					}

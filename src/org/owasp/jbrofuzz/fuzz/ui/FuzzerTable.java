@@ -54,7 +54,7 @@ public class FuzzerTable extends JTable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1876543211323L;
-	
+
 	// The types of encodings allowed within the encoding column
 	public static final String[] ENCODINGS = {"Standard", "Uppercase", "Lowercase", "URL Encode", "HTML Encode", "UTF-8"};
 
@@ -65,7 +65,7 @@ public class FuzzerTable extends JTable {
 		setFont(new Font("Monospaced", Font.BOLD, 12));
 		setBackground(Color.BLACK);
 		setForeground(Color.WHITE);
-		
+
 		// Set the column widths
 		TableColumn column = null;
 		for (int i = 0; i < model.getColumnCount(); i++) {
@@ -82,9 +82,10 @@ public class FuzzerTable extends JTable {
 		}
 
 	}
-	
+
+	@Override
 	public TableCellEditor getCellEditor(int row, int column) {
-		
+
 		JComboBox comboxBox = new JComboBox(ENCODINGS);
 		comboxBox.setFont(new Font("Monospaced", Font.BOLD, 12));
 		comboxBox.setBackground(Color.BLACK);
@@ -96,9 +97,10 @@ public class FuzzerTable extends JTable {
 			return new DefaultCellEditor(comboxBox);
 		else
 			return super.getCellEditor(row, column);
-		
+
 	}
 
+	@Override
 	public TableCellRenderer getCellRenderer(int row, int column)	{
 		int modelColumn = convertColumnIndexToModel( column );
 
@@ -106,7 +108,7 @@ public class FuzzerTable extends JTable {
 			return new ComboBoxRenderer ();
 		else
 			return super.getCellRenderer(row, column);
-		
+
 	}
 
 
@@ -116,14 +118,15 @@ class ComboBoxRenderer extends JComboBox implements TableCellRenderer {
 
 	private static final long serialVersionUID = 2240748527651063324L;
 
+	@Override
 	public String getToolTipText() {
 		return "Select an Encoding from the Drop-Down Menu";
 	}
-	
+
 	public Component getTableCellRendererComponent(
 			JTable table, Object value, boolean isSelected,
 			boolean hasFocus, int row, int column)	{
-		
+
 		setBorder(null);
 		removeAllItems();
 		addItem( value );

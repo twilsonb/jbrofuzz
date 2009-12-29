@@ -167,7 +167,7 @@ public class HammingDistanceChart {
 				false, // include legend
 				true, // tooltips?
 				true // URLs?
-				);
+		);
 
 		Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
@@ -175,7 +175,7 @@ public class HammingDistanceChart {
 
 		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
 		renderer
-				.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+		.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
 
 		return new ChartPanel(chart);
 	}

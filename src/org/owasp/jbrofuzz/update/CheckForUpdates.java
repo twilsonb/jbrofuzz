@@ -147,7 +147,7 @@ public class CheckForUpdates extends JDialog {
 		providersTextScrollPane.setVerticalScrollBarPolicy(20);
 		providersTextScrollPane.setHorizontalScrollBarPolicy(30);
 		providersTextScrollPane
-				.setPreferredSize(new Dimension(x - 150, y - 110));
+		.setPreferredSize(new Dimension(x - 150, y - 110));
 		centerPanel.add(providersTextScrollPane);
 
 		// Bottom buttons
@@ -236,8 +236,8 @@ public class CheckForUpdates extends JDialog {
 								close.setEnabled(true);
 							} catch (final IOException ex) {
 								mainLabel
-										.append("\nAn error occured while attempting to open the browser:\n\n"
-												+ JBroFuzzFormat.URL_WEBSITE);
+								.append("\nAn error occured while attempting to open the browser:\n\n"
+										+ JBroFuzzFormat.URL_WEBSITE);
 							}
 						}
 					});
@@ -319,7 +319,7 @@ public class CheckForUpdates extends JDialog {
 
 						throw new IOException(
 								"Content too large to be buffered: "
-										+ contentLength + " bytes");
+								+ contentLength + " bytes");
 
 					}
 
@@ -388,17 +388,17 @@ public class CheckForUpdates extends JDialog {
 						newVersionExists = true;
 					} else if (latest < current) {
 						mainLabel
-								.append("\nYou are running a newer (perhaps experimental) version.");
+						.append("\nYou are running a newer (perhaps experimental) version.");
 					} else {
 						mainLabel
-								.append("\nYou are running the latest version.");
+						.append("\nYou are running the latest version.");
 					}
 
 				} else {
 					mainLabel
-							.append("\n"
-									+ "Could not interpret JBroFuzz version\nnumbers.\n\nTo check manually, visit:\n\n"
-									+ JBroFuzzFormat.URL_WEBSITE);
+					.append("\n"
+							+ "Could not interpret JBroFuzz version\nnumbers.\n\nTo check manually, visit:\n\n"
+							+ JBroFuzzFormat.URL_WEBSITE);
 				}
 
 			} else {

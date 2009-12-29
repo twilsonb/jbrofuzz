@@ -83,7 +83,7 @@ public class Fuzzer implements Iterator<String> {
 			payloads = this.prototype.getPayloads();
 
 			if (this.prototype.isRecursive()) {
-				
+
 				maxValue = Fuzzer.pow(payloads.size(), len);
 
 			} else {
@@ -201,11 +201,11 @@ public class Fuzzer implements Iterator<String> {
 			long val = cValue;
 			// Perform division on a stack
 			Stack<Integer> stack = new Stack<Integer>();
-			
+
 			while (val >= payloads.size()) {
 
-				stack.push( new Integer((int) val % payloads.size()) );
-				
+				stack.push( Integer.valueOf((int) val % payloads.size()) );
+
 				val = val / payloads.size();
 
 			}
@@ -238,10 +238,10 @@ public class Fuzzer implements Iterator<String> {
 	 */
 	private static long pow(int x, int y) {
 
-		long b=((long)y)&0x00000000ffffffffL;
+		long b=(y)&0x00000000ffffffffL;
 		long result = 1L;
 		long powerN=x;
-		
+
 		while(b!=0){
 			if((b&1)!=0) result*=powerN;
 			b>>>=1;

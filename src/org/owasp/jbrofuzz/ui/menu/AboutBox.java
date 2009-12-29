@@ -127,9 +127,9 @@ public class AboutBox extends JDialog {
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		final URL licenseURL = ClassLoader.getSystemClassLoader().getResource(
-				"LICENSE/gpl-license.txt");
+		"LICENSE/gpl-license.txt");
 		final URL disclaimerURL = ClassLoader.getSystemClassLoader()
-				.getResource("LICENSE/NOTICE.txt");
+		.getResource("LICENSE/NOTICE.txt");
 
 		// The about editor label
 		final JLabel about = new JLabel(JBroFuzzFormat.ABOUT,

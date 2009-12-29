@@ -110,14 +110,14 @@ public class EncoderHashFrame extends JFrame {
 	private JSplitPane verticalSplitPane, horizontalSplitPane;
 
 	private JTextPane enTextPane, deTextPane;
-	
+
 	// The tree
 	private JTree tree;
 
 	private JButton encode, decode, close;
 
 	private static boolean encoderHashIsShowing = false;
-	
+
 	public EncoderHashFrame(final JBroFuzzWindow parent) {
 
 		if (encoderHashIsShowing) {
@@ -156,11 +156,11 @@ public class EncoderHashFrame extends JFrame {
 		final JPanel decoderPanel = new JPanel(new BorderLayout());
 
 		encoderPanel
-				.setBorder(BorderFactory
-						.createCompoundBorder(
-								BorderFactory
-										.createTitledBorder(" Enter the plain text below to be encoded / hashed "),
-								BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		.setBorder(BorderFactory
+				.createCompoundBorder(
+						BorderFactory
+						.createTitledBorder(" Enter the plain text below to be encoded / hashed "),
+						BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		decoderPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Enter the text below to be decoded "),
@@ -273,11 +273,11 @@ public class EncoderHashFrame extends JFrame {
 					public void run() {
 
 						encoderHashIsShowing = false;
-						
+
 						// Save the values of the encode/decode as a preference
 						prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 						prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-						
+
 						dispose();
 
 					}
@@ -292,17 +292,17 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					encoderHashIsShowing = false;
-					
+
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-					
+
 					dispose();
 
 				}
 			}
 		});
-		
+
 		// Keyboard listener on the treeView for Ctrl+Return to Encode
 		tree.addKeyListener(new KeyAdapter() {
 			@Override
@@ -310,18 +310,18 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					encoderHashIsShowing = false;
-					
+
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-					
+
 					dispose();
 
 				}
 			}
 		});
 
-		
+
 		// Keyboard listener on the decoded text pane for escape to cancel
 		deTextPane.addKeyListener(new KeyAdapter() {
 			@Override
@@ -329,17 +329,17 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					encoderHashIsShowing = false;
-					
+
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-					
+
 					dispose();
 
 				}
 			}
 		});
-		
+
 		// Keyboard listener on the encoded text pane for escape to cancel
 		enTextPane.addKeyListener(new KeyAdapter() {
 			@Override
@@ -347,17 +347,17 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					encoderHashIsShowing = false;
-					
+
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-					
+
 					dispose();
 
 				}
 			}
 		});
-		
+
 		// Keyboard listeners on the buttons for escape to cancel
 		encode.addKeyListener(new KeyAdapter() {
 			@Override
@@ -365,45 +365,45 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					encoderHashIsShowing = false;
-					
+
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-					
+
 					dispose();
 
 				}
 			}
 		});
-		
+
 		decode.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
 
 					encoderHashIsShowing = false;
-					
+
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-					
+
 					dispose();
 
 				}
 			}
 		});
-		
+
 		close.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
 
 					encoderHashIsShowing = false;
-					
+
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-					
+
 					dispose();
 
 				}
@@ -437,21 +437,21 @@ public class EncoderHashFrame extends JFrame {
 			@Override
 			public void windowClosing(final WindowEvent e) {
 				encoderHashIsShowing = false;
-				
+
 				// Save the values of the encode/decode as a preference
 				prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 				prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-				
+
 				dispose();
 			}
 		});
-		
+
 		// Load the values of encode/decode from the preferences
 		enTextPane.setText(prefs.get(JBroFuzzFormat.TEXT_ENCODE, ""));
 		deTextPane.setText(prefs.get(JBroFuzzFormat.TEXT_DECODE, ""));
 
 	}
-	
+
 	/**
 	 * <p>
 	 * Calculate the value to be encoded/decoded, based on the selected scheme
@@ -467,7 +467,7 @@ public class EncoderHashFrame extends JFrame {
 	public void calculate(boolean isToEncode) {
 
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-				.getLastSelectedPathComponent();
+		.getLastSelectedPathComponent();
 
 		if (node == null) {
 			return;
@@ -488,24 +488,24 @@ public class EncoderHashFrame extends JFrame {
 						if (isToEncode) {
 
 							deTextPane.setText(URLEncoder.encode(encodeText,
-									"US-ASCII"));
+							"US-ASCII"));
 
 						} else {
 
 							enTextPane.setText(URLDecoder.decode(decodeText,
-									"US-ASCII"));
+							"US-ASCII"));
 						}
 					} catch (UnsupportedEncodingException e) {
-						
+
 						if (isToEncode) {
 							deTextPane.setText("Error: String cannot be encoded...");
 						} else {
 							enTextPane.setText("Error: String cannot be decoded...");
 						}
-						
+
 					}
 				}
-				
+
 				// 2 implies URL Encode/Decode (ISO-8859-1)
 				if (i == 2) {
 
@@ -513,12 +513,12 @@ public class EncoderHashFrame extends JFrame {
 						if (isToEncode) {
 
 							deTextPane.setText(URLEncoder.encode(encodeText,
-									"ISO-8859-1"));
+							"ISO-8859-1"));
 
 						} else {
 
 							enTextPane.setText(URLDecoder.decode(decodeText,
-									"ISO-8859-1"));
+							"ISO-8859-1"));
 						}
 					} catch (UnsupportedEncodingException e) {
 
@@ -527,10 +527,10 @@ public class EncoderHashFrame extends JFrame {
 						} else {
 							enTextPane.setText("Error: String cannot be decoded...");
 						}
-						
+
 					}
 				}
-				
+
 				// 3 implies URL Encode/Decode (windows-1252)
 				if (i == 3) {
 
@@ -538,24 +538,24 @@ public class EncoderHashFrame extends JFrame {
 						if (isToEncode) {
 
 							deTextPane.setText(URLEncoder.encode(encodeText,
-									"windows-1252"));
+							"windows-1252"));
 
 						} else {
 
 							enTextPane.setText(URLDecoder.decode(decodeText,
-									"windows-1252"));
+							"windows-1252"));
 						}
 					} catch (UnsupportedEncodingException e) {
-						
+
 						if (isToEncode) {
 							deTextPane.setText("Error: String cannot be encoded...");
 						} else {
 							enTextPane.setText("Error: String cannot be decoded...");
 						}
-						
+
 					}
 				}
-				
+
 				// 4 implies URL Encode/Decode (UTF-8)
 				if (i == 4) {
 
@@ -563,76 +563,76 @@ public class EncoderHashFrame extends JFrame {
 						if (isToEncode) {
 
 							deTextPane.setText(URLEncoder.encode(encodeText,
-									"UTF-8"));
+							"UTF-8"));
 
 						} else {
 
 							enTextPane.setText(URLDecoder.decode(decodeText,
-									"UTF-8"));
+							"UTF-8"));
 						}
 					} catch (UnsupportedEncodingException e) {
-						
+
 						if (isToEncode) {
 							deTextPane.setText("Error: String cannot be encoded...");
 						} else {
 							enTextPane.setText("Error: String cannot be decoded...");
 						}
-						
+
 					}
 				}
-								
+
 				// 5 implies URL Encode/Decode (UTF-16BE)
 				if (i == 5) {
-					
+
 					try {
 						if (isToEncode) {
-							
+
 							deTextPane.setText(URLEncoder.encode(encodeText,
 									"UTF-16BE"));
 						} else {
-							
+
 							enTextPane.setText(URLDecoder.decode(decodeText,
 									"UTF-16BE"));
-							
+
 						}
-						
+
 					} catch (UnsupportedEncodingException ech) {
 						if (isToEncode) {
 							deTextPane.setText("Error: String cannot be encoded...");
 						} else {
 							enTextPane.setText("Error: String cannot be decoded...");
 						}
-						
+
 					}
 				}
-				
+
 				// 6 implies: Sixteen-bit Unicode Transformation Format, 
 				// little endian UTF-16LE
 				if (i == 6) {
-					
+
 					try {
 						if (isToEncode) {
-							
+
 							deTextPane.setText(URLEncoder.encode(encodeText,
 									"UTF-16LE"));
 						} else {
-							
+
 							enTextPane.setText(URLDecoder.decode(decodeText,
 									"UTF-16LE"));
-							
+
 						}
-						
+
 					} catch (UnsupportedEncodingException ech) {
-						
+
 						if (isToEncode) {
 							deTextPane.setText("Error: String cannot be encoded...");
 						} else {
 							enTextPane.setText("Error: String cannot be decoded...");
 						}
-						
+
 					}
 				}
-				
+
 				// 7 implies Base64
 				if (i == 7) {
 
@@ -655,7 +655,7 @@ public class EncoderHashFrame extends JFrame {
 						try {
 
 							MessageDigest md5 = MessageDigest
-									.getInstance("MD5");
+							.getInstance("MD5");
 							md5.update(encodeText.getBytes("iso-8859-1"), 0,
 									encodeText.length());
 
@@ -668,12 +668,12 @@ public class EncoderHashFrame extends JFrame {
 						} catch (NoSuchAlgorithmException exception1) {
 
 							deTextPane
-									.setText("Error: MD5 could not be found...");
+							.setText("Error: MD5 could not be found...");
 
 						} catch (UnsupportedEncodingException exception2) {
 
 							deTextPane
-									.setText("Error: MD5 String cannot be encoded...");
+							.setText("Error: MD5 String cannot be encoded...");
 
 						}
 					}
@@ -687,7 +687,7 @@ public class EncoderHashFrame extends JFrame {
 						try {
 
 							MessageDigest sha1 = MessageDigest
-									.getInstance("SHA-1");
+							.getInstance("SHA-1");
 							sha1.update(encodeText.getBytes("iso-8859-1"), 0,
 									encodeText.length());
 
@@ -700,12 +700,12 @@ public class EncoderHashFrame extends JFrame {
 						} catch (NoSuchAlgorithmException exception1) {
 
 							deTextPane
-									.setText("Error: SHA-1 could not be found...");
+							.setText("Error: SHA-1 could not be found...");
 
 						} catch (UnsupportedEncodingException exception2) {
 
 							deTextPane
-									.setText("Error: SHA-1 String cannot be encoded...");
+							.setText("Error: SHA-1 String cannot be encoded...");
 
 						}
 					}
@@ -719,7 +719,7 @@ public class EncoderHashFrame extends JFrame {
 						try {
 
 							MessageDigest sha256 = MessageDigest
-									.getInstance("SHA-256");
+							.getInstance("SHA-256");
 							sha256.update(encodeText.getBytes("iso-8859-1"), 0,
 									encodeText.length());
 
@@ -732,12 +732,12 @@ public class EncoderHashFrame extends JFrame {
 						} catch (NoSuchAlgorithmException exception2) {
 
 							deTextPane
-									.setText("Error: SHA-256 could not be found...");
+							.setText("Error: SHA-256 could not be found...");
 
 						} catch (UnsupportedEncodingException exception2) {
 
 							deTextPane
-									.setText("Error: SHA-256 String cannot be encoded...");
+							.setText("Error: SHA-256 String cannot be encoded...");
 
 						}
 					}
@@ -751,7 +751,7 @@ public class EncoderHashFrame extends JFrame {
 						try {
 
 							MessageDigest sha384 = MessageDigest
-									.getInstance("SHA-384");
+							.getInstance("SHA-384");
 							sha384.update(encodeText.getBytes("iso-8859-1"), 0,
 									encodeText.length());
 
@@ -764,12 +764,12 @@ public class EncoderHashFrame extends JFrame {
 						} catch (NoSuchAlgorithmException exception2) {
 
 							deTextPane
-									.setText("Error: SHA-384 could not be found...");
+							.setText("Error: SHA-384 could not be found...");
 
 						} catch (UnsupportedEncodingException exception2) {
 
 							deTextPane
-									.setText("Error: SHA-384 String cannot be encoded...");
+							.setText("Error: SHA-384 String cannot be encoded...");
 
 						}
 					}
@@ -783,7 +783,7 @@ public class EncoderHashFrame extends JFrame {
 						try {
 
 							MessageDigest sha512 = MessageDigest
-									.getInstance("SHA-512");
+							.getInstance("SHA-512");
 							sha512.update(encodeText.getBytes("iso-8859-1"), 0,
 									encodeText.length());
 
@@ -796,20 +796,20 @@ public class EncoderHashFrame extends JFrame {
 						} catch (NoSuchAlgorithmException exception2) {
 
 							deTextPane
-									.setText("Error: SHA-512 could not be found...");
+							.setText("Error: SHA-512 could not be found...");
 
 						} catch (UnsupportedEncodingException exception2) {
 
 							deTextPane
-									.setText("Error: SHA-512 String cannot be encoded...");
+							.setText("Error: SHA-512 String cannot be encoded...");
 
 						}
 					}
 				}
-				
+
 				// 13 implies Hexadecimal lowercase
 				if (i == 13) {					
-					
+
 					if (isToEncode) {
 
 						try {
@@ -832,10 +832,10 @@ public class EncoderHashFrame extends JFrame {
 
 					}
 				}
-				
+
 				// 14 implies Hexadecimal Uppercase
 				if (i == 14) {					
-					
+
 					if (isToEncode) {
 
 						try {
@@ -858,10 +858,10 @@ public class EncoderHashFrame extends JFrame {
 
 					}
 				}
-				
+
 				// 15 implies Binary
 				if (i == 15) {					
-					
+
 					if (isToEncode) {
 
 						try {
@@ -884,10 +884,10 @@ public class EncoderHashFrame extends JFrame {
 
 					}
 				}
-				
+
 				// 16 implies www-form-urlencoded
 				if (i == 16) {					
-					
+
 					final URLCodec codec = new URLCodec();
 
 					if (isToEncode) {
@@ -913,11 +913,11 @@ public class EncoderHashFrame extends JFrame {
 
 					}
 				}
-				
+
 				// 17 implies RFC 1521 MIME (Multipurpose Internet Mail Extensions) 
 				// Part One. Rules #3, #4, and #5 of the quoted-printable spec are not implemented yet
 				if (i == 17) {					
-					
+
 					final QuotedPrintableCodec codec = new QuotedPrintableCodec();
 
 					if (isToEncode) {
@@ -940,81 +940,81 @@ public class EncoderHashFrame extends JFrame {
 
 					}
 				}
-				
+
 				// 18 implies HTML Encode
 				if (i == 18) {
-					
+
 					if (isToEncode) {
-						
+
 						deTextPane.setText(StringEscapeUtils.escapeHtml(encodeText));
-						
+
 					} else {
-						
+
 						enTextPane.setText(StringEscapeUtils.unescapeHtml(decodeText));
 					}
 				}
-				
+
 				// 19 implies CSV Encode
 				if (i == 19) {
-					
+
 					if (isToEncode) {
-						
+
 						deTextPane.setText(StringEscapeUtils.escapeCsv(encodeText));
-						
+
 					} else {
-						
+
 						enTextPane.setText(StringEscapeUtils.unescapeCsv(decodeText));
 					}
 				}
-				
+
 				// 20 implies Java
 				if (i == 20) {
-					
+
 					if (isToEncode) {
-						
+
 						deTextPane.setText(StringEscapeUtils.escapeJava(encodeText));
-						
+
 					} else {
-						
+
 						enTextPane.setText(StringEscapeUtils.unescapeJava(decodeText));
 					}
 				}
-				
+
 				// 21 implies JavaScript
 				if (i == 21) {
-					
+
 					if (isToEncode) {
-						
+
 						deTextPane.setText(StringEscapeUtils.escapeJavaScript(encodeText));
-						
+
 					} else {
-						
+
 						enTextPane.setText(StringEscapeUtils.unescapeJavaScript(decodeText));
 					}
 				}
 
 				// 22 implies SQL
 				if (i == 22) {
-					
+
 					if (isToEncode) {
-						
+
 						deTextPane.setText(StringEscapeUtils.escapeSql(encodeText));
-						
+
 					} else {
 						// No reverse method exists within String Escape Utils
 						// enTextPane.setText(StringEscapeUtils.unescapeSql(decodeText));
 					}
 				}
-				
+
 				// 23 implies XML
 				if (i == 23) {
-					
+
 					if (isToEncode) {
-						
+
 						deTextPane.setText(StringEscapeUtils.escapeXml(encodeText));
-						
+
 					} else {
-						
+
 						enTextPane.setText(StringEscapeUtils.unescapeXml(decodeText));
 					}
 				}

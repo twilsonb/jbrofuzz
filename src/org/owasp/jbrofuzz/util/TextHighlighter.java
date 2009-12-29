@@ -283,7 +283,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 	}
 
 	private void processChangedLines(final int offset, final int length)
-			throws BadLocationException {
+	throws BadLocationException {
 		final String text = this.getText(0, getLength());
 		highlightString(Color.black, 0, getLength(), true, false);
 
@@ -303,7 +303,7 @@ public class TextHighlighter extends DefaultStyledDocument {
 
 	@Override
 	public void remove(final int offset, final int length)
-			throws BadLocationException {
+	throws BadLocationException {
 		super.remove(offset, length);
 		processChangedLines(offset, length);
 	}

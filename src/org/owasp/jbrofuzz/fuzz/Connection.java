@@ -43,10 +43,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.prefs.Preferences;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.KeyManager;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -104,7 +104,7 @@ public class Connection {
 			System.out.println("No SSL algorithm support: " + e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
 			System.out
-					.println("Exception when setting up the Naive key management.");
+			.println("Exception when setting up the Naive key management.");
 		}
 
 		return (SSLSocketFactory) SSLSocketFactory.getDefault();
@@ -148,7 +148,7 @@ public class Connection {
 	 * @since 0.1
 	 */
 	public Connection(final String urlString, final String message)
-			throws ConnectionException {
+	throws ConnectionException {
 
 		isResponse100Continue = false;
 
@@ -266,7 +266,7 @@ public class Connection {
 								// also
 								// write them as output
 								final byte[] postData = (getPostDataInMessage())
-										.getBytes();
+								.getBytes();
 								out_stream.write(postData);
 								baos.write(postData, 0, postData.length);
 								// If so, check for chunked encoding again (not
@@ -296,9 +296,9 @@ public class Connection {
 
 											if (incoming2.contains("\r\n0\r\n")
 													|| incoming2
-															.contains("\n0\n")
+													.contains("\n0\n")
 													|| incoming2
-															.contains("\r0\r")) {
+													.contains("\r0\r")) {
 												end_reached2 = true;
 											}
 
@@ -464,7 +464,7 @@ public class Connection {
 
 			try {
 				final String out2 = reply
-						.split("\r\n--jbrofuzz--100-continue-->\r\n")[1];
+				.split("\r\n--jbrofuzz--100-continue-->\r\n")[1];
 				final String out3 = out2.split(" ")[1].substring(0, 3);
 
 				if (StringUtils.isNumeric(out3)) {

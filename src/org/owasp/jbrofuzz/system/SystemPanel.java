@@ -47,6 +47,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+
 import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 
@@ -159,19 +160,19 @@ public class SystemPanel extends JBroFuzzPanel {
 		start("[System Health Check Start]", 2);
 		start("[System Info Start]", 1);
 		final String systemInfo = "  [Java]\r\n" + "    Vendor:  "
-				+ System.getProperty("java.vendor") + "\r\n" + "    Version: "
-				+ System.getProperty("java.version") + "\r\n"
-				+ "    Installed at: " + System.getProperty("java.home")
-				+ "\r\n" + "    Website: "
-				+ System.getProperty("java.vendor.url") + "\r\n"
-				+ "  [User]\r\n" + "    User: "
-				+ System.getProperty("user.name") + "\r\n" + "    Home dir: "
-				+ System.getProperty("user.home") + "\r\n"
-				+ "    Current dir: " + System.getProperty("user.dir") + "\r\n"
-				+ "  [O/S]\r\n" + "    Name: " + System.getProperty("os.name")
-				+ "\r\n" + "    Version: " + System.getProperty("os.version")
-				+ "\r\n" + "    Architecture: " + System.getProperty("os.arch")
-				+ "\r\n";
+		+ System.getProperty("java.vendor") + "\r\n" + "    Version: "
+		+ System.getProperty("java.version") + "\r\n"
+		+ "    Installed at: " + System.getProperty("java.home")
+		+ "\r\n" + "    Website: "
+		+ System.getProperty("java.vendor.url") + "\r\n"
+		+ "  [User]\r\n" + "    User: "
+		+ System.getProperty("user.name") + "\r\n" + "    Home dir: "
+		+ System.getProperty("user.home") + "\r\n"
+		+ "    Current dir: " + System.getProperty("user.dir") + "\r\n"
+		+ "  [O/S]\r\n" + "    Name: " + System.getProperty("os.name")
+		+ "\r\n" + "    Version: " + System.getProperty("os.version")
+		+ "\r\n" + "    Architecture: " + System.getProperty("os.arch")
+		+ "\r\n";
 
 		final String[] info = systemInfo.split("\r\n");
 

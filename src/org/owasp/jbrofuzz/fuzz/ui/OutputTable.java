@@ -53,9 +53,9 @@ public class OutputTable extends JTable {
 	private static final long serialVersionUID = 165423542L;
 
 	public OutputTable(final ResponseTableModel model) {
-		
+
 		super(model);
-		
+
 		TableRowSorter<ResponseTableModel> sorter = 
 			new TableRowSorter<ResponseTableModel>(model);
 		setRowSorter(sorter);
