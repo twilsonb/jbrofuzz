@@ -77,13 +77,13 @@ public class PayloadsPanel extends JBroFuzzPanel {
 
 	// The Table Models with a single column
 	protected final SingleColumnModel payloadsTableModel, fuzzersTableModel,
-			categoriesTableModel;
+	categoriesTableModel;
 
 	// The row sorters for the two tables
 	protected TableRowSorter<SingleColumnModel> sorter, sorter2;
 
 	protected final NonWrappingTextPane payloadInfoTextArea,
-			fuzzerInfoTextArea;
+	fuzzerInfoTextArea;
 
 	/**
 	 * Constructor for the Payloads Panel.
@@ -102,7 +102,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		categoriesPanel = new JPanel(new BorderLayout());
 		categoriesPanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(" Categories "), BorderFactory
-						.createEmptyBorder(1, 1, 1, 1)));
+				.createEmptyBorder(1, 1, 1, 1)));
 		// categoriesPanel.setBounds(10, 20, 220, 430);
 		// this.add(categoriesPanel);
 
@@ -184,12 +184,12 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		payloadsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		payloadsTable
-				.getTableHeader()
-				.setToolTipText(
-						"Click to specify sorting; Control-Click to specify secondary sorting");
+		.getTableHeader()
+		.setToolTipText(
+				"Click to specify sorting; Control-Click to specify secondary sorting");
 
 		payloadsTable
-				.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
+		.setFont(new Font("Lucida Sans Typewriter", Font.BOLD, 14));
 		payloadsTable.setRowHeight(30);
 		payloadsTable.getSelectionModel().addListSelectionListener(
 				new PayloadsRowListener(this));
@@ -201,7 +201,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 				if (e.getClickCount() == 2) {
 
 					final String payload = (String) payloadsTable.getModel()
-							.getValueAt(payloadsTable.getSelectedRow(), 0);
+					.getValueAt(payloadsTable.getSelectedRow(), 0);
 					new PropertiesViewer(PayloadsPanel.this,
 							"Payload Information", payload);
 
@@ -262,9 +262,9 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		final JScrollPane commentLabelScrollPane = new JScrollPane(
 				payloadInfoTextArea);
 		commentLabelScrollPane
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		commentLabelScrollPane
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		// commentLabelScrollPane.setPreferredSize(new Dimension(400, 150));
 
 		JSplitPane bottomSplitPanel = new JSplitPane(

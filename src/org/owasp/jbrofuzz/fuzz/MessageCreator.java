@@ -51,7 +51,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * @since 1.3
  */
 public class MessageCreator {
-	
+
 	// The message that will be placed on the wire
 	private String message;
 	// The actual payload that will be incorporated into the original message
@@ -320,7 +320,7 @@ public class MessageCreator {
 
 	}
 
-	
+
 	/**
 	 * TODO Should really write this a bit better..
 	 */

@@ -144,9 +144,9 @@ public abstract class JBroFuzzPanel extends JPanel {
 		// Traverse children
 		TreeNode node = (TreeNode) parent.getLastPathComponent();
 		if (node.getChildCount() >= 0) {
-			
+
 			for (Enumeration<TreeNode> e = node.children(); e.hasMoreElements();) {
-				
+
 				TreeNode n = e.nextElement();
 				TreePath path = parent.pathByAddingChild(n);
 				expandAll(tree, path, expand);
@@ -266,7 +266,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 		i2_copy.setIcon(ImageCreator.IMG_COPY);
 		i3_paste.setIcon(ImageCreator.IMG_PASTE);
 		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
-		
+
 		i0_open.setEnabled(open);
 		i1_cut.setEnabled(cut);
 		i2_copy.setEnabled(copy);
@@ -301,19 +301,19 @@ public abstract class JBroFuzzPanel extends JPanel {
 							return;
 						}
 						final String fileName = (String) area.getModel()
-								.getValueAt(area.convertRowIndexToModel(c), 0)
-								+ ".html";
+						.getValueAt(area.convertRowIndexToModel(c), 0)
+						+ ".html";
 						final File f = getFrame().getJBroFuzz().getHandler()
-								.getFuzzFile(fileName);
+						.getFuzzFile(fileName);
 
 						Browser.init();
 						try {
 							Browser.displayURL(f.toURI().toString());
 						} catch (final IOException ex) {
 							getFrame()
-									.log(
-											"Could not launch link in external browser",
-											3);
+							.log(
+									"Could not launch link in external browser",
+									3);
 						}
 					}
 
@@ -391,7 +391,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 							return;
 						}
 						final String name = (String) area.getModel()
-								.getValueAt(area.convertRowIndexToModel(c), 0);
+						.getValueAt(area.convertRowIndexToModel(c), 0);
 						new WindowViewerFrame(JBroFuzzPanel.this, name);
 
 					}
@@ -400,7 +400,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 							.getName())) {
 
 						final String payload = (String) area.getModel()
-								.getValueAt(area.getSelectedRow(), 0);
+						.getValueAt(area.getSelectedRow(), 0);
 						new PropertiesViewer(JBroFuzzPanel.this,
 								"Payload Information", payload);
 
@@ -414,7 +414,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 						final int c = area.getSelectedRow();
 						final String name = (String) area.getModel()
-								.getValueAt(c, 0);
+						.getValueAt(c, 0);
 						new WindowViewerFrame(JBroFuzzPanel.this, name.split(" ")[0]);
 
 					}
@@ -472,7 +472,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 		});
 	}
 
-	
+
 	/**
 	 * <p>
 	 * Method for setting up the right click copy paste cut and select all menu.
@@ -499,7 +499,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 		i2_copy.setIcon(ImageCreator.IMG_COPY);
 		i3_paste.setIcon(ImageCreator.IMG_PASTE);
 		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
-		
+
 		i1_cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
 				ActionEvent.CTRL_MASK));
 		i2_copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,

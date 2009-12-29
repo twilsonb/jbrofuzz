@@ -48,7 +48,7 @@ public class PasteAction extends TextAction {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				final JTextComponent text = PasteAction.this
-						.getTextComponent(evt);
+				.getTextComponent(evt);
 				if (text != null) {
 					if (text.isEditable()) {
 						text.paste();

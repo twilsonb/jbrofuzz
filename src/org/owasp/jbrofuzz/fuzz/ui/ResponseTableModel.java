@@ -52,7 +52,7 @@ public class ResponseTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	// The names of the columns within the table of generators
 	private static final String[] COLUMNNAMES = { "No", "Target", "Timestamp",
-			"Status", "Response Time", "Response Size" };
+		"Status", "Response Time", "Response Size" };
 	// The vector of ResponseOutputs
 	private Vector<ResponseOutput> dataVector;
 	// The integer counter
@@ -88,7 +88,7 @@ public class ResponseTableModel extends AbstractTableModel {
 
 		dataVector.add(new ResponseOutput(
 
-		outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
+				outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
 				.getStartDateShort(), "Sending  - ...", "000000 ms",
 				"00000000 bytes"
 
@@ -226,13 +226,13 @@ public class ResponseTableModel extends AbstractTableModel {
 
 		ResponseOutput response = new ResponseOutput(
 
-		outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
+				outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
 				.getStartDateShort(),
 				"Finished - " + outputMessage.getStatus(), StringUtils.leftPad(
 						"" + outputMessage.getResponseTime(), 6, '0')
 						+ " ms", StringUtils.leftPad(""
-						+ outputMessage.getByteCount(), 8, '0')
-						+ " bytes"
+								+ outputMessage.getByteCount(), 8, '0')
+								+ " bytes"
 
 		);
 
@@ -245,11 +245,11 @@ public class ResponseTableModel extends AbstractTableModel {
 
 		ResponseOutput response = new ResponseOutput(
 
-		outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
+				outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
 				.getStartDateShort(), "[Error]  - " + e.getMessage(),
 				StringUtils.leftPad("" + outputMessage.getResponseTime(), 6,
-						'0')
-						+ " ms", StringUtils.leftPad(""
+				'0')
+				+ " ms", StringUtils.leftPad(""
 						+ outputMessage.getByteCount(), 8, '0')
 						+ " bytes"
 

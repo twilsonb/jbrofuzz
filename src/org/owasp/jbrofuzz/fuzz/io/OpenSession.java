@@ -186,7 +186,7 @@ public class OpenSession {
 							fuzz_id)) {
 						fuzzer_happy = false;
 					}
-					
+
 					// Work on the encoding you are reading in
 					boolean encoding_found = false;
 					for (String lamda : FuzzerTable.ENCODINGS) {
@@ -194,13 +194,13 @@ public class OpenSession {
 							encoding_found = true;
 						}
 					}
-										
+
 					// Set the default encoding, the first one
 					if(!encoding_found) {
 						encoding_ = FuzzerTable.ENCODINGS[0];
 					}
-					
-					
+
+
 					// The start and end integers should be happy
 					try {
 						start = Integer.parseInt(payloadArray[2]);
@@ -222,9 +222,9 @@ public class OpenSession {
 						mWindow.log("Could not open and add Fuzzer: "
 								+ fileInput[i], 3);
 					} else {
-						
+
 						mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_, start, end);
-						
+
 					}
 				}
 			}

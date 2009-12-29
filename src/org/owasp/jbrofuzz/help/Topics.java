@@ -79,7 +79,7 @@ public class Topics extends JFrame implements TreeSelectionListener {
 
 	// The final String Array of tree nodes
 	private static final String[] nodeNames = { "Help Topics", "Fuzzing",
-			"Graphing", "Payloads", "Headers", "System" };
+		"Graphing", "Payloads", "Headers", "System" };
 
 	/**
 	 * <p>
@@ -93,7 +93,7 @@ public class Topics extends JFrame implements TreeSelectionListener {
 	private JTree tree;
 	// The corresponding scroll panels
 	private JScrollPane helpScrPane, webdScrPane, tcpsScrPane, tcpfScrPane,
-			geneScrPane, sysmScrPane;
+	geneScrPane, sysmScrPane;
 
 	// The main split pane
 	private JSplitPane splitPane;
@@ -272,7 +272,7 @@ public class Topics extends JFrame implements TreeSelectionListener {
 	public void valueChanged(final TreeSelectionEvent e) {
 
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-				.getLastSelectedPathComponent();
+		.getLastSelectedPathComponent();
 
 		if (node == null) {
 			return;

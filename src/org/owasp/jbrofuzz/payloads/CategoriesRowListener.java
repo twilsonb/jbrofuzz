@@ -76,7 +76,7 @@ final class CategoriesRowListener implements ListSelectionListener {
 
 			c = payloadsPanel.categoriesTable.convertRowIndexToModel(c);
 			value = (String) payloadsPanel.categoriesTableModel
-					.getValueAt(c, 0);
+			.getValueAt(c, 0);
 
 		} catch (IndexOutOfBoundsException e) {
 			return;
@@ -84,8 +84,8 @@ final class CategoriesRowListener implements ListSelectionListener {
 
 		payloadsPanel.fuzzersTable.setRowSorter(null);
 		payloadsPanel.fuzzersTableModel
-				.setData(payloadsPanel.getFrame().getJBroFuzz().getDatabase()
-						.getPrototypeNamesInCategory(value));
+		.setData(payloadsPanel.getFrame().getJBroFuzz().getDatabase()
+				.getPrototypeNamesInCategory(value));
 		payloadsPanel.sorter2 = new TableRowSorter<SingleColumnModel>(
 				payloadsPanel.fuzzersTableModel);
 		payloadsPanel.fuzzersTable.setRowSorter(payloadsPanel.sorter2);
@@ -96,7 +96,7 @@ final class CategoriesRowListener implements ListSelectionListener {
 		payloadsPanel.fuzzersPanel.setBorder(BorderFactory
 				.createCompoundBorder(BorderFactory.createTitledBorder(" "
 						+ value + " "), BorderFactory.createEmptyBorder(1, 1,
-						1, 1)));
+								1, 1)));
 
 		payloadsPanel.payloadsPanel.setBorder(BorderFactory
 				.createCompoundBorder(BorderFactory

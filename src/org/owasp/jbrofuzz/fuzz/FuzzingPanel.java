@@ -277,35 +277,35 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			@Override
 			public void mouseClicked(final MouseEvent e) {
 				// if (e.getClickCount() == 1) {
-//					SwingUtilities.invokeLater(new Runnable() {
-//						public void run() {
+				//					SwingUtilities.invokeLater(new Runnable() {
+				//						public void run() {
 
-							int c = fuzzersTable.getSelectedRow();
+				int c = fuzzersTable.getSelectedRow();
 
-//							try {
-//								c = mOutputTable.convertRowIndexToModel(c);
-//							} catch (IndexOutOfBoundsException eqwr) {
-//								return;
-//							}
-							
-							final int af = ((Integer) fuzzersTable.getModel().getValueAt(c, 2)).intValue();
-							final int fb = ((Integer) fuzzersTable.getModel().getValueAt(c, 3)).intValue();
-						
-							request_textPane.grabFocus();
-							try {
-								request_textPane.setCaretPosition(af);
-							} catch (IllegalArgumentException  vad_arg) {
-								getFrame().log("Could not pinpoint the position where the fuzzer is", 3);
-							}
-							request_textPane.setSelectionStart(af);
-							request_textPane.setSelectionEnd(fb);
-							// fuzzersTable.grabFocus();
-//						}
-//					});
+				//							try {
+				//								c = mOutputTable.convertRowIndexToModel(c);
+				//							} catch (IndexOutOfBoundsException eqwr) {
+				//								return;
+				//							}
+
+				final int af = ((Integer) fuzzersTable.getModel().getValueAt(c, 2)).intValue();
+				final int fb = ((Integer) fuzzersTable.getModel().getValueAt(c, 3)).intValue();
+
+				request_textPane.grabFocus();
+				try {
+					request_textPane.setCaretPosition(af);
+				} catch (IllegalArgumentException  vad_arg) {
+					getFrame().log("Could not pinpoint the position where the fuzzer is", 3);
+				}
+				request_textPane.setSelectionStart(af);
+				request_textPane.setSelectionEnd(fb);
+				// fuzzersTable.grabFocus();
+				//						}
+				//					});
 				// }
 			}
 		});
-		
+
 		final JScrollPane fuzzersScrollPane = new JScrollPane(fuzzersTable);
 		fuzzersScrollPane.setVerticalScrollBarPolicy(20);
 

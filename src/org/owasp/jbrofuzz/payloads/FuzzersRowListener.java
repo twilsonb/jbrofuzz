@@ -78,7 +78,7 @@ final class FuzzersRowListener implements ListSelectionListener {
 			return;
 		}
 		final String id = payloadsPanel.getFrame().getJBroFuzz().getDatabase()
-				.getIdFromName(name);
+		.getIdFromName(name);
 
 		payloadsPanel.payloadsTableModel.setData(payloadsPanel.getFrame()
 				.getJBroFuzz().getDatabase().getPayloads(id));
@@ -96,16 +96,16 @@ final class FuzzersRowListener implements ListSelectionListener {
 					+ "Fuzzer Type: "
 					+ ((payloadsPanel.getFrame().getJBroFuzz().getDatabase()
 							.getPrototype(id).getType()))
-					+ "\n"
-					+ "Fuzzer Id:   "
-					+ id
-					+ "\n\n"
-					+ "Total Number of Payloads: "
-					+ payloadsPanel.getFrame().getJBroFuzz().getDatabase()
+							+ "\n"
+							+ "Fuzzer Id:   "
+							+ id
+							+ "\n\n"
+							+ "Total Number of Payloads: "
+							+ payloadsPanel.getFrame().getJBroFuzz().getDatabase()
 							.getSize(id));
 			payloadsPanel.fuzzerInfoTextArea
-					.setCaretPosition(payloadsPanel.fuzzerInfoTextArea
-							.getText().length());
+			.setCaretPosition(payloadsPanel.fuzzerInfoTextArea
+					.getText().length());
 
 		}
 

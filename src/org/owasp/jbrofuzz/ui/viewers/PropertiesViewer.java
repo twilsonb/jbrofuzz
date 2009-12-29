@@ -85,7 +85,7 @@ public class PropertiesViewer extends JFrame {
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(""), BorderFactory.createEmptyBorder(1, 1,
-				1, 1)));
+						1, 1)));
 		listPanel.setBounds(10, 10, 520, 250);
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" " + header + " "), BorderFactory

@@ -71,7 +71,7 @@ public class HelpChart extends JScrollPane {
 		super();
 
 		final URL helpURL = ClassLoader.getSystemClassLoader().getResource(
-				"help/topics-02.html");
+		"help/topics-02.html");
 
 		JEditorPane tcpfPane;
 		try {
@@ -85,9 +85,9 @@ public class HelpChart extends JScrollPane {
 		JScrollPane helpScrollPane = new JScrollPane(tcpfPane);
 
 		helpScrollPane
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		helpScrollPane
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 		setViewportView(tcpfPane);
 

@@ -99,7 +99,7 @@ public class Database {
 
 		prototypes = new HashMap<String, Prototype>();
 		loadFile();
-		
+
 		// Add the Zero Fuzzers
 		Prototype pt0 = new Prototype('Z', "999-ZER-10K", "10000 Plain Requests");
 		Prototype pt1 = new Prototype('Z', "999-ZER-1KI", "1000 Plain Requests");
@@ -108,7 +108,7 @@ public class Database {
 		Prototype pt4 = new Prototype('Z', "999-ZER-ONE", "1 Plain Request");
 
 		final String zeroFuzzerName = "Zero Fuzzers";
-		
+
 		pt0.addCategory(zeroFuzzerName);
 		pt1.addCategory(zeroFuzzerName);
 		pt2.addCategory(zeroFuzzerName);
@@ -116,9 +116,9 @@ public class Database {
 		pt4.addCategory(zeroFuzzerName);
 
 		for (int i = 0; i < 10000; i++) {
-			
+
 			pt0.addPayload("");
-			
+
 			if(i < 1000) {
 				pt1.addPayload("");
 			}
@@ -132,13 +132,13 @@ public class Database {
 				pt4.addPayload("");
 			}
 		}
-		
+
 		prototypes.put("999-ZER-10K", pt0);
 		prototypes.put("999-ZER-1KI", pt1);
 		prototypes.put("999-ZER-100", pt2);
 		prototypes.put("999-ZER-TEN", pt3);
 		prototypes.put("999-ZER-ONE", pt4);
-		
+
 	}
 
 	/**
@@ -180,7 +180,7 @@ public class Database {
 	 * @since 1.2
 	 */
 	public Fuzzer createFuzzer(String prototypeId, int len)
-			throws NoSuchFuzzerException {
+	throws NoSuchFuzzerException {
 
 		if (!containsPrototype(prototypeId)) {
 
@@ -192,7 +192,7 @@ public class Database {
 
 		return new Fuzzer(getPrototype(prototypeId), len);
 	}
-	
+
 	/**
 	 * <p>
 	 * This factory method should be used instead of the #createFuzzer() if the
@@ -222,8 +222,8 @@ public class Database {
 	 * @since 1.9
 	 */
 	public FuzzerBigInteger createFuzzerBigInteger(String prototypeId, int len) 
-			throws NoSuchFuzzerException {
-		
+	throws NoSuchFuzzerException {
+
 		if (!containsPrototype(prototypeId)) {
 
 			throw new NoSuchFuzzerException(StringUtils.abbreviate(prototypeId,
@@ -234,7 +234,7 @@ public class Database {
 
 		return new FuzzerBigInteger(getPrototype(prototypeId), len);
 	}
-	
+
 	/**
 	 * <p>Return all the unique categories found across prototypes that are loaded
 	 * into the database.</p>
@@ -255,7 +255,7 @@ public class Database {
 		for (String id : ids) {
 
 			ArrayList<String> categoriesArrayList = prototypes.get(id)
-					.getCategories();
+			.getCategories();
 			String[] categoriesArray = new String[categoriesArrayList.size()];
 			categoriesArrayList.toArray(categoriesArray);
 
@@ -292,7 +292,7 @@ public class Database {
 		return set.toArray(output);
 
 	}
-	
+
 	/**
 	 * <p>Get all the unique Fuzzer IDs that are loaded in the database.</p>
 	 * 
@@ -305,9 +305,9 @@ public class Database {
 	 * @since 1.5
 	 */
 	public String[] getAllFuzzerIDs() {
-		
+
 		return getAllPrototypeIDs();
-		
+
 	}
 
 	/**
@@ -519,7 +519,7 @@ public class Database {
 
 		// Attempt to read from the jar file
 		final URL fileURL = ClassLoader.getSystemClassLoader().getResource(
-				"fuzzers.jbrofuzz");
+		"fuzzers.jbrf");
 
 		if (fileURL == null) {
 			// -1 File not found
@@ -583,7 +583,7 @@ public class Database {
 				if (fileInput[i].charAt(13) != ':') {
 					continue;
 				}
-				
+
 			} catch (IndexOutOfBoundsException e1) {
 				continue;
 			}
@@ -600,12 +600,12 @@ public class Database {
 			}
 
 			final char inputTypeChar = _fla[0].charAt(0);
-			
+
 			// Check [0] -> Fuzzer Type 'Z' or 'P', etc..
 			if(!Prototype.isValidFuzzerType(inputTypeChar)) {
 				continue;
 			}
-			
+
 			// The Id: SQL-INJ cannot be empty
 			if (_fla[1].isEmpty()) {
 				continue;
@@ -738,9 +738,9 @@ public class Database {
 	 * @return e.g. Replacive
 	 */
 	public String getTypeFromName(String name) {
-		
+
 		return prototypes.get(getIdFromName(name)).getType();
-		
+
 	}
 
 	/**
@@ -754,9 +754,9 @@ public class Database {
 	 * @since 1.8
 	 */
 	public String getType(String id) {
-		
+
 		return prototypes.get(id).getType();
-		
+
 	}
 
 }

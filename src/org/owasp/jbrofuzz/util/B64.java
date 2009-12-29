@@ -64,9 +64,9 @@ public class B64 {
 		int rawIndex = 0;
 		for (int i = 0; i < base64.length(); i += 4) {
 			final int block = (B64.getValue(base64.charAt(i)) << 18)
-					+ (B64.getValue(base64.charAt(i + 1)) << 12)
-					+ (B64.getValue(base64.charAt(i + 2)) << 6)
-					+ (B64.getValue(base64.charAt(i + 3)));
+			+ (B64.getValue(base64.charAt(i + 1)) << 12)
+			+ (B64.getValue(base64.charAt(i + 2)) << 6)
+			+ (B64.getValue(base64.charAt(i + 3)));
 			for (int j = 0; (j < 3) && (rawIndex + j < raw.length); j++) {
 				raw[rawIndex + j] = (byte) ((block >> (8 * (2 - j))) & 0xff);
 			}

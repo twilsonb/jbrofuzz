@@ -73,8 +73,8 @@ public class Faq extends JFrame implements TreeSelectionListener {
 
 	// The final String Array of tree nodes
 	private static final String[] nodeNames = { "FAQ", "System Requirements",
-			"Java", "Installation", "Files & Directories",
-			"Fuzzers & Payloads", "Older Features/Versions", "Proxy Settings" };
+		"Java", "Installation", "Files & Directories",
+		"Fuzzers & Payloads", "Older Features/Versions", "Proxy Settings" };
 
 	/**
 	 * <p>
@@ -148,7 +148,7 @@ public class Faq extends JFrame implements TreeSelectionListener {
 		} catch (final IOException e1) {
 			faqEditorPane = new JEditorPane();
 			faqEditorPane
-					.setText("Frequently Asked Questions file could not be located.");
+			.setText("Frequently Asked Questions file could not be located.");
 		}
 		faqScrollPane = new JScrollPane(faqEditorPane);
 
@@ -209,7 +209,7 @@ public class Faq extends JFrame implements TreeSelectionListener {
 	public void valueChanged(final TreeSelectionEvent e) {
 
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-				.getLastSelectedPathComponent();
+		.getLastSelectedPathComponent();
 
 		if (node == null) {
 			return;

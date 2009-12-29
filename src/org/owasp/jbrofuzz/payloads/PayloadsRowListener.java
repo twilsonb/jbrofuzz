@@ -76,7 +76,7 @@ final class PayloadsRowListener implements ListSelectionListener {
 		try {
 
 			payload = (String) payloadsPanel.payloadsTableModel
-					.getValueAt(d, 0);
+			.getValueAt(d, 0);
 
 		} catch (IndexOutOfBoundsException e) {
 			return;

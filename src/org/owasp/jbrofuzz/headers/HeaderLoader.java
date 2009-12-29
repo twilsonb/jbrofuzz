@@ -74,7 +74,7 @@ public class HeaderLoader {
 
 		// Attempt to read from the jar file
 		final URL fileURL = ClassLoader.getSystemClassLoader().getResource(
-				"headers.jbrofuzz");
+		"headers.jbrf");
 
 		if (fileURL == null) {
 			return;
@@ -149,7 +149,7 @@ public class HeaderLoader {
 		int index = 0;
 		boolean exists = false;
 		for (Enumeration<HeaderTreeNode> e = extracted(dn); e.hasMoreElements()
-				&& !exists;) {
+		&& !exists;) {
 
 			String currentElement = e.nextElement().toString();
 
@@ -272,7 +272,7 @@ public class HeaderLoader {
 
 								try {
 									numberOfFields = Integer
-											.parseInt(firstLineArray[2]);
+									.parseInt(firstLineArray[2]);
 								} catch (final NumberFormatException e) {
 									numberOfFields = 0;
 								}
@@ -312,12 +312,12 @@ public class HeaderLoader {
 									categoriesArray = line2.split("\\|");
 									for (int xa = 0; xa < categoriesArray.length; xa++) {
 										categoriesArray[xa] = StringUtils
-												.stripStart(
-														StringUtils
-																.stripEnd(
-																		categoriesArray[xa],
-																		" "),
-														" ");
+										.stripStart(
+												StringUtils
+												.stripEnd(
+														categoriesArray[xa],
+														" "),
+										" ");
 									}
 									addNodes(categoriesArray, myNode);
 

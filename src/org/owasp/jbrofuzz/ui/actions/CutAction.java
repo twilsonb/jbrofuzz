@@ -48,7 +48,7 @@ public class CutAction extends TextAction {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				final JTextComponent text = CutAction.this
-						.getTextComponent(evt);
+				.getTextComponent(evt);
 				if (text != null) {
 					text.cut();
 					text.requestFocus();

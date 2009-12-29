@@ -186,7 +186,7 @@ public class StatusCodeChart {
 		dataset = new DefaultPieDataset();
 
 		for (Iterator<Entry<String, Integer>> it = map.entrySet().iterator(); it
-				.hasNext();) {
+		.hasNext();) {
 			Map.Entry<String, Integer> entry = it.next();
 
 			dataset.setValue(entry.getKey(), (double) entry.getValue()
@@ -201,7 +201,7 @@ public class StatusCodeChart {
 				"JBroFuzz Status Code Pie Chart", dataset, true, // legend?
 				true, // tooltips?
 				false // URLs?
-				);
+		);
 
 		Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());

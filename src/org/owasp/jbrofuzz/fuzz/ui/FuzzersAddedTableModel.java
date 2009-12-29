@@ -50,7 +50,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	// The names of the columns within the table of generators
 	private static final String[] COLUMNNAMES = 
 	{ "Fuzzer ID", "Encoding", "Start", "End" };
-	
+
 	// The vector of data
 	private Vector<FuzzerRow> dataVector;
 	// The panel that the model is attached to
@@ -151,7 +151,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 			return null;
 		}
 	}
-	
+
 	public int getStart(final int row) {
 		final FuzzerRow rec_ = dataVector.get(row);
 		return Integer.valueOf(rec_.getStartPoint());
@@ -197,7 +197,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	public void setValueAt(final Object value, final int row, final int column) {
 
 		FuzzerRow record = dataVector.get(row);
-		
+
 		if(column == 0) {
 			record.setId((String) value);
 		}

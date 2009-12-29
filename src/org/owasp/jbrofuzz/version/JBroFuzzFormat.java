@@ -80,20 +80,12 @@ public class JBroFuzzFormat {
 	 * </p>
 	 */
 	public static final String DISCLAIMER = "<HTML>JBroFuzz generates requests and records the responses. It does not attempt to identify if a particular "
-			+ "site is vulnerable or not; this requires further human analysis. <BR><BR>However, certain payload categories, like XSS, "
-			+ "are crafted to try to successfully exploit flaws. Thus the human analyst would have to review the results "
-			+ "in order to recognize if exploitation succeeded or not.<BR><BR>"
-			+ "The author of JBroFuzz takes no "
-			+ "legal or other responsibility for any problems that "
-			+ "might occur while running this program.<BR></HTML>";
-
-	/**
-	 * <p>
-	 * The file name of the database including all payloads. This is expected to
-	 * be included within the jar/exe file of JBroFuzz.
-	 * </p>
-	 */
-	public static final String FILE_GNU = "generators.jbrofuzz";
+		+ "site is vulnerable or not; this requires further human analysis. <BR><BR>However, certain payload categories, like XSS, "
+		+ "are crafted to try to successfully exploit flaws. Thus the human analyst would have to review the results "
+		+ "in order to recognize if exploitation succeeded or not.<BR><BR>"
+		+ "The author of JBroFuzz takes no "
+		+ "legal or other responsibility for any problems that "
+		+ "might occur while running this program.<BR></HTML>";
 
 	/**
 	 * <p>
@@ -145,12 +137,12 @@ public class JBroFuzzFormat {
 	 * The preferences used for also showing the responses received "On The Wire" tab.
 	 */
 	public static final String PR_FUZZ_3_1 = "fuzz.ui.wire.responses";
-	
+
 	/**
 	 * The preferences used for "Re-send POST Data if 100 Continue is received"
 	 */
 	public static final String PR_FUZZ_4 = "fuzz.100.continue";
-	
+
 	/**
 	 * The preference for double clicking on an output line and displaying it in a browser
 	 */
@@ -180,12 +172,12 @@ public class JBroFuzzFormat {
 	 * The encode text saved as a preference
 	 */
 	public static final String TEXT_ENCODE = "encode.text";
-	
+
 	/**
 	 * The decoded/hashed text saved as a preference
 	 */
 	public static final String TEXT_DECODE = "decode.text";
-	
+
 	/**
 	 * <p>
 	 * The version of JBroFuzz in String format and always of the form "x.x"
@@ -216,13 +208,13 @@ public class JBroFuzzFormat {
 	 */
 	public static final String ABOUT =
 
-	"<HTML><B>JBroFuzz Version:  " + VERSION + "<BR>" + "Codename: "
-			+ JBroFuzzFormat.getCodeName(JBroFuzzFormat.VERSION)
-			+ "</B><BR><BR>" + "<B>Copyright &copy; " + YEAR
-			+ " subere@uncon.org</B><BR><BR>" + "Running Under  Java "
-			+ System.getProperty("java.version") + "<BR><BR>"
-			+ "<B>A stateless network protocol fuzzer <BR>"
-			+ "for web applications." + "</B><BR></HTML>";
+		"<HTML><B>JBroFuzz Version:  " + VERSION + "<BR>" + "Codename: "
+		+ JBroFuzzFormat.getCodeName(JBroFuzzFormat.VERSION)
+		+ "</B><BR><BR>" + "<B>Copyright &copy; " + YEAR
+		+ " subere@uncon.org</B><BR><BR>" + "Running Under  Java "
+		+ System.getProperty("java.version") + "<BR><BR>"
+		+ "<B>A stateless network protocol fuzzer <BR>"
+		+ "for web applications." + "</B><BR></HTML>";
 
 	/**
 	 * <p>
@@ -251,7 +243,7 @@ public class JBroFuzzFormat {
 			return s;
 		} else {
 			return StringUtils.abbreviate(s, len / 2)
-					+ StringUtils.right(s, len / 2);
+			+ StringUtils.right(s, len / 2);
 		}
 	}
 
@@ -361,11 +353,11 @@ public class JBroFuzzFormat {
 			oSystem = oSystem.toLowerCase(new Locale(ISO_LAN_CODE));
 			if (oSystem.startsWith("windows")) {
 				UIManager
-						.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+				.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			}
 			if (oSystem.startsWith("linux")) {
 				UIManager
-						.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+				.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 			}
 		} catch (final UnsupportedLookAndFeelException e) {
 			return 2;
@@ -430,7 +422,7 @@ public class JBroFuzzFormat {
 		// Set some preferences for the mac
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name",
-				"JBroFuzz");
+		"JBroFuzz");
 
 	}
 

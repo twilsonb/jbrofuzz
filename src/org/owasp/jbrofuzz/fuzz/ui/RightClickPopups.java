@@ -41,7 +41,7 @@ public class RightClickPopups {
 		i2_clear.setIcon(ImageCreator.IMG_CLEAR);
 		i3_copy.setIcon(ImageCreator.IMG_COPY);
 		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
-		
+
 		popmenu.add(i5_open_folder);
 		popmenu.add(i0_open_browser);
 		popmenu.add(i1_open_viewer);
@@ -75,7 +75,7 @@ public class RightClickPopups {
 
 			}
 		});
-		
+
 		// Open in Viewer
 		i1_open_viewer.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -188,7 +188,7 @@ public class RightClickPopups {
 				area.selectAll();
 			}
 		});
-		
+
 		// The mouse adapter used for the table and the table header
 		final MouseAdapter myOutputMouseAdapter = new MouseAdapter() {
 
@@ -197,7 +197,7 @@ public class RightClickPopups {
 
 					final Point point = e.getPoint();
 					final int row = area.rowAtPoint(point);
-					
+
 					if (row < 0) {
 						i0_open_browser.setEnabled(false);
 						i1_open_viewer.setEnabled(false);
@@ -205,7 +205,7 @@ public class RightClickPopups {
 						i3_copy.setEnabled(false);
 						i4_select.setEnabled(false);
 						i5_open_folder.setEnabled(false);
-						
+
 					} else {
 						i0_open_browser.setEnabled(true);
 						i1_open_viewer.setEnabled(true);
@@ -213,15 +213,15 @@ public class RightClickPopups {
 						i3_copy.setEnabled(true);
 						i4_select.setEnabled(true);
 						i5_open_folder.setEnabled(true);
-						
+
 						if(area.getSelectedRows().length < 2) {
 							area.getSelectionModel().setSelectionInterval(row, row);
 						}
 					}
-					
+
 					area.requestFocus();
 					popmenu.show(e.getComponent(), e.getX(), e.getY());
-				
+
 				} 
 			}
 
@@ -236,14 +236,14 @@ public class RightClickPopups {
 			}
 
 
-			
+
 		};
-			
+
 		area.getTableHeader().addMouseListener(myOutputMouseAdapter);
 		area.addMouseListener(myOutputMouseAdapter);
-		
+
 	}
-	
+
 	public static final void rightClickRequestTextComponent(final FuzzingPanel mFuzzingPanel, final JTextComponent area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
@@ -259,7 +259,7 @@ public class RightClickPopups {
 		i2_copy.setIcon(ImageCreator.IMG_COPY);
 		i3_paste.setIcon(ImageCreator.IMG_PASTE);
 		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
-		
+
 		i1_cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
 				ActionEvent.CTRL_MASK));
 		i2_copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
@@ -333,7 +333,7 @@ public class RightClickPopups {
 		});
 	}
 
-	
+
 	public static final void rightClickFuzzersTable(final FuzzingPanel mFuzzingPanel, final JTable area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
@@ -349,7 +349,7 @@ public class RightClickPopups {
 		i2_clear.setIcon(ImageCreator.IMG_CLEAR);
 		i3_copy.setIcon(ImageCreator.IMG_COPY);
 		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
-		
+
 		popmenu.add(i0_view_payloads);
 		popmenu.add(i1_remove_fuzzer);
 		popmenu.addSeparator();
@@ -366,25 +366,25 @@ public class RightClickPopups {
 				if (c < 0) {
 					return;
 				}
-				
+
 				final String fuzzerRowId = (String) area.getModel()
 				.getValueAt(area.convertRowIndexToModel(c), 0);
-				
+
 				final String fuzzerName = 
 					mFuzzingPanel.getFrame().getJBroFuzz().
 					getDatabase().getName(fuzzerRowId);
-				
+
 				final String[] fuzzerPayloads =
 					mFuzzingPanel.getFrame().getJBroFuzz().
 					getDatabase().getPayloads(fuzzerRowId);
-				
+
 				StringBuffer myPayloadsBuffer = new StringBuffer();
 				for(String si : fuzzerPayloads) {
 					myPayloadsBuffer.append(si);
 					myPayloadsBuffer.append('\n');
 					myPayloadsBuffer.append('\n');
 				}
-				
+
 				new PropertiesViewer(mFuzzingPanel,
 						"Fuzzer: " + fuzzerName + " (" + fuzzerRowId + ")", 
 						myPayloadsBuffer.toString());
@@ -442,7 +442,7 @@ public class RightClickPopups {
 						mFuzzingPanel.stop();
 
 						mFuzzingPanel.clearFuzzersTable();
-						
+
 					}
 
 				} else {
@@ -491,54 +491,54 @@ public class RightClickPopups {
 				area.selectAll();
 			}
 		});
-		
+
 		final MouseAdapter myFuZZMouseAdapter = new MouseAdapter() {
 
-				private void checkForTriggerEvent(final MouseEvent e) {
-					if (e.isPopupTrigger()) {
+			private void checkForTriggerEvent(final MouseEvent e) {
+				if (e.isPopupTrigger()) {
 
-						final Point point = e.getPoint();
-						final int row = area.rowAtPoint(point);
-						
-						if (row < 0) {
-							i0_view_payloads.setEnabled(false);
-							i1_remove_fuzzer.setEnabled(false);
-							i2_clear.setEnabled(true);
-							i3_copy.setEnabled(false);
-							i4_select.setEnabled(false);
-							// i5_open_folder.setEnabled(false);
-							
-						} else {
-							i0_view_payloads.setEnabled(true);
-							i1_remove_fuzzer.setEnabled(true);
-							i2_clear.setEnabled(true);
-							i3_copy.setEnabled(true);
-							i4_select.setEnabled(true);
-							// i5_open_folder.setEnabled(true);
-							
-							if(area.getSelectedRows().length < 2) {
-								area.getSelectionModel().setSelectionInterval(row, row);
-							}
+					final Point point = e.getPoint();
+					final int row = area.rowAtPoint(point);
+
+					if (row < 0) {
+						i0_view_payloads.setEnabled(false);
+						i1_remove_fuzzer.setEnabled(false);
+						i2_clear.setEnabled(true);
+						i3_copy.setEnabled(false);
+						i4_select.setEnabled(false);
+						// i5_open_folder.setEnabled(false);
+
+					} else {
+						i0_view_payloads.setEnabled(true);
+						i1_remove_fuzzer.setEnabled(true);
+						i2_clear.setEnabled(true);
+						i3_copy.setEnabled(true);
+						i4_select.setEnabled(true);
+						// i5_open_folder.setEnabled(true);
+
+						if(area.getSelectedRows().length < 2) {
+							area.getSelectionModel().setSelectionInterval(row, row);
 						}
-						
-						area.requestFocus();
-						popmenu.show(e.getComponent(), e.getX(), e.getY());
-					
-					} 
-				}
+					}
 
-				@Override
-				public void mousePressed(final MouseEvent e) {
-					checkForTriggerEvent(e);
-				}
+					area.requestFocus();
+					popmenu.show(e.getComponent(), e.getX(), e.getY());
 
-				@Override
-				public void mouseReleased(final MouseEvent e) {
-					checkForTriggerEvent(e);
-				}
+				} 
+			}
+
+			@Override
+			public void mousePressed(final MouseEvent e) {
+				checkForTriggerEvent(e);
+			}
+
+			@Override
+			public void mouseReleased(final MouseEvent e) {
+				checkForTriggerEvent(e);
+			}
 
 		};
-		
+
 		area.getTableHeader().addMouseListener(myFuZZMouseAdapter);
 		area.addMouseListener(myFuZZMouseAdapter);
 	}

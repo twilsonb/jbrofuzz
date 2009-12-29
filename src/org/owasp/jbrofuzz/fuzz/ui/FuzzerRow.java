@@ -50,7 +50,7 @@ public class FuzzerRow {
 	private int start;
 	// The fuzzer end point
 	private int end;
-	
+
 	/**
 	 * <p>The main constructor for each Fuzzer Row.</p>
 	 * 
@@ -59,7 +59,7 @@ public class FuzzerRow {
 	 * @param end The fuzzer end point
 	 */
 	public FuzzerRow(String id, String encoding, int start, int end) {
-		
+
 		this.id = id;
 		this.encoding = encoding;
 		this.start = start;
@@ -81,7 +81,7 @@ public class FuzzerRow {
 	 * @param point2 The fuzzer end point
 	 */
 	public FuzzerRow(String id, int start, int end) {
-		
+
 		this.id = id;
 		this.encoding = FuzzerTable.ENCODINGS[0];
 		this.start = start;
@@ -157,5 +157,5 @@ public class FuzzerRow {
 	public void setEndPoint(int end) {
 		this.end = end;
 	}
-		
+
 }

@@ -98,7 +98,7 @@ public class FileSystemTree extends JTree implements MouseListener {
 			public void actionPerformed(final ActionEvent e) {
 
 				final TreePath selectedPath = FileSystemTree.this
-						.getSelectionPath();
+				.getSelectionPath();
 
 				if (selectedPath == null)
 					return;
@@ -139,16 +139,16 @@ public class FileSystemTree extends JTree implements MouseListener {
 				if (!pathFile.canExecute()) {
 					graphingPanel.getFrame().log(
 							"Graphing Panel: Path cannot be executed: "
-									+ pathFile, 4);
+							+ pathFile, 4);
 					return;
 				}
 				// Or if its an individual file
 				if (pathFile.isFile()) {
 					graphingPanel
-							.getFrame()
-							.log(
-									"Graphing Panel: Cannot graph individual files ",
-									4);
+					.getFrame()
+					.log(
+							"Graphing Panel: Cannot graph individual files ",
+							4);
 					return;
 				}
 
@@ -166,7 +166,7 @@ public class FileSystemTree extends JTree implements MouseListener {
 			public void actionPerformed(final ActionEvent e) {
 
 				FileSystemTreeNode selectedNode = (FileSystemTreeNode) FileSystemTree.this
-						.getLastSelectedPathComponent();
+				.getLastSelectedPathComponent();
 
 				if (selectedNode == null)
 					return;
@@ -186,7 +186,7 @@ public class FileSystemTree extends JTree implements MouseListener {
 			public void actionPerformed(final ActionEvent e) {
 
 				final TreePath selectedPath = FileSystemTree.this
-						.getSelectionPath();
+				.getSelectionPath();
 
 				if (selectedPath == null)
 					return;
@@ -227,7 +227,7 @@ public class FileSystemTree extends JTree implements MouseListener {
 				if (!pathFile.canExecute()) {
 					graphingPanel.getFrame().log(
 							"Graphing Panel: Path cannot be executed: "
-									+ pathFile, 4);
+							+ pathFile, 4);
 					return;
 				}
 
@@ -241,17 +241,17 @@ public class FileSystemTree extends JTree implements MouseListener {
 
 				} catch (MalformedURLException e1) {
 					graphingPanel
-							.getFrame()
-							.log(
-									"Graphing Panel: Could not open location: Bad URL Location ",
-									4);
+					.getFrame()
+					.log(
+							"Graphing Panel: Could not open location: Bad URL Location ",
+							4);
 					return;
 				} catch (IOException e2) {
 					graphingPanel
-							.getFrame()
-							.log(
-									"Graphing Panel: Could not open location: IO Issues ",
-									4);
+					.getFrame()
+					.log(
+							"Graphing Panel: Could not open location: IO Issues ",
+							4);
 					return;
 				}
 

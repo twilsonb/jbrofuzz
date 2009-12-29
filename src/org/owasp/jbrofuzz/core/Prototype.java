@@ -390,7 +390,7 @@ public class Prototype {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * <p>Method to confirm if a fuzzer type specified in the 
 	 * form of a single character, is valid.</p>
@@ -404,7 +404,7 @@ public class Prototype {
 	 * @since 1.8
 	 */
 	public static boolean isValidFuzzerType(final char inputType) {
-		
+
 		// Replacive Fuzzer Type
 		if (inputType == 'P') {
 			return true;
@@ -429,7 +429,7 @@ public class Prototype {
 		if (inputType == 'P') {
 			return true;
 		}
-		
+
 		return false;
 	}
 

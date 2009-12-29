@@ -230,8 +230,8 @@ public class StartUpdateChecker extends JDialog {
 				SwingConstants.LEFT);
 		mainLabel.setIconTextGap(20);
 		mainLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-		
-		
+
+
 		centerPanel.add(mainLabel);
 
 		// Bottom buttons
@@ -279,13 +279,13 @@ public class StartUpdateChecker extends JDialog {
 
 		// Global frame issues
 		final int xLocation = parent.getLocationOnScreen().x
-				- (StartUpdateChecker.x / 2) + (parent.getWidth() / 2);
+		- (StartUpdateChecker.x / 2) + (parent.getWidth() / 2);
 		final int yLocation = parent.getLocationOnScreen().y
-				- (StartUpdateChecker.y / 2) + (parent.getHeight() / 2);
-		
+		- (StartUpdateChecker.y / 2) + (parent.getHeight() / 2);
+
 		setSize(StartUpdateChecker.x, StartUpdateChecker.y);
 		setLocation(xLocation, yLocation);
-		
+
 		setMinimumSize(new Dimension(StartUpdateChecker.x, StartUpdateChecker.y));
 		setResizable(true);
 		setVisible(true);

@@ -78,8 +78,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	private static final int x = 650;
 	private static final int y = 400;
 	private static final String[] nodeNames = { "Preferences",
-			"Directory Locations", "Fuzzing", "Fuzzing: On The Wire",
-			"Fuzzing: Output"};
+		"Directory Locations", "Fuzzing", "Fuzzing: On The Wire",
+	"Fuzzing: Output"};
 	// The tree
 	private JTree tree;
 	// The main split pane
@@ -154,8 +154,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		tabsCheckBox.setBorderPaintedFlat(true);
 		tabsCheckBox
-				.setToolTipText(" Tick this option, if you would like to see the tabs under " +
-						"the tool bar, instead of at the bottom of the window ");
+		.setToolTipText(" Tick this option, if you would like to see the tabs under " +
+		"the tool bar, instead of at the bottom of the window ");
 
 		tabsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -178,7 +178,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		newVCheckBox.setBorderPaintedFlat(true);
 		newVCheckBox
-				.setToolTipText(" Untick this option, if you do not want to be notified about new versions at startup ");
+		.setToolTipText(" Untick this option, if you do not want to be notified about new versions at startup ");
 
 		newVCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -201,7 +201,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		deleteCheckBox.setBorderPaintedFlat(true);
 		deleteCheckBox
-				.setToolTipText("Tick this option, if you would like to remove any empty directories");
+		.setToolTipText("Tick this option, if you would like to remove any empty directories");
 
 		deleteCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -235,7 +235,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		socketCheckBox.setBorderPaintedFlat(true);
 		socketCheckBox
-				.setToolTipText("Tick this box, if you are getting timeout responses");
+		.setToolTipText("Tick this box, if you are getting timeout responses");
 
 		socketCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -259,7 +259,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		endlineCheckBox.setBorderPaintedFlat(true);
 		endlineCheckBox
-				.setToolTipText("Tick this box, if you want to use \"\\n\" for each line put on the wire");
+		.setToolTipText("Tick this box, if you want to use \"\\n\" for each line put on the wire");
 
 		endlineCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -273,7 +273,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[2].add(endlineCheckBox);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 
-		
+
 		// Fuzzing... -> Word wrap request text panel
 
 		final boolean wrap_req_box = prefs.getBoolean(
@@ -283,7 +283,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 				wrap_req_box);
 		wrap_req_check_box.setBorderPaintedFlat(true);
 		wrap_req_check_box
-				.setToolTipText("If ticked, the request text area will wrap the text to fit the size of the area");
+		.setToolTipText("If ticked, the request text area will wrap the text to fit the size of the area");
 
 		wrap_req_check_box.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -307,7 +307,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 				wrap_res_bool);
 		wrap_res_check_box.setBorderPaintedFlat(true);
 		wrap_res_check_box
-				.setToolTipText("Tick this box, to see all output text wrapped to the size of the response window");
+		.setToolTipText("Tick this box, to see all output text wrapped to the size of the response window");
 
 		wrap_res_check_box.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -329,7 +329,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 				"Re-send POST Data if 100 Continue is received", cont_bool);
 		cont_check_box.setBorderPaintedFlat(true);
 		cont_check_box
-				.setToolTipText("Tick this box, to re-send the POST Data in a HTTP/1.1 message, if a 100 continue is received");
+		.setToolTipText("Tick this box, to re-send the POST Data in a HTTP/1.1 message, if a 100 continue is received");
 
 		cont_check_box.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent event5) {
@@ -344,7 +344,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[2].add(cont_check_box);
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 
-		
+
 		// Fuzzing: On The Wire... -> Show on the wire tab after fuzzing finished
 		final boolean showwirebox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3,
 				false);
@@ -354,7 +354,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		showwireCheckBox.setBorderPaintedFlat(true);
 		showwireCheckBox
-				.setToolTipText("Tick this box, if you want to always see the \"On The Wire\" tab");
+		.setToolTipText("Tick this box, if you want to always see the \"On The Wire\" tab");
 
 		showwireCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -374,11 +374,11 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		final JCheckBox displayResponseCheckBox = new JCheckBox(
 				" Display the Requests as well as the Responses received ",
 				displayResponseBox);
-		
+
 		displayResponseCheckBox.setBorderPaintedFlat(true);
 		displayResponseCheckBox.setToolTipText(
-				"Tick this box to display the responses received for each request sent within the \"On The Wire\" tab");
-		
+		"Tick this box to display the responses received for each request sent within the \"On The Wire\" tab");
+
 		displayResponseCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (displayResponseCheckBox.isSelected()) {
@@ -388,20 +388,20 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 				}
 			}
 		});
-		
+
 		panels[3].add(displayResponseCheckBox);
 		panels[3].add(Box.createRigidArea(new Dimension(0, 20)));
-		
+
 		// Fuzzing: Output -> Double click opens up browser or panel
 		final boolean fuzzingResponseDoubleClickBox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
 		final JCheckBox fuzzingResponseDoubleClickCheckBox = new JCheckBox(
 				" Double click on a Response opens it up in a Browser ",
 				fuzzingResponseDoubleClickBox);
-		
+
 		fuzzingResponseDoubleClickCheckBox.setBorderPainted(false);
 		fuzzingResponseDoubleClickCheckBox.setToolTipText(
-				"Tick this box to open up response in a browser, instead of a text-based window");
-		
+		"Tick this box to open up response in a browser, instead of a text-based window");
+
 		fuzzingResponseDoubleClickCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (fuzzingResponseDoubleClickCheckBox.isSelected()) {
@@ -411,10 +411,10 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 				}
 			}
 		});
-		
+
 		panels[4].add(fuzzingResponseDoubleClickCheckBox);
 		panels[4].add(Box.createRigidArea(new Dimension(0, 20)));
-		
+
 		// Create the top split pane, showing the treeView and the Preferences
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setLeftComponent(leftScrollPane);
@@ -503,7 +503,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	public void valueChanged(final TreeSelectionEvent e) {
 
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-				.getLastSelectedPathComponent();
+		.getLastSelectedPathComponent();
 
 		if (node == null) {
 			return;

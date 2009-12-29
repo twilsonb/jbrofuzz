@@ -65,12 +65,12 @@ public class CopyAction extends TextAction {
 							for (int i = 0; i < table.getColumnCount(); i++) {
 
 								selectionBuffer
-										.append(table
-												.getModel()
-												.getValueAt(
-														table
-																.convertRowIndexToModel(element),
-														i));
+								.append(table
+										.getModel()
+										.getValueAt(
+												table
+												.convertRowIndexToModel(element),
+												i));
 								if (i < table.getColumnCount() - 1) {
 									selectionBuffer.append(",");
 								}
@@ -91,7 +91,7 @@ public class CopyAction extends TextAction {
 					if (o instanceof JTextComponent) {
 
 						final JTextComponent text = CopyAction.this
-								.getTextComponent(evt);
+						.getTextComponent(evt);
 
 						text.copy();
 						text.requestFocus();
