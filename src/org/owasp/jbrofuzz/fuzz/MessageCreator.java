@@ -65,7 +65,7 @@ public class MessageCreator {
 	 * This value is '\n' or '\r\n'.
 	 * </p>
 	 */
-	public String END_LINE;
+	public final String END_LINE;
 
 	public MessageCreator(String message, String encoding, String payload, int start, int finish) {
 

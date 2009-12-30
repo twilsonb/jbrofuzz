@@ -51,9 +51,9 @@ public class StatusCodeChart {
 
 	public static final int MAX_CHARS = 32;
 	// The x-axis filenames
-	String[] x_data;
+	String[] xData;
 	// The y-axis data
-	String[] y_data;
+	String[] yData;
 
 	private DefaultPieDataset dataset;
 
@@ -65,8 +65,8 @@ public class StatusCodeChart {
 
 	public StatusCodeChart(int size) {
 
-		x_data = new String[size];
-		y_data = new String[size];
+		xData = new String[size];
+		yData = new String[size];
 
 		dataset = new DefaultPieDataset();
 		dataset.setValue("501", 25);
@@ -147,7 +147,7 @@ public class StatusCodeChart {
 
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 
-		for (String n : y_data) {
+		for (String n : yData) {
 
 			if (map.containsKey(n))
 				map.put(n, map.get(n) + 1);
@@ -190,7 +190,7 @@ public class StatusCodeChart {
 			Map.Entry<String, Integer> entry = it.next();
 
 			dataset.setValue(entry.getKey(), (double) entry.getValue()
-					/ (double) y_data.length);
+					/ (double) yData.length);
 
 		}
 	}
@@ -213,8 +213,8 @@ public class StatusCodeChart {
 
 	public void setValueAt(int index, File f) {
 
-		x_data[index] = f.getName();
-		y_data[index] = calculateValue(f);
+		xData[index] = f.getName();
+		yData[index] = calculateValue(f);
 
 	}
 

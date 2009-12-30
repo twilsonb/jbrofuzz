@@ -27,7 +27,7 @@ public class FullyTrustingManager implements X509TrustManager {
 	 * @see javax.net.ssl.X509TrustManager#
 	 *      checkClientTrusted(java.security.cert.X509Certificate[], String)
 	 */
-	public void checkClientTrusted(X509Certificate[] cert, String authType)
+	public void checkClientTrusted(final X509Certificate[] cert, final String authType)
 	throws CertificateException {
 	}
 
@@ -35,7 +35,7 @@ public class FullyTrustingManager implements X509TrustManager {
 	 * @see javax.net.ssl.X509TrustManager#
 	 *      checkServerTrusted(java.security.cert.X509Certificate[], String)
 	 */
-	public void checkServerTrusted(X509Certificate[] cert, String authType)
+	public void checkServerTrusted(final X509Certificate[] cert, final String authType)
 	throws CertificateException {
 	}
 
@@ -43,7 +43,7 @@ public class FullyTrustingManager implements X509TrustManager {
 	 * @see javax.net.ssl.X509TrustManager# getAcceptedIssuers()
 	 */
 	public X509Certificate[] getAcceptedIssuers() {
-		return null;
+		return new X509Certificate[] {};
 	}
 
 }

@@ -80,8 +80,8 @@ KeyListener {
 	private static final long serialVersionUID = -5815321460026044259L;
 
 	// Dimensions of the generator dialog box
-	private static final int x = 340;
-	private static final int y = 180;
+	private static final int SIZE_X = 340;
+	private static final int SIZE_Y = 180;
 
 	// The buttons
 	private JButton ok, cancel;
@@ -91,7 +91,7 @@ KeyListener {
 
 	final JPopupMenu popmenu;
 
-	JComboBox _url, methodBox, charsetBox, versionBox;
+	JComboBox urlBox, methodBox, charsetBox, versionBox;
 
 	/**
 	 * <p>
@@ -117,15 +117,15 @@ KeyListener {
 
 		// Components
 
-		_url = new JComboBox();
-		_url.setPreferredSize(new Dimension(250, 20));
-		_url.setEditable(true);
+		urlBox = new JComboBox();
+		urlBox.setPreferredSize(new Dimension(250, 20));
+		urlBox.setEditable(true);
 
-		_url.getEditor().getEditorComponent().addMouseListener(this);
-		_url.setToolTipText("Copy/Paste a URL from your browser");
-		_url.setFont(new Font("Verdana", Font.BOLD, 12));
+		urlBox.getEditor().getEditorComponent().addMouseListener(this);
+		urlBox.setToolTipText("Copy/Paste a URL from your browser");
+		urlBox.setFont(new Font("Verdana", Font.BOLD, 12));
 
-		_url.getEditor().getEditorComponent().addKeyListener(this);
+		urlBox.getEditor().getEditorComponent().addKeyListener(this);
 
 		final String methods[] = { "GET", "POST", "HEAD", "PUT", "DELETE",
 				"TRACE", "PROPFIND", "OPTIONS" };
@@ -219,7 +219,7 @@ KeyListener {
 					try {
 						if (clipData
 								.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-							((JTextComponent) _url.getEditor()
+							((JTextComponent) urlBox.getEditor()
 									.getEditorComponent()).cut();
 						}
 					} catch (Exception e1) {
@@ -246,7 +246,7 @@ KeyListener {
 					try {
 						if (clipData
 								.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-							((JTextComponent) _url.getEditor()
+							((JTextComponent) urlBox.getEditor()
 									.getEditorComponent()).copy();
 						}
 					} catch (Exception e1) {
@@ -273,7 +273,7 @@ KeyListener {
 					try {
 						if (clipData
 								.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-							((JTextComponent) _url.getEditor()
+							((JTextComponent) urlBox.getEditor()
 									.getEditorComponent())
 									.replaceSelection((String) (clipData
 											.getTransferData(DataFlavor.stringFlavor)));
@@ -292,7 +292,7 @@ KeyListener {
 		i4.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				_url.getEditor().selectAll();
+				urlBox.getEditor().selectAll();
 
 			}
 		});
@@ -302,7 +302,7 @@ KeyListener {
 		final JPanel targetPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
 				15, 15));
 		targetPanel.add(new JLabel("URL:"));
-		targetPanel.add(_url);
+		targetPanel.add(urlBox);
 
 		final JPanel propertiesPanel = new JPanel(new FlowLayout(
 				FlowLayout.RIGHT, 15, 15));
@@ -321,15 +321,15 @@ KeyListener {
 
 		// Set the URL text
 		String url_displaying = parent.getPanelFuzzing().getTextURL();
-		((JTextComponent) _url.getEditor().getEditorComponent())
+		((JTextComponent) urlBox.getEditor().getEditorComponent())
 		.setText(url_displaying);
-		((JTextComponent) _url.getEditor().getEditorComponent()).selectAll();
+		((JTextComponent) urlBox.getEditor().getEditorComponent()).selectAll();
 
 		// Global frame issues
 		setLocation(Math.abs(parent.getLocation().x + 20), Math.abs(parent
 				.getLocation().y + 20));
 
-		setSize(OpenLocationDialog.x, OpenLocationDialog.y);
+		setSize(OpenLocationDialog.SIZE_X, OpenLocationDialog.SIZE_Y);
 		setResizable(true);
 		setVisible(true);
 
@@ -345,7 +345,7 @@ KeyListener {
 
 	private void clickOK() {
 
-		String in_url_s = ((JTextComponent) _url.getEditor()
+		String in_url_s = ((JTextComponent) urlBox.getEditor()
 				.getEditorComponent()).getText();
 
 		if ((!in_url_s.startsWith("http://"))

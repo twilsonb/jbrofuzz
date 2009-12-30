@@ -50,9 +50,9 @@ public class ResponseTimeChart {
 
 	public static final int MAX_CHARS = 32;
 	// The x-axis filenames
-	String[] x_data;
+	String[] xData;
 	// The y-axis data
-	int[] y_data;
+	int[] yData;
 
 	private DefaultCategoryDataset dataset;
 
@@ -64,8 +64,8 @@ public class ResponseTimeChart {
 
 	public ResponseTimeChart(int size) {
 
-		x_data = new String[size];
-		y_data = new int[size];
+		xData = new String[size];
+		yData = new int[size];
 
 		dataset = new DefaultCategoryDataset();
 
@@ -163,10 +163,10 @@ public class ResponseTimeChart {
 
 	public void setValueAt(int index, File f) {
 
-		x_data[index] = f.getName();
-		y_data[index] = calculateValue(f);
+		xData[index] = f.getName();
+		yData[index] = calculateValue(f);
 
-		dataset.addValue(y_data[index], "Row 1", x_data[index]);
+		dataset.addValue(yData[index], "Row 1", xData[index]);
 
 	}
 

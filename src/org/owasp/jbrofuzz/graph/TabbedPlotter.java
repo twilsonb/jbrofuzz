@@ -52,13 +52,13 @@ public class TabbedPlotter extends JTabbedPane {
 
 	private GraphingPanel graphingPanel;
 
-	private StatusCodeChart st_Chart;
-	private ResponseTimeChart rt_Canvas;
-	private ResponseSizeChart fs_Canvas;
-	private JaccardIndexChart hv_Canvas;
-	private HammingDistanceChart cr_Canvas;
-	private ResponseHeaderSizeChart rh_Canvas;
-	private HelpChart hl_Canvas;
+	private StatusCodeChart statusChart;
+	private ResponseTimeChart rTimeChart;
+	private ResponseSizeChart rSizeChart;
+	private JaccardIndexChart jIndexChart;
+	private HammingDistanceChart hDistChart;
+	private ResponseHeaderSizeChart rHeadChart;
+	private HelpChart helpChart;
 
 	public TabbedPlotter(GraphingPanel graphingPanel) {
 
@@ -66,21 +66,21 @@ public class TabbedPlotter extends JTabbedPane {
 
 		this.graphingPanel = graphingPanel;
 
-		st_Chart = new StatusCodeChart();
-		hv_Canvas = new JaccardIndexChart();
-		fs_Canvas = new ResponseSizeChart();
-		rt_Canvas = new ResponseTimeChart();
-		cr_Canvas = new HammingDistanceChart();
-		rh_Canvas = new ResponseHeaderSizeChart();
-		hl_Canvas = new HelpChart();
+		statusChart = new StatusCodeChart();
+		jIndexChart = new JaccardIndexChart();
+		rSizeChart = new ResponseSizeChart();
+		rTimeChart = new ResponseTimeChart();
+		hDistChart = new HammingDistanceChart();
+		rHeadChart = new ResponseHeaderSizeChart();
+		helpChart = new HelpChart();
 
-		this.add(" Status Code ", st_Chart.getPlotCanvas());
-		this.add(" Response Time ", rt_Canvas.getPlotCanvas());
-		this.add(" Response Size ", fs_Canvas.getPlotCanvas());
-		this.add(" Jaccard Index ", hv_Canvas.getPlotCanvas());
-		this.add(" Hamming Distance ", cr_Canvas.getPlotCanvas());
-		this.add(" Response Header ", rh_Canvas.getPlotCanvas());
-		this.add(" Help ", hl_Canvas);
+		this.add(" Status Code ", statusChart.getPlotCanvas());
+		this.add(" Response Time ", rTimeChart.getPlotCanvas());
+		this.add(" Response Size ", rSizeChart.getPlotCanvas());
+		this.add(" Jaccard Index ", jIndexChart.getPlotCanvas());
+		this.add(" Hamming Distance ", hDistChart.getPlotCanvas());
+		this.add(" Response Header ", rHeadChart.getPlotCanvas());
+		this.add(" Help ", helpChart);
 
 	}
 
@@ -107,12 +107,12 @@ public class TabbedPlotter extends JTabbedPane {
 			return;
 
 		// Set minimum/max for each graph
-		st_Chart = new StatusCodeChart(folderFiles.length);
-		rt_Canvas = new ResponseTimeChart(folderFiles.length);
-		fs_Canvas = new ResponseSizeChart(folderFiles.length);
-		hv_Canvas = new JaccardIndexChart(folderFiles.length);
-		cr_Canvas = new HammingDistanceChart(folderFiles.length);
-		rh_Canvas = new ResponseHeaderSizeChart(folderFiles.length);
+		statusChart = new StatusCodeChart(folderFiles.length);
+		rTimeChart = new ResponseTimeChart(folderFiles.length);
+		rSizeChart = new ResponseSizeChart(folderFiles.length);
+		jIndexChart = new JaccardIndexChart(folderFiles.length);
+		hDistChart = new HammingDistanceChart(folderFiles.length);
+		rHeadChart = new ResponseHeaderSizeChart(folderFiles.length);
 
 		class Grapher extends SwingWorker<String, Object> {
 
@@ -122,12 +122,12 @@ public class TabbedPlotter extends JTabbedPane {
 				// Loop through the files
 				for (int a = 0; a < folderFiles.length; a++) {
 
-					st_Chart.setValueAt(a, folderFiles[a]);
-					rt_Canvas.setValueAt(a, folderFiles[a]);
-					fs_Canvas.setValueAt(a, folderFiles[a]);
-					hv_Canvas.setValueAt(a, folderFiles[a]);
-					cr_Canvas.setValueAt(a, folderFiles[a]);
-					rh_Canvas.setValueAt(a, folderFiles[a]);
+					statusChart.setValueAt(a, folderFiles[a]);
+					rTimeChart.setValueAt(a, folderFiles[a]);
+					rSizeChart.setValueAt(a, folderFiles[a]);
+					jIndexChart.setValueAt(a, folderFiles[a]);
+					hDistChart.setValueAt(a, folderFiles[a]);
+					rHeadChart.setValueAt(a, folderFiles[a]);
 
 				}
 
@@ -137,19 +137,19 @@ public class TabbedPlotter extends JTabbedPane {
 			@Override
 			protected void done() {
 
-				st_Chart.createFinalPlotCanvas();
-				rt_Canvas.createFinalPlotCanvas();
-				fs_Canvas.createFinalPlotCanvas();
-				hv_Canvas.createFinalPlotCanvas();
-				cr_Canvas.createFinalPlotCanvas();
-				rh_Canvas.createFinalPlotCanvas();
+				statusChart.createFinalPlotCanvas();
+				rTimeChart.createFinalPlotCanvas();
+				rSizeChart.createFinalPlotCanvas();
+				jIndexChart.createFinalPlotCanvas();
+				hDistChart.createFinalPlotCanvas();
+				rHeadChart.createFinalPlotCanvas();
 
-				setComponentAt(0, st_Chart.getPlotCanvas());
-				setComponentAt(1, rt_Canvas.getPlotCanvas());
-				setComponentAt(2, fs_Canvas.getPlotCanvas());
-				setComponentAt(3, hv_Canvas.getPlotCanvas());
-				setComponentAt(4, cr_Canvas.getPlotCanvas());
-				setComponentAt(5, rh_Canvas.getPlotCanvas());
+				setComponentAt(0, statusChart.getPlotCanvas());
+				setComponentAt(1, rTimeChart.getPlotCanvas());
+				setComponentAt(2, rSizeChart.getPlotCanvas());
+				setComponentAt(3, jIndexChart.getPlotCanvas());
+				setComponentAt(4, hDistChart.getPlotCanvas());
+				setComponentAt(5, rHeadChart.getPlotCanvas());
 
 				// Stop the progress bar
 				graphingPanel.setProgressBarStop();

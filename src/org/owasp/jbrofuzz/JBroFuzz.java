@@ -76,13 +76,13 @@ public class JBroFuzz {
 
 	}
 
-	private FileHandler mHandler;
+	final private FileHandler mHandler;
 
-	private JBroFuzzFormat mFormat;
+	final private JBroFuzzFormat mFormat;
 
-	private JBroFuzzWindow mWindow;
+	final private JBroFuzzWindow mWindow;
 
-	private Database mDatabase;
+	final private Database mDatabase;
 
 	/**
 	 * <p>

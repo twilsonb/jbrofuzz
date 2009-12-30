@@ -82,8 +82,8 @@ public class CheckForUpdates extends JDialog {
 	private static final long serialVersionUID = 1410800645463737781L;
 
 	// Dimensions of the about box
-	private static final int x = 650;
-	private static final int y = 400;
+	private static final int SIZE_X = 650;
+	private static final int SIZE_Y = 400;
 
 	// The JPanels inside the main window
 	private JTextArea mainLabel;
@@ -140,14 +140,14 @@ public class CheckForUpdates extends JDialog {
 		providersTableScrollPane.setColumnHeader(null);
 		providersTableScrollPane.setVerticalScrollBarPolicy(20);
 		providersTableScrollPane.setHorizontalScrollBarPolicy(30);
-		imageLabel.setPreferredSize(new Dimension(100, y - 110));
+		imageLabel.setPreferredSize(new Dimension(100, SIZE_Y - 110));
 		centerPanel.add(imageLabel);
 
 		final JScrollPane providersTextScrollPane = new JScrollPane(mainLabel);
 		providersTextScrollPane.setVerticalScrollBarPolicy(20);
 		providersTextScrollPane.setHorizontalScrollBarPolicy(30);
 		providersTextScrollPane
-		.setPreferredSize(new Dimension(x - 150, y - 110));
+		.setPreferredSize(new Dimension(SIZE_X - 150, SIZE_Y - 110));
 		centerPanel.add(providersTextScrollPane);
 
 		// Bottom buttons
@@ -206,7 +206,7 @@ public class CheckForUpdates extends JDialog {
 		// Global frame issues
 		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math
 				.abs(parent.getLocationOnScreen().y + 20));
-		this.setSize(CheckForUpdates.x, CheckForUpdates.y);
+		this.setSize(CheckForUpdates.SIZE_X, CheckForUpdates.SIZE_Y);
 		setResizable(false);
 		setVisible(true);
 	}

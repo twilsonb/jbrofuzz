@@ -58,13 +58,13 @@ public class FileHandler {
 	public static final int MAX_BYTES = 33554432;
 
 	// The main window frame gui
-	private JBroFuzz g;
+	private JBroFuzz mJBroFuzz;
 
 	// The fuzz directory of operation
 	private File fuzzDirectory;
 
 	// The /jbrofuzz directory created at launch
-	private File DIR_JBROFUZZ;
+	private File jbrfDirectory;
 
 	// A counter for any File -> New directories created
 	private int count;
@@ -79,15 +79,15 @@ public class FileHandler {
 	 * time-stamp.
 	 * </p>
 	 * 
-	 * @param g
+	 * @param mJBroFuzz
 	 * 
 	 * @author subere@uncon.org
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public FileHandler(final JBroFuzz g) {
+	public FileHandler(final JBroFuzz mJBroFuzz) {
 
-		this.g = g;
+		this.mJBroFuzz = mJBroFuzz;
 		count = 0;
 		createNewDirectory();
 
@@ -104,15 +104,15 @@ public class FileHandler {
 	 * @version 1.8
 	 * @since 1.5
 	 */
-	public void createNewDirectory() {
+	public final void createNewDirectory() {
 
-		StringBuffer directoryLocation = new StringBuffer();
+		final StringBuffer directoryLocation = new StringBuffer();
 		directoryLocation.append(System.getProperty("user.dir"));
 		directoryLocation.append(File.separator);
 		directoryLocation.append("jbrofuzz");
 
 		// Create the /jbrofuzz directory in the current folder
-		DIR_JBROFUZZ = new File(directoryLocation.toString());
+		jbrfDirectory = new File(directoryLocation.toString());
 
 		directoryLocation.append(File.separator);
 		directoryLocation.append("fuzz");
@@ -122,32 +122,10 @@ public class FileHandler {
 		// Create the necessary directory with the corresponding timestamp
 		fuzzDirectory = new File(directoryLocation.toString());
 
-		// If the directory does not exist, create it
-		if (!fuzzDirectory.exists()) {
-			boolean success = fuzzDirectory.mkdirs();
-			if (!success) {
-
-				g
-				.getWindow()
-				.log(
-						"Failed to create \"fuzz\" directory, no data will be written to file.",
-						4);
-				g
-				.getWindow()
-				.log(
-						"Run JBroFuzz from the command line: \"java -jar JBroFuzz.jar\"",
-						0);
-				g
-				.getWindow()
-				.log(
-						"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
-						0);
-
-			}
-			// If the directory is already present, create a directory with a
-			// number at the end
-		} else {
-
+		// If the directory is already present, create a directory with a
+		// number at the end
+		if (fuzzDirectory.exists()) {
+			
 			count++;
 			count %= 1000;
 
@@ -166,20 +144,20 @@ public class FileHandler {
 
 			if (fuzzDirectory.exists()) {
 
-				g.getWindow().log(
+				mJBroFuzz.getWindow().log(
 						"The \"fuzz\" directory being used, already exists", 1);
 
 			} else {
 
-				boolean success = fuzzDirectory.mkdirs();
+				final boolean success = fuzzDirectory.mkdirs();
 				if (!success) {
 
-					g
+					mJBroFuzz
 					.getWindow()
 					.log(
 							"Failed to create new \"fuzz\" directory, no data will be written to file.",
 							4);
-					g
+					mJBroFuzz
 					.getWindow()
 					.log(
 							"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
@@ -187,6 +165,31 @@ public class FileHandler {
 				}
 
 			}
+
+		} else {
+			// If the directory does not exist, create it
+			
+			final boolean success = fuzzDirectory.mkdirs();
+			if (!success) {
+
+				mJBroFuzz
+				.getWindow()
+				.log(
+						"Failed to create \"fuzz\" directory, no data will be written to file.",
+						4);
+				mJBroFuzz
+				.getWindow()
+				.log(
+						"Run JBroFuzz from the command line: \"java -jar JBroFuzz.jar\"",
+						0);
+				mJBroFuzz
+				.getWindow()
+				.log(
+						"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
+						0);
+
+			}
+
 		}
 	}
 
@@ -198,8 +201,10 @@ public class FileHandler {
 	public void deleteEmptryDirectories() {
 
 		if (!fuzzDirectory.exists()) {
-			System.out.println("Could not find directory: "
-					+ fuzzDirectory.getName());
+			mJBroFuzz
+			.getWindow()
+			.log("Could not find directory: "
+					+ fuzzDirectory.getName(), 3);
 			return;
 		}
 
@@ -208,15 +213,16 @@ public class FileHandler {
 				FileUtils.deleteDirectory(fuzzDirectory);
 
 			} catch (final IOException e2) {
-				System.out.println("Could not delete directory: "
-						+ fuzzDirectory.getName());
+				mJBroFuzz.getWindow()
+				.log("Could not delete directory: "
+						+ fuzzDirectory.getName(), 3);
 			}
 		}
 
 		final File parent = fuzzDirectory.getParentFile();
 
 		if (!parent.exists()) {
-			System.out.println("Could not find directory: " + parent.getName());
+			// g.getWindow.log("Could not find directory: " + parent.getName(), 3);
 			return;
 		}
 
@@ -225,24 +231,24 @@ public class FileHandler {
 				FileUtils.deleteDirectory(parent);
 
 			} catch (final IOException e) {
-				System.out.println("Could not delete directory: "
-						+ parent.getName());
+//				g.getWindow.log("Could not delete directory: "
+//						+ parent.getName(), 3);
 			}
 		}
 
-		if (!DIR_JBROFUZZ.exists()) {
-			System.out.println("Could not find directory: "
-					+ DIR_JBROFUZZ.getName());
+		if (!jbrfDirectory.exists()) {
+//			g.getWindow.log("Could not find directory: "
+//					+ jbrfDirectory.getName(), 3);
 			return;
 		}
 
-		if (FileUtils.sizeOfDirectory(DIR_JBROFUZZ) == 0L) {
+		if (FileUtils.sizeOfDirectory(jbrfDirectory) == 0L) {
 			try {
-				FileUtils.deleteDirectory(DIR_JBROFUZZ);
+				FileUtils.deleteDirectory(jbrfDirectory);
 
 			} catch (final IOException e) {
-				System.out.println("Could not delete directory: "
-						+ DIR_JBROFUZZ.getName());
+//				g.getWindow.log("Could not delete directory: "
+//						+ jbrfDirectory.getName(), 3);
 
 			}
 		}
@@ -307,16 +313,16 @@ public class FileHandler {
 		final File file = new File(fuzzDirectory, fileName);
 		if (file.exists()) {
 			if (file.isDirectory()) {
-				g.getWindow().log(
+				mJBroFuzz.getWindow().log(
 						"File '" + file + "' exists but is a directory", 3);
 				return ""; // new String();
 			}
 			if (file.canRead() == false) {
-				g.getWindow().log("File '" + file + "' cannot be read", 3);
+				mJBroFuzz.getWindow().log("File '" + file + "' cannot be read", 3);
 				return ""; // new String();
 			}
 		} else {
-			g.getWindow().log("File '" + file + "' does not exist", 3);
+			mJBroFuzz.getWindow().log("File '" + file + "' does not exist", 3);
 			return ""; // new String();
 		}
 
@@ -334,7 +340,7 @@ public class FileHandler {
 				fileContents.append((char) c);
 				counter++;
 				if (counter == Integer.MAX_VALUE) {
-					g.getWindow().log(
+					mJBroFuzz.getWindow().log(
 							"Only displaying the first 2^31-1 bytes of the file '"
 							+ file.getName(), 3);
 				}
@@ -344,7 +350,7 @@ public class FileHandler {
 			fis.close();
 
 		} catch (IOException e) {
-			g.getWindow()
+			mJBroFuzz.getWindow()
 			.log(
 					"Opening File '" + file.getName()
 					+ "' caused an I/O error", 4);
@@ -367,7 +373,7 @@ public class FileHandler {
 			FileUtils.touch(toWrite);
 			FileUtils.writeStringToFile(toWrite, outputMessage.toString());
 		} catch (IOException e) {
-			g.getWindow().log("Error writting fuzz file: " + fileName, 3);
+			mJBroFuzz.getWindow().log("Error writting fuzz file: " + fileName, 3);
 		}
 	}
 

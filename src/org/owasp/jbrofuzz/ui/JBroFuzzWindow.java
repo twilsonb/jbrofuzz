@@ -505,7 +505,7 @@ public class JBroFuzzWindow extends JFrame {
 	 *            [SHOT] Amber Shout - light error >= 4 => [ERRR] Red Error
 	 * 
 	 */
-	public void log(final String str, final int level) {
+	public final void log(final String str, final int level) {
 
 		cp.start(str, level);
 

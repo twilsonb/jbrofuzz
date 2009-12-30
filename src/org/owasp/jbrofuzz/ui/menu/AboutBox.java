@@ -98,8 +98,8 @@ public class AboutBox extends JDialog {
 	public static final int ACKNOWLEDGEMENTS = 3;
 
 	// Dimensions of the about box
-	private static final int x = 450;
-	private static final int y = 300;
+	private static final int SIZE_X = 450;
+	private static final int SIZE_Y = 300;
 
 	// The tabbed pane, holding all the different panels and labels
 	private JTabbedPane tabbedPane;
@@ -202,8 +202,8 @@ public class AboutBox extends JDialog {
 		// Global frame issues
 		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
 				.abs(parent.getLocation().y + 100));
-		this.setSize(AboutBox.x, AboutBox.y);
-		setMinimumSize(new Dimension(x, y));
+		this.setSize(AboutBox.SIZE_X, AboutBox.SIZE_Y);
+		setMinimumSize(new Dimension(SIZE_X, SIZE_Y));
 		setResizable(true);
 		setVisible(true);
 	}

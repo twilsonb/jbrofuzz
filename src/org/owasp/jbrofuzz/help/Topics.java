@@ -72,13 +72,13 @@ public class Topics extends JFrame implements TreeSelectionListener {
 	private static final long serialVersionUID = 1726771399839929062L;
 
 	// Dimensions of the about box
-	private static final int x = 650;
-	private static final int y = 400;
+	private static final int SIZE_X = 650;
+	private static final int SIZE_Y = 400;
 	//
-	private static String FILE_NOT_FOUND = "Help file could not be located.";
+	private static final String FILE_NOT_FOUND = "Help file could not be located.";
 
 	// The final String Array of tree nodes
-	private static final String[] nodeNames = { "Help Topics", "Fuzzing",
+	private static final String[] NODENAMES = { "Help Topics", "Fuzzing",
 		"Graphing", "Payloads", "Headers", "System" };
 
 	/**
@@ -126,16 +126,16 @@ public class Topics extends JFrame implements TreeSelectionListener {
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-		topicsURL = new URL[nodeNames.length];
+		topicsURL = new URL[NODENAMES.length];
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
-				nodeNames[0]);
+				NODENAMES[0]);
 
-		for (int i = 0; i < nodeNames.length; i++) {
+		for (int i = 0; i < NODENAMES.length; i++) {
 			topicsURL[i] = ClassLoader.getSystemClassLoader().getResource(
 					"help/topics-0" + i + ".html");
 			if (i > 0) {
-				top.add(new DefaultMutableTreeNode(nodeNames[i]));
+				top.add(new DefaultMutableTreeNode(NODENAMES[i]));
 			}
 		}
 
@@ -224,7 +224,7 @@ public class Topics extends JFrame implements TreeSelectionListener {
 		sysmScrPane.setMinimumSize(minimumSize);
 		treeView.setMinimumSize(minimumSize);
 		splitPane.setDividerLocation(100);
-		splitPane.setPreferredSize(new Dimension(Topics.x, Topics.y));
+		splitPane.setPreferredSize(new Dimension(Topics.SIZE_X, Topics.SIZE_Y));
 
 		// Add the split pane to this panel
 		getContentPane().add(splitPane, BorderLayout.CENTER);
@@ -252,8 +252,8 @@ public class Topics extends JFrame implements TreeSelectionListener {
 		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
 				.abs(parent.getLocation().y + 100));
 
-		this.setSize(Topics.x, Topics.y);
-		setMinimumSize(new Dimension(x / 2, y / 2));
+		this.setSize(Topics.SIZE_X, Topics.SIZE_Y);
+		setMinimumSize(new Dimension(SIZE_X / 2, SIZE_Y / 2));
 
 		setResizable(true);
 		setVisible(true);

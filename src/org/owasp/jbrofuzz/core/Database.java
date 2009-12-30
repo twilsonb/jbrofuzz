@@ -101,11 +101,11 @@ public class Database {
 		loadFile();
 
 		// Add the Zero Fuzzers
-		Prototype pt0 = new Prototype('Z', "999-ZER-10K", "10000 Plain Requests");
-		Prototype pt1 = new Prototype('Z', "999-ZER-1KI", "1000 Plain Requests");
-		Prototype pt2 = new Prototype('Z', "999-ZER-100", "100 Plain Requests");
-		Prototype pt3 = new Prototype('Z', "999-ZER-TEN", "10 Plain Requests");
-		Prototype pt4 = new Prototype('Z', "999-ZER-ONE", "1 Plain Request");
+		final Prototype pt0 = new Prototype('Z', "999-ZER-10K", "10000 Plain Requests");
+		final Prototype pt1 = new Prototype('Z', "999-ZER-1KI", "1000 Plain Requests");
+		final Prototype pt2 = new Prototype('Z', "999-ZER-100", "100 Plain Requests");
+		final Prototype pt3 = new Prototype('Z', "999-ZER-TEN", "10 Plain Requests");
+		final Prototype pt4 = new Prototype('Z', "999-ZER-ONE", "1 Plain Request");
 
 		final String zeroFuzzerName = "Zero Fuzzers";
 
@@ -154,7 +154,7 @@ public class Database {
 	 * @version 1.8
 	 * @since 1.2
 	 */
-	public boolean containsPrototype(String prototypeId) {
+	public boolean containsPrototype(final String prototypeId) {
 
 		return prototypes.containsKey(prototypeId);
 
@@ -179,7 +179,7 @@ public class Database {
 	 * @version 1.8
 	 * @since 1.2
 	 */
-	public Fuzzer createFuzzer(String prototypeId, int len)
+	public Fuzzer createFuzzer(final String prototypeId, final int len)
 	throws NoSuchFuzzerException {
 
 		if (!containsPrototype(prototypeId)) {
@@ -221,7 +221,7 @@ public class Database {
 	 * @version 1.9
 	 * @since 1.9
 	 */
-	public FuzzerBigInteger createFuzzerBigInteger(String prototypeId, int len) 
+	public FuzzerBigInteger createFuzzerBigInteger(final String prototypeId, final int len) 
 	throws NoSuchFuzzerException {
 
 		if (!containsPrototype(prototypeId)) {
@@ -249,15 +249,15 @@ public class Database {
 	 */
 	public String[] getAllCategories() {
 
-		HashSet<String> o = new HashSet<String>();
+		final HashSet<String> o = new HashSet<String>();
 
-		String[] ids = getAllPrototypeIDs();
+		final String[] ids = getAllPrototypeIDs();
 		for (String id : ids) {
 
-			ArrayList<String> categoriesArrayList = prototypes.get(id)
+			final ArrayList<String> catArrayList = prototypes.get(id)
 			.getCategories();
-			String[] categoriesArray = new String[categoriesArrayList.size()];
-			categoriesArrayList.toArray(categoriesArray);
+			final String[] categoriesArray = new String[catArrayList.size()];
+			catArrayList.toArray(categoriesArray);
 
 			for (String cCategory : categoriesArray) {
 
@@ -267,7 +267,7 @@ public class Database {
 
 		}
 
-		String[] uniqueCategoriesArray = new String[o.size()];
+		final String[] uniqueCategoriesArray = new String[o.size()];
 		o.toArray(uniqueCategoriesArray);
 
 		return uniqueCategoriesArray;
@@ -334,7 +334,8 @@ public class Database {
 		set.toArray(input);
 
 		for (String key : input) {
-			output.append(prototypes.get(key).getName() + "\n");
+			output.append(prototypes.get(key).getName());
+			output.append('\n');
 		}
 
 		return output.toString().split("\n");
