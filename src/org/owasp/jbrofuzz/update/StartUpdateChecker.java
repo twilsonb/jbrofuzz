@@ -75,8 +75,8 @@ public class StartUpdateChecker extends JDialog {
 	private static final long serialVersionUID = 5920384008550160901L;
 
 	// Dimensions of the about box
-	private static final int x = 440;
-	private static final int y = 220;
+	private static final int SIZE_X = 440;
+	private static final int SIZE_Y = 220;
 
 	/**
 	 * <p>
@@ -279,14 +279,14 @@ public class StartUpdateChecker extends JDialog {
 
 		// Global frame issues
 		final int xLocation = parent.getLocationOnScreen().x
-		- (StartUpdateChecker.x / 2) + (parent.getWidth() / 2);
+		- (StartUpdateChecker.SIZE_X / 2) + (parent.getWidth() / 2);
 		final int yLocation = parent.getLocationOnScreen().y
-		- (StartUpdateChecker.y / 2) + (parent.getHeight() / 2);
+		- (StartUpdateChecker.SIZE_Y / 2) + (parent.getHeight() / 2);
 
-		setSize(StartUpdateChecker.x, StartUpdateChecker.y);
+		setSize(StartUpdateChecker.SIZE_X, StartUpdateChecker.SIZE_Y);
 		setLocation(xLocation, yLocation);
 
-		setMinimumSize(new Dimension(StartUpdateChecker.x, StartUpdateChecker.y));
+		setMinimumSize(new Dimension(StartUpdateChecker.SIZE_X, StartUpdateChecker.SIZE_Y));
 		setResizable(true);
 		setVisible(true);
 

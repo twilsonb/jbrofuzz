@@ -64,9 +64,9 @@ public class SystemPanel extends JBroFuzzPanel {
 
 	private static final long serialVersionUID = 6122485751450521994L;
 
-	private JTextPane listTextArea;
+	private final JTextPane listTextArea;
 
-	private DefaultStyledDocument m_defaultStyledDocument;
+	private DefaultStyledDocument mDefaultStyledDocument;
 
 	// The line count
 	private int lineCount;
@@ -94,8 +94,8 @@ public class SystemPanel extends JBroFuzzPanel {
 				.createTitledBorder(" System Logger "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 
-		m_defaultStyledDocument = new DefaultStyledDocument();
-		listTextArea = new JTextPane(m_defaultStyledDocument);
+		mDefaultStyledDocument = new DefaultStyledDocument();
+		listTextArea = new JTextPane(mDefaultStyledDocument);
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		listTextArea.setEditable(false);
 		listTextArea.setBackground(Color.BLACK);
@@ -261,10 +261,10 @@ public class SystemPanel extends JBroFuzzPanel {
 
 			SimpleAttributeSet attr = new SimpleAttributeSet();
 			StyleConstants.setForeground(attr, c);
-			m_defaultStyledDocument.insertString(m_defaultStyledDocument
+			mDefaultStyledDocument.insertString(mDefaultStyledDocument
 					.getLength(), toLog.toString(), attr);
 
-			listTextArea.setCaretPosition(m_defaultStyledDocument.getLength());
+			listTextArea.setCaretPosition(mDefaultStyledDocument.getLength());
 
 		} catch (BadLocationException ex) {
 

@@ -68,11 +68,11 @@ public class Faq extends JFrame implements TreeSelectionListener {
 	private static final long serialVersionUID = 4301858021356404678L;
 
 	// Dimensions of the about box
-	private static final int x = 650;
-	private static final int y = 400;
+	private static final int SIZE_X = 650;
+	private static final int SIZE_Y = 400;
 
 	// The final String Array of tree nodes
-	private static final String[] nodeNames = { "FAQ", "System Requirements",
+	private static final String[] NODENAMES = { "FAQ", "System Requirements",
 		"Java", "Installation", "Files & Directories",
 		"Fuzzers & Payloads", "Older Features/Versions", "Proxy Settings" };
 
@@ -82,8 +82,6 @@ public class Faq extends JFrame implements TreeSelectionListener {
 	 * </p>
 	 */
 	private static boolean faqShowing = false;
-	// The button
-	private JButton ok;
 	// The tree
 	private JTree tree;
 	// The JEditorPane
@@ -109,6 +107,8 @@ public class Faq extends JFrame implements TreeSelectionListener {
 	 */
 	public Faq(final JBroFuzzWindow parent) {
 
+		super();
+		
 		if (faqShowing) {
 			return;
 		}
@@ -120,16 +120,16 @@ public class Faq extends JFrame implements TreeSelectionListener {
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-		faqURL = new URL[nodeNames.length];
+		faqURL = new URL[NODENAMES.length];
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
-				nodeNames[0]);
+				NODENAMES[0]);
 
-		for (int i = 0; i < nodeNames.length; i++) {
+		for (int i = 0; i < NODENAMES.length; i++) {
 			faqURL[i] = ClassLoader.getSystemClassLoader().getResource(
 					"help/faq-0" + i + ".html");
 			if (i > 0) {
-				top.add(new DefaultMutableTreeNode(nodeNames[i]));
+				top.add(new DefaultMutableTreeNode(NODENAMES[i]));
 			}
 		}
 
@@ -168,7 +168,7 @@ public class Faq extends JFrame implements TreeSelectionListener {
 		getContentPane().add(splitPane, BorderLayout.CENTER);
 
 		// Bottom button
-		ok = new JButton("  OK  ");
+		final JButton ok = new JButton("  OK  ");
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
 				15, 15));
@@ -190,8 +190,8 @@ public class Faq extends JFrame implements TreeSelectionListener {
 		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
 				.abs(parent.getLocation().y + 100));
 
-		this.setSize(Faq.x, Faq.y);
-		setMinimumSize(new Dimension(x / 2, y / 2));
+		this.setSize(Faq.SIZE_X, Faq.SIZE_Y);
+		setMinimumSize(new Dimension(SIZE_X / 2, SIZE_Y / 2));
 
 		setResizable(true);
 		setVisible(true);
@@ -217,9 +217,9 @@ public class Faq extends JFrame implements TreeSelectionListener {
 
 		final String s = node.toString();
 
-		for (int i = 0; i < nodeNames.length; i++) {
+		for (int i = 0; i < NODENAMES.length; i++) {
 
-			if (s.equalsIgnoreCase(nodeNames[i])) {
+			if (s.equalsIgnoreCase(NODENAMES[i])) {
 				try {
 					faqEditorPane.setPage(faqURL[i]);
 				} catch (IOException e1) {

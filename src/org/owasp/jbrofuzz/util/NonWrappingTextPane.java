@@ -64,10 +64,10 @@ public class NonWrappingTextPane extends JTextPane {
 	public boolean getScrollableTracksViewportWidth() {
 
 		final Component parent = getParent();
-		final ComponentUI ui = getUI();
+		final ComponentUI mComponentUI = getUI();
 
 		if (parent != null) {
-			return (ui.getPreferredSize(this).width <= parent.getSize().width);
+			return (mComponentUI.getPreferredSize(this).width <= parent.getSize().width);
 		}
 
 		return true;

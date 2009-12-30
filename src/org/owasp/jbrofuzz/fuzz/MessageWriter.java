@@ -34,9 +34,10 @@ import java.util.Date;
 
 public class MessageWriter {
 
-	private static final SimpleDateFormat SD_Format = new SimpleDateFormat(
+	private static final SimpleDateFormat SD_FORMAT = new SimpleDateFormat(
 	"zzz-yyyy-MM-dd-HH-mm-ss-SSS");
-	private static final SimpleDateFormat SH_Format = new SimpleDateFormat(
+	
+	private static final SimpleDateFormat SH_FORMAT = new SimpleDateFormat(
 	"DDD-HH-mm-ss-SSS");
 
 	private StringBuffer message;
@@ -117,12 +118,12 @@ public class MessageWriter {
 
 	public String getStartDateFull() {
 
-		return SD_Format.format(start);
+		return SD_FORMAT.format(start);
 	}
 
 	public String getStartDateShort() {
 
-		return SH_Format.format(start);
+		return SH_FORMAT.format(start);
 
 	}
 

@@ -92,7 +92,8 @@ public class Connection {
 	 * 
 	 * @since 1.3
 	 */
-	private static final SSLSocketFactory getSocketFactory() {
+	private static final SSLSocketFactory getSocketFactory() throws ConnectionException {
+
 		try {
 			TrustManager[] tm = new TrustManager[] { new FullyTrustingManager() };
 			SSLContext context = SSLContext.getInstance("SSL");
@@ -101,13 +102,12 @@ public class Connection {
 			return context.getSocketFactory();
 
 		} catch (KeyManagementException e) {
-			System.out.println("No SSL algorithm support: " + e.getMessage());
+			throw new ConnectionException("No SSL algorithm support.");
 		} catch (NoSuchAlgorithmException e) {
-			System.out
-			.println("Exception when setting up the Naive key management.");
+			throw new ConnectionException("Exception when setting up the Naive key management.");
 		}
 
-		return (SSLSocketFactory) SSLSocketFactory.getDefault();
+		// return (SSLSocketFactory) SSLSocketFactory.getDefault();
 	}
 
 	private String message;
@@ -117,9 +117,9 @@ public class Connection {
 	private int port;
 
 	private String host, protocol;
-	private InputStream in_stream;
+	private InputStream inStream;
 
-	private OutputStream out_stream;
+	private OutputStream outStream;
 
 	private int socketTimeout;
 
@@ -213,11 +213,11 @@ public class Connection {
 			mSocket.setSendBufferSize(this.message.getBytes().length);
 			mSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
 
-			in_stream = mSocket.getInputStream();
-			out_stream = mSocket.getOutputStream();
+			inStream = mSocket.getInputStream();
+			outStream = mSocket.getOutputStream();
 
 			// Put message on the wire
-			out_stream.write(this.message.getBytes());
+			outStream.write(this.message.getBytes());
 
 			// Read response, see what you have back
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -227,7 +227,7 @@ public class Connection {
 			if (protocolIsHTTP11(message)) {
 
 				boolean end_reached = false;
-				while ((!end_reached) && ((got = in_stream.read(recv)) > -1)) {
+				while ((!end_reached) && ((got = inStream.read(recv)) > -1)) {
 
 					baos.write(recv, 0, got);
 
@@ -267,13 +267,13 @@ public class Connection {
 								// write them as output
 								final byte[] postData = (getPostDataInMessage())
 								.getBytes();
-								out_stream.write(postData);
+								outStream.write(postData);
 								baos.write(postData, 0, postData.length);
 								// If so, check for chunked encoding again (not
 								// tidy)
 								boolean end_reached2 = false;
 								while ((!end_reached2)
-										&& ((got = in_stream.read(recv)) > -1)) {
+										&& ((got = inStream.read(recv)) > -1)) {
 
 									final String cont_100_mark = "\r\n--jbrofuzz--100-continue-->\r\n";
 									baos.write(cont_100_mark.getBytes(), 0,
@@ -319,14 +319,14 @@ public class Connection {
 			} else {
 
 				// If no HTTP/1.1 just read the stream, until the end
-				while ((got = in_stream.read(recv)) > -1) {
+				while ((got = inStream.read(recv)) > -1) {
 					baos.write(recv, 0, got);
 				}
 
 			}
 
-			in_stream.close();
-			out_stream.close();
+			inStream.close();
+			outStream.close();
 			mSocket.close();
 
 			reply = new String(baos.toByteArray());
@@ -348,8 +348,8 @@ public class Connection {
 
 		} finally {
 
-			IOUtils.closeQuietly(in_stream);
-			IOUtils.closeQuietly(out_stream);
+			IOUtils.closeQuietly(inStream);
+			IOUtils.closeQuietly(outStream);
 
 		}
 
@@ -494,7 +494,7 @@ public class Connection {
 	 *            The input string used
 	 * @return boolean True if HTTP/1.1 is found on the first line
 	 */
-	public boolean protocolIsHTTP11(String message) {
+	public final boolean protocolIsHTTP11(String message) {
 
 		try {
 
@@ -522,7 +522,7 @@ public class Connection {
 	 * @since 1.5
 	 * @return
 	 */
-	public String getPostDataInMessage() {
+	public final String getPostDataInMessage() {
 
 		try {
 

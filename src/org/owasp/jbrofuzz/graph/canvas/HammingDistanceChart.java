@@ -21,9 +21,9 @@ public class HammingDistanceChart {
 
 	public static final int MAX_CHARS = 1048576;
 	// The x-axis filenames
-	String[] x_data;
+	String[] xData;
 	// The y-axis data
-	double[] y_data;
+	double[] yData;
 	// The data to be displayed
 	private DefaultCategoryDataset dataset;
 
@@ -38,8 +38,8 @@ public class HammingDistanceChart {
 
 	public HammingDistanceChart(int size) {
 
-		x_data = new String[size];
-		y_data = new double[size];
+		xData = new String[size];
+		yData = new double[size];
 
 		dataset = new DefaultCategoryDataset();
 
@@ -182,20 +182,20 @@ public class HammingDistanceChart {
 
 	public void setValueAt(int index, File f) {
 
-		x_data[index] = f.getName();
+		xData[index] = f.getName();
 
 		if (index == 0) {
 
 			calculateFirstSet(f);
-			y_data[index] = 0;
+			yData[index] = 0;
 
 		} else {
 
-			y_data[index] = calculateValue(f);
+			yData[index] = calculateValue(f);
 
 		}
 
-		dataset.addValue(y_data[index], "Row 1", x_data[index]);
+		dataset.addValue(yData[index], "Row 1", xData[index]);
 
 	}
 

@@ -70,7 +70,7 @@ public class Prototype {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	private static String calculatePayload(String param) {
+	private static String calculatePayload(final String param) {
 
 		String beginning;
 		try {
@@ -83,13 +83,13 @@ public class Prototype {
 		}
 
 		// Get rid of the first characters
-		param = param.substring(5);
+		final String parameter = param.substring(5);
 		// Chop at x, the variable of f(x)
-		final String[] paramArray = param.split(" x ");
+		final String[] paramArray = parameter.split(" x ");
 
 		// Check to see if you have two elements
 		if (paramArray.length != 2) {
-			return param;
+			return parameter;
 		}
 		// Define the input string
 		final String input = paramArray[0];
@@ -103,13 +103,13 @@ public class Prototype {
 
 		// Check that times is positive
 		if (times <= 0) {
-			return param;
+			return parameter;
 		}
 
 		// Check that what you're creating is not too huge
 		final int len = input.length() * times;
 		if (len > FileHandler.MAX_BYTES) {
-			return param;
+			return parameter;
 		}
 
 		final StringBuffer newBuffer = new StringBuffer(len);
@@ -152,17 +152,17 @@ public class Prototype {
 	 * Injection'
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.2
 	 */
-	public Prototype(char type, String id, String name) {
+	public Prototype(final char type, final String id, final String name) {
 
 		this(type, id, name, new ArrayList<String>(), new ArrayList<String>());
 
 	}
 
-	public Prototype(char type, String id, String name,
-			ArrayList<String> categories, ArrayList<String> payloads) {
+	public Prototype(final char type, final String id, final String name,
+			final ArrayList<String> categories, final ArrayList<String> payloads) {
 
 		this.type = type;
 		this.id = id;
@@ -179,7 +179,7 @@ public class Prototype {
 	 * @param category
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.2
 	 */
 	public void addCategory(final String category) {
@@ -336,7 +336,7 @@ public class Prototype {
 	 */
 	protected boolean isAMemberOfCategory(String category) {
 
-		String[] categoriesArray = new String[categories.size()];
+		final String[] categoriesArray = new String[categories.size()];
 		categories.toArray(categoriesArray);
 
 		for (String s : categoriesArray) {

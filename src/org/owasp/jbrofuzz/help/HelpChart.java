@@ -53,7 +53,7 @@ public class HelpChart extends JScrollPane {
 	 */
 	private static final long serialVersionUID = 2266326648164756664L;
 
-	private static String FILE_NOT_FOUND = "Help file could not be located.";
+	private static final String FILE_NOT_FOUND = "Help file could not be located.";
 
 	/**
 	 * <p>
@@ -82,7 +82,7 @@ public class HelpChart extends JScrollPane {
 		}
 
 		tcpfPane.setEditable(false);
-		JScrollPane helpScrollPane = new JScrollPane(tcpfPane);
+		final JScrollPane helpScrollPane = new JScrollPane(tcpfPane);
 
 		helpScrollPane
 		.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);

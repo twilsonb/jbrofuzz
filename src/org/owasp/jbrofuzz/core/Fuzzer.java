@@ -48,9 +48,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public class Fuzzer implements Iterator<String> {
 
-	private int len;
+	final private int len;
 
-	private Prototype prototype;
+	final private Prototype prototype;
 
 	private ArrayList<String> payloads;
 
@@ -74,12 +74,16 @@ public class Fuzzer implements Iterator<String> {
 	 * @version 1.8
 	 * @since 1.2
 	 */
-	protected Fuzzer(Prototype prototype, int len) throws NoSuchFuzzerException {
+	protected Fuzzer(final Prototype prototype, final int len) throws NoSuchFuzzerException {
 
 		this.prototype = prototype;
 
-		if (prototype != null) {
+		if (prototype == null) {
+			
+			maxValue = 0L;
 
+		} else {
+			
 			payloads = this.prototype.getPayloads();
 
 			if (this.prototype.isRecursive()) {
@@ -90,9 +94,7 @@ public class Fuzzer implements Iterator<String> {
 				maxValue = payloads.size();
 
 			}
-
-		} else {
-			maxValue = 0L;
+			
 		}
 
 		cValue = 0L;
@@ -176,11 +178,7 @@ public class Fuzzer implements Iterator<String> {
 
 	public boolean hasNext() {
 
-		if (cValue < maxValue) {
-			return true;
-		} else {
-			return false;
-		}
+		return cValue < maxValue;
 
 	}
 
@@ -196,11 +194,11 @@ public class Fuzzer implements Iterator<String> {
 		// Recursive Prototype
 		else {
 
-			StringBuffer output = new StringBuffer("");
+			final StringBuffer output = new StringBuffer("");
 
 			long val = cValue;
 			// Perform division on a stack
-			Stack<Integer> stack = new Stack<Integer>();
+			final Stack<Integer> stack = new Stack<Integer>();
 
 			while (val >= payloads.size()) {
 
@@ -213,8 +211,9 @@ public class Fuzzer implements Iterator<String> {
 			// identified
 			output.append(StringUtils.leftPad(payloads.get((int)val),
 					len - stack.size(), payloads.get(0)));
-			while (!stack.isEmpty())
+			while (!stack.isEmpty()) {
 				output.append(payloads.get((stack.pop()).intValue()));
+			}
 
 			cValue++;
 			return output.toString();
@@ -229,22 +228,22 @@ public class Fuzzer implements Iterator<String> {
 	}
 
 	/**
-	 * <p>Static method calculating the result of: x^y</p>
-	 * <p>If x^y > Long.MAX_VALUE return 0.</p>
+	 * <p>Static method calculating the result of: alpha^beta</p>
+	 * <p>If alpha^beta > Long.MAX_VALUE return 0.</p>
 	 * 
-	 * @param x The base
-	 * @param y The power
-	 * @return x^y as a long value
+	 * @param alpha The base
+	 * @param beta The power
+	 * @return alpha^beta as a long value
 	 */
-	private static long pow(int x, int y) {
+	private static long pow(int alpha, int beta) {
 
-		long b=(y)&0x00000000ffffffffL;
+		long gamma = (beta)&0x00000000ffffffffL;
 		long result = 1L;
-		long powerN=x;
+		long powerN=alpha;
 
-		while(b!=0){
-			if((b&1)!=0) result*=powerN;
-			b>>>=1;
+		while(gamma!=0){
+			if((gamma&1)!=0) result*=powerN;
+			gamma>>>=1;
 			powerN=powerN*powerN;
 		}
 

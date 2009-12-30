@@ -185,8 +185,8 @@ public class PayloadsDialog extends JDialog {
 	private static final long serialVersionUID = -1083415577221148132L;
 
 	// Dimensions of the generator dialog box
-	private static final int x = 680;
-	private static final int y = 400;
+	private static final int SIZE_X = 680;
+	private static final int SIZE_Y = 400;
 
 	// The names of the table areas as String variables
 	private static final String NAME_CATEGORY = "Category-Table";
@@ -194,7 +194,7 @@ public class PayloadsDialog extends JDialog {
 	private static final String NAME_PAYLOAD = "Payload-Table";
 
 	// The buttons
-	private JButton ok;
+	private final JButton ok;
 
 	// The frame that the sniffing panel is attached
 	private JBroFuzzWindow m;
@@ -245,7 +245,7 @@ public class PayloadsDialog extends JDialog {
 		categoriesPanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(" Categories "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
-		categoriesPanel.setBounds(10, 20, 190, y - 70);
+		categoriesPanel.setBounds(10, 20, 190, SIZE_Y - 70);
 		this.add(categoriesPanel);
 
 		categoriesTableModel = new SingleColumnModel(" Category Name ");
@@ -280,7 +280,7 @@ public class PayloadsDialog extends JDialog {
 				categoriesTable);
 		categoryTableScrollPane.setVerticalScrollBarPolicy(20);
 		categoryTableScrollPane.setHorizontalScrollBarPolicy(30);
-		categoryTableScrollPane.setPreferredSize(new Dimension(170, y - 110));
+		categoryTableScrollPane.setPreferredSize(new Dimension(170, SIZE_Y - 110));
 		categoriesPanel.add(categoryTableScrollPane);
 
 		// Fuzzers : The middle area displaying the list of fuzzers by name
@@ -328,7 +328,7 @@ public class PayloadsDialog extends JDialog {
 		nameTextAreaTextScrollPane.setVerticalScrollBarPolicy(20);
 		nameTextAreaTextScrollPane.setHorizontalScrollBarPolicy(30);
 		nameTextAreaTextScrollPane
-		.setPreferredSize(new Dimension(160, y - 190));
+		.setPreferredSize(new Dimension(160, SIZE_Y - 190));
 		fuzzersPanel.add(nameTextAreaTextScrollPane);
 
 		// Payloads : A JSplitPane with a table and a textArea
@@ -358,7 +358,7 @@ public class PayloadsDialog extends JDialog {
 				payloadsTable);
 		payloadsTableScrollPane.setVerticalScrollBarPolicy(20);
 		payloadsTableScrollPane.setHorizontalScrollBarPolicy(30);
-		payloadsTableScrollPane.setPreferredSize(new Dimension(200, y - 190));
+		payloadsTableScrollPane.setPreferredSize(new Dimension(200, SIZE_Y - 190));
 		// payloadsPanel.add(payloadsTableScrollPane);
 
 		fuzzerInfoTextArea = new NonWrappingTextPane();
@@ -445,7 +445,7 @@ public class PayloadsDialog extends JDialog {
 
 		this.setLocation(Math.abs(parent.getFrame().getLocation().x + 100),
 				Math.abs(parent.getFrame().getLocation().y + 100));
-		this.setSize(PayloadsDialog.x, PayloadsDialog.y);
+		this.setSize(PayloadsDialog.SIZE_X, PayloadsDialog.SIZE_Y);
 		setResizable(true);
 		setVisible(true);
 	}

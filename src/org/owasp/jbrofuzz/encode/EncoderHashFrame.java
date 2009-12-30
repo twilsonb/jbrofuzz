@@ -96,10 +96,10 @@ public class EncoderHashFrame extends JFrame {
 
 	private static final long serialVersionUID = 8808832051334720865L;
 	// Dimensions of the frame
-	private static final int x = 650;
-	private static final int y = 400;
+	private static final int SIZE_X = 650;
+	private static final int SIZE_Y = 400;
 
-	private static final String[] codes = { "Codes/Hashes", "URL US-ASCII",
+	private static final String[] CODES = { "Codes/Hashes", "URL US-ASCII",
 		"URL ISO-8859-1", "URL Cp1252", "URL UTF-8", "URL UTF-16BE", 
 		"URL UTF-16LE", "Base64", "MD5 Hash", "SHA1 Hash", "SHA-256",
 		"SHA-384", "SHA-512", "Hexadecimal (low)", "Hexadecimal (UPP)", 
@@ -133,7 +133,7 @@ public class EncoderHashFrame extends JFrame {
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		// Create the nodes
-		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(codes[0]);
+		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(CODES[0]);
 		// Create a tree that allows one selection at a time
 		tree = new JTree(top);
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -144,10 +144,10 @@ public class EncoderHashFrame extends JFrame {
 		final JScrollPane leftScrollPane = new JScrollPane(tree);
 
 		// Create all the right hand panels
-		for (int i = 0; i < codes.length; i++) {
+		for (int i = 0; i < CODES.length; i++) {
 
 			if (i > 0) {
-				top.add(new DefaultMutableTreeNode(codes[i]));
+				top.add(new DefaultMutableTreeNode(CODES[i]));
 			}
 
 		}
@@ -225,7 +225,7 @@ public class EncoderHashFrame extends JFrame {
 		decoderPanel.setMinimumSize(minimumSize);
 
 		horizontalSplitPane.setDividerLocation(180);
-		verticalSplitPane.setDividerLocation(y / 2);
+		verticalSplitPane.setDividerLocation(SIZE_Y / 2);
 
 		// Traverse tree from root
 		TreeNode root = (TreeNode) tree.getModel().getRoot();
@@ -426,8 +426,8 @@ public class EncoderHashFrame extends JFrame {
 		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
 				.abs(parent.getLocation().y + 100));
 
-		this.setSize(EncoderHashFrame.x, EncoderHashFrame.y);
-		setMinimumSize(new Dimension(x / 2, y / 2));
+		this.setSize(EncoderHashFrame.SIZE_X, EncoderHashFrame.SIZE_Y);
+		setMinimumSize(new Dimension(SIZE_X / 2, SIZE_Y / 2));
 
 		setResizable(true);
 		setVisible(true);
@@ -474,9 +474,9 @@ public class EncoderHashFrame extends JFrame {
 		}
 
 		final String s = node.toString();
-		for (int i = 1; i < codes.length; i++) {
+		for (int i = 1; i < CODES.length; i++) {
 
-			if (s.equalsIgnoreCase(codes[i])) {
+			if (s.equalsIgnoreCase(CODES[i])) {
 
 				final String encodeText = enTextPane.getText();
 				final String decodeText = deTextPane.getText();

@@ -67,7 +67,7 @@ public class JBroFuzzFormat {
 	 * variable.
 	 * </p>
 	 */
-	public static String CODENAME = getCodeName(JBroFuzzFormat.VERSION);
+	public static final String CODENAME = getCodeName(JBroFuzzFormat.VERSION);
 
 	/**
 	 * Formatting the date in ISO8601 standard format.

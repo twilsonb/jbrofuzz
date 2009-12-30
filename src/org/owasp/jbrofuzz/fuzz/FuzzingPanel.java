@@ -142,10 +142,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	private final JPanel outputPanel;
 
 	// The JTextField
-	private final JTextField url_textField;
+	private final JTextField urlField;
 
 	// The JTextArea
-	private JTextPane request_textPane;
+	private JTextPane requestPane;
 
 	// The JTable were results are outputted
 	private OutputTable mOutputTable;
@@ -154,19 +154,19 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	private ResponseTableModel outputTableModel;
 
 	// The JTable of the generator
-	private FuzzerTable fuzzersTable;
+	private final FuzzerTable fuzzersTable;
 
 	// And the table model that goes with it
-	private FuzzersAddedTableModel mFuzzingTableModel;
+	private final FuzzersAddedTableModel mFuzzingTableModel;
 
 	// A counter for the number of times fuzz has been clicked
 	private int counter;
 
 	// The "On The Wire" console
-	private JTextPane onTheWire_textArea;
+	private JTextPane onTextPane;
 
 	// The frame window
-	private JBroFuzzWindow jbrofuzz_MainFrame;
+	private JBroFuzzWindow mWindow;
 
 	private JSplitPane mainPane, topPane;
 
@@ -187,7 +187,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 
 		super(" Fuzzing ", m);
 
-		this.jbrofuzz_MainFrame = m;
+		this.mWindow = m;
 		counter = 1;
 
 		stopped = true;
@@ -200,18 +200,18 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				.createTitledBorder(" URL "), BorderFactory.createEmptyBorder(
 						1, 1, 1, 1)));
 
-		url_textField = new JTextField();
-		url_textField.setEditable(true);
-		url_textField.setVisible(true);
-		url_textField.setFont(new Font("Verdana", Font.BOLD, 12));
-		url_textField.setMargin(new Insets(1, 1, 1, 1));
-		url_textField.setBackground(Color.WHITE);
-		url_textField.setForeground(Color.BLACK);
+		urlField = new JTextField();
+		urlField.setEditable(true);
+		urlField.setVisible(true);
+		urlField.setFont(new Font("Verdana", Font.BOLD, 12));
+		urlField.setMargin(new Insets(1, 1, 1, 1));
+		urlField.setBackground(Color.WHITE);
+		urlField.setForeground(Color.BLACK);
 
 		// Right click: Cut, Copy, Paste, Select All
-		popupText(url_textField, true, true, true, true);
+		popupText(urlField, true, true, true, true);
 
-		targetPanel.add(url_textField);
+		targetPanel.add(urlField);
 
 		// The request panel
 		final JPanel requestPanel = new JPanel(new BorderLayout());
@@ -224,22 +224,22 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		boolean wrapText = prefs.getBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
 
 		if (!wrapText) {
-			request_textPane = new NonWrappingTextPane();
+			requestPane = new NonWrappingTextPane();
 		} else {
-			request_textPane = new JTextPane();
+			requestPane = new JTextPane();
 		}
 
-		request_textPane.putClientProperty("charset", "UTF-8");
-		request_textPane.setEditable(true);
-		request_textPane.setVisible(true);
-		request_textPane.setFont(new Font("Verdana", Font.PLAIN, 12));
+		requestPane.putClientProperty("charset", "UTF-8");
+		requestPane.setEditable(true);
+		requestPane.setVisible(true);
+		requestPane.setFont(new Font("Verdana", Font.PLAIN, 12));
 
-		request_textPane.setMargin(new Insets(1, 1, 1, 1));
-		request_textPane.setBackground(Color.WHITE);
-		request_textPane.setForeground(Color.BLACK);
+		requestPane.setMargin(new Insets(1, 1, 1, 1));
+		requestPane.setBackground(Color.WHITE);
+		requestPane.setForeground(Color.BLACK);
 
 		// Set the editor kit responsible for highlighting
-		request_textPane.setEditorKit(new StyledEditorKit() {
+		requestPane.setEditorKit(new StyledEditorKit() {
 
 			private static final long serialVersionUID = -6085642347022880064L;
 
@@ -251,10 +251,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		});
 
 		// Right click: Cut, Copy, Paste, Select All
-		RightClickPopups.rightClickRequestTextComponent(this, request_textPane);
+		RightClickPopups.rightClickRequestTextComponent(this, requestPane);
 
 		// The message scroll pane where the message pane sits
-		final JScrollPane requestScrollPane = new JScrollPane(request_textPane,
+		final JScrollPane requestScrollPane = new JScrollPane(requestPane,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		requestPanel.add(requestScrollPane);
@@ -291,14 +291,14 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				final int af = ((Integer) fuzzersTable.getModel().getValueAt(c, 2)).intValue();
 				final int fb = ((Integer) fuzzersTable.getModel().getValueAt(c, 3)).intValue();
 
-				request_textPane.grabFocus();
+				requestPane.grabFocus();
 				try {
-					request_textPane.setCaretPosition(af);
+					requestPane.setCaretPosition(af);
 				} catch (IllegalArgumentException  vad_arg) {
 					getFrame().log("Could not pinpoint the position where the fuzzer is", 3);
 				}
-				request_textPane.setSelectionStart(af);
-				request_textPane.setSelectionEnd(fb);
+				requestPane.setSelectionStart(af);
+				requestPane.setSelectionEnd(fb);
 				// fuzzersTable.grabFocus();
 				//						}
 				//					});
@@ -319,18 +319,18 @@ public class FuzzingPanel extends JBroFuzzPanel {
 				BorderFactory.createTitledBorder(" Requests "), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
 
-		onTheWire_textArea = new JTextPane();
-		onTheWire_textArea.setFont(new Font("Verdana", Font.PLAIN, 10));
-		onTheWire_textArea.setEditable(false);
-		onTheWire_textArea.setBackground(Color.BLACK);
-		onTheWire_textArea.setForeground(Color.GREEN);
+		onTextPane = new JTextPane();
+		onTextPane.setFont(new Font("Verdana", Font.PLAIN, 10));
+		onTextPane.setEditable(false);
+		onTextPane.setBackground(Color.BLACK);
+		onTextPane.setForeground(Color.GREEN);
 
 		// Right click: Cut, Copy, Paste, Select All
-		popupText(onTheWire_textArea, false, true, false, true);
+		popupText(onTextPane, false, true, false, true);
 
 		// onTheWireEvent = 0;
 
-		JScrollPane consoleScrollPane = new JScrollPane(onTheWire_textArea,
+		JScrollPane consoleScrollPane = new JScrollPane(onTextPane,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -474,7 +474,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		// Check to see what text has been selected
 		try {
 
-			request_textPane.getSelectedText();
+			requestPane.getSelectedText();
 
 		} catch (final IllegalArgumentException e) {
 
@@ -487,8 +487,8 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		}
 
 		// Find the location of where the text has been selected
-		final int sPoint = request_textPane.getSelectionStart();
-		final int fPoint = request_textPane.getSelectionEnd();
+		final int sPoint = requestPane.getSelectionStart();
+		final int fPoint = requestPane.getSelectionEnd();
 
 		new PayloadsDialog(this, sPoint, fPoint);
 
@@ -540,9 +540,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 */
 	public void clearAllFields() {
 
-		url_textField.setText("");
-		request_textPane.setText("");
-		onTheWire_textArea.setText("");
+		urlField.setText("");
+		requestPane.setText("");
+		onTextPane.setText("");
 
 		// topRightPanel.setTitleAt(1, " On The Wire ");
 		// topRightPanel.setSelectedIndex(0);
@@ -554,7 +554,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			outputTableModel.removeRow(0);
 		}
 
-		url_textField.requestFocusInWindow();
+		urlField.requestFocusInWindow();
 	}
 
 	/**
@@ -589,7 +589,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			outputTableModel.removeRow(0);
 		}
 
-		url_textField.requestFocusInWindow();
+		urlField.requestFocusInWindow();
 
 	}
 
@@ -613,7 +613,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			mFuzzingTableModel.removeRow(0);
 		}
 
-		url_textField.requestFocusInWindow();
+		urlField.requestFocusInWindow();
 
 	}
 
@@ -690,7 +690,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 */
 	public String getTextRequest() {
 
-		return StringUtils.abbreviate(request_textPane.getText(), 16384);
+		return StringUtils.abbreviate(requestPane.getText(), 16384);
 
 	}
 
@@ -703,7 +703,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 */
 	public String getTextURL() {
 
-		return StringUtils.abbreviate(url_textField.getText(), 1024);
+		return StringUtils.abbreviate(urlField.getText(), 1024);
 
 	}
 
@@ -777,10 +777,10 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public void setTextRequest(String input) {
+	public final void setTextRequest(String input) {
 
-		request_textPane.setText(input);
-		request_textPane.setCaretPosition(0);
+		requestPane.setText(input);
+		requestPane.setCaretPosition(0);
 
 	}
 
@@ -796,9 +796,9 @@ public class FuzzingPanel extends JBroFuzzPanel {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public void setTextURL(String input) {
+	public final void setTextURL(String input) {
 
-		url_textField.setText(input);
+		urlField.setText(input);
 
 	}
 
@@ -821,14 +821,14 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		// Start, Stop, Pause, Add, Remove
 		setOptionsAvailable(false, true, false, false, false);
 
-		url_textField.setEditable(false);
-		url_textField.setBackground(Color.BLACK);
-		url_textField.setForeground(Color.WHITE);
+		urlField.setEditable(false);
+		urlField.setBackground(Color.BLACK);
+		urlField.setForeground(Color.WHITE);
 
 		toConsole("\n--> [JBROFUZZ FUZZING START] -->\n\n");
 
-		onTheWire_textArea.setBackground(Color.BLACK);
-		onTheWire_textArea.setForeground(Color.WHITE);
+		onTextPane.setBackground(Color.BLACK);
+		onTextPane.setForeground(Color.WHITE);
 
 		// topRightPanel.setTitleAt(1, " On The Wire ");
 		topRightPanel.setSelectedIndex(1);
@@ -968,11 +968,11 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			// buttonRemGen.setEnabled(true);
 		}
 
-		url_textField.setEditable(true);
-		url_textField.setBackground(Color.WHITE);
-		url_textField.setForeground(Color.BLACK);
-		onTheWire_textArea.setBackground(Color.BLACK);
-		onTheWire_textArea.setForeground(Color.GREEN);
+		urlField.setEditable(true);
+		urlField.setBackground(Color.WHITE);
+		urlField.setForeground(Color.BLACK);
+		onTextPane.setBackground(Color.BLACK);
+		onTextPane.setForeground(Color.GREEN);
 
 		// Get the preference for showing the "On The Wire" tab
 		boolean showWireTab = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
@@ -1006,7 +1006,7 @@ public class FuzzingPanel extends JBroFuzzPanel {
 		// onTheWireEvent++;
 		// topRightPanel.setTitleAt(1, " On The Wire (" + onTheWireEvent + ") ");
 
-		final Document doc = onTheWire_textArea.getDocument();
+		final Document doc = onTextPane.getDocument();
 		final Element e = doc.getDefaultRootElement();
 		// Copy attribute Set
 		final AttributeSet attr = e.getAttributes().copyAttributes();
@@ -1022,13 +1022,13 @@ public class FuzzingPanel extends JBroFuzzPanel {
 			doc.insertString(doc.getLength(), input, attr);
 
 		} catch (BadLocationException e2) {
-			jbrofuzz_MainFrame
+			mWindow
 			.log(
 					"Fuzzing Panel: Could not clear the \"On the Wire\" console",
 					3);
 		}
 
-		onTheWire_textArea.setCaretPosition(doc.getLength());
+		onTextPane.setCaretPosition(doc.getLength());
 
 	}
 }

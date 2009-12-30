@@ -75,9 +75,10 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 	private static final long serialVersionUID = -335514965523117410L;
 	// Dimensions of the about box
-	private static final int x = 650;
-	private static final int y = 400;
-	private static final String[] nodeNames = { "Preferences",
+	private static final int SIZE_X = 650;
+	private static final int SIZE_Y = 400;
+	
+	private static final String[] NODENAMES = { "Preferences",
 		"Directory Locations", "Fuzzing", "Fuzzing: On The Wire",
 	"Fuzzing: Output"};
 	// The tree
@@ -91,7 +92,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	// The actual preferences object
 	private Preferences prefs;
 
-	private JPanel[] panels = new JPanel[nodeNames.length];
+	private JPanel[] panels = new JPanel[NODENAMES.length];
 
 	/**
 	 * <p>
@@ -116,7 +117,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
-				nodeNames[0]);
+				NODENAMES[0]);
 		// Create a tree that allows one selection at a time
 		tree = new JTree(top);
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -129,18 +130,18 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		final JScrollPane leftScrollPane = new JScrollPane(tree);
 
 		// Create all the right hand panels
-		for (int i = 0; i < nodeNames.length; i++) {
+		for (int i = 0; i < NODENAMES.length; i++) {
 
 			panels[i] = new JPanel();
 			panels[i].setLayout(new BoxLayout(panels[i],
 					BoxLayout.PAGE_AXIS));
-			JLabel header = new JLabel("<HTML><H3>&nbsp;" + nodeNames[i]
+			JLabel header = new JLabel("<HTML><H3>&nbsp;" + NODENAMES[i]
 			                                                          + "</H3></HTML>");
 			panels[i].add(header);
 			header.add(Box.createRigidArea(new Dimension(0, 20)));
 
 			if (i > 0) {
-				top.add(new DefaultMutableTreeNode(nodeNames[i]));
+				top.add(new DefaultMutableTreeNode(NODENAMES[i]));
 			}
 
 		}
@@ -494,8 +495,8 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		// Global frame issues
 		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math
 				.abs(parent.getLocationOnScreen().y + 20));
-		this.setSize(x, y);
-		setMinimumSize(new Dimension(x, y));
+		this.setSize(SIZE_X, SIZE_Y);
+		setMinimumSize(new Dimension(SIZE_X, SIZE_Y));
 		setResizable(true);
 		setVisible(true);
 	}
@@ -510,9 +511,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		}
 
 		final String s = node.toString();
-		for (int i = 0; i < nodeNames.length; i++) {
+		for (int i = 0; i < NODENAMES.length; i++) {
 
-			if (s.equalsIgnoreCase(nodeNames[i])) {
+			if (s.equalsIgnoreCase(NODENAMES[i])) {
 				splitPane.setRightComponent(panels[i]);
 				splitPane.setDividerLocation(splitPane.getDividerLocation());
 			}
