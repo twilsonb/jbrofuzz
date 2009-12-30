@@ -649,6 +649,9 @@ public class Database {
 				if (!fileInput[i + 1].startsWith(">")) {
 					continue;
 				}
+				if (!fileInput[i + 2].startsWith(">>")) {
+					continue;
+				}
 			} catch (IndexOutOfBoundsException e) {
 				continue;
 			}
@@ -698,7 +701,7 @@ public class Database {
 			for (int j = 1; j <= noPayloads; j++) {
 				try {
 
-					proto.addPayload(fileInput[i + 1 + j]);
+					proto.addPayload(fileInput[i + 2 + j]);
 
 				} catch (IndexOutOfBoundsException e) {
 					continue;

