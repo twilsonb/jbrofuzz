@@ -250,12 +250,12 @@ public class HeaderLoader {
 			if ((!line.startsWith("#")) && (line.length() > 5)) {
 
 				// "J:AAA-BBB:" First line contains three fields
-				if ((line.charAt(1) == ':') && ((line.charAt(9) == ':'))) {
+				if ((line.charAt(1) == ':') && ((line.charAt(13) == ':'))) {
 					final String[] firstLineArray = line.split(":");
 
 					// Check that there are three fields separated by ':' in the
 					// first line
-					if (firstLineArray.length == 3) {
+					if (firstLineArray.length == 4) {
 
 						// Check that the first character is one of JBROFUZZ
 						if (("J".equals(firstLineArray[0]))
@@ -272,7 +272,7 @@ public class HeaderLoader {
 
 								try {
 									numberOfFields = Integer
-									.parseInt(firstLineArray[2]);
+									.parseInt(firstLineArray[3]);
 								} catch (final NumberFormatException e) {
 									numberOfFields = 0;
 								}
