@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -74,9 +74,12 @@ public class StartUpdateChecker extends JDialog {
 
 	private static final long serialVersionUID = 5920384008550160901L;
 
-	// Dimensions of the about box
+	// Dimensions of the update dialog
 	private static final int SIZE_X = 440;
 	private static final int SIZE_Y = 220;
+	
+	private final static double ZERO_VERSION = 0.0;
+
 
 	/**
 	 * <p>
@@ -91,27 +94,21 @@ public class StartUpdateChecker extends JDialog {
 	 * @return double of the version or 0.0 in case of an error
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.3
 	 */
 	private static double getWebsiteVersion() {
-
-		final double ZERO_VERSION = 0.0;
 
 		String response = "";
 		BufferedReader instream = null;
 
 		try {
 
-			URL url = new URL(JBroFuzzFormat.URL_WEBSITE);
-			URLConnection urlc = url.openConnection();
-			int statusCode = ((HttpURLConnection) urlc).getResponseCode();
+			final URL url = new URL(JBroFuzzFormat.URL_WEBSITE);
+			final URLConnection urlc = url.openConnection();
+			final int statusCode = ((HttpURLConnection) urlc).getResponseCode();
 
-			if (statusCode != 200) {
-
-				return ZERO_VERSION;
-
-			} else {
+			if (statusCode == HttpURLConnection.HTTP_OK) {
 
 				instream = new BufferedReader(new InputStreamReader(urlc
 						.getInputStream()));
@@ -121,24 +118,26 @@ public class StartUpdateChecker extends JDialog {
 				}
 
 				// Typically returns -1
-				long contentLength = urlc.getContentLength();
+				final long contentLength = urlc.getContentLength();
 
 				if (contentLength > Integer.MAX_VALUE) {
 					return ZERO_VERSION;
 				}
 
-				int c;
-				int l = 0;
-				StringBuffer body = new StringBuffer(131072);
+				int count;
+				int limit = 0;
+				final StringBuffer body = new StringBuffer(Character.MAX_VALUE);
 				// 
-				while (((c = instream.read()) != -1) && (l < 131072)) {
-					body.append((char) c);
-					l++;
+				while (((count = instream.read()) != -1) && (limit < Character.MAX_VALUE)) {
+					body.append((char) count);
+					limit++;
 				}
 				instream.close();
 
 				response = body.toString();
 
+			} else {
+				return ZERO_VERSION;
 			} // else statement for a 200 response
 
 		} catch (IOException e) {
@@ -149,10 +148,10 @@ public class StartUpdateChecker extends JDialog {
 
 		if (!response.equalsIgnoreCase("")) {
 
-			final Pattern p1 = Pattern.compile("Current version is (\\d.\\d)");
-			final Matcher m1 = p1.matcher(response);
-			if (m1.find()) {
-				final String webVersion = m1.group().substring(19, 22);
+			final Pattern pattern1 = Pattern.compile("Current version is (\\d.\\d)");
+			final Matcher match1 = pattern1.matcher(response);
+			if (match1.find()) {
+				final String webVersion = match1.group().substring(19, 22);
 
 				try {
 					// Return the value, if found
@@ -170,10 +169,7 @@ public class StartUpdateChecker extends JDialog {
 		}
 		return ZERO_VERSION;
 	}
-
-	// The download and close button
-	private JButton download, close;
-
+	
 	/**
 	 * <p>
 	 * Main constructor that displays a JDialog if a new version is identified
@@ -191,16 +187,17 @@ public class StartUpdateChecker extends JDialog {
 		super(parent, " JBroFuzz - New Version Available ", true);
 
 		// Version comparison to see if we will display or dispose
-		double latest = StartUpdateChecker.getWebsiteVersion();
-		if (latest == 0.0) {
+		final double latest = StartUpdateChecker.getWebsiteVersion();
+		if (latest == StartUpdateChecker.ZERO_VERSION) {
 			StartUpdateChecker.this.dispose();
 			return;
 		}
+		
 		double current;
 		try {
 			current = Double.parseDouble(JBroFuzzFormat.VERSION);
 		} catch (NumberFormatException e1) {
-			current = 0.0;
+			current = StartUpdateChecker.ZERO_VERSION;
 		}
 		if (latest <= current) {
 			StartUpdateChecker.this.dispose();
@@ -235,15 +232,15 @@ public class StartUpdateChecker extends JDialog {
 		centerPanel.add(mainLabel);
 
 		// Bottom buttons
-		download = new JButton("Download");
-		close = new JButton("Close");
+		final JButton download = new JButton("Download");
+		final JButton close = new JButton("Close");
 		southPanel.add(download);
 		southPanel.add(close);
 
 		// Action Listeners
 
 		download.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
+			public void actionPerformed(final ActionEvent even) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -261,7 +258,7 @@ public class StartUpdateChecker extends JDialog {
 		});
 
 		close.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
+			public void actionPerformed(final ActionEvent even) {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {

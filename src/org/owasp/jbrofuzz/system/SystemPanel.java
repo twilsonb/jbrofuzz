@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -48,7 +48,7 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
+import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 
 /**
@@ -60,7 +60,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
  * @author subere@uncon.org
  * @version 1.8
  */
-public class SystemPanel extends JBroFuzzPanel {
+public class SystemPanel extends AbstractPanel {
 
 	private static final long serialVersionUID = 6122485751450521994L;
 

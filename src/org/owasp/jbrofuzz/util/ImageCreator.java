@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -112,7 +112,8 @@ public class ImageCreator {
 		+ "na5pXhC8iszMK8mPpNU2fHe5Ng4fOtQwa7HECKUYMA4AADAAANVarc/l95/0SxIbAJA5tfrs"
 		+ "RUFI7twqiu7q7GyPNxDI8YfDGl8k4lOoVOetouj+DaDzOgfcNME8AAAAAElFTkSuQmCC";
 
-	private static final String TXT_DISCLAIMER = "iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
+	private static final String TXT_DISCLAIMER = 
+		"iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwY"
 		+ "AAAABGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAA"
 		+ "F2+SX8VGAAAAsklEQVR42mL8//8/A7kAIICYGCgAAAFEkWaAACJJM2MjQwEQB8D4AAHEQqQm"
 		+ "ASC1AIgf/K9nmAATBwggJiI1HgDiDUCNBchyAAFEjLNBNl4AalyALgEQQAygqELGDA3/HYA4"

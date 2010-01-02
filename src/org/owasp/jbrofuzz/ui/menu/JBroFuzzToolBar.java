@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -40,7 +40,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import org.owasp.jbrofuzz.help.Topics;
-import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
+import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
@@ -122,13 +122,13 @@ public class JBroFuzzToolBar extends JToolBar {
 
 				final class Starter extends SwingWorker<String, Object> {
 
-					JBroFuzzPanel p;
+					AbstractPanel p;
 
 					@Override
 					public String doInBackground() {
 
 						int c = getFrame().getTp().getSelectedIndex();
-						p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
+						p = (AbstractPanel) getFrame().getTp().getComponent(c);
 						p.start();
 
 						return "start-menu-bar-done";
@@ -152,7 +152,7 @@ public class JBroFuzzToolBar extends JToolBar {
 			public void actionPerformed(final ActionEvent e) {
 
 				int c = getFrame().getTp().getSelectedIndex();
-				JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+				AbstractPanel p = (AbstractPanel) getFrame().getTp()
 				.getComponent(c);
 				p.stop();
 
@@ -178,7 +178,7 @@ public class JBroFuzzToolBar extends JToolBar {
 					public void run() {
 
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.add();
 
@@ -195,7 +195,7 @@ public class JBroFuzzToolBar extends JToolBar {
 					public void run() {
 
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.remove();
 

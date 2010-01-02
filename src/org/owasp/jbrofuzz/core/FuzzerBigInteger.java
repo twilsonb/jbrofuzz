@@ -3,7 +3,7 @@
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -30,8 +30,8 @@
 package org.owasp.jbrofuzz.core;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 import org.apache.commons.lang.StringUtils;
@@ -56,37 +56,38 @@ import org.apache.commons.lang.StringUtils;
  */
 public class FuzzerBigInteger implements Iterator<String> {
 
-	private int len;
+	private final transient int len;
 
-	private Prototype prototype;
+	private final transient Prototype prototype;
 
-	private ArrayList<String> payloads;
+	private transient List<String> payloads;
 
-	private BigInteger cValue, maxValue;
+	private transient BigInteger cValue, maxValue;
 
-	protected FuzzerBigInteger(Prototype prototype, int len) throws NoSuchFuzzerException {
+	protected FuzzerBigInteger(final Prototype prototype, final int len) throws NoSuchFuzzerException {
 
 		this.prototype = prototype;
 
-		if (prototype != null) {
-
+		if (prototype == null) {
+			
+			maxValue = BigInteger.ZERO;
+			
+		} else {
+			
 			payloads = this.prototype.getPayloads();
 
 			if (this.prototype.isRecursive()) {
 
-				maxValue = new BigInteger("" + payloads.size());
+				maxValue = BigInteger.valueOf(payloads.size());
 				maxValue = maxValue.pow(len < 0 ? 0 : len);
 
 			} else {
-				maxValue = new BigInteger("" + payloads.size());
+				maxValue = BigInteger.valueOf(payloads.size());
 
 			}
-
-		} else {
-			maxValue = new BigInteger("0");
 		}
 
-		cValue = new BigInteger("0");
+		cValue = BigInteger.ZERO;
 		this.len = len;
 
 	}
@@ -118,23 +119,19 @@ public class FuzzerBigInteger implements Iterator<String> {
 
 	public boolean hasNext() {
 
-		if (cValue.compareTo(maxValue) < 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return cValue.compareTo(maxValue) < 0;
 
 	}
 
 	public String next() {
 
-		StringBuffer output = new StringBuffer("");
+		final StringBuffer output = new StringBuffer("");
 
 		// Replacive Prototype
-		if (maxValue.compareTo(new BigInteger("" + payloads.size())) == 0) {
+		if (maxValue.compareTo(BigInteger.valueOf(payloads.size())) == 0) {
 
 			output.append(payloads.get(cValue.intValue()));
-			cValue = cValue.add(new BigInteger("1"));
+			cValue = cValue.add(BigInteger.ONE);
 
 		}
 		// Recursive Prototype
@@ -142,22 +139,30 @@ public class FuzzerBigInteger implements Iterator<String> {
 
 			BigInteger val = cValue;
 			// Perform division on a stack
-			Stack<BigInteger> stack = new Stack<BigInteger>();
-			while (val.compareTo(new BigInteger("" + payloads.size())) >= 0) {
+			final Stack<BigInteger> stack = new Stack<BigInteger>();
+			while (val.compareTo(BigInteger.valueOf(payloads.size())) >= 0) {
 
-				stack.push(new BigInteger(""
-						+ (val.mod(new BigInteger("" + payloads.size())))));
-				val = val.divide(new BigInteger("" + payloads.size()));
+				stack.push(
+						val.mod(
+								BigInteger.valueOf(payloads.size()) 
+						)
+				);
+				val = val.divide(BigInteger.valueOf(payloads.size()));
 
 			}
 			// Append the relevant empty positions with the first element
 			// identified
-			output.append(StringUtils.leftPad(payloads.get((val.intValue())),
+			output.append(StringUtils.leftPad(payloads.get(val.intValue()),
 					len - stack.size(), payloads.get(0)));
-			while (!stack.isEmpty())
-				output.append(payloads.get((stack.pop()).intValue()));
+			while (!stack.isEmpty()) {
+				output.append(
+						payloads.get(
+								stack.pop().intValue()
+						)
+				);
+			}
 
-			cValue = cValue.add(new BigInteger("1"));
+			cValue = cValue.add(BigInteger.ONE);
 
 		}
 
@@ -167,7 +172,7 @@ public class FuzzerBigInteger implements Iterator<String> {
 
 	public void remove() {
 
-		cValue = cValue.add(new BigInteger("1"));
+		cValue = cValue.add(BigInteger.ONE);
 
 	}
 

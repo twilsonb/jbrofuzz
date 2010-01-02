@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -47,7 +47,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableRowSorter;
 
-import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
+import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
@@ -62,12 +62,12 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * @author subere@uncon.org
  * @version 1.5
  */
-public class PayloadsPanel extends JBroFuzzPanel {
+public class PayloadsPanel extends AbstractPanel {
 
 	private static final long serialVersionUID = 1234567890L;
 
 	// The split pane at the centre of the screen
-	private JSplitPane mainSplitPanel, rightSplitPanel;
+	private final JSplitPane mainSplitPanel, rightSplitPanel;
 
 	// The JPanels carrying the components
 	protected final JPanel categoriesPanel, payloadsPanel, fuzzersPanel;
@@ -267,13 +267,13 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		// commentLabelScrollPane.setPreferredSize(new Dimension(400, 150));
 
-		JSplitPane bottomSplitPanel = new JSplitPane(
+		final JSplitPane bottomSplitPanel = new JSplitPane(
 				JSplitPane.HORIZONTAL_SPLIT);
 		bottomSplitPanel.setOneTouchExpandable(false);
 		bottomSplitPanel.setRightComponent(commentLabelScrollPane);
 		bottomSplitPanel.setLeftComponent(payloadTableScrollPane);
 
-		JSplitPane payloadsSplitPanel = new JSplitPane(
+		final JSplitPane payloadsSplitPanel = new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT);
 		payloadsSplitPanel.setOneTouchExpandable(false);
 		// payloadsSplitPanel.setPreferredSize(new Dimension(410, 260));
@@ -329,7 +329,7 @@ public class PayloadsPanel extends JBroFuzzPanel {
 		}
 
 		// Allow for all areas to be resized to even not be seen
-		Dimension minimumSize = new Dimension(0, 0);
+		final Dimension minimumSize = new Dimension(0, 0);
 
 		viewTextScrollPane.setMinimumSize(minimumSize);
 		bottomSplitPanel.setMinimumSize(minimumSize);

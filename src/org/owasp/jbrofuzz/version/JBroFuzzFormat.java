@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -41,7 +41,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.lang.StringUtils;
-import org.owasp.jbrofuzz.JBroFuzz;
 
 /**
  * <p>
@@ -57,7 +56,8 @@ import org.owasp.jbrofuzz.JBroFuzz;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.6
+ * @version 1.9
+ * @since 1.4
  */
 public class JBroFuzzFormat {
 
@@ -68,6 +68,8 @@ public class JBroFuzzFormat {
 	 * </p>
 	 */
 	public static final String CODENAME = getCodeName(JBroFuzzFormat.VERSION);
+
+	private final static String DATE_FORMAT = "DDD-yyyy-MM-dd-HH-mm-ss";
 
 	/**
 	 * Formatting the date in ISO8601 standard format.
@@ -86,13 +88,6 @@ public class JBroFuzzFormat {
 		+ "The author of JBroFuzz takes no "
 		+ "legal or other responsibility for any problems that "
 		+ "might occur while running this program.<BR></HTML>";
-
-	/**
-	 * <p>
-	 * The default ISO language code, set to English (en).
-	 * </p>
-	 */
-	public static final String ISO_LAN_CODE = "en";
 
 	/**
 	 * The preferences used for deciding whether or not to delete any blank
@@ -184,7 +179,7 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "1.8";
+	public static final String VERSION = "1.9";
 
 	/**
 	 * <p>
@@ -192,7 +187,7 @@ public class JBroFuzzFormat {
 	 * released.
 	 * </p>
 	 */
-	public static final String YEAR = "2009";
+	public static final String YEAR = "2010";
 
 	/**
 	 * The web site used via means of the selecting "JBroFuzz Website on the
@@ -225,25 +220,25 @@ public class JBroFuzzFormat {
 	 * This method does not, yet guarantee a return String of length len.
 	 * </p>
 	 * 
-	 * @param s
+	 * @param input
 	 * @param len
 	 * @return String
 	 */
-	public static final String centerAbbreviate(String s, int len) {
+	public static final String centerAbbreviate(final String input, final int len) {
 
-		if (s.length() <= len) {
-			return s;
+		if (input.length() <= len) {
+			return input;
 		}
 
 		if (len < 5) {
-			return s;
+			return input;
 		}
 
-		if (s.length() < len) {
-			return s;
+		if (input.length() < len) {
+			return input;
 		} else {
-			return StringUtils.abbreviate(s, len / 2)
-			+ StringUtils.right(s, len / 2);
+			return StringUtils.abbreviate(input, len / 2)
+			+ StringUtils.right(input, len / 2);
 		}
 	}
 
@@ -326,10 +321,8 @@ public class JBroFuzzFormat {
 	 */
 	private static final String getDate() {
 
-		final String DATE_FORMAT = "DDD-yyyy-MM-dd-HH-mm-ss";
-
 		final SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT,
-				new Locale(ISO_LAN_CODE));
+				Locale.ENGLISH);
 
 		return SDF.format(new Date());
 	}
@@ -344,13 +337,13 @@ public class JBroFuzzFormat {
 	 * @param mJBroFuzz
 	 *            JBroFuzz
 	 */
-	private static final int setLookAndFeel(final JBroFuzz mJBroFuzz) {
+	private static final int setLookAndFeel() {
 		try {
 			String oSystem = System.getProperty("os.name");
 			if (oSystem == null) {
 				return 1;
 			}
-			oSystem = oSystem.toLowerCase(new Locale(ISO_LAN_CODE));
+			oSystem = oSystem.toLowerCase(Locale.ENGLISH);
 			if (oSystem.startsWith("windows")) {
 				UIManager
 				.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -412,12 +405,13 @@ public class JBroFuzzFormat {
 	 * @param mJBroFuzz
 	 *            JBroFuzz
 	 * 
-	 * @version 1.4
+	 * @version 1.9
+	 * @since 1.4
 	 */
-	public JBroFuzzFormat(final JBroFuzz mJBroFuzz) {
+	public JBroFuzzFormat() {
 
 		// Set the look and feel
-		JBroFuzzFormat.setLookAndFeel(mJBroFuzz);
+		JBroFuzzFormat.setLookAndFeel();
 
 		// Set some preferences for the mac
 		System.setProperty("apple.laf.useScreenMenuBar", "true");

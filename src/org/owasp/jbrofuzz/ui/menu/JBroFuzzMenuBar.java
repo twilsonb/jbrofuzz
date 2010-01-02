@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -56,7 +56,7 @@ import org.owasp.jbrofuzz.fuzz.io.SaveSession;
 import org.owasp.jbrofuzz.help.Faq;
 import org.owasp.jbrofuzz.help.Topics;
 import org.owasp.jbrofuzz.payloads.OpenLocationDialog;
-import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
+import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.actions.CopyAction;
 import org.owasp.jbrofuzz.ui.actions.CutAction;
@@ -83,11 +83,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 	private final JBroFuzzWindow mFrameWindow;
 	// The menu items
-	private final JMenu file, edit, view, panel, options, help;
+	private final JMenu view, panel, options, help;
 	// Used under the Panel JMenu as items
-	private JMenuItem showAll, hideAll, start, pause, stop, add, remove;
+	private final JMenuItem start, pause, stop, add, remove;
 	// Used under the view JMenu as items
-	private JCheckBoxMenuItem graphing, fuzzing, headers, payloads, system;
+	private final JCheckBoxMenuItem graphing, fuzzing, headers, payloads, system;
 
 	/**
 	 * 
@@ -95,11 +95,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 	 *            FrameWindow
 	 */
 	public JBroFuzzMenuBar(final JBroFuzzWindow mFrameWindow) {
-
+		super();
 		this.mFrameWindow = mFrameWindow;
 
-		file = new JMenu("File");
-		edit = new JMenu("Edit");
+		final JMenu file = new JMenu("File");
+		final JMenu edit = new JMenu("Edit");
 		view = new JMenu("View");
 		panel = new JMenu("Panel");
 		options = new JMenu("Options");
@@ -195,8 +195,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		payloads = new JCheckBoxMenuItem("Payloads", false);
 		system = new JCheckBoxMenuItem("System", false);
 
-		showAll = new JMenuItem("Show All", ImageCreator.IMG_SHOW_ALL);
-		hideAll = new JMenuItem("Hide All");
+		final JMenuItem showAll = new JMenuItem("Show All", ImageCreator.IMG_SHOW_ALL);
+		final JMenuItem hideAll = new JMenuItem("Hide All");
 
 		showHide.add(fuzzing);
 		showHide.add(headers);
@@ -224,18 +224,18 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final ButtonGroup group = new ButtonGroup();
 
 		for (int i = 0; i < Math.min(installedFeels.length, 10); i++) {
-			final JRadioButtonMenuItem rb = new JRadioButtonMenuItem(
+			final JRadioButtonMenuItem rButton1 = new JRadioButtonMenuItem(
 					installedFeels[i].getName());
-			group.add(rb);
-			lookAndFeel.add(rb);
-			rb.setSelected(UIManager.getLookAndFeel().getName()
+			group.add(rButton1);
+			lookAndFeel.add(rButton1);
+			rButton1.setSelected(UIManager.getLookAndFeel().getName()
 					.equalsIgnoreCase(installedFeels[i].getName()));
 
-			rb.putClientProperty("Look and Feel Name", installedFeels[i]);
+			rButton1.putClientProperty("Look and Feel Name", installedFeels[i]);
 
-			rb.addItemListener(new ItemListener() {
-				public void itemStateChanged(final ItemEvent ie) {
-					final JRadioButtonMenuItem rbi = (JRadioButtonMenuItem) ie
+			rButton1.addItemListener(new ItemListener() {
+				public void itemStateChanged(final ItemEvent iEvent) {
+					final JRadioButtonMenuItem rbi = (JRadioButtonMenuItem) iEvent
 					.getSource();
 
 					if (rbi.isSelected()) {
@@ -361,20 +361,28 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		// File -> New
 		newFile.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent even) {
 
 				fuzzing.setSelected(true);
 				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 
-				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
+				if (mFrameWindow.getPanelFuzzing().isStopped()) {
 
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+					mFrameWindow.getPanelFuzzing().clearAllFields();
+					mFrameWindow.setTitle("Untitled");
+					// Create a new directory to store all data
+					mFrameWindow.getJBroFuzz().getHandler()
+					.createNewDirectory();
+
+				} else {
+
+					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
 					if (choice == JOptionPane.YES_OPTION) {
-						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						final int c = getFrame().getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -385,14 +393,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 						.createNewDirectory();
 					}
 
-				} else {
-
-					mFrameWindow.getPanelFuzzing().clearAllFields();
-					mFrameWindow.setTitle("Untitled");
-					// Create a new directory to store all data
-					mFrameWindow.getJBroFuzz().getHandler()
-					.createNewDirectory();
-
 				}
 
 			}
@@ -401,29 +401,30 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		// File -> Open
 		open.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent aEvent) {
 
 				fuzzing.setSelected(true);
 				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 
-				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
+				if (mFrameWindow.getPanelFuzzing().isStopped()) {
 
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+					new OpenSession(mFrameWindow);
+
+				} else {
+					
+					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
 					if (choice == JOptionPane.YES_OPTION) {
-						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						final int c = getFrame().getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.stop();
 
 						new OpenSession(mFrameWindow);
 
 					}
-
-				} else {
-					new OpenSession(mFrameWindow);
 				}
 
 			}
@@ -431,20 +432,25 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		// File -> Close
 		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent aEvent) {
 
 				fuzzing.setSelected(true);
 				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 
-				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
+				if (mFrameWindow.getPanelFuzzing().isStopped()) {
 
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+					getFrame().setCloseFile();
+					mFrameWindow.setTitle("Untitled");
+
+				} else {
+					
+					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
 					if (choice == JOptionPane.YES_OPTION) {
-						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						final int c = getFrame().getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -453,11 +459,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 					}
 
-				} else {
-
-					getFrame().setCloseFile();
-					mFrameWindow.setTitle("Untitled");
-
 				}
 
 			}
@@ -465,20 +466,20 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		// File -> Open Location
 		openLocation.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent aEvent) {
 
 				fuzzing.setSelected(true);
 				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 
 				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
 
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
 					if (choice == JOptionPane.YES_OPTION) {
-						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						final int c = getFrame().getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -499,7 +500,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		// File -> Clear Output
 		clearOutput.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent aEvent) {
 
 				fuzzing.setSelected(true);
 				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
@@ -512,7 +513,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -538,7 +539,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		// File -> Clear Fuzzers
 		clearFuzzers.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent aEvent) {
 
 				fuzzing.setSelected(true);
 				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
@@ -551,7 +552,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -572,12 +573,16 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		// File -> Save
 		save.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent aEvent) {
 
 				fuzzing.setSelected(true);
 				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 
-				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
+				if (mFrameWindow.getPanelFuzzing().isStopped()) {
+
+					new SaveSession(mFrameWindow);
+
+				} else {
 
 					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
 							"Fuzzing Session Running. Stop Fuzzing?",
@@ -585,16 +590,13 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.stop();
 
 						new SaveSession(mFrameWindow);
 
 					}
-
-				} else {
-					new SaveSession(mFrameWindow);
 
 				}
 
@@ -603,7 +605,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		// File -> Save as
 		saveAs.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent aEvent) {
 
 				fuzzing.setSelected(true);
 				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
@@ -616,7 +618,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 					if (choice == JOptionPane.YES_OPTION) {
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -649,11 +651,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!graphing.getState()) {
-							JBroFuzzMenuBar.this.getFrame().setTabHide(
+						if (graphing.getState()) {
+							JBroFuzzMenuBar.this.getFrame().setTabShow(
 									JBroFuzzWindow.ID_PANEL_GRAPHING);
 						} else {
-							JBroFuzzMenuBar.this.getFrame().setTabShow(
+							JBroFuzzMenuBar.this.getFrame().setTabHide(
 									JBroFuzzWindow.ID_PANEL_GRAPHING);
 						}
 					}
@@ -666,11 +668,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						if (!fuzzing.getState()) {
-							JBroFuzzMenuBar.this.getFrame().setTabHide(
+						if (fuzzing.getState()) {
+							JBroFuzzMenuBar.this.getFrame().setTabShow(
 									JBroFuzzWindow.ID_PANEL_FUZZING);
 						} else {
-							JBroFuzzMenuBar.this.getFrame().setTabShow(
+							JBroFuzzMenuBar.this.getFrame().setTabHide(
 									JBroFuzzWindow.ID_PANEL_FUZZING);
 						}
 					}
@@ -793,13 +795,13 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				final class Starter extends SwingWorker<String, Object> {
 
-					JBroFuzzPanel p;
+					AbstractPanel p;
 
 					@Override
 					public String doInBackground() {
 
 						int c = getFrame().getTp().getSelectedIndex();
-						p = (JBroFuzzPanel) getFrame().getTp().getComponent(c);
+						p = (AbstractPanel) getFrame().getTp().getComponent(c);
 						p.start();
 
 						return "start-menu-bar-done";
@@ -825,7 +827,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					public void run() {
 
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -854,7 +856,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					public void run() {
 
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.add();
 
@@ -869,7 +871,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new CheckForUpdates((JBroFuzzPanel) getFrame().getTp()
+						new CheckForUpdates((AbstractPanel) getFrame().getTp()
 								.getComponent(
 										getFrame().getTp().getSelectedIndex()));
 					}
@@ -885,7 +887,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					public void run() {
 
 						int c = getFrame().getTp().getSelectedIndex();
-						JBroFuzzPanel p = (JBroFuzzPanel) getFrame().getTp()
+						AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.remove();
 
@@ -1006,10 +1008,10 @@ public class JBroFuzzMenuBar extends JMenuBar {
 	 *            the boolean array of 5 elements
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.2
 	 */
-	public void setEnabledPanelOptions(boolean[] b) {
+	public void setEnabledPanelOptions(final boolean[] b) {
 
 		if (b.length == 5) {
 

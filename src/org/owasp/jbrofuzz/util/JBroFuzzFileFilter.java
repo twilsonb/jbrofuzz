@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -32,6 +32,7 @@ package org.owasp.jbrofuzz.util;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -50,7 +51,6 @@ public class JBroFuzzFileFilter extends FileFilter {
 	private Hashtable<String, JBroFuzzFileFilter> filters = null;
 	private String description = null;
 	private String fullDescription = null;
-	private boolean useExtensionsInDescription = true;
 
 	/**
 	 * Creates a file filter. If no filters are added, then all files are
@@ -59,7 +59,7 @@ public class JBroFuzzFileFilter extends FileFilter {
 	 * @see #addExtension
 	 */
 	public JBroFuzzFileFilter() {
-
+		super();
 		filters = new Hashtable<String, JBroFuzzFileFilter>();
 		// add the .jbrofuzz extension and its description
 		addExtension("jbrofuzz");
@@ -72,7 +72,7 @@ public class JBroFuzzFileFilter extends FileFilter {
 	 * 
 	 * Files that begin with "." are ignored.
 	 * 
-	 * @param f
+	 * @param fileObject
 	 *            The file that should be checked
 	 * @return true if this file should be shown
 	 * 
@@ -80,13 +80,13 @@ public class JBroFuzzFileFilter extends FileFilter {
 	 * @see FileFilter#accept
 	 */
 	@Override
-	public boolean accept(File f) {
-		if (f != null) {
-			if (f.isDirectory()) {
+	public boolean accept(final File fileObject) {
+		if (fileObject != null) {
+			if (fileObject.isDirectory()) {
 				return true;
 			}
-			String extension = getExtension(f);
-			if (extension != null && filters.get(getExtension(f)) != null) {
+			final String extension = getExtension(fileObject);
+			if (extension != null && filters.get(getExtension(fileObject)) != null) {
 				return true;
 			}
 
@@ -105,11 +105,11 @@ public class JBroFuzzFileFilter extends FileFilter {
 	 * 
 	 * Note that the "." before the extension is not needed and will be ignored.
 	 */
-	private void addExtension(String extension) {
+	private void addExtension(final String extension) {
 		if (filters == null) {
 			filters = new Hashtable<String, JBroFuzzFileFilter>(5);
 		}
-		filters.put(extension.toLowerCase(), this);
+		filters.put(extension.toLowerCase(Locale.ENGLISH), this);
 		fullDescription = null;
 	}
 
@@ -129,7 +129,7 @@ public class JBroFuzzFileFilter extends FileFilter {
 				fullDescription = description == null ? "(" : description
 						+ " (";
 				// build the description from the extension list
-				Enumeration<String> extensions = filters.keys();
+				final Enumeration<String> extensions = filters.keys();
 				if (extensions != null) {
 					fullDescription += "." + extensions.nextElement();
 					while (extensions.hasMoreElements()) {
@@ -150,12 +150,12 @@ public class JBroFuzzFileFilter extends FileFilter {
 	 * @see #getExtension
 	 * @see FileFilter#accept
 	 */
-	private String getExtension(File f) {
-		if (f != null) {
-			String filename = f.getName();
-			int i = filename.lastIndexOf('.');
-			if (i > 0 && i < filename.length() - 1) {
-				return filename.substring(i + 1).toLowerCase();
+	private String getExtension(final File fileObject) {
+		if (fileObject != null) {
+			final String filename = fileObject.getName();
+			final int index = filename.lastIndexOf('.');
+			if (index > 0 && index < filename.length() - 1) {
+				return filename.substring(index + 1).toLowerCase();
 			}
 
 		}
@@ -174,7 +174,7 @@ public class JBroFuzzFileFilter extends FileFilter {
 	 * @see setExtensionListInDescription
 	 */
 	private boolean isExtensionListInDescription() {
-		return useExtensionsInDescription;
+		return true;
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class JBroFuzzFileFilter extends FileFilter {
 	 * @see setExtensionListInDescription
 	 * @see isExtensionListInDescription
 	 */
-	private void setDescription(String description) {
+	private void setDescription(final String description) {
 		this.description = description;
 		fullDescription = null;
 	}

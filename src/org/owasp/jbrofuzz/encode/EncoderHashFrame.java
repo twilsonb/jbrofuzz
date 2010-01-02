@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -119,7 +119,7 @@ public class EncoderHashFrame extends JFrame {
 	private static boolean encoderHashIsShowing = false;
 
 	public EncoderHashFrame(final JBroFuzzWindow parent) {
-
+		
 		if (encoderHashIsShowing) {
 			return;
 		}
@@ -654,7 +654,7 @@ public class EncoderHashFrame extends JFrame {
 
 						try {
 
-							MessageDigest md5 = MessageDigest
+							final MessageDigest md5 = MessageDigest
 							.getInstance("MD5");
 							md5.update(encodeText.getBytes("iso-8859-1"), 0,
 									encodeText.length());
@@ -718,7 +718,7 @@ public class EncoderHashFrame extends JFrame {
 
 						try {
 
-							MessageDigest sha256 = MessageDigest
+							final MessageDigest sha256 = MessageDigest
 							.getInstance("SHA-256");
 							sha256.update(encodeText.getBytes("iso-8859-1"), 0,
 									encodeText.length());
@@ -750,7 +750,7 @@ public class EncoderHashFrame extends JFrame {
 
 						try {
 
-							MessageDigest sha384 = MessageDigest
+							final MessageDigest sha384 = MessageDigest
 							.getInstance("SHA-384");
 							sha384.update(encodeText.getBytes("iso-8859-1"), 0,
 									encodeText.length());
@@ -1026,16 +1026,18 @@ public class EncoderHashFrame extends JFrame {
 		} // for loop
 	}
 
-	private static String convertToHex(byte[] data) {
+	private static String convertToHex(final byte[] data) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < data.length; i++) {
 			int halfbyte = (data[i] >>> 4) & 0x0F;
 			int two_halfs = 0;
 			do {
-				if ((0 <= halfbyte) && (halfbyte <= 9))
+				if ((0 <= halfbyte) && (halfbyte <= 9)) {
 					buf.append((char) ('0' + halfbyte));
-				else
+				}
+				else {
 					buf.append((char) ('a' + (halfbyte - 10)));
+				}
 				halfbyte = data[i] & 0x0F;
 			} while (two_halfs++ < 1);
 		}

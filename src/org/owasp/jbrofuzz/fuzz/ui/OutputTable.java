@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -56,7 +56,7 @@ public class OutputTable extends JTable {
 
 		super(model);
 
-		TableRowSorter<ResponseTableModel> sorter = 
+		final TableRowSorter<ResponseTableModel> sorter = 
 			new TableRowSorter<ResponseTableModel>(model);
 		setRowSorter(sorter);
 

@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -44,7 +44,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
-import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
+import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.util.ImageCreator;
 
 /**
@@ -72,7 +72,7 @@ public class PropertiesViewer extends JFrame {
 	 * @param text
 	 *            The text to be displayed inside the area of the window
 	 */
-	public PropertiesViewer(final JBroFuzzPanel parent, final String header,
+	public PropertiesViewer(final AbstractPanel parent, final String header,
 			final String text) {
 		super("JBroFuzz - " + header);
 		setIconImage(ImageCreator.IMG_FRAME.getImage());

@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -201,15 +201,15 @@ public class JBroFuzzWindow extends JFrame {
 				if (c >= 0) {
 
 					boolean[] b = new boolean[5];
-					b[0] = ((JBroFuzzPanel) pane.getComponent(c))
+					b[0] = ((AbstractPanel) pane.getComponent(c))
 					.isStartedEnabled();
-					b[1] = ((JBroFuzzPanel) pane.getComponent(c))
+					b[1] = ((AbstractPanel) pane.getComponent(c))
 					.isStoppedEnabled();
-					b[2] = ((JBroFuzzPanel) pane.getComponent(c))
+					b[2] = ((AbstractPanel) pane.getComponent(c))
 					.isPauseEnabled();
-					b[3] = ((JBroFuzzPanel) pane.getComponent(c))
+					b[3] = ((AbstractPanel) pane.getComponent(c))
 					.isAddedEnabled();
-					b[4] = ((JBroFuzzPanel) pane.getComponent(c))
+					b[4] = ((AbstractPanel) pane.getComponent(c))
 					.isRemovedEnabled();
 
 					// Set the toolbar/menubar options which are enabled
@@ -481,7 +481,7 @@ public class JBroFuzzWindow extends JFrame {
 
 		for (int i = 0; i < tp.getTabCount(); i++) {
 
-			if (name.equals((((JBroFuzzPanel) tp.getComponent(i)).getName()))) {
+			if (name.equals((((AbstractPanel) tp.getComponent(i)).getName()))) {
 
 				return true;
 
