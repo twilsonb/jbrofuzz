@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -102,10 +102,7 @@ public class AboutBox extends JDialog {
 	private static final int SIZE_Y = 300;
 
 	// The tabbed pane, holding all the different panels and labels
-	private JTabbedPane tabbedPane;
-
-	// The ok button at the bottom of the box
-	private JButton ok;
+	private final transient JTabbedPane tabbedPane;
 
 	/**
 	 * <p>
@@ -184,12 +181,12 @@ public class AboutBox extends JDialog {
 		setTab(tab);
 
 		// OK Button
-		ok = new JButton("  OK  ");
+		final JButton ok = new JButton("  OK  ");
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
 				15, 15));
 		buttonPanel.add(ok);
 		ok.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
+			public void actionPerformed(final ActionEvent aEvent) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						AboutBox.this.dispose();

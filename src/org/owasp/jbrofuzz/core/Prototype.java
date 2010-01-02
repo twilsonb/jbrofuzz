@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -30,6 +30,7 @@
 package org.owasp.jbrofuzz.core;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.io.FileHandler;
@@ -67,7 +68,7 @@ public class Prototype {
 	 * value
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.2
 	 */
 	private static String calculatePayload(final String param) {
@@ -119,15 +120,11 @@ public class Prototype {
 		return newBuffer.toString();
 	}
 
-	private ArrayList<String> categories;
+	private transient List<String> categories, payloads;
 
-	private ArrayList<String> payloads;
+	private transient String name, uniqId;
 
-	private String name;
-
-	private char type;
-
-	private String id;
+	private transient char type;
 
 	/**
 	 * <p>A Prototype constuctor, effectively building the fuzzer
@@ -146,7 +143,7 @@ public class Prototype {
 	 * @param type 'R' for Recursive, 'P' for Replacive, or 'Z' for a 
 	 * Zero Fuzzer
 	 * 
-	 * @param id e.g. 'XSS-101' or 'SQL-MS2-008'
+	 * @param uniqId e.g. 'XSS-101' or 'SQL-MS2-008'
 	 * 
 	 * @param name e.g. 'MS 2008 SQL 
 	 * Injection'
@@ -155,17 +152,17 @@ public class Prototype {
 	 * @version 1.9
 	 * @since 1.2
 	 */
-	public Prototype(final char type, final String id, final String name) {
+	public Prototype(final char type, final String uniqId, final String name) {
 
-		this(type, id, name, new ArrayList<String>(), new ArrayList<String>());
+		this(type, uniqId, name, new ArrayList<String>(), new ArrayList<String>());
 
 	}
 
-	public Prototype(final char type, final String id, final String name,
-			final ArrayList<String> categories, final ArrayList<String> payloads) {
+	public Prototype(final char type, final String uniqId, final String name,
+			final List<String> categories, final List<String> payloads) {
 
 		this.type = type;
-		this.id = id;
+		this.uniqId = uniqId;
 		this.name = StringUtils.trim(name);
 		this.categories = categories;
 		this.payloads = payloads;
@@ -185,7 +182,7 @@ public class Prototype {
 	public void addCategory(final String category) {
 
 		categories.add(category);
-		categories.trimToSize();
+		// categories.trimToSize();
 
 	}
 
@@ -199,10 +196,10 @@ public class Prototype {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public void addPayload(String payload) {
+	public void addPayload(final String payload) {
 
 		payloads.add(calculatePayload(payload));
-		payloads.trimToSize();
+		// payloads.trimToSize();
 
 	}
 
@@ -216,7 +213,7 @@ public class Prototype {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	protected ArrayList<String> getCategories() {
+	protected List<String> getCategories() {
 		return categories;
 	}
 
@@ -237,7 +234,7 @@ public class Prototype {
 	 * @since 1.2
 	 */
 	protected String getId() {
-		return id;
+		return uniqId;
 	}
 
 	/**
@@ -269,8 +266,8 @@ public class Prototype {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	protected ArrayList<String> getPayloads() {
-		payloads.trimToSize();
+	protected List<String> getPayloads() {
+		// payloads.trimToSize();
 		return payloads;
 	}
 
@@ -331,10 +328,10 @@ public class Prototype {
 	 * @return true if it is a member of that category
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.2
 	 */
-	protected boolean isAMemberOfCategory(String category) {
+	protected boolean isAMemberOfCategory(final String category) {
 
 		final String[] categoriesArray = new String[categories.size()];
 		categories.toArray(categoriesArray);

@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -402,7 +402,7 @@ public class Connection {
 	 * message that has been transmitted during construction.
 	 * </p>
 	 * <p>
-	 * Revisited this method in JBroFuzz 1.8 in order NOT to throw an exception
+	 * Revisited this method in JBroFuzz 1.9 in order NOT to throw an exception
 	 * if the reply string is empty, see {@link #getMessage()} for old
 	 * implementation logic.
 	 * </p>

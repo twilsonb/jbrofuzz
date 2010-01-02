@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -29,8 +29,8 @@
  */
 package org.owasp.jbrofuzz.core;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 import org.apache.commons.lang.StringUtils;
@@ -43,18 +43,18 @@ import org.apache.commons.lang.StringUtils;
  * 
  * 
  * @author subere@uncon.org
- * @version 1.8
+ * @version 1.9
  * @since 1.2
  */
 public class Fuzzer implements Iterator<String> {
 
-	final private int len;
+	final private transient int len;
 
-	final private Prototype prototype;
+	final private transient Prototype prototype;
 
-	private ArrayList<String> payloads;
+	private transient List<String> payloads;
 
-	private long cValue, maxValue;
+	private transient long cValue, maxValue;
 
 	/**
 	 * <p>This constructor is available through the factory method, createFuzzer(), 
@@ -184,17 +184,17 @@ public class Fuzzer implements Iterator<String> {
 
 	public String next() {
 
+		final StringBuffer output = new StringBuffer();
+		
 		// Replacive Prototype
 		if (maxValue == payloads.size()) {
 
 			cValue++;
-			return payloads.get((int) cValue - 1);
+			output.append(payloads.get((int) cValue - 1));
 
 		}
 		// Recursive Prototype
 		else {
-
-			final StringBuffer output = new StringBuffer("");
 
 			long val = cValue;
 			// Perform division on a stack
@@ -212,13 +212,14 @@ public class Fuzzer implements Iterator<String> {
 			output.append(StringUtils.leftPad(payloads.get((int)val),
 					len - stack.size(), payloads.get(0)));
 			while (!stack.isEmpty()) {
-				output.append(payloads.get((stack.pop()).intValue()));
+				output.append(payloads.get(stack.pop().intValue()));
 			}
 
 			cValue++;
-			return output.toString();
 
 		}
+
+		return output.toString();
 
 
 	}
@@ -235,14 +236,16 @@ public class Fuzzer implements Iterator<String> {
 	 * @param beta The power
 	 * @return alpha^beta as a long value
 	 */
-	private static long pow(int alpha, int beta) {
+	private static long pow(final int alpha, final int beta) {
 
 		long gamma = (beta)&0x00000000ffffffffL;
 		long result = 1L;
 		long powerN=alpha;
 
 		while(gamma!=0){
-			if((gamma&1)!=0) result*=powerN;
+			if((gamma&1)!=0) {
+				result*=powerN;
+			}
 			gamma>>>=1;
 			powerN=powerN*powerN;
 		}

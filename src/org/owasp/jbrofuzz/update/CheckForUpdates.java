@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -58,7 +58,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 
-import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
+import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -106,7 +106,7 @@ public class CheckForUpdates extends JDialog {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public CheckForUpdates(final JBroFuzzPanel parent) {
+	public CheckForUpdates(final AbstractPanel parent) {
 
 		super(parent.getFrame(), " JBroFuzz - Check For Updates ", true);
 		setIconImage(ImageCreator.IMG_FRAME.getImage());

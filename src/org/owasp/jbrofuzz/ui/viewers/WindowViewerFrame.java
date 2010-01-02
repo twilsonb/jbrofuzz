@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -60,7 +60,7 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
 import org.apache.commons.lang.StringUtils;
-import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
+import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
@@ -102,7 +102,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 	 * @param parent
 	 * @param name
 	 */
-	public WindowViewerFrame(final JBroFuzzPanel parent, final String name) {
+	public WindowViewerFrame(final AbstractPanel parent, final String name) {
 
 		super("JBroFuzz - File Viewer - " + name + ".html");
 		setIconImage(ImageCreator.IMG_FRAME.getImage());

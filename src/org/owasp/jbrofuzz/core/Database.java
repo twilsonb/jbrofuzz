@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -34,9 +34,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
@@ -81,7 +82,9 @@ public class Database {
 	// The maximum number of categories of a prototype
 	private static final int MAX_NO_OF_CATEGORIES = Byte.MAX_VALUE;
 
-	private HashMap<String, Prototype> prototypes;
+	final private Map<String, Prototype> prototypes;
+	
+	private final static String ZERO_FUZZER_NAME = "Zero Fuzzers";
 
 	/**
 	 * <p>
@@ -107,13 +110,11 @@ public class Database {
 		final Prototype pt3 = new Prototype('Z', "999-ZER-TEN", "10 Plain Requests");
 		final Prototype pt4 = new Prototype('Z', "999-ZER-ONE", "1 Plain Request");
 
-		final String zeroFuzzerName = "Zero Fuzzers";
-
-		pt0.addCategory(zeroFuzzerName);
-		pt1.addCategory(zeroFuzzerName);
-		pt2.addCategory(zeroFuzzerName);
-		pt3.addCategory(zeroFuzzerName);
-		pt4.addCategory(zeroFuzzerName);
+		pt0.addCategory(ZERO_FUZZER_NAME);
+		pt1.addCategory(ZERO_FUZZER_NAME);
+		pt2.addCategory(ZERO_FUZZER_NAME);
+		pt3.addCategory(ZERO_FUZZER_NAME);
+		pt4.addCategory(ZERO_FUZZER_NAME);
 
 		for (int i = 0; i < 10000; i++) {
 
@@ -254,7 +255,7 @@ public class Database {
 		final String[] ids = getAllPrototypeIDs();
 		for (String id : ids) {
 
-			final ArrayList<String> catArrayList = prototypes.get(id)
+			final List<String> catArrayList = prototypes.get(id)
 			.getCategories();
 			final String[] categoriesArray = new String[catArrayList.size()];
 			catArrayList.toArray(categoriesArray);
@@ -267,10 +268,10 @@ public class Database {
 
 		}
 
-		final String[] uniqueCategoriesArray = new String[o.size()];
-		o.toArray(uniqueCategoriesArray);
+		final String[] uCategoriesArray = new String[o.size()];
+		o.toArray(uCategoriesArray);
 
-		return uniqueCategoriesArray;
+		return uCategoriesArray;
 
 	}
 
@@ -287,7 +288,7 @@ public class Database {
 	 */
 	public String[] getAllPrototypeIDs() {
 
-		Set<String> set = prototypes.keySet();
+		final Set<String> set = prototypes.keySet();
 		final String[] output = new String[set.size()];
 		return set.toArray(output);
 
@@ -327,9 +328,9 @@ public class Database {
 	 */
 	public String[] getAllPrototypeNames() {
 
-		StringBuffer output = new StringBuffer();
+		final StringBuffer output = new StringBuffer();
 
-		Set<String> set = prototypes.keySet();
+		final Set<String> set = prototypes.keySet();
 		final String[] input = new String[set.size()];
 		set.toArray(input);
 
@@ -354,15 +355,15 @@ public class Database {
 	 * @see #getName(String)
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.2
 	 */
-	public String getIdFromName(String name) {
+	public String getIdFromName(final String name) {
 
-		String[] ids = getAllPrototypeIDs();
+		final String[] ids = getAllPrototypeIDs();
 		for (String id : ids) {
-			Prototype g = prototypes.get(id);
-			if (name.equalsIgnoreCase(g.getName())) {
+			final Prototype cPrototype = prototypes.get(id);
+			if (name.equalsIgnoreCase(cPrototype.getName())) {
 				return id;
 			}
 		}
@@ -374,7 +375,7 @@ public class Database {
 	 * Returns the name of a prototype, given its Id.
 	 * </p>
 	 * 
-	 * @param id
+	 * @param uniqId
 	 *            e.g. "001-HTT-MTH"
 	 * @return String e.g. "Uppercase HTTP Methods"
 	 * 
@@ -384,9 +385,9 @@ public class Database {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public String getName(String id) {
+	public String getName(final String uniqId) {
 
-		return prototypes.get(id).getName();
+		return prototypes.get(uniqId).getName();
 
 	}
 
@@ -395,7 +396,7 @@ public class Database {
 	 * Returns the array of payloads attached to a given prototype Id.
 	 * </p>
 	 * 
-	 * @param id
+	 * @param uniqId
 	 *            e.g. "001-HTT-MTH"
 	 * @return String[] or String[0] if the prototype does not exist in the
 	 *         database
@@ -406,12 +407,12 @@ public class Database {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public String[] getPayloads(String id) {
+	public String[] getPayloads(final String uniqId) {
 
-		if (containsPrototype(id)) {
-			Prototype g = prototypes.get(id);
-			final String[] output = new String[g.size()];
-			return g.getPayloads().toArray(output);
+		if (containsPrototype(uniqId)) {
+			Prototype cPrototype = prototypes.get(uniqId);
+			final String[] output = new String[cPrototype.size()];
+			return cPrototype.getPayloads().toArray(output);
 		} else {
 			return new String[0];
 		}
@@ -431,7 +432,7 @@ public class Database {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public Prototype getPrototype(String prototypeId) {
+	public Prototype getPrototype(final String prototypeId) {
 
 		return prototypes.get(prototypeId);
 
@@ -451,10 +452,10 @@ public class Database {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public String[] getPrototypeNamesInCategory(String category) {
+	public String[] getPrototypeNamesInCategory(final String category) {
 
-		HashSet<String> o = new HashSet<String>();
-		String[] ids = getAllPrototypeIDs();
+		final HashSet<String> o = new HashSet<String>();
+		final String[] ids = getAllPrototypeIDs();
 
 		for (String id : ids) {
 
@@ -464,10 +465,10 @@ public class Database {
 			}
 		}
 
-		String[] uniqueCategoriesArray = new String[o.size()];
-		o.toArray(uniqueCategoriesArray);
+		String[] uCategotiesArray = new String[o.size()];
+		o.toArray(uCategotiesArray);
 
-		return uniqueCategoriesArray;
+		return uCategotiesArray;
 	}
 
 	/**
@@ -475,23 +476,25 @@ public class Database {
 	 * Get the number of payloads the prototype with the given Id has.
 	 * </p>
 	 * 
-	 * @param id
+	 * @param fuzzerId
 	 *            e.g. "001-HTT-MTH"
 	 * @return int value of size, 0 if Id does not exist.
 	 * 
 	 * @see #getPayloads(String)
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.2
 	 */
-	public int getSize(String id) {
+	public int getSize(final String fuzzerId) {
 
-		if (containsPrototype(id)) {
-			Prototype g = prototypes.get(id);
-			return g.size();
-		} else {
-			return 0;
+		int returnSize = 0;
+		
+		if (containsPrototype(fuzzerId)) {
+			final Prototype g = prototypes.get(fuzzerId);
+			returnSize = g.size();
 		}
+		
+		return returnSize;
 
 	}
 
@@ -741,7 +744,7 @@ public class Database {
 	 * @param name The fuzzer name
 	 * @return e.g. Replacive
 	 */
-	public String getTypeFromName(String name) {
+	public String getTypeFromName(final String name) {
 
 		return prototypes.get(getIdFromName(name)).getType();
 
@@ -750,16 +753,16 @@ public class Database {
 	/**
 	 * <p>Return the prototype type, based on the id value.</p>
 	 * 
-	 * @param id
+	 * @param fuzzerId
 	 * @return e.g. "Recursive", "Cross Product"
 	 * 
 	 * @author subere@uncon.org
 	 * @version 1.8
 	 * @since 1.8
 	 */
-	public String getType(String id) {
+	public String getType(final String fuzzerId) {
 
-		return prototypes.get(id).getType();
+		return prototypes.get(fuzzerId).getType();
 
 	}
 

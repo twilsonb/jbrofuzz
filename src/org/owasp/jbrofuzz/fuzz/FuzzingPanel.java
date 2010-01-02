@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -69,7 +69,7 @@ import org.owasp.jbrofuzz.fuzz.ui.OutputTable;
 import org.owasp.jbrofuzz.fuzz.ui.ResponseTableModel;
 import org.owasp.jbrofuzz.fuzz.ui.RightClickPopups;
 import org.owasp.jbrofuzz.payloads.PayloadsDialog;
-import org.owasp.jbrofuzz.ui.JBroFuzzPanel;
+import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
@@ -102,7 +102,7 @@ import com.Ostermiller.util.Browser;
  * @version 1.8
  * @since 0.2
  */
-public class FuzzingPanel extends JBroFuzzPanel {
+public class FuzzingPanel extends AbstractPanel {
 
 	/**
 	 * <p>
