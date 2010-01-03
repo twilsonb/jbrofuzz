@@ -39,8 +39,8 @@ import java.io.UnsupportedEncodingException;
  * </p>
  * 
  * @author subere@uncon.org
+ * @version 1.9
  * @since 0.1
- * @version 1.5
  */
 public class B64 {
 
@@ -156,8 +156,8 @@ public class B64 {
 		final int slack = raw.length - offset - 1;
 		final int end = (slack >= 2) ? 2 : slack;
 		for (int i = 0; i <= end; i++) {
-			final byte b = raw[offset + i];
-			final int neuter = (b < 0) ? b + 256 : b;
+			final byte bByte = raw[offset + i];
+			final int neuter = (bByte < 0) ? bByte + 256 : bByte;
 			block += neuter << (8 * (2 - i));
 		}
 		final char[] base64 = new char[4];
@@ -193,23 +193,23 @@ public class B64 {
 		return '?';
 	}
 
-	private static int getValue(final char c) {
-		if ((c >= 'A') && (c <= 'Z')) {
-			return c - 'A';
+	private static int getValue(final char inChar) {
+		if ((inChar >= 'A') && (inChar <= 'Z')) {
+			return inChar - 'A';
 		}
-		if ((c >= 'a') && (c <= 'z')) {
-			return c - 'a' + 26;
+		if ((inChar >= 'a') && (inChar <= 'z')) {
+			return inChar - 'a' + 26;
 		}
-		if ((c >= '0') && (c <= '9')) {
-			return c - '0' + 52;
+		if ((inChar >= '0') && (inChar <= '9')) {
+			return inChar - '0' + 52;
 		}
-		if (c == '+') {
+		if (inChar == '+') {
 			return 62;
 		}
-		if (c == '/') {
+		if (inChar == '/') {
 			return 63;
 		}
-		if (c == '=') {
+		if (inChar == '=') {
 			return 0;
 		}
 		return -1;

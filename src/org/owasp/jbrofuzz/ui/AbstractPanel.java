@@ -1,9 +1,9 @@
 /**
- * JBroFuzz 1.8
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
- * Copyright (C) 2007, 2008, 2009 subere@uncon.org
+ * Copyright (C) 2007 - 2010 subere@uncon.org
  *
  * This file is part of JBroFuzz.
  * 
@@ -69,9 +69,10 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.5
+ * @version 1.9
+ * @since 1.5
  */
-public abstract class JBroFuzzPanel extends JPanel {
+public abstract class AbstractPanel extends JPanel {
 
 	private static final long serialVersionUID = -4932876100272401793L;
 
@@ -94,7 +95,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 	 * @param name
 	 * @param frame
 	 */
-	public JBroFuzzPanel(final String name, final JBroFuzzWindow frame) {
+	public AbstractPanel(final String name, final JBroFuzzWindow frame) {
 
 		super();
 		setLayout(new BorderLayout());
@@ -291,7 +292,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 				final int d = pane.getSelectedIndex();
 				if (d >= 0) {
 
-					String s = ((JBroFuzzPanel) pane.getComponent(d)).getName();
+					String s = ((AbstractPanel) pane.getComponent(d)).getName();
 
 					if (s.equalsIgnoreCase(getFrame().getPanelFuzzing()
 							.getName())) {
@@ -379,7 +380,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 				final int d = pane.getSelectedIndex();
 				if (d >= 0) {
 
-					String s = ((JBroFuzzPanel) pane.getComponent(d)).getName();
+					String s = ((AbstractPanel) pane.getComponent(d)).getName();
 
 					if (s.equalsIgnoreCase(getFrame().getPanelFuzzing()
 							.getName())) {
@@ -392,7 +393,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 						}
 						final String name = (String) area.getModel()
 						.getValueAt(area.convertRowIndexToModel(c), 0);
-						new WindowViewerFrame(JBroFuzzPanel.this, name);
+						new WindowViewerFrame(AbstractPanel.this, name);
 
 					}
 
@@ -401,7 +402,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 
 						final String payload = (String) area.getModel()
 						.getValueAt(area.getSelectedRow(), 0);
-						new PropertiesViewer(JBroFuzzPanel.this,
+						new PropertiesViewer(AbstractPanel.this,
 								"Payload Information", payload);
 
 					}
@@ -415,7 +416,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 						final int c = area.getSelectedRow();
 						final String name = (String) area.getModel()
 						.getValueAt(c, 0);
-						new WindowViewerFrame(JBroFuzzPanel.this, name.split(" ")[0]);
+						new WindowViewerFrame(AbstractPanel.this, name.split(" ")[0]);
 
 					}
 
@@ -433,7 +434,7 @@ public abstract class JBroFuzzPanel extends JPanel {
 							output.append("\n");
 						}
 
-						new PropertiesViewer(JBroFuzzPanel.this, "Properties",
+						new PropertiesViewer(AbstractPanel.this, "Properties",
 								output.toString());
 
 					}
