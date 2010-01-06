@@ -116,14 +116,14 @@ public class EncoderHashFrame extends JFrame {
 
 	private JButton encode, decode, close;
 
-	private static boolean encoderHashIsShowing = false;
+	private static boolean windowIsShowing = false;
 
 	public EncoderHashFrame(final JBroFuzzWindow parent) {
 		
-		if (encoderHashIsShowing) {
+		if (windowIsShowing) {
 			return;
 		}
-		encoderHashIsShowing = true;
+		windowIsShowing = true;
 
 		// really inspired from Paros Proxy, but as a frame
 		setTitle(" JBroFuzz - Encoder/Hash ");
@@ -272,7 +272,7 @@ public class EncoderHashFrame extends JFrame {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						encoderHashIsShowing = false;
+						windowIsShowing = false;
 
 						// Save the values of the encode/decode as a preference
 						prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
@@ -291,7 +291,7 @@ public class EncoderHashFrame extends JFrame {
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
 
-					encoderHashIsShowing = false;
+					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
@@ -309,7 +309,7 @@ public class EncoderHashFrame extends JFrame {
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
 
-					encoderHashIsShowing = false;
+					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
@@ -328,7 +328,7 @@ public class EncoderHashFrame extends JFrame {
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
 
-					encoderHashIsShowing = false;
+					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
@@ -346,7 +346,7 @@ public class EncoderHashFrame extends JFrame {
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
 
-					encoderHashIsShowing = false;
+					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
@@ -364,7 +364,7 @@ public class EncoderHashFrame extends JFrame {
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
 
-					encoderHashIsShowing = false;
+					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
@@ -381,7 +381,7 @@ public class EncoderHashFrame extends JFrame {
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
 
-					encoderHashIsShowing = false;
+					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
@@ -398,7 +398,7 @@ public class EncoderHashFrame extends JFrame {
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
 
-					encoderHashIsShowing = false;
+					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
 					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
@@ -436,7 +436,7 @@ public class EncoderHashFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(final WindowEvent e) {
-				encoderHashIsShowing = false;
+				windowIsShowing = false;
 
 				// Save the values of the encode/decode as a preference
 				prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());

@@ -37,20 +37,17 @@ import javax.swing.tree.DefaultMutableTreeNode;
  */
 public class HeaderTreeNode extends DefaultMutableTreeNode {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1419679735344469281L;
-
+	private static final long serialVersionUID = -2215677803093884221L;
+	
 	private boolean nodeIsDirectory;
 
-	public HeaderTreeNode(Object o) {
-		super(o);
+	public HeaderTreeNode(final Object myObject) {
+		super(myObject);
 		nodeIsDirectory = false;
 	}
 
-	public HeaderTreeNode(Object o, boolean isDirectory) {
-		super(o);
+	public HeaderTreeNode(final Object myObject, final boolean isDirectory) {
+		super(myObject);
 		nodeIsDirectory = isDirectory;
 	}
 

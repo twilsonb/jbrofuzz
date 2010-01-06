@@ -407,19 +407,6 @@ public abstract class AbstractPanel extends JPanel {
 
 					}
 
-					if (s.equalsIgnoreCase(getFrame().getPanelSniffing()
-							.getName())) {
-
-						// Runtime.getRuntime().gc();
-						// Runtime.getRuntime().runFinalization();
-
-						final int c = area.getSelectedRow();
-						final String name = (String) area.getModel()
-						.getValueAt(c, 0);
-						new WindowViewerFrame(AbstractPanel.this, name.split(" ")[0]);
-
-					}
-
 					if (s.equalsIgnoreCase(getFrame().getPanelWebDirectories()
 							.getName())) {
 

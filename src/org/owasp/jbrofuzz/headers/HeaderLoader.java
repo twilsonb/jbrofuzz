@@ -59,11 +59,11 @@ public class HeaderLoader {
 	// The maximum number of fields allowed for each header
 	private static final int MAX_NO_OF_FIELDS = Byte.MAX_VALUE;
 	private HashMap<String[], Header> headers;
-	private HeaderTreeNode myNode;
+	private final HeaderTreeNode myNode;
 
 	private int globalCounter;
 
-	private StringBuffer fileContents;
+	private final StringBuffer fileContents;
 
 	public HeaderLoader() {
 
@@ -81,31 +81,31 @@ public class HeaderLoader {
 		}
 
 		// Read the characters from the file
-		BufferedReader in = null;
+		BufferedReader inBuffer = null;
 		try {
 			final URLConnection connection = fileURL.openConnection();
 			connection.connect();
 
-			in = new BufferedReader(new InputStreamReader(connection
+			inBuffer = new BufferedReader(new InputStreamReader(connection
 					.getInputStream()));
 
 			int counter = 0;
-			int c;
-			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
+			int charRead;
+			while (((charRead = inBuffer.read()) > 0) && (counter < MAX_CHARS)) {
 				// Allow the character only if its printable ascii or \n
-				if ((CharUtils.isAsciiPrintable((char) c))
-						|| (((char) c) == '\n')) {
-					fileContents.append((char) c);
+				if ((CharUtils.isAsciiPrintable((char) charRead))
+						|| (((char) charRead) == '\n')) {
+					fileContents.append((char) charRead);
 				}
 				counter++;
 			}
 
-			in.close();
+			inBuffer.close();
 
 		} catch (final IOException e1) {
 			return;
 		} finally {
-			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(inBuffer);
 		}
 
 	} // constructor
@@ -125,7 +125,7 @@ public class HeaderLoader {
 	 * 
 	 * @param categoriesArray
 	 *            The array of nodes to be added.
-	 * @param dn
+	 * @param headerTreeNode
 	 *            The tree node on which to be added.
 	 * 
 	 * @see #getMasterHeader()
@@ -133,7 +133,8 @@ public class HeaderLoader {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	private void addNodes(String[] categoriesArray, HeaderTreeNode dn) {
+	private void addNodes(final String[] categoriesArray, 
+			final HeaderTreeNode headerTreeNode) {
 
 		if (categoriesArray.length == 0) {
 			return;
@@ -143,15 +144,15 @@ public class HeaderLoader {
 		}
 		globalCounter++;
 		// Find the first element
-		String firstElement = StringUtils.stripStart(StringUtils.stripEnd(
+		final String firstElement = StringUtils.stripStart(StringUtils.stripEnd(
 				categoriesArray[0], " "), " ");
 		// Use the index to know its position
 		int index = 0;
 		boolean exists = false;
-		for (Enumeration<HeaderTreeNode> e = extracted(dn); e.hasMoreElements()
+		for (final Enumeration<HeaderTreeNode> e = extracted(headerTreeNode); e.hasMoreElements()
 		&& !exists;) {
 
-			String currentElement = e.nextElement().toString();
+			final String currentElement = e.nextElement().toString();
 
 			if (currentElement.equalsIgnoreCase(firstElement)) {
 
@@ -167,27 +168,27 @@ public class HeaderLoader {
 		// Does the first element exist?
 		if (!exists) {
 
-			dn.add(new HeaderTreeNode(firstElement));
+			headerTreeNode.add(new HeaderTreeNode(firstElement));
 		}
 
 		// Remove the first element, start again
-		String[] temp = (String[]) ArrayUtils.subarray(categoriesArray, 1,
+		final String[] temp = (String[]) ArrayUtils.subarray(categoriesArray, 1,
 				categoriesArray.length);
-		HeaderTreeNode nemp = (HeaderTreeNode) dn.getChildAt(index);
+		final HeaderTreeNode nemp = (HeaderTreeNode) headerTreeNode.getChildAt(index);
 
 		addNodes(temp, nemp);
 
 	}
 
 	@SuppressWarnings("unchecked")
-	private Enumeration<HeaderTreeNode> extracted(HeaderTreeNode dn) {
-		return dn.children();
+	private Enumeration<HeaderTreeNode> extracted(final HeaderTreeNode headerTreeNode) {
+		return headerTreeNode.children();
 	}
 
 	public Header getHeader(final TreePath treePath) {
 
 		if (!((HeaderTreeNode) treePath.getLastPathComponent()).isLeaf()) {
-			return new Header(0);
+			return Header.ZERO;
 		}
 
 		final Object[] path = treePath.getPath();
@@ -219,7 +220,7 @@ public class HeaderLoader {
 			}
 		}
 
-		return new Header(0);
+		return Header.ZERO;
 
 	}
 
@@ -298,12 +299,10 @@ public class HeaderLoader {
 							line2 = line2.substring(1);
 							String[] categoriesArray;
 
-							String commentLine = fileInput[i + 2];
+							final String commentLine = fileInput[i + 2];
 							if (commentLine.startsWith(">>")) {
 
-								// Finally create the header, add the comments
-								Header myGen = new Header(i);
-								myGen.setComment(commentLine.substring(2));
+								
 
 								// If categories do exist in the second line
 								if (line2.contains("|")) {
@@ -335,14 +334,17 @@ public class HeaderLoader {
 								}
 
 								// Add the values for each element
-								StringBuffer myBuffer = new StringBuffer();
+								final StringBuffer myBuffer = new StringBuffer();
 								for (int j = 1; j <= numberOfFields; j++) {
 									myBuffer.append(fileInput[i + 2 + j]);
 									myBuffer.append('\n');
 								}
-								myGen.setHeader(myBuffer.toString());
-
-								headers.put(categoriesArray, myGen);
+								
+								// Finally create the header, add the comments
+								headers.put(categoriesArray, 
+										new Header(numberOfFields, 
+												myBuffer.toString(), 
+												commentLine.substring(2)));
 							}
 
 						}

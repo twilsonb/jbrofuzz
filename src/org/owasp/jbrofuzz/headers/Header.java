@@ -31,31 +31,28 @@ package org.owasp.jbrofuzz.headers;
 
 public class Header {
 
-	private int id, noOfFields;
+	private static int headerCounter = 0;
+	
+	private int headerId, noOfFields;
 
-	private String header, comment;
-
-	/**
-	 * @param id
-	 */
-	public Header(int id) {
-		this.id = id;
-		noOfFields = 0;
-		header = "";
-		comment = "";
-	}
+	private String headerValue, comment;
 
 	/**
-	 * @param id
+	 * @param headerId
 	 * @param noOfFields
-	 * @param header
+	 * @param headerValue
 	 * @param comment
 	 */
-	public Header(int id, int noOfFields, String header, String comment) {
-		this.id = id;
+	public Header(final int noOfFields, 
+			final String headerValue, final String comment) {
+		
+		this.headerId = headerCounter;
 		this.noOfFields = noOfFields;
-		this.header = header;
+		
+		this.headerValue = headerValue;
 		this.comment = comment;
+		// Increment the counter
+		headerCounter++;
 	}
 
 	/**
@@ -69,23 +66,23 @@ public class Header {
 	 * @return the value
 	 */
 	public String getHeader() {
-		return header;
+		return headerValue;
 	}
 
 	/**
 	 * @return the id
 	 */
 	public int getId() {
-		return id;
+		return headerId;
 	}
 
 	protected String getInfo() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("\nTotal No of Characters: ");
-		sb.append(header.length());
-		sb.append("\nTotal No of Fields (lines): ");
-		sb.append(header.split("\n").length);
-		return sb.toString();
+		final StringBuilder sBuilder = new StringBuilder();
+		sBuilder.append("\nTotal No of Characters: ");
+		sBuilder.append(headerValue.length());
+		sBuilder.append("\nTotal No of Fields (lines): ");
+		sBuilder.append(headerValue.split("\n").length);
+		return sBuilder.toString();
 	}
 
 	/**
@@ -99,32 +96,33 @@ public class Header {
 	 * @param comment
 	 *            the comment to set
 	 */
-	protected void setComment(String comment) {
+	protected void setComment(final String comment) {
 		this.comment = comment;
 	}
 
 	/**
-	 * @param value
+	 * @param headerValue
 	 *            the value to set
 	 */
-	public void setHeader(String value) {
-		header = value;
+	public void setHeader(final String headerValue) {
+		this.headerValue = headerValue;
 	}
 
 	/**
-	 * @param id
+	 * @param headerId
 	 *            the id to set
 	 */
-	public void setId(int id) {
-		this.id = id;
+	public void setId(final int headerId) {
+		this.headerId = headerId;
 	}
 
 	/**
 	 * @param noOfFields
 	 *            the noOfFields to set
 	 */
-	public void setNoOfFields(int noOfFields) {
+	public void setNoOfFields(final int noOfFields) {
 		this.noOfFields = noOfFields;
 	}
 
+	public static final Header ZERO = new Header(0, "", "");
 }
