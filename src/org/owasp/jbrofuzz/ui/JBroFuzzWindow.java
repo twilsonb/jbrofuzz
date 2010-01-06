@@ -49,7 +49,7 @@ import javax.swing.event.ChangeListener;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
 import org.owasp.jbrofuzz.graph.GraphingPanel;
-import org.owasp.jbrofuzz.headers.HeadersPanel;
+import org.owasp.jbrofuzz.headers.HeaderFrame;
 import org.owasp.jbrofuzz.payloads.PayloadsPanel;
 import org.owasp.jbrofuzz.system.SystemPanel;
 import org.owasp.jbrofuzz.ui.menu.JBroFuzzMenuBar;
@@ -83,11 +83,6 @@ public class JBroFuzzWindow extends JFrame {
 	public static final int ID_PANEL_GRAPHING = 121;
 
 	/**
-	 * Unique int identifier for the Headers Panel
-	 */
-	public static final int ID_PANEL_HEADERS = 123;
-
-	/**
 	 * Unique int identifier for the Fuzzing Panel
 	 */
 	public static final int ID_PANEL_FUZZING = 124;
@@ -113,9 +108,6 @@ public class JBroFuzzWindow extends JFrame {
 
 	// The web directories panel
 	private final GraphingPanel gp;
-
-	// The main sniffing panel
-	private final HeadersPanel sp;
 
 	// The main definitions panel
 	private final PayloadsPanel pp;
@@ -165,7 +157,6 @@ public class JBroFuzzWindow extends JFrame {
 		// The panels must be below the toolBar and menuBar
 		gp = new GraphingPanel(this);
 		fp = new FuzzingPanel(this);
-		sp = new HeadersPanel(this);
 		pp = new PayloadsPanel(this);
 		cp = new SystemPanel(this);
 
@@ -185,7 +176,6 @@ public class JBroFuzzWindow extends JFrame {
 		tp.add(fp.getName(), fp);
 		tp.add(gp.getName(), gp);
 		tp.add(pp.getName(), pp);
-		tp.add(sp.getName(), sp);
 		tp.add(cp.getName(), cp);
 
 		// The selected tab
@@ -308,7 +298,6 @@ public class JBroFuzzWindow extends JFrame {
 		fp.stop();
 		gp.stop();
 		pp.stop();
-		sp.stop();
 		cp.stop();
 
 		// Get the prefences the global preferences
@@ -410,18 +399,6 @@ public class JBroFuzzWindow extends JFrame {
 	 */
 	public PayloadsPanel getPanelPayloads() {
 		return pp;
-	}
-
-	/**
-	 * <p>
-	 * Method returning the m sniffing panel that is being instantiated through
-	 * the m window.
-	 * </p>
-	 * 
-	 * @return mSniffingPanel
-	 */
-	public HeadersPanel getPanelSniffing() {
-		return sp;
 	}
 
 	/**
@@ -583,14 +560,6 @@ public class JBroFuzzWindow extends JFrame {
 			}
 		}
 
-		if (n == JBroFuzzWindow.ID_PANEL_HEADERS) {
-			if (isTabOpen(sp.getName())) {
-
-				tp.remove(sp);
-
-			}
-		}
-
 		if (n == JBroFuzzWindow.ID_PANEL_SYSTEM) {
 			if (isTabOpen(cp.getName())) {
 
@@ -638,14 +607,6 @@ public class JBroFuzzWindow extends JFrame {
 				tp.addTab(fp.getName(), fp);
 			}
 			tp.setSelectedComponent(fp);
-		}
-
-		if (n == JBroFuzzWindow.ID_PANEL_HEADERS) {
-
-			if (!isTabOpen(sp.getName())) {
-				tp.addTab(sp.getName(), sp);
-			}
-			tp.setSelectedComponent(sp);
 		}
 
 		if (n == JBroFuzzWindow.ID_PANEL_SYSTEM) {

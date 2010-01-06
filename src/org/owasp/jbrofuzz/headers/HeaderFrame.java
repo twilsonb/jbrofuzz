@@ -35,66 +35,70 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
+import javax.swing.WindowConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.text.Document;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import org.owasp.jbrofuzz.graph.FileSystemTreeModel;
 import org.owasp.jbrofuzz.graph.FileSystemTreeNode;
-import org.owasp.jbrofuzz.ui.AbstractPanel;
-import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
- * <p>
- * The headers panel showing the headers in their corresponding categories.
- * </p>
+ * <p>The headers window showing the headers in their 
+ * corresponding categories.</p>
  * 
  * @author subere@uncon.org
- * @version 1.4
+ * @version 1.9
+ * @since 1.9
  */
-public class HeadersPanel extends AbstractPanel implements
-TreeSelectionListener {
+public class HeaderFrame extends JFrame implements TreeSelectionListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1835892912239470843L;
+	private static final long serialVersionUID = 8707597613561230771L;
+	
+	// Dimensions of the frame
+	private static final int SIZE_X = 650;
+	private static final int SIZE_Y = 400;
+
 	// The split pane at the centre of the screen
 	private JSplitPane mainSplitPanel, rVSplitPanel, rHSplitPanel;
 	// The main file tree object
 	private JTree tree;
 	// The progress bar displayed
 	private JProgressBar progressBar;
-	// A boolean to check if we are running or not
-	private boolean stopped;
 	// The header, info and comment text area
 	private NonWrappingTextPane hTxTArea, iTxTArea, cTxTArea;
 	// The header's loader
 	private HeaderLoader mHeadersLoader;
 
-	public HeadersPanel(final JBroFuzzWindow m) {
+	private static boolean windowIsShowing = false;
 
-		super(" Headers ", m);
+	public HeaderFrame() {
+
+		if (windowIsShowing) {
+			return;
+		}
+		windowIsShowing = true;
+		
+		setIconImage(ImageCreator.IMG_FRAME.getImage());
+		setTitle(" JBroFuzz - Browser Headers ");
 		setLayout(new BorderLayout());
-
-		stopped = true;
-
-		// Set the options in the toolbar enabled at startup
-		setOptionsAvailable(true, false, true, false, false);
 
 		mHeadersLoader = new HeaderLoader();
 		// The left hand side tree and friends
@@ -103,7 +107,7 @@ TreeSelectionListener {
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		tree.addTreeSelectionListener(this);
 
-		JScrollPane treeScrollPanel = new JScrollPane(tree);
+		final JScrollPane treeScrollPanel = new JScrollPane(tree);
 		treeScrollPanel.setVerticalScrollBarPolicy(20);
 		treeScrollPanel.setHorizontalScrollBarPolicy(30);
 
@@ -118,7 +122,7 @@ TreeSelectionListener {
 		hTxTArea = new NonWrappingTextPane();
 		hTxTArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		hTxTArea = new NonWrappingTextPane();
+		// hTxTArea = new NonWrappingTextPane();
 		hTxTArea.putClientProperty("charset", "UTF-8");
 		hTxTArea.setEditable(true);
 		hTxTArea.setVisible(true);
@@ -143,9 +147,9 @@ TreeSelectionListener {
 		});
 
 		// Right click: Cut, Copy, Paste, Select All
-		popupText(hTxTArea, true, true, true, true);
+		// popupText(hTxTArea, true, true, true, true);
 
-		JScrollPane hScrollPane = new JScrollPane(hTxTArea);
+		final JScrollPane hScrollPane = new JScrollPane(hTxTArea);
 		hScrollPane.setVerticalScrollBarPolicy(20);
 		hScrollPane.setHorizontalScrollBarPolicy(30);
 
@@ -162,9 +166,9 @@ TreeSelectionListener {
 		iTxTArea.setEditable(false);
 		iTxTArea.setFont(new Font("Verdana", Font.BOLD, 10));
 		// Right click: Cut, Copy, Paste, Select All
-		popupText(iTxTArea, false, true, false, true);
+		// popupText(iTxTArea, false, true, false, true);
 
-		JScrollPane iScrollPane = new JScrollPane(iTxTArea);
+		final JScrollPane iScrollPane = new JScrollPane(iTxTArea);
 		iScrollPane.setVerticalScrollBarPolicy(20);
 		iScrollPane.setHorizontalScrollBarPolicy(30);
 
@@ -181,9 +185,9 @@ TreeSelectionListener {
 		cTxTArea.setEditable(false);
 		cTxTArea.setFont(new Font("Verdana", Font.BOLD, 10));
 		// Right click: Cut, Copy, Paste, Select All
-		popupText(cTxTArea, false, true, false, true);
+		// popupText(cTxTArea, false, true, false, true);
 
-		JScrollPane cScrollPane = new JScrollPane(cTxTArea);
+		final JScrollPane cScrollPane = new JScrollPane(cTxTArea);
 		cScrollPane.setVerticalScrollBarPolicy(20);
 		cScrollPane.setHorizontalScrollBarPolicy(30);
 
@@ -212,39 +216,9 @@ TreeSelectionListener {
 		mainSplitPanel.setLeftComponent(treePanel);
 		mainSplitPanel.setRightComponent(rVSplitPanel);
 
-		// Set the divider locations, relative to the screen size
-		final Dimension scr_res = JBroFuzzFormat.getScreenSize();
-		if ((scr_res.width == 0) || (scr_res.height == 0)) {
-
-			rHSplitPanel.setDividerLocation(430);
-			rVSplitPanel.setDividerLocation(350);
-			mainSplitPanel.setDividerLocation(300);
-
-		} else {
-
-			final int window_width = scr_res.width - 200;
-			final int window_height = scr_res.height - 200;
-			// Check that the screen is width/length is +tive
-			if ((window_width > 0) && (window_height > 0)) {
-
-				rHSplitPanel.setDividerLocation(window_width * 2 / 5);
-				rVSplitPanel.setDividerLocation(window_height / 2);
-				mainSplitPanel.setDividerLocation(window_height / 2);
-
-				// topPane.setDividerLocation( window_width * 2 / 3 );
-				// mainPane.setDividerLocation( window_height / 2 );
-
-			} else {
-
-				rHSplitPanel.setDividerLocation(430);
-				rVSplitPanel.setDividerLocation(350);
-				mainSplitPanel.setDividerLocation(300);
-
-			}
-		}
-
+		
 		// Allow for all areas to be resized to even not be seen
-		Dimension minimumSize = new Dimension(0, 0);
+		final Dimension minimumSize = new Dimension(0, 0);
 		treePanel.setMinimumSize(minimumSize);
 		commentPanel.setMinimumSize(minimumSize);
 		infoPanel.setMinimumSize(minimumSize);
@@ -267,29 +241,37 @@ TreeSelectionListener {
 		// Load and expand the tree
 		mHeadersLoader.load();
 		tree.setModel(new DefaultTreeModel(mHeadersLoader.getMasterTreeNode()));
-		// Traverse tree from root
-		TreeNode root = (TreeNode) tree.getModel().getRoot();
-		expandOne(tree, new TreePath(root));
-		// Select the first row
 		tree.setSelectionRow(0);
+		
+		// Global frame issues
 
-	}
+		this.setSize(SIZE_X, SIZE_Y);
+		setMinimumSize(new Dimension(SIZE_X / 2, SIZE_Y / 2));
 
-	@Override
-	public void add() {
-	}
+		setResizable(true);
+		setVisible(true);
 
-	@Override
-	public void pause() {
-	}
+		// Set the preferences object access
+		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
+		
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(final WindowEvent wEvent) {
+				windowIsShowing = false;
+				
+				prefs.putInt("UI.H.rHSplitPanel", rHSplitPanel.getDividerLocation());
+				prefs.putInt("UI.H.rVSplitPanel", rVSplitPanel.getDividerLocation());
+				prefs.putInt("UI.H.mainSplitPanel", mainSplitPanel.getDividerLocation());
+				
+				dispose();
+			}
+		});
 
-	@Override
-	public boolean isStoppedEnabled() {
-		return stopped;
-	}
-
-	@Override
-	public void remove() {
+		rHSplitPanel.setDividerLocation(prefs.getInt("UI.H.rHSplitPanel", 315));
+		rVSplitPanel.setDividerLocation(prefs.getInt("UI.H.rVSplitPanel", 242));
+		mainSplitPanel.setDividerLocation(prefs.getInt("UI.H.mainSplitPanel", 162));
+		
 	}
 
 	/**
@@ -297,15 +279,15 @@ TreeSelectionListener {
 	 * Set the value to be displayed in the <code>Comment</code> JTextArea.
 	 * </p>
 	 * 
-	 * @param t
+	 * @param comment
 	 *            The input String
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.2
 	 */
-	public void setComment(String t) {
-		cTxTArea.setText(t);
+	public void setComment(final String comment) {
+		cTxTArea.setText(comment);
 		cTxTArea.setCaretPosition(0);
 	}
 
@@ -315,16 +297,16 @@ TreeSelectionListener {
 	 * NonWrappingTextPane.
 	 * </p>
 	 * 
-	 * @param t
+	 * @param header
 	 *            The input String
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.2
 	 */
-	public void setHeader(String t) {
+	public void setHeader(final String header) {
 
-		hTxTArea.setText(t);
+		hTxTArea.setText(header);
 		hTxTArea.setCaretPosition(0);
 	}
 
@@ -333,77 +315,40 @@ TreeSelectionListener {
 	 * Set the value to be displayed in the <code>Information</code> JTextArea.
 	 * </p>
 	 * 
-	 * @param t
+	 * @param info
 	 *            The input String
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 1.9
 	 * @since 1.2
 	 */
-	public void setInformation(String t) {
+	public void setInformation(final String info) {
 
-		iTxTArea.setText(t);
+		iTxTArea.setText(info);
 		iTxTArea.setCaretPosition(0);
 
 	}
 
-	@Override
-	public void start() {
-
-		if (!stopped) {
-			return;
-		}
-		stopped = false;
-
-		// Set the options in the tool bar enabled at startup
-		setOptionsAvailable(false, true, true, false, false);
-
-		// Start to do what you need to do
-		progressBar.setIndeterminate(true);
-
-		mHeadersLoader.load();
-		tree.setModel(new DefaultTreeModel(mHeadersLoader.getMasterTreeNode()));
-		// Traverse tree from root
-		TreeNode root = (TreeNode) tree.getModel().getRoot();
-		expandAll(tree, new TreePath(root), true);
-		// Select the first row
-		tree.setSelectionRow(0);
-	}
 
 	@Override
-	public void stop() {
-
-		if (stopped) {
-			return;
-		}
-		stopped = true;
-
-		// Set the options in the toolbar enabled at startup
-		setOptionsAvailable(true, false, true, false, false);
-
-		// Stop to do what you need to do
-		progressBar.setIndeterminate(false);
-
-	}
-
-	@Override
-	public void valueChanged(TreeSelectionEvent e) {
+	public void valueChanged(final TreeSelectionEvent tEvent) {
 
 		final TreePath selectedPath = tree.getSelectionPath();
 
-		if (selectedPath == null)
+		if (selectedPath == null) {
 			return;
+		}
 		// More than 127 directories chill
 		if (selectedPath.getPathCount() > Byte.MAX_VALUE) {
-			HeadersPanel.this.getFrame().log(
-					"Headers Panel: Path has more than 127 locations ", 3);
+//			parent.log(
+//					"Headers Panel: Path has more than 127 locations ", 3);
 			return;
 		}
 
-		Header hd = mHeadersLoader.getHeader(selectedPath);
-		setHeader(hd.getHeader());
-		setInformation(hd.getInfo());
-		setComment(hd.getComment());
+		final Header cHeader = mHeadersLoader.getHeader(selectedPath);
+		setHeader(cHeader.getHeader());
+		setInformation(cHeader.getInfo());
+		setComment(cHeader.getComment());
 
 	}
 

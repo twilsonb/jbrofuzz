@@ -53,6 +53,7 @@ import org.owasp.jbrofuzz.encode.EncoderHashFrame;
 import org.owasp.jbrofuzz.fuzz.io.OpenSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveAsSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveSession;
+import org.owasp.jbrofuzz.headers.HeaderFrame;
 import org.owasp.jbrofuzz.help.Faq;
 import org.owasp.jbrofuzz.help.Topics;
 import org.owasp.jbrofuzz.payloads.OpenLocationDialog;
@@ -87,7 +88,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 	// Used under the Panel JMenu as items
 	private final JMenuItem start, pause, stop, add, remove;
 	// Used under the view JMenu as items
-	private final JCheckBoxMenuItem graphing, fuzzing, headers, payloads, system;
+	private final JCheckBoxMenuItem graphing, fuzzing, payloads, system;
 
 	/**
 	 * 
@@ -191,7 +192,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 		graphing = new JCheckBoxMenuItem("Graphing", true);
 		fuzzing = new JCheckBoxMenuItem("Fuzzing", true);
-		headers = new JCheckBoxMenuItem("Headers", true);
 		payloads = new JCheckBoxMenuItem("Payloads", false);
 		system = new JCheckBoxMenuItem("System", false);
 
@@ -199,13 +199,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final JMenuItem hideAll = new JMenuItem("Hide All");
 
 		showHide.add(fuzzing);
-		showHide.add(headers);
 		showHide.add(payloads);
 		showHide.add(graphing);
 		showHide.add(system);
 
 		fuzzing.setState(true);
-		headers.setState(true);
 		payloads.setState(true);
 		graphing.setState(true);
 		system.setState(true);
@@ -315,18 +313,25 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		panel.add(remove);
 
 		// Options
+		
+		final JMenuItem headers = new JMenuItem("Browser Headers");
 		final JMenuItem encoderHash = new JMenuItem("Encoder/Hash...");
-		encoderHash.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
 		final JMenuItem updates = new JMenuItem("Check for Updates...",
-				ImageCreator.IMG_UPDATE);
+				ImageCreator.IMG_UPDATE);		
 		final JMenuItem preferences = new JMenuItem("Preferences",
 				ImageCreator.IMG_PREFERENCES);
+
+		headers.setAccelerator(KeyStroke.getKeyStroke('H', Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+		
+		encoderHash.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
 		preferences.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
+		options.add(headers);
+		options.addSeparator();
 		options.add(encoderHash);
 		options.add(updates);
 		options.addSeparator();
@@ -680,24 +685,6 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			}
 		});
 
-		headers.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						if (!headers.getState()) {
-							JBroFuzzMenuBar.this.getFrame().setTabHide(
-									JBroFuzzWindow.ID_PANEL_HEADERS);
-						} else {
-							JBroFuzzMenuBar.this.getFrame().setTabShow(
-									JBroFuzzWindow.ID_PANEL_HEADERS);
-						}
-					}
-				});
-
-			}
-		});
-
 		payloads.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
@@ -747,12 +734,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_FUZZING);
 						fuzzing.setState(true);
-						JBroFuzzMenuBar.this.getFrame().setTabShow(
-								JBroFuzzWindow.ID_PANEL_HEADERS);
-						headers.setState(true);
+					
 						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_PAYLOADS);
 						payloads.setState(true);
+						
 						JBroFuzzMenuBar.this.getFrame().setTabShow(
 								JBroFuzzWindow.ID_PANEL_SYSTEM);
 						system.setState(true);
@@ -774,12 +760,11 @@ public class JBroFuzzMenuBar extends JMenuBar {
 						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_FUZZING);
 						fuzzing.setState(false);
-						JBroFuzzMenuBar.this.getFrame().setTabHide(
-								JBroFuzzWindow.ID_PANEL_HEADERS);
-						headers.setState(false);
+						
 						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_PAYLOADS);
 						payloads.setState(false);
+						
 						JBroFuzzMenuBar.this.getFrame().setTabHide(
 								JBroFuzzWindow.ID_PANEL_SYSTEM);
 						system.setState(false);
@@ -903,6 +888,17 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						new EncoderHashFrame(JBroFuzzMenuBar.this.getFrame());
+					}
+				});
+			}
+		});
+		
+		headers.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						new HeaderFrame();
 					}
 				});
 			}
