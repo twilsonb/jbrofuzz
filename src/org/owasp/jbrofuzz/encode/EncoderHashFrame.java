@@ -49,7 +49,6 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
-import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -76,6 +75,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.B64;
 import org.owasp.jbrofuzz.util.ImageCreator;
@@ -231,9 +231,6 @@ public class EncoderHashFrame extends JFrame {
 		TreeNode root = (TreeNode) tree.getModel().getRoot();
 		parent.getPanelPayloads().expandAll(tree, new TreePath(root), true);
 
-		// Get the preferences for saving the encode/decode values
-		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-
 		// Bottom three buttons
 		encode = new JButton(" Encode/Hash ");
 		decode = new JButton(" Decode ");
@@ -275,8 +272,8 @@ public class EncoderHashFrame extends JFrame {
 						windowIsShowing = false;
 
 						// Save the values of the encode/decode as a preference
-						prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
-						prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+						JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+						JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
 
 						dispose();
 
@@ -294,8 +291,8 @@ public class EncoderHashFrame extends JFrame {
 					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
-					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
-					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
 
 					dispose();
 
@@ -312,8 +309,8 @@ public class EncoderHashFrame extends JFrame {
 					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
-					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
-					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
 
 					dispose();
 
@@ -331,8 +328,8 @@ public class EncoderHashFrame extends JFrame {
 					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
-					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
-					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
 
 					dispose();
 
@@ -349,8 +346,8 @@ public class EncoderHashFrame extends JFrame {
 					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
-					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
-					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
 
 					dispose();
 
@@ -367,8 +364,8 @@ public class EncoderHashFrame extends JFrame {
 					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
-					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
-					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
 
 					dispose();
 
@@ -384,8 +381,8 @@ public class EncoderHashFrame extends JFrame {
 					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
-					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
-					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
 
 					dispose();
 
@@ -401,8 +398,8 @@ public class EncoderHashFrame extends JFrame {
 					windowIsShowing = false;
 
 					// Save the values of the encode/decode as a preference
-					prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
-					prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
 
 					dispose();
 
@@ -439,16 +436,16 @@ public class EncoderHashFrame extends JFrame {
 				windowIsShowing = false;
 
 				// Save the values of the encode/decode as a preference
-				prefs.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
-				prefs.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+				JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
+				JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
 
 				dispose();
 			}
 		});
 
 		// Load the values of encode/decode from the preferences
-		enTextPane.setText(prefs.get(JBroFuzzFormat.TEXT_ENCODE, ""));
-		deTextPane.setText(prefs.get(JBroFuzzFormat.TEXT_DECODE, ""));
+		enTextPane.setText(JBroFuzz.PREFS.get(JBroFuzzFormat.TEXT_ENCODE, ""));
+		deTextPane.setText(JBroFuzz.PREFS.get(JBroFuzzFormat.TEXT_DECODE, ""));
 
 	}
 

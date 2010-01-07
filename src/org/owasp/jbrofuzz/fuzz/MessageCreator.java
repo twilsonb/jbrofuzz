@@ -31,10 +31,10 @@ package org.owasp.jbrofuzz.fuzz;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.prefs.Preferences;
 
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -70,8 +70,7 @@ public class MessageCreator {
 	public MessageCreator(String message, String encoding, String payload, int start, int finish) {
 
 		// Set the end of line character from the preferences
-		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-		boolean endLineChar = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
+		boolean endLineChar = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
 		END_LINE = endLineChar ? "\n" : "\r\n";
 
 		// Perform the necessary encoding on the payload specified

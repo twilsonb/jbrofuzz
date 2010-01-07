@@ -645,7 +645,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						JBroFuzzMenuBar.this.getFrame().exitProcedure();
+						JBroFuzzMenuBar.this.getFrame().closeFrame();
 					}
 				});
 			}

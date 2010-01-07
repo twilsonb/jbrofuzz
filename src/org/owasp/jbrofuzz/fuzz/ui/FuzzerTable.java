@@ -58,7 +58,7 @@ public class FuzzerTable extends JTable {
 	// The types of encodings allowed within the encoding column
 	public static final String[] ENCODINGS = {"Standard", "Uppercase", "Lowercase", "URL Encode", "HTML Encode", "UTF-8"};
 
-	public FuzzerTable(final FuzzersAddedTableModel model) {
+	public FuzzerTable(final FuzzersTableModel model) {
 
 		super(model);
 

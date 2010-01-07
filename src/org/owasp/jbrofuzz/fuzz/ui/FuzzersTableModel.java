@@ -40,10 +40,10 @@ import javax.swing.table.AbstractTableModel;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.8
- * @since 0.6
+ * @version 1.9
+ * @since 1.9
  */
-public class FuzzersAddedTableModel extends AbstractTableModel {
+public class FuzzersTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = -2073798761991443962L;
 
@@ -64,7 +64,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * @param fPanel
 	 *            FuzzingPanel
 	 */
-	public FuzzersAddedTableModel() {
+	public FuzzersTableModel() {
 		dataVector = new Vector<FuzzerRow>();
 	}
 
@@ -86,7 +86,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getColumnCount() {
-		return FuzzersAddedTableModel.COLUMNNAMES.length;
+		return FuzzersTableModel.COLUMNNAMES.length;
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class FuzzersAddedTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public String getColumnName(final int column) {
-		return FuzzersAddedTableModel.COLUMNNAMES[column];
+		return FuzzersTableModel.COLUMNNAMES[column];
 	}
 
 	/**
