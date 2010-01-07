@@ -101,7 +101,7 @@ public class JBroFuzzFormat {
 	 * 
 	 * True represents top.
 	 */
-	public static final String PR_2 = "prefs.ui.tabs";
+	// public static final String PR_2 = "prefs.ui.tabs";
 
 	/**
 	 * The preferences used for deciding whether or not to check and notify a
@@ -364,36 +364,6 @@ public class JBroFuzzFormat {
 			return 6;
 		}
 		return 0;
-	}
-
-	/**
-	 * <p>
-	 * Method for returning the dimension (width & height) of the screen size.
-	 * </p>
-	 * <p>
-	 * In the event of an error it returns a dimension of (0,0).
-	 * </p>
-	 * 
-	 * @return Dimension
-	 * 
-	 * @version 1.4
-	 * @since 1.4
-	 */
-	public static Dimension getScreenSize() {
-
-		try {
-
-			return Toolkit.getDefaultToolkit().getScreenSize();
-
-		} catch (AWTError e1) {
-
-			return new Dimension(0, 0);
-
-		} catch (HeadlessException e1) {
-
-			return new Dimension(0, 0);
-		}
-
 	}
 
 	/**

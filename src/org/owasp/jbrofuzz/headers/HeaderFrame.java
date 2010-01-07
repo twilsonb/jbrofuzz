@@ -35,9 +35,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -54,6 +55,7 @@ import javax.swing.text.StyledEditorKit;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.graph.FileSystemTreeModel;
 import org.owasp.jbrofuzz.graph.FileSystemTreeNode;
 import org.owasp.jbrofuzz.util.ImageCreator;
@@ -68,10 +70,10 @@ import org.owasp.jbrofuzz.util.TextHighlighter;
  * @version 1.9
  * @since 1.9
  */
-public class HeaderFrame extends JFrame implements TreeSelectionListener {
+public class HeaderFrame extends JFrame implements TreeSelectionListener, KeyListener {
 
 	private static final long serialVersionUID = 8707597613561230771L;
-	
+
 	// Dimensions of the frame
 	private static final int SIZE_X = 650;
 	private static final int SIZE_Y = 400;
@@ -80,8 +82,6 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 	private JSplitPane mainSplitPanel, rVSplitPanel, rHSplitPanel;
 	// The main file tree object
 	private JTree tree;
-	// The progress bar displayed
-	private JProgressBar progressBar;
 	// The header, info and comment text area
 	private NonWrappingTextPane hTxTArea, iTxTArea, cTxTArea;
 	// The header's loader
@@ -95,7 +95,7 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 			return;
 		}
 		windowIsShowing = true;
-		
+
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setTitle(" JBroFuzz - Browser Headers ");
 		setLayout(new BorderLayout());
@@ -106,6 +106,7 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 		tree = new JTree(new FileSystemTreeModel(new FileSystemTreeNode("...")));
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		tree.addTreeSelectionListener(this);
+		tree.addKeyListener(this);
 
 		final JScrollPane treeScrollPanel = new JScrollPane(tree);
 		treeScrollPanel.setVerticalScrollBarPolicy(20);
@@ -120,6 +121,7 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 
 		// The right hand side header area
 		hTxTArea = new NonWrappingTextPane();
+		hTxTArea.addKeyListener(this);
 		hTxTArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		// hTxTArea = new NonWrappingTextPane();
@@ -162,6 +164,7 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 
 		// The right hand side information area
 		iTxTArea = new NonWrappingTextPane();
+		iTxTArea.addKeyListener(this);
 		iTxTArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		iTxTArea.setEditable(false);
 		iTxTArea.setFont(new Font("Verdana", Font.BOLD, 10));
@@ -181,6 +184,7 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 
 		// The right hand side comment area
 		cTxTArea = new NonWrappingTextPane();
+		cTxTArea.addKeyListener(this);
 		cTxTArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		cTxTArea.setEditable(false);
 		cTxTArea.setFont(new Font("Verdana", Font.BOLD, 10));
@@ -216,7 +220,7 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 		mainSplitPanel.setLeftComponent(treePanel);
 		mainSplitPanel.setRightComponent(rVSplitPanel);
 
-		
+
 		// Allow for all areas to be resized to even not be seen
 		final Dimension minimumSize = new Dimension(0, 0);
 		treePanel.setMinimumSize(minimumSize);
@@ -225,7 +229,7 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 		headerPanel.setMinimumSize(minimumSize);
 
 		// The bottom progress bar and friends
-		progressBar = new JProgressBar();
+		final JProgressBar progressBar = new JProgressBar();
 		progressBar.setString("   ");
 		progressBar.setStringPainted(true);
 		progressBar.setBounds(410, 465, 120, 20);
@@ -241,37 +245,59 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 		// Load and expand the tree
 		mHeadersLoader.load();
 		tree.setModel(new DefaultTreeModel(mHeadersLoader.getMasterTreeNode()));
-		tree.setSelectionRow(0);
+		tree.setSelectionRow(JBroFuzz.PREFS.getInt("UI.H.HeaderSelection", 0));
 		
-		// Global frame issues
+		// Global frame issues & preferences
 
-		this.setSize(SIZE_X, SIZE_Y);
-		setMinimumSize(new Dimension(SIZE_X / 2, SIZE_Y / 2));
-
-		setResizable(true);
-		setVisible(true);
-
-		// Set the preferences object access
-		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-		
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(final WindowEvent wEvent) {
-				windowIsShowing = false;
-				
-				prefs.putInt("UI.H.rHSplitPanel", rHSplitPanel.getDividerLocation());
-				prefs.putInt("UI.H.rVSplitPanel", rVSplitPanel.getDividerLocation());
-				prefs.putInt("UI.H.mainSplitPanel", mainSplitPanel.getDividerLocation());
-				
-				dispose();
+
+				closeFrame();
+
 			}
 		});
 
-		rHSplitPanel.setDividerLocation(prefs.getInt("UI.H.rHSplitPanel", 315));
-		rVSplitPanel.setDividerLocation(prefs.getInt("UI.H.rVSplitPanel", 242));
-		mainSplitPanel.setDividerLocation(prefs.getInt("UI.H.mainSplitPanel", 162));
+		mainSplitPanel.setDividerLocation(JBroFuzz.PREFS.getInt("UI.H.mainSplitPanel", 162));
+		rHSplitPanel.setDividerLocation(JBroFuzz.PREFS.getInt("UI.H.rHSplitPanel", 315));
+		rVSplitPanel.setDividerLocation(JBroFuzz.PREFS.getInt("UI.H.rVSplitPanel", 242));
+
+		// Minimum size window 127 x 127
+		HeaderFrame.this.setMinimumSize(new Dimension(Byte.MAX_VALUE, Byte.MAX_VALUE));
+
+		int xSize = JBroFuzz.PREFS.getInt("UI.H.Height", SIZE_X);
+		if(xSize < Byte.MAX_VALUE) {
+			xSize = Byte.MAX_VALUE;
+		}
+
+		int ySize = JBroFuzz.PREFS.getInt("UI.H.Width", SIZE_Y);
+		if(ySize < Byte.MAX_VALUE) {
+			ySize = Byte.MAX_VALUE;
+		}
+
+		HeaderFrame.this.setSize(ySize, xSize);
+
+		setResizable(true);
+		setVisible(true);
+
+	}
+
+	private final void closeFrame() {
+
+		windowIsShowing = false;
+
+		JBroFuzz.PREFS.putInt("UI.H.mainSplitPanel", mainSplitPanel.getDividerLocation());
+		JBroFuzz.PREFS.putInt("UI.H.rHSplitPanel", rHSplitPanel.getDividerLocation());
+		JBroFuzz.PREFS.putInt("UI.H.rVSplitPanel", rVSplitPanel.getDividerLocation());
+
+		JBroFuzz.PREFS.putInt("UI.H.HeaderSelection", tree.getSelectionCount());
 		
+		JBroFuzz.PREFS.putInt("UI.H.Height", HeaderFrame.this.getSize().height);
+		JBroFuzz.PREFS.putInt("UI.H.Width", HeaderFrame.this.getSize().width);
+
+		HeaderFrame.this.dispose();
+
 	}
 
 	/**
@@ -338,10 +364,9 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 		if (selectedPath == null) {
 			return;
 		}
-		// More than 127 directories chill
+
+		// If more than 127 directories, chill...
 		if (selectedPath.getPathCount() > Byte.MAX_VALUE) {
-//			parent.log(
-//					"Headers Panel: Path has more than 127 locations ", 3);
 			return;
 		}
 
@@ -350,6 +375,39 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener {
 		setInformation(cHeader.getInfo());
 		setComment(cHeader.getComment());
 
+	}
+
+	@Override
+	public void keyTyped(final KeyEvent kEvent) {
+
+		if (kEvent.getKeyCode() == 27) {
+
+			closeFrame();
+
+		}
+
+	}
+
+	@Override
+	public void keyPressed(final KeyEvent kEvent) {
+
+		if (kEvent.getKeyCode() == 27) {
+
+			closeFrame();
+
+		}
+		
+	}
+
+	@Override
+	public void keyReleased(final KeyEvent kEvent) {
+
+		if (kEvent.getKeyCode() == 27) {
+
+			closeFrame();
+
+		}
+		
 	}
 
 }

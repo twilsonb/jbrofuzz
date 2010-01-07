@@ -413,14 +413,14 @@ public class RightClickPopups {
 
 						mFuzzingPanel.stop();
 
-						((FuzzersAddedTableModel)area.getModel()).removeRow(area.convertRowIndexToModel(c));
+						((FuzzersTableModel)area.getModel()).removeRow(area.convertRowIndexToModel(c));
 						// .getValueAt(area.convertRowIndexToModel(c), 3);
 						// new WindowViewerFrame(mFuzzingPanel, name);						
 					}
 
 				} else {
 
-					((FuzzersAddedTableModel)area.getModel()).removeRow(area.convertRowIndexToModel(c));
+					((FuzzersTableModel)area.getModel()).removeRow(area.convertRowIndexToModel(c));
 
 				}
 

@@ -49,7 +49,6 @@ import javax.swing.event.ChangeListener;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
 import org.owasp.jbrofuzz.graph.GraphingPanel;
-import org.owasp.jbrofuzz.headers.HeaderFrame;
 import org.owasp.jbrofuzz.payloads.PayloadsPanel;
 import org.owasp.jbrofuzz.system.SystemPanel;
 import org.owasp.jbrofuzz.ui.menu.JBroFuzzMenuBar;
@@ -68,15 +67,17 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 1.9
+ * @since 1.3
  */
 public class JBroFuzzWindow extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -8055724052613595729L;
 
+	// Dimensions of the frame
+	private static final int SIZE_X = 700;
+	private static final int SIZE_Y = 500;
+	
 	/**
 	 * Unique int identifier for the Graphing Panel
 	 */
@@ -123,6 +124,7 @@ public class JBroFuzzWindow extends JFrame {
 
 	// The file to which the window saves to
 	private File currentFile;
+	
 	// A boolean to see if the current file is set
 	private boolean isCurrentFileSet;
 
@@ -163,8 +165,7 @@ public class JBroFuzzWindow extends JFrame {
 		// Set the corresponding borders for each panel
 
 		// The tabbed pane, setup according to preferences
-		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-		boolean tabsAtTop = prefs.getBoolean(JBroFuzzFormat.PR_2, false);
+		boolean tabsAtTop = JBroFuzz.PREFS.getBoolean("UI.JBroFuzz.Tabs", false);
 		if (tabsAtTop) {
 			tp = new JTabbedPane(SwingConstants.TOP);
 		} else {
@@ -234,55 +235,43 @@ public class JBroFuzzWindow extends JFrame {
 		}
 
 		// The tabbed pane, setup according to preferences
-		boolean checkNewVersion = prefs.getBoolean(JBroFuzzFormat.PR_3, true);
+		boolean checkNewVersion = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_3, true);
 		if (checkNewVersion) {
 			(new StartUpdateCheck()).execute();
 		}
-
+		
 	}
 
 	public static void createAndShowGUI(final JBroFuzzWindow mJBroFuzzWindow) {
 
-		final Dimension min_size = new Dimension(400, 300);
-
-		// The image icon and minimum size
+		mJBroFuzzWindow.setMinimumSize(new Dimension(Byte.MAX_VALUE, Byte.MAX_VALUE));
 		mJBroFuzzWindow.setIconImage(ImageCreator.IMG_FRAME.getImage());
-		mJBroFuzzWindow.setMinimumSize(min_size);
 
-		mJBroFuzzWindow
-		.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+		mJBroFuzzWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		mJBroFuzzWindow.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(final WindowEvent e) {
-				mJBroFuzzWindow.exitProcedure();
+			public void windowClosing(final WindowEvent wEvent) {
+
+				mJBroFuzzWindow.closeFrame();
+
 			}
 		});
 
 		// Set the location of the window
 		mJBroFuzzWindow.setLocation(50, 100);
-		// mJBroFuzzWindow.setSize(950, 600);
 
-		// Set the size of the window, relative to the screen size
-		final Dimension scr_res = JBroFuzzFormat.getScreenSize();
-		if ((scr_res.width == 0) || (scr_res.height == 0)) {
-
-			mJBroFuzzWindow.setSize(min_size);
-
-		} else {
-
-			final int window_width = scr_res.width - 200;
-			final int window_height = scr_res.height - 200;
-			// Check that the screen is width/length is +tive
-			if ((window_width > 0) && (window_height > 0)) {
-
-				mJBroFuzzWindow.setSize(window_width, window_height);
-
-			} else {
-
-				mJBroFuzzWindow.setSize(min_size);
-
-			}
+		int xSize = JBroFuzz.PREFS.getInt("UI.JBroFuzz.Width", SIZE_X);
+		if(xSize < Byte.MAX_VALUE) {
+			xSize = Byte.MAX_VALUE;
 		}
+
+		int ySize = JBroFuzz.PREFS.getInt("UI.JBroFuzz.Height", SIZE_Y);
+		if(ySize < Byte.MAX_VALUE) {
+			ySize = Byte.MAX_VALUE;
+		}
+		
+		mJBroFuzzWindow.setSize(new Dimension(xSize, ySize));
 		mJBroFuzzWindow.setResizable(true);
 		mJBroFuzzWindow.setVisible(true);
 	}
@@ -291,27 +280,37 @@ public class JBroFuzzWindow extends JFrame {
 	 * <p>
 	 * Method for exiting the entire application.
 	 * </p>
-	 * 
+	 *
+	 * @author subere@uncon.org
+	 * @version 1.9
+	 * @since 1.9
 	 */
-	public void exitProcedure() {
+	public void closeFrame() {
 
 		fp.stop();
 		gp.stop();
 		pp.stop();
 		cp.stop();
 
-		// Get the prefences the global preferences
-		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-
 		// Delete empty dirs created
-		boolean deleteBlankDirs = prefs.getBoolean(JBroFuzzFormat.PR_1, true);
-		if (deleteBlankDirs) {
+		final boolean delBlankDirs = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_1, true);
+		if (delBlankDirs) {
 			getJBroFuzz().getHandler().deleteEmptryDirectories();
 		}
+		
+		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Height", this.getSize().height);
+		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Width", this.getSize().width);
 
 		// Save the values of the url/request as a preference
-		prefs.put(JBroFuzzFormat.TEXT_URL, fp.getTextURL());
-		prefs.put(JBroFuzzFormat.TEXT_REQUEST, fp.getTextRequest());
+		final String sURL = fp.getTextURL();
+		if(sURL.length() < Preferences.MAX_VALUE_LENGTH) {
+			JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_URL, fp.getTextURL());
+		}
+		
+		final String sRequest = fp.getTextRequest();
+		if(sRequest.length() < Preferences.MAX_VALUE_LENGTH) {
+			JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_REQUEST, fp.getTextRequest());
+		}
 
 		dispose();
 

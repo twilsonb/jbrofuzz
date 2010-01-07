@@ -29,6 +29,8 @@
  */
 package org.owasp.jbrofuzz;
 
+import java.util.prefs.Preferences;
+
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
@@ -49,10 +51,12 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.5
+ * @version 1.9
  * @since 0.1
  */
 public class JBroFuzz {
+
+	public static final Preferences PREFS = Preferences.userRoot().node("owasp/jbrofuzz");
 
 	/**
 	 * <p>

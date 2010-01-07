@@ -37,7 +37,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -60,6 +59,7 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
 import org.apache.commons.lang.StringUtils;
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
@@ -119,8 +119,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		listPanel.setLayout(new BorderLayout());
 
 		// Get the preferences for wrapping lines of text
-		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-		boolean wrapText = prefs
+		boolean wrapText = JBroFuzz.PREFS
 		.getBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
 
 		if (wrapText) {

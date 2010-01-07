@@ -300,33 +300,8 @@ public class PayloadsPanel extends AbstractPanel {
 		mainSplitPanel.setLeftComponent(categoriesPanel);
 		mainSplitPanel.setRightComponent(rightSplitPanel);
 
-		// Set the divider locations, relative to the screen size
-		final Dimension scr_res = JBroFuzzFormat.getScreenSize();
-		if ((scr_res.width == 0) || (scr_res.height == 0)) {
-
-			mainSplitPanel.setDividerLocation(250);
-			rightSplitPanel.setDividerLocation(250);
-
-		} else {
-
-			final int window_width = scr_res.width - 200;
-			final int window_height = scr_res.height - 200;
-			// Check that the screen is width/length is +tive
-			if ((window_width > 0) && (window_height > 0)) {
-
-				rightSplitPanel.setDividerLocation(window_width * 1 / 5);
-				mainSplitPanel.setDividerLocation(window_width * 1 / 5);
-
-				// topPane.setDividerLocation( window_width * 2 / 3 );
-				// mainPane.setDividerLocation( window_height / 2 );
-
-			} else {
-
-				mainSplitPanel.setDividerLocation(250);
-				rightSplitPanel.setDividerLocation(250);
-
-			}
-		}
+		mainSplitPanel.setDividerLocation(250);
+		rightSplitPanel.setDividerLocation(250);
 
 		// Allow for all areas to be resized to even not be seen
 		final Dimension minimumSize = new Dimension(0, 0);
@@ -337,9 +312,9 @@ public class PayloadsPanel extends AbstractPanel {
 		payloadTableScrollPane.setMinimumSize(minimumSize);
 
 		categoriesPanel.setMinimumSize(minimumSize);
-		fuzzersPanel.setMinimumSize(minimumSize);
-		payloadsPanel.setMinimumSize(minimumSize);
 		rightSplitPanel.setMinimumSize(minimumSize);
+		payloadsPanel.setMinimumSize(minimumSize);
+		fuzzersPanel.setMinimumSize(minimumSize);
 
 		// Add all the components to the main pane
 		this.add(mainSplitPanel, BorderLayout.CENTER);

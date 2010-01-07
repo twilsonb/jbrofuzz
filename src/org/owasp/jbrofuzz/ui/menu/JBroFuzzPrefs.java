@@ -37,7 +37,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -57,6 +56,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
@@ -89,9 +89,6 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	// The buttons displayed
 	private JButton ok, cancel;
 
-	// The actual preferences object
-	private Preferences prefs;
-
 	private JPanel[] panels = new JPanel[NODENAMES.length];
 
 	/**
@@ -111,9 +108,6 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 		setFont(new Font("Verdana", Font.PLAIN, 12));
-
-		// Set the preferences object access
-		prefs = Preferences.userRoot().node("owasp/jbrofuzz");
 
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
@@ -148,7 +142,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Preferences -> Show Tabs
 
-		final boolean tabsbottom = prefs.getBoolean(JBroFuzzFormat.PR_2, false);
+		final boolean tabsbottom = JBroFuzz.PREFS.getBoolean("UI.JBroFuzz.Tabs", false);
 		final JCheckBox tabsCheckBox = new JCheckBox(
 				" Show tabs in the main window at the top of the window (requires restart) ",
 				tabsbottom);
@@ -161,9 +155,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		tabsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (tabsCheckBox.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_2, true);
+					JBroFuzz.PREFS.putBoolean("UI.JBroFuzz.Tabs", true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_2, false);
+					JBroFuzz.PREFS.putBoolean("UI.JBroFuzz.Tabs", false);
 				}
 			}
 		});
@@ -172,7 +166,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Preferences -> Check for New Version at Startup
 
-		final boolean newVersionCheck = prefs.getBoolean(JBroFuzzFormat.PR_3,
+		final boolean newVersionCheck = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_3,
 				true);
 		final JCheckBox newVCheckBox = new JCheckBox(
 				" Check for a new version at startup ", newVersionCheck);
@@ -184,9 +178,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		newVCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (newVCheckBox.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_3, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_3, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_3, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_3, false);
 				}
 			}
 		});
@@ -195,7 +189,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Directory Locations...
 
-		final boolean deletebox = prefs.getBoolean(JBroFuzzFormat.PR_1, false);
+		final boolean deletebox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_1, false);
 		final JCheckBox deleteCheckBox = new JCheckBox(
 				" On exit, delete any empty directories created at startup ",
 				deletebox);
@@ -207,9 +201,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		deleteCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (deleteCheckBox.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_1, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_1, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_1, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_1, false);
 				}
 			}
 		});
@@ -228,7 +222,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Fuzzing... -> Socket Timeout
 
-		final boolean socketbox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1,
+		final boolean socketbox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_1,
 				false);
 		final JCheckBox socketCheckBox = new JCheckBox(
 				" Extend the socket timeout from 5 seconds to 30 seconds ",
@@ -241,9 +235,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		socketCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (socketCheckBox.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_1, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_1, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
 				}
 			}
 		});
@@ -252,7 +246,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Fuzzing... -> End of Line Character
 
-		final boolean endlinebox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_2,
+		final boolean endlinebox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_2,
 				false);
 		final JCheckBox endlineCheckBox = new JCheckBox(
 				" Use \"\\n\" instead of \"\\r\\n\" as an end of line character ",
@@ -265,9 +259,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		endlineCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (endlineCheckBox.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_2, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_2, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
 				}
 			}
 		});
@@ -277,7 +271,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Fuzzing... -> Word wrap request text panel
 
-		final boolean wrap_req_box = prefs.getBoolean(
+		final boolean wrap_req_box = JBroFuzz.PREFS.getBoolean(
 				JBroFuzzFormat.WRAP_REQUEST, false);
 		final JCheckBox wrap_req_check_box = new JCheckBox(
 				" Word wrap text in the \"Request\" area (requires restart) ",
@@ -289,9 +283,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		wrap_req_check_box.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (wrap_req_check_box.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.WRAP_REQUEST, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.WRAP_REQUEST, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
 				}
 			}
 		});
@@ -301,7 +295,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		// Fuzzing... -> Word wrap response text panel
 
-		final boolean wrap_res_bool = prefs.getBoolean(
+		final boolean wrap_res_bool = JBroFuzz.PREFS.getBoolean(
 				JBroFuzzFormat.WRAP_RESPONSE, false);
 		final JCheckBox wrap_res_check_box = new JCheckBox(
 				" Word wrap text in the \"Response\" window (requires restart) ",
@@ -313,9 +307,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		wrap_res_check_box.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (wrap_res_check_box.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.WRAP_RESPONSE, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.WRAP_RESPONSE, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
 				}
 			}
 		});
@@ -324,7 +318,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[2].add(Box.createRigidArea(new Dimension(0, 20)));
 
 		// Fuzzing ...-> "Re-send POST Data if 100 Continue is received"
-		final boolean cont_bool = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_4,
+		final boolean cont_bool = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_4,
 				true);
 		final JCheckBox cont_check_box = new JCheckBox(
 				"Re-send POST Data if 100 Continue is received", cont_bool);
@@ -335,9 +329,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		cont_check_box.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent event5) {
 				if (cont_check_box.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_4, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_4, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_4, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_4, false);
 				}
 			}
 		});
@@ -347,7 +341,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 
 		// Fuzzing: On The Wire... -> Show on the wire tab after fuzzing finished
-		final boolean showwirebox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3,
+		final boolean showwirebox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_3,
 				false);
 		final JCheckBox showwireCheckBox = new JCheckBox(
 				" Show \"On The Wire\" tab after fuzzing has stopped or finished ",
@@ -360,9 +354,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		showwireCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (showwireCheckBox.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_3, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
 				}
 			}
 		});
@@ -371,7 +365,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[3].add(Box.createRigidArea(new Dimension(0, 20)));
 
 		// Fuzzing: On The Wire... -> Display responses inside the On The Wire text area
-		final boolean displayResponseBox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
+		final boolean displayResponseBox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
 		final JCheckBox displayResponseCheckBox = new JCheckBox(
 				" Display the Requests as well as the Responses received ",
 				displayResponseBox);
@@ -383,9 +377,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		displayResponseCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (displayResponseCheckBox.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3_1, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_3_1, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
 				}
 			}
 		});
@@ -394,7 +388,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[3].add(Box.createRigidArea(new Dimension(0, 20)));
 
 		// Fuzzing: Output -> Double click opens up browser or panel
-		final boolean fuzzingResponseDoubleClickBox = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
+		final boolean fuzzingResponseDoubleClickBox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
 		final JCheckBox fuzzingResponseDoubleClickCheckBox = new JCheckBox(
 				" Double click on a Response opens it up in a Browser ",
 				fuzzingResponseDoubleClickBox);
@@ -406,9 +400,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		fuzzingResponseDoubleClickCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (fuzzingResponseDoubleClickCheckBox.isSelected()) {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
 				} else {
-					prefs.putBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, false);
 				}
 			}
 		});

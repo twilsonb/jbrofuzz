@@ -41,7 +41,6 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.prefs.Preferences;
 
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -51,6 +50,7 @@ import javax.net.ssl.SSLContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.JBroFuzz;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -178,10 +178,7 @@ public class Connection {
 			port = 80;
 		}
 
-		// Set the socket timeout from the preferences
-		final Preferences prefs = Preferences.userRoot().node("owasp/jbrofuzz");
-
-		boolean maxTimeout = prefs.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
+		boolean maxTimeout = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
 		socketTimeout = maxTimeout ? 30000 : 5000;
 
 		this.message = message;
@@ -255,7 +252,7 @@ public class Connection {
 
 							// Check if the preferences are set to re-send the
 							// POST Data if a 100 continue
-							boolean follow100Continue = prefs.getBoolean(
+							boolean follow100Continue = JBroFuzz.PREFS.getBoolean(
 									JBroFuzzFormat.PR_FUZZ_4, true);
 
 							if (follow100Continue) {
