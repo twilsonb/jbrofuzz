@@ -259,8 +259,12 @@ public class JBroFuzzWindow extends JFrame {
 		});
 
 		// Set the location of the window
-		mJBroFuzzWindow.setLocation(50, 100);
+		final int xLocation = JBroFuzz.PREFS.getInt("UI.JBroFuzz.X", 50);
+		final int yLocation = JBroFuzz.PREFS.getInt("UI.JBroFuzz.Y", 100);
+		
+		mJBroFuzzWindow.setLocation(xLocation, yLocation);
 
+		// Set the size of the window
 		int xSize = JBroFuzz.PREFS.getInt("UI.JBroFuzz.Width", SIZE_X);
 		if(xSize < Byte.MAX_VALUE) {
 			xSize = Byte.MAX_VALUE;
@@ -300,6 +304,8 @@ public class JBroFuzzWindow extends JFrame {
 		
 		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Height", this.getSize().height);
 		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Width", this.getSize().width);
+		JBroFuzz.PREFS.putInt("UI.JBroFuzz.X", this.getLocation().x);
+		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Y", this.getLocation().y);
 
 		// Save the values of the url/request as a preference
 		final String sURL = fp.getTextURL();
