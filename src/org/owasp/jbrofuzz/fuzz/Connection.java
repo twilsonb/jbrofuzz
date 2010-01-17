@@ -36,8 +36,11 @@ import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -112,7 +115,8 @@ public class Connection {
 
 	private String message;
 	private Socket mSocket;
-	private String reply;
+	private URLConnection httpConn;
+	private String reply;	
 	private URL url = null;
 	private int port;
 
@@ -124,6 +128,10 @@ public class Connection {
 	private int socketTimeout;
 
 	private boolean isResponse100Continue;
+	
+	private String proxyServer;
+	private String proxyPort;
+	private boolean proxyEnabled;
 
 	/**
 	 * <p>
@@ -151,7 +159,7 @@ public class Connection {
 	throws ConnectionException {
 
 		isResponse100Continue = false;
-
+		
 		try {
 			url = new URL(urlString);
 		} catch (MalformedURLException e1) {
@@ -186,35 +194,58 @@ public class Connection {
 		final byte[] recv = new byte[Connection.RECV_BUF_SIZE];
 
 		try {
+			proxyEnabled = Boolean.parseBoolean(JBroFuzz.PREFS.get(JBroFuzzFormat.PROXY_ENABLED, ""));
+			
+			if (proxyEnabled) {
+				proxyServer = JBroFuzz.PREFS.get(JBroFuzzFormat.PROXY_SERVER, "");
+				proxyPort = JBroFuzz.PREFS.get(JBroFuzzFormat.PROXY_PORT, "");
+			
+				SocketAddress proxyAddr = new InetSocketAddress(proxyServer, Integer.parseInt(proxyPort.trim()));
+				Proxy proxy = new Proxy(Proxy.Type.HTTP, proxyAddr);
+			
+				httpConn = url.openConnection(proxy);
+			
+				httpConn.setAllowUserInteraction(true);
+				httpConn.setDoInput(true);
+				httpConn.setDoOutput(true);
+			
+				httpConn.connect();	
+			
+				outStream = httpConn.getOutputStream();
+				outStream.write(this.message.getBytes());
+			
+				inStream = httpConn.getInputStream();
+			}	else { 
+				if (protocol.equalsIgnoreCase("https")) {
 
-			if (protocol.equalsIgnoreCase("https")) {
+					// Make sure we have a factory for the SSL socket
+					if (mSSLSocketFactory == null) {
+						mSSLSocketFactory = getSocketFactory();
+					}
 
-				// Make sure we have a factory for the SSL socket
-				if (mSSLSocketFactory == null) {
-					mSSLSocketFactory = getSocketFactory();
+					// Handle HTTPS differently then HTTP
+					mSocket = mSSLSocketFactory.createSocket(host, port);
+					mSocket.setSoTimeout(socketTimeout);
+
+				} else {
+					// Handle HTTP differently then HTTPS
+					mSocket = new Socket();
+					mSocket.connect(new InetSocketAddress(host, port),
+							socketTimeout);
 				}
+	
 
-				// Handle HTTPS differently then HTTP
-				mSocket = mSSLSocketFactory.createSocket(host, port);
-				mSocket.setSoTimeout(socketTimeout);
+				// Set buffers, streams, smile...
+			
+				mSocket.setSendBufferSize(this.message.getBytes().length);
+				mSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
 
-			} else {
-
-				// Handle HTTP differently then HTTPS
-				mSocket = new Socket();
-				mSocket.connect(new InetSocketAddress(host, port),
-						socketTimeout);
+				inStream = mSocket.getInputStream();
+				outStream = mSocket.getOutputStream();
+				
+				// Put message on the wire
+				outStream.write(this.message.getBytes());
 			}
-
-			// Set buffers, streams, smile...
-			mSocket.setSendBufferSize(this.message.getBytes().length);
-			mSocket.setReceiveBufferSize(Connection.RECV_BUF_SIZE);
-
-			inStream = mSocket.getInputStream();
-			outStream = mSocket.getOutputStream();
-
-			// Put message on the wire
-			outStream.write(this.message.getBytes());
 
 			// Read response, see what you have back
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -324,10 +355,10 @@ public class Connection {
 
 			inStream.close();
 			outStream.close();
-			mSocket.close();
+			//mSocket.close();
 
 			reply = new String(baos.toByteArray());
-
+			
 		} catch (MalformedURLException e1) {
 
 			reply = "Malformed URL: " + e1.getMessage() + "\n";
