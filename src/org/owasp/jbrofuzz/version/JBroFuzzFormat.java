@@ -142,6 +142,21 @@ public class JBroFuzzFormat {
 	 * The preference for double clicking on an output line and displaying it in a browser
 	 */
 	public static final String PR_FUZZ_OUTPUT_1 = "fuzz.output.browser";
+	
+	/**
+	 * The preference for enabling proxy support
+	 */
+	public static final String PROXY_ENABLED = "proxy.enabled";
+	
+	/**
+	 * The preference for setting the proxy server
+	 */
+	public static final String PROXY_SERVER = "proxy.server";
+	
+	/**
+	 * The preference setting the proxy port
+	 */
+	public static final String PROXY_PORT = "proxy.port";
 
 	/**
 	 * If true, the response will wrap when opened in a new window

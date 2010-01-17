@@ -831,8 +831,7 @@ public class FuzzingPanel extends AbstractPanel {
 					}
 
 					final String payload = f.next();
-					final MessageCreator currentMessage = new MessageCreator(
-							getTextRequest(), encoding, payload, start, end);
+					final MessageCreator currentMessage = new MessageCreator(getTextRequest(), encoding, payload, start, end);
 					final MessageWriter outputMessage = new MessageWriter(
 							currentMessage, this);
 
