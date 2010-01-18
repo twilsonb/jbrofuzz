@@ -30,7 +30,7 @@
 package org.owasp.jbrofuzz.ui.menu;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -39,6 +39,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -46,6 +47,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -81,10 +83,10 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 	private static final int SIZE_X = 650;
 	private static final int SIZE_Y = 400;
-	
+
 	private static final String[] NODENAMES = { "Preferences",
 		"Directory Locations", "Fuzzing", "Fuzzing: On The Wire",
-	"Fuzzing: Output", "Proxy Settings"};
+		"Fuzzing: Output", "Proxy Settings"};
 
 	// The tree
 	private JTree tree;
@@ -95,9 +97,9 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 	private JButton ok, cancel;
 
 	private JPanel[] panels = new JPanel[NODENAMES.length];
-	
+
 	private JSplitPane rightPane;
-	
+
 	/**
 	 * <p>
 	 * The preferences dialog constructor, passing the main window as argument.
@@ -194,7 +196,66 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[0].add(newVCheckBox);
 		panels[0].add(Box.createRigidArea(new Dimension(0, 20)));
 
-		// Directory Locations...
+		// Directory Locations... Directory Save Browse
+
+		final String dir = parent.getJBroFuzz().getHandler().getCanonicalPath();
+
+		final JPanel dirPanel = new JPanel();
+		dirPanel.setLayout(new BoxLayout(dirPanel, BoxLayout.LINE_AXIS));
+
+		dirPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Fuzzing Directory (where data is saved) "), BorderFactory.createEmptyBorder(
+						1, 1, 1, 1)));
+
+		final JTextField directoryTextField = new JTextField(dir);
+		directoryTextField.setFont(new Font("Verdana", Font.PLAIN, 12));
+		directoryTextField.setMargin(new Insets(1, 1, 1, 1));
+
+		final JButton browseDirButton = new JButton("Browse");
+		browseDirButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		// For 2.0 release
+		browseDirButton.setEnabled(false);
+		
+		JFileChooser chooser;
+
+		browseDirButton.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+
+						JFileChooser chooserD = new JFileChooser();
+
+						chooserD.setCurrentDirectory(new File("."));
+						chooserD.setDialogTitle("Select Directory to Save Fuzzing Data");
+						chooserD.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+						chooserD.setAcceptAllFileFilterUsed(false);
+
+						if (chooserD.showOpenDialog(JBroFuzzPrefs.this) == JFileChooser.APPROVE_OPTION) {
+							
+							File selDirFile = chooserD.getSelectedFile();
+							if(selDirFile.isDirectory()) {
+//								JBroFuzz.PREFS.put("Save.Location", selDirFile.toString());
+//								directoryTextField.setText(selDirFile.toString());
+								// parent.getJBroFuzz().getHandler().setFuzzDirectory(selDirFile);
+							}
+//							System.out.println("getCurrentDirectory(): " 
+//									+  chooserD.getCurrentDirectory());
+//							System.out.println("getSelectedFile() : " 
+//									+  chooserD.getSelectedFile());
+						}
+//						else {
+//							System.out.println("No Selection ");
+//						}
+
+					}
+				});
+			}
+		});
+
+		dirPanel.add(directoryTextField, BorderLayout.NORTH);
+		dirPanel.add(browseDirButton);
+
+		// Directory Locations... Directory -> Delete directories check-box
 
 		final boolean deletebox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_1, false);
 		final JCheckBox deleteCheckBox = new JCheckBox(
@@ -214,18 +275,11 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 				}
 			}
 		});
+
+		panels[1].add(dirPanel);
+		panels[1].add(Box.createRigidArea(new Dimension(0, 20)));
 		panels[1].add(deleteCheckBox);
-		panels[1].add(Box.createRigidArea(new Dimension(0, 20)));
-
-		String dir = parent.getJBroFuzz().getHandler().getCanonicalPath();
-
-		JLabel box = new JLabel("<html>"
-				+ JBroFuzzFormat.centerAbbreviate(dir, 70) + "</html>");
-		box.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Fuzzing (where data is saved) "),
-				BorderFactory.createEmptyBorder(1, 1, 1, 5)));
-		panels[1].add(box);
-		panels[1].add(Box.createRigidArea(new Dimension(0, 20)));
+		panels[1].add(Box.createRigidArea(new Dimension(0, 200)));
 
 		// Fuzzing... -> Socket Timeout
 
@@ -417,33 +471,33 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 		panels[4].add(fuzzingResponseDoubleClickCheckBox);
 		panels[4].add(Box.createRigidArea(new Dimension(0, 20)));
 
-		
+
 		// Proxy Configuration Settings
 		final boolean enableProxyClickBox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PROXY_ENABLED, false);
-	
+
 		final JCheckBox enableProxyCheckBox = new JCheckBox(
 				" Enable Proxy Configuration ",
 				enableProxyClickBox);
-		
+
 		enableProxyCheckBox.setBorderPainted(false);
 		enableProxyCheckBox.setToolTipText(
-				"Tick this box to enable proxy support.");
-		
+		"Tick this box to enable proxy support.");
+
 		final JPanel proxyServerPanel = new JPanel(new BorderLayout());
 		proxyServerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Proxy Server "), BorderFactory.createEmptyBorder(
-				1, 1, 1, 1)));
-		
+						1, 1, 1, 1)));
+
 		final JTextField proxyServerTextField = new JTextField();
 		proxyServerTextField.setFont(new Font("Verdana", Font.BOLD, 12));
 		proxyServerTextField.setMargin(new Insets(1, 1, 1, 1));
 		proxyServerPanel.add(proxyServerTextField, BorderLayout.NORTH);
-		
+
 		final JPanel proxyPortPanel = new JPanel(new BorderLayout());
 		proxyPortPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Proxy Port "), BorderFactory.createEmptyBorder(
-				1, 1, 1, 1)));
-		
+						1, 1, 1, 1)));
+
 		final JTextField proxyPortTextField = new JTextField();
 		proxyPortTextField.setFont(new Font("Verdana", Font.BOLD, 12));
 		proxyPortTextField.setMargin(new Insets(1, 1, 1, 1));
@@ -455,12 +509,12 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 			proxyServerTextField.setEditable(false);
 			proxyPortTextField.setEditable(false);
 		}
-		
+
 		String proxyServer = JBroFuzz.PREFS.get(JBroFuzzFormat.PROXY_SERVER, "");
 		proxyServerTextField.setText(proxyServer);
 		String proxyPort = JBroFuzz.PREFS.get(JBroFuzzFormat.PROXY_PORT, "");
 		proxyPortTextField.setText(proxyPort);
-		
+
 		enableProxyCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (enableProxyCheckBox.isSelected()) {
@@ -474,19 +528,19 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 				}
 			}
 		});
-		
+
 		rightPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		rightPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 		rightPane.setOneTouchExpandable(false);
 		rightPane.setLeftComponent(proxyServerPanel);
 		rightPane.setRightComponent(proxyPortPanel);
 		rightPane.setDividerLocation(350);
-		
+
 		panels[5].add(enableProxyCheckBox);
 		panels[5].add(Box.createRigidArea(new Dimension(0, 20)));
 		panels[5].add(rightPane);
 		panels[5].add(Box.createRigidArea(new Dimension(0, 200)));
-		
+
 		// Create the top split pane, showing the treeView and the Preferences
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setLeftComponent(leftScrollPane);

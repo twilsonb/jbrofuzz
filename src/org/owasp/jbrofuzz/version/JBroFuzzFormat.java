@@ -221,7 +221,8 @@ public class JBroFuzzFormat {
 		"<HTML><B>JBroFuzz Version:  " + VERSION + "<BR>" + "Codename: "
 		+ JBroFuzzFormat.getCodeName(JBroFuzzFormat.VERSION)
 		+ "</B><BR><BR>" + "<B>Copyright &copy; " + YEAR
-		+ " subere@uncon.org</B><BR><BR>" + "Running Under  Java "
+		+ " subere@uncon.org<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+		  "Nathan Sportsman</B><BR>" + "Running Under  Java "
 		+ System.getProperty("java.version") + "<BR><BR>"
 		+ "<B>A stateless network protocol fuzzer <BR>"
 		+ "for web applications." + "</B><BR></HTML>";
