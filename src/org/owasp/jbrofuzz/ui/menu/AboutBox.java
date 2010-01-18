@@ -169,12 +169,20 @@ public class AboutBox extends JDialog {
 		ackScrollPane.setVerticalScrollBarPolicy(20);
 		ackScrollPane.setHorizontalScrollBarPolicy(30);
 
+		// The code development team editor label
+		final JLabel code = new JLabel(JBroFuzzFormat.DEVELOPMENT_TEAM,
+				ImageCreator.IMG_OWASP, SwingConstants.LEFT);
+		code.setIconTextGap(20);
+		code.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+
+
 		// The tabbed pane holding all the different tabs
 		tabbedPane = new JTabbedPane();
 		tabbedPane.add(about, " About ");
 		tabbedPane.add(lcsScrollPane, " License ");
 		tabbedPane.add(disclaimer, " Disclaimer ");
 		tabbedPane.add(ackScrollPane, " Acknowledgements ");
+		tabbedPane.add(code, " Code ");
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 		// Set the tab to be displayed
