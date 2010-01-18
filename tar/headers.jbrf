@@ -1,9 +1,9 @@
 #
 # JBroFuzz Browser Headers
 #
-# Copyright (C) 2009 
+# Copyright (c) 2010 
 # subere@uncon.org
-# Version 1.7
+# Version 1.9
 #
 
 J:101-NTA-AAA:Header 101:5

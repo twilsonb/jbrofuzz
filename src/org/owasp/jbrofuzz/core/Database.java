@@ -63,13 +63,13 @@ import org.apache.commons.lang.StringUtils;
  * 
  * 
  * @author subere@uncon.org
- * @version 1.8
+ * @version 1.9
  * @since 1.2
  */
 public class Database {
 
 	// The maximum number of chars to be read from file, regardless
-	private static final int MAX_CHARS = Short.MAX_VALUE;
+	private static final int MAX_CHARS = Character.MAX_VALUE;
 	// The maximum number of lines allowed to be read from the file
 	private static final int MAX_LINES = 2048;
 	// The maximum length of a line allowed
@@ -99,7 +99,7 @@ public class Database {
 	 * @since 1.2
 	 */
 	public Database() {
-
+		
 		prototypes = new HashMap<String, Prototype>();
 		loadFile();
 
