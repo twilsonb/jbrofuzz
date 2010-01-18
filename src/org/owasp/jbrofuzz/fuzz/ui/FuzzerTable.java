@@ -56,7 +56,7 @@ public class FuzzerTable extends JTable {
 	private static final long serialVersionUID = 1876543211323L;
 
 	// The types of encodings allowed within the encoding column
-	public static final String[] ENCODINGS = {"Standard", "Uppercase", "Lowercase", "URL Encode", "HTML Encode", "UTF-8"};
+	public static final String[] ENCODINGS = {"Standard", "Uppercase", "Lowercase", "URL Encode", "HTML Encode", "UTF-8", "UTF-16"};
 
 	public FuzzerTable(final FuzzersTableModel model) {
 
