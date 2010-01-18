@@ -16,13 +16,18 @@ border=0>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
   <tr>
-    <td><p>A fuzzer is a collection of payloads. A fuzzer contains a particular character set which will be tested against the specified range of the request.</p>
-      <p> </p>
-      <p>Some examples of fuzzers:</p>
-      <p> * Sending all requests of : 0000 to 1111 (binary generator over 4 characters)<br>
-  * Sending all requests of : 00 to 99 (decimal generator over 2 characters).</p>
-      <p> </p>
-      <p>To get a better understanding of how fuzzers work, view the tutorial demo that is available for download.</p></td>
+    <td>
+	  <p>The following list represents a number of axioms according to which JBroFuzz defines and uses fuzzing concepts. 
+</p>
+
+<ul><li> A fuzzer is a set of payloads
+</li><li> The algorithm that defines how the payloads of a fuzzer get combined in sequential order, defines the type of fuzzer
+</li><li> A prototype is the base form description (a bit like a signature) from which a fuzzer can be created
+</li></ul>
+<p>Ergo within JBroFuzz, prototype definitions are stored in a file called fuzzers.jbrf. Each prototype corresponds to a fuzzer, containing information such as the type of fuzzer, the number of payloads it has, etc. 
+</p><p>Finally, a fuzzing database is collection of fuzzers, as constructed by a set of prototypes. Welcome to the org.owasp.jbrofuzz.core library!
+</p>
+	</td>
   </tr>
 </table>
 <hr>
@@ -39,7 +44,7 @@ border=0>
 <table cellspacing="0" cellpadding="3" width="100%" align="center" bgcolor="#8080ff" 
 border=0>
   <tr>
-    <td><p>All fuzzer definitions are loaded from the file fuzzers.jbrofuzz</p>
+    <td><p>All fuzzer definitions are loaded from the file fuzzers.jbrf</p>
       <p></p>
       <p></p>
       <p>This is an internal file within JBroFuzz and can be found inside the JBroFuzz.jar java archive. </p>
@@ -48,10 +53,10 @@ border=0>
 	  <p>In the win32 and msi releases for every version, they are embedded inside the executable, would not recommend pulling them from there.</p>
 	  <p></p>
 	  <p></p>
-	  <p>In the jar release, you can find all fuzzer definitions within the file 'fuzzers.jbrofuzz' in the root directory of the compressed jar file. Rename the JBroFuzz.jar to JBroFuzz.zip and access as a normal zip archive to obtain and modify the file.</p>
+	  <p>In the jar release, you can find all fuzzer definitions within the file 'fuzzers.jbrf' in the root directory of the compressed jar file. Rename the JBroFuzz.jar to JBroFuzz.zip and access as a normal zip archive to obtain and modify the file.</p>
 	  <p></p>
 	  <p></p>
-	  <p>Online at: http://jbrofuzz.svn.sourceforge.net/viewvc/jbrofuzz/tar/fuzzers.jbrofuzz</p>
+	  <p>Online at: http://jbrofuzz.svn.sourceforge.net/viewvc/jbrofuzz/tar/fuzzers.jbrf</p>
 	  <p></p>
 	  <p>As part of the subversion repository.</p>
 	 </td>
@@ -71,10 +76,20 @@ border=0>
 border=0>
   <tr>
     <td><p>An attempt to define the term can be found on the spike mailing list:</p>
-      <p> </p>
+      <p>&nbsp;</p>
       <p>http://marc2.theaimsgroup.com/?l=spike&amp;m=105606327823227&amp;w=2</p>
       <p>&nbsp;</p>
-      <p>http://www.scadasec.net/secwiki/FuzzingTools</p>
+	  <p><i>"Fuzzing is a methodology for finding flaws in a protocol by crafting
+			different types of packets for that protocol which contain data that
+			pushes the protocol's specifications to the point of breaking them, and
+			sending these packets to a system capable of receiving that protocol,
+			and finally monitoring the results."</i></p>
+	  <p>&nbsp;</p>
+	  <p>The above definition focuses more on protocols and packets, within the JBroFuzz documentation you will find:</p>
+	  <p>&nbsp;</p>
+	  <p><i>"JBroFuzz has attempted to expose the intrinsic beauty of the subject: Constantly submit a vast amount of payloads to a service, device or prompt, waiting for the one response that makes all the difference. This is the mentality that JBroFuzz embraces and attempts to offer back to security professionals."</i></p>
+	  <p>&nbsp;</p>
+      <p>http://en.wikipedia.org/wiki/Fuzzing</p>
       <p><br>
       </p></td>
   </tr>

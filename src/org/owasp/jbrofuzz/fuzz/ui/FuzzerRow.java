@@ -35,7 +35,7 @@ package org.owasp.jbrofuzz.fuzz.ui;
  * Fuzzing panel.</p>
  * 
  * @author subere@uncon.org
- * @version 1.8
+ * @version 1.9
  * @since 1.8
  */
 public class FuzzerRow {

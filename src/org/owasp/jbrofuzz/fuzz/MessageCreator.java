@@ -106,7 +106,17 @@ public class MessageCreator {
 								this.payload = payload;
 								e.printStackTrace();
 							}
-						} else {
+						} else 
+							// Encoding 6: UTF-16
+							if(encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[6])) {
+								try {
+									this.payload = URLEncoder.encode(payload, "UTF-16");
+								} catch (UnsupportedEncodingException e) {
+									this.payload = payload;
+									e.printStackTrace();
+								}
+							}
+						else {
 							this.payload = payload;
 						}
 
