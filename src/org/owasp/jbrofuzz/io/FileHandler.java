@@ -101,7 +101,7 @@ public class FileHandler {
 	 * is created.</p>
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.8
+	 * @version 1.9
 	 * @since 1.5
 	 */
 	public final void createNewDirectory() {
@@ -292,6 +292,27 @@ public class FileHandler {
 	public File getFuzzDirectory() {
 
 		return fuzzDirectory;
+	}
+	
+	/**
+	 * <p>Set the fuzzing directory where all the files will 
+	 * be saved to the directory specified.</p>
+	 * 
+	 * @param directory
+	 * @return true if succcessful, false if anything else
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.9
+	 * @since 1.9
+	 */
+	public boolean setFuzzDirectory(File fuzzDirectory) {
+		
+		if(fuzzDirectory.isDirectory()) {
+			this.fuzzDirectory = fuzzDirectory;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**

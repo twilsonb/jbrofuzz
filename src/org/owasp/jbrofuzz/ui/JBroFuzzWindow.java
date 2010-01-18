@@ -297,10 +297,10 @@ public class JBroFuzzWindow extends JFrame {
 		cp.stop();
 
 		// Delete empty dirs created
-		final boolean delBlankDirs = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_1, true);
-		if (delBlankDirs) {
-			getJBroFuzz().getHandler().deleteEmptryDirectories();
-		}
+//		final boolean delBlankDirs = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_1, true);
+//		if (delBlankDirs) {
+//			getJBroFuzz().getHandler().deleteEmptryDirectories();
+//		}
 		
 		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Height", this.getSize().height);
 		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Width", this.getSize().width);
