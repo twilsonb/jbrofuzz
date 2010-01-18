@@ -40,6 +40,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -100,6 +102,11 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 	private JSplitPane rightPane;
 
+	public static final int MIN_PORT = 1;  /* min network port */
+	public static final int MAX_PORT = 65535; /* max network port */
+	private int port;
+	private boolean validProxy = true;
+	
 	/**
 	 * <p>
 	 * The preferences dialog constructor, passing the main window as argument.
@@ -485,7 +492,7 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 
 		final JPanel proxyServerPanel = new JPanel(new BorderLayout());
 		proxyServerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Proxy Server "), BorderFactory.createEmptyBorder(
+				.createTitledBorder(" HTTP Proxy Server "), BorderFactory.createEmptyBorder(
 						1, 1, 1, 1)));
 
 		final JTextField proxyServerTextField = new JTextField();
@@ -581,9 +588,34 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						if (enableProxyCheckBox.isSelected()) {
-							JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PROXY_ENABLED, true);
-							JBroFuzz.PREFS.put(JBroFuzzFormat.PROXY_SERVER, proxyServerTextField.getText());
-							JBroFuzz.PREFS.put(JBroFuzzFormat.PROXY_PORT, proxyPortTextField.getText());
+							
+						    /* validate proxy server and proxy port */
+						    try {
+						    	InetAddress.getByName(proxyServerTextField.getText());	
+						    } catch (UnknownHostException uhe) {
+						    	System.out.println("Invalid hostname " + proxyServerTextField.getText());
+						    	validProxy = false;
+						    }
+						    
+						    try {
+						    	port = Integer.parseInt(proxyPortTextField.getText());	
+						    } catch (NumberFormatException nfe) {
+						    	System.out.println("Invalid port number " + proxyPortTextField.getText());
+						    	validProxy = false;
+						    }
+						 
+						    if ((port < MIN_PORT) || (port > MAX_PORT)) {
+						    	System.out.println("Invalid port number " + port);
+						    	System.out.println("Port should be in range " + MIN_PORT + " to " + MAX_PORT);
+						    	validProxy = false;
+						    }
+						    
+						    if (validProxy) {
+						    	JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PROXY_ENABLED, true);
+						    	JBroFuzz.PREFS.put(JBroFuzzFormat.PROXY_PORT, proxyPortTextField.getText());
+						    	JBroFuzz.PREFS.put(JBroFuzzFormat.PROXY_SERVER, proxyServerTextField.getText());
+						    }
+							
 						}
 						JBroFuzzPrefs.this.dispose();
 
