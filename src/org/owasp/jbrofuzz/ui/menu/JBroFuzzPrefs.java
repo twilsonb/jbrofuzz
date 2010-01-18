@@ -593,20 +593,19 @@ public class JBroFuzzPrefs extends JDialog implements TreeSelectionListener {
 						    try {
 						    	InetAddress.getByName(proxyServerTextField.getText());	
 						    } catch (UnknownHostException uhe) {
-						    	System.out.println("Invalid hostname " + proxyServerTextField.getText());
+						    	parent.log("Invalid proxy server address/hostname: " + proxyServerTextField.getText(), 4);
 						    	validProxy = false;
 						    }
 						    
 						    try {
 						    	port = Integer.parseInt(proxyPortTextField.getText());	
 						    } catch (NumberFormatException nfe) {
-						    	System.out.println("Invalid port number " + proxyPortTextField.getText());
 						    	validProxy = false;
 						    }
 						 
 						    if ((port < MIN_PORT) || (port > MAX_PORT)) {
-						    	System.out.println("Invalid port number " + port);
-						    	System.out.println("Port should be in range " + MIN_PORT + " to " + MAX_PORT);
+						    	parent.log("Invalid proxy port number: " + proxyPortTextField.getText(), 4);
+						    	parent.log("Port should be in range " + MIN_PORT + " to " + MAX_PORT, 4);
 						    	validProxy = false;
 						    }
 						    
