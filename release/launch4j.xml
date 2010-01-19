@@ -28,16 +28,16 @@
     <minVersion>1.6.0</minVersion>
     <maxVersion></maxVersion>
     <jdkPreference>preferJre</jdkPreference>
-    <initialHeapSize>128</initialHeapSize>
+    <initialHeapSize>64</initialHeapSize>
     <maxHeapSize>512</maxHeapSize>
   </jre>
   <versionInfo>
-    <fileVersion>1.8.0.0</fileVersion>
-    <txtFileVersion>1.8.0.0</txtFileVersion>
+    <fileVersion>1.9.0.0</fileVersion>
+    <txtFileVersion>1.9.0.0</txtFileVersion>
     <fileDescription>Java Browser Fuzzer</fileDescription>
-    <copyright>Copyright 2009 (c)</copyright>
-    <productVersion>1.8.0.0</productVersion>
-    <txtProductVersion>1.8.0.0</txtProductVersion>
+    <copyright>Copyright 2007 - 2010 (c) subere@uncon.org</copyright>
+    <productVersion>1.9.0.0</productVersion>
+    <txtProductVersion>1.9.0.0</txtProductVersion>
     <productName>JBroFuzz</productName>
     <companyName>JBroFuzz</companyName>
     <internalName>JBroFuzz</internalName>
