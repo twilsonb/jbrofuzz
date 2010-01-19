@@ -14,10 +14,10 @@
     <ROW Property="BannerBitmap" MultiBuildValue="DefaultBuild:default_banner.bmp" Type="1"/>
     <ROW Property="DialogBitmap" MultiBuildValue="DefaultBuild:default_dialog.bmp" Type="1"/>
     <ROW Property="Manufacturer" Value="OWASP" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{BDF4D8EB-CF6C-4FC2-BC02-851D87D4D9E1} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{D8C379EF-2B49-4BAD-A810-FD1825DC1661} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="JBroFuzz" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="1.8.0"/>
+    <ROW Property="ProductVersion" Value="1.9.0"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{8563E053-CB25-42AF-BAC9-B42EE0F78B49}"/>
     <ROW Property="WindowsFamily9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
@@ -45,6 +45,7 @@
     <ROW File="example_03_charset_buffer_overflow.jbrofuzz" Component_="example_01_http_version.jbrofuzz" FileName="exampl~3.jbr|example-03-charset-buffer-overflow.jbrofuzz" Attributes="0" SourcePath="..\jar\examples\example-03-charset-buffer-overflow.jbrofuzz" SelfReg="false" Sequence="4"/>
     <ROW File="example_04_mobile_symbian.jbrofuzz" Component_="example_01_http_version.jbrofuzz" FileName="exampl~4.jbr|example-04-mobile-symbian.jbrofuzz" Attributes="0" SourcePath="..\jar\examples\example-04-mobile-symbian.jbrofuzz" SelfReg="false" Sequence="5"/>
     <ROW File="example_05_chrome_version_fuzz.jbrofuzz" Component_="example_01_http_version.jbrofuzz" FileName="exampl~5.jbr|example-05-chrome-version-fuzz.jbrofuzz" Attributes="0" SourcePath="..\jar\examples\example-05-chrome-version-fuzz.jbrofuzz" SelfReg="false" Sequence="6"/>
+    <ROW File="example_06_user_agents_google.jbrofuzz" Component_="example_01_http_version.jbrofuzz" FileName="exampl~6.jbr|example-06-user-agents-google.jbrofuzz" Attributes="0" SourcePath="..\jar\examples\example-06-user-agents-google.jbrofuzz" SelfReg="false" Sequence="7"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" Languages="en" InstallationType="4"/>
