@@ -139,7 +139,7 @@ public class MessageWriter {
 
 	}
 
-	public void setConnection(Connection connection) {
+	public void setConnection(AbstractConnection connection) {
 
 		// Update the reply
 		final String reply = connection.getReply();
