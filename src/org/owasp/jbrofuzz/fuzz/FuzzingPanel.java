@@ -845,7 +845,7 @@ public class FuzzingPanel extends AbstractPanel {
 					try {
 
 						// Connect
-						final Connection connection = new Connection(getTextURL(),
+						final AbstractConnection connection = new Connection(getTextURL(),
 								currentMessage.getMessage());
 
 						// If a 100 Continue is encountered, print what you put
