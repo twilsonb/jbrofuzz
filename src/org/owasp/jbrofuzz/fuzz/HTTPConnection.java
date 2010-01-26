@@ -50,6 +50,7 @@ import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
+import javax.net.ssl.*;
 /**
  * Description: The class responsible for making the connection for the purposes
  * of fuzzing through the corresponding socket.
