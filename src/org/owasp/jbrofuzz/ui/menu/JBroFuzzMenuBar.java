@@ -84,7 +84,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 	private final JBroFuzzWindow mFrameWindow;
 	// The menu items
-	private final JMenu view, panel, options, help;
+	private final JMenu view, panel, options; // , help;
 	// Used under the Panel JMenu as items
 	private final JMenuItem start, pause, stop, add, remove;
 	// Used under the view JMenu as items
@@ -104,14 +104,13 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		view = new JMenu("View");
 		panel = new JMenu("Panel");
 		options = new JMenu("Options");
-		help = new JMenu("Help");
 
 		this.add(file);
 		this.add(edit);
 		this.add(view);
 		this.add(panel);
 		this.add(options);
-		this.add(help);
+		this.add(new JMenuHelp(this));
 
 		// File
 		final JMenuItem newFile = new JMenuItem("New", ImageCreator.IMG_NEW);
@@ -337,27 +336,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		options.addSeparator();
 		options.add(preferences);
 
-		// Help
-		final JMenuItem topics = new JMenuItem("Topics",
-				ImageCreator.IMG_TOPICS);
-		final JMenuItem faq = new JMenuItem("FAQ", ImageCreator.IMG_FAQ);
-		// final JMenuItem tutorial = new JMenuItem("Tutorial");
-		final JMenuItem website = new JMenuItem("JBroFuzz Website...",
-				ImageCreator.IMG_OWASP_SML);
-		final JMenuItem disclaimer = new JMenuItem("Disclaimer",
-				ImageCreator.IMG_DISCLAIMER);
-		final JMenuItem about = new JMenuItem("About", ImageCreator.IMG_ABOUT);
-
-		about.setAccelerator(KeyStroke.getKeyStroke('0', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
-		help.add(topics);
-		help.add(faq);
-		help.addSeparator();
-		help.add(website);
-		help.addSeparator();
-		help.add(disclaimer);
-		help.add(about);
+		
 
 		//
 		// The action listeners for each component...
@@ -915,78 +894,10 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 			}
 		});
-
-		faq.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						new Faq(JBroFuzzMenuBar.this.getFrame());
-					}
-				});
-			}
-		});
-
-		topics.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						new Topics(JBroFuzzMenuBar.this.getFrame());
-					}
-				});
-			}
-		});
-
-		website.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						Browser.init();
-						try {
-							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
-						} catch (final IOException ex) {
-
-							JBroFuzzMenuBar.this
-							.getFrame()
-							.log(
-									"Could not launch link in external browser",
-									3);
-
-						}
-					}
-				});
-			}
-		});
-
-		disclaimer.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						new AboutBox(JBroFuzzMenuBar.this.getFrame(),
-								AboutBox.DISCLAIMER);
-					}
-				});
-			}
-		});
-
-		about.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						new AboutBox(JBroFuzzMenuBar.this.getFrame(),
-								AboutBox.ABOUT);
-					}
-				});
-			}
-		});
-
+		
 	}
 
-	private JBroFuzzWindow getFrame() {
+	public JBroFuzzWindow getFrame() {
 		return mFrameWindow;
 	}
 

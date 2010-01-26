@@ -68,7 +68,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
  * @version 1.9
  * @since 0.1
  */
-public class Connection {
+public class Connection implements AbstractConnection {
 	
 	AbstractConnection mainConnection;
 	
