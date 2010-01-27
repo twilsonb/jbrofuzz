@@ -37,6 +37,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.print.PrinterException;
 import java.io.IOException;
 import java.net.URL;
 
@@ -106,25 +107,42 @@ public class Shortcuts extends JFrame {
 		final URL shortcutsURL = ClassLoader.getSystemClassLoader().getResource(
 				"help/shortcuts.html");
 
-		JEditorPane helpPane;
+		final JEditorPane helpPane = new JEditorPane();;
 		try {
-			helpPane = new JEditorPane(shortcutsURL);
+			helpPane.setPage(shortcutsURL);
 		} catch (final IOException e1) {
-			helpPane = new JEditorPane("text/html", FILE_NOT_FOUND);
-			// helpPane.setText(FILE_NOT_FOUND);
+			helpPane.setContentType("text/html");
+			helpPane.setText(FILE_NOT_FOUND);
 		}
 		helpPane.setEditable(false);
 
 		// Add the split pane to this panel
 		getContentPane().add(new JScrollPane(helpPane), BorderLayout.CENTER);
 
-		// Bottom button
-		final JButton okButton = new JButton("  OK  ");
-
+		// Bottom buttons
+		final JButton printBun = new JButton(" Print ");
+		final JButton okButton = new JButton(" Close ");
+		
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
 				15, 15));
+		buttonPanel.add(printBun);
 		buttonPanel.add(okButton);
 
+		printBun.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent aEvent) {
+
+				try {
+					boolean complete = helpPane.print();
+					if (!complete) {
+						parent.log("User cancelled Printing", 1);
+					}
+				} catch (PrinterException prException) {
+					parent.log("A Printing Exception Occured", 4);
+				}
+
+			}
+		});
+		
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent aEvent) {
 
