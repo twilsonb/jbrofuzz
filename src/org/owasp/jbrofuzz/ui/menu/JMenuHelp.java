@@ -44,9 +44,9 @@ public class JMenuHelp extends JMenu {
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
 		this.add(topics);
+		this.add(shortcuts);
 		this.add(faq);
 		this.addSeparator();
-		this.add(shortcuts);
 		this.addSeparator();
 		this.add(website);
 		this.addSeparator();
