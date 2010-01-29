@@ -43,6 +43,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.Event;
 
 
 import java.util.Locale;
@@ -64,7 +65,11 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-
+import javax.swing.Action;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
@@ -101,6 +106,8 @@ public class EncoderHashFrame extends JFrame {
 	private JButton encode, decode, close;
 
 	private static boolean windowIsShowing = false;
+	
+	private CommentJPanel commentPanel;
 
 	public EncoderHashFrame(final JBroFuzzWindow parent) {
 		
@@ -219,6 +226,10 @@ public class EncoderHashFrame extends JFrame {
 		final String desc = "Select an encoding or hashing scheme from the left hard side";
 		encode.setToolTipText(desc);
 		decode.setToolTipText(desc);
+		
+		commentPanel = new CommentJPanel();
+		
+		getContentPane().add(commentPanel, BorderLayout.WEST);
 
 		encode.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -386,6 +397,39 @@ public class EncoderHashFrame extends JFrame {
 				}
 			}
 		});
+		
+		tree.addTreeSelectionListener( new TreeSelectionListener() {
+			public void valueChanged(final TreeSelectionEvent e) {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+				
+				if (node == null)
+					return;
+				
+				decode.setEnabled( EncoderHashCore.canDecoded(node.toString()) );
+			}
+		});
+
+        // ctrl+enter to encode
+        Action doEncode = new AbstractAction() {
+            public void actionPerformed(final ActionEvent e) {
+                calculate(true);
+            }
+        };
+
+        enTextPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+            .put(KeyStroke.getKeyStroke(Event.ENTER, Event.CTRL_MASK), "doEncode");
+        enTextPane.getActionMap().put("doEncode", doEncode);
+        
+        // ctrl+alt+enter to decode
+        Action doDecode = new AbstractAction() {
+            public void actionPerformed(final ActionEvent e) {
+                calculate(false);
+            }
+        };
+
+        enTextPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+            .put(KeyStroke.getKeyStroke(Event.ENTER, Event.CTRL_MASK + Event.ALT_MASK), "doDecode");
+        enTextPane.getActionMap().put("doDecode", doDecode);
 
 		// Bottom buttons
 
