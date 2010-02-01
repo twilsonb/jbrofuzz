@@ -32,6 +32,7 @@ package org.owasp.jbrofuzz.encode;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
@@ -39,21 +40,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.Event;
 
-
-import java.util.Locale;
-
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
@@ -61,20 +57,14 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import javax.swing.text.JTextComponent;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import javax.swing.Action;
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.util.B64;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -85,7 +75,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.8
+ * @version 1.9
  * @since 1.5
  * 
  */
@@ -96,7 +86,7 @@ public class EncoderHashFrame extends JFrame {
 	private static final int SIZE_X = 650;
 	private static final int SIZE_Y = 400;
 
-	private JSplitPane verticalSplitPane, horizontalSplitPane;
+	private JSplitPane horizontalSplitPane, verticalSplitPane, commentSplitPane;
 
 	private JTextPane enTextPane, deTextPane;
 
@@ -107,7 +97,7 @@ public class EncoderHashFrame extends JFrame {
 
 	private static boolean windowIsShowing = false;
 	
-	private CommentJPanel commentPanel;
+	private HashPanel commentPanel;
 
 	public EncoderHashFrame(final JBroFuzzWindow parent) {
 		
@@ -166,7 +156,7 @@ public class EncoderHashFrame extends JFrame {
 		enTextPane.setForeground(new Color(51, 102, 102));
 
 		// Set the right click for the encode text area
-		popupText(enTextPane);
+		HashPanelRightClick.popupText(enTextPane);
 
 		final JScrollPane encodeScrollPane = new JScrollPane(enTextPane,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -187,7 +177,7 @@ public class EncoderHashFrame extends JFrame {
 		deTextPane.setForeground(new Color(204, 51, 0));
 
 		// Set the right click for the decode text area
-		popupText(deTextPane);
+		HashPanelRightClick.popupText(deTextPane);
 
 		final JScrollPane decodeScrollPane = new JScrollPane(deTextPane,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -195,25 +185,37 @@ public class EncoderHashFrame extends JFrame {
 
 		decoderPanel.add(decodeScrollPane, BorderLayout.CENTER);
 
+		// Text panes -> Comment
+		commentPanel = new HashPanel("");
+
 		horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		commentSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
-		horizontalSplitPane.setLeftComponent(leftScrollPane);
-		horizontalSplitPane.setRightComponent(verticalSplitPane);
-
+		commentSplitPane.setLeftComponent(verticalSplitPane);
+		commentSplitPane.setRightComponent(commentPanel);
+		
 		verticalSplitPane.setTopComponent(encoderPanel);
 		verticalSplitPane.setBottomComponent(decoderPanel);
 
+		horizontalSplitPane.setLeftComponent(leftScrollPane);
+		horizontalSplitPane.setRightComponent(commentSplitPane);
+
+		
 		// Set the minimum size for all components
 		final Dimension minimumSize = new Dimension(0, 0);
 		leftScrollPane.setMinimumSize(minimumSize);
 		verticalSplitPane.setMinimumSize(minimumSize);
+		commentSplitPane.setMinimumSize(minimumSize);
+		
 		encoderPanel.setMinimumSize(minimumSize);
 		decoderPanel.setMinimumSize(minimumSize);
-
+		commentPanel.setMinimumSize(minimumSize);
+		
 		horizontalSplitPane.setDividerLocation(180);
 		verticalSplitPane.setDividerLocation(SIZE_Y / 2);
-
+		commentSplitPane.setDividerLocation(280);
+		
 		// Traverse tree from root
 		TreeNode root = (TreeNode) tree.getModel().getRoot();
 		parent.getPanelPayloads().expandAll(tree, new TreePath(root), true);
@@ -226,11 +228,7 @@ public class EncoderHashFrame extends JFrame {
 		final String desc = "Select an encoding or hashing scheme from the left hard side";
 		encode.setToolTipText(desc);
 		decode.setToolTipText(desc);
-		
-		commentPanel = new CommentJPanel();
-		
-		getContentPane().add(commentPanel, BorderLayout.WEST);
-
+				
 		encode.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -402,16 +400,22 @@ public class EncoderHashFrame extends JFrame {
 			public void valueChanged(final TreeSelectionEvent e) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 				
-				if (node == null)
+				if (node == null) {
 					return;
+				}
+				final String coderName = node.toString();
 				
-				decode.setEnabled( EncoderHashCore.canDecoded(node.toString()) );
+				decode.setEnabled( EncoderHashCore.isDecoded(coderName) );
+				commentPanel.setText( EncoderHashCore.getComment(coderName) );
 			}
 		});
 
         // ctrl+enter to encode
         Action doEncode = new AbstractAction() {
-            public void actionPerformed(final ActionEvent e) {
+
+			private static final long serialVersionUID = -7686474340015136816L;
+
+			public void actionPerformed(final ActionEvent e) {
                 calculate(true);
             }
         };
@@ -422,7 +426,10 @@ public class EncoderHashFrame extends JFrame {
         
         // ctrl+alt+enter to decode
         Action doDecode = new AbstractAction() {
-            public void actionPerformed(final ActionEvent e) {
+
+			private static final long serialVersionUID = 3083350774016663021L;
+
+			public void actionPerformed(final ActionEvent e) {
                 calculate(false);
             }
         };
@@ -503,87 +510,5 @@ public class EncoderHashFrame extends JFrame {
 			final String decodeText = deTextPane.getText();
 			enTextPane.setText(EncoderHashCore.decode(decodeText, s));
 		}
-	}
-
-	/**
-	 * <p>
-	 * Method for setting up the right click copy paste cut and select all menu.
-	 * </p>
-	 * <p>
-	 * It passes the parameters of which options in the right click menu are
-	 * enabled.
-	 * </p>
-	 * 
-	 * @param area
-	 *            JTextComponent
-	 */
-	public final void popupText(final JTextComponent area) {
-
-		final JPopupMenu popmenu = new JPopupMenu();
-
-		final JMenuItem i1_cut = new JMenuItem("Cut");
-		final JMenuItem i2_copy = new JMenuItem("Copy");
-		final JMenuItem i3_paste = new JMenuItem("Paste");
-		final JMenuItem i4_select = new JMenuItem("Select All");
-
-		i1_cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				ActionEvent.CTRL_MASK));
-		i2_copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-				ActionEvent.CTRL_MASK));
-		i3_paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-				ActionEvent.CTRL_MASK));
-		i4_select.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				ActionEvent.CTRL_MASK));
-
-		popmenu.add(i1_cut);
-		popmenu.add(i2_copy);
-		popmenu.add(i3_paste);
-		popmenu.addSeparator();
-		popmenu.add(i4_select);
-
-		i1_cut.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				area.cut();
-			}
-		});
-
-		i2_copy.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				area.copy();
-			}
-		});
-
-		i3_paste.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				if (area.isEditable()) {
-					area.paste();
-				}
-			}
-		});
-
-		i4_select.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				area.selectAll();
-			}
-		});
-
-		area.addMouseListener(new MouseAdapter() {
-			private void checkForTriggerEvent(final MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					area.requestFocus();
-					popmenu.show(e.getComponent(), e.getX(), e.getY());
-				}
-			}
-
-			@Override
-			public void mousePressed(final MouseEvent e) {
-				checkForTriggerEvent(e);
-			}
-
-			@Override
-			public void mouseReleased(final MouseEvent e) {
-				checkForTriggerEvent(e);
-			}
-		});
 	}
 }
