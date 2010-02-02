@@ -34,7 +34,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -54,8 +53,6 @@ import org.owasp.jbrofuzz.fuzz.io.OpenSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveAsSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveSession;
 import org.owasp.jbrofuzz.headers.HeaderFrame;
-import org.owasp.jbrofuzz.help.Faq;
-import org.owasp.jbrofuzz.help.Topics;
 import org.owasp.jbrofuzz.payloads.OpenLocationDialog;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
@@ -65,9 +62,6 @@ import org.owasp.jbrofuzz.ui.actions.PasteAction;
 import org.owasp.jbrofuzz.ui.actions.SelectAllAction;
 import org.owasp.jbrofuzz.update.CheckForUpdates;
 import org.owasp.jbrofuzz.util.ImageCreator;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
-
-import com.Ostermiller.util.Browser;
 
 /**
  * <p>

@@ -29,31 +29,8 @@
  */
 package org.owasp.jbrofuzz.fuzz;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InterruptedIOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
-import java.net.Proxy;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.URL;
-import java.net.URLConnection;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
-import org.owasp.jbrofuzz.JBroFuzz;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -65,7 +42,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.9
+ * @version 2.0
  * @since 0.1
  */
 public class Connection implements AbstractConnection {
@@ -102,9 +79,9 @@ public class Connection implements AbstractConnection {
 
 		// Check the message for it being an HTTP 1.1
 		if(protocolIsHTTP11(message)) {
-			mainConnection = new HTTPConnection(urlString, message);
+			mainConnection = new HTTPConnection(protocol, host, port, message);
 		} else {
-			mainConnection = new SocketConnection(urlString, message);
+			mainConnection = new SocketConnection(protocol, host, port, message);
 		}
 	}
 

@@ -52,7 +52,6 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
