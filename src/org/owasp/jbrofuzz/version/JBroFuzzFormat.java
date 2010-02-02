@@ -29,10 +29,6 @@
  */
 package org.owasp.jbrofuzz.version;
 
-import java.awt.AWTError;
-import java.awt.Dimension;
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;

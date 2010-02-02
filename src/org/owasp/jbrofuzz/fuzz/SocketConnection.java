@@ -36,24 +36,19 @@ import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
+import javax.net.ssl.*;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -110,7 +105,6 @@ public class SocketConnection implements AbstractConnection {
 			throw new ConnectionException("Exception when setting up the Naive key management.");
 		}
 
-		// return (SSLSocketFactory) SSLSocketFactory.getDefault();
 	}
 
 	private String message;
@@ -150,7 +144,7 @@ public class SocketConnection implements AbstractConnection {
 	 * @version 1.5
 	 * @since 0.1
 	 */
-	public SocketConnection(final String urlString, final String message)
+	public SocketConnection(final String protocol, final String host, final int port, final String message)
 	throws ConnectionException {
 
 
