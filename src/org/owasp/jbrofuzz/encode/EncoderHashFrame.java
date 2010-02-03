@@ -410,7 +410,7 @@ public class EncoderHashFrame extends JFrame {
 			}
 		});
 
-        // ctrl+enter to encode
+        // alt+enter to encode
         Action doEncode = new AbstractAction() {
 
 			private static final long serialVersionUID = -7686474340015136816L;
@@ -421,10 +421,10 @@ public class EncoderHashFrame extends JFrame {
         };
 
         enTextPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-            .put(KeyStroke.getKeyStroke(Event.ENTER, Event.CTRL_MASK), "doEncode");
+            .put(KeyStroke.getKeyStroke(Event.ENTER, Event.ALT_MASK), "doEncode");
         enTextPane.getActionMap().put("doEncode", doEncode);
         
-        // ctrl+alt+enter to decode
+        // alt+backspace to decode
         Action doDecode = new AbstractAction() {
 
 			private static final long serialVersionUID = 3083350774016663021L;
@@ -435,7 +435,7 @@ public class EncoderHashFrame extends JFrame {
         };
 
         enTextPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-            .put(KeyStroke.getKeyStroke(Event.ENTER, Event.CTRL_MASK + Event.ALT_MASK), "doDecode");
+            .put(KeyStroke.getKeyStroke(Event.BACK_SPACE, Event.ALT_MASK), "doDecode");
         enTextPane.getActionMap().put("doDecode", doDecode);
 
 		// Bottom buttons
