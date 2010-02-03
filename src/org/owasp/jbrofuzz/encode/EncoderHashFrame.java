@@ -257,12 +257,16 @@ public class EncoderHashFrame extends JFrame {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-
+						
 						windowIsShowing = false;
 
+						final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+						
 						// Save the values of the encode/decode as a preference
 						JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 						JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+						if (node != null)
+							JBroFuzz.PREFS.put(JBroFuzzFormat.ENCODER_NAME, node.toString());
 
 						dispose();
 
@@ -278,6 +282,8 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					windowIsShowing = false;
+					
+					final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
 					// Save the values of the encode/decode as a preference
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
@@ -296,11 +302,15 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					windowIsShowing = false;
+					
+					final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
 					// Save the values of the encode/decode as a preference
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-
+					if (node != null)
+						JBroFuzz.PREFS.put(JBroFuzzFormat.ENCODER_NAME, node.toString());
+					
 					dispose();
 
 				}
@@ -315,11 +325,15 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					windowIsShowing = false;
+					
+					final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
 					// Save the values of the encode/decode as a preference
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-
+					if (node != null)
+						JBroFuzz.PREFS.put(JBroFuzzFormat.ENCODER_NAME, node.toString());
+					
 					dispose();
 
 				}
@@ -333,11 +347,15 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					windowIsShowing = false;
+					
+					final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
 					// Save the values of the encode/decode as a preference
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-
+					if (node != null)
+						JBroFuzz.PREFS.put(JBroFuzzFormat.ENCODER_NAME, node.toString());
+					
 					dispose();
 
 				}
@@ -351,11 +369,15 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					windowIsShowing = false;
+					
+					final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
 					// Save the values of the encode/decode as a preference
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-
+					if (node != null)
+						JBroFuzz.PREFS.put(JBroFuzzFormat.ENCODER_NAME, node.toString());
+					
 					dispose();
 
 				}
@@ -368,11 +390,15 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					windowIsShowing = false;
+					
+					final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
 					// Save the values of the encode/decode as a preference
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-
+					if (node != null)
+						JBroFuzz.PREFS.put(JBroFuzzFormat.ENCODER_NAME, node.toString());
+					
 					dispose();
 
 				}
@@ -385,11 +411,15 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 
 					windowIsShowing = false;
+					
+					final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
 					// Save the values of the encode/decode as a preference
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 					JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
-
+					if (node != null)
+						JBroFuzz.PREFS.put(JBroFuzzFormat.ENCODER_NAME, node.toString());
+					
 					dispose();
 
 				}
@@ -466,9 +496,13 @@ public class EncoderHashFrame extends JFrame {
 			public void windowClosing(final WindowEvent e) {
 				windowIsShowing = false;
 
+				final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+				
 				// Save the values of the encode/decode as a preference
 				JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_ENCODE, enTextPane.getText());
 				JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_DECODE, deTextPane.getText());
+				if (node != null)
+					JBroFuzz.PREFS.put(JBroFuzzFormat.ENCODER_NAME, node.toString());				
 
 				dispose();
 			}
@@ -477,6 +511,14 @@ public class EncoderHashFrame extends JFrame {
 		// Load the values of encode/decode from the preferences
 		enTextPane.setText(JBroFuzz.PREFS.get(JBroFuzzFormat.TEXT_ENCODE, ""));
 		deTextPane.setText(JBroFuzz.PREFS.get(JBroFuzzFormat.TEXT_DECODE, ""));
+		
+		final String encoder_type = JBroFuzz.PREFS.get(JBroFuzzFormat.ENCODER_NAME, "");
+		
+		for (int i=0; i<= EncoderHashCore.CODES.length; i++)
+			if ( EncoderHashCore.CODES[i].equalsIgnoreCase(encoder_type) ) {
+				tree.setSelectionRow( i+1 );
+				break;
+			}
 
 	}
 

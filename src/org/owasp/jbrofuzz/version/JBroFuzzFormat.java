@@ -183,6 +183,11 @@ public class JBroFuzzFormat {
 	 * The decoded/hashed text saved as a preference
 	 */
 	public static final String TEXT_DECODE = "decode.text";
+	
+	/**
+	 * Encode/hash type saved as a preference
+	 */
+	public static final String ENCODER_NAME = "encoder.name";
 
 	/**
 	 * <p>
