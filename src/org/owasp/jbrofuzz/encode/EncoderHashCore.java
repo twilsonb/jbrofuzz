@@ -62,7 +62,7 @@ public class EncoderHashCore {
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-8\");",
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-16LE\");",
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-16BE\");",
-		"MIME Base64 uses a 64-character alphabet consisting of upper- and lower-case Roman alphabet characters (A–Z, a–z), the numerals (0–9), and the \"+\" and \"/\" symbols. The \"=\" symbol is also used as a special suffix code.", 
+		"MIME Base64 uses a 64-character alphabet consisting of upper- and lower-case Roman alphabet characters (A-Z, a-z), the numerals (0ï¿½9), and the \"+\" and \"/\" symbols. The \"=\" symbol is also used as a special suffix code.", 
 		"The 128-bit (16-byte) MD5 hashes (also termed message digests) are typically represented as a sequence of 32 hexadecimal digits. The hash of the zero-length string is: MD5(\"\") = d41d8cd98f00b204e9800998ecf8427e", 
 		"SHA-1 (as well as SHA-0) produces a 160-bit digest from a message with a maximum length of (2^64 - 1) bits.  Encoding is performed parsing by getting the bytes in encodeText.getBytes(\"iso-8859-1\") standard. ", 
 		"SHA-256 produces a 256-bit digest from a message with a maximum length of (2^64-1) bits. Encoding is performed parsing by getting the bytes in encodeText.getBytes(\"iso-8859-1\") standard. ",
@@ -134,7 +134,7 @@ public class EncoderHashCore {
 			else if (type.equalsIgnoreCase("URL UTF-16BE"))
 				return decodeUrlUtf16BE(decodeText);
 			else if (type.equalsIgnoreCase("URL UTF-16LE"))
-				return decodeUrlUtf16BE(decodeText);
+				return decodeUrlUtf16LE(decodeText);
 			else if (type.equalsIgnoreCase("Base64"))
 				return decodeBase64(decodeText);
 			else if (type.equalsIgnoreCase("Hexadecimal (low)"))
@@ -265,7 +265,6 @@ public class EncoderHashCore {
 	}
 	
 	// URL Decode (UTF-16LE)
-	// TODO: Why isn't this method used anywhere?
 	private static String decodeUrlUtf16LE(final String decodeText) {
 		try {
 			return URLDecoder.decode(decodeText, "UTF-16LE");
@@ -304,7 +303,7 @@ public class EncoderHashCore {
 		else if (type.equalsIgnoreCase("URL UTF-16BE"))
 			return encodeUrlUtf16BE(encodeText);
 		else if (type.equalsIgnoreCase("URL UTF-16LE"))
-			return encodeUrlUtf16BE(encodeText);
+			return encodeUrlUtf16LE(encodeText);
 		else if (type.equalsIgnoreCase("Base64"))
 			return encodeBase64(encodeText);
 		else if (type.equalsIgnoreCase("MD5 Hash"))
@@ -525,7 +524,6 @@ public class EncoderHashCore {
 	}
 	
 	// URL Encode (UTF-16LE)
-	// TODO: Why isn't this method used anywhere?
 	private static String encodeUrlUtf16LE(final String encodeText) {
 		try {
 			return URLEncoder.encode(encodeText, "UTF-16LE");
