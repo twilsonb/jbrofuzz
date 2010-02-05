@@ -60,6 +60,7 @@ import org.owasp.jbrofuzz.ui.actions.CopyAction;
 import org.owasp.jbrofuzz.ui.actions.CutAction;
 import org.owasp.jbrofuzz.ui.actions.PasteAction;
 import org.owasp.jbrofuzz.ui.actions.SelectAllAction;
+import org.owasp.jbrofuzz.ui.prefs.PrefDialog;
 import org.owasp.jbrofuzz.update.CheckForUpdates;
 import org.owasp.jbrofuzz.util.ImageCreator;
 
@@ -882,7 +883,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new JBroFuzzPrefs(JBroFuzzMenuBar.this.getFrame());
+						new PrefDialog(JBroFuzzMenuBar.this.getFrame());
 					}
 				});
 
