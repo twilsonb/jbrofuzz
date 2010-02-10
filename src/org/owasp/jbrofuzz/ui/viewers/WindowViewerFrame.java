@@ -32,6 +32,7 @@ package org.owasp.jbrofuzz.ui.viewers;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -67,16 +68,19 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
- * Class extending a JFrame for displaying the contents of each TCP sniffing
- * request/reply that has been made.
+ * Class extending a JFrame for displaying the contents of a file.
+ * Typically, a file represents a request/response that has been sent
+ * and received.
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.7
+ * @version 2.0
  * @since 0.2
  */
 public class WindowViewerFrame extends JFrame implements DocumentListener {
 
+	private static final int SIZE_X = 550;
+	private static final int SIZE_Y = 525;
 
 	private static final long serialVersionUID = -4765698531680118534L;
 
@@ -179,14 +183,15 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		pane.add(listPanel, BorderLayout.CENTER);
 		pane.add(bottomPanel, BorderLayout.SOUTH);
 
-		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math
-				.abs(parent.getLocationOnScreen().y + 20));
-		this.setSize(550, 525);
+		this.setLocation(parent.getLocationOnScreen().x + 100, parent.getLocationOnScreen().y + 20);
+		this.setSize(SIZE_X, SIZE_Y);
 
 		setResizable(true);
 		setVisible(true);
+		setMinimumSize(new Dimension(SIZE_X, SIZE_Y));
 		setDefaultCloseOperation(2);
 
+				
 		listTextArea.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
@@ -283,6 +288,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 			hilit.removeAllHighlights();
 			entry.setText("");
 			entry.setBackground(entryBg);
+			WindowViewerFrame.this.dispose();
 		}
 
 	}

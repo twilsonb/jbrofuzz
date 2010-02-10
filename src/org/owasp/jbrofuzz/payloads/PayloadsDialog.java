@@ -72,7 +72,7 @@ import org.owasp.jbrofuzz.util.NonWrappingTextPane;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.0
+ * @version 2.0
  */
 public class PayloadsDialog extends JDialog {
 
@@ -443,8 +443,8 @@ public class PayloadsDialog extends JDialog {
 
 		// Global frame issues
 
-		this.setLocation(Math.abs(parent.getFrame().getLocation().x + 100),
-				Math.abs(parent.getFrame().getLocation().y + 100));
+		this.setLocation(parent.getFrame().getLocation().x + 100,
+				parent.getFrame().getLocation().y + 100);
 		this.setSize(PayloadsDialog.SIZE_X, PayloadsDialog.SIZE_Y);
 		setResizable(true);
 		setVisible(true);
