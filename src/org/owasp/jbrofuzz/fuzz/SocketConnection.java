@@ -116,9 +116,11 @@ public class SocketConnection implements AbstractConnection {
 
 	private String host, protocol;
 	private InputStream inStream;
-
 	private OutputStream outStream;
 
+	ByteArrayOutputStream baos;
+
+	private SocketTimer timer;
 	private int socketTimeout;
 
 
@@ -177,7 +179,6 @@ public class SocketConnection implements AbstractConnection {
 
 
 			// Set buffers, streams, smile...
-
 			mSocket.setSendBufferSize(this.message.getBytes().length);
 			mSocket.setReceiveBufferSize(SocketConnection.RECV_BUF_SIZE);
 
@@ -187,24 +188,28 @@ public class SocketConnection implements AbstractConnection {
 			// Put message on the wire
 			outStream.write(this.message.getBytes());
 
+			// Start timer
+			timer = new SocketTimer(this, 5000);
+			timer.start();
 
 			// Read response, see what you have back
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			baos = new ByteArrayOutputStream();
 			int got;
-
-
-
-			// If no HTTP/1.1 just read the stream, until the end
 			while ((got = inStream.read(recv)) > -1) {
 				baos.write(recv, 0, got);
 			}
 
-
+			// Reset the timer, ya...
+			timer.reset();
 
 			inStream.close();
 			outStream.close();
-			//mSocket.close();
+			baos.close();
+			mSocket.close();
 
+			// Stop the timer
+			timer.stop();
+			
 			reply = new String(baos.toByteArray());
 
 		} catch (MalformedURLException e1) {
@@ -323,6 +328,20 @@ public class SocketConnection implements AbstractConnection {
 
 		return false;
 
+	}
+
+
+	public void close() {
+
+		IOUtils.closeQuietly(inStream);
+		IOUtils.closeQuietly(outStream);
+		try {
+			mSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }
