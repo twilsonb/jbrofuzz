@@ -118,11 +118,10 @@ public class SocketConnection implements AbstractConnection {
 	private InputStream inStream;
 	private OutputStream outStream;
 
-	ByteArrayOutputStream baos;
-
 	private SocketTimer timer;
 	private int socketTimeout;
-
+	
+	private boolean timeoutElapsed;
 
 	/**
 	 * <p>
@@ -149,13 +148,9 @@ public class SocketConnection implements AbstractConnection {
 	public SocketConnection(final String protocol, final String host, final int port, final String message)
 	throws ConnectionException {
 
-
-
-		boolean maxTimeout = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
-		socketTimeout = maxTimeout ? 30000 : 5000;
-
 		this.message = message;
-
+		this.timeoutElapsed = false;
+		
 		final byte[] recv = new byte[SocketConnection.RECV_BUF_SIZE];
 
 		try {
@@ -188,30 +183,35 @@ public class SocketConnection implements AbstractConnection {
 			// Put message on the wire
 			outStream.write(this.message.getBytes());
 
+			// Get the timeout value on the Socket
+			socketTimeout = JBroFuzz.PREFS.getInt("Socket.Max.Timeout", 7);
+			// validate
+			if( (socketTimeout < 1) || (socketTimeout > 51) ) {
+				socketTimeout = 7;
+			}
 			// Start timer
-			timer = new SocketTimer(this, 5000);
+			timer = new SocketTimer(this, socketTimeout * 1000);
 			timer.start();
 
 			// Read response, see what you have back
-			baos = new ByteArrayOutputStream();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int got;
 			while ((got = inStream.read(recv)) > -1) {
 				baos.write(recv, 0, got);
 			}
 
-			// Reset the timer, ya...
+			// If the timer is not reset, close() will be called
 			timer.reset();
+
+			baos.close();
 
 			inStream.close();
 			outStream.close();
-			baos.close();
+
 			mSocket.close();
 
-			// Stop the timer
-			timer.stop();
-			
 			reply = new String(baos.toByteArray());
-
+			
 		} catch (MalformedURLException e1) {
 
 			reply = "Malformed URL: " + e1.getMessage() + "\n";
@@ -224,7 +224,11 @@ public class SocketConnection implements AbstractConnection {
 
 		} catch (IOException e3) {
 
-			reply = "An IO Error occured: " + e3.getMessage() + "\n";
+			if(timeoutElapsed) {
+				reply = "Timeout Connection after: " + socketTimeout + " ms\n";
+			} else {
+				reply = "An IO Error occured: " + e3.getMessage() + "\n";
+			}
 			throw new ConnectionException(reply);
 
 		} finally {
@@ -335,12 +339,8 @@ public class SocketConnection implements AbstractConnection {
 
 		IOUtils.closeQuietly(inStream);
 		IOUtils.closeQuietly(outStream);
-		try {
-			mSocket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		timeoutElapsed = true;
 		
 	}
 

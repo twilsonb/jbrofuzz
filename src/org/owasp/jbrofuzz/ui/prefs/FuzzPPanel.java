@@ -29,12 +29,17 @@
  */
 package org.owasp.jbrofuzz.ui.prefs;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
@@ -43,34 +48,42 @@ public class FuzzPPanel extends AbstractPrefsPanel {
 
 	private static final long serialVersionUID = -6307578507750425289L;
 
+	private static final String[] socketSeconds = 
+		{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+		 "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+		 "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+		 "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+		 "41", "42", "43", "44", "45", "46", "47", "48", "49", "50" };
+
+	// The Socket Timeout Combo Box
+	private final JComboBox stoBox;
+	
 	public FuzzPPanel(final PrefDialog dialog) {
-		super("Fuzzing");
 		
+		super("Fuzzing");
 		
 		// Fuzzing... -> Socket Timeout
 
-		final boolean socketbox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_1,
-				false);
-		final JCheckBox socketCheckBox = new JCheckBox(
-				" Extend the socket timeout from 5 seconds to 30 seconds ",
-				socketbox);
+		int stoPrefValue = JBroFuzz.PREFS.getInt("Socket.Max.Timeout", 7);
+		// validate
+		if( (stoPrefValue < 1) || (stoPrefValue > 51) ) {
+			stoPrefValue = 7;
+		}
 
-		socketCheckBox.setBorderPaintedFlat(true);
-		socketCheckBox
-		.setToolTipText("Tick this box, if you are getting timeout responses");
-
-		socketCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				if (socketCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_1, true);
-				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_1, false);
-				}
-			}
-		});
-		add(socketCheckBox);
+		stoBox = new JComboBox(socketSeconds);
+		stoBox.setSelectedIndex(stoPrefValue - 1);
+		stoBox.setMaximumRowCount(4);
+		
+		final JLabel stoLabel = new JLabel("Specify Socket Connection Timeout (in seconds): ");
+		stoLabel.setToolTipText("Increase/Decrease the number of seconds you wait for an open connection");
+		
+		final JPanel sTimeOutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
+		sTimeOutPanel.add(stoLabel);
+		sTimeOutPanel.add(stoBox);
+		
+		add(sTimeOutPanel);
 		add(Box.createRigidArea(new Dimension(0, 20)));
-
+		
 		// Fuzzing... -> End of Line Character
 
 		final boolean endlinebox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_2,
@@ -170,6 +183,12 @@ public class FuzzPPanel extends AbstractPrefsPanel {
 		
 	}
 	
-	public void apply() { }
+	public void apply() { 
+		
+		// Fuzzing... -> Socket Timeout
+		final int stoIndex = stoBox.getSelectedIndex();
+		JBroFuzz.PREFS.putInt("Socket.Max.Timeout", stoIndex + 1);
+		
+	}
 
 }
