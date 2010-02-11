@@ -108,12 +108,6 @@ public class JBroFuzzFormat {
 	public static final String PR_3 = "startup.check.new-version";
 
 	/**
-	 * The preferences used for selecting the timeout in the socket created,
-	 * while fuzzing.
-	 */
-	public static final String PR_FUZZ_1 = "fuzz.socket.timeout.max";
-
-	/**
 	 * The preferences used for selecting the end of line character to be
 	 * appended to each line sent on the wire.
 	 */

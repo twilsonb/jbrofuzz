@@ -302,10 +302,10 @@ public class JBroFuzzWindow extends JFrame {
 //			getJBroFuzz().getHandler().deleteEmptryDirectories();
 //		}
 		
-		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Height", this.getSize().height - 20);
-		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Width", this.getSize().width - 20);
-		JBroFuzz.PREFS.putInt("UI.JBroFuzz.X", this.getLocation().x + 10);
-		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Y", this.getLocation().y + 10);
+		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Height", this.getSize().height);
+		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Width", this.getSize().width);
+		JBroFuzz.PREFS.putInt("UI.JBroFuzz.X", this.getLocation().x);
+		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Y", this.getLocation().y);
 
 		// Save the values of the url/request as a preference
 		final String sURL = fp.getTextURL();

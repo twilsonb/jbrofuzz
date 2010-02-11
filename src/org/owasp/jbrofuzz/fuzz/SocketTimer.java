@@ -112,8 +112,9 @@ public class SocketTimer extends Thread {
 
 				// Check to see if the time has been exceeded
 				if (tElapsed > m_length) {
-					// Close the socket, be rude...
+					// Close the connection, be rude...
 					sConnection.close();
+					break;
 				}
 				
 			}

@@ -228,8 +228,7 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math
-				.abs(parent.getLocationOnScreen().y + 20));
+		this.setLocation(parent.getLocationOnScreen().x + 100, parent.getLocationOnScreen().y + 20);
 		this.setSize(SIZE_X, SIZE_Y);
 		setMinimumSize(new Dimension(SIZE_X, SIZE_Y));
 		setResizable(true);

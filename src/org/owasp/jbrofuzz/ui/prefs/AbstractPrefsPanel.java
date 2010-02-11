@@ -30,6 +30,7 @@
 package org.owasp.jbrofuzz.ui.prefs;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -44,10 +45,10 @@ public abstract class AbstractPrefsPanel extends JPanel {
 	private final String name;
 	
 	public AbstractPrefsPanel(final String name) {
-		super();
+		super(new FlowLayout(FlowLayout.LEFT, 0, 15));
 		this.name = name;
 		
-		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		final JLabel header = new JLabel("<HTML><H3>&nbsp;" + name + "</H3></HTML>");
 		add(header);
 		header.add(Box.createRigidArea(new Dimension(0, 20)));
