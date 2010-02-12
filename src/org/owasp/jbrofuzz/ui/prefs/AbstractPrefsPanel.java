@@ -29,41 +29,82 @@
  */
 package org.owasp.jbrofuzz.ui.prefs;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public abstract class AbstractPrefsPanel extends JPanel {
-
-	private static final long serialVersionUID = 3769177781032351184L;
-	
+/**
+ * <p>Abstract class providing the preferences panel foundation,
+ * used for each panel within the preferences dialog 
+ * PrefDialog.java</p>
+ * 
+ * @author subere@uncon.org
+ * @version 2.0
+ * @since 2.0
+ */
+abstract class AbstractPrefsPanel extends JPanel {
+	// The name of the panel, as passed by the constructor
 	private final String name;
-	
-	public AbstractPrefsPanel(final String name) {
-		super(new FlowLayout(FlowLayout.LEFT, 0, 15));
+
+	/**
+	 * <p>Abstract preferences panel constructor, passing
+	 * the String of the name to be displayed on the right
+	 * hand side tree and the top of the left hand side.</p>
+	 * 
+	 * @param name The name of the preferences panel
+	 */
+	protected AbstractPrefsPanel(final String name) {
+		super();
 		this.name = name;
-		
-		// setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		final JLabel header = new JLabel("<HTML><H3>&nbsp;" + name + "</H3></HTML>");
+
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		final JLabel header = new JLabel("<HTML><H3>&nbsp;&nbsp;" + name + "</H3></HTML>");
+		// A very important line when it comes to BoxLayout component alignment
+		header.setAlignmentX(0.0f);
 		add(header);
-		header.add(Box.createRigidArea(new Dimension(0, 20)));
-		
+
 	}
-	
-	public String getName() {
+
+	/**
+	 * <p>Return the name of the panel, as specified 
+	 * under object construction.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @since 2.0
+	 */
+	public final String getName() {
 		return this.name;
 	}
-	
-	public DefaultMutableTreeNode getTreeNode() {
+
+	/**
+	 * <p>Method returning a default mutable tree node,
+	 * to be added to the right hand side panel of the
+	 * preferences menu.</p>
+	 * 
+	 * @return DefaultMutableTreeNode
+	 * 				A default tree node with the name
+	 * 				specified during construction.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @since 2.0 
+	 */
+	protected final DefaultMutableTreeNode getTreeNode() {
 		return new DefaultMutableTreeNode(name);
 	}
-	
+
+	/**
+	 * <p>Method required to be implemented, for setting
+	 * the preferences changed, in the event of the user
+	 * clicking "Apply".</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @since 2.0
+	 */
 	protected abstract void apply();
-	
+
 
 }

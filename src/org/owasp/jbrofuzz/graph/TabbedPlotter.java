@@ -43,7 +43,7 @@ import org.owasp.jbrofuzz.graph.canvas.ResponseTimeChart;
 import org.owasp.jbrofuzz.graph.canvas.StatusCodeChart;
 import org.owasp.jbrofuzz.help.HelpChart;
 
-public class TabbedPlotter extends JTabbedPane {
+class TabbedPlotter extends JTabbedPane {
 
 	/**
 	 * 
@@ -96,7 +96,7 @@ public class TabbedPlotter extends JTabbedPane {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public void plot(final File directory) {
+	protected void plot(final File directory) {
 
 		// Set the progress bar to show
 		graphingPanel.setProgressBarStart();

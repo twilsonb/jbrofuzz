@@ -84,15 +84,15 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 
 	private static final long serialVersionUID = -4765698531680118534L;
 
-	final static Color  HILIT_COLOR = Color.LIGHT_GRAY;
-	final static Color  ERROR_COLOR = Color.PINK;
-	final static String CANCEL_ACTION = "cancel-search";
+	private final static Color  HILIT_COLOR = Color.LIGHT_GRAY;
+	private final static Color  ERROR_COLOR = Color.PINK;
+	private final static String CANCEL_ACTION = "cancel-search";
 
-	final Color entryBg;
-	final transient Highlighter hilit;
-	final transient Highlighter.HighlightPainter painter;
+	private final Color entryBg;
+	private final transient Highlighter hilit;
+	private final transient Highlighter.HighlightPainter painter;
 
-	final JTextPane listTextArea;
+	private final JTextPane listTextArea;
 	private JTextField entry;
 	private JLabel status;
 
@@ -157,7 +157,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		am.put(CANCEL_ACTION, new CancelAction());
 
 		// Right click: Cut, Copy, Paste, Select All
-		parent.popupText(listTextArea, false, true, false, true);
+		AbstractPanel.popupText(listTextArea, false, true, false, true);
 
 		// Define the Scroll Pane for the Text Area
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
@@ -201,7 +201,8 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 			}
 		});
 
-		class FileLoader extends SwingWorker<String, Object> {
+// TODO from UCDetector: Local class "WindowViewerFrame$FileLoader" has 0 references
+		class FileLoader extends SwingWorker<String, Object> { // NO_UCD
 
 			@Override
 			public String doInBackground() {
@@ -231,7 +232,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 
 	}
 
-	public void search() {
+	private void search() {
 		hilit.removeAllHighlights();
 
 		String s = entry.getText();
@@ -263,7 +264,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 
 	}
 
-	void message(String msg) {
+	private void message(String msg) {
 		status.setText(StringUtils.abbreviate(msg, 40));
 	}
 
@@ -280,7 +281,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 	public void changedUpdate(DocumentEvent ev) {
 	}
 
-	class CancelAction extends AbstractAction {
+	private class CancelAction extends AbstractAction {
 
 		private static final long serialVersionUID = 9875234L;
 

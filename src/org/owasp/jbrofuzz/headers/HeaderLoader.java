@@ -44,7 +44,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 
-public class HeaderLoader {
+class HeaderLoader {
 
 	private static final String HEADER = "JBroFuzz Headers Collection";
 
@@ -185,7 +185,7 @@ public class HeaderLoader {
 		return headerTreeNode.children();
 	}
 
-	public Header getHeader(final TreePath treePath) {
+	protected Header getHeader(final TreePath treePath) {
 
 		if (!((HeaderTreeNode) treePath.getLastPathComponent()).isLeaf()) {
 			return Header.ZERO;
@@ -229,7 +229,7 @@ public class HeaderLoader {
 		return myNode;
 	}
 
-	public void load() {
+	protected void load() {
 
 		// Parse the contents of the StringBuffer to the array of generators
 
@@ -354,10 +354,11 @@ public class HeaderLoader {
 		}
 	}
 
-	public int size() {
-
-		return headers.size();
-
-	}
+// TODO UCdetector: Remove unused code: 
+// 	public int size() {
+// 
+// 		return headers.size();
+// 
+// 	}
 
 }

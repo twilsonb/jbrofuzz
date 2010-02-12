@@ -679,7 +679,8 @@ public class ImageCreator {
 	 * A black cross, representing the close image icon.
 	 * </p>
 	 */
-	public static final ImageIcon IMG_CLOSE = new ImageIcon(B64
+// TODO from UCDetector: Constant "ImageCreator.IMG_CLOSE" has 0 references
+	public static final ImageIcon IMG_CLOSE = new ImageIcon(B64 // NO_UCD
 			.decode(TXT_CLOSE));
 
 	/**

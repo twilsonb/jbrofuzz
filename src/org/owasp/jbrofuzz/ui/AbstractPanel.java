@@ -473,7 +473,7 @@ public abstract class AbstractPanel extends JPanel {
 	 * @param area
 	 *            JTextArea
 	 */
-	public final void popupText(final JTextComponent area, boolean cut,
+	public static final void popupText(final JTextComponent area, boolean cut,
 			boolean copy, boolean paste, boolean selectAll) {
 
 		final JPopupMenu popmenu = new JPopupMenu();

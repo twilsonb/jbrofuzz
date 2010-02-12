@@ -1,6 +1,6 @@
 package org.owasp.jbrofuzz.fuzz;
 
-public interface AbstractConnection {
+interface AbstractConnection {
 
 	/**
 	 * <p>
@@ -14,7 +14,7 @@ public interface AbstractConnection {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public abstract String getMessage();
+	String getMessage();
 
 	/**
 	 * <p>
@@ -27,7 +27,7 @@ public interface AbstractConnection {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public abstract String getPort();
+	String getPort();
 
 	/**
 	 * <p>
@@ -46,7 +46,7 @@ public interface AbstractConnection {
 	 * @version 1.3
 	 * @since 1.0
 	 */
-	public abstract String getReply();
+	String getReply();
 
 	/**
 	 * <p>
@@ -66,7 +66,7 @@ public interface AbstractConnection {
 	 * @version 1.5
 	 * @since 1.2
 	 */
-	public abstract String getStatus();
+	String getStatus();
 
 	/**
 	 * <p>
@@ -81,7 +81,7 @@ public interface AbstractConnection {
 	 *            The input string used
 	 * @return boolean True if HTTP/1.1 is found on the first line
 	 */
-	public abstract boolean protocolIsHTTP11(String message);
+	boolean protocolIsHTTP11(String message);
 
 	/**
 	 * <p>
@@ -96,8 +96,8 @@ public interface AbstractConnection {
 	 * @since 1.5
 	 * @return
 	 */
-	public abstract String getPostDataInMessage();
+	String getPostDataInMessage();
 
-	public abstract boolean isResponse100Continue();
+	boolean isResponse100Continue();
 
 }

@@ -59,6 +59,7 @@ import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 
 import org.owasp.jbrofuzz.ui.AbstractPanel;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -106,9 +107,9 @@ public class CheckForUpdates extends JDialog {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public CheckForUpdates(final AbstractPanel parent) {
+	public CheckForUpdates(final JBroFuzzWindow parent) {
 
-		super(parent.getFrame(), " JBroFuzz - Check For Updates ", true);
+		super(parent, " JBroFuzz - Check For Updates ", true);
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -131,7 +132,7 @@ public class CheckForUpdates extends JDialog {
 		mainLabel.setVisible(true);
 
 		// Right click: Cut, Copy, Paste, Select All
-		parent.popupText(mainLabel, false, true, false, true);
+		AbstractPanel.popupText(mainLabel, false, true, false, true);
 
 		// Scroll Panels for the text area and image
 
@@ -203,9 +204,12 @@ public class CheckForUpdates extends JDialog {
 		getContentPane().add(centerPanel, BorderLayout.CENTER);
 		getContentPane().add(southPanel, BorderLayout.SOUTH);
 
-		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocationOnScreen().x + 100), Math
-				.abs(parent.getLocationOnScreen().y + 20));
+		// Where to show the check for updates dialog
+		this.setLocation(
+				parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
+				parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
+		);
+		
 		this.setSize(CheckForUpdates.SIZE_X, CheckForUpdates.SIZE_Y);
 		setResizable(false);
 		setVisible(true);

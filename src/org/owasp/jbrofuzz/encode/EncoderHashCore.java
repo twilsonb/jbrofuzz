@@ -46,7 +46,7 @@ import org.owasp.jbrofuzz.util.B64;
 
 public class EncoderHashCore {
 	
-	public static final String[] CODES = {
+	protected static final String[] CODES = {
 		"URL US-ASCII", "URL ISO-8859-1", "URL Cp1252", "URL UTF-8",
 		"URL UTF-16BE", "URL UTF-16LE", "Base64", "MD5 Hash", "SHA-1 Hash", "SHA-256 Hash",
 		"SHA-384 Hash", "SHA-512 Hash", "Hexadecimal (low)", "Hexadecimal (UPP)", 
@@ -89,7 +89,7 @@ public class EncoderHashCore {
 			"Escape: XML"
 	};
 	
-	public static boolean isDecoded(final String type) {
+	protected static boolean isDecoded(final String type) {
 
 		for (int i=0; i<IS_DECODABLE.length; i++)
 			if (type.equalsIgnoreCase(IS_DECODABLE[i])) {
@@ -98,17 +98,9 @@ public class EncoderHashCore {
 		return false;
 	}
 	
-	public static boolean exists(final String type) {
-		
-		for(String sCode : CODES) {
-			if(type.equalsIgnoreCase(sCode)) {
-				return true;
-			}
-		}
-		return false;
-	}
 	
-	public static String getComment(final String type) {
+	
+	protected static String getComment(final String type) {
 		
 		for (int i=0; i<CODES.length; i++) {
 			if(type.equalsIgnoreCase(CODES[i])) {
@@ -120,7 +112,7 @@ public class EncoderHashCore {
 		
 	}
 	
-	public static String decode(final String decodeText, final String type) {
+	protected static String decode(final String decodeText, final String type) {
 			if (!isDecoded(type))
 				return "Error: String cannot be decoded...";
 			else if (type.equalsIgnoreCase("URL US-ASCII"))
@@ -217,7 +209,7 @@ public class EncoderHashCore {
 	// Decode RFC 1521 MIME (Multipurpose Internet Mail Extensions) 
 	// Part One. Rules #3, #4, and #5 of the quoted-printable spec are not implemented yet
 	private static String decodeRfc1521(final String decodeText) {
-		QuotedPrintableCodec codec = new QuotedPrintableCodec();
+		final QuotedPrintableCodec codec = new QuotedPrintableCodec();
 		try {
 			return codec.decode(decodeText);
 		} catch (DecoderException e) {
@@ -227,7 +219,7 @@ public class EncoderHashCore {
 
 	// Decode www-form-url
 	private static String decodeUrlCodec(final String decodeText) {
-		URLCodec codec = new URLCodec();
+		final URLCodec codec = new URLCodec();
 		try {
 			return codec.decode(decodeText, "UTF-8");
 		} catch (DecoderException e) {
@@ -291,7 +283,7 @@ public class EncoderHashCore {
 		}
 	}
 	
-	public static String encode(final String encodeText, final String type) {
+	protected static String encode(final String encodeText, final String type) {
 		if (type.equalsIgnoreCase("URL US-ASCII"))
 			return encodeUrlUsAscii(encodeText);
 		else if (type.equalsIgnoreCase("URL ISO-8859-1"))
@@ -403,10 +395,10 @@ public class EncoderHashCore {
 	// Encode MD5 Hash
 	private static String encodeMd5Hash(final String encodeText) {
 		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+			MessageDigest md5 = MessageDigest.getInstance("MD5");
+			md5.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
 			byte[] hash = new byte[32];
-			hash = md.digest();
+			hash = md5.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: MD5 could not be found...";
@@ -418,7 +410,7 @@ public class EncoderHashCore {
 	// Encode RFC 1521 MIME (Multipurpose Internet Mail Extensions) 
 	// Part One. Rules #3, #4, and #5 of the quoted-printable spec are not implemented yet
 	private static String encodeRfc1521(final String encodeText) {
-		QuotedPrintableCodec codec = new QuotedPrintableCodec();
+		final QuotedPrintableCodec codec = new QuotedPrintableCodec();
 		try {
 			return codec.encode(encodeText);
 		} catch (EncoderException e) {
@@ -429,10 +421,10 @@ public class EncoderHashCore {
 	// Encode SHA-1 Hash
 	private static String encodeSha1Hash(final String encodeText) {
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-1");
-			md.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+			MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+			sha1.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
 			byte[] hash = new byte[40];
-			hash = md.digest();
+			hash = sha1.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-1 could not be found...";
@@ -444,10 +436,10 @@ public class EncoderHashCore {
 	// Encode SHA-256 Hash
 	private static String encodeSha256Hash(final String encodeText) {
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			md.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+			MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+			sha256.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
 			byte[] hash = new byte[64];
-			hash = md.digest();
+			hash = sha256.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-256 could not be found...";
@@ -459,10 +451,10 @@ public class EncoderHashCore {
 	// Encode SHA-384 Hash
 	private static String encodeSha384Hash(final String encodeText) {
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-384");
-			md.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+			MessageDigest sha384 = MessageDigest.getInstance("SHA-384");
+			sha384.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
 			byte[] hash = new byte[96];
-			hash = md.digest();
+			hash = sha384.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-384 could not be found...";
@@ -474,10 +466,10 @@ public class EncoderHashCore {
 	// Encode SHA-512 Hash
 	private static String encodeSha512Hash(final String encodeText) {
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-512");
-			md.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+			MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
+			sha512.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
 			byte[] hash = new byte[128];
-			hash = md.digest();
+			hash = sha512.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-512 could not be found...";

@@ -152,10 +152,11 @@ public class FuzzersTableModel extends AbstractTableModel {
 		}
 	}
 
-	public int getStart(final int row) {
-		final FuzzerRow rec_ = dataVector.get(row);
-		return Integer.valueOf(rec_.getStartPoint());
-	}
+// TODO UCdetector: Remove unused code: 
+// 	public int getStart(final int row) {
+// 		final FuzzerRow rec_ = dataVector.get(row);
+// 		return Integer.valueOf(rec_.getStartPoint());
+// 	}
 
 	/**
 	 * <p>A cell is always editable within the fuzzers table.</p>

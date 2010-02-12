@@ -45,11 +45,11 @@ import java.net.URL;
  * @version 2.0
  * @since 0.1
  */
-public class Connection implements AbstractConnection {
+class Connection implements AbstractConnection {
 	
-	AbstractConnection mainConnection;
+	private transient AbstractConnection mainConnection;
 	
-	public Connection(final String urlString, final String message)
+	protected Connection(final String urlString, final String message)
 	throws ConnectionException {
 		
 		URL url;
@@ -59,8 +59,8 @@ public class Connection implements AbstractConnection {
 			throw new ConnectionException("Malformed URL : " + e1.getMessage() + "\n");
 		}
 
-		String protocol = url.getProtocol();
-		String host = url.getHost();
+		final String protocol = url.getProtocol();
+		final String host = url.getHost();
 		int port = url.getPort();
 
 		// Allow only HTTP/S as protocols
@@ -108,13 +108,9 @@ public class Connection implements AbstractConnection {
 		
 	}
 
-	public final boolean protocolIsHTTP11(String message) {
+	public final boolean protocolIsHTTP11(final String message) {
 
-		if(message.contains("HTTP/1.1")) {
-			return true;
-		}
-		
-		return false;
+		return message.contains("HTTP/1.1");
 		
 	}
 

@@ -22,7 +22,7 @@ public class JMenuHelp extends JMenu {
 
 	private static final long serialVersionUID = 364420126164053633L;
 
-	public JMenuHelp(final JBroFuzzMenuBar mainMenuBar) {
+	protected JMenuHelp(final JBroFuzzMenuBar mainMenuBar) {
 		
 		super("Help");
 		

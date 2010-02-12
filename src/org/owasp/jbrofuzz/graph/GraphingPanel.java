@@ -191,13 +191,13 @@ public class GraphingPanel extends AbstractPanel {
 	public void remove() {
 	}
 
-	public void setProgressBarStart() {
+	protected void setProgressBarStart() {
 
 		progressBar.setIndeterminate(true);
 
 	}
 
-	public void setProgressBarStop() {
+	protected void setProgressBarStop() {
 
 		progressBar.setIndeterminate(false);
 
@@ -252,7 +252,7 @@ public class GraphingPanel extends AbstractPanel {
 	 * 
 	 * @param input
 	 */
-	public void toConsole(final String input) {
+	protected void toConsole(final String input) {
 
 		// Use a FILO for the output to the console, never exceeding 500 lines
 		if (console.getLineCount() > 500) {

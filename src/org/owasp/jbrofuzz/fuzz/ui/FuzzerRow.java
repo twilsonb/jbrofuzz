@@ -35,10 +35,10 @@ package org.owasp.jbrofuzz.fuzz.ui;
  * Fuzzing panel.</p>
  * 
  * @author subere@uncon.org
- * @version 1.9
+ * @version 2.0
  * @since 1.8
  */
-public class FuzzerRow {
+class FuzzerRow {
 
 	// The fuzzer name, e.g. LDAP Injection
 	private String name;
@@ -58,34 +58,13 @@ public class FuzzerRow {
 	 * @param start The fuzzer start point
 	 * @param end The fuzzer end point
 	 */
-	public FuzzerRow(String id, String encoding, int start, int end) {
+	protected FuzzerRow(String id, String encoding, int start, int end) {
 
 		this.id = id;
 		this.encoding = encoding;
 		this.start = start;
 		this.end = end;
 
-	}
-
-	/**
-	 * <p> The constructor for less complicated fuzzers that only have
-	 * a single start and end point.</p>
-	 * 
-	 * <p>This constructor should be used for Recursive and Recursive 
-	 * Fuzzers.</p>
-	 * 
-	 * @param name The fuzzer name e.g. LDAP Injection
-	 * @param type The fuzzer type e.g. Replacive, Recursive, Double Fuzzer
-	 * @param id  The fuzzer id e.g. LDP-INJ
-	 * @param start The fuzzer start point
-	 * @param point2 The fuzzer end point
-	 */
-	public FuzzerRow(String id, int start, int end) {
-
-		this.id = id;
-		this.encoding = FuzzerTable.ENCODINGS[0];
-		this.start = start;
-		this.end = end;
 	}
 
 	/**

@@ -32,13 +32,10 @@ package org.owasp.jbrofuzz.fuzz;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
-import java.net.URL;
-import java.net.URLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -48,7 +45,6 @@ import javax.net.ssl.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -60,10 +56,10 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.9
+ * @version 2.0
  * @since 0.1
  */
-public class SocketConnection implements AbstractConnection {
+class SocketConnection implements AbstractConnection {
 
 	// The maximum size for the socket I/O
 	// private final static int SEND_BUF_SIZE = 256 * 1024;
@@ -93,9 +89,9 @@ public class SocketConnection implements AbstractConnection {
 	private static final SSLSocketFactory getSocketFactory() throws ConnectionException {
 
 		try {
-			TrustManager[] tm = new TrustManager[] { new FullyTrustingManager() };
-			SSLContext context = SSLContext.getInstance("SSL");
-			context.init(new KeyManager[0], tm, new SecureRandom());
+			final TrustManager[] tManager = new TrustManager[] { new FullyTrustingManager() };
+			final SSLContext context = SSLContext.getInstance("SSL");
+			context.init(new KeyManager[0], tManager, new SecureRandom());
 
 			return context.getSocketFactory();
 
@@ -107,21 +103,15 @@ public class SocketConnection implements AbstractConnection {
 
 	}
 
-	private String message;
-	private Socket mSocket;
-	private URLConnection httpConn;
-	private String reply;	
-	private URL url = null;
-	private int port;
+	private final transient String message;
+	private transient Socket mSocket;
+	private transient String reply;	
+	private transient int port;
 
-	private String host, protocol;
-	private InputStream inStream;
-	private OutputStream outStream;
+	private transient InputStream inStream;
+	private transient OutputStream outStream;
 
-	private SocketTimer timer;
 	private int socketTimeout;
-	
-	private boolean timeoutElapsed;
 
 	/**
 	 * <p>
@@ -142,15 +132,14 @@ public class SocketConnection implements AbstractConnection {
 	 * @throws ConnectionException
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.5
+	 * @version 2.0
 	 * @since 0.1
 	 */
-	public SocketConnection(final String protocol, final String host, final int port, final String message)
+	protected SocketConnection(final String protocol, final String host, final int port, final String message)
 	throws ConnectionException {
 
 		this.message = message;
-		this.timeoutElapsed = false;
-		
+
 		final byte[] recv = new byte[SocketConnection.RECV_BUF_SIZE];
 
 		try {
@@ -190,11 +179,11 @@ public class SocketConnection implements AbstractConnection {
 				socketTimeout = 7;
 			}
 			// Start timer
-			timer = new SocketTimer(this, socketTimeout * 1000);
+			final SocketTimer timer = new SocketTimer(this, socketTimeout * 1000);
 			timer.start();
 
 			// Read response, see what you have back
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			int got;
 			while ((got = inStream.read(recv)) > -1) {
 				baos.write(recv, 0, got);
@@ -211,24 +200,15 @@ public class SocketConnection implements AbstractConnection {
 			mSocket.close();
 
 			reply = new String(baos.toByteArray());
-			
+
 		} catch (MalformedURLException e1) {
 
 			reply = "Malformed URL: " + e1.getMessage() + "\n";
 			throw new ConnectionException(reply);
 
-		} catch (InterruptedIOException e2) {
-
-			reply = "Connection Timeout after: " + socketTimeout + " ms\n";
-			throw new ConnectionException(reply);
-
 		} catch (IOException e3) {
 
-			if(timeoutElapsed) {
-				reply = "Timeout Connection after: " + socketTimeout + " ms\n";
-			} else {
-				reply = "An IO Error occured: " + e3.getMessage() + "\n";
-			}
+			reply = "An IO Error occured: " + e3.getMessage() + ". This could also be a Connection Timeout, try increasing the value under Preferences -> Fuzzing\n";
 			throw new ConnectionException(reply);
 
 		} finally {
@@ -259,7 +239,7 @@ public class SocketConnection implements AbstractConnection {
 		if (port == -1) {
 			return "[JBROFUZZ PORT IS INVALID]";
 		} else {
-			return "" + port;
+			return Integer.toString(port);
 		}
 
 	}
@@ -282,28 +262,29 @@ public class SocketConnection implements AbstractConnection {
 	 */
 	public String getStatus() {
 
+		char[] code = {'0', '0', '0'};
+
 		try {
 			final String out = reply.split(" ")[1].substring(0, 3);
 
 			if (StringUtils.isNumeric(out)) {
-				return out;
-			} else {
-				return "000";
-			}
+				code = out.toCharArray();
+			} 
 
 		} catch (Exception exception1) {
 
-			return "---";
+			code[0] = '-';
+			code[1] = '-';
+			code[2] = '-';
 
 		}
-		// else we have received a 100 continue
-
+		return code.toString();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.owasp.jbrofuzz.fuzz.AbstractConnection#protocolIsHTTP11(java.lang.String)
 	 */
-	public final boolean protocolIsHTTP11(String message) {
+	public final boolean protocolIsHTTP11(final String message) {
 
 		return false;
 	}
@@ -335,13 +316,11 @@ public class SocketConnection implements AbstractConnection {
 	}
 
 
-	public void close() {
+	protected void close() {
 
 		IOUtils.closeQuietly(inStream);
 		IOUtils.closeQuietly(outStream);
-		
-		timeoutElapsed = true;
-		
+
 	}
 
 }

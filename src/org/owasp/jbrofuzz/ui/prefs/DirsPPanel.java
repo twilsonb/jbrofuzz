@@ -51,11 +51,11 @@ import javax.swing.SwingUtilities;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
-public class DirsPPanel extends AbstractPrefsPanel {
+class DirsPPanel extends AbstractPrefsPanel {
 
 	private static final long serialVersionUID = -7358976067347647005L;
 
-	public DirsPPanel(final PrefDialog dialog) {
+	protected DirsPPanel(final PrefDialog dialog) {
 		super("Directory Locations");
 		
 		// Directory Locations... Directory Save Browse
@@ -64,7 +64,8 @@ public class DirsPPanel extends AbstractPrefsPanel {
 
 		final JPanel dirPanel = new JPanel();
 		dirPanel.setLayout(new BoxLayout(dirPanel, BoxLayout.LINE_AXIS));
-
+		// A very important line when it comes to BoxLayout
+		dirPanel.setAlignmentX(0.0f);
 		dirPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Fuzzing Directory (where data is saved) "), BorderFactory.createEmptyBorder(
 						1, 1, 1, 1)));

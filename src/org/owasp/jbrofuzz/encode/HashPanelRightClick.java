@@ -42,7 +42,7 @@ import javax.swing.text.JTextComponent;
 
 import org.owasp.jbrofuzz.util.ImageCreator;
 
-public final class HashPanelRightClick {
+final class HashPanelRightClick {
 
 	/**
 	 * <p>

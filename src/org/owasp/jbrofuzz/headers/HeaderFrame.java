@@ -58,6 +58,7 @@ import javax.swing.tree.TreePath;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.graph.FileSystemTreeModel;
 import org.owasp.jbrofuzz.graph.FileSystemTreeNode;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
@@ -89,7 +90,7 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener, KeyLis
 
 	private static boolean windowIsShowing = false;
 
-	public HeaderFrame() {
+	public HeaderFrame(final JBroFuzzWindow parent) {
 
 		if (windowIsShowing) {
 			return;
@@ -278,6 +279,12 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener, KeyLis
 
 		HeaderFrame.this.setSize(ySize, xSize);
 
+		// Where to show headers frame
+		HeaderFrame.this.setLocation(
+				parent.getLocation().x + (parent.getWidth() - xSize) / 2, 
+				parent.getLocation().y + (parent.getHeight() - ySize) / 2
+		);
+		
 		setResizable(true);
 		setVisible(true);
 

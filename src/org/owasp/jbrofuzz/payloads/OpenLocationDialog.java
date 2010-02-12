@@ -89,9 +89,9 @@ KeyListener {
 	// The frame that the sniffing panel is attached
 	private JBroFuzzWindow m;
 
-	final JPopupMenu popmenu;
+	private final JPopupMenu popmenu;
 
-	JComboBox urlBox, methodBox, charsetBox, versionBox;
+	private JComboBox urlBox, methodBox, charsetBox, versionBox;
 
 	/**
 	 * <p>

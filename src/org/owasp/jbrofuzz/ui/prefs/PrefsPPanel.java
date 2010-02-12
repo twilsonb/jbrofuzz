@@ -39,7 +39,7 @@ import javax.swing.JCheckBox;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
-public class PrefsPPanel extends AbstractPrefsPanel {
+class PrefsPPanel extends AbstractPrefsPanel {
 
 	private static final long serialVersionUID = -8670706526863295929L;
 

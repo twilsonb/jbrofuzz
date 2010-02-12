@@ -459,7 +459,7 @@ public class JBroFuzzWindow extends JFrame {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public boolean isTabOpen(String name) {
+	private boolean isTabOpen(String name) {
 
 		for (int i = 0; i < tp.getTabCount(); i++) {
 

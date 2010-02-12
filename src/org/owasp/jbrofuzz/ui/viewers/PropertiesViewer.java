@@ -102,7 +102,7 @@ public class PropertiesViewer extends JFrame {
 		listTextArea.setLineWrap(true);
 
 		// Right click: Cut, Copy, Paste, Select All
-		parent.popupText(listTextArea, false, true, false, true);
+		AbstractPanel.popupText(listTextArea, false, true, false, true);
 
 		// Define the Scroll Area for the Text
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
@@ -135,7 +135,8 @@ public class PropertiesViewer extends JFrame {
 			}
 		});
 
-		final class Starter extends SwingWorker<String, Object> {
+// TODO from UCDetector: Local class "PropertiesViewer$Starter" has 0 references
+		final class Starter extends SwingWorker<String, Object> { // NO_UCD
 
 			@Override
 			public String doInBackground() {

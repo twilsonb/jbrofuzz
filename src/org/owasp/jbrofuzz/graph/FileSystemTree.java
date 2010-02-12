@@ -48,13 +48,13 @@ import org.owasp.jbrofuzz.util.ImageCreator;
 
 import com.Ostermiller.util.Browser;
 
-public class FileSystemTree extends JTree implements MouseListener {
+class FileSystemTree extends JTree implements MouseListener {
 
 	private static final long serialVersionUID = -4289004118182074303L;
 
-	final JPopupMenu popmenu;
+	private final JPopupMenu popmenu;
 
-	public FileSystemTree(final GraphingPanel graphingPanel,
+	protected FileSystemTree(final GraphingPanel graphingPanel,
 			FileSystemTreeModel fileSystemTreeModel) {
 
 		super(fileSystemTreeModel);

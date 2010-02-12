@@ -57,7 +57,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * @version 2.0
  * @since 2.0
  */
-public class ProxyPPanel extends AbstractPrefsPanel {
+class ProxyPPanel extends AbstractPrefsPanel {
 
 	private static final long serialVersionUID = 7858434511884269098L;
 
@@ -65,8 +65,8 @@ public class ProxyPPanel extends AbstractPrefsPanel {
 	
 	private final JCheckBox enProxyCheckBox;
 	
-	public static final int MIN_PORT = 1;  /* min network port */
-	public static final int MAX_PORT = 65535; /* max network port */
+	private static final int MIN_PORT = 1;  /* min network port */
+	private static final int MAX_PORT = 65535; /* max network port */
 	private int port;
 	private boolean validProxy = true;
 	
