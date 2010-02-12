@@ -56,11 +56,11 @@ public class ResponseHeaderSizeChart {
 	 * In this case, 1 Mb.
 	 * </p>
 	 */
-	public static final int MAX_CHARS = 1048576;
+	private static final int MAX_CHARS = 1048576;
 	// The x-axis filenames
-	String[] xData;
+	private String[] xData;
 	// The y-axis data
-	int[] yData;
+	private int[] yData;
 
 	private DefaultCategoryDataset dataset;
 

@@ -29,7 +29,7 @@
  */
 package org.owasp.jbrofuzz.headers;
 
-public class Header {
+class Header {
 
 	private static int headerCounter = 0;
 	
@@ -43,7 +43,7 @@ public class Header {
 	 * @param headerValue
 	 * @param comment
 	 */
-	public Header(final int noOfFields, 
+	protected Header(final int noOfFields, 
 			final String headerValue, final String comment) {
 		
 		this.headerId = headerCounter;
@@ -92,13 +92,14 @@ public class Header {
 		return noOfFields;
 	}
 
-	/**
-	 * @param comment
-	 *            the comment to set
-	 */
-	protected void setComment(final String comment) {
-		this.comment = comment;
-	}
+// TODO UCdetector: Remove unused code: 
+// 	/**
+// 	 * @param comment
+// 	 *            the comment to set
+// 	 */
+// 	protected void setComment(final String comment) {
+// 		this.comment = comment;
+// 	}
 
 	/**
 	 * @param headerValue
@@ -124,5 +125,5 @@ public class Header {
 		this.noOfFields = noOfFields;
 	}
 
-	public static final Header ZERO = new Header(0, "", "");
+	protected static final Header ZERO = new Header(0, "", "");
 }

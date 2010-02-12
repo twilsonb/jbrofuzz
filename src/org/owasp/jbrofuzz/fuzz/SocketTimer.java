@@ -48,19 +48,19 @@ package org.owasp.jbrofuzz.fuzz;
  * @version 2.0
  * @since 2.0
  */
-public class SocketTimer extends Thread {
+class SocketTimer extends Thread {
 
 	// Rate at which timer is checked
-	private final int m_rate = Byte.MAX_VALUE;
+	private transient final int m_rate = Byte.MAX_VALUE;
 	
 	// Length of the Timer timeout in milliseconds
-	private final int m_length;
+	private transient final int m_length;
 
 	// The time that has elapsed on the counter thread
-	private int tElapsed;
+	private transient int tElapsed;
 
 	// The Socket attached to this timer
-	private final SocketConnection sConnection;
+	private transient final SocketConnection sConnection;
 	
 	/**
 	 * <p>Create a Timer of specified length, specified as a
@@ -69,7 +69,7 @@ public class SocketTimer extends Thread {
 	 * @param sConnection the socket connection
 	 * @param timeInMS Length of time (in ms) before timeout
 	 */
-	public SocketTimer(final SocketConnection sConnection, final int timeInMS) {
+	protected SocketTimer(final SocketConnection sConnection, final int timeInMS) {
 		
 		super();
 		this.sConnection = sConnection;
@@ -87,7 +87,7 @@ public class SocketTimer extends Thread {
 	 * @version 2.0
 	 * @since 2.0
 	 */
-	public void reset() {
+	protected void reset() {
 		synchronized(this) {
 			tElapsed = 0;
 		}

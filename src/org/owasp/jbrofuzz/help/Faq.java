@@ -187,8 +187,11 @@ public class Faq extends JFrame implements TreeSelectionListener {
 
 		// Global frame issues
 		splitPane.setDividerLocation(150);
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
+		// Where to show the FAQ frame
+		this.setLocation(
+				parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
+				parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
+		);
 
 		this.setSize(Faq.SIZE_X, Faq.SIZE_Y);
 		setMinimumSize(new Dimension(SIZE_X / 2, SIZE_Y / 2));

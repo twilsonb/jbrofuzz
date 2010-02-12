@@ -480,9 +480,11 @@ public class EncoderHashFrame extends JFrame {
 		getContentPane().add(horizontalSplitPane, BorderLayout.CENTER);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
-		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
+		// Where to show the encoder/hash frame
+		this.setLocation(
+				parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
+				parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
+		);
 
 		this.setSize(EncoderHashFrame.SIZE_X, EncoderHashFrame.SIZE_Y);
 		setMinimumSize(new Dimension(SIZE_X / 2, SIZE_Y / 2));
@@ -534,7 +536,7 @@ public class EncoderHashFrame extends JFrame {
 	 * @version 1.6
 	 * @since 1.5
 	 */
-	public void calculate(boolean isToEncode) {
+	private void calculate(boolean isToEncode) {
 
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 		.getLastSelectedPathComponent();

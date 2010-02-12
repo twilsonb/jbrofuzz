@@ -53,7 +53,7 @@ import org.apache.http.params.HttpProtocolParams;
  * @version 2.0
  * @since 2.0
  */
-public class HTTPConnection implements AbstractConnection {
+class HTTPConnection implements AbstractConnection {
 
 	private final String protocol;
 	private final String host;
@@ -84,7 +84,7 @@ public class HTTPConnection implements AbstractConnection {
 	 * @version 2.0
 	 * @since 2.0
 	 */
-	public HTTPConnection(final String protocol, final String host, final int port, final String message) 
+	protected HTTPConnection(final String protocol, final String host, final int port, final String message) 
 	throws ConnectionException {
 		// Object construction
 		this.protocol = protocol;
@@ -155,7 +155,7 @@ public class HTTPConnection implements AbstractConnection {
 		if (port == -1) {
 			return "[JBROFUZZ PORT IS INVALID]";
 		} else {
-			return "" + port;
+			return Integer.toString(port);
 		}
 
 	}
@@ -177,13 +177,13 @@ public class HTTPConnection implements AbstractConnection {
 	 * @see org.owasp.jbrofuzz.fuzz.AbstractConnection#getStatus()
 	 */
 	public String getStatus() {
-		return "" + statusCode;
+		return Integer.toString(statusCode);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.owasp.jbrofuzz.fuzz.AbstractConnection#protocolIsHTTP11(java.lang.String)
 	 */
-	public final boolean protocolIsHTTP11(String message) {
+	public final boolean protocolIsHTTP11(final String message) {
 
 		return true;
 	}

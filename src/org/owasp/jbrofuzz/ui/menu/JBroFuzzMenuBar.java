@@ -830,9 +830,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new CheckForUpdates((AbstractPanel) getFrame().getTp()
-								.getComponent(
-										getFrame().getTp().getSelectedIndex()));
+						new CheckForUpdates(JBroFuzzMenuBar.this.getFrame());
 					}
 				});
 
@@ -872,7 +870,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new HeaderFrame();
+						new HeaderFrame(JBroFuzzMenuBar.this.getFrame());
 					}
 				});
 			}

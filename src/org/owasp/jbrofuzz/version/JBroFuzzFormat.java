@@ -52,18 +52,12 @@ import org.apache.commons.lang.StringUtils;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.9
+ * @version 2.0
  * @since 1.4
  */
 public class JBroFuzzFormat {
 
-	/**
-	 * <p>
-	 * Each version of JBroFuzz has a code name, which is defined by this public
-	 * variable.
-	 * </p>
-	 */
-	public static final String CODENAME = getCodeName(JBroFuzzFormat.VERSION);
+	
 
 	private final static String DATE_FORMAT = "DDD-yyyy-MM-dd-HH-mm-ss";
 
@@ -106,12 +100,6 @@ public class JBroFuzzFormat {
 	 * True represents yes.
 	 */
 	public static final String PR_3 = "startup.check.new-version";
-
-	/**
-	 * The preferences used for selecting the end of line character to be
-	 * appended to each line sent on the wire.
-	 */
-	public static final String PR_FUZZ_2 = "fuzz.end.of.line";
 
 	/**
 	 * The preferences used for keeping the "On The Wire" tab always selected.
@@ -189,7 +177,7 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "1.9";
+	public static final String VERSION = "2.0";
 
 	/**
 	 * <p>
@@ -197,7 +185,7 @@ public class JBroFuzzFormat {
 	 * released.
 	 * </p>
 	 */
-	public static final String YEAR = "2010";
+	private static final String YEAR = "2010";
 
 	/**
 	 * The web site used via means of the selecting "JBroFuzz Website on the
@@ -221,11 +209,20 @@ public class JBroFuzzFormat {
 		+ "<B>A stateless network protocol fuzzer <BR>"
 		+ "for web applications." + "</B><BR></HTML>";
 
+	/**
+	 * <p>The text displayed under the code tab, in the
+	 * about box.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @sinse 1.8
+	 */
 	public static final String DEVELOPMENT_TEAM =
 		
 		"<HTML><B>Development of JBroFuzz:</B><BR><BR>"
 		+ "Yiannis Pavlosoglou<BR>"
 		+ "Nathan Sportsman<BR>"
+		+ "Yiannis Marangos<BR>"
 
 		+ "<BR></HTML>";
 

@@ -19,11 +19,11 @@ import org.owasp.jbrofuzz.util.ImageCreator;
 
 public class HammingDistanceChart {
 
-	public static final int MAX_CHARS = 1048576;
+	private static final int MAX_CHARS = 1048576;
 	// The x-axis filenames
-	String[] xData;
+	private String[] xData;
 	// The y-axis data
-	double[] yData;
+	private double[] yData;
 	// The data to be displayed
 	private DefaultCategoryDataset dataset;
 

@@ -66,11 +66,7 @@ import org.owasp.jbrofuzz.util.ImageCreator;
  */
 public class Topics extends JFrame implements TreeSelectionListener {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1726771399839929062L;
-
+	private static final long serialVersionUID = -7418512227087099730L;
 	// Dimensions of the about box
 	private static final int SIZE_X = 650;
 	private static final int SIZE_Y = 400;
@@ -249,9 +245,13 @@ public class Topics extends JFrame implements TreeSelectionListener {
 
 		// Global frame issues
 		splitPane.setDividerLocation(150);
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
-
+		
+		// Where to show the topics frame
+		this.setLocation(
+				parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
+				parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
+		);
+		
 		this.setSize(Topics.SIZE_X, Topics.SIZE_Y);
 		setMinimumSize(new Dimension(SIZE_X / 2, SIZE_Y / 2));
 

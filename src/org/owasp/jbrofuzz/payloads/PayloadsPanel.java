@@ -79,8 +79,9 @@ public class PayloadsPanel extends AbstractPanel {
 	categoriesTableModel;
 
 	// The row sorters for the two tables
-	protected TableRowSorter<SingleColumnModel> sorter, sorter2;
-
+	private TableRowSorter<SingleColumnModel> sorter;
+	protected TableRowSorter<SingleColumnModel> sorter2;
+	
 	protected final NonWrappingTextPane payloadInfoTextArea,
 	fuzzerInfoTextArea;
 
@@ -239,7 +240,7 @@ public class PayloadsPanel extends AbstractPanel {
 		fuzzerInfoTextArea.setForeground(Color.BLACK);
 
 		// Right click: Cut, Copy, Paste, Select All
-		popupText(fuzzerInfoTextArea, false, true, false, true);
+		AbstractPanel.popupText(fuzzerInfoTextArea, false, true, false, true);
 
 		final JScrollPane viewTextScrollPane = new JScrollPane(
 				fuzzerInfoTextArea);
@@ -320,79 +321,6 @@ public class PayloadsPanel extends AbstractPanel {
 
 	}
 
-	/**
-	 * <p>
-	 * Method for setting up the right click copy, select all and properties
-	 * menu.
-	 * </p>
-	 * 
-	 * @param area
-	 *            JTextArea
-	 */
-	/*
-	 * protected void popup(final JTable area) {
-	 * 
-	 * final JPopupMenu popmenu = new JPopupMenu(); /* final JMenuItem i1 = new
-	 * JMenuItem() final JMenuItem i2 = new JMenuItem("Copy"); final JMenuItem
-	 * i4 = new JMenuItem("Select All"); final JMenuItem i5 = new
-	 * JMenuItem("Properties");
-	 * 
-	 * i2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-	 * ActionEvent.CTRL_MASK));
-	 * i4.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-	 * ActionEvent.CTRL_MASK));
-	 * 
-	 * popmenu.add(i2); popmenu.add(i4); popmenu.addSeparator();
-	 * popmenu.add(i5);
-	 */
-	/*
-	 * final JMenuItem i1 = new JMenuItem("Cut"); final JMenuItem i2 = new
-	 * JMenuItem("Copy"); final JMenuItem i3 = new JMenuItem("Paste"); final
-	 * JMenuItem i4 = new JMenuItem("Select All");
-	 * 
-	 * i1.setEnabled(false); i2.setEnabled(true); i3.setEnabled(false);
-	 * i4.setEnabled(false);
-	 * 
-	 * popmenu.add(i1); popmenu.add(i2); popmenu.add(i3); popmenu.add(i4);
-	 * 
-	 * i2.addActionListener(new ActionListener() { public void
-	 * actionPerformed(final ActionEvent e) { // Copy final StringBuffer
-	 * selectionBuffer = new StringBuffer(); final int[] selection =
-	 * area.getSelectedRows(); for (final int element : selection) {
-	 * selectionBuffer.append(area.getModel().getValueAt(element, 0));
-	 * selectionBuffer.append("\n"); } final JTextArea myTempArea = new
-	 * JTextArea(); myTempArea.setText(selectionBuffer.toString());
-	 * myTempArea.selectAll(); myTempArea.copy();
-	 * area.removeRowSelectionInterval(0, area.getRowCount() - 1); } });
-	 * 
-	 * i4.addActionListener(new ActionListener() { public void
-	 * actionPerformed(final ActionEvent e) { // Select All area.selectAll(); }
-	 * });
-	 */
-	/*
-	 * i5.addActionListener(new ActionListener() { public void
-	 * actionPerformed(final ActionEvent e) { // Properties final String
-	 * tableName = area.getName(); if(tableName.equalsIgnoreCase("Name")) {
-	 * final String exploit = (String)
-	 * area.getModel().getValueAt(area.getSelectedRow(), 0); new
-	 * ExploitViewer(getFrame(), exploit, ExploitViewer.VIEW_EXPLOIT); }
-	 * if(tableName.equalsIgnoreCase("Category")) { final String exploit =
-	 * (String) area.getModel().getValueAt(area.getSelectedRow(), 0); new
-	 * ExploitViewer(getFrame(), exploit, ExploitViewer.VIEW_CATEGORY); } } });
-	 */
-	/*
-	 * area.addMouseListener(new MouseAdapter() { private void
-	 * checkForTriggerEvent(final MouseEvent e) { if (e.isPopupTrigger()) {
-	 * area.requestFocus(); popmenu.show(e.getComponent(), e.getX(), e.getY());
-	 * } }
-	 * 
-	 * @Override public void mousePressed(final MouseEvent e) {
-	 * checkForTriggerEvent(e); }
-	 * 
-	 * @Override public void mouseReleased(final MouseEvent e) {
-	 * checkForTriggerEvent(e); } }); }
-	 */
-
 	@Override
 	public void add() {
 	}
@@ -436,7 +364,7 @@ public class PayloadsPanel extends AbstractPanel {
 	 * @param fuzzer
 	 * @param category
 	 */
-	public void setFuzzerDisplayed(final String fuzzer, final String category) {
+	protected void setFuzzerDisplayed(final String fuzzer, final String category) {
 
 		int c = 0;
 		final String[] allRows = categoriesTableModel.getAllRows();
@@ -477,7 +405,7 @@ public class PayloadsPanel extends AbstractPanel {
 	 * @version 1.3
 	 * @since 1.0
 	 */
-	public void setPayloadDisplayed(final String payload, final String fuzzer,
+	protected void setPayloadDisplayed(final String payload, final String fuzzer,
 			final String category) {
 
 		int c = 0;

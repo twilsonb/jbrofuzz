@@ -81,7 +81,7 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 	
 	private final JBroFuzzWindow parent;
 	
-	private final JButton apply;
+	private final JButton applyBut;
 	
 	/**
 	 * <p>
@@ -149,25 +149,25 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 		tree.setSelectionRow(3);
 
 		// Bottom three buttons
-		JButton ok, cancel;
+		JButton okBut, cancelBut;
 		
-		ok = new JButton("  OK  ");
-		cancel = new JButton("Cancel");
-		apply = new JButton(" Apply ");
+		okBut = new JButton("  OK  ");
+		cancelBut = new JButton("Cancel");
+		applyBut = new JButton(" Apply ");
 		
-		ok.setEnabled(true);
-		cancel.setEnabled(true);
-		apply.setEnabled(false);
+		okBut.setEnabled(true);
+		cancelBut.setEnabled(true);
+		applyBut.setEnabled(false);
 		
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
 				15, 15));
-		buttonPanel.add(ok);
-		buttonPanel.add(cancel);
-		buttonPanel.add(apply);
+		buttonPanel.add(okBut);
+		buttonPanel.add(cancelBut);
+		buttonPanel.add(applyBut);
 
 		// Action Listeners for all three buttons
 
-		ok.addActionListener(new ActionListener() {
+		okBut.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent okEvent) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -182,7 +182,7 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 			}
 		});
 
-		cancel.addActionListener(new ActionListener() {
+		cancelBut.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent cancelEvent) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -194,7 +194,7 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 			}
 		});
 
-		apply.addActionListener(new ActionListener() {
+		applyBut.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent applyEvent) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
@@ -202,7 +202,7 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 						for(AbstractPrefsPanel p : panels) {
 							p.apply();
 						}
-						apply.setEnabled(false);
+						applyBut.setEnabled(false);
 
 					}
 				});
@@ -227,8 +227,12 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 		getContentPane().add(splitPane, BorderLayout.CENTER);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
-		// Global frame issues
-		this.setLocation(parent.getLocationOnScreen().x + 100, parent.getLocationOnScreen().y + 20);
+		// Where to show the preferences box
+		this.setLocation(
+				parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
+				parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
+		);
+		
 		this.setSize(SIZE_X, SIZE_Y);
 		setMinimumSize(new Dimension(SIZE_X, SIZE_Y));
 		setResizable(true);
@@ -253,13 +257,17 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 
 		} // for loop
 		
-		if(apply != null) {
-			apply.setEnabled(true);
+		if(applyBut != null) {
+			applyBut.setEnabled(true);
 		}
 		
 	}
 	
 	protected JBroFuzzWindow getJBroFuzzWindow() {
 		return this.parent;
+	}
+	
+	protected void setApplyEnabled(final boolean applyOn) {
+		applyBut.setEnabled(applyOn);
 	}
 }

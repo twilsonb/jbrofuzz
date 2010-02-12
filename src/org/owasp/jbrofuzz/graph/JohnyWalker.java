@@ -31,7 +31,7 @@ package org.owasp.jbrofuzz.graph;
 
 import java.io.File;
 
-public class JohnyWalker {
+class JohnyWalker {
 
 	private FileSystemTreeNode master;
 
@@ -43,7 +43,7 @@ public class JohnyWalker {
 
 	private int fileCount, dirCount;
 
-	public JohnyWalker(GraphingPanel x3) {
+	protected JohnyWalker(GraphingPanel x3) {
 
 		directory = new File(System.getProperty("user.dir") + File.separator
 				+ "jbrofuzz" + File.separator + "fuzz");
@@ -103,7 +103,7 @@ public class JohnyWalker {
 
 	}
 
-	public void run() {
+	protected void run() {
 
 		listAllFiles(directory, master);
 

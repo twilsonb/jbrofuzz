@@ -204,7 +204,7 @@ public class FuzzingPanel extends AbstractPanel {
 		urlField.setForeground(Color.BLACK);
 
 		// Right click: Cut, Copy, Paste, Select All
-		popupText(urlField, true, true, true, true);
+		AbstractPanel.popupText(urlField, true, true, true, true);
 
 		targetPanel.add(urlField);
 
@@ -308,9 +308,7 @@ public class FuzzingPanel extends AbstractPanel {
 		onTextPane.setForeground(Color.GREEN);
 
 		// Right click: Cut, Copy, Paste, Select All
-		popupText(onTextPane, false, true, false, true);
-
-		// onTheWireEvent = 0;
+		AbstractPanel.popupText(onTextPane, false, true, false, true);
 
 		final JScrollPane consoleScrollPane = new JScrollPane(onTextPane,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -517,17 +515,7 @@ public class FuzzingPanel extends AbstractPanel {
 		urlField.requestFocusInWindow();
 	}
 
-	/**
-	 * <p>Method for setting the counter value to 1
-	 * again.</p>
-	 * 
-	 * @author subere@uncon.org
-	 * @version 1.8
-	 * @since 1.8
-	 */
-	public void resetCounter() {
-		counter = 1;
-	}
+	
 
 	/**
 	 * <p>
@@ -832,8 +820,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 					final String payload = f.next();
 					final MessageCreator currentMessage = new MessageCreator(getTextRequest(), encoding, payload, start, end);
-					final MessageWriter outputMessage = new MessageWriter(
-							currentMessage, this);
+					final MessageWriter outputMessage = new MessageWriter(this);
 
 					final int co_k = outputTableModel.addNewRow(outputMessage);
 
@@ -914,7 +901,7 @@ public class FuzzingPanel extends AbstractPanel {
 		stopped = true;
 		// Start, Stop, Pause, Add, Remove
 		setOptionsAvailable(true, false, false, true, true);
-		int total = fuzzersTable.getRowCount();
+		final int total = fuzzersTable.getRowCount();
 		
 		if (total > 0) {
 			setOptionRemove(true);
@@ -954,13 +941,10 @@ public class FuzzingPanel extends AbstractPanel {
 	 *            The input string.
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.7
+	 * @version 2.0
 	 * @since 1.5
 	 */
-	public void toConsole(final String input) {
-
-		// onTheWireEvent++;
-		// topRightPanel.setTitleAt(1, " On The Wire (" + onTheWireEvent + ") ");
+	private void toConsole(final String input) {
 
 		final Document eDoc = onTextPane.getDocument();
 		final Element eElement = eDoc.getDefaultRootElement();
@@ -968,9 +952,8 @@ public class FuzzingPanel extends AbstractPanel {
 		final AttributeSet attr = eElement.getAttributes().copyAttributes();
 
 		try {
-			// Use a FILO for the output to the console, never exceeding 1000
-			// characters
-			final int totLength = eDoc.getLength() - 80 * 24;
+			// Use a FILO for the output to the console
+			final int totLength = eDoc.getLength() - Integer.MAX_VALUE;
 			if (totLength > 1) {
 				eDoc.remove(0, totLength);
 			}
@@ -978,10 +961,7 @@ public class FuzzingPanel extends AbstractPanel {
 			eDoc.insertString(eDoc.getLength(), input, attr);
 
 		} catch (BadLocationException e2) {
-			mWindow
-			.log(
-					"Fuzzing Panel: Could not clear the \"On the Wire\" console",
-					3);
+			mWindow.log("Fuzzing Panel: Could not clear the \"On the Wire\" console", 3);
 		}
 
 		onTextPane.setCaretPosition(eDoc.getLength());

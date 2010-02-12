@@ -47,16 +47,17 @@ public class FileSystemTreeNode extends DefaultMutableTreeNode {
 		nodeIsDirectory = false;
 	}
 
-	public FileSystemTreeNode(Object o, boolean isDirectory) {
-		super(o);
-		nodeIsDirectory = isDirectory;
-	}
+// TODO UCdetector: Remove unused code: 
+// 	public FileSystemTreeNode(Object o, boolean isDirectory) {
+// 		super(o);
+// 		nodeIsDirectory = isDirectory;
+// 	}
 
 	public boolean isDirectory() {
 		return nodeIsDirectory;
 	}
 
-	public void setAsDirectory() {
+	protected void setAsDirectory() {
 		nodeIsDirectory = true;
 	}
 }

@@ -154,10 +154,12 @@ public class Shortcuts extends JFrame {
 
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
-		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
-
+		// Where to show the shortcuts frame
+		this.setLocation(
+				parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
+				parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
+		);
+		
 		this.setSize(Shortcuts.SIZE_X, Shortcuts.SIZE_Y);
 		setMinimumSize(new Dimension(SIZE_X / 2, SIZE_Y / 2));
 

@@ -60,9 +60,10 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 2.0
+ * @since 1.3
  */
-public class AboutBox extends JDialog {
+class AboutBox extends JDialog {
 
 	/**
 	 * 
@@ -74,28 +75,28 @@ public class AboutBox extends JDialog {
 	 * Constant for the about tab to be displayed.
 	 * </p>
 	 */
-	public static final int ABOUT = 0;
+	protected static final int ABOUT = 0;
 
 	/**
 	 * <p>
 	 * Constant for the license tab to be displayed.
 	 * </p>
 	 */
-	public static final int LICENSE = 1;
+	private static final int LICENSE = 1;
 
 	/**
 	 * <p>
 	 * Constant for the disclaimer tab to be displayed.
 	 * </p>
 	 */
-	public static final int DISCLAIMER = 2;
+	protected static final int DISCLAIMER = 2;
 
 	/**
 	 * <p>
 	 * Constant for the acknowledgements tab to be displayed.
 	 * </p>
 	 */
-	public static final int ACKNOWLEDGEMENTS = 3;
+	private static final int ACKNOWLEDGEMENTS = 3;
 
 	// Dimensions of the about box
 	private static final int SIZE_X = 450;
@@ -113,7 +114,7 @@ public class AboutBox extends JDialog {
 	 * @param parent
 	 * @param tab
 	 */
-	public AboutBox(final JFrame parent, final int tab) {
+	protected AboutBox(final JFrame parent, final int tab) {
 
 		super(parent, " JBroFuzz - About ", true);
 
@@ -204,9 +205,13 @@ public class AboutBox extends JDialog {
 		});
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
-		// Global frame issues
-		this.setLocation(Math.abs(parent.getLocation().x + 100), Math
-				.abs(parent.getLocation().y + 100));
+		// Where to show the about box
+		this.setLocation(
+				parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
+				parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
+		);
+
+
 		this.setSize(AboutBox.SIZE_X, AboutBox.SIZE_Y);
 		setMinimumSize(new Dimension(SIZE_X, SIZE_Y));
 		setResizable(true);
@@ -229,7 +234,7 @@ public class AboutBox extends JDialog {
 			break;
 		default:
 			tabbedPane.setSelectedIndex(0);
-			break;
+		break;
 		}
 	}
 }

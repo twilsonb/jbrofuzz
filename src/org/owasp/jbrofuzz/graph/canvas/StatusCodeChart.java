@@ -49,11 +49,11 @@ import org.owasp.jbrofuzz.util.ImageCreator;
 
 public class StatusCodeChart {
 
-	public static final int MAX_CHARS = 32;
+	private static final int MAX_CHARS = 32;
 	// The x-axis filenames
-	String[] xData;
+	private String[] xData;
 	// The y-axis data
-	String[] yData;
+	private String[] yData;
 
 	private DefaultPieDataset dataset;
 

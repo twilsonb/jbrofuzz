@@ -101,7 +101,7 @@ public class SystemPanel extends AbstractPanel {
 		listTextArea.setBackground(Color.BLACK);
 
 		// Right click: Cut, Copy, Paste, Select All
-		popupText(listTextArea, false, true, false, true);
+		AbstractPanel.popupText(listTextArea, false, true, false, true);
 
 		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
 		listTextScrollPane.setVerticalScrollBarPolicy(20);

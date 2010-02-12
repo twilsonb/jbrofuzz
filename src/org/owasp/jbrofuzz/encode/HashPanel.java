@@ -39,7 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-public class HashPanel extends JPanel {
+class HashPanel extends JPanel {
 
 	private static final long serialVersionUID = -1270470006553668063L;
 

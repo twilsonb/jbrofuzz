@@ -35,27 +35,29 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * 
  * @author subere@uncon.org
  */
-public class HeaderTreeNode extends DefaultMutableTreeNode {
+class HeaderTreeNode extends DefaultMutableTreeNode {
 
 	private static final long serialVersionUID = -2215677803093884221L;
 	
 	private boolean nodeIsDirectory;
 
-	public HeaderTreeNode(final Object myObject) {
+	protected HeaderTreeNode(final Object myObject) {
 		super(myObject);
 		nodeIsDirectory = false;
 	}
 
-	public HeaderTreeNode(final Object myObject, final boolean isDirectory) {
-		super(myObject);
-		nodeIsDirectory = isDirectory;
-	}
+// TODO UCdetector: Remove unused code: 
+// 	public HeaderTreeNode(final Object myObject, final boolean isDirectory) {
+// 		super(myObject);
+// 		nodeIsDirectory = isDirectory;
+// 	}
 
 	public boolean isDirectory() {
 		return nodeIsDirectory;
 	}
 
-	public void setAsDirectory() {
-		nodeIsDirectory = true;
-	}
+// TODO UCdetector: Remove unused code: 
+// 	public void setAsDirectory() {
+// 		nodeIsDirectory = true;
+// 	}
 }

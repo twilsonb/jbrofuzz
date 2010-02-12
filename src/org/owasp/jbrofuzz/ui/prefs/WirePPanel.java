@@ -39,7 +39,7 @@ import javax.swing.JCheckBox;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
-public class WirePPanel extends AbstractPrefsPanel {
+class WirePPanel extends AbstractPrefsPanel {
 
 	private static final long serialVersionUID = 4718844109726649392L;
 
@@ -71,18 +71,18 @@ public class WirePPanel extends AbstractPrefsPanel {
 		add(Box.createRigidArea(new Dimension(0, 20)));
 
 		// Fuzzing: On The Wire... -> Display responses inside the On The Wire text area
-		final boolean displayResponseBox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
-		final JCheckBox displayResponseCheckBox = new JCheckBox(
+		final boolean dispBoolean = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
+		final JCheckBox diskRespBox = new JCheckBox(
 				" Display the Requests as well as the Responses received ",
-				displayResponseBox);
+				dispBoolean);
 
-		displayResponseCheckBox.setBorderPaintedFlat(true);
-		displayResponseCheckBox.setToolTipText(
+		diskRespBox.setBorderPaintedFlat(true);
+		diskRespBox.setToolTipText(
 		"Tick this box to display the responses received for each request sent within the \"On The Wire\" tab");
 
-		displayResponseCheckBox.addActionListener(new ActionListener() {
+		diskRespBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent disEvent) {
-				if (displayResponseCheckBox.isSelected()) {
+				if (diskRespBox.isSelected()) {
 					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_3_1, true);
 				} else {
 					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
@@ -90,7 +90,7 @@ public class WirePPanel extends AbstractPrefsPanel {
 			}
 		});
 
-		add(displayResponseCheckBox);
+		add(diskRespBox);
 		add(Box.createRigidArea(new Dimension(0, 20)));
 
 

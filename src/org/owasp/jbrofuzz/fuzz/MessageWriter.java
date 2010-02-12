@@ -31,27 +31,27 @@ package org.owasp.jbrofuzz.fuzz;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class MessageWriter {
 
 	private static final SimpleDateFormat SD_FORMAT = new SimpleDateFormat(
-	"zzz-yyyy-MM-dd-HH-mm-ss-SSS");
+	"zzz-yyyy-MM-dd-HH-mm-ss-SSS", Locale.ENGLISH);
 	
 	private static final SimpleDateFormat SH_FORMAT = new SimpleDateFormat(
-	"DDD-HH-mm-ss-SSS");
+	"DDD-HH-mm-ss-SSS", Locale.ENGLISH);
 
-	private StringBuffer message;
+	private transient final StringBuffer message;
 
-	private String filename;
-	private String textURL;
-	private final Date start;
-	private Date end;
-	private String status;
+	private transient final String filename;
+	private transient final String textURL;
+	private transient final Date start;
+	private transient Date end;
+	private transient String status;
 
-	private int replyByteLength;
+	private transient int replyByteLength;
 
-	public MessageWriter(final MessageCreator currentMessage,
-			final FuzzingPanel fuzzingPanel) {
+	protected MessageWriter(final FuzzingPanel fuzzingPanel) {
 
 		// Set the start & end time
 		start = new Date();
@@ -70,20 +70,22 @@ public class MessageWriter {
 
 	}
 
-	private void append(int n) {
+	private void append(final int input) {
 
-		message.append(n);
+		message.append(input);
 		message.append('\n');
-		message.append("--");
+		message.append('-');
+		message.append('-');
 		message.append('\n');
 
 	}
 
-	private void append(String s) {
+	private void append(final String input) {
 
-		message.append(s);
+		message.append(input);
 		message.append('\n');
-		message.append("--");
+		message.append('-');
+		message.append('-');
 		message.append('\n');
 
 	}
@@ -118,12 +120,17 @@ public class MessageWriter {
 
 	public String getStartDateFull() {
 
-		return SD_FORMAT.format(start);
+		synchronized (this){
+			return SD_FORMAT.format(start);
+		}
+		
 	}
 
 	public String getStartDateShort() {
-
-		return SH_FORMAT.format(start);
+	
+		synchronized (this){
+			return SH_FORMAT.format(start);
+		}
 
 	}
 
@@ -139,7 +146,7 @@ public class MessageWriter {
 
 	}
 
-	public void setConnection(AbstractConnection connection) {
+	public void setConnection(final AbstractConnection connection) {
 
 		// Update the reply
 		final String reply = connection.getReply();
@@ -166,10 +173,10 @@ public class MessageWriter {
 
 	}
 
-	public void setException(ConnectionException exception) {
+	public void setException(final ConnectionException conException) {
 
 		// Update the reply
-		final String reply = exception.getMessage();
+		final String reply = conException.getMessage();
 
 		// Update the end time
 		end = new Date();

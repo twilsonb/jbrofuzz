@@ -372,7 +372,7 @@ public class PayloadsDialog extends JDialog {
 		fuzzerInfoTextArea.setForeground(Color.BLACK);
 
 		// Right click: Cut, Copy, Paste, Select All
-		parent.popupText(fuzzerInfoTextArea, false, true, false, true);
+		AbstractPanel.popupText(fuzzerInfoTextArea, false, true, false, true);
 
 		fuzzerInfoTextArea.addKeyListener(new KeyAdapter() {
 			@Override

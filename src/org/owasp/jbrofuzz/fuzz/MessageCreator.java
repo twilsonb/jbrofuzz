@@ -31,12 +31,12 @@ package org.owasp.jbrofuzz.fuzz;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Locale;
 
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -47,10 +47,10 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * 
  * 
  * @author subere@uncon.org
- * @version 1.8
+ * @version 2.0
  * @since 1.3
  */
-public class MessageCreator {
+class MessageCreator {
 
 	// The message that will be placed on the wire
 	private String message;
@@ -67,21 +67,21 @@ public class MessageCreator {
 	 */
 	public final String END_LINE;
 
-	public MessageCreator(String message, String encoding, String payload, int start, int finish) {
+	protected MessageCreator(final String message, final String encoding, final String payload, final int start, final int finish) {
 
 		// Set the end of line character from the preferences
-		boolean endLineChar = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_2, false);
+		final boolean endLineChar = JBroFuzz.PREFS.getBoolean("fuzz.end.of.line", false);
 		END_LINE = endLineChar ? "\n" : "\r\n";
 
 		// Perform the necessary encoding on the payload specified
 
 		// Encoding 1: Uppercase
 		if(encoding.equals(FuzzerTable.ENCODINGS[1])) {
-			this.payload = payload.toUpperCase();
+			this.payload = payload.toUpperCase(Locale.ENGLISH);
 		} else 
 			// Encoding 2: Lowercase
 			if(encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[2])) {
-				this.payload = payload.toLowerCase();
+				this.payload = payload.toLowerCase(Locale.ENGLISH);
 			} else
 				// Encoding 3: www-form-urlencoded 
 				if(encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[3])) {
@@ -122,7 +122,7 @@ public class MessageCreator {
 
 
 		// Split the message and add in-between
-		StringBuffer messageBuffer = new StringBuffer();
+		final StringBuffer messageBuffer = new StringBuffer();
 		messageBuffer.append(message.substring(0, start));
 		messageBuffer.append(this.payload);
 		messageBuffer.append(message.substring(finish));
@@ -132,7 +132,6 @@ public class MessageCreator {
 
 		// By now we have the complete message with the payload in the right
 		// location
-
 		if ((this.message.startsWith("GET"))
 				|| (this.message.startsWith("HEAD"))) {
 
@@ -146,31 +145,31 @@ public class MessageCreator {
 
 		if (this.message.startsWith("POST")) {
 			// Find the position of "\r\n\r\n"
-			int eoh = this.message.indexOf(END_LINE + END_LINE);
+			final int eoh = this.message.indexOf(END_LINE + END_LINE);
 			// Provided an ending character sequence has been found
 			if (eoh != -1) {
 				// Find the location of the "Content-Length:"
-				int ctl = this.message.indexOf("Content-Length:");
+				final int ctl = this.message.indexOf("Content-Length:");
 				// Provided a content length character sequence exists in
 				// the request
 				if (ctl != -1) {
 
 					int contentLength = 0;
-					String postValue = this.message.substring(eoh
+					final String postValue = this.message.substring(eoh
 							+ (END_LINE + END_LINE).length());
 
 					// Find the next end of line
-					int neol = this.message.indexOf(END_LINE, ctl);
+					final int neol = this.message.indexOf(END_LINE, ctl);
 					if (neol != -1) {
 						// Retrieve the value until the next "\r\n"
 						// character
-						String contentLengthString = this.message
+						final String contLengthString = this.message
 						.substring(
 								ctl + "Content-Length:".length(),
 								neol);
 						try {
 							contentLength = Integer
-							.parseInt(contentLengthString);
+							.parseInt(contLengthString);
 						} catch (NumberFormatException e) {
 							contentLength = 0;
 						}
@@ -179,42 +178,40 @@ public class MessageCreator {
 						// postValue in bytes
 						if (contentLength != postValue.getBytes().length) {
 
-							StringBuffer newMessageBuffer = new StringBuffer();
-							newMessageBuffer.append(this.message.substring(
+							final StringBuffer newMsgBuffer = new StringBuffer();
+							newMsgBuffer.append(this.message.substring(
 									0, ctl + "Content-Length:".length()));
 							try {
 
-								newMessageBuffer
-								.append(" "
-										+ postValue
-										.getBytes("ISO-8859-1").length);
+								newMsgBuffer.append(' ');
+								newMsgBuffer.append(postValue.getBytes("ISO-8859-1").length);
 
 							} catch (UnsupportedEncodingException e) {
 
-								newMessageBuffer.append(" "
-										+ postValue.getBytes().length);
+								newMsgBuffer.append(' ');
+								newMsgBuffer.append(postValue.getBytes().length);
 
 							}
 
 							// If the remaining header starts with "\r\n"
 							// then the "Content-Length was the last header
 							// line
-							String remainingHeader = this.message
+							final String remainingHeader = this.message
 							.substring(neol, eoh
 									+ (END_LINE + END_LINE)
 									.length());
 							if (remainingHeader.startsWith(END_LINE)) {
-								newMessageBuffer
-								.append(END_LINE + END_LINE);
+								newMsgBuffer.append(END_LINE);
+								newMsgBuffer.append(END_LINE);
 							} else {
-								newMessageBuffer.append(remainingHeader);
+								newMsgBuffer.append(remainingHeader);
 							}
 
-							newMessageBuffer.append(postValue);
+							newMsgBuffer.append(postValue);
 							// System.out.println("--------" + postValue +
 							// "------");
 
-							this.message = newMessageBuffer.toString();
+							this.message = newMsgBuffer.toString();
 
 						}
 					}
@@ -268,13 +265,14 @@ public class MessageCreator {
 	 * @return The message also showing any special characters
 	 * 
 	 * @see #getMessage()
+	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 2.0
 	 * @since 1.2
 	 */
 	public String getMessageForDisplayPurposes() {
 		// END_LINE can be either a \n or a \r\n
-		if (END_LINE.equals("\n")) {
+		if ("\n".equals(END_LINE)) {
 			// \n
 			return stringReplace("\n", message, "\\n\n");
 
@@ -309,7 +307,7 @@ public class MessageCreator {
 		}
 
 		// END_LINE can be either a \n or a \r\n
-		if (END_LINE.equals("\n")) {
+		if ("\n".equals(END_LINE)) {
 			// \n
 			return stringReplace("\n", postDataString, "\\n\n");
 
