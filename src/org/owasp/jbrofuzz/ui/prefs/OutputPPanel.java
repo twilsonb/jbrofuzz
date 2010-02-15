@@ -37,7 +37,7 @@ import javax.swing.Box;
 import javax.swing.JCheckBox;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class OutputPPanel extends AbstractPrefsPanel {
 
@@ -47,7 +47,7 @@ class OutputPPanel extends AbstractPrefsPanel {
 		super("Fuzzing: Output");
 		
 		// Fuzzing: Output -> Double click opens up browser or panel
-		final boolean fuzzingResponseDoubleClickBox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
+		final boolean fuzzingResponseDoubleClickBox = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[3], true);
 		final JCheckBox fuzzingResponseDoubleClickCheckBox = new JCheckBox(
 				" Double click on a Response opens it up in a Browser ",
 				fuzzingResponseDoubleClickBox);
@@ -59,9 +59,9 @@ class OutputPPanel extends AbstractPrefsPanel {
 		fuzzingResponseDoubleClickCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (fuzzingResponseDoubleClickCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[3], true);
 				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_OUTPUT_1, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[3], false);
 				}
 			}
 		});

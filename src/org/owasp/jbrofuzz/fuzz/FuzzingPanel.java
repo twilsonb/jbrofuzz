@@ -75,6 +75,7 @@ import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 import com.Ostermiller.util.Browser;
 
@@ -215,7 +216,7 @@ public class FuzzingPanel extends AbstractPanel {
 				.createEmptyBorder(5, 5, 5, 5)));
 
 		// Get the preferences for wrapping lines of text
-		final boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
+		final boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.WRAP_REQUEST, false);
 
 		if (wrapText) {
 			requestPane = new JTextPane();
@@ -348,7 +349,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 							// Get the preferences for the double click
 							final boolean openInBrowser = JBroFuzz.PREFS.getBoolean(
-									JBroFuzzFormat.PR_FUZZ_OUTPUT_1, true);
+									JBroFuzzPrefs.FUZZING[3], true);
 
 							if(openInBrowser) {
 
@@ -415,8 +416,8 @@ public class FuzzingPanel extends AbstractPanel {
 		FuzzingPanel.this.add(mainPane, BorderLayout.CENTER);
 
 		// Display the last displayed url/request
-		this.setTextURL(JBroFuzz.PREFS.get(JBroFuzzFormat.TEXT_URL, ""));
-		this.setTextRequest(JBroFuzz.PREFS.get(JBroFuzzFormat.TEXT_REQUEST, ""));
+		this.setTextURL(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_URL, ""));
+		this.setTextRequest(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_REQUEST, ""));
 	}
 
 	/**
@@ -827,7 +828,7 @@ public class FuzzingPanel extends AbstractPanel {
 					// Put the message on the console as it goes out on the wire
 					toConsole(currentMessage.getMessageForDisplayPurposes());
 
-					final boolean showRespWire = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
+					final boolean showRespWire = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[1], false);
 
 					try {
 
@@ -918,7 +919,7 @@ public class FuzzingPanel extends AbstractPanel {
 		onTextPane.setForeground(Color.GREEN);
 
 		// Get the preference for showing the "On The Wire" tab
-		final boolean showWireTab = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
+		final boolean showWireTab = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[0], false);
 
 		if (showWireTab) {
 			topRightPanel.setSelectedIndex(1);

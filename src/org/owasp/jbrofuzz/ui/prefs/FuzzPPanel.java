@@ -41,7 +41,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class FuzzPPanel extends AbstractPrefsPanel {
 
@@ -125,7 +125,7 @@ class FuzzPPanel extends AbstractPrefsPanel {
 		// Fuzzing... -> Word wrap request text panel
 
 		final boolean wrap_req_box = JBroFuzz.PREFS.getBoolean(
-				JBroFuzzFormat.WRAP_REQUEST, false);
+				JBroFuzzPrefs.WRAP_REQUEST, false);
 		final JCheckBox wReqBox = new JCheckBox(
 				" Word wrap text in the \"Request\" area (requires restart) ",
 				wrap_req_box);
@@ -136,9 +136,9 @@ class FuzzPPanel extends AbstractPrefsPanel {
 		wReqBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent wReqEvt) {
 				if (wReqBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.WRAP_REQUEST, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.WRAP_REQUEST, true);
 				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.WRAP_REQUEST, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.WRAP_REQUEST, false);
 				}
 			}
 		});
@@ -149,7 +149,7 @@ class FuzzPPanel extends AbstractPrefsPanel {
 		// Fuzzing... -> Word wrap response text panel
 
 		final boolean wrap_res_bool = JBroFuzz.PREFS.getBoolean(
-				JBroFuzzFormat.WRAP_RESPONSE, false);
+				JBroFuzzPrefs.WRAP_RESPONSE, false);
 		final JCheckBox wRespBox = new JCheckBox(
 				" Word wrap text in the \"Response\" window (requires restart) ",
 				wrap_res_bool);
@@ -160,9 +160,9 @@ class FuzzPPanel extends AbstractPrefsPanel {
 		wRespBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent wrap_res_evt) {
 				if (wRespBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.WRAP_RESPONSE, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.WRAP_RESPONSE, true);
 				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.WRAP_RESPONSE, false);
 				}
 			}
 		});
@@ -171,7 +171,7 @@ class FuzzPPanel extends AbstractPrefsPanel {
 		add(Box.createRigidArea(new Dimension(0, 20)));
 
 		// Fuzzing ...-> "Re-send POST Data if 100 Continue is received"
-		final boolean cont_bool = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_4,
+		final boolean cont_bool = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[2],
 				true);
 		final JCheckBox cont_check_box = new JCheckBox(
 				"Re-send POST Data if 100 Continue is received", cont_bool);
@@ -182,9 +182,9 @@ class FuzzPPanel extends AbstractPrefsPanel {
 		cont_check_box.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent event5) {
 				if (cont_check_box.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_4, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[2], true);
 				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_4, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[2], false);
 				}
 			}
 		});

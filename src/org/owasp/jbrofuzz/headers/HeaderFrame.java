@@ -59,9 +59,9 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.graph.FileSystemTreeModel;
 import org.owasp.jbrofuzz.graph.FileSystemTreeNode;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
+import org.owasp.jbrofuzz.version.ImageCreator;
 
 /**
  * <p>The headers window showing the headers in their 

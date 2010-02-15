@@ -71,105 +71,14 @@ public class JBroFuzzFormat {
 	 * The text, in html format, shown in the disclaimer box.
 	 * </p>
 	 */
-	public static final String DISCLAIMER = "<HTML>JBroFuzz generates requests and records the responses. It does not attempt to identify if a particular "
+	public static final String DISCLAIMER = 
+		"<HTML>JBroFuzz generates requests and records the responses. It does not attempt to identify if a particular "
 		+ "site is vulnerable or not; this requires further human analysis. <BR><BR>However, certain payload categories, like XSS, "
 		+ "are crafted to try to successfully exploit flaws. Thus the human analyst would have to review the results "
 		+ "in order to recognize if exploitation succeeded or not.<BR><BR>"
 		+ "The author of JBroFuzz takes no "
 		+ "legal or other responsibility for any problems that "
 		+ "might occur while running this program.<BR></HTML>";
-
-	/**
-	 * The preferences used for deciding whether or not to delete any blank
-	 * directories while exiting.
-	 */
-	public static final String PR_1 = "prefs.dir.delete";
-
-	/**
-	 * The preferences used for deciding whether or not to align the tabs at the
-	 * top or bottom of the main window.
-	 * 
-	 * True represents top.
-	 */
-	// public static final String PR_2 = "prefs.ui.tabs";
-
-	/**
-	 * The preferences used for deciding whether or not to check and notify a
-	 * user at startup of a new version.
-	 * 
-	 * True represents yes.
-	 */
-	public static final String PR_3 = "startup.check.new-version";
-
-	/**
-	 * The preferences used for keeping the "On The Wire" tab always selected.
-	 */
-	public static final String PR_FUZZ_3 = "fuzz.ui.show.wire";
-
-	/**
-	 * The preferences used for also showing the responses received "On The Wire" tab.
-	 */
-	public static final String PR_FUZZ_3_1 = "fuzz.ui.wire.responses";
-
-	/**
-	 * The preferences used for "Re-send POST Data if 100 Continue is received"
-	 */
-	public static final String PR_FUZZ_4 = "fuzz.100.continue";
-
-	/**
-	 * The preference for double clicking on an output line and displaying it in a browser
-	 */
-	public static final String PR_FUZZ_OUTPUT_1 = "fuzz.output.browser";
-	
-	/**
-	 * The preference for enabling proxy support
-	 */
-	public static final String PROXY_ENABLED = "proxy.enabled";
-	
-	/**
-	 * The preference for setting the proxy server
-	 */
-	public static final String PROXY_SERVER = "proxy.server";
-	
-	/**
-	 * The preference setting the proxy port
-	 */
-	public static final String PROXY_PORT = "proxy.port";
-
-	/**
-	 * If true, the response will wrap when opened in a new window
-	 */
-	public static final String WRAP_RESPONSE = "wrap.response";
-
-	/**
-	 * If true, the request will wrap when viewed in the fuzzing panel
-	 */
-	public static final String WRAP_REQUEST = "wrap.request";
-
-	/**
-	 * The url text saved as a preference
-	 */
-	public static final String TEXT_URL = "fuzz.ui.url_text";
-
-	/**
-	 * The request text saved as a preference
-	 */
-	public static final String TEXT_REQUEST = "fuzz.ui.request_text";
-
-	/**
-	 * The encode text saved as a preference
-	 */
-	public static final String TEXT_ENCODE = "encode.text";
-
-	/**
-	 * The decoded/hashed text saved as a preference
-	 */
-	public static final String TEXT_DECODE = "decode.text";
-	
-	/**
-	 * Encode/hash type saved as a preference
-	 */
-	public static final String ENCODER_NAME = "encoder.name";
 
 	/**
 	 * <p>

@@ -54,8 +54,9 @@ import org.owasp.jbrofuzz.system.SystemPanel;
 import org.owasp.jbrofuzz.ui.menu.JBroFuzzMenuBar;
 import org.owasp.jbrofuzz.ui.menu.JBroFuzzToolBar;
 import org.owasp.jbrofuzz.update.StartUpdateChecker;
-import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
  * <p>
@@ -234,8 +235,8 @@ public class JBroFuzzWindow extends JFrame {
 			}
 		}
 
-		// The tabbed pane, setup according to preferences
-		boolean checkNewVersion = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_3, true);
+		// Check for a new version at startup
+		boolean checkNewVersion = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[0], true);
 		if (checkNewVersion) {
 			(new StartUpdateCheck()).execute();
 		}
@@ -286,7 +287,7 @@ public class JBroFuzzWindow extends JFrame {
 	 * </p>
 	 *
 	 * @author subere@uncon.org
-	 * @version 1.9
+	 * @version 2.0
 	 * @since 1.9
 	 */
 	public void closeFrame() {
@@ -302,20 +303,29 @@ public class JBroFuzzWindow extends JFrame {
 //			getJBroFuzz().getHandler().deleteEmptryDirectories();
 //		}
 		
-		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Height", this.getSize().height);
-		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Width", this.getSize().width);
-		JBroFuzz.PREFS.putInt("UI.JBroFuzz.X", this.getLocation().x);
-		JBroFuzz.PREFS.putInt("UI.JBroFuzz.Y", this.getLocation().y);
+		// If the frame is maximised, don't update the JBroFuzz window height & width
+		if( (this.getExtendedState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH) {
+
+			JBroFuzz.PREFS.putInt("UI.JBroFuzz.X", this.getLocation().x);
+			JBroFuzz.PREFS.putInt("UI.JBroFuzz.Y", this.getLocation().y);
+
+		} else {
+			
+			JBroFuzz.PREFS.putInt("UI.JBroFuzz.Height", this.getSize().height);
+			JBroFuzz.PREFS.putInt("UI.JBroFuzz.Width", this.getSize().width);
+			JBroFuzz.PREFS.putInt("UI.JBroFuzz.X", this.getLocation().x);
+			JBroFuzz.PREFS.putInt("UI.JBroFuzz.Y", this.getLocation().y);			
+		}
 
 		// Save the values of the url/request as a preference
 		final String sURL = fp.getTextURL();
 		if(sURL.length() < Preferences.MAX_VALUE_LENGTH) {
-			JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_URL, fp.getTextURL());
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.TEXT_URL, fp.getTextURL());
 		}
 		
 		final String sRequest = fp.getTextRequest();
 		if(sRequest.length() < Preferences.MAX_VALUE_LENGTH) {
-			JBroFuzz.PREFS.put(JBroFuzzFormat.TEXT_REQUEST, fp.getTextRequest());
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.TEXT_REQUEST, fp.getTextRequest());
 		}
 
 		dispose();
