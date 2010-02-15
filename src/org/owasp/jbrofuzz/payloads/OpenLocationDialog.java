@@ -60,7 +60,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**

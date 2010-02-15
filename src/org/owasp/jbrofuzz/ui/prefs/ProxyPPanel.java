@@ -46,7 +46,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
  * <p>
@@ -88,7 +88,7 @@ class ProxyPPanel extends AbstractPrefsPanel {
 		this.dialog = dialog;
 		
 		// Proxy Configuration Settings
-		final boolean enProxyClickBox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PROXY_ENABLED, false);
+		final boolean enProxyClickBox = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.PROXY[0], false);
 
 		enProxyCheckBox = new JCheckBox(
 				" Enable Proxy Configuration ",
@@ -125,19 +125,19 @@ class ProxyPPanel extends AbstractPrefsPanel {
 			portTextField.setEditable(false);
 		}
 
-		final String proxyServer = JBroFuzz.PREFS.get(JBroFuzzFormat.PROXY_SERVER, "");
+		final String proxyServer = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[1], "");
 		serverTextField.setText(proxyServer);
-		final String proxyPort = JBroFuzz.PREFS.get(JBroFuzzFormat.PROXY_PORT, "");
+		final String proxyPort = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[2], "");
 		portTextField.setText(proxyPort);
 
 		enProxyCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent proxyEvent) {
 				if (enProxyCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PROXY_ENABLED, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.PROXY[0], true);
 					serverTextField.setEditable(true);
 					portTextField.setEditable(true);
 				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PROXY_ENABLED, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.PROXY[0], false);
 					serverTextField.setEditable(false);
 					portTextField.setEditable(false);
 				}
@@ -183,9 +183,10 @@ class ProxyPPanel extends AbstractPrefsPanel {
 		    }
 		    
 		    if (validProxy) {
-		    	JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PROXY_ENABLED, true);
-		    	JBroFuzz.PREFS.put(JBroFuzzFormat.PROXY_PORT, portTextField.getText());
-		    	JBroFuzz.PREFS.put(JBroFuzzFormat.PROXY_SERVER, serverTextField.getText());
+		    	JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.PROXY[0], true);
+		    	JBroFuzz.PREFS.put(JBroFuzzPrefs.PROXY[1], serverTextField.getText());
+		    	JBroFuzz.PREFS.put(JBroFuzzPrefs.PROXY[2], portTextField.getText());
+
 		    }
 			
 		}

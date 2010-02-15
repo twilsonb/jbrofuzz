@@ -15,7 +15,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.Align;
-import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.ImageCreator;
 
 public class HammingDistanceChart {
 

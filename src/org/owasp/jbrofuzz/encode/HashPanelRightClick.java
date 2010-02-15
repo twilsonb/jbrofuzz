@@ -40,7 +40,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 
-import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.ImageCreator;
 
 final class HashPanelRightClick {
 

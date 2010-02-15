@@ -62,7 +62,7 @@ import org.owasp.jbrofuzz.ui.actions.PasteAction;
 import org.owasp.jbrofuzz.ui.actions.SelectAllAction;
 import org.owasp.jbrofuzz.ui.prefs.PrefDialog;
 import org.owasp.jbrofuzz.update.CheckForUpdates;
-import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.ImageCreator;
 
 /**
  * <p>

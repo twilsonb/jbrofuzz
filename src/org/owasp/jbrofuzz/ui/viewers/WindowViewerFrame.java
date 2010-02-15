@@ -62,9 +62,9 @@ import javax.swing.text.Highlighter;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
-import org.owasp.jbrofuzz.util.ImageCreator;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
  * <p>
@@ -124,7 +124,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 
 		// Get the preferences for wrapping lines of text
 		boolean wrapText = JBroFuzz.PREFS
-		.getBoolean(JBroFuzzFormat.WRAP_RESPONSE, false);
+		.getBoolean(JBroFuzzPrefs.WRAP_RESPONSE, false);
 
 		if (wrapText) {
 

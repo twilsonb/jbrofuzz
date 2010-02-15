@@ -49,7 +49,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class DirsPPanel extends AbstractPrefsPanel {
 
@@ -120,7 +120,7 @@ class DirsPPanel extends AbstractPrefsPanel {
 
 		// Directory Locations... Directory -> Delete directories check-box
 
-		final boolean deletebox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_1, false);
+		final boolean deletebox = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[0], false);
 		final JCheckBox deleteCheckBox = new JCheckBox(
 				" On exit, delete any empty directories created at startup ",
 				deletebox);
@@ -132,9 +132,9 @@ class DirsPPanel extends AbstractPrefsPanel {
 		deleteCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (deleteCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_1, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DIRS[0], true);
 				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_1, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DIRS[0], false);
 				}
 			}
 		});

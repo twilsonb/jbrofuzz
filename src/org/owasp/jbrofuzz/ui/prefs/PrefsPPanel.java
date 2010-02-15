@@ -37,7 +37,7 @@ import javax.swing.Box;
 import javax.swing.JCheckBox;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class PrefsPPanel extends AbstractPrefsPanel {
 
@@ -72,7 +72,7 @@ class PrefsPPanel extends AbstractPrefsPanel {
 		
 		// Preferences -> Check for New Version at Startup
 
-		final boolean newVersionCheck = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_3,
+		final boolean newVersionCheck = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[0],
 				true);
 		final JCheckBox newVCheckBox = new JCheckBox(
 				" Check for a new version at startup ", newVersionCheck);
@@ -84,9 +84,9 @@ class PrefsPPanel extends AbstractPrefsPanel {
 		newVCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				if (newVCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_3, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.GENERAL[0], true);
 				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_3, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.GENERAL[0], false);
 				}
 			}
 		});

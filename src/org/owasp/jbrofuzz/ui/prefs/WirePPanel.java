@@ -37,7 +37,7 @@ import javax.swing.Box;
 import javax.swing.JCheckBox;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class WirePPanel extends AbstractPrefsPanel {
 
@@ -47,7 +47,7 @@ class WirePPanel extends AbstractPrefsPanel {
 		super("Fuzzing: On the Wire");
 		
 		// Fuzzing: On The Wire... -> Show on the wire tab after fuzzing finished
-		final boolean showwirebox = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_3,
+		final boolean showwirebox = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[0],
 				false);
 		final JCheckBox showwireCheckBox = new JCheckBox(
 				" Show \"On The Wire\" tab after fuzzing has stopped or finished ",
@@ -60,9 +60,9 @@ class WirePPanel extends AbstractPrefsPanel {
 		showwireCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent swEvent) {
 				if (showwireCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_3, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[0], true);
 				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_3, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[0], false);
 				}
 			}
 		});
@@ -71,7 +71,7 @@ class WirePPanel extends AbstractPrefsPanel {
 		add(Box.createRigidArea(new Dimension(0, 20)));
 
 		// Fuzzing: On The Wire... -> Display responses inside the On The Wire text area
-		final boolean dispBoolean = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
+		final boolean dispBoolean = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[1], false);
 		final JCheckBox diskRespBox = new JCheckBox(
 				" Display the Requests as well as the Responses received ",
 				dispBoolean);
@@ -83,9 +83,9 @@ class WirePPanel extends AbstractPrefsPanel {
 		diskRespBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent disEvent) {
 				if (diskRespBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_3_1, true);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[1], true);
 				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzFormat.PR_FUZZ_3_1, false);
+					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[1], false);
 				}
 			}
 		});

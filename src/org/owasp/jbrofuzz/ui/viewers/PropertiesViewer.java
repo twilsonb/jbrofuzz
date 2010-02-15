@@ -45,7 +45,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
 import org.owasp.jbrofuzz.ui.AbstractPanel;
-import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.ImageCreator;
 
 /**
  * <p>

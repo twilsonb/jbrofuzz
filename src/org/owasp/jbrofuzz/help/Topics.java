@@ -54,7 +54,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.util.ImageCreator;
+import org.owasp.jbrofuzz.version.ImageCreator;
 
 /**
  * <p>
