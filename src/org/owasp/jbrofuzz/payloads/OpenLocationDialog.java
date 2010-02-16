@@ -326,8 +326,7 @@ KeyListener {
 		((JTextComponent) urlBox.getEditor().getEditorComponent()).selectAll();
 
 		// Global frame issues
-		setLocation(Math.abs(parent.getLocation().x + 20), Math.abs(parent
-				.getLocation().y + 20));
+		setLocation(parent.getLocation().x + 20, parent.getLocation().y + 40);
 
 		setSize(OpenLocationDialog.SIZE_X, OpenLocationDialog.SIZE_Y);
 		setResizable(true);

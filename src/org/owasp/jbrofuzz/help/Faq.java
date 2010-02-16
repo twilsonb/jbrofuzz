@@ -55,6 +55,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * 
@@ -158,9 +159,8 @@ public class Faq extends JFrame implements TreeSelectionListener {
 		splitPane.setRightComponent(faqScrollPane);
 		splitPane.setOneTouchExpandable(false);
 
-		final Dimension minimumSize = new Dimension(0, 0);
-		faqScrollPane.setMinimumSize(minimumSize);
-		treeView.setMinimumSize(minimumSize);
+		faqScrollPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		treeView.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		splitPane.setDividerLocation(100);
 		splitPane.setPreferredSize(new Dimension(100, 0));
 

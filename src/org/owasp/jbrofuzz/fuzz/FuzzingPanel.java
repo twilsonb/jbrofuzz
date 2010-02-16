@@ -351,15 +351,14 @@ public class FuzzingPanel extends AbstractPanel {
 							final boolean openInBrowser = JBroFuzz.PREFS.getBoolean(
 									JBroFuzzPrefs.FUZZING[3], true);
 
+							final File directory = getFrame().getJBroFuzz().getHandler().getFuzzDirectory();
+							final File selFile = new File(directory, name + ".html");
+							
 							if(openInBrowser) {
 
-								final String fileName = name + ".html";
-								final File cFile = getFrame().getJBroFuzz().getHandler()
-								.getFuzzFile(fileName);
-
-								Browser.init();
+							Browser.init();
 								try {
-									Browser.displayURL(cFile.toURI().toString());
+									Browser.displayURL(selFile.toURI().toString());
 								} catch (final IOException ex) {
 									getFrame()
 									.log(
@@ -368,7 +367,7 @@ public class FuzzingPanel extends AbstractPanel {
 								}
 							} else {
 
-								new WindowViewerFrame(FuzzingPanel.this, name);
+								new WindowViewerFrame(FuzzingPanel.this, selFile);
 
 							}
 
@@ -404,11 +403,10 @@ public class FuzzingPanel extends AbstractPanel {
 		mainPane.setBottomComponent(outputPanel);
 
 		// Allow for all areas to be resized to even not be seen
-		final Dimension minimumSize = new Dimension(0, 0);
-		topLeftPanel.setMinimumSize(minimumSize);
-		topRightPanel.setMinimumSize(minimumSize);
-		topPane.setMinimumSize(minimumSize);
-		outputPanel.setMinimumSize(minimumSize);
+		topLeftPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		topRightPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		topPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		outputPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 
 		topPane.setDividerLocation(JBroFuzz.PREFS.getInt("UI.F.topSplitPanel", 440));
 		mainPane.setDividerLocation(JBroFuzz.PREFS.getInt("UI.F.mainSplitPanel", 262));
@@ -757,7 +755,8 @@ public class FuzzingPanel extends AbstractPanel {
 	 * </p>
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.7
+	 * @version 2.0
+	 * @since 1.0
 	 */
 	@Override
 	public void start() {
@@ -833,7 +832,7 @@ public class FuzzingPanel extends AbstractPanel {
 					try {
 
 						// Connect
-						final AbstractConnection connection = new Connection(getTextURL(),
+						final Connection connection = new Connection(getTextURL(),
 								currentMessage.getMessage());
 
 						// If a 100 Continue is encountered, print what you put

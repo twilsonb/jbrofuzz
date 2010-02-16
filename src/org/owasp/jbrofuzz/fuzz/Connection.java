@@ -47,7 +47,7 @@ import java.net.URL;
  */
 class Connection implements AbstractConnection {
 	
-	private transient AbstractConnection mainConnection;
+	private AbstractConnection mainConnection;
 	
 	protected Connection(final String urlString, final String message)
 	throws ConnectionException {

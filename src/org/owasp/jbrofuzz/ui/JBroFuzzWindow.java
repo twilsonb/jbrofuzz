@@ -41,7 +41,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
-import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -53,7 +52,7 @@ import org.owasp.jbrofuzz.payloads.PayloadsPanel;
 import org.owasp.jbrofuzz.system.SystemPanel;
 import org.owasp.jbrofuzz.ui.menu.JBroFuzzMenuBar;
 import org.owasp.jbrofuzz.ui.menu.JBroFuzzToolBar;
-import org.owasp.jbrofuzz.update.StartUpdateChecker;
+import org.owasp.jbrofuzz.update.StartUpdateCheck;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
@@ -218,27 +217,10 @@ public class JBroFuzzWindow extends JFrame {
 
 		log("System Launch, Welcome!", 1);
 
-		// Check for an updated version
-		final class StartUpdateCheck extends SwingWorker<String, Object> {
-
-			@Override
-			public String doInBackground() {
-
-				new StartUpdateChecker(JBroFuzzWindow.this);
-				return "done-checking-updates";
-
-			}
-
-			@Override
-			protected void done() {
-
-			}
-		}
-
 		// Check for a new version at startup
 		boolean checkNewVersion = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[0], true);
 		if (checkNewVersion) {
-			(new StartUpdateCheck()).execute();
+			(new StartUpdateCheck(JBroFuzzWindow.this)).execute();
 		}
 		
 	}

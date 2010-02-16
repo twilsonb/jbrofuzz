@@ -65,6 +65,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.version.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -92,24 +93,24 @@ public class PayloadsDialog extends JDialog {
 			}
 
 			String value;
-			int c = categoriesTable.getSelectedRow();
+			int count = categoriesTable.getSelectedRow();
 			try {
 
-				c = categoriesTable.convertRowIndexToModel(c);
-				value = (String) categoriesTableModel.getValueAt(c, 0);
+				count = categoriesTable.convertRowIndexToModel(count);
+				value = (String) catTableModel.getValueAt(count, 0);
 
 			} catch (IndexOutOfBoundsException e) {
 				return;
 			}
 
 			fuzzersTable.setRowSorter(null);
-			fuzzersTableModel.setData(m.getJBroFuzz().getDatabase()
+			fTableModel.setData(mWindow.getJBroFuzz().getDatabase()
 					.getPrototypeNamesInCategory(value));
-			sorter2 = new TableRowSorter<SingleColumnModel>(fuzzersTableModel);
+			sorter2 = new TableRowSorter<SingleColumnModel>(fTableModel);
 			fuzzersTable.setRowSorter(sorter2);
 
 			payloadsTable.setRowSorter(null);
-			payloadsTableModel.setData(null);
+			pTableModel.setData(null);
 
 			fuzzersPanel.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createTitledBorder(" " + value + " "),
@@ -119,8 +120,8 @@ public class PayloadsDialog extends JDialog {
 					BorderFactory.createTitledBorder(" Select a Fuzzer "),
 					BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-			fuzzerInfoTextArea.setText("");
-			fuzzerInfoTextArea.setCaretPosition(0);
+			fInfoArea.setText("");
+			fInfoArea.setCaretPosition(0);
 
 		}
 	}
@@ -140,43 +141,43 @@ public class PayloadsDialog extends JDialog {
 			}
 
 			String name;
-			int d = fuzzersTable.getSelectedRow();
+			int dount = fuzzersTable.getSelectedRow();
 			try {
 
-				d = fuzzersTable.convertRowIndexToModel(d);
-				name = (String) fuzzersTableModel.getValueAt(d, 0);
+				dount = fuzzersTable.convertRowIndexToModel(dount);
+				name = (String) fTableModel.getValueAt(dount, 0);
 
 			} catch (IndexOutOfBoundsException e) {
 				return;
 			}
-			final String id = m.getJBroFuzz().getDatabase().getIdFromName(name);
+			final String fuzzerID = mWindow.getJBroFuzz().getDatabase().getIdFromName(name);
 
-			payloadsTableModel.setData(m.getJBroFuzz().getDatabase()
-					.getPayloads(id));
+			pTableModel.setData(mWindow.getJBroFuzz().getDatabase()
+					.getPayloads(fuzzerID));
 			// If there are rows in the payloads, we have a fuzzer to add
-			if (payloadsTableModel.getRowCount() > 0) {
+			if (pTableModel.getRowCount() > 0) {
 
-				ok.setEnabled(true);
+				okBut.setEnabled(true);
 
 				payloadsPanel.setBorder(BorderFactory.createCompoundBorder(
 						BorderFactory.createTitledBorder(" "
-								+ m.getJBroFuzz().getDatabase()
-								.getPrototype(id).getType() + " ID: "
-								+ id + " "), BorderFactory.createEmptyBorder(1,
+								+ mWindow.getJBroFuzz().getDatabase()
+								.getPrototype(fuzzerID).getType() + " ID: "
+								+ fuzzerID + " "), BorderFactory.createEmptyBorder(1,
 										1, 1, 1)));
 
-				fuzzerInfoTextArea.setText("\nFuzzer Name: "
+				fInfoArea.setText("\nFuzzer Name: "
 						+ name
 						+ "\n"
 						+ "Fuzzer Type: "
-						+ m.getJBroFuzz().getDatabase().getPrototype(id)
-						.getType() + "\n" + "Fuzzer Id:   " + id
+						+ mWindow.getJBroFuzz().getDatabase().getPrototype(fuzzerID)
+						.getType() + "\n" + "Fuzzer Id:   " + fuzzerID
 						+ "\n\n" + "Total Number of Payloads: "
-						+ m.getJBroFuzz().getDatabase().getSize(id));
-				fuzzerInfoTextArea.setCaretPosition(fuzzerInfoTextArea
+						+ mWindow.getJBroFuzz().getDatabase().getSize(fuzzerID));
+				fInfoArea.setCaretPosition(fInfoArea
 						.getText().length());
 			} else {
-				ok.setEnabled(false);
+				okBut.setEnabled(false);
 			}
 
 		}
@@ -194,31 +195,28 @@ public class PayloadsDialog extends JDialog {
 	private static final String NAME_PAYLOAD = "Payload-Table";
 
 	// The buttons
-	private final JButton ok;
+	private final JButton okBut;
 
 	// The frame that the sniffing panel is attached
-	private JBroFuzzWindow m;
+	private final JBroFuzzWindow mWindow;
 
 	// The JPanels carrying the components
-	private JPanel categoriesPanel, fuzzersPanel, payloadsPanel;
-
-	/*
-	 * private int start, end; // The last category accessed private String
-	 * lastCategory;
-	 */
+	// private final JPanel categoriesPanel;
+	private final JPanel fuzzersPanel, payloadsPanel;
 
 	// The JTables carrying the data
-	private JTable categoriesTable, fuzzersTable, payloadsTable;
+	private final JTable categoriesTable, fuzzersTable, payloadsTable;
 
 	// The Table Models with a single column
-	private SingleColumnModel categoriesTableModel, fuzzersTableModel,
-	payloadsTableModel;
+	private final SingleColumnModel catTableModel;
+	private final SingleColumnModel fTableModel, pTableModel;
 
 	// The row sorters for the two tables
-	private TableRowSorter<SingleColumnModel> sorter, sorter2;
+	// private final TableRowSorter<SingleColumnModel> sorter;
+	private TableRowSorter<SingleColumnModel> sorter2;
 
 	// The non-wrapping text pane
-	private NonWrappingTextPane fuzzerInfoTextArea;
+	private final NonWrappingTextPane fInfoArea;
 
 	/**
 	 * <p>
@@ -237,27 +235,28 @@ public class PayloadsDialog extends JDialog {
 		setFont(new Font("SansSerif", Font.BOLD, 10));
 
 		setLayout(null);
-		m = parent.getFrame();
+		mWindow = parent.getFrame();
 
 		// Categories : The area on the left, displaying the categories table
 
-		categoriesPanel = new JPanel();
+		final JPanel categoriesPanel = new JPanel();
 		categoriesPanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(" Categories "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 		categoriesPanel.setBounds(10, 20, 190, SIZE_Y - 70);
 		this.add(categoriesPanel);
 
-		categoriesTableModel = new SingleColumnModel(" Category Name ");
-		categoriesTable = new JTable(categoriesTableModel);
+		catTableModel = new SingleColumnModel(" Category Name ");
+		categoriesTable = new JTable(catTableModel);
 		categoriesTable.setName(NAME_CATEGORY);
 		popup(categoriesTable);
 
 		categoriesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		categoriesTableModel.setData(m.getJBroFuzz().getDatabase()
+		catTableModel.setData(mWindow.getJBroFuzz().getDatabase()
 				.getAllCategories());
 
-		sorter = new TableRowSorter<SingleColumnModel>(categoriesTableModel);
+		TableRowSorter<SingleColumnModel> sorter = 
+			new TableRowSorter<SingleColumnModel>(catTableModel);
 		categoriesTable.setRowSorter(sorter);
 
 		categoriesTable.setFont(new Font("Verdana", Font.BOLD, 10));
@@ -269,19 +268,19 @@ public class PayloadsDialog extends JDialog {
 
 		categoriesTable.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
+			public void keyPressed(final KeyEvent kEvent) {
+				if (kEvent.getKeyCode() == 27) {
 					PayloadsDialog.this.dispose();
 				}
 			}
 		});
 
-		final JScrollPane categoryTableScrollPane = new JScrollPane(
+		final JScrollPane catScrollPane = new JScrollPane(
 				categoriesTable);
-		categoryTableScrollPane.setVerticalScrollBarPolicy(20);
-		categoryTableScrollPane.setHorizontalScrollBarPolicy(30);
-		categoryTableScrollPane.setPreferredSize(new Dimension(170, SIZE_Y - 110));
-		categoriesPanel.add(categoryTableScrollPane);
+		catScrollPane.setVerticalScrollBarPolicy(20);
+		catScrollPane.setHorizontalScrollBarPolicy(30);
+		catScrollPane.setPreferredSize(new Dimension(170, SIZE_Y - 110));
+		categoriesPanel.add(catScrollPane);
 
 		// Fuzzers : The middle area displaying the list of fuzzers by name
 
@@ -292,12 +291,12 @@ public class PayloadsDialog extends JDialog {
 		fuzzersPanel.setBounds(210, 20, 180, 250);
 		this.add(fuzzersPanel);
 
-		fuzzersTableModel = new SingleColumnModel(" Fuzzer Name ");
-		fuzzersTable = new JTable(fuzzersTableModel);
+		fTableModel = new SingleColumnModel(" Fuzzer Name ");
+		fuzzersTable = new JTable(fTableModel);
 		fuzzersTable.setName(NAME_FUZZER);
 		popup(fuzzersTable);
 
-		sorter2 = new TableRowSorter<SingleColumnModel>(fuzzersTableModel);
+		sorter2 = new TableRowSorter<SingleColumnModel>(fTableModel);
 		fuzzersTable.setRowSorter(sorter2);
 
 		fuzzersTable.setFont(new Font("Verdana", Font.BOLD, 10));
@@ -310,26 +309,26 @@ public class PayloadsDialog extends JDialog {
 		/*
 		 * fuzzersTable.addMouseListener(new MouseAdapter(){ @Override public
 		 * void mouseClicked(final MouseEvent e){ if (e.getClickCount() == 1){
-		 * ok.setEnabled(true); // String exploit = (String)
+		 * okBut.setEnabled(true); // String exploit = (String)
 		 * nameTable.getModel().getValueAt(nameTable.getSelectedRow(), 0); //
-		 * new ExploitViewer(m, exploit, ExploitViewer.VIEW_EXPLOIT); } } } );
+		 * new ExploitViewer(mWindow, exploit, ExploitViewer.VIEW_EXPLOIT); } } } );
 		 */
 		fuzzersTable.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
+			public void keyPressed(final KeyEvent kEvent) {
+				if (kEvent.getKeyCode() == 27) {
 					PayloadsDialog.this.dispose();
 				}
 			}
 		});
 
-		final JScrollPane nameTextAreaTextScrollPane = new JScrollPane(
+		final JScrollPane nameScrollPane = new JScrollPane(
 				fuzzersTable);
-		nameTextAreaTextScrollPane.setVerticalScrollBarPolicy(20);
-		nameTextAreaTextScrollPane.setHorizontalScrollBarPolicy(30);
-		nameTextAreaTextScrollPane
+		nameScrollPane.setVerticalScrollBarPolicy(20);
+		nameScrollPane.setHorizontalScrollBarPolicy(30);
+		nameScrollPane
 		.setPreferredSize(new Dimension(160, SIZE_Y - 190));
-		fuzzersPanel.add(nameTextAreaTextScrollPane);
+		fuzzersPanel.add(nameScrollPane);
 
 		// Payloads : A JSplitPane with a table and a textArea
 
@@ -341,8 +340,8 @@ public class PayloadsDialog extends JDialog {
 		payloadsPanel.setLayout(new BoxLayout(payloadsPanel, BoxLayout.Y_AXIS));
 		this.add(payloadsPanel);
 
-		payloadsTableModel = new SingleColumnModel(" Payloads ");
-		payloadsTable = new JTable(payloadsTableModel);
+		pTableModel = new SingleColumnModel(" Payloads ");
+		payloadsTable = new JTable(pTableModel);
 		payloadsTable.setName(NAME_PAYLOAD);
 		popup(payloadsTable);
 
@@ -354,73 +353,72 @@ public class PayloadsDialog extends JDialog {
 		payloadsTable.setBackground(Color.BLACK);
 		payloadsTable.setForeground(Color.WHITE);
 
-		final JScrollPane payloadsTableScrollPane = new JScrollPane(
+		final JScrollPane plScrollPane = new JScrollPane(
 				payloadsTable);
-		payloadsTableScrollPane.setVerticalScrollBarPolicy(20);
-		payloadsTableScrollPane.setHorizontalScrollBarPolicy(30);
-		payloadsTableScrollPane.setPreferredSize(new Dimension(200, SIZE_Y - 190));
+		plScrollPane.setVerticalScrollBarPolicy(20);
+		plScrollPane.setHorizontalScrollBarPolicy(30);
+		plScrollPane.setPreferredSize(new Dimension(200, SIZE_Y - 190));
 		// payloadsPanel.add(payloadsTableScrollPane);
 
-		fuzzerInfoTextArea = new NonWrappingTextPane();
+		fInfoArea = new NonWrappingTextPane();
 
-		fuzzerInfoTextArea.putClientProperty("charset", "UTF-8");
-		fuzzerInfoTextArea.setEditable(false);
-		fuzzerInfoTextArea.setVisible(true);
-		fuzzerInfoTextArea.setFont(new Font("Verdana", Font.BOLD, 10));
-		fuzzerInfoTextArea.setMargin(new Insets(1, 1, 1, 1));
-		fuzzerInfoTextArea.setBackground(Color.WHITE);
-		fuzzerInfoTextArea.setForeground(Color.BLACK);
+		fInfoArea.putClientProperty("charset", "UTF-8");
+		fInfoArea.setEditable(false);
+		fInfoArea.setVisible(true);
+		fInfoArea.setFont(new Font("Verdana", Font.BOLD, 10));
+		fInfoArea.setMargin(new Insets(1, 1, 1, 1));
+		fInfoArea.setBackground(Color.WHITE);
+		fInfoArea.setForeground(Color.BLACK);
 
 		// Right click: Cut, Copy, Paste, Select All
-		AbstractPanel.popupText(fuzzerInfoTextArea, false, true, false, true);
+		AbstractPanel.popupText(fInfoArea, false, true, false, true);
 
-		fuzzerInfoTextArea.addKeyListener(new KeyAdapter() {
+		fInfoArea.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
+			public void keyPressed(final KeyEvent kEvent) {
+				if (kEvent.getKeyCode() == 27) {
 					PayloadsDialog.this.dispose();
 				}
 			}
 		});
 		final JScrollPane fuzzerInfoScrollPane = new JScrollPane(
-				fuzzerInfoTextArea);
+				fInfoArea);
 		fuzzerInfoScrollPane.setVerticalScrollBarPolicy(20);
 		fuzzerInfoScrollPane.setHorizontalScrollBarPolicy(30);
 		fuzzerInfoScrollPane.setPreferredSize(new Dimension(150, 100));
 		// payloadsPanel.add(viewTextScrollPane);
 
-		JSplitPane payloadsSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		final JSplitPane payloadsSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		payloadsSplitPane.setOneTouchExpandable(false);
-		payloadsSplitPane.setTopComponent(payloadsTableScrollPane);
+		payloadsSplitPane.setTopComponent(plScrollPane);
 		payloadsSplitPane.setBottomComponent(fuzzerInfoScrollPane);
 		payloadsSplitPane.setDividerLocation(150);
 
-		payloadsPanel.add(payloadsTableScrollPane);
+		payloadsPanel.add(plScrollPane);
 
 		// Allow for all areas to be resized to even not be seen
-		Dimension minimumSize = new Dimension(0, 0);
-		payloadsTable.setMinimumSize(minimumSize);
-		fuzzerInfoTextArea.setMinimumSize(minimumSize);
+		payloadsTable.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		fInfoArea.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 
 		// Bottom button
-		ok = new JButton(" Add Fuzzer ", ImageCreator.IMG_ADD);
-		ok.setBounds(515, 305, 140, 40);
-		ok.setEnabled(false);
+		okBut = new JButton(" Add Fuzzer ", ImageCreator.IMG_ADD);
+		okBut.setBounds(515, 305, 140, 40);
+		okBut.setEnabled(false);
 
-		ok.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
+		okBut.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent aEvent) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						final int c = fuzzersTable.getSelectedRow();
-						final String name = (String) fuzzersTableModel
+						final int selRow = fuzzersTable.getSelectedRow();
+						final String name = (String) fTableModel
 						.getValueAt(fuzzersTable
-								.convertRowIndexToModel(c), 0);
+								.convertRowIndexToModel(selRow), 0);
 
-						final String id = m.getJBroFuzz().
+						final String selID = mWindow.getJBroFuzz().
 						getDatabase().getIdFromName(name);
 
-						m.getPanelFuzzing().addFuzzer(id, FuzzerTable.ENCODINGS[0], start, end);
+						mWindow.getPanelFuzzing().addFuzzer(selID, FuzzerTable.ENCODINGS[0], start, end);
 						PayloadsDialog.this.dispose();
 
 					}
@@ -428,18 +426,18 @@ public class PayloadsDialog extends JDialog {
 			}
 		});
 
-		ok.addKeyListener(new KeyAdapter() {
+		okBut.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
+			public void keyPressed(final KeyEvent kEvent) {
+				if (kEvent.getKeyCode() == 27) {
 					PayloadsDialog.this.dispose();
 				}
 			}
 		});
 
-		ok
+		okBut
 		.setToolTipText("The selected category will be added to the fuzzing list");
-		getContentPane().add(ok);
+		getContentPane().add(okBut);
 
 		// Global frame issues
 
@@ -463,33 +461,33 @@ public class PayloadsDialog extends JDialog {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
-		final JMenuItem i1 = new JMenuItem("Cut");
-		final JMenuItem i2 = new JMenuItem("Copy");
-		final JMenuItem i3 = new JMenuItem("Paste");
-		final JMenuItem i4 = new JMenuItem("Select All");
-		final JMenuItem i5 = new JMenuItem("Properties");
+		final JMenuItem i1_cut = new JMenuItem("Cut");
+		final JMenuItem i2_copy = new JMenuItem("Copy");
+		final JMenuItem i3_paste = new JMenuItem("Paste");
+		final JMenuItem i4_select = new JMenuItem("Select All");
+		final JMenuItem i5_properties = new JMenuItem("Properties");
 
-		i1.setEnabled(false);
-		i2.setEnabled(true);
-		i3.setEnabled(false);
-		i4.setEnabled(false);
+		i1_cut.setEnabled(false);
+		i2_copy.setEnabled(true);
+		i3_paste.setEnabled(false);
+		i4_select.setEnabled(false);
 
-		popmenu.add(i1);
-		popmenu.add(i2);
-		popmenu.add(i3);
-		popmenu.add(i4);
+		popmenu.add(i1_cut);
+		popmenu.add(i2_copy);
+		popmenu.add(i3_paste);
+		popmenu.add(i4_select);
 		popmenu.addSeparator();
-		popmenu.add(i5);
+		popmenu.add(i5_properties);
 
 		// Copy
 
-		i2.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
+		i2_copy.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent aEvent) {
 
-				final int a = area.getSelectedRow();
-				String value = (String) area.getModel().getValueAt(a, 0);
+				final int selRow = area.getSelectedRow();
+				final String value = (String) area.getModel().getValueAt(selRow, 0);
 
-				StringSelection ss = new StringSelection(value);
+				final StringSelection ss = new StringSelection(value);
 				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
 						ss, null);
 
@@ -498,7 +496,7 @@ public class PayloadsDialog extends JDialog {
 
 		// Properties : Points to the Payloads Tab
 
-		i5.addActionListener(new ActionListener() {
+		i5_properties.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
 				if (area.getName().equalsIgnoreCase(PayloadsDialog.NAME_FUZZER)) {
@@ -507,19 +505,19 @@ public class PayloadsDialog extends JDialog {
 					fuzzersTable.getSelectionModel().setSelectionInterval(
 							fuzzersTable.convertRowIndexToModel(c),
 							fuzzersTable.convertRowIndexToModel(c));
-					final String fuzzer = (String) fuzzersTableModel
+					final String fuzzer = (String) fTableModel
 					.getValueAt(fuzzersTable.convertRowIndexToModel(c),
 							0);
 
-					int d = categoriesTable.getSelectedRow();
-					String category = (String) categoriesTableModel.getValueAt(
+					final int d = categoriesTable.getSelectedRow();
+					final String category = (String) catTableModel.getValueAt(
 							categoriesTable.convertRowIndexToModel(d), 0);
 
 					PayloadsDialog.this.dispose();
 
-					m.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
-					m.getPanelPayloads().setCategoryDisplayed(category);
-					m.getPanelPayloads().setFuzzerDisplayed(fuzzer, category);
+					mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
+					mWindow.getPanelPayloads().setCategoryDisplayed(category);
+					mWindow.getPanelPayloads().setFuzzerDisplayed(fuzzer, category);
 
 				}
 
@@ -530,14 +528,14 @@ public class PayloadsDialog extends JDialog {
 					categoriesTable.getSelectionModel().setSelectionInterval(
 							categoriesTable.convertRowIndexToModel(c),
 							categoriesTable.convertRowIndexToModel(c));
-					final String value = (String) categoriesTableModel
+					final String value = (String) catTableModel
 					.getValueAt(categoriesTable
 							.convertRowIndexToModel(c), 0);
 
 					PayloadsDialog.this.dispose();
 
-					m.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
-					m.getPanelPayloads().setCategoryDisplayed(value);
+					mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
+					mWindow.getPanelPayloads().setCategoryDisplayed(value);
 
 				}
 
@@ -548,30 +546,30 @@ public class PayloadsDialog extends JDialog {
 					fuzzersTable.getSelectionModel().setSelectionInterval(
 							fuzzersTable.convertRowIndexToModel(c),
 							fuzzersTable.convertRowIndexToModel(c));
-					final String fuzzer = (String) fuzzersTableModel
+					final String fuzzer = (String) fTableModel
 					.getValueAt(fuzzersTable.convertRowIndexToModel(c),
 							0);
 
-					int d = categoriesTable.getSelectedRow();
+					final int selCat = categoriesTable.getSelectedRow();
 					categoriesTable.getSelectionModel().setSelectionInterval(
-							categoriesTable.convertRowIndexToModel(d),
-							categoriesTable.convertRowIndexToModel(d));
-					String category = (String) categoriesTableModel.getValueAt(
-							categoriesTable.convertRowIndexToModel(d), 0);
+							categoriesTable.convertRowIndexToModel(selCat),
+							categoriesTable.convertRowIndexToModel(selCat));
+					final String category = (String) catTableModel.getValueAt(
+							categoriesTable.convertRowIndexToModel(selCat), 0);
 
-					int k = payloadsTable.getSelectedRow();
+					final int k = payloadsTable.getSelectedRow();
 					payloadsTable.getSelectionModel()
 					.setSelectionInterval(k, k);
-					String payload = (String) payloadsTableModel.getValueAt(k,
+					final String payload = (String) pTableModel.getValueAt(k,
 							0);
 
 					PayloadsDialog.this.dispose();
 
-					m.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
+					mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
 
-					m.getPanelPayloads().setCategoryDisplayed(category);
-					m.getPanelPayloads().setFuzzerDisplayed(fuzzer, category);
-					m.getPanelPayloads().setPayloadDisplayed(payload, fuzzer,
+					mWindow.getPanelPayloads().setCategoryDisplayed(category);
+					mWindow.getPanelPayloads().setFuzzerDisplayed(fuzzer, category);
+					mWindow.getPanelPayloads().setPayloadDisplayed(payload, fuzzer,
 							category);
 
 				}

@@ -31,7 +31,6 @@ package org.owasp.jbrofuzz.system;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
@@ -50,6 +49,7 @@ import javax.swing.text.StyleConstants;
 
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -110,20 +110,19 @@ public class SystemPanel extends AbstractPanel {
 		listPanel.add(listTextScrollPane);
 
 		// The top and bottom split components
-		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 50, 33));
+		final JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 50, 33));
 
 		// topPanel.add(infoButton);
 
-		JSplitPane mainPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		final JSplitPane mainPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		mainPane.setOneTouchExpandable(false);
 		mainPane.setTopComponent(topPanel);
 		mainPane.setBottomComponent(listPanel);
 		mainPane.setDividerLocation(50);
 
 		// Allow for all areas to be resized to even not be seen
-		Dimension minimumSize = new Dimension(0, 0);
-		topPanel.setMinimumSize(minimumSize);
-		listPanel.setMinimumSize(minimumSize);
+		topPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		listPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 
 		this.add(mainPane, BorderLayout.CENTER);
 

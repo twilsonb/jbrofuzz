@@ -35,8 +35,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -44,6 +42,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
+import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.version.ImageCreator;
 
 import com.Ostermiller.util.Browser;
@@ -52,44 +51,33 @@ class FileSystemTree extends JTree implements MouseListener {
 
 	private static final long serialVersionUID = -4289004118182074303L;
 
+	private static final String GR_PANEL = "Graphing Panel: ";
+	
 	private final JPopupMenu popmenu;
 
 	protected FileSystemTree(final GraphingPanel graphingPanel,
-			FileSystemTreeModel fileSystemTreeModel) {
+			final FileSystemTreeModel fsTreeModel) {
 
-		super(fileSystemTreeModel);
+		super(fsTreeModel);
 
 		popmenu = new JPopupMenu();
 
 		final JMenuItem i0_graph = new JMenuItem("Graph");
-		final JMenuItem i1_cut = new JMenuItem("Cut");
-		final JMenuItem i2_copy = new JMenuItem("Copy");
-		final JMenuItem i3_paste = new JMenuItem("Paste");
-		final JMenuItem i4_select = new JMenuItem("Select All");
-		final JMenuItem i5_open = new JMenuItem("Open in Browser");
+		final JMenuItem i1_open_folder = new JMenuItem("Open Containing Folder");
+		final JMenuItem i2_open_browser = new JMenuItem("Open in Browser");
+		final JMenuItem i3_open_viewer = new JMenuItem("Open in Viewer");
+		final JMenuItem i4_copy = new JMenuItem("Copy");
 
-		// i0_graph.setIcon(ImageCreator.IMG_PAUSE);
-		i1_cut.setIcon(ImageCreator.IMG_CUT);
-		i2_copy.setIcon(ImageCreator.IMG_COPY);
-		i3_paste.setIcon(ImageCreator.IMG_PASTE);
-		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
-		i5_open.setIcon(ImageCreator.IMG_OPENINBROWSER);
-
-		i0_graph.setEnabled(true);
-		i1_cut.setEnabled(false);
-		i2_copy.setEnabled(true);
-		i3_paste.setEnabled(false);
-		i4_select.setEnabled(false);
-		i5_open.setEnabled(true);
+		i2_open_browser.setIcon(ImageCreator.IMG_OPENINBROWSER);
+		i4_copy.setIcon(ImageCreator.IMG_COPY);
 
 		popmenu.add(i0_graph);
 		popmenu.addSeparator();
-		popmenu.add(i1_cut);
-		popmenu.add(i2_copy);
-		popmenu.add(i3_paste);
-		popmenu.add(i4_select);
+		popmenu.add(i1_open_folder);
+		popmenu.add(i2_open_browser);
+		popmenu.add(i3_open_viewer);
 		popmenu.addSeparator();
-		popmenu.add(i5_open);
+		popmenu.add(i4_copy);
 
 		// Graph
 		i0_graph.addActionListener(new ActionListener() {
@@ -97,206 +85,241 @@ class FileSystemTree extends JTree implements MouseListener {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
 
-				final TreePath selectedPath = FileSystemTree.this
-				.getSelectionPath();
+				final String stringFile = 
+					getFileFromPath(FileSystemTree.this.getSelectionPath());
+				
+				if(stringFile.startsWith(GR_PANEL)) {
+					
+					// An error occured
+					graphingPanel.getFrame().log(stringFile, 4);
+					
+				} else {
+					
+					final File pathFile = new File(stringFile);
+					
+					if (pathFile.isFile()) {
+						graphingPanel.getFrame()
+						.log(GR_PANEL + "Cannot graph individual files",	4);
+						
+					} else {
 
-				if (selectedPath == null)
-					return;
-				// More than 32 directories chill
-				if (selectedPath.getPathCount() > 32) {
-					graphingPanel.getFrame().log(
-							"Graphing Panel: Path has more than 32 locations ",
-							3);
-					return;
+						// Let the graphing begin
+						graphingPanel.getTabbedPlotter().plot(pathFile);
+
+					}
+					
 				}
 
-				Object[] path = selectedPath.getPath();
-
-				// Get the file path
-
-				StringBuffer stringPath = new StringBuffer(System
-						.getProperty("user.dir"));
-				stringPath.append(File.separator);
-				stringPath.append("jbrofuzz");
-
-				for (Object node : path) {
-
-					stringPath.append(System.getProperty("file.separator"));
-					stringPath.append(node.toString());
-
-				}
-
-				File pathFile = new File(stringPath.toString());
-				// If we are talking about something non-existent, we don't want
-				// to know
-				if (!pathFile.exists()) {
-					graphingPanel.getFrame().log(
-							"Graphing Panel: Path does not exist: " + pathFile,
-							4);
-					return;
-				}
-				// Similar if we cannot execute the location
-				if (!pathFile.canExecute()) {
-					graphingPanel.getFrame().log(
-							"Graphing Panel: Path cannot be executed: "
-							+ pathFile, 4);
-					return;
-				}
-				// Or if its an individual file
-				if (pathFile.isFile()) {
-					graphingPanel
-					.getFrame()
-					.log(
-							"Graphing Panel: Cannot graph individual files ",
-							4);
-					return;
-				}
-
-				// Let the graphing begin
-				graphingPanel.getTabbedPlotter().plot(pathFile);
 
 			}
 
 		});
 
-		// Copy
-		i2_copy.addActionListener(new ActionListener() {
+		// Open Containing Folder
+		i1_open_folder.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent openEvt) {
 
-			@Override
-			public void actionPerformed(final ActionEvent e) {
+				final String stringFile = 
+					getFileFromPath(FileSystemTree.this.getSelectionPath());
+				
+				if(stringFile.startsWith(GR_PANEL)) {
+					
+					// An error occured
+					graphingPanel.getFrame().log(stringFile, 4);
+					
+				} else {
+					
+					final File pathFile = new File(stringFile);
+					final File parentFile = pathFile.getParentFile();
 
-				FileSystemTreeNode selectedNode = (FileSystemTreeNode) FileSystemTree.this
-				.getLastSelectedPathComponent();
-
-				if (selectedNode == null)
-					return;
-
-				final String s = selectedNode.toString();
-				final JTextArea myTempArea = new JTextArea(s);
-				myTempArea.selectAll();
-				myTempArea.copy();
-
-			}
-
-		});
-
-		i5_open.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-
-				final TreePath selectedPath = FileSystemTree.this
-				.getSelectionPath();
-
-				if (selectedPath == null)
-					return;
-				// More than 32 directories chill
-				if (selectedPath.getPathCount() > 32) {
-					graphingPanel.getFrame().log(
-							"Graphing Panel: Path has more than 32 locations ",
-							4);
-					return;
-				}
-
-				Object[] path = selectedPath.getPath();
-
-				// Get the file path
-
-				StringBuffer stringPath = new StringBuffer(System
-						.getProperty("user.dir"));
-				stringPath.append(File.separator);
-				stringPath.append("jbrofuzz");
-
-				for (Object node : path) {
-
-					stringPath.append(System.getProperty("file.separator"));
-					stringPath.append(node.toString());
-
-				}
-
-				File pathFile = new File(stringPath.toString());
-				// If we are talking about something non-existent, we don't want
-				// to know
-				if (!pathFile.exists()) {
-					graphingPanel.getFrame().log(
-							"Graphing Panel: Path does not exist: " + pathFile,
-							4);
-					return;
-				}
-				// Similar if we cannot execute the location
-				if (!pathFile.canExecute()) {
-					graphingPanel.getFrame().log(
-							"Graphing Panel: Path cannot be executed: "
-							+ pathFile, 4);
-					return;
-				}
-
-				// Go to the browser
-				URL pathURL;
-				try {
-
-					pathURL = pathFile.toURI().toURL();
 					Browser.init();
-					Browser.displayURL(pathURL.toString());
-
-				} catch (MalformedURLException e1) {
-					graphingPanel
-					.getFrame()
-					.log(
-							"Graphing Panel: Could not open location: Bad URL Location ",
-							4);
-					return;
-				} catch (IOException e2) {
-					graphingPanel
-					.getFrame()
-					.log(
-							"Graphing Panel: Could not open location: IO Issues ",
-							4);
-					return;
+					
+					try {
+						
+						Browser.displayURL(parentFile.toURI().toString());
+						
+					} catch (final IOException ex) {
+						graphingPanel.getFrame()
+						.log(GR_PANEL + 
+								"Could not open containing folder: " + parentFile.toString(),
+								3);
+					}
+					
 				}
 
 			}
+		});
+		
+		// Open in Browser
+		i2_open_browser.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent openEvt) {
+
+				final String stringFile = 
+					getFileFromPath(FileSystemTree.this.getSelectionPath());
+				
+				if(stringFile.startsWith(GR_PANEL)) {
+					
+					// An error occured
+					graphingPanel.getFrame().log(stringFile, 4);
+					
+				} else {
+					
+					final File pathFile = new File(stringFile);
+					Browser.init();
+					
+					try {
+						
+						Browser.displayURL(pathFile.toURI().toString());
+						
+					} catch (final IOException ex) {
+						graphingPanel.getFrame().log(
+								GR_PANEL + "Could not open file in browser: " + pathFile.toString(),
+							3
+						);
+					}
+					
+				}
+
+			}
+		});
+		
+		// Open in Viewer
+		i3_open_viewer.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent openEvt) {
+
+				final String stringFile = 
+					getFileFromPath(FileSystemTree.this.getSelectionPath());
+				
+				if(stringFile.startsWith(GR_PANEL)) {
+					
+					// An error occured
+					graphingPanel.getFrame().log(stringFile, 4);
+					
+				} else {
+					
+					new WindowViewerFrame(graphingPanel, new File(stringFile));
+					
+				}
+
+			}
+		});
+				
+		// Copy
+		i4_copy.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(final ActionEvent cpEvent) {
+
+				final String stringFile = 
+					getFileFromPath(FileSystemTree.this.getSelectionPath());
+
+				if(stringFile.startsWith(GR_PANEL)) {
+					
+					// An error occured
+					graphingPanel.getFrame().log(stringFile, 4);
+					
+				} else {
+
+					final JTextArea myTempArea = new JTextArea(stringFile);
+					myTempArea.selectAll();
+					myTempArea.copy();
+				}
+			} // actionPerformed
 
 		});
+
 
 		addMouseListener(this);
 
 	}
 
-	private void checkForTriggerEvent(final MouseEvent e) {
-		if (e.isPopupTrigger()) {
-			final TreePath selPath = getPathForLocation(e.getX(), e.getY());
+	/**
+	 * <p>Method for obtaining the file location from the tree
+	 * path specified.</p>
+	 * 
+	 * <p>In the event of an error, this method returns a 
+	 * String that starts with "Graphing Panel:"</p>
+	 * 
+	 * @param selectedPath The selected path on the Tree.
+	 * 
+	 * @return String The toString() of the file location, or a 
+	 * value  that starts with "Graphing Panel" in case of an
+	 * error.
+	 */
+	private final String getFileFromPath(final TreePath selectedPath) {
+		
+		if (selectedPath == null) {
+			return GR_PANEL + "The selected path is null";
+		}
+		// More than 32 directories chill
+		if (selectedPath.getPathCount() > 32) {
+			return GR_PANEL + "Path has more than 32 locations";
+		}
+
+		final Object[] path = selectedPath.getPath();
+
+		// Get the file path
+		final StringBuffer stringPath = new StringBuffer(System
+				.getProperty("user.dir"));
+		stringPath.append(File.separator);
+		stringPath.append("jbrofuzz");
+
+		for (Object node : path) {
+
+			stringPath.append(System.getProperty("file.separator"));
+			stringPath.append(node.toString());
+
+		}
+
+		final File pathFile = new File(stringPath.toString());
+		// If we are talking about something non-existent, we don't want
+		// to know
+		if (!pathFile.exists()) {
+			return GR_PANEL + "Path does not exist: " + pathFile;
+		}
+		// Similar if we cannot execute the location
+		if (!pathFile.canExecute()) {
+			return GR_PANEL + "Path cannot be executed: " + pathFile;
+		}
+		
+		return pathFile.toString();
+		
+	}
+	
+	private void checkForTriggerEvent(final MouseEvent mEvent1) {
+		if (mEvent1.isPopupTrigger()) {
+			final TreePath selPath = getPathForLocation(mEvent1.getX(), mEvent1.getY());
 			setSelectionPath(selPath);
-			popmenu.show(e.getComponent(), e.getX(), e.getY());
+			popmenu.show(mEvent1.getComponent(), mEvent1.getX(), mEvent1.getY());
 		}
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		checkForTriggerEvent(e);
+	public void mouseClicked(final MouseEvent mEvent2) {
+		checkForTriggerEvent(mEvent2);
 
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		checkForTriggerEvent(e);
+	public void mouseEntered(final MouseEvent mEvent3) {
+		checkForTriggerEvent(mEvent3);
 
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		checkForTriggerEvent(e);
+	public void mouseExited(final MouseEvent mEvent4) {
+		checkForTriggerEvent(mEvent4);
 
 	}
 
 	@Override
-	public void mousePressed(final MouseEvent e) {
-		checkForTriggerEvent(e);
+	public void mousePressed(final MouseEvent mEvent5) {
+		checkForTriggerEvent(mEvent5);
 	}
 
 	@Override
-	public void mouseReleased(final MouseEvent e) {
-		checkForTriggerEvent(e);
+	public void mouseReleased(final MouseEvent mEvent6) {
+		checkForTriggerEvent(mEvent6);
 	}
 
 }

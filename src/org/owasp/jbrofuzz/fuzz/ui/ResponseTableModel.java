@@ -226,13 +226,12 @@ public class ResponseTableModel extends AbstractTableModel {
 
 		ResponseOutput response = new ResponseOutput(
 
-				outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
-				.getStartDateShort(),
-				"Finished - " + outputMessage.getStatus(), StringUtils.leftPad(
-						"" + outputMessage.getResponseTime(), 6, '0')
-						+ " ms", StringUtils.leftPad(""
-								+ outputMessage.getByteCount(), 8, '0')
-								+ " bytes"
+				outputMessage.getFileName(), 
+				outputMessage.getTextURL(), 
+				outputMessage.getStartDateShort(),
+				"Finished - " + outputMessage.getStatus(), 
+				StringUtils.leftPad("" + outputMessage.getResponseTime(), 6, '0') + " ms",
+				StringUtils.leftPad("" + outputMessage.getByteCount(), 8, '0') + " bytes"
 
 		);
 

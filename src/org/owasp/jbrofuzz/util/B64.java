@@ -53,7 +53,7 @@ public class B64 {
 	 *            String
 	 * @return byte[]
 	 */
-	protected static byte[] decode(final String base64) {
+	private static byte[] decode(final String base64) {
 
 		int pad = 0;
 		for (int i = base64.length() - 1; base64.charAt(i) == '='; i--) {

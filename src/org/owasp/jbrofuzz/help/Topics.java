@@ -55,6 +55,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -211,14 +212,13 @@ public class Topics extends JFrame implements TreeSelectionListener {
 		splitPane.setRightComponent(helpScrPane);
 		splitPane.setOneTouchExpandable(false);
 
-		final Dimension minimumSize = new Dimension(0, 0);
-		helpScrPane.setMinimumSize(minimumSize);
-		webdScrPane.setMinimumSize(minimumSize);
-		tcpsScrPane.setMinimumSize(minimumSize);
-		tcpfScrPane.setMinimumSize(minimumSize);
-		geneScrPane.setMinimumSize(minimumSize);
-		sysmScrPane.setMinimumSize(minimumSize);
-		treeView.setMinimumSize(minimumSize);
+		helpScrPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		webdScrPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		tcpsScrPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		tcpfScrPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		geneScrPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		sysmScrPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		treeView.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		splitPane.setDividerLocation(100);
 		splitPane.setPreferredSize(new Dimension(Topics.SIZE_X, Topics.SIZE_Y));
 

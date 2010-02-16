@@ -146,7 +146,7 @@ public class MessageWriter {
 
 	}
 
-	public void setConnection(final AbstractConnection connection) {
+	public void setConnection(final Connection connection) {
 
 		// Update the reply
 		final String reply = connection.getReply();

@@ -62,6 +62,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
 import org.owasp.jbrofuzz.version.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>The headers window showing the headers in their 
@@ -223,11 +224,10 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener, KeyLis
 
 
 		// Allow for all areas to be resized to even not be seen
-		final Dimension minimumSize = new Dimension(0, 0);
-		treePanel.setMinimumSize(minimumSize);
-		commentPanel.setMinimumSize(minimumSize);
-		infoPanel.setMinimumSize(minimumSize);
-		headerPanel.setMinimumSize(minimumSize);
+		treePanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		commentPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		infoPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		headerPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 
 		// The bottom progress bar and friends
 		final JProgressBar progressBar = new JProgressBar();

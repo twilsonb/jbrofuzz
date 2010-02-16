@@ -29,6 +29,7 @@
  */
 package org.owasp.jbrofuzz.version;
 
+import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -135,6 +136,7 @@ public class JBroFuzzFormat {
 
 		+ "<BR></HTML>";
 
+	public static final Dimension ZERO_DIM = new Dimension(0,0);
 	/**
 	 * <p>
 	 * Method for abbreviating the given String to a particular length, by

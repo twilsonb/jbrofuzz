@@ -162,25 +162,7 @@ public abstract class AbstractPanel extends JPanel {
 		}
 	}
 
-	/**
-	 * <p>
-	 * Method for completely expanding the first layer of a given
-	 * <code>JTree</code>.
-	 * </p>
-	 * 
-	 * @param tree
-	 *            The JTree to be expanded/collapsed
-	 * @param parent
-	 *            The parent TreePath from which to begin
-	 * 
-	 * @author subere@uncon.org
-	 * @version 1.5
-	 * @since 1.4
-	 */
-	public void expandOne(JTree tree, TreePath parent) {
-
-		tree.expandPath(parent);
-	}
+	
 
 	/**
 	 * <p>
@@ -393,7 +375,11 @@ public abstract class AbstractPanel extends JPanel {
 						}
 						final String name = (String) area.getModel()
 						.getValueAt(area.convertRowIndexToModel(c), 0);
-						new WindowViewerFrame(AbstractPanel.this, name);
+						
+						final File directory = getFrame().getJBroFuzz().getHandler().getFuzzDirectory();
+						final File selFile = new File(directory, name);
+						
+						new WindowViewerFrame(AbstractPanel.this, selFile);
 
 					}
 

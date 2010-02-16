@@ -51,7 +51,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.9
+ * @version 2.0
  * @since 0.1
  */
 public class JBroFuzz {
