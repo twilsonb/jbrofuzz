@@ -278,7 +278,7 @@ class SocketConnection implements AbstractConnection {
 			code[2] = '-';
 
 		}
-		return code.toString();
+		return new String(code);
 	}
 
 	/* (non-Javadoc)

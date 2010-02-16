@@ -54,6 +54,7 @@ import javax.swing.tree.TreePath;
 
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -135,10 +136,9 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 		splitPane.setDividerLocation(150);
 
 		// Set the minimum size for all components
-		final Dimension minimumSize = new Dimension(0, 0);
-		leftScrollPane.setMinimumSize(minimumSize);
+		leftScrollPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		for (JPanel jp : panels) {
-			jp.setMinimumSize(minimumSize);
+			jp.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		}
 		splitPane.setDividerLocation(150);
 

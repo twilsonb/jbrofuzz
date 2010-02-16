@@ -52,6 +52,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -304,17 +305,16 @@ public class PayloadsPanel extends AbstractPanel {
 		rightSplitPanel.setDividerLocation(250);
 
 		// Allow for all areas to be resized to even not be seen
-		final Dimension minimumSize = new Dimension(0, 0);
 
-		viewTextScrollPane.setMinimumSize(minimumSize);
-		bottomSplitPanel.setMinimumSize(minimumSize);
-		commentLabelScrollPane.setMinimumSize(minimumSize);
-		payloadTableScrollPane.setMinimumSize(minimumSize);
+		viewTextScrollPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		bottomSplitPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		commentLabelScrollPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		payloadTableScrollPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 
-		categoriesPanel.setMinimumSize(minimumSize);
-		rightSplitPanel.setMinimumSize(minimumSize);
-		payloadsPanel.setMinimumSize(minimumSize);
-		fuzzersPanel.setMinimumSize(minimumSize);
+		categoriesPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		rightSplitPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		payloadsPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		fuzzersPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 
 		// Add all the components to the main pane
 		this.add(mainSplitPanel, BorderLayout.CENTER);

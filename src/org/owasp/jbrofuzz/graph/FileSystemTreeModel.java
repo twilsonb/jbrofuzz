@@ -38,12 +38,12 @@ public class FileSystemTreeModel extends DefaultTreeModel {
 	 */
 	private static final long serialVersionUID = 9140676458241640432L;
 
-	public FileSystemTreeModel(FileSystemTreeNode root) {
+	public FileSystemTreeModel(final FileSystemTreeNode root) {
 		super(root, true);
 	}
 
 	@Override
-	public boolean isLeaf(Object node) {
+	public boolean isLeaf(final Object node) {
 
 		return !((FileSystemTreeNode) node).isDirectory();
 

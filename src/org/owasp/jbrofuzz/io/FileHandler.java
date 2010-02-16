@@ -193,67 +193,7 @@ public class FileHandler {
 		}
 	}
 
-	/**
-	 * <p>
-	 * Method for deleting the empty directories at the end of a session.
-	 * </p>
-	 */
-	public void deleteEmptryDirectories() {
-
-		if (!fuzzDirectory.exists()) {
-			mJBroFuzz
-			.getWindow()
-			.log("Could not find directory: "
-					+ fuzzDirectory.getName(), 3);
-			return;
-		}
-
-		if (FileUtils.sizeOfDirectory(fuzzDirectory) == 0L) {
-			try {
-				FileUtils.deleteDirectory(fuzzDirectory);
-
-			} catch (final IOException e2) {
-				mJBroFuzz.getWindow()
-				.log("Could not delete directory: "
-						+ fuzzDirectory.getName(), 3);
-			}
-		}
-
-		final File parent = fuzzDirectory.getParentFile();
-
-		if (!parent.exists()) {
-			// g.getWindow.log("Could not find directory: " + parent.getName(), 3);
-			return;
-		}
-
-		if (FileUtils.sizeOfDirectory(parent) == 0L) {
-			try {
-				FileUtils.deleteDirectory(parent);
-
-			} catch (final IOException e) {
-//				g.getWindow.log("Could not delete directory: "
-//						+ parent.getName(), 3);
-			}
-		}
-
-		if (!jbrfDirectory.exists()) {
-//			g.getWindow.log("Could not find directory: "
-//					+ jbrfDirectory.getName(), 3);
-			return;
-		}
-
-		if (FileUtils.sizeOfDirectory(jbrfDirectory) == 0L) {
-			try {
-				FileUtils.deleteDirectory(jbrfDirectory);
-
-			} catch (final IOException e) {
-//				g.getWindow.log("Could not delete directory: "
-//						+ jbrfDirectory.getName(), 3);
-
-			}
-		}
-
-	}
+	
 
 	/**
 	 * <p>
@@ -314,73 +254,73 @@ public class FileHandler {
 			return false;
 		}
 	}
-
+	
+	
 	/**
-	 * <p>
-	 * Method for returning the contents of a file in the 'fuzz' directory,
-	 * created during startup.
-	 * </p>
+	 * <p>Method for returning the contents of any file as 
+	 * String.</p>
+	 * <p>In the event of an error, the String returned is
+	 * the error message triggered.</p>
 	 * 
-	 * @param fileName
-	 *            The name of the file, e.g. 01-0000001.html
+	 * @param inputFile File
+	 *            
 	 * @return String The contents of the file as a string
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
-	 * @since 1.2
+	 * @version 2.0
+	 * @since 2.0
 	 */
-	public String readFuzzFile(String fileName) {
+	public static String readFile(File inputFile) {
 
-		final File file = new File(fuzzDirectory, fileName);
-		if (file.exists()) {
-			if (file.isDirectory()) {
-				mJBroFuzz.getWindow().log(
-						"File '" + file + "' exists but is a directory", 3);
-				return ""; // new String();
+		final String fileName = inputFile.toString();
+		
+		if (inputFile.exists()) {
+			if (inputFile.isDirectory()) {
+				
+				return "File is a directory:\n\n" + fileName;
 			}
-			if (file.canRead() == false) {
-				mJBroFuzz.getWindow().log("File '" + file + "' cannot be read", 3);
-				return ""; // new String();
+			if (!inputFile.canRead()) {
+				
+				return "File cannot be read:\n\n" + fileName;
+				
 			}
 		} else {
-			mJBroFuzz.getWindow().log("File '" + file + "' does not exist", 3);
-			return ""; // new String();
+			
+			return "File does not exist:\n\n" + fileName;
+			
 		}
 
+		int counter = 0;
 		InputStream in = null;
 		FileInputStream fis = null;
 		StringBuffer fileContents = new StringBuffer();
 		try {
-			fis = new FileInputStream(file);
+			fis = new FileInputStream(inputFile);
 			in = new BufferedInputStream(fis);
 
-			int counter = 0;
 			int c;
 			// Read, having as upper maximum the int maximum
 			while (((c = in.read()) > 0) && (counter <= MAX_BYTES)) {
 				fileContents.append((char) c);
 				counter++;
-				if (counter == Integer.MAX_VALUE) {
-					mJBroFuzz.getWindow().log(
-							"Only displaying the first 2^31-1 bytes of the file '"
-							+ file.getName(), 3);
-				}
+				
 			}
 
 			in.close();
 			fis.close();
 
 		} catch (IOException e) {
-			mJBroFuzz.getWindow()
-			.log(
-					"Opening File '" + file.getName()
-					+ "' caused an I/O error", 4);
+			
+			return "Attempting to open the file caused an I/O Error:\n\n" + fileName;
 
 		} finally {
 			IOUtils.closeQuietly(in);
 			IOUtils.closeQuietly(fis);
 		}
-
+		
+		if(counter == MAX_BYTES) {
+			fileContents.append("\n... stopped reading after 32 Mbytes.\n");
+		}
 		return fileContents.toString();
 	}
 

@@ -38,6 +38,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -61,6 +62,7 @@ import javax.swing.text.Highlighter;
 
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.version.ImageCreator;
@@ -103,12 +105,16 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 	 * corresponding panel.
 	 * </p>
 	 * 
-	 * @param parent
-	 * @param name
+	 * @param parent The parent panel that the frame will belong to
+	 * @param name The full file name of the file location to be opened
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @since 2.0
 	 */
-	public WindowViewerFrame(final AbstractPanel parent, final String name) {
+	public WindowViewerFrame(final AbstractPanel parent, final File inputFile) {
 
-		super("JBroFuzz - File Viewer - " + name + ".html");
+		super("JBroFuzz - File Viewer - " + inputFile.getName());
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 
 		// The container pane
@@ -118,7 +124,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		// Define the Panel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(name + ".html"), BorderFactory
+				.createTitledBorder(inputFile.getName()), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 		listPanel.setLayout(new BorderLayout());
 
@@ -201,7 +207,6 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 			}
 		});
 
-// TODO from UCDetector: Local class "WindowViewerFrame$FileLoader" has 0 references
 		class FileLoader extends SwingWorker<String, Object> { // NO_UCD
 
 			@Override
@@ -211,9 +216,8 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 
 				listTextArea.setText(
 
-						parent.getFrame().getJBroFuzz().getHandler().readFuzzFile(
-								name + ".html")
-
+						FileHandler.readFile(inputFile)
+						
 				);
 
 				return "done";

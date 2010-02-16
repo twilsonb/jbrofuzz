@@ -30,7 +30,6 @@
 package org.owasp.jbrofuzz.graph;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.swing.BorderFactory;
@@ -45,6 +44,7 @@ import javax.swing.text.BadLocationException;
 
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -138,9 +138,8 @@ public class GraphingPanel extends AbstractPanel {
 		mainSplitPanel.setRightComponent(rightPanel);
 
 		// Allow for all areas to be resized to even not be seen
-		Dimension minimumSize = new Dimension(0, 0);
-		leftPanel.setMinimumSize(minimumSize);
-		rightPanel.setMinimumSize(minimumSize);
+		leftPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		rightPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 
 		// The bottom progress bar and friends
 		progressBar = new JProgressBar();
@@ -220,9 +219,9 @@ public class GraphingPanel extends AbstractPanel {
 		// Start to do what you need to do
 		setProgressBarStart();
 
-		JohnyWalker j = new JohnyWalker(this);
-		j.run();
-		tree.setModel(new FileSystemTreeModel(j.getFileSystemTreeNode()));
+		final JohnyWalker jWalker = new JohnyWalker(this);
+		jWalker.run();
+		tree.setModel(new FileSystemTreeModel(jWalker.getFileSystemTreeNode()));
 
 	}
 

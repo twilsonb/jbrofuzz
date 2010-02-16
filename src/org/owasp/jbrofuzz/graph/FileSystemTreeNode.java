@@ -34,24 +34,18 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * 
  * @author subere@uncon.org
- * @version 1.5
+ * @version 2.0
  */
 public class FileSystemTreeNode extends DefaultMutableTreeNode {
 
 	private static final long serialVersionUID = 5086899959196495566L;
 
-	private boolean nodeIsDirectory;
+	private transient boolean nodeIsDirectory;
 
-	public FileSystemTreeNode(Object o) {
-		super(o);
+	public FileSystemTreeNode(final Object fsObject) {
+		super(fsObject);
 		nodeIsDirectory = false;
 	}
-
-// TODO UCdetector: Remove unused code: 
-// 	public FileSystemTreeNode(Object o, boolean isDirectory) {
-// 		super(o);
-// 		nodeIsDirectory = isDirectory;
-// 	}
 
 	public boolean isDirectory() {
 		return nodeIsDirectory;

@@ -66,6 +66,7 @@ import javax.swing.tree.TreePath;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
@@ -203,14 +204,13 @@ public class EncoderHashFrame extends JFrame {
 
 		
 		// Set the minimum size for all components
-		final Dimension minimumSize = new Dimension(0, 0);
-		leftScrollPane.setMinimumSize(minimumSize);
-		verticalSplitPane.setMinimumSize(minimumSize);
-		commentSplitPane.setMinimumSize(minimumSize);
+		leftScrollPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		verticalSplitPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		commentSplitPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		
-		encoderPanel.setMinimumSize(minimumSize);
-		decoderPanel.setMinimumSize(minimumSize);
-		commentPanel.setMinimumSize(minimumSize);
+		encoderPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		decoderPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		commentPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		
 		horizontalSplitPane.setDividerLocation(180);
 		verticalSplitPane.setDividerLocation(SIZE_Y / 2);
@@ -288,6 +288,8 @@ public class EncoderHashFrame extends JFrame {
 					// Save the values of the encode/decode as a preference
 					JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[0], enTextPane.getText());
 					JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[1], deTextPane.getText());
+					if (node != null)
+						JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[2], node.toString());
 
 					dispose();
 

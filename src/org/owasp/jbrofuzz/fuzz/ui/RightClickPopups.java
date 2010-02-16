@@ -88,7 +88,11 @@ public class RightClickPopups {
 				}
 				final String name = (String) area.getModel()
 				.getValueAt(area.convertRowIndexToModel(c), 0);
-				new WindowViewerFrame(mFuzzingPanel, name);
+				
+				final File directory = mFuzzingPanel.getFrame().getJBroFuzz().getHandler().getFuzzDirectory();
+				final File selFile = new File(directory, name + ".html");
+				
+				new WindowViewerFrame(mFuzzingPanel, selFile);
 
 			}
 		});
