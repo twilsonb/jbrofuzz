@@ -59,7 +59,14 @@ public class JBroFuzzPrefs {
 		 * 
 		 * This is a boolean preference.
 		 */
-		"prefs.dir.delete"
+		"prefs.dir.delete",
+		
+		/**
+		 * The preference of where user data should be created.
+		 * 
+		 * This is a String preference.
+		 */
+		"save.dir"
 	};
 
 	/**

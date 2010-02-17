@@ -44,7 +44,7 @@ import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.owasp.jbrofuzz.util.B64;
 
-public class EncoderHashCore {
+class EncoderHashCore {
 	
 	protected static final String[] CODES = {
 		"URL US-ASCII", "URL ISO-8859-1", "URL Cp1252", "URL UTF-8",

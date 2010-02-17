@@ -42,8 +42,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.version.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 import com.Ostermiller.util.Browser;
 
@@ -258,9 +260,11 @@ class FileSystemTree extends JTree implements MouseListener {
 
 		final Object[] path = selectedPath.getPath();
 
+		// Get the directory location from preferences
+		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[1], System.getProperty("user.dir"));
+
 		// Get the file path
-		final StringBuffer stringPath = new StringBuffer(System
-				.getProperty("user.dir"));
+		final StringBuffer stringPath = new StringBuffer(dirString);
 		stringPath.append(File.separator);
 		stringPath.append("jbrofuzz");
 

@@ -66,8 +66,12 @@ public class Fuzzer implements Iterator<String> {
 	 * 
 	 * @see Database.createFuzzer(String id, int length)
 	 * 
-	 * @param prototype
-	 * @param len
+	 * @param prototype The prototype id, as read from the fuzzers.jbrf file
+	 * 					e.g. "031-B16-HEX" for the hexadecimal alphabet 	 
+	 * 
+	 * @param len		The length of the fuzzer, required for recursive and zero
+	 * 					fuzzers. This should always be a positive integer.
+	 * 		
 	 * @throws NoSuchFuzzerException
 	 * 
 	 * @author subere@uncon.org
@@ -119,7 +123,7 @@ public class Fuzzer implements Iterator<String> {
 	 * @version 1.8
 	 * @since 1.2
 	 */
-	public long getCurrectValue() {
+	public long getCurrentValue() {
 
 		return cValue;
 
@@ -176,12 +180,35 @@ public class Fuzzer implements Iterator<String> {
 
 	}
 
+	/**
+	 * <p>Check whether or not the fuzzer iterator has a next element.</p>
+	 * 
+	 * @return true if the fuzzer has more elements to return during its 
+	 * 				iteration
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @since 1.2
+	 */
 	public boolean hasNext() {
 
 		return cValue < maxValue;
 
 	}
 
+	/**
+	 * <p>Return the next element of the fuzzer during iteration.</p>
+	 * 
+	 * <p>This method should be used to access fuzzing payloads, after
+	 * construction of the fuzzer object.</p>
+	 * 
+	 * @return String	The next fuzzer payload, during the iteration 
+	 * 					process
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @since 1.2
+	 */
 	public String next() {
 
 		final StringBuffer output = new StringBuffer();
