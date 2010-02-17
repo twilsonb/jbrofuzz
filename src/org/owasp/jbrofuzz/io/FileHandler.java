@@ -40,6 +40,7 @@ import org.apache.commons.io.IOUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.MessageWriter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
  * <p>
@@ -49,7 +50,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * 
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 2.0
  * @since 1.2
  */
 public class FileHandler {
@@ -64,7 +65,7 @@ public class FileHandler {
 	private File fuzzDirectory;
 
 	// The /jbrofuzz directory created at launch
-	private File jbrfDirectory;
+	private File rootDirectory;
 
 	// A counter for any File -> New directories created
 	private int count;
@@ -101,18 +102,21 @@ public class FileHandler {
 	 * is created.</p>
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.9
+	 * @version 2.0
 	 * @since 1.5
 	 */
 	public final void createNewDirectory() {
 
+		// Get the root directory location from preferences
+		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[1], System.getProperty("user.dir"));
+		
+		// Create the /jbrofuzz directory in the current folder
+		rootDirectory = new File(dirString);
+
 		final StringBuffer directoryLocation = new StringBuffer();
-		directoryLocation.append(System.getProperty("user.dir"));
+		directoryLocation.append(dirString);
 		directoryLocation.append(File.separator);
 		directoryLocation.append("jbrofuzz");
-
-		// Create the /jbrofuzz directory in the current folder
-		jbrfDirectory = new File(directoryLocation.toString());
 
 		directoryLocation.append(File.separator);
 		directoryLocation.append("fuzz");
@@ -204,13 +208,13 @@ public class FileHandler {
 	 * @return String the path of the 'fuzz' directory
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 2.0
 	 * @since 1.2
 	 */
 	public String getCanonicalPath() {
 
 		try {
-			return fuzzDirectory.getCanonicalPath();
+			return rootDirectory.getCanonicalPath();
 		} catch (IOException e) {
 			return "";
 		}
@@ -233,28 +237,6 @@ public class FileHandler {
 
 		return fuzzDirectory;
 	}
-	
-	/**
-	 * <p>Set the fuzzing directory where all the files will 
-	 * be saved to the directory specified.</p>
-	 * 
-	 * @param directory
-	 * @return true if succcessful, false if anything else
-	 * 
-	 * @author subere@uncon.org
-	 * @version 1.9
-	 * @since 1.9
-	 */
-	public boolean setFuzzDirectory(File fuzzDirectory) {
-		
-		if(fuzzDirectory.isDirectory()) {
-			this.fuzzDirectory = fuzzDirectory;
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	
 	/**
 	 * <p>Method for returning the contents of any file as 

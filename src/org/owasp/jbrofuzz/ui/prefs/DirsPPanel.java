@@ -37,6 +37,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -54,9 +55,15 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 class DirsPPanel extends AbstractPrefsPanel {
 
 	private static final long serialVersionUID = -7358976067347647005L;
-
+	
+	private final JTextField dirTextField;
+	
+	private final PrefDialog dialog;
+	
 	protected DirsPPanel(final PrefDialog dialog) {
+		
 		super("Directory Locations");
+		this.dialog = dialog;
 		
 		// Directory Locations... Directory Save Browse
 
@@ -70,17 +77,15 @@ class DirsPPanel extends AbstractPrefsPanel {
 				.createTitledBorder(" Fuzzing Directory (where data is saved) "), BorderFactory.createEmptyBorder(
 						1, 1, 1, 1)));
 
-		final JTextField dirTextField = new JTextField(dir);
+		dirTextField = new JTextField(dir);
 		dirTextField.setFont(new Font("Verdana", Font.PLAIN, 12));
 		dirTextField.setMargin(new Insets(1, 1, 1, 1));
 
 		final JButton browseDirButton = new JButton("Browse");
 		browseDirButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		// For 2.0 release
-		browseDirButton.setEnabled(false);
+		browseDirButton.setEnabled(true);
 		
-		JFileChooser chooser;
-
 		browseDirButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -97,18 +102,23 @@ class DirsPPanel extends AbstractPrefsPanel {
 							
 							File selDirFile = chooserD.getSelectedFile();
 							if(selDirFile.isDirectory()) {
-//								JBroFuzz.PREFS.put("Save.Location", selDirFile.toString());
-//								directoryTextField.setText(selDirFile.toString());
-								// parent.getJBroFuzz().getHandler().setFuzzDirectory(selDirFile);
+
+								try {
+									
+									dirTextField.setText(selDirFile.getCanonicalPath());
+									
+								} catch (IOException e) {
+									
+									dialog.getJBroFuzzWindow().log(e.getMessage(), 4);
+									
+								}
+								
 							}
 //							System.out.println("getCurrentDirectory(): " 
 //									+  chooserD.getCurrentDirectory());
 //							System.out.println("getSelectedFile() : " 
 //									+  chooserD.getSelectedFile());
 						}
-//						else {
-//							System.out.println("No Selection ");
-//						}
 
 					}
 				});
@@ -147,5 +157,12 @@ class DirsPPanel extends AbstractPrefsPanel {
 
 	}
 	
-	public void apply() { }
+	public void apply() {
+
+		String location = dirTextField.getText();
+		JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[1], location);
+		dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().createNewDirectory();
+		dirTextField.setText(dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().getCanonicalPath());
+		
+	}
 }

@@ -186,12 +186,24 @@ public class Database {
 		if (!containsPrototype(prototypeId)) {
 
 			throw new NoSuchFuzzerException(StringUtils.abbreviate(prototypeId,
-					10)
-					+ " : No Such Fuzzer Found in the Database ");
+					10) + " : No Such Fuzzer Found in the Database ");
 
 		}
 
 		return new Fuzzer(getPrototype(prototypeId), len);
+	}
+	
+	public PowerFuzzer createPowerFuzzer(final String prototypeId, final int len, final int power) 
+	throws NoSuchFuzzerException {
+		
+		if (!containsPrototype(prototypeId)) {
+			
+			throw new NoSuchFuzzerException(StringUtils.abbreviate(prototypeId, 
+					10) + "No Such Fuzzer Found in the Database ");
+			
+		}
+		
+		return new PowerFuzzer(getPrototype(prototypeId), len, power);
 	}
 
 	/**

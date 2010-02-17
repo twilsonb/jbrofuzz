@@ -31,6 +31,9 @@ package org.owasp.jbrofuzz.graph;
 
 import java.io.File;
 
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
+
 class JohnyWalker {
 
 	private FileSystemTreeNode master;
@@ -45,7 +48,10 @@ class JohnyWalker {
 
 	protected JohnyWalker(GraphingPanel x3) {
 
-		directory = new File(System.getProperty("user.dir") + File.separator
+		// Get the directory location from preferences
+		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[1], System.getProperty("user.dir"));
+
+		directory = new File(dirString + File.separator
 				+ "jbrofuzz" + File.separator + "fuzz");
 		this.x3 = x3;
 
