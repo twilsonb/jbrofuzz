@@ -79,6 +79,10 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * @version 1.9
  * @since 1.5
  * 
+ * @author Yiannis Marangos
+ * @version 2.0
+ * @since 2.0
+ * 
  */
 public class EncoderHashFrame extends JFrame {
 
