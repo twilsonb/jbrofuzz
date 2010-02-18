@@ -64,13 +64,16 @@ public class ResponseSizeChart {
 
 	private DefaultCategoryDataset dataset;
 
+	// Constants
+	private static final String END_SIGNATURE = "--jbrofuzz-->\n";
+
 	public ResponseSizeChart() {
 
 		this(0);
 
 	}
 
-	public ResponseSizeChart(int size) {
+	public ResponseSizeChart(final int size) {
 
 		xData = new String[size];
 		yData = new int[size];
@@ -79,34 +82,33 @@ public class ResponseSizeChart {
 
 	}
 
-	private int calculateValue(File f) {
+	private int calculateValue(final File inputFile) {
 
-		if (f.isDirectory()) {
+		if (inputFile.isDirectory()) {
 			return -1;
 		}
 
 		long headerLength = 0L;
 
-		BufferedReader in = null;
+		BufferedReader inBuffReader = null;
 		try {
 
-			in = new BufferedReader(new FileReader(f));
+			inBuffReader = new BufferedReader(new FileReader(inputFile));
 
-			StringBuffer one = new StringBuffer();
+			final StringBuffer one = new StringBuffer();
 			int counter = 0;
-			int c;
-			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
+			int got;
+			while (((got = inBuffReader.read()) > 0) && (counter < MAX_CHARS)) {
 
-				one.append((char) c);
+				one.append((char) got);
 				counter++;
 
 			}
-			in.close();
+			inBuffReader.close();
 
 			one.delete(0, 5);
 			one.delete(one.indexOf("\n--"), one.length());
 
-			final String END_SIGNATURE = "--jbrofuzz-->\n";
 			headerLength = (one.indexOf(END_SIGNATURE) + END_SIGNATURE.length());
 
 		} catch (final IOException e1) {
@@ -123,11 +125,11 @@ public class ResponseSizeChart {
 
 		} finally {
 
-			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(inBuffReader);
 
 		}
 
-		return (int) (f.length() - headerLength);
+		return (int) (inputFile.length() - headerLength);
 	}
 
 	public void createFinalPlotCanvas() {
@@ -136,7 +138,7 @@ public class ResponseSizeChart {
 
 	public ChartPanel getPlotCanvas() {
 
-		JFreeChart chart = ChartFactory.createBarChart(
+		final JFreeChart chart = ChartFactory.createBarChart(
 				"JBroFuzz Response Size Bar Chart", // chart title
 				"File Name", // domain axis label
 				"Response Size (bytes)", // range axis label
@@ -147,22 +149,23 @@ public class ResponseSizeChart {
 				true // URLs?
 		);
 
-		Plot plot = chart.getPlot();
+		final Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
 
-		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
-		renderer
-		.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+		final CategoryItemRenderer renderer = 
+									chart.getCategoryPlot().getRenderer();
+		renderer.setBaseToolTipGenerator(
+									new StandardCategoryToolTipGenerator());
 
 		return new ChartPanel(chart);
 
 	}
 
-	public void setValueAt(int index, File f) {
+	public void setValueAt(final int index, final File inputFile) {
 
-		xData[index] = f.getName();
-		yData[index] = calculateValue(f);
+		xData[index] = inputFile.getName();
+		yData[index] = calculateValue(inputFile);
 
 		dataset.addValue(yData[index], "Row 1", xData[index]);
 

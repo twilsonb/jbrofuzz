@@ -62,29 +62,27 @@ public class GraphingPanel extends AbstractPanel {
 	 */
 	private static final long serialVersionUID = -3962672183042644437L;
 
-	// The split pane at the centre of the screen
-	private JSplitPane mainSplitPanel;
 	// The main file tree object
-	private FileSystemTree tree;
+	private final FileSystemTree tree;
 	// The progress bar displayed
-	private JProgressBar progressBar;
+	private final JProgressBar progressBar;
 	// A boolean to check if we are running or not
 	private boolean stopped;
 	// Console related trends
-	private JTextArea console;
+	private final JTextArea console;
 	// The right tabs holding the graphs
-	private TabbedPlotter rightPanel;
+	private final TabbedPlotter rightPanel;
 
 	/**
 	 * The constructor for the Graphing Panel. This constructor spawns the main
 	 * panel involving web directories.
 	 * 
-	 * @param m
+	 * @param mWindow
 	 * 
 	 */
-	public GraphingPanel(final JBroFuzzWindow m) {
+	public GraphingPanel(final JBroFuzzWindow mWindow) {
 
-		super(" Graphing ", m);
+		super(" Graphing ", mWindow);
 		setLayout(new BorderLayout());
 
 		stopped = true;
@@ -95,22 +93,22 @@ public class GraphingPanel extends AbstractPanel {
 		// The right hand side console and friends
 		console = new JTextArea();
 
-		JScrollPane consoleScrollPanel = new JScrollPane(console);
-		consoleScrollPanel.setVerticalScrollBarPolicy(20);
-		consoleScrollPanel.setHorizontalScrollBarPolicy(30);
+		final JScrollPane consoleSclPanel = new JScrollPane(console);
+		consoleSclPanel.setVerticalScrollBarPolicy(20);
+		consoleSclPanel.setHorizontalScrollBarPolicy(30);
 
 		final JPanel consolePanel = new JPanel(new BorderLayout());
 		consolePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Console "), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
 
-		consolePanel.add(consoleScrollPanel);
+		consolePanel.add(consoleSclPanel);
 
 		// The right hand side tree and friends
 		tree = new FileSystemTree(this, new FileSystemTreeModel(
 				new FileSystemTreeNode("...")));
 
-		JScrollPane treeScrollPanel = new JScrollPane(tree);
+		final JScrollPane treeScrollPanel = new JScrollPane(tree);
 		treeScrollPanel.setVerticalScrollBarPolicy(20);
 		treeScrollPanel.setHorizontalScrollBarPolicy(30);
 
@@ -122,7 +120,7 @@ public class GraphingPanel extends AbstractPanel {
 		treePanel.add(treeScrollPanel);
 
 		// The left hand side tab and friends
-		JTabbedPane leftPanel = new JTabbedPane(SwingConstants.TOP);
+		final JTabbedPane leftPanel = new JTabbedPane(SwingConstants.TOP);
 		leftPanel.add(" Tree ", treePanel);
 		leftPanel.add(" Console ", consolePanel);
 
@@ -130,7 +128,7 @@ public class GraphingPanel extends AbstractPanel {
 		rightPanel = new TabbedPlotter(this);
 
 		// The main split pane and friends
-		mainSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		final JSplitPane mainSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 		mainSplitPanel.setOneTouchExpandable(false);
 		mainSplitPanel.setDividerLocation(300);

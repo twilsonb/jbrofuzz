@@ -85,7 +85,7 @@ class FileSystemTree extends JTree implements MouseListener {
 		i0_graph.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(final ActionEvent e) {
+			public void actionPerformed(final ActionEvent aEvent) {
 
 				final String stringFile = 
 					getFileFromPath(FileSystemTree.this.getSelectionPath());

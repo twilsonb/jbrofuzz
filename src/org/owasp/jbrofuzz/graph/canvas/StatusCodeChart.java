@@ -57,50 +57,52 @@ public class StatusCodeChart {
 
 	private DefaultPieDataset dataset;
 
+	// Constants
+	private static final String ERROR = "---";
+
 	public StatusCodeChart() {
 
 		this(0);
 
 	}
 
-	public StatusCodeChart(int size) {
+	public StatusCodeChart(final int size) {
 
 		xData = new String[size];
 		yData = new String[size];
 
 		dataset = new DefaultPieDataset();
+		// Default + shape of the graph
 		dataset.setValue("501", 25);
 		dataset.setValue("302", 25);
 		dataset.setValue("404", 25);
 		dataset.setValue("200", 25);
 	}
 
-	private String calculateValue(File f) {
+	private String calculateValue(final File inputFile) {
 
-		final String ERROR = "---";
-
-		if (f.isDirectory()) {
+		if (inputFile.isDirectory()) {
 			// return -1;
 			return ERROR;
 		}
 
 		String status = ERROR;
 
-		BufferedReader in = null;
+		BufferedReader inbuffReader = null;
 		try {
 
-			in = new BufferedReader(new FileReader(f));
+			inbuffReader = new BufferedReader(new FileReader(inputFile));
 
-			StringBuffer one = new StringBuffer(MAX_CHARS);
+			final StringBuffer one = new StringBuffer(MAX_CHARS);
 			int counter = 0;
-			int c;
-			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
+			int got;
+			while (((got = inbuffReader.read()) > 0) && (counter < MAX_CHARS)) {
 
-				one.append((char) c);
+				one.append((char) got);
 				counter++;
 
 			}
-			in.close();
+			inbuffReader.close();
 
 			one.delete(0, one.indexOf("\n--\n") + 4);
 			one.delete(one.indexOf("\n--"), one.length());
@@ -125,7 +127,7 @@ public class StatusCodeChart {
 
 		} finally {
 
-			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(inbuffReader);
 
 		}
 
@@ -145,14 +147,16 @@ public class StatusCodeChart {
 	 */
 	public void createFinalPlotCanvas() {
 
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		final HashMap<String, Integer> map = new HashMap<String, Integer>();
 
 		for (String n : yData) {
 
-			if (map.containsKey(n))
+			if (map.containsKey(n)) {
 				map.put(n, map.get(n) + 1);
-			else
+			}
+			else {
 				map.put(n, 1);
+			}
 
 			// if (n > 0) {
 			//
@@ -185,9 +189,9 @@ public class StatusCodeChart {
 
 		dataset = new DefaultPieDataset();
 
-		for (Iterator<Entry<String, Integer>> it = map.entrySet().iterator(); it
-		.hasNext();) {
-			Map.Entry<String, Integer> entry = it.next();
+		final Iterator<Entry<String, Integer>> iter = map.entrySet().iterator();
+		while ( iter.hasNext() ) {
+			final Map.Entry<String, Integer> entry = iter.next();
 
 			dataset.setValue(entry.getKey(), (double) entry.getValue()
 					/ (double) yData.length);
@@ -197,13 +201,13 @@ public class StatusCodeChart {
 
 	public ChartPanel getPlotCanvas() {
 
-		JFreeChart chart = ChartFactory.createPieChart(
+		final JFreeChart chart = ChartFactory.createPieChart(
 				"JBroFuzz Status Code Pie Chart", dataset, true, // legend?
 				true, // tooltips?
 				false // URLs?
 		);
 
-		Plot plot = chart.getPlot();
+		final Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
 
@@ -211,10 +215,10 @@ public class StatusCodeChart {
 
 	}
 
-	public void setValueAt(int index, File f) {
+	public void setValueAt(final int index, final File inputFile) {
 
-		xData[index] = f.getName();
-		yData[index] = calculateValue(f);
+		xData[index] = inputFile.getName();
+		yData[index] = calculateValue(inputFile);
 
 	}
 

@@ -107,7 +107,7 @@ public class Fuzzer implements Iterator<String> {
 	}
 
 	/**
-	 * <p>Get the current numeric value as a string that the fuzzer
+	 * <p>Get the current numeric value as a long that the fuzzer
 	 * is iterating through.</p>
 	 * 
 	 * <p>Say that you have the hexadecimal fuzzer 'HEX-...' of 
@@ -117,7 +117,7 @@ public class Fuzzer implements Iterator<String> {
 	 * <p>This method gives you the ability to know to return on the 
 	 * current iteration, the numeric value we are currently on.</p>
 	 * 
-	 * @return as String, the numeric value, e.g. '1048576'
+	 * @return as a long, the numeric value, e.g. '1048576'
 	 * 
 	 * @author subere@uncon.org
 	 * @version 1.8
@@ -127,6 +127,20 @@ public class Fuzzer implements Iterator<String> {
 
 		return cValue;
 
+	}
+	
+	/**
+	 * <p>Resets the current value back to 0, as the value is set
+	 * during construction.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @since 2.0
+	 */
+	public void resetCurrentValue() {
+		
+		cValue = 0L;
+		
 	}
 
 	/**
