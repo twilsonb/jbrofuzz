@@ -64,13 +64,15 @@ public class ResponseHeaderSizeChart {
 
 	private DefaultCategoryDataset dataset;
 
+	private static final String END_SIGNATURE = "--jbrofuzz-->\n";
+
 	public ResponseHeaderSizeChart() {
 
 		this(0);
 
 	}
 
-	public ResponseHeaderSizeChart(int size) {
+	public ResponseHeaderSizeChart(final int size) {
 
 		xData = new String[size];
 		yData = new int[size];
@@ -79,31 +81,29 @@ public class ResponseHeaderSizeChart {
 
 	}
 
-	private int calculateValue(File f) {
+	private int calculateValue(final File inputFile) {
 
-		final String END_SIGNATURE = "--jbrofuzz-->\n";
-
-		if (f.isDirectory()) {
+		if (inputFile.isDirectory()) {
 			return -1;
 		}
 
 		int headerLength = 0;
 
-		BufferedReader in = null;
+		BufferedReader inBuffReader = null;
 		try {
 
-			in = new BufferedReader(new FileReader(f));
+			inBuffReader = new BufferedReader(new FileReader(inputFile));
 
-			StringBuffer one = new StringBuffer();
+			final StringBuffer one = new StringBuffer();
 			int counter = 0;
-			int c;
-			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
+			int got;
+			while (((got = inBuffReader.read()) > 0) && (counter < MAX_CHARS)) {
 
-				one.append((char) c);
+				one.append((char) got);
 				counter++;
 
 			}
-			in.close();
+			inBuffReader.close();
 
 			one.delete(0, one.indexOf(END_SIGNATURE) + END_SIGNATURE.length());
 
@@ -129,7 +129,7 @@ public class ResponseHeaderSizeChart {
 
 		} finally {
 
-			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(inBuffReader);
 
 		}
 
@@ -142,7 +142,7 @@ public class ResponseHeaderSizeChart {
 
 	public ChartPanel getPlotCanvas() {
 
-		JFreeChart chart = ChartFactory.createBarChart(
+		final JFreeChart chart = ChartFactory.createBarChart(
 				"JBroFuzz Response Header Size Bar Chart", // chart title
 				"File Name", // domain axis label
 				"Response Header Size (bytes)", // range axis label
@@ -153,22 +153,23 @@ public class ResponseHeaderSizeChart {
 				true // URLs?
 		);
 
-		Plot plot = chart.getPlot();
+		final Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
 
-		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
-		renderer
-		.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+		final CategoryItemRenderer renderer = 
+									chart.getCategoryPlot().getRenderer();
+		renderer.setBaseToolTipGenerator(
+									new StandardCategoryToolTipGenerator());
 
 		return new ChartPanel(chart);
 
 	}
 
-	public void setValueAt(int index, File f) {
+	public void setValueAt(final int index, final File inputFile) {
 
-		xData[index] = f.getName();
-		yData[index] = calculateValue(f);
+		xData[index] = inputFile.getName();
+		yData[index] = calculateValue(inputFile);
 
 		dataset.addValue(yData[index], "Row 1", xData[index]);
 

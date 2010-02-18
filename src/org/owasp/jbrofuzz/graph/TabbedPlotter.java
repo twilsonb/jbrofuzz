@@ -50,7 +50,7 @@ class TabbedPlotter extends JTabbedPane {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private GraphingPanel graphingPanel;
+	private final GraphingPanel gPanel;
 
 	private StatusCodeChart statusChart;
 	private ResponseTimeChart rTimeChart;
@@ -58,13 +58,12 @@ class TabbedPlotter extends JTabbedPane {
 	private JaccardIndexChart jIndexChart;
 	private HammingDistanceChart hDistChart;
 	private ResponseHeaderSizeChart rHeadChart;
-	private HelpChart helpChart;
-
-	public TabbedPlotter(GraphingPanel graphingPanel) {
+	
+	public TabbedPlotter(final GraphingPanel gPanel) {
 
 		super(SwingConstants.BOTTOM);
 
-		this.graphingPanel = graphingPanel;
+		this.gPanel = gPanel;
 
 		statusChart = new StatusCodeChart();
 		jIndexChart = new JaccardIndexChart();
@@ -72,7 +71,6 @@ class TabbedPlotter extends JTabbedPane {
 		rTimeChart = new ResponseTimeChart();
 		hDistChart = new HammingDistanceChart();
 		rHeadChart = new ResponseHeaderSizeChart();
-		helpChart = new HelpChart();
 
 		this.add(" Status Code ", statusChart.getPlotCanvas());
 		this.add(" Response Time ", rTimeChart.getPlotCanvas());
@@ -80,7 +78,8 @@ class TabbedPlotter extends JTabbedPane {
 		this.add(" Jaccard Index ", jIndexChart.getPlotCanvas());
 		this.add(" Hamming Distance ", hDistChart.getPlotCanvas());
 		this.add(" Response Header ", rHeadChart.getPlotCanvas());
-		this.add(" Help ", helpChart);
+		
+		this.add(" Help ", new HelpChart() );
 
 	}
 
@@ -99,12 +98,13 @@ class TabbedPlotter extends JTabbedPane {
 	protected void plot(final File directory) {
 
 		// Set the progress bar to show
-		graphingPanel.setProgressBarStart();
+		gPanel.setProgressBarStart();
 
 		final File[] folderFiles = directory.listFiles();
 		// In case its a file & similar, don't bother
-		if (folderFiles == null)
+		if (folderFiles == null) {
 			return;
+		}
 
 		// Set minimum/max for each graph
 		statusChart = new StatusCodeChart(folderFiles.length);
@@ -152,7 +152,7 @@ class TabbedPlotter extends JTabbedPane {
 				setComponentAt(5, rHeadChart.getPlotCanvas());
 
 				// Stop the progress bar
-				graphingPanel.setProgressBarStop();
+				gPanel.setProgressBarStop();
 
 			}
 		}

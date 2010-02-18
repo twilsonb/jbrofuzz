@@ -35,7 +35,9 @@ class Header {
 	
 	private int headerId, noOfFields;
 
-	private String headerValue, comment;
+	private String headerValue;
+	
+	private final String comment;
 
 	/**
 	 * @param headerId

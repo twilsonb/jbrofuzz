@@ -30,13 +30,16 @@ public class HammingDistanceChart {
 	// The hash set with all the characters of the first response
 	private StringBuffer firstSet;
 
+	// Constants
+	private final static String END_SIGNATURE = "--jbrofuzz-->\n";
+
 	public HammingDistanceChart() {
 
 		this(0);
 
 	}
 
-	public HammingDistanceChart(int size) {
+	public HammingDistanceChart(final int size) {
 
 		xData = new String[size];
 		yData = new double[size];
@@ -47,30 +50,28 @@ public class HammingDistanceChart {
 
 	}
 
-	private void calculateFirstSet(File f) {
+	private void calculateFirstSet(final File inputFile) {
 
-		final String END_SIGNATURE = "--jbrofuzz-->\n";
-
-		BufferedReader in = null;
+		BufferedReader inBuffReader = null;
 		try {
 
-			in = new BufferedReader(new FileReader(f));
+			inBuffReader = new BufferedReader(new FileReader(inputFile));
 
 			int counter = 0;
 			int check = 0;
-			int c;
-			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
+			int got;
+			while (((got = inBuffReader.read()) > 0) && (counter < MAX_CHARS)) {
 
 				// If we are passed "--jbrofuzz-->\n" in the file
 				if (check == END_SIGNATURE.length()) {
 
-					firstSet.append((char) c);
+					firstSet.append((char) got);
 
 				}
 				// Else find "--jbrofuzz-->\n" using a counter
 				else {
 					// Increment the counter for each success
-					if (c == END_SIGNATURE.charAt(check)) {
+					if (got == END_SIGNATURE.charAt(check)) {
 						check++;
 					} else {
 						check = 0;
@@ -80,34 +81,32 @@ public class HammingDistanceChart {
 				counter++;
 
 			}
-			in.close();
+			inBuffReader.close();
 
 		} catch (final IOException e1) {
 
 		} finally {
 
-			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(inBuffReader);
 		}
 
 	}
 
-	private int calculateValue(File f) {
-
-		final String END_SIGNATURE = "--jbrofuzz-->\n";
+	private int calculateValue(final File inputFile) {
 
 		int hammingDistance = 0;
 
-		BufferedReader in = null;
+		BufferedReader inBuffReader = null;
 		try {
 
-			in = new BufferedReader(new FileReader(f));
+			inBuffReader = new BufferedReader(new FileReader(inputFile));
 
 			// Counter looping through the first response
 			int counter1 = 0;
 			int counter = 0;
 			int check = 0;
-			int c;
-			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
+			int got;
+			while (((got = inBuffReader.read()) > 0) && (counter < MAX_CHARS)) {
 
 				// If we are passed "--jbrofuzz-->\n" in the file
 				if (check == END_SIGNATURE.length()) {
@@ -119,7 +118,7 @@ public class HammingDistanceChart {
 					} else {
 						// The current character is not equal to the
 						// one in the buffer, increment
-						if ((char) c != firstSet.charAt(counter1)) {
+						if ((char) got != firstSet.charAt(counter1)) {
 							hammingDistance++;
 						}
 					}
@@ -129,7 +128,7 @@ public class HammingDistanceChart {
 				// Else find "--jbrofuzz-->\n" using a counter
 				else {
 					// Increment the counter for each success
-					if (c == END_SIGNATURE.charAt(check)) {
+					if (got == END_SIGNATURE.charAt(check)) {
 						check++;
 					} else {
 						check = 0;
@@ -139,13 +138,13 @@ public class HammingDistanceChart {
 				counter++;
 
 			}
-			in.close();
+			inBuffReader.close();
 
 		} catch (final IOException e1) {
 
 		} finally {
 
-			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(inBuffReader);
 
 		}
 
@@ -158,7 +157,7 @@ public class HammingDistanceChart {
 
 	public ChartPanel getPlotCanvas() {
 
-		JFreeChart chart = ChartFactory.createBarChart(
+		final JFreeChart chart = ChartFactory.createBarChart(
 				"JBroFuzz Hamming Distance Bar Chart", // chart title
 				"File Name", // domain axis label
 				"Hamming Distance", // range axis label
@@ -169,29 +168,30 @@ public class HammingDistanceChart {
 				true // URLs?
 		);
 
-		Plot plot = chart.getPlot();
+		final Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
 
-		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
-		renderer
-		.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
+		final CategoryItemRenderer renderer = 
+									chart.getCategoryPlot().getRenderer();
+		renderer.setBaseToolTipGenerator(
+				new StandardCategoryToolTipGenerator());
 
 		return new ChartPanel(chart);
 	}
 
-	public void setValueAt(int index, File f) {
+	public void setValueAt(final int index, final File inputFile) {
 
-		xData[index] = f.getName();
+		xData[index] = inputFile.getName();
 
 		if (index == 0) {
 
-			calculateFirstSet(f);
+			calculateFirstSet(inputFile);
 			yData[index] = 0;
 
 		} else {
 
-			yData[index] = calculateValue(f);
+			yData[index] = calculateValue(inputFile);
 
 		}
 

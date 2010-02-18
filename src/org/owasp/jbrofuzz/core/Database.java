@@ -83,7 +83,7 @@ public class Database {
 	private static final int MAX_NO_OF_CATEGORIES = Byte.MAX_VALUE;
 
 	final private Map<String, Prototype> prototypes;
-	
+
 	private final static String ZERO_FUZZER_NAME = "Zero Fuzzers";
 
 	/**
@@ -99,7 +99,7 @@ public class Database {
 	 * @since 1.2
 	 */
 	public Database() {
-		
+
 		prototypes = new HashMap<String, Prototype>();
 		loadFile();
 
@@ -192,18 +192,50 @@ public class Database {
 
 		return new Fuzzer(getPrototype(prototypeId), len);
 	}
-	
+
 	public PowerFuzzer createPowerFuzzer(final String prototypeId, final int len, final int power) 
 	throws NoSuchFuzzerException {
-		
+
 		if (!containsPrototype(prototypeId)) {
-			
+
 			throw new NoSuchFuzzerException(StringUtils.abbreviate(prototypeId, 
 					10) + "No Such Fuzzer Found in the Database ");
-			
+
 		}
-		
+
 		return new PowerFuzzer(getPrototype(prototypeId), len, power);
+	}
+
+	public DoubleFuzzer createDoubleFuzzer(String id1, int length1,  
+			String id2, int length2) throws NoSuchFuzzerException {
+
+		if( containsPrototype(id1) && containsPrototype(id2) ) {
+
+			return new DoubleFuzzer(getPrototype(id1), length1, getPrototype(id2), length2);
+
+		} else {
+
+			throw new NoSuchFuzzerException(
+					StringUtils.abbreviate(id1, 10) + " or " +
+					StringUtils.abbreviate(id2, 10) + 
+			" Not Found in the Database ");
+		}
+	}
+
+	public CrossProductFuzzer createCrossFuzzer(String id1, int length1,  
+			String id2, int length2) throws NoSuchFuzzerException {
+
+		if( containsPrototype(id1) && containsPrototype(id2) ) {
+
+			return new CrossProductFuzzer(getPrototype(id1), length1, getPrototype(id2), length2);
+
+		} else {
+
+			throw new NoSuchFuzzerException(
+					StringUtils.abbreviate(id1, 10) + " or " +
+					StringUtils.abbreviate(id2, 10) + 
+			" Not Found in the Database ");
+		}
 	}
 
 	/**
@@ -500,12 +532,12 @@ public class Database {
 	public int getSize(final String fuzzerId) {
 
 		int returnSize = 0;
-		
+
 		if (containsPrototype(fuzzerId)) {
 			final Prototype g = prototypes.get(fuzzerId);
 			returnSize = g.size();
 		}
-		
+
 		return returnSize;
 
 	}

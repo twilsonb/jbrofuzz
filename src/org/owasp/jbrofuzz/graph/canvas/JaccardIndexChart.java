@@ -32,13 +32,16 @@ public class JaccardIndexChart {
 	// The hash set with all the characters of the first response
 	private HashSet<Character> firstSet;
 
+	// Constants
+	private final static String END_SIGNATURE = "--jbrofuzz-->\n";
+
 	public JaccardIndexChart() {
 
 		this(0);
 
 	}
 
-	public JaccardIndexChart(int size) {
+	public JaccardIndexChart(final int size) {
 
 		xData = new String[size];
 		yData = new double[size];
@@ -49,30 +52,28 @@ public class JaccardIndexChart {
 
 	}
 
-	private void calculateFirstSet(File f) {
+	private void calculateFirstSet(final File inputFile) {
 
-		final String END_SIGNATURE = "--jbrofuzz-->\n";
-
-		BufferedReader in = null;
+		BufferedReader inBuffReader = null;
 		try {
 
-			in = new BufferedReader(new FileReader(f));
+			inBuffReader = new BufferedReader(new FileReader(inputFile));
 
 			int counter = 0;
 			int check = 0;
-			int c;
-			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
+			int got;
+			while (((got = inBuffReader.read()) > 0) && (counter < MAX_CHARS)) {
 
 				// If we are passed "--jbrofuzz-->\n" in the file
 				if (check == END_SIGNATURE.length()) {
 
-					firstSet.add((char) c);
+					firstSet.add((char) got);
 
 				}
 				// Else find "--jbrofuzz-->\n" using a counter
 				else {
 					// Increment the counter for each success
-					if (c == END_SIGNATURE.charAt(check)) {
+					if (got == END_SIGNATURE.charAt(check)) {
 						check++;
 					} else {
 						check = 0;
@@ -82,32 +83,30 @@ public class JaccardIndexChart {
 				counter++;
 
 			}
-			in.close();
+			inBuffReader.close();
 
 		} catch (final IOException e1) {
 
 		} finally {
 
-			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(inBuffReader);
 		}
 
 	}
 
-	private double calculateValue(File f) {
+	private double calculateValue(final File inputFile) {
 
-		final String END_SIGNATURE = "--jbrofuzz-->\n";
+		final HashSet<Character> secondSet = new HashSet<Character>();
 
-		HashSet<Character> secondSet = new HashSet<Character>();
-
-		BufferedReader in = null;
+		BufferedReader inBuffReader = null;
 		try {
 
-			in = new BufferedReader(new FileReader(f));
+			inBuffReader = new BufferedReader(new FileReader(inputFile));
 
 			int counter = 0;
 			int check = 0;
 			int c;
-			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
+			while (((c = inBuffReader.read()) > 0) && (counter < MAX_CHARS)) {
 
 				// If we are passed "--jbrofuzz-->\n" in the file
 				if (check == END_SIGNATURE.length()) {
@@ -128,21 +127,21 @@ public class JaccardIndexChart {
 				counter++;
 
 			}
-			in.close();
+			inBuffReader.close();
 
 		} catch (final IOException e1) {
 
 		} finally {
 
-			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(inBuffReader);
 
 		}
 
 		// Calculate the Jaccard Index, between the 2 sets of chars
-		Set<Character> intersectionSet = new HashSet<Character>(firstSet);
+		final Set<Character> intersectionSet = new HashSet<Character>(firstSet);
 		intersectionSet.retainAll(secondSet);
 
-		Set<Character> unionSet = new HashSet<Character>(firstSet);
+		final Set<Character> unionSet = new HashSet<Character>(firstSet);
 		unionSet.addAll(secondSet);
 		// The index is the ratio
 		return ((double) intersectionSet.size() / (double) unionSet.size());
@@ -154,7 +153,7 @@ public class JaccardIndexChart {
 
 	public ChartPanel getPlotCanvas() {
 
-		JFreeChart chart = ChartFactory.createBarChart(
+		final JFreeChart chart = ChartFactory.createBarChart(
 				"JBroFuzz Jaccard Index Bar Chart", // chart title
 				"File Name", // domain axis label
 				"Jaccard Similarity Coefficient", // range axis label
@@ -165,7 +164,7 @@ public class JaccardIndexChart {
 				true // URLs?
 		);
 
-		Plot plot = chart.getPlot();
+		final Plot plot = chart.getPlot();
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
 
@@ -177,18 +176,18 @@ public class JaccardIndexChart {
 
 	}
 
-	public void setValueAt(int index, File f) {
+	public void setValueAt(final int index, final File inputFile) {
 
-		xData[index] = f.getName();
+		xData[index] = inputFile.getName();
 
 		if (index == 0) {
 
-			calculateFirstSet(f);
+			calculateFirstSet(inputFile);
 			yData[index] = 1;
 
 		} else {
 
-			yData[index] = calculateValue(f);
+			yData[index] = calculateValue(inputFile);
 
 		}
 

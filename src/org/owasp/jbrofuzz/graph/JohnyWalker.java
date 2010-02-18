@@ -38,28 +38,29 @@ class JohnyWalker {
 
 	private FileSystemTreeNode master;
 
-	private File directory;
+	private final File directory;
 
-	private GraphingPanel x3;
+	private final GraphingPanel gPanel;
 
 	//
 
 	private int fileCount, dirCount;
 
-	protected JohnyWalker(GraphingPanel x3) {
+	protected JohnyWalker(final GraphingPanel gPanel) {
 
 		// Get the directory location from preferences
-		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[1], System.getProperty("user.dir"));
+		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[1],
+				System.getProperty("user.dir"));
 
-		directory = new File(dirString + File.separator
-				+ "jbrofuzz" + File.separator + "fuzz");
-		this.x3 = x3;
+		directory = new File(dirString + File.separator + "jbrofuzz"
+				+ File.separator + "fuzz");
+		this.gPanel = gPanel;
 
 		if (directory.canRead()) {
 			master = new FileSystemTreeNode(directory.getName());
 			master.setAsDirectory();
 		} else {
-			this.x3.toConsole("Cannot read: " + directory.getPath());
+			this.gPanel.toConsole("Cannot read: " + directory.getPath());
 		}
 
 		fileCount = 0;
@@ -76,25 +77,25 @@ class JohnyWalker {
 		return directory.listFiles().length;
 
 	}
-
-	private void listAllFiles(File directory, FileSystemTreeNode parent) {
+	
+	private void listAllFiles(final File directory, final FileSystemTreeNode parent) {
 
 		if (!directory.canRead()) {
-			x3.toConsole("Could not read: " + directory.getPath());
+			gPanel.toConsole("Could not read: " + directory.getPath());
 			return;
 		}
 
-		if (x3.isStoppedEnabled()) {
+		if (gPanel.isStoppedEnabled()) {
 			return;
 		}
 
 		dirCount++;
 
-		File[] children = directory.listFiles();
+		final File[] children = directory.listFiles();
 
 		for (File f : children) {
 
-			FileSystemTreeNode node = new FileSystemTreeNode(f.getName());
+			final FileSystemTreeNode node = new FileSystemTreeNode(f.getName());
 
 			if (f.isDirectory()) {
 				node.setAsDirectory();
@@ -113,8 +114,8 @@ class JohnyWalker {
 
 		listAllFiles(directory, master);
 
-		x3.toConsole("Total Files: " + fileCount);
-		x3.toConsole("Total Directories: " + dirCount);
+		gPanel.toConsole("Total Files: " + fileCount);
+		gPanel.toConsole("Total Directories: " + dirCount);
 
 	}
 
