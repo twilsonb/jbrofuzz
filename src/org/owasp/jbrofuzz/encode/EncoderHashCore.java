@@ -42,35 +42,45 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.owasp.jbrofuzz.util.B64;
+import org.apache.commons.codec.binary.Base64;
 
+/**
+ * @author Yiannis Marangos
+ * @version 2.0
+ * @since 2.0
+ */
 class EncoderHashCore {
 	
 	protected static final String[] CODES = {
-		"URL US-ASCII", "URL ISO-8859-1", "URL Cp1252", "URL UTF-8",
-		"URL UTF-16BE", "URL UTF-16LE", "Base64", "MD5 Hash", "SHA-1 Hash", "SHA-256 Hash",
+		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", 
+		"Base64", "MD5 Hash", "SHA-1 Hash", "SHA-256 Hash",
 		"SHA-384 Hash", "SHA-512 Hash", "Hexadecimal (low)", "Hexadecimal (UPP)", 
 		"Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)",
 		"Escape: HTML", "Escape: CSV", "Escape: Java", "Escape: JavaScript",
 		"Escape: SQL", "Escape: XML"
 	};
 	
+	private final static String IS_DECODABLE[] = {
+		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", "Base64", "Hexadecimal (low)",
+		"Hexadecimal (UPP)", "Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)",
+		"Escape: HTML", "Escape: CSV", "Escape: Java", "Escape: JavaScript",
+		"Escape: XML"
+	};
+	
 	private static final String[] COMMENTS = {
-		"This is a call using the java URL decoder class, similar to: URLDecoder.decode(decodeText, \"US-ASCII\");", 
-		"This is using the java URL decoder, but with: URLDecoder.decode(decodeText, \"ISO-8859-1\");", 
 		"This is using the java URL decoder, but with: URLDecoder.decode(decodeText, \"windows-1252\");", 
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-8\");",
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-16LE\");",
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-16BE\");",
-		"MIME Base64 uses a 64-character alphabet consisting of upper- and lower-case Roman alphabet characters (A-Z, a-z), the numerals (0�9), and the \"+\" and \"/\" symbols. The \"=\" symbol is also used as a special suffix code.", 
+		"MIME Base64 uses a 64-character alphabet consisting of upper- and lower-case Roman alphabet characters (A-Z, a-z), the numerals (0-9), and the \"+\" and \"/\" symbols. The \"=\" symbol is also used as a special suffix code.", 
 		"The 128-bit (16-byte) MD5 hashes (also termed message digests) are typically represented as a sequence of 32 hexadecimal digits. The hash of the zero-length string is: MD5(\"\") = d41d8cd98f00b204e9800998ecf8427e", 
-		"SHA-1 (as well as SHA-0) produces a 160-bit digest from a message with a maximum length of (2^64 - 1) bits.  Encoding is performed parsing by getting the bytes in encodeText.getBytes(\"iso-8859-1\") standard. ", 
-		"SHA-256 produces a 256-bit digest from a message with a maximum length of (2^64-1) bits. Encoding is performed parsing by getting the bytes in encodeText.getBytes(\"iso-8859-1\") standard. ",
-		"SHA-384 produces a 384-bit digest from a message with a maximum length of (2^128-1) bits. Encoding is performed parsing by getting the bytes in encodeText.getBytes(\"iso-8859-1\") standard. ", 
-		"SHA-512 produces a 512-bit digest from a message with a maximum length of (2^128-1) bits. Encoding is performed parsing by getting the bytes in encodeText.getBytes(\"iso-8859-1\") standard. ", 
+		"SHA-1 (as well as SHA-0) produces a 160-bit digest from a message with a maximum length of (2^64 - 1) bits.  Encoding is performed parsing by getting the bytes in encodeText.getBytes() standard. ", 
+		"SHA-256 produces a 256-bit digest from a message with a maximum length of (2^64-1) bits. Encoding is performed parsing by getting the bytes in encodeText.getBytes() standard. ",
+		"SHA-384 produces a 384-bit digest from a message with a maximum length of (2^128-1) bits. Encoding is performed parsing by getting the bytes in encodeText.getBytes() standard. ", 
+		"SHA-512 produces a 512-bit digest from a message with a maximum length of (2^128-1) bits. Encoding is performed parsing by getting the bytes in encodeText.getBytes() standard. ", 
 		"Hexadecimal (low)", 
 		"Hexadecimal (UPP)", 
-		"Binary : BinaryCodec.toAsciiChars(encodeText.getBytes(\"iso-8859-1\")", 
+		"Binary : BinaryCodec.toAsciiChars(encodeText.getBytes()", 
 		"www-form-urlencoded", 
 		"RFC 1521 MIME (eMail) using QuotedPrintableCodec with codec.encode(encodeText);",
 		"Supports all known HTML 4.0 entities, including funky accents. Note that the commonly used apostrophe escape character (&apos;) is not a legal entity and so is not supported). ", 
@@ -80,17 +90,8 @@ class EncoderHashCore {
 		"Escapes the characters in a String to be suitable to pass to an SQL query. \nFor example, \n\nstatement.executeQuery(\"SELECT * FROM MOVIES WHERE TITLE='\" + StringEscapeUtils.escapeSql(\"McHale's Navy\")  At present, this method only turns single-quotes into doubled single-quotes (\"McHale's Navy\" => \"McHale''s Navy\"). It does not handle the cases of percent (%) or underscore (_) for use in LIKE clauses.\n\nsee http://www.jguru.com/faq/view.jsp?EID=8881 ", 
 		"Escapes the characters in a String using XML entities. For example: \"bread\" & \"butter\" => &quot;bread&quot; &amp; &quot;butter&quot;. Supports only the five basic XML entities (gt, lt, quot, amp, apos). Does not support DTDs or external entities. Note that unicode characters greater than 0x7f are as of 3.0, no longer escaped. "
 	};
-
-	private final static String IS_DECODABLE[] = {
-			"URL US-ASCII", "URL ISO-8859-1", "URL Cp1252", "URL UTF-8",
-			"URL UTF-16BE", "URL UTF-16LE", "Base64", "Hexadecimal (low)",
-			"Hexadecimal (UPP)", "Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)",
-			"Escape: HTML", "Escape: CSV", "Escape: Java", "Escape: JavaScript",
-			"Escape: XML"
-	};
 	
 	protected static boolean isDecoded(final String type) {
-
 		for (int i=0; i<IS_DECODABLE.length; i++)
 			if (type.equalsIgnoreCase(IS_DECODABLE[i])) {
 				return true;
@@ -115,10 +116,6 @@ class EncoderHashCore {
 	protected static String decode(final String decodeText, final String type) {
 			if (!isDecoded(type))
 				return "Error: String cannot be decoded...";
-			else if (type.equalsIgnoreCase("URL US-ASCII"))
-				return decodeUrlUsAscii(decodeText);
-			else if (type.equalsIgnoreCase("URL ISO-8859-1"))
-				return decodeUrlIso88591(decodeText);
 			else if (type.equalsIgnoreCase("URL Cp1252"))
 				return decodeUrlWindows1252(decodeText);
 			else if (type.equalsIgnoreCase("URL UTF-8"))
@@ -155,16 +152,12 @@ class EncoderHashCore {
 	
 	// Decode Base64
 	private static String decodeBase64(final String decodeText) {
-		return B64.decodeString(decodeText);
+		return new String(Base64.decodeBase64(decodeText.getBytes()));
 	}
 	
 	// Decode Binary
 	private static String decodeBinary(final String decodeText) {
-		try {
-			return new String(BinaryCodec.fromAscii(decodeText.getBytes("iso-8859-1")));
-		} catch (UnsupportedEncodingException e) {
-			return "Error: Binary value cannot be decoded...";
-		} 
+		return new String(BinaryCodec.fromAscii(decodeText.getBytes()));
 	}
 
 	// CSV Decode
@@ -229,24 +222,6 @@ class EncoderHashCore {
 		} 
 	}
 	
-	// URL Decode (ISO-8859-1)
-	private static String decodeUrlIso88591(final String decodeText) {
-		try {
-			return URLDecoder.decode(decodeText, "ISO-8859-1");
-		} catch (UnsupportedEncodingException e) {
-			return "Error: String cannot be encoded...";
-		}
-	}
-
-	// URL Decode (US-ASCII)
-	private static String decodeUrlUsAscii(final String decodeText) {
-		try {
-			return URLDecoder.decode(decodeText, "US-ASCII");
-		} catch (UnsupportedEncodingException e) {
-			return "Error: String cannot be encoded...";
-		}
-	}
-	
 	// URL Decode (UTF-16BE)
 	private static String decodeUrlUtf16BE(final String decodeText) {
 		try {
@@ -284,11 +259,7 @@ class EncoderHashCore {
 	}
 	
 	protected static String encode(final String encodeText, final String type) {
-		if (type.equalsIgnoreCase("URL US-ASCII"))
-			return encodeUrlUsAscii(encodeText);
-		else if (type.equalsIgnoreCase("URL ISO-8859-1"))
-			return encodeUrlIso88591(encodeText);
-		else if (type.equalsIgnoreCase("URL Cp1252"))
+		if (type.equalsIgnoreCase("URL Cp1252"))
 			return encodeUrlWindows1252(encodeText);
 		else if (type.equalsIgnoreCase("URL UTF-8"))
 			return encodeUrlUtf8(encodeText);
@@ -336,16 +307,12 @@ class EncoderHashCore {
 
 	// Encode Base64
 	private static String encodeBase64(final String encodeText) {
-		return B64.encodeString(encodeText);
+		return new String(Base64.encodeBase64(encodeText.getBytes()));
 	}
 	
 	// Encode Binary
 	private static String encodeBinary(final String encodeText) {
-		try {
-			return new String(BinaryCodec.toAsciiChars(encodeText.getBytes("iso-8859-1")));
-		} catch (UnsupportedEncodingException e) {
-			return "Error: Binary value cannot be decoded...";
-		} 
+		return new String(BinaryCodec.toAsciiChars(encodeText.getBytes()));
 	}
 
 	// CSV Encode
@@ -380,11 +347,7 @@ class EncoderHashCore {
 	
 	// Encode Hexadecimal lowercase
 	private static String encodeHexLow(final String encodeText) {
-		try {
-			return new String(Hex.encodeHex(encodeText.getBytes("iso-8859-1")));
-		} catch (UnsupportedEncodingException e) {
-			return "Error: String input cannot be encoded...";
-		}
+		return new String(Hex.encodeHex(encodeText.getBytes()));
 	}
 	
 	// Encode Hexadecimal uppercase
@@ -396,14 +359,12 @@ class EncoderHashCore {
 	private static String encodeMd5Hash(final String encodeText) {
 		try {
 			MessageDigest md5 = MessageDigest.getInstance("MD5");
-			md5.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+			md5.update(encodeText.getBytes(), 0, encodeText.length());
 			byte[] hash = new byte[32];
 			hash = md5.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: MD5 could not be found...";
-		} catch (UnsupportedEncodingException e2) {
-			return "Error: MD5 String cannot be encoded...";
 		}
 	}
 	
@@ -422,14 +383,12 @@ class EncoderHashCore {
 	private static String encodeSha1Hash(final String encodeText) {
 		try {
 			MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
-			sha1.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+			sha1.update(encodeText.getBytes(), 0, encodeText.length());
 			byte[] hash = new byte[40];
 			hash = sha1.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-1 could not be found...";
-		} catch (UnsupportedEncodingException e2) {
-			return "Error: SHA-1 String cannot be encoded...";
 		}
 	}
 	
@@ -437,14 +396,12 @@ class EncoderHashCore {
 	private static String encodeSha256Hash(final String encodeText) {
 		try {
 			MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-			sha256.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+			sha256.update(encodeText.getBytes(), 0, encodeText.length());
 			byte[] hash = new byte[64];
 			hash = sha256.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-256 could not be found...";
-		} catch (UnsupportedEncodingException e2) {
-			return "Error: SHA-256 String cannot be encoded...";
 		}
 	}
 	
@@ -452,14 +409,12 @@ class EncoderHashCore {
 	private static String encodeSha384Hash(final String encodeText) {
 		try {
 			MessageDigest sha384 = MessageDigest.getInstance("SHA-384");
-			sha384.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+			sha384.update(encodeText.getBytes(), 0, encodeText.length());
 			byte[] hash = new byte[96];
 			hash = sha384.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-384 could not be found...";
-		} catch (UnsupportedEncodingException e2) {
-			return "Error: SHA-384 String cannot be encoded...";
 		}
 	}
 	
@@ -467,14 +422,12 @@ class EncoderHashCore {
 	private static String encodeSha512Hash(final String encodeText) {
 		try {
 			MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
-			sha512.update(encodeText.getBytes("iso-8859-1"), 0, encodeText.length());
+			sha512.update(encodeText.getBytes(), 0, encodeText.length());
 			byte[] hash = new byte[128];
 			hash = sha512.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-512 could not be found...";
-		} catch (UnsupportedEncodingException e2) {
-			return "Error: SHA-512 String cannot be encoded...";
 		}
 	}
 	
@@ -485,24 +438,6 @@ class EncoderHashCore {
 			return codec.encode(encodeText, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			return "Error: Sting input cannot be decoded";
-		}
-	}
-	
-	// URL Encode (ISO-8859-1)
-	private static String encodeUrlIso88591(final String encodeText) {
-		try {
-			return URLEncoder.encode(encodeText, "ISO-8859-1");
-		} catch (UnsupportedEncodingException e) {
-			return "Error: String cannot be encoded...";
-		}
-	}
-	
-	// URL Encode (US-ASCII)
-	private static String encodeUrlUsAscii(final String encodeText) {
-		try {
-			return URLEncoder.encode(encodeText, "US-ASCII");
-		} catch (UnsupportedEncodingException e) {
-			return "Error: String cannot be encoded...";
 		}
 	}
 	
