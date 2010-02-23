@@ -522,7 +522,7 @@ public class EncoderHashFrame extends JFrame {
 		
 		final String encoder_type = JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[2], "");
 		
-		for (int i=0; i<= EncoderHashCore.CODES.length; i++)
+		for (int i=0; i < EncoderHashCore.CODES.length; i++)
 			if ( EncoderHashCore.CODES[i].equalsIgnoreCase(encoder_type) ) {
 				tree.setSelectionRow( i+1 );
 				break;
