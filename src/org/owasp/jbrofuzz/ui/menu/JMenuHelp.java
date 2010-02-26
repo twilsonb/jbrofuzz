@@ -18,7 +18,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 import com.Ostermiller.util.Browser;
 
-public class JMenuHelp extends JMenu {
+class JMenuHelp extends JMenu {
 
 	private static final long serialVersionUID = 364420126164053633L;
 

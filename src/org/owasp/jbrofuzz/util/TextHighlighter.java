@@ -233,6 +233,8 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("Pragma", Color.blue);
 		keywords.put("Proxy-Agent", Color.blue);
 		keywords.put("Proxy-agent", Color.blue);
+		keywords.put("Proxy-Authorization", Color.blue);
+		keywords.put("Proxy-authorization", Color.blue);
 		keywords.put("Proxy-Connection", Color.blue);
 		keywords.put("Referer", Color.blue);
 		keywords.put("Server", Color.blue);
