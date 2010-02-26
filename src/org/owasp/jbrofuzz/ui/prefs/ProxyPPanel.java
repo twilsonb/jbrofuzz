@@ -29,10 +29,9 @@
  */
 package org.owasp.jbrofuzz.ui.prefs;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
@@ -41,8 +40,8 @@ import java.net.UnknownHostException;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 import org.owasp.jbrofuzz.JBroFuzz;
@@ -68,9 +67,9 @@ class ProxyPPanel extends AbstractPrefsPanel {
 	private static final int MIN_PORT = 1;  /* min network port */
 	private static final int MAX_PORT = 65535; /* max network port */
 	private int port;
-	private boolean validProxy = true;
+	private boolean validProxy;
 	
-	private final JTextField serverTextField, portTextField;
+	private final JTextField serverTextField, portTextField, userTextField, passTextField;
 	
 	/**
 	 * <p>
@@ -86,83 +85,134 @@ class ProxyPPanel extends AbstractPrefsPanel {
 	protected ProxyPPanel(final PrefDialog dialog) {
 		super("Proxy Settings");
 		this.dialog = dialog;
+		validProxy = true;
 		
 		// Proxy Configuration Settings
 		final boolean enProxyClickBox = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.PROXY[0], false);
-
 		enProxyCheckBox = new JCheckBox(
 				" Enable Proxy Configuration ",
 				enProxyClickBox);
 
 		enProxyCheckBox.setBorderPainted(false);
-		enProxyCheckBox.setToolTipText(
-		"Tick this box to enable proxy support.");
-
-		final JPanel proxyServerPanel = new JPanel(new BorderLayout());
-		proxyServerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" HTTP Proxy Server "), BorderFactory.createEmptyBorder(
+		enProxyCheckBox.setToolTipText("Tick this box to enable proxy support.");
+		enProxyCheckBox.setAlignmentX(0.0f);
+		
+		// The main proxy panel, with enabled fields if the above box is ticked
+		final JPanel proxyPanel = new JPanel(new GridBagLayout());
+		proxyPanel.setAlignmentX(0.0f);
+		GridBagConstraints gridStrains = new GridBagConstraints();
+		proxyPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(" Proxy Settings "), BorderFactory.createEmptyBorder(
 						1, 1, 1, 1)));
+		
+		// The proxy server fields for server address and port
+		final JLabel serverLabel = new JLabel(" Proxy Address: ");
+		final JLabel portLabel = new JLabel(" Port: ");
+		final JLabel userLabel = new JLabel(" Username: ");
+		final JLabel passLabel = new JLabel(" Password: ");
 
-		serverTextField = new JTextField();
-		serverTextField.setFont(new Font("Verdana", Font.BOLD, 12));
-		serverTextField.setMargin(new Insets(1, 1, 1, 1));
-		proxyServerPanel.add(serverTextField, BorderLayout.NORTH);
-
-		final JPanel proxyPortPanel = new JPanel(new BorderLayout());
-		proxyPortPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Proxy Port "), BorderFactory.createEmptyBorder(
-						1, 1, 1, 1)));
-
-		portTextField = new JTextField();
-		portTextField.setFont(new Font("Verdana", Font.BOLD, 12));
-		portTextField.setMargin(new Insets(1, 1, 1, 1));
-		proxyPortPanel.add(portTextField, BorderLayout.NORTH);
+		serverTextField = new JTextField(20);
+		portTextField = new JTextField(5);
+		userTextField = new JTextField(20);
+		passTextField = new JTextField(20);
+		
+		gridStrains.fill = GridBagConstraints.NONE;
+		
+		gridStrains.gridx = 0;
+		gridStrains.gridy = 0;
+		proxyPanel.add(serverLabel, gridStrains);
+		gridStrains.gridx = 1;
+		gridStrains.gridy = 0;
+		proxyPanel.add(serverTextField, gridStrains);
+		
+		gridStrains.gridx = 2;
+		gridStrains.gridy = 0;
+		proxyPanel.add(portLabel, gridStrains);
+		gridStrains.gridx = 3;
+		gridStrains.gridy = 0;
+		proxyPanel.add(portTextField, gridStrains);
+		
+		gridStrains.gridx = 0;
+		gridStrains.gridy = 1;
+		proxyPanel.add(new JLabel(" "), gridStrains);
+		
+		
+		gridStrains.gridx = 0;
+		gridStrains.gridy = 2;
+		proxyPanel.add(userLabel, gridStrains);
+		gridStrains.gridx = 1;
+		gridStrains.gridy = 2;
+		proxyPanel.add(userTextField, gridStrains);
+		
+		gridStrains.gridx = 0;
+		gridStrains.gridy = 3;
+		proxyPanel.add(passLabel, gridStrains);
+		gridStrains.gridx = 1;
+		gridStrains.gridy = 3;
+		proxyPanel.add(passTextField, gridStrains);
+		
+		gridStrains.gridx = 0;
+		gridStrains.gridy = 4;
+		proxyPanel.add(new JLabel(" "), gridStrains);
+		
 		if (enProxyCheckBox.isSelected()) {
 			serverTextField.setEditable(true);
 			portTextField.setEditable(true);
+			userTextField.setEditable(true);
+			passTextField.setEditable(true);
 		} else {
 			serverTextField.setEditable(false);
 			portTextField.setEditable(false);
+			userTextField.setEditable(false);
+			passTextField.setEditable(false);
 		}
-
-		final String proxyServer = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[1], "");
-		serverTextField.setText(proxyServer);
-		final String proxyPort = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[2], "");
-		portTextField.setText(proxyPort);
-
+		
+		
 		enProxyCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent proxyEvent) {
 				if (enProxyCheckBox.isSelected()) {
 					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.PROXY[0], true);
 					serverTextField.setEditable(true);
 					portTextField.setEditable(true);
+					userTextField.setEditable(true);
+					passTextField.setEditable(true);
 				} else {
 					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.PROXY[0], false);
 					serverTextField.setEditable(false);
 					portTextField.setEditable(false);
+					userTextField.setEditable(false);
+					passTextField.setEditable(false);
 				}
+				dialog.setApplyEnabled(true);
 			}
 		});
 
-		final JSplitPane rightPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		rightPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-		rightPane.setOneTouchExpandable(false);
-		rightPane.setLeftComponent(proxyServerPanel);
-		rightPane.setRightComponent(proxyPortPanel);
-		rightPane.setDividerLocation(350);
-
+		
+		
 		add(enProxyCheckBox);
-		add(Box.createRigidArea(new Dimension(0, 20)));
-		add(rightPane);
+		add(proxyPanel);
 		add(Box.createRigidArea(new Dimension(0, 200)));
 
+    	// Populate the fields
+		serverTextField.setText(JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[1], ""));
+		portTextField.setText(JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[2], ""));
+		userTextField.setText(JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[3], ""));
+		passTextField.setText(JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[4], ""));
+		
 	}
 	
 	public void apply() {
 		
+		JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.PROXY[0], enProxyCheckBox.isSelected());
+    	JBroFuzz.PREFS.put(JBroFuzzPrefs.PROXY[1], serverTextField.getText());
+    	JBroFuzz.PREFS.put(JBroFuzzPrefs.PROXY[2], portTextField.getText());
+    	JBroFuzz.PREFS.put(JBroFuzzPrefs.PROXY[3], userTextField.getText());
+    	JBroFuzz.PREFS.put(JBroFuzzPrefs.PROXY[4], passTextField.getText());
+    	
+    	/*
 		if (enProxyCheckBox.isSelected()) {
 			
-		    /* validate proxy server and proxy port */
+		    // validate proxy server and proxy port
 		    try {
 		    	InetAddress.getByName(serverTextField.getText());	
 		    } catch (UnknownHostException uhe) {
@@ -178,17 +228,17 @@ class ProxyPPanel extends AbstractPrefsPanel {
 		 
 		    if ((port < MIN_PORT) || (port > MAX_PORT)) {
 		    	dialog.getJBroFuzzWindow().log("Invalid proxy port number: " + portTextField.getText(), 4);
-		    	dialog.getJBroFuzzWindow().log("Port should be in range " + MIN_PORT + " to " + MAX_PORT, 4);
+		    	dialog.getJBroFuzzWindow().log("Port should be in the range of: [" + MIN_PORT + ", " + MAX_PORT + "]", 4);
 		    	validProxy = false;
 		    }
-		    
+		    // Finally, write all the preferences
 		    if (validProxy) {
-		    	JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.PROXY[0], true);
-		    	JBroFuzz.PREFS.put(JBroFuzzPrefs.PROXY[1], serverTextField.getText());
-		    	JBroFuzz.PREFS.put(JBroFuzzPrefs.PROXY[2], portTextField.getText());
-
+		    	
+		    	
 		    }
 			
 		}
+		*/
+		
 	}
 }

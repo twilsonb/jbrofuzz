@@ -145,20 +145,47 @@ public class JBroFuzzPrefs {
 		 * The preference for enabling proxy support
 		 * 
 		 * This is a boolean preference.
+		 * 
+		 * 0
 		 */
 		"proxy.enabled",
+		
 		/**
 		 * The preference for setting the proxy server
 		 * 
 		 * This is a String preference.
+		 * 
+		 * 1
 		 */
 		"proxy.server",
+		
 		/**
-		 * The preference setting the proxy port
+		 * The preference for setting the proxy port
 		 * 
 		 * This is a String preference.
+		 * 
+		 * 2
 		 */
-		"proxy.port"
+		"proxy.port",
+		
+		/**
+		 * The preference setting for the proxy username
+		 * 
+		 * This is a String preference.
+		 * 
+		 * 3
+		 */
+		"proxy.username",
+		
+		/**
+		 * The preference setting for the proxy password
+		 * 
+		 * This is a String preference.
+		 * 
+		 * 4
+		 */
+		"proxy.password"
+		
 	};
 
 	/**

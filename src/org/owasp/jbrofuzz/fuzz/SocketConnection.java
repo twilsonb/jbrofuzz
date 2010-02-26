@@ -35,16 +35,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -89,7 +95,9 @@ class SocketConnection implements AbstractConnection {
 	private static final SSLSocketFactory getSocketFactory() throws ConnectionException {
 
 		try {
-			final TrustManager[] tManager = new TrustManager[] { new FullyTrustingManager() };
+			final TrustManager[] tManager = new TrustManager[] { 
+					new FullyTrustingManager() 
+			};
 			final SSLContext context = SSLContext.getInstance("SSL");
 			context.init(new KeyManager[0], tManager, new SecureRandom());
 
@@ -155,8 +163,10 @@ class SocketConnection implements AbstractConnection {
 				mSocket.setSoTimeout(socketTimeout);
 
 			} else {
+
 				// Handle HTTP differently then HTTPS
 				mSocket = new Socket();
+
 				mSocket.connect(new InetSocketAddress(host, port),
 						socketTimeout);
 			}
@@ -208,7 +218,10 @@ class SocketConnection implements AbstractConnection {
 
 		} catch (IOException e3) {
 
-			reply = "An IO Error occured: " + e3.getMessage() + ". This could also be a Connection Timeout, try increasing the value under Preferences -> Fuzzing\n";
+			reply = "An IO Error occured: " + e3.getMessage() + 
+			". \n\nThis could also be a Connection Timeout, " +
+			"\ntry increasing the value under Preferences ->" +
+			" Fuzzing\n";
 			throw new ConnectionException(reply);
 
 		} finally {

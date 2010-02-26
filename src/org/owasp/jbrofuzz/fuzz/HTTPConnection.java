@@ -33,15 +33,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 
 
@@ -91,20 +96,45 @@ class HTTPConnection implements AbstractConnection {
 		this.host = host;
 		this.port = port;
 		this.message = message;
-
+		
 		// Parameters (not being used at the moment)
 		HttpParams params = new BasicHttpParams();
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+
 		// HTTP Method: GET, HEAD, POST, PUT, DELETE, TRACE and OPTIONS
 		HttpRequestBase httpMethod = null;
 		if(message.startsWith("GET")) {
-			httpMethod = new HttpGet(host);
+			httpMethod = new HttpGet(protocol + "://" + host + ":" + port);
+			
 		}
+		
+		// Proxy credentials, if enabled
+		final boolean proxyEnabled = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.PROXY[0], false);
+
+		
+		if(proxyEnabled) {
+			final String proxyHost = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[1], "");
+			final int proxyPort = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.PROXY[2], 0);
+			final String proxyUser = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[3], "");
+			final String proxyPass = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[4], "");
+			
+			UsernamePasswordCredentials creds = new UsernamePasswordCredentials(proxyUser, proxyPass);
+			AuthScope authScope = new AuthScope(proxyHost, proxyPort);
+			
+			HttpHost proxyHttpHost = new HttpHost(proxyHost, proxyPort);
+			
+			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxyHttpHost);
+		
+			httpclient.getCredentialsProvider().setCredentials(authScope, creds);
+			
+		}
+		
+		
 
 		try {
 			
-			HttpClient httpclient = new DefaultHttpClient();
 			HttpResponse response = httpclient.execute(httpMethod);
 			HttpEntity entity = response.getEntity();
 			
