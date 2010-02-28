@@ -47,7 +47,7 @@ import org.owasp.jbrofuzz.io.FileHandler;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.5
+ * @version 2.0
  * @since 1.2
  */
 public class Prototype {
@@ -120,11 +120,59 @@ public class Prototype {
 		return newBuffer.toString();
 	}
 
+	/**
+	 * <p>Method to confirm if a fuzzer type specified in the 
+	 * form of a single character, is valid.</p>
+	 * 
+	 * @param inputType The fuzzer type character e.g. 'Z' for
+	 * a Zero Fuzzer.
+	 * @return true if the fuzzer type exists, else false.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @since 1.8
+	 */
+	public static boolean isValidFuzzerType(final char inputType) {
+
+		// Replacive Fuzzer Type
+		if (inputType == 'P') {
+			return true;
+		}
+		// Recursive Fuzzer Type
+		if (inputType == 'R') {
+			return true;
+		}
+		// Zero Fuzzer Type
+		if (inputType == 'Z') {
+			return true;
+		}
+		// Double Fuzzer Type
+		if (inputType == 'D') {
+			return true;
+		}
+		// Cross Product Fuzzer Type
+		if (inputType == 'X') {
+			return true;
+		}
+		// Power Fuzzer Type
+		if (inputType == 'P') {
+			return true;
+		}
+		// Header Type
+		if (inputType == 'H') {
+			return true;
+		}
+
+		return false;
+	}
+
 	private transient List<String> categories, payloads;
 
 	private transient String name, uniqId;
 
 	private transient char type;
+
+	private transient String comment;
 
 	/**
 	 * <p>A Prototype constuctor, effectively building the fuzzer
@@ -213,7 +261,7 @@ public class Prototype {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	protected List<String> getCategories() {
+	public List<String> getCategories() {
 		return categories;
 	}
 
@@ -251,7 +299,7 @@ public class Prototype {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	protected String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -266,7 +314,7 @@ public class Prototype {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	protected List<String> getPayloads() {
+	public List<String> getPayloads() {
 		// payloads.trimToSize();
 		return payloads;
 	}
@@ -389,48 +437,6 @@ public class Prototype {
 	}
 
 	/**
-	 * <p>Method to confirm if a fuzzer type specified in the 
-	 * form of a single character, is valid.</p>
-	 * 
-	 * @param inputType The fuzzer type character e.g. 'Z' for
-	 * a Zero Fuzzer.
-	 * @return true if the fuzzer type exists, else false.
-	 * 
-	 * @author subere@uncon.org
-	 * @version 1.8
-	 * @since 1.8
-	 */
-	public static boolean isValidFuzzerType(final char inputType) {
-
-		// Replacive Fuzzer Type
-		if (inputType == 'P') {
-			return true;
-		}
-		// Recursive Fuzzer Type
-		if (inputType == 'R') {
-			return true;
-		}
-		// Zero Fuzzer Type
-		if (inputType == 'Z') {
-			return true;
-		}
-		// Double Fuzzer Type
-		if (inputType == 'D') {
-			return true;
-		}
-		// Cross Product Fuzzer Type
-		if (inputType == 'X') {
-			return true;
-		}
-		// Power Fuzzer Type
-		if (inputType == 'P') {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * <p>
 	 * Return the number of payloads that this prototype has.
 	 * </p>
@@ -443,6 +449,19 @@ public class Prototype {
 	 */
 	public int size() {
 		return payloads.size();
+	}
+	
+	public int getNoOfCategories() {
+		return categories.size();
+	}
+
+	public void addComment(String comment) {
+		this.comment = comment;
+		
+	}
+
+	public String getComment() {
+		return this.comment;
 	}
 
 }

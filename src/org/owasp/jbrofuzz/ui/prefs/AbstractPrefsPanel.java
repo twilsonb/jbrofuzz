@@ -44,6 +44,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * @since 2.0
  */
 abstract class AbstractPrefsPanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+	
 	// The name of the panel, as passed by the constructor
 	private final String name;
 

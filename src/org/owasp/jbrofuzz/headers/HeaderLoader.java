@@ -29,20 +29,16 @@
  */
 package org.owasp.jbrofuzz.headers;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.tree.TreePath;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
+import org.owasp.jbrofuzz.core.Prototype;
+import org.owasp.jbrofuzz.core.Verifier;
 
 class HeaderLoader {
 
@@ -50,64 +46,19 @@ class HeaderLoader {
 
 	private static final int MAX_RECURSION = 1024;
 
-	// The maximum number of chars to be read from file, regardless
-	private static final int MAX_CHARS = Short.MAX_VALUE;
-
-	// The maximum number of lines allowed to be read from the file
-	private static final int MAX_LINES = 1024;
-
-	// The maximum number of fields allowed for each header
-	private static final int MAX_NO_OF_FIELDS = Byte.MAX_VALUE;
-	private HashMap<String[], Header> headers;
 	private final HeaderTreeNode myNode;
 
 	private int globalCounter;
 
-	private final StringBuffer fileContents;
+	private Map<String, Prototype> headers_;
 
 	public HeaderLoader() {
 
 		myNode = new HeaderTreeNode(HEADER);
 		globalCounter = 0;
 
-		fileContents = new StringBuffer();
-
-		// Attempt to read from the jar file
-		final URL fileURL = ClassLoader.getSystemClassLoader().getResource(
-		"headers.jbrf");
-
-		if (fileURL == null) {
-			return;
-		}
-
-		// Read the characters from the file
-		BufferedReader inBuffer = null;
-		try {
-			final URLConnection connection = fileURL.openConnection();
-			connection.connect();
-
-			inBuffer = new BufferedReader(new InputStreamReader(connection
-					.getInputStream()));
-
-			int counter = 0;
-			int charRead;
-			while (((charRead = inBuffer.read()) > 0) && (counter < MAX_CHARS)) {
-				// Allow the character only if its printable ascii or \n
-				if ((CharUtils.isAsciiPrintable((char) charRead))
-						|| (((char) charRead) == '\n')) {
-					fileContents.append((char) charRead);
-				}
-				counter++;
-			}
-
-			inBuffer.close();
-
-		} catch (final IOException e1) {
-			return;
-		} finally {
-			IOUtils.closeQuietly(inBuffer);
-		}
-
+		headers_ = Verifier.loadFile("headers.jbrf");
+		
 	} // constructor
 
 	/**
@@ -191,37 +142,55 @@ class HeaderLoader {
 			return Header.ZERO;
 		}
 
-		final Object[] path = treePath.getPath();
-		// Go through the key set elements of the headers
-		for (String[] element : headers.keySet()) {
+		for(String headerName : headers_.keySet()) {
+			
+			Prototype proto = headers_.get(headerName);
+			
+			int catLength = proto.getNoOfCategories();
+			
+			final String[] categories = new String[catLength];
+			proto.getCategories().toArray(categories);
 
+			final Object[] path = treePath.getPath();
 			int success = path.length - 1;
-
+			
 			for (int i = 0; i < path.length; i++) {
-
 				try {
-
-					if (path[i + 1].toString().equalsIgnoreCase(element[i])) {
+					
+					if(path[i + 1].toString().equalsIgnoreCase(categories[i])) {
 						success--;
-
 					} else {
 						i = 32;
-
 					}
-				} catch (ArrayIndexOutOfBoundsException e) {
+					
+				} catch (ArrayIndexOutOfBoundsException exp) {
 					i = 32;
-
-				}
-
-				if (success == 0) {
-					return headers.get(element);
-
 				}
 			}
+			// We have found the header we were looking for
+			if(success == 0) {
+				int noOfFields = proto.size();
+				
+				final String[] output = new String[noOfFields];
+				proto.getPayloads().toArray(output);
+				
+				final StringBuffer myBuffer = new StringBuffer();
+				for(String payload : output) {
+					myBuffer.append(payload);
+					myBuffer.append('\n');
+				}
+				myBuffer.append('\n');
+				
+				final String commentL = proto.getComment();
+				
+				return new Header(noOfFields, myBuffer.toString(), commentL);
+				
+			}
+			
 		}
-
+		
 		return Header.ZERO;
-
+		
 	}
 
 	public HeaderTreeNode getMasterTreeNode() {
@@ -231,134 +200,20 @@ class HeaderLoader {
 
 	protected void load() {
 
-		// Parse the contents of the StringBuffer to the array of generators
+		
+		for (String hd : headers_.keySet()) {
+			
+			Prototype pt = headers_.get(hd);
 
-		final String[] fileInput = fileContents.toString().split("\n");
-		final int len = fileInput.length;
-
-		headers = new HashMap<String[], Header>(len);
-
-		if (fileInput.length > MAX_LINES) {
-			return;
+			String [] catArray = new String[pt.getNoOfCategories()];
+			pt.getCategories().toArray(catArray);
+			
+			addNodes(catArray, myNode);
+			
 		}
+		
 
-		for (int i = 0; i < len; i++) {
-
-			// The number of fields identified for each category
-			int numberOfFields = 0;
-
-			final String line = fileInput[i];
-			if ((!line.startsWith("#")) && (line.length() > 5)) {
-
-				// "J:AAA-BBB:" First line contains three fields
-				if ((line.charAt(1) == ':') && ((line.charAt(13) == ':'))) {
-					final String[] firstLineArray = line.split(":");
-
-					// Check that there are three fields separated by ':' in the
-					// first line
-					if (firstLineArray.length == 4) {
-
-						// Check that the first character is one of JBROFUZZ
-						if (("J".equals(firstLineArray[0]))
-								|| ("B".equals(firstLineArray[0]))
-								|| ("R".equals(firstLineArray[0]))
-								|| ("O".equals(firstLineArray[0]))
-								|| ("F".equals(firstLineArray[0]))
-								|| ("U".equals(firstLineArray[0]))
-								|| ("Z".equals(firstLineArray[0]))) {
-
-							// Check that the ID contains a '-' after 3
-							// characters
-							if (firstLineArray[1].charAt(3) == '-') {
-
-								try {
-									numberOfFields = Integer
-									.parseInt(firstLineArray[3]);
-								} catch (final NumberFormatException e) {
-									numberOfFields = 0;
-								}
-
-							}
-						}
-					}
-				} // First line check
-
-				// If a positive number of fields is claimed in the first line
-				// and the first line is OK
-				if ((numberOfFields > 0)
-						&& (numberOfFields <= MAX_NO_OF_FIELDS)) {
-					// final String[] firstArray = line.split(":");
-
-					// Check that there is enough space to actually
-					// add this particular header
-					if (i < len - numberOfFields - 2) {
-
-						// Check that the second line starts with a '>'
-						String line2 = fileInput[i + 1];
-						if (line2.startsWith(">")) {
-							line2 = line2.substring(1);
-							String[] categoriesArray;
-
-							final String commentLine = fileInput[i + 2];
-							if (commentLine.startsWith(">>")) {
-
-								
-
-								// If categories do exist in the second line
-								if (line2.contains("|")) {
-
-									globalCounter = 0;
-									categoriesArray = line2.split("\\|");
-									for (int xa = 0; xa < categoriesArray.length; xa++) {
-										categoriesArray[xa] = StringUtils
-										.stripStart(
-												StringUtils
-												.stripEnd(
-														categoriesArray[xa],
-														" "),
-										" ");
-									}
-									addNodes(categoriesArray, myNode);
-
-								}
-								// If no categories have been specified, add a
-								// default category
-								else {
-
-									categoriesArray = new String[] { "<unknown "
-											+ i + ">" };
-
-									myNode.add(new HeaderTreeNode("<unknown "
-											+ i + ">"));
-
-								}
-
-								// Add the values for each element
-								final StringBuffer myBuffer = new StringBuffer();
-								for (int j = 1; j <= numberOfFields; j++) {
-									myBuffer.append(fileInput[i + 2 + j]);
-									myBuffer.append('\n');
-								}
-								
-								// Finally create the header, add the comments
-								headers.put(categoriesArray, 
-										new Header(numberOfFields, 
-												myBuffer.toString(), 
-												commentLine.substring(2)));
-							}
-
-						}
-					}
-				}
-			}
-		}
 	}
 
-// TODO UCdetector: Remove unused code: 
-// 	public int size() {
-// 
-// 		return headers.size();
-// 
-// 	}
 
 }
