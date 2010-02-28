@@ -280,10 +280,10 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener, KeyLis
 		HeaderFrame.this.setSize(ySize, xSize);
 
 		// Where to show headers frame
-		HeaderFrame.this.setLocation(
-				parent.getLocation().x + (parent.getWidth() - xSize) / 2, 
-				parent.getLocation().y + (parent.getHeight() - ySize) / 2
-		);
+//		HeaderFrame.this.setLocation(
+//				parent.getLocation().x + (parent.getWidth() - xSize) / 2, 
+//				parent.getLocation().y + (parent.getHeight() - ySize) / 2
+//		);
 		
 		setResizable(true);
 		setVisible(true);
