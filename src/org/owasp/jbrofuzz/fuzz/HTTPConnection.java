@@ -120,14 +120,15 @@ class HTTPConnection implements AbstractConnection {
 			final String proxyUser = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[3], "");
 			final String proxyPass = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[4], "");
 			
-			UsernamePasswordCredentials creds = new UsernamePasswordCredentials(proxyUser, proxyPass);
-			AuthScope authScope = new AuthScope(proxyHost, proxyPort);
-			
 			HttpHost proxyHttpHost = new HttpHost(proxyHost, proxyPort);
 			
 			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxyHttpHost);
 		
-			httpclient.getCredentialsProvider().setCredentials(authScope, creds);
+			if (proxyUser != null && proxyPass != null) {
+				UsernamePasswordCredentials creds = new UsernamePasswordCredentials(proxyUser, proxyPass);
+				AuthScope authScope = new AuthScope(proxyHost, proxyPort);
+				httpclient.getCredentialsProvider().setCredentials(authScope, creds);
+			}
 			
 		}
 		
@@ -142,7 +143,7 @@ class HTTPConnection implements AbstractConnection {
 				// Read the entity response, copy it into the byte array stream
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				InputStream instream = entity.getContent();
-				
+		
 				int l;
 				byte[] tmp = new byte[2048];
 				while ((l = instream.read(tmp)) != -1) {
@@ -150,9 +151,10 @@ class HTTPConnection implements AbstractConnection {
 				}
 				
 				reply = new String(baos.toByteArray());
+			} else {
+				reply = "Entity is NULL";
 			}
-			
-			reply = "Entity is NULL";
+				
 			statusCode = response.getStatusLine().getStatusCode();
 			
 		} catch(Exception e4) {
