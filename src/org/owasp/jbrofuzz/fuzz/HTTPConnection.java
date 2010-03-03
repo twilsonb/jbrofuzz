@@ -30,21 +30,20 @@
 package org.owasp.jbrofuzz.fuzz;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.URL;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
@@ -58,30 +57,31 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * @version 2.0
  * @since 2.0
  */
-class HTTPConnection implements AbstractConnection {
+public class HTTPConnection implements AbstractConnection {
+
+	private final static int RECV_BUF_SIZE = 256 * 1024;
+
+	// Singleton SSLSocket factory used with it's factory
+	private static SSLSocketFactory mSSLSocketFactory;
 
 	private final String protocol;
-	private final String host;
-	private final int port;
 	private final String message;
+	private final String host;
+
+	private transient String reply;	
+	private transient int port;
+
+	private transient InputStream inStream;
+	// private transient OutputStream outStream;
+
+	private int statusCode; 
 	
-	private String reply;
-	
-	private int statusCode;
+	private int socketTimeout;
 	
 	/**
 	 * <p>
 	 * The constructor for the HTTP connection. Actually make the connection.
 	 * </p>
-	 * 
-	 * @param urlString
-	 *            The url string from which the protocol (e.g. "https"), the
-	 *            host (e.g. www.owasp.org) and the port number will be
-	 *            determined.
-	 * 
-	 * @param message
-	 *            of what to put on the wire, once a connection has been
-	 *            established.
 	 * 
 	 * @throws ConnectionException
 	 * 
@@ -97,18 +97,145 @@ class HTTPConnection implements AbstractConnection {
 		this.port = port;
 		this.message = message;
 		
-		// Parameters (not being used at the moment)
-		HttpParams params = new BasicHttpParams();
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+		// Get the file part from the message, rubbish...
+		String file;
+		try {
 
-		DefaultHttpClient httpclient = new DefaultHttpClient();
+			file = message.split("\r\n")[0].split(" ")[1];
 
-		// HTTP Method: GET, HEAD, POST, PUT, DELETE, TRACE and OPTIONS
-		HttpRequestBase httpMethod = null;
-		if(message.startsWith("GET")) {
-			httpMethod = new HttpGet(protocol + "://" + host + ":" + port);
-			
+		} catch (Exception e1) {
+
+			file = "";
 		}
+
+		
+		final byte[] recv = new byte[RECV_BUF_SIZE];
+
+		try {
+
+			URL mURL = new URL(protocol, host, port, file);
+			
+			if (protocol.equalsIgnoreCase("https")) {
+
+				HttpsURLConnection myCon = (HttpsURLConnection) mURL.openConnection();
+
+				// Make sure we have a factory for the SSL socket
+				if (mSSLSocketFactory == null) {
+					mSSLSocketFactory = Connection.getSocketFactory();
+				}
+				// that way no invalid certificates will ever complain
+				myCon.setSSLSocketFactory(mSSLSocketFactory);
+				// Not complete...
+				//
+			} else {	// HTTP Connection
+				
+				HttpURLConnection myCon = (HttpURLConnection) mURL.openConnection();
+					
+					String [] headers = message.split("\r\n\r\n")[0].split("\r\n");
+					// Set all headers..
+					for(int i = 1; i < headers.length; i++) {
+						String[] fieldLine = headers[i].split(":");
+						
+						StringUtils.trimToEmpty(fieldLine[0]);
+						StringUtils.trimToEmpty(fieldLine[1]);
+						
+						// Possibly do empty checks here later
+						
+						myCon.addRequestProperty(fieldLine[0], fieldLine[1]);
+					}
+					
+					// Set the method GET / POST / only a handful are supported
+					String method = headers[0].split(" ")[0];
+					System.out.println(method); // why oh why you print a GET but do a POST?
+					myCon.setRequestMethod(method);
+					
+					// Check if there is post data equivalent present
+					if(message.split("\r\n\r\n").length > 1) {
+						
+						String postData = message.split("\r\n\r\n")[1];
+						
+						myCon.setDoOutput(true);
+						myCon.setUseCaches(false);
+						
+						myCon.setRequestProperty("Content-Length", 
+								"" + Integer.toString(postData.getBytes().length));
+						
+						// Connect
+						OutputStreamWriter out = new OutputStreamWriter(
+	                              myCon.getOutputStream());
+						
+						out.write(postData);
+						out.close();
+
+					} else {
+						// Connect
+						myCon.connect();
+					}
+					
+					// Maybe put the per-below in a separate try-catch block
+					inStream = myCon.getInputStream();
+					
+					// Get the timeout value on the Socket
+					socketTimeout = JBroFuzz.PREFS.getInt("Socket.Max.Timeout", 7);
+					// validate
+					if( (socketTimeout < 1) || (socketTimeout > 51) ) {
+						socketTimeout = 7;
+					}
+					// Start timer
+					final SocketTimer timer = new SocketTimer(this, socketTimeout * 1000);
+					timer.start();
+
+					// Read response, see what you have back
+					final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					int got;
+					while ((got = inStream.read(recv)) > -1) {
+						baos.write(recv, 0, got);
+					}
+
+					// If the timer is not reset, close() will be called
+					timer.reset();
+
+					baos.close();
+
+					inStream.close();
+					// outStream.close();
+					
+					myCon.disconnect();
+					
+					reply = new String(baos.toByteArray());
+					
+
+				
+				
+				
+			}
+
+
+		
+
+		} catch (MalformedURLException e1) {
+
+			reply = "Malformed URL: " + e1.getMessage() + "\n";
+			throw new ConnectionException(reply);
+
+		} catch (IOException e3) {
+
+			reply = "An IO Error occured: " + e3.getMessage() + 
+			". \n\nThis could also be a Connection Timeout, " +
+			"\ntry increasing the value under Preferences ->" +
+			" Fuzzing\n";
+			throw new ConnectionException(reply);
+
+		} finally {
+
+			IOUtils.closeQuietly(inStream);
+			// IOUtils.closeQuietly(outStream);
+
+		}
+		
+		
+		
+		
 		
 		// Proxy credentials, if enabled
 		final boolean proxyEnabled = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.PROXY[0], false);
@@ -119,51 +246,9 @@ class HTTPConnection implements AbstractConnection {
 			final int proxyPort = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.PROXY[2], 0);
 			final String proxyUser = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[3], "");
 			final String proxyPass = JBroFuzz.PREFS.get(JBroFuzzPrefs.PROXY[4], "");
-			
-			HttpHost proxyHttpHost = new HttpHost(proxyHost, proxyPort);
-			
-			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxyHttpHost);
-		
-			if (proxyUser != null && proxyPass != null) {
-				UsernamePasswordCredentials creds = new UsernamePasswordCredentials(proxyUser, proxyPass);
-				AuthScope authScope = new AuthScope(proxyHost, proxyPort);
-				httpclient.getCredentialsProvider().setCredentials(authScope, creds);
-			}
-			
 		}
-		
-		
+			
 
-		try {
-			
-			HttpResponse response = httpclient.execute(httpMethod);
-			HttpEntity entity = response.getEntity();
-			
-			if (entity != null) {
-				// Read the entity response, copy it into the byte array stream
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				InputStream instream = entity.getContent();
-		
-				int l;
-				byte[] tmp = new byte[2048];
-				while ((l = instream.read(tmp)) != -1) {
-					baos.write(tmp, 0, l);
-				}
-				
-				reply = new String(baos.toByteArray());
-			} else {
-				reply = "Entity is NULL";
-			}
-				
-			statusCode = response.getStatusLine().getStatusCode();
-			
-		} catch(Exception e4) {
-			
-			reply = "An Exception occured.";
-			statusCode = 0;
-			throw new ConnectionException(e4.getMessage());
-			
-		}
 
 
 	}
@@ -246,4 +331,11 @@ class HTTPConnection implements AbstractConnection {
 
 	}
 
+	@Override
+	public void close() {
+
+		IOUtils.closeQuietly(inStream);
+		// IOUtils.closeQuietly(outStream);
+
+	}
 }

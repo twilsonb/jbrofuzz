@@ -35,9 +35,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -50,7 +48,6 @@ import javax.net.ssl.TrustManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -74,42 +71,6 @@ class SocketConnection implements AbstractConnection {
 	// Singleton SSLSocket factory used with it's factory
 	private static SSLSocketFactory mSSLSocketFactory;
 
-	/**
-	 * <p>
-	 * Returns a SSL factory instance that trusts all server certificates.
-	 * </p>
-	 * 
-	 * <p>
-	 * Used by the Connection constructor for the SSL socket.
-	 * </p>
-	 * 
-	 * <p>
-	 * In the event of an exception, the factory method defaults to a normal
-	 * SSLSocketFactory.
-	 * </p>
-	 * 
-	 * @return SSLSocketFactory an SSL socket factory
-	 * 
-	 * @since 1.3
-	 */
-	private static final SSLSocketFactory getSocketFactory() throws ConnectionException {
-
-		try {
-			final TrustManager[] tManager = new TrustManager[] { 
-					new FullyTrustingManager() 
-			};
-			final SSLContext context = SSLContext.getInstance("SSL");
-			context.init(new KeyManager[0], tManager, new SecureRandom());
-
-			return context.getSocketFactory();
-
-		} catch (KeyManagementException e) {
-			throw new ConnectionException("No SSL algorithm support.");
-		} catch (NoSuchAlgorithmException e) {
-			throw new ConnectionException("Exception when setting up the Naive key management.");
-		}
-
-	}
 
 	private final transient String message;
 	private transient Socket mSocket;
@@ -155,7 +116,7 @@ class SocketConnection implements AbstractConnection {
 
 				// Make sure we have a factory for the SSL socket
 				if (mSSLSocketFactory == null) {
-					mSSLSocketFactory = getSocketFactory();
+					mSSLSocketFactory = Connection.getSocketFactory();
 				}
 
 				// Handle HTTPS differently then HTTP
@@ -329,7 +290,7 @@ class SocketConnection implements AbstractConnection {
 	}
 
 
-	protected void close() {
+	public void close() {
 
 		IOUtils.closeQuietly(inStream);
 		IOUtils.closeQuietly(outStream);

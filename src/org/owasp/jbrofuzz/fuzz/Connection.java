@@ -31,6 +31,14 @@ package org.owasp.jbrofuzz.fuzz;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -79,6 +87,7 @@ class Connection implements AbstractConnection {
 
 		// Check the message for it being an HTTP 1.1
 		if(protocolIsHTTP11(message)) {
+			System.out.println("About to launch an HTTP connection");
 			mainConnection = new HTTPConnection(protocol, host, port, message);
 		} else {
 			mainConnection = new SocketConnection(protocol, host, port, message);
@@ -123,6 +132,49 @@ class Connection implements AbstractConnection {
 	public boolean isResponse100Continue() {
 
 		return mainConnection.isResponse100Continue();
+
+	}
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * <p>
+	 * Returns a SSL factory instance that trusts all server certificates.
+	 * </p>
+	 * 
+	 * <p>
+	 * Used by the Connection constructor for the SSL socket.
+	 * </p>
+	 * 
+	 * <p>
+	 * In the event of an exception, the factory method defaults to a normal
+	 * SSLSocketFactory.
+	 * </p>
+	 * 
+	 * @return SSLSocketFactory an SSL socket factory
+	 * 
+	 * @since 1.3
+	 */
+	protected static final SSLSocketFactory getSocketFactory() throws ConnectionException {
+
+		try {
+			final TrustManager[] tManager = new TrustManager[] { 
+					new FullyTrustingManager() 
+			};
+			final SSLContext context = SSLContext.getInstance("SSL");
+			context.init(new KeyManager[0], tManager, new SecureRandom());
+
+			return context.getSocketFactory();
+
+		} catch (KeyManagementException e) {
+			throw new ConnectionException("No SSL algorithm support.");
+		} catch (NoSuchAlgorithmException e) {
+			throw new ConnectionException("Exception when setting up the Naive key management.");
+		}
 
 	}
 

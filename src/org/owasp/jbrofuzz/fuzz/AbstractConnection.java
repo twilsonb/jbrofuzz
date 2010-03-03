@@ -100,4 +100,6 @@ interface AbstractConnection {
 
 	boolean isResponse100Continue();
 
+	abstract void close();
+
 }
