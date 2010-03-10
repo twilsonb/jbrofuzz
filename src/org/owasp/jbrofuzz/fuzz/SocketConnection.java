@@ -36,18 +36,13 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
  * Description: The class responsible for making the connection for the purposes
@@ -62,7 +57,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
  * @version 2.0
  * @since 0.1
  */
-class SocketConnection implements AbstractConnection {
+class SocketConnection {
 
 	// The maximum size for the socket I/O
 	// private final static int SEND_BUF_SIZE = 256 * 1024;
@@ -144,7 +139,7 @@ class SocketConnection implements AbstractConnection {
 			outStream.write(this.message.getBytes());
 
 			// Get the timeout value on the Socket
-			socketTimeout = JBroFuzz.PREFS.getInt("Socket.Max.Timeout", 7);
+			socketTimeout = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.FUZZING[0].getId(), 7);
 			// validate
 			if( (socketTimeout < 1) || (socketTimeout > 51) ) {
 				socketTimeout = 7;
@@ -194,9 +189,6 @@ class SocketConnection implements AbstractConnection {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.owasp.jbrofuzz.fuzz.AbstractConnection#getMessage()
-	 */
 	public String getMessage() {
 		if (message.isEmpty()) {
 			return "[JBROFUZZ REQUEST IS BLANK]";
@@ -205,9 +197,6 @@ class SocketConnection implements AbstractConnection {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.owasp.jbrofuzz.fuzz.AbstractConnection#getPort()
-	 */
 	public String getPort() {
 
 		if (port == -1) {
@@ -218,9 +207,6 @@ class SocketConnection implements AbstractConnection {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.owasp.jbrofuzz.fuzz.AbstractConnection#getReply()
-	 */
 	public String getReply() {
 
 		if (reply.isEmpty()) {
@@ -231,64 +217,29 @@ class SocketConnection implements AbstractConnection {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.owasp.jbrofuzz.fuzz.AbstractConnection#getStatus()
-	 */
-	public String getStatus() {
 
-		char[] code = {'0', '0', '0'};
+	public String getStatus() {
 
 		try {
 			final String out = reply.split(" ")[1].substring(0, 3);
 
 			if (StringUtils.isNumeric(out)) {
-				code = out.toCharArray();
-			} 
+				
+				return out;
+			
+			} else {
+				
+				return new String ("000");
+				
+			}
 
 		} catch (Exception exception1) {
 
-			code[0] = '-';
-			code[1] = '-';
-			code[2] = '-';
-
-		}
-		return new String(code);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.owasp.jbrofuzz.fuzz.AbstractConnection#protocolIsHTTP11(java.lang.String)
-	 */
-	public final boolean protocolIsHTTP11(final String message) {
-
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.owasp.jbrofuzz.fuzz.AbstractConnection#getPostDataInMessage()
-	 */
-	public final String getPostDataInMessage() {
-
-		try {
-
-			return message.split("\r\n\r\n")[1];
-
-		} catch (Exception e1) {
-
-			return message;
+			return new String("---");
 
 		}
 
 	}
-
-	/* (non-Javadoc)
-	 * @see org.owasp.jbrofuzz.fuzz.AbstractConnection#isResponse100Continue()
-	 */
-	public boolean isResponse100Continue() {
-
-		return false;
-
-	}
-
 
 	public void close() {
 

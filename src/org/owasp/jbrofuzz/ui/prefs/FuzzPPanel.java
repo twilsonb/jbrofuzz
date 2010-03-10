@@ -49,27 +49,24 @@ class FuzzPPanel extends AbstractPrefsPanel {
 
 	// Declare any static constants
 	private static final String[] SOCKET_SECONDS = 
-		{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-		 "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-		 "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
-		 "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
-		 "41", "42", "43", "44", "45", "46", "47", "48", "49", "50" };
+	{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+		"11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+		"21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+		"31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+		"41", "42", "43", "44", "45", "46", "47", "48", "49", "50" };
 
-	// Declare all preference parameter Strings being used
-	private static final String PARAM_1 = "Socket.Max.Timeout";
-	
-	private static final String PARAM_2 = "fuzz.end.of.line";
-	
 	// The Socket Timeout Combo Box
 	private final JComboBox stoBox;
-	
+	// The check boxes, excluding the 
+	private final JCheckBox [] checkBoxes = new JCheckBox[JBroFuzzPrefs.FUZZING.length - 1];
+
 	public FuzzPPanel(final PrefDialog dialog) {
-		
+
 		super("Fuzzing");
-		
+
 		// Fuzzing... -> Socket Timeout
 
-		int stoPrefValue = JBroFuzz.PREFS.getInt(PARAM_1, 7);
+		int stoPrefValue = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.FUZZING[0].getId(), 7);
 		// Validate
 		if( (stoPrefValue < 1) || (stoPrefValue > 51) ) {
 			stoPrefValue = 7;
@@ -78,130 +75,61 @@ class FuzzPPanel extends AbstractPrefsPanel {
 		stoBox = new JComboBox(SOCKET_SECONDS);
 		stoBox.setSelectedIndex(stoPrefValue - 1);
 		stoBox.setMaximumRowCount(5);
-		
+
 		// Re-enable the apply button in the event of a change
 		stoBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent stoEvent) {
 				dialog.setApplyEnabled(true);
 			}
 		});
-		
-		final JLabel stoLabel = new JLabel("Specify Socket Connection Timeout (in seconds): ");
-		stoLabel.setToolTipText("Increase/Decrease the number of seconds you wait for an open connection");
-		
+
+		final JLabel stoLabel = new JLabel(JBroFuzzPrefs.FUZZING[0].getTitle());
+		stoLabel.setToolTipText(JBroFuzzPrefs.FUZZING[0].getTooltip());
+
 		final JPanel sTimeOutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
 		// A very important line when it comes to BoxLayout
 		sTimeOutPanel.setAlignmentX(0.0f);
 		sTimeOutPanel.add(stoLabel);
 		sTimeOutPanel.add(stoBox);
-		
+
 		add(sTimeOutPanel);
-		
-		// Fuzzing... -> End of Line Character
-
-		final boolean endlinebox = JBroFuzz.PREFS.getBoolean(PARAM_2,
-				false);
-		final JCheckBox endlineCheckBox = new JCheckBox(
-				" Use \"\\n\" instead of \"\\r\\n\" as an end of line character ",
-				endlinebox);
-
-		endlineCheckBox.setBorderPaintedFlat(true);
-		endlineCheckBox
-		.setToolTipText("Tick this box, if you want to use \"\\n\" for each line put on the wire");
-
-		endlineCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent eolEvt) {
-				if (endlineCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(PARAM_2, true);
-				} else {
-					JBroFuzz.PREFS.putBoolean(PARAM_2, false);
-				}
-			}
-		});
-		add(endlineCheckBox);
 		add(Box.createRigidArea(new Dimension(0, 20)));
 
+		for(int i = 0; i < checkBoxes.length; i++) {
 
-		// Fuzzing... -> Word wrap request text panel
+			final boolean boolEntry = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[i].getId(), true);
+			checkBoxes[i] = new JCheckBox(JBroFuzzPrefs.FUZZING[i].getTitle(), boolEntry);
+			checkBoxes[i].setToolTipText(JBroFuzzPrefs.FUZZING[i].getTooltip());
+			checkBoxes[i].setBorderPaintedFlat(true);
+			checkBoxes[i].addActionListener(new ActionListener() {
+				public void actionPerformed(final ActionEvent e) {
 
-		final boolean wrap_req_box = JBroFuzz.PREFS.getBoolean(
-				JBroFuzzPrefs.WRAP_REQUEST, false);
-		final JCheckBox wReqBox = new JCheckBox(
-				" Word wrap text in the \"Request\" area (requires restart) ",
-				wrap_req_box);
-		wReqBox.setBorderPaintedFlat(true);
-		wReqBox
-		.setToolTipText("If ticked, the request text area will wrap the text to fit the size of the area");
+					dialog.setApplyEnabled(true);
 
-		wReqBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent wReqEvt) {
-				if (wReqBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.WRAP_REQUEST, true);
-				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.WRAP_REQUEST, false);
 				}
-			}
-		});
+			});
+			add(checkBoxes[i]);
+			add(Box.createRigidArea(new Dimension(0, 20)));
+		}
 
-		add(wReqBox);
-		add(Box.createRigidArea(new Dimension(0, 20)));
+		add(Box.createRigidArea(new Dimension(0, 200)));
 
-		// Fuzzing... -> Word wrap response text panel
 
-		final boolean wrap_res_bool = JBroFuzz.PREFS.getBoolean(
-				JBroFuzzPrefs.WRAP_RESPONSE, false);
-		final JCheckBox wRespBox = new JCheckBox(
-				" Word wrap text in the \"Response\" window (requires restart) ",
-				wrap_res_bool);
-		wRespBox.setBorderPaintedFlat(true);
-		wRespBox
-		.setToolTipText("Tick this box, to see all output text wrapped to the size of the response window");
 
-		wRespBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent wrap_res_evt) {
-				if (wRespBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.WRAP_RESPONSE, true);
-				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.WRAP_RESPONSE, false);
-				}
-			}
-		});
-
-		add(wRespBox);
-		add(Box.createRigidArea(new Dimension(0, 20)));
-
-		// Fuzzing ...-> "Re-send POST Data if 100 Continue is received"
-		final boolean cont_bool = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[2],
-				true);
-		final JCheckBox cont_check_box = new JCheckBox(
-				"Re-send POST Data if 100 Continue is received", cont_bool);
-		cont_check_box.setBorderPaintedFlat(true);
-		cont_check_box
-		.setToolTipText("Tick this box, to re-send the POST Data in a HTTP/1.1 message, if a 100 continue is received");
-
-		cont_check_box.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent event5) {
-				if (cont_check_box.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[2], true);
-				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[2], false);
-				}
-			}
-		});
-
-		add(cont_check_box);
-		add(Box.createRigidArea(new Dimension(0, 20)));
-
-		
-		
 	}
-	
+
 	public void apply() { 
-		
+
 		// Fuzzing... -> Socket Timeout
-		final int stoIndex = stoBox.getSelectedIndex();
-		JBroFuzz.PREFS.putInt(PARAM_1, stoIndex + 1);
-		
+		JBroFuzz.PREFS.putInt(JBroFuzzPrefs.FUZZING[0].getId(), stoBox.getSelectedIndex() + 1);
+		// The rest
+		for(int i = 0; i < checkBoxes.length; i++) {
+			JBroFuzz.PREFS.putBoolean(
+					JBroFuzzPrefs.FUZZING[i].getId(), 
+					checkBoxes[i].isSelected()
+			);
+		}
+
 	}
 
 }

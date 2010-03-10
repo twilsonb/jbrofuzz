@@ -41,35 +41,41 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class OutputPPanel extends AbstractPrefsPanel {
 
-	private static final long serialVersionUID = -8848755796748210431L;
+	private static final long serialVersionUID = -5132235157071990705L;
+	
+	private final JCheckBox [] checkBoxes = new JCheckBox[JBroFuzzPrefs.FUZZINGOUTPUT.length];
 
 	protected OutputPPanel(final PrefDialog dialog) {
+		
 		super("Fuzzing: Output");
 		
-		// Fuzzing: Output -> Double click opens up browser or panel
-		final boolean fuzzingResponseDoubleClickBox = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[3], true);
-		final JCheckBox fuzzingResponseDoubleClickCheckBox = new JCheckBox(
-				" Double click on a Response opens it up in a Browser ",
-				fuzzingResponseDoubleClickBox);
-
-		fuzzingResponseDoubleClickCheckBox.setBorderPainted(false);
-		fuzzingResponseDoubleClickCheckBox.setToolTipText(
-		"Tick this box to open up response in a browser, instead of a text-based window");
-
-		fuzzingResponseDoubleClickCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				if (fuzzingResponseDoubleClickCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[3], true);
-				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[3], false);
+		for(int i = 0; i < JBroFuzzPrefs.FUZZINGOUTPUT.length; i++) {
+			
+			final boolean boolEntry = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZINGOUTPUT[i].getId(), true);
+			checkBoxes[i] = new JCheckBox(JBroFuzzPrefs.FUZZINGOUTPUT[i].getTitle(), boolEntry);
+			checkBoxes[i].setToolTipText(JBroFuzzPrefs.FUZZINGOUTPUT[i].getTooltip());
+			checkBoxes[i].setBorderPaintedFlat(true);
+			checkBoxes[i].addActionListener(new ActionListener() {
+				public void actionPerformed(final ActionEvent e) {
+					
+					dialog.setApplyEnabled(true);
+					
 				}
-			}
-		});
-
-		add(fuzzingResponseDoubleClickCheckBox);
-		add(Box.createRigidArea(new Dimension(0, 20)));
+			});
+			add(checkBoxes[i]);
+			add(Box.createRigidArea(new Dimension(0, 20)));
+		}
+		
 
 	}
 	
-	public void apply() { }
+	public void apply() { 
+		
+		for(int i = 0; i < checkBoxes.length; i++) {
+			JBroFuzz.PREFS.putBoolean(
+					JBroFuzzPrefs.FUZZINGOUTPUT[i].getId(), 
+					checkBoxes[i].isSelected()
+			);
+		}
+	}
 }

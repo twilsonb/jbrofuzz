@@ -165,7 +165,7 @@ public class JBroFuzzWindow extends JFrame {
 		// Set the corresponding borders for each panel
 
 		// The tabbed pane, setup according to preferences
-		boolean tabsAtTop = JBroFuzz.PREFS.getBoolean("UI.JBroFuzz.Tabs", false);
+		boolean tabsAtTop = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[1].getId(), true);
 		if (tabsAtTop) {
 			tp = new JTabbedPane(SwingConstants.TOP);
 		} else {
@@ -218,7 +218,7 @@ public class JBroFuzzWindow extends JFrame {
 		log("System Launch, Welcome!", 1);
 
 		// Check for a new version at startup
-		boolean checkNewVersion = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[0], true);
+		boolean checkNewVersion = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[0].getId(), true);
 		if (checkNewVersion) {
 			(new StartUpdateCheck(JBroFuzzWindow.this)).execute();
 		}
@@ -242,18 +242,18 @@ public class JBroFuzzWindow extends JFrame {
 		});
 
 		// Set the location of the window
-		final int xLocation = JBroFuzz.PREFS.getInt("UI.JBroFuzz.X", 50);
-		final int yLocation = JBroFuzz.PREFS.getInt("UI.JBroFuzz.Y", 100);
+		final int xLocation = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.UI[0].getId(), 50);
+		final int yLocation = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.UI[1].getId(), 100);
 		
 		mJBroFuzzWindow.setLocation(xLocation, yLocation);
 
 		// Set the size of the window
-		int xSize = JBroFuzz.PREFS.getInt("UI.JBroFuzz.Width", SIZE_X);
+		int xSize = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.UI[2].getId(), SIZE_X);
 		if(xSize < Byte.MAX_VALUE) {
 			xSize = Byte.MAX_VALUE;
 		}
 
-		int ySize = JBroFuzz.PREFS.getInt("UI.JBroFuzz.Height", SIZE_Y);
+		int ySize = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.UI[3].getId(), SIZE_Y);
 		if(ySize < Byte.MAX_VALUE) {
 			ySize = Byte.MAX_VALUE;
 		}
@@ -279,24 +279,19 @@ public class JBroFuzzWindow extends JFrame {
 		pp.stop();
 		cp.stop();
 
-		// Delete empty dirs created
-//		final boolean delBlankDirs = JBroFuzz.PREFS.getBoolean(JBroFuzzFormat.PR_1, true);
-//		if (delBlankDirs) {
-//			getJBroFuzz().getHandler().deleteEmptryDirectories();
-//		}
-		
 		// If the frame is maximised, don't update the JBroFuzz window height & width
 		if( (this.getExtendedState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH) {
 
-			JBroFuzz.PREFS.putInt("UI.JBroFuzz.X", this.getLocation().x);
-			JBroFuzz.PREFS.putInt("UI.JBroFuzz.Y", this.getLocation().y);
+			JBroFuzz.PREFS.putInt(JBroFuzzPrefs.UI[0].getId(), this.getLocation().x);
+			JBroFuzz.PREFS.putInt(JBroFuzzPrefs.UI[1].getId(), this.getLocation().y);
 
 		} else {
 			
-			JBroFuzz.PREFS.putInt("UI.JBroFuzz.Height", this.getSize().height);
-			JBroFuzz.PREFS.putInt("UI.JBroFuzz.Width", this.getSize().width);
-			JBroFuzz.PREFS.putInt("UI.JBroFuzz.X", this.getLocation().x);
-			JBroFuzz.PREFS.putInt("UI.JBroFuzz.Y", this.getLocation().y);			
+			JBroFuzz.PREFS.putInt(JBroFuzzPrefs.UI[3].getId(), this.getSize().height);
+			JBroFuzz.PREFS.putInt(JBroFuzzPrefs.UI[2].getId(), this.getSize().width);
+			
+			JBroFuzz.PREFS.putInt(JBroFuzzPrefs.UI[0].getId(), this.getLocation().x);
+			JBroFuzz.PREFS.putInt(JBroFuzzPrefs.UI[1].getId(), this.getLocation().y);			
 		}
 
 		// Save the values of the url/request as a preference

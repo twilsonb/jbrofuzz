@@ -43,56 +43,39 @@ class PrefsPPanel extends AbstractPrefsPanel {
 
 	private static final long serialVersionUID = -8670706526863295929L;
 
+	private final JCheckBox [] checkBoxes = new JCheckBox[JBroFuzzPrefs.GENERAL.length];
+	
 	public PrefsPPanel(final PrefDialog dialog) {
+		
 		super("Preferences");
+
+		for(int i = 0; i < JBroFuzzPrefs.GENERAL.length; i++) {
 		
-		// Preferences -> Show Tabs
-
-		final boolean tabsbottom = JBroFuzz.PREFS.getBoolean("UI.JBroFuzz.Tabs", false);
-		final JCheckBox tabsCheckBox = new JCheckBox(
-				" Show tabs in the main window at the top of the window (requires restart) ",
-				tabsbottom);
-
-		tabsCheckBox.setBorderPaintedFlat(true);
-		tabsCheckBox
-		.setToolTipText(" Tick this option, if you would like to see the tabs under " +
-		"the tool bar, instead of at the bottom of the window ");
-
-		tabsCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				if (tabsCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean("UI.JBroFuzz.Tabs", true);
-				} else {
-					JBroFuzz.PREFS.putBoolean("UI.JBroFuzz.Tabs", false);
+			final boolean boolEntry = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[i].getId(), true);
+			checkBoxes[i] = new JCheckBox(JBroFuzzPrefs.GENERAL[i].getTitle(), boolEntry);
+			checkBoxes[i].setToolTipText(JBroFuzzPrefs.GENERAL[i].getTooltip());
+			checkBoxes[i].setBorderPaintedFlat(true);
+			checkBoxes[i].addActionListener(new ActionListener() {
+				public void actionPerformed(final ActionEvent e) {
+					
+					dialog.setApplyEnabled(true);
+					
 				}
-			}
-		});
-		add(tabsCheckBox);
-		add(Box.createRigidArea(new Dimension(0, 20)));
+			});
+			add(checkBoxes[i]);
+			add(Box.createRigidArea(new Dimension(0, 20)));
+		}
 		
-		// Preferences -> Check for New Version at Startup
-
-		final boolean newVersionCheck = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[0],
-				true);
-		final JCheckBox newVCheckBox = new JCheckBox(
-				" Check for a new version at startup ", newVersionCheck);
-
-		newVCheckBox.setBorderPaintedFlat(true);
-		newVCheckBox
-		.setToolTipText(" Untick this option, if you do not want to be notified about new versions at startup ");
-
-		newVCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				if (newVCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.GENERAL[0], true);
-				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.GENERAL[0], false);
-				}
-			}
-		});
-		add(newVCheckBox);
-		add(Box.createRigidArea(new Dimension(0, 20)));
 	}
 
-	public void apply() { }
+	public void apply() {
+		
+		for(int i = 0; i < checkBoxes.length; i++) {
+			JBroFuzz.PREFS.putBoolean(
+					JBroFuzzPrefs.GENERAL[i].getId(), 
+					checkBoxes[i].isSelected()
+			);
+		}
+		
+	}
 }

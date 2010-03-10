@@ -53,9 +53,9 @@ import javax.net.ssl.TrustManager;
  * @version 2.0
  * @since 0.1
  */
-class Connection implements AbstractConnection {
+class Connection {
 	
-	private AbstractConnection mainConnection;
+	private SocketConnection mainConnection;
 	
 	protected Connection(final String urlString, final String message)
 	throws ConnectionException {
@@ -85,13 +85,9 @@ class Connection implements AbstractConnection {
 			port = 80;
 		}
 
-		// Check the message for it being an HTTP 1.1
-		if(protocolIsHTTP11(message)) {
-			System.out.println("About to launch an HTTP connection");
-			mainConnection = new HTTPConnection(protocol, host, port, message);
-		} else {
-			mainConnection = new SocketConnection(protocol, host, port, message);
-		}
+
+		mainConnection = new SocketConnection(protocol, host, port, message);
+		
 	}
 
 	public String getMessage() {
@@ -117,29 +113,6 @@ class Connection implements AbstractConnection {
 		
 	}
 
-	public final boolean protocolIsHTTP11(final String message) {
-
-		return message.contains("HTTP/1.1");
-		
-	}
-
-	public final String getPostDataInMessage() {
-
-		return mainConnection.getPostDataInMessage();
-
-	}
-
-	public boolean isResponse100Continue() {
-
-		return mainConnection.isResponse100Continue();
-
-	}
-
-	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	/**
 	 * <p>

@@ -49,7 +49,7 @@ class JohnyWalker {
 	protected JohnyWalker(final GraphingPanel gPanel) {
 
 		// Get the directory location from preferences
-		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[1],
+		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(),
 				System.getProperty("user.dir"));
 
 		directory = new File(dirString + File.separator + "jbrofuzz"

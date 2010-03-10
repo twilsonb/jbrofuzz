@@ -43,58 +43,40 @@ class WirePPanel extends AbstractPrefsPanel {
 
 	private static final long serialVersionUID = 4718844109726649392L;
 
+	private final JCheckBox [] checkBoxes = new JCheckBox[JBroFuzzPrefs.FUZZINGONTHEWIRE.length];
+
 	protected WirePPanel(final PrefDialog dialog) {
+		
 		super("Fuzzing: On the Wire");
 		
-		// Fuzzing: On The Wire... -> Show on the wire tab after fuzzing finished
-		final boolean showwirebox = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[0],
-				false);
-		final JCheckBox showwireCheckBox = new JCheckBox(
-				" Show \"On The Wire\" tab after fuzzing has stopped or finished ",
-				showwirebox);
-
-		showwireCheckBox.setBorderPaintedFlat(true);
-		showwireCheckBox
-		.setToolTipText("Tick this box, if you want to always see the \"On The Wire\" tab");
-
-		showwireCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent swEvent) {
-				if (showwireCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[0], true);
-				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[0], false);
+		for(int i = 0; i < JBroFuzzPrefs.FUZZINGONTHEWIRE.length; i++) {
+			
+			final boolean boolEntry = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZINGONTHEWIRE[i].getId(), true);
+			checkBoxes[i] = new JCheckBox(JBroFuzzPrefs.FUZZINGONTHEWIRE[i].getTitle(), boolEntry);
+			checkBoxes[i].setToolTipText(JBroFuzzPrefs.FUZZINGONTHEWIRE[i].getTooltip());
+			checkBoxes[i].setBorderPaintedFlat(true);
+			checkBoxes[i].addActionListener(new ActionListener() {
+				public void actionPerformed(final ActionEvent e) {
+					
+					dialog.setApplyEnabled(true);
+					
 				}
-			}
-		});
-
-		add(showwireCheckBox);
-		add(Box.createRigidArea(new Dimension(0, 20)));
-
-		// Fuzzing: On The Wire... -> Display responses inside the On The Wire text area
-		final boolean dispBoolean = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[1], false);
-		final JCheckBox diskRespBox = new JCheckBox(
-				" Display the Requests as well as the Responses received ",
-				dispBoolean);
-
-		diskRespBox.setBorderPaintedFlat(true);
-		diskRespBox.setToolTipText(
-		"Tick this box to display the responses received for each request sent within the \"On The Wire\" tab");
-
-		diskRespBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent disEvent) {
-				if (diskRespBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[1], true);
-				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.FUZZING[1], false);
-				}
-			}
-		});
-
-		add(diskRespBox);
-		add(Box.createRigidArea(new Dimension(0, 20)));
+			});
+			add(checkBoxes[i]);
+			add(Box.createRigidArea(new Dimension(0, 20)));
+		}
 
 
 	}
 	
-	public void apply() {} 
+	public void apply() {
+		
+		for(int i = 0; i < checkBoxes.length; i++) {
+			JBroFuzz.PREFS.putBoolean(
+					JBroFuzzPrefs.FUZZINGONTHEWIRE[i].getId(), 
+					checkBoxes[i].isSelected()
+			);
+		}
+		
+	} 
 }

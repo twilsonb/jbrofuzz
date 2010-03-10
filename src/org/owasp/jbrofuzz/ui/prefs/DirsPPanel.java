@@ -43,7 +43,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -74,9 +73,9 @@ class DirsPPanel extends AbstractPrefsPanel {
 		// A very important line when it comes to BoxLayout
 		dirPanel.setAlignmentX(0.0f);
 		dirPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Fuzzing Directory (where data is saved) "), BorderFactory.createEmptyBorder(
+				.createTitledBorder(JBroFuzzPrefs.DIRS[0].getTitle()), BorderFactory.createEmptyBorder(
 						1, 1, 1, 1)));
-
+		dirPanel.setToolTipText(JBroFuzzPrefs.DIRS[0].getTooltip());
 		dirTextField = new JTextField(dir);
 		dirTextField.setFont(new Font("Verdana", Font.PLAIN, 12));
 		dirTextField.setMargin(new Insets(1, 1, 1, 1));
@@ -91,16 +90,16 @@ class DirsPPanel extends AbstractPrefsPanel {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						JFileChooser chooserD = new JFileChooser();
+						final JFileChooser chooserD = new JFileChooser();
 
 						chooserD.setCurrentDirectory(new File("."));
-						chooserD.setDialogTitle("Select Directory to Save Fuzzing Data");
+						chooserD.setDialogTitle(JBroFuzzPrefs.DIRS[0].getTooltip());
 						chooserD.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 						chooserD.setAcceptAllFileFilterUsed(false);
 
 						if (chooserD.showOpenDialog(dialog) == JFileChooser.APPROVE_OPTION) {
 							
-							File selDirFile = chooserD.getSelectedFile();
+							final File selDirFile = chooserD.getSelectedFile();
 							if(selDirFile.isDirectory()) {
 
 								try {
@@ -114,10 +113,7 @@ class DirsPPanel extends AbstractPrefsPanel {
 								}
 								
 							}
-//							System.out.println("getCurrentDirectory(): " 
-//									+  chooserD.getCurrentDirectory());
-//							System.out.println("getSelectedFile() : " 
-//									+  chooserD.getSelectedFile());
+
 						}
 
 					}
@@ -127,40 +123,15 @@ class DirsPPanel extends AbstractPrefsPanel {
 
 		dirPanel.add(dirTextField, BorderLayout.NORTH);
 		dirPanel.add(browseDirButton);
-
-		// Directory Locations... Directory -> Delete directories check-box
-
-		final boolean deletebox = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[0], false);
-		final JCheckBox deleteCheckBox = new JCheckBox(
-				" On exit, delete any empty directories created at startup ",
-				deletebox);
-
-		deleteCheckBox.setBorderPaintedFlat(true);
-		deleteCheckBox
-		.setToolTipText("Tick this option, if you would like to remove any empty directories");
-
-		deleteCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				if (deleteCheckBox.isSelected()) {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DIRS[0], true);
-				} else {
-					JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DIRS[0], false);
-				}
-			}
-		});
-
 		add(dirPanel);
-		add(Box.createRigidArea(new Dimension(0, 20)));
-		add(deleteCheckBox);
-		add(Box.createRigidArea(new Dimension(0, 200)));
+		add(Box.createRigidArea(new Dimension(0, 300)));
 
 
 	}
 	
 	public void apply() {
 
-		String location = dirTextField.getText();
-		JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[1], location);
+		JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[0].getId(), dirTextField.getText());
 		dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().createNewDirectory();
 		dirTextField.setText(dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().getCanonicalPath());
 		
