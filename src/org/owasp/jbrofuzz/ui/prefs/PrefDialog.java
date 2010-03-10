@@ -78,7 +78,7 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 	// The main split pane
 	private final JSplitPane splitPane;
 
-	private final AbstractPrefsPanel[] panels = new AbstractPrefsPanel[6];
+	private final AbstractPrefsPanel[] panels = new AbstractPrefsPanel[5];
 	
 	private final JBroFuzzWindow parent;
 	
@@ -109,7 +109,6 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 		panels[2] = new FuzzPPanel(this);
 		panels[3] = new WirePPanel(this);
 		panels[4] = new OutputPPanel(this);		
-		panels[5] = new ProxyPPanel(this);
 
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(

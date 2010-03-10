@@ -60,7 +60,7 @@ class SocketTimer extends Thread {
 	private transient int tElapsed;
 
 	// The Socket attached to this timer
-	private transient final AbstractConnection sConnection;
+	private transient final SocketConnection sConnection;
 	
 	/**
 	 * <p>Create a Timer of specified length, specified as a
@@ -69,7 +69,7 @@ class SocketTimer extends Thread {
 	 * @param sConnection the socket connection
 	 * @param timeInMS Length of time (in ms) before timeout
 	 */
-	protected SocketTimer(final AbstractConnection sConnection, final int timeInMS) {
+	protected SocketTimer(final SocketConnection sConnection, final int timeInMS) {
 		
 		super();
 		this.sConnection = sConnection;

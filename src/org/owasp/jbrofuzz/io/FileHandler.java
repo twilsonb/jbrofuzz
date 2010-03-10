@@ -108,7 +108,7 @@ public class FileHandler {
 	public final void createNewDirectory() {
 
 		// Get the root directory location from preferences
-		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[1], System.getProperty("user.dir"));
+		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
 		
 		// Create the /jbrofuzz directory in the current folder
 		rootDirectory = new File(dirString);

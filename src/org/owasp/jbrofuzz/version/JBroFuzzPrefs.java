@@ -51,24 +51,77 @@ public class JBroFuzzPrefs {
 	 * @version 2.0
 	 * @since 2.0
 	 */
-	public static final String [] DIRS = 
+	public static final PrefEntry [] DIRS = 
 	{
-		/**
-		 * The preferences used for deciding whether or not to delete any blank 
-		 * directories while exiting.
-		 * 
-		 * This is a boolean preference.
-		 */
-		"prefs.dir.delete",
+		// 0
+		new PrefEntry(
+				"save.dir",
+				" Fuzzing Directory (where data is saved) ",
+				" Select Directory to Save Fuzzing Data "
+			)
 		
-		/**
-		 * The preference of where user data should be created.
-		 * 
-		 * This is a String preference.
-		 */
-		"save.dir"
 	};
+	
+	/**
+	 * The UI preferences for the main and other windows.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @since 2.0
+	 */
+	public static final PrefEntry [] UI = 
+	{
+		// 0
+		new PrefEntry(
+				"ui.jbrofuzz.x",
+				" Main window location on the x-axis",
+				" Change this value, in order to change where the window is located",
+				true
+			),
+			
+		// 1
+		new PrefEntry(
+				"ui.jbrofuzz.y",
+				" Main window location on the y-axis",
+				" Change this value, in order to change where the window is located",
+				true
+			),
 
+		// 2
+		new PrefEntry(
+				"ui.jbrofuzz.width",
+				" Main window width",
+				" Change this value, in order to change the window width",
+				true
+		),
+		
+		// 3
+		new PrefEntry(
+				"ui.jbrofuzz.height",
+				" Main window height",
+				" Change this value, in order to change the window height",
+				true
+		),
+		
+		// 4 topPane
+		new PrefEntry(
+				"ui.f.topsplitpanel",
+				" Fuzzing Panel Top Split Panel",
+				" Change this value, in order to change the top divider location",
+				true
+		),
+		
+		// 5 mainPane
+		new PrefEntry(
+				"ui.f.mainsplitpanel",
+				" Fuzzing Panel Main Split Panel",
+				" Change this value, in order to change the main divider location",
+				true
+		)
+
+			
+	};
+	
 	/**
 	 * General preferences for JBroFuzz, examples include checking for a new
 	 * version at startup.
@@ -77,7 +130,7 @@ public class JBroFuzzPrefs {
 	 * @version 2.0
 	 * @since 2.0
 	 */
-	public static final String [] GENERAL = 
+	public static final PrefEntry [] GENERAL = 
 	{
 		/**
 		 * The preferences used for deciding whether or not to check and notify 
@@ -85,117 +138,88 @@ public class JBroFuzzPrefs {
 		 * 
 		 * This is a boolean preference.
 		 */
-		"startup.check.new-version"
+		new PrefEntry(
+				"startup.check.new-version",
+				" Check for a new version at startup ",
+				" Untick this option, if you do not want to be notified about new versions at startup "
+			),
+		
+		/**
+		 * The preference related to the location of the tabs. True implies the 
+		 * tab 
+		 */
+		new PrefEntry(
+				"ui.jbrofuzz.tabs",
+				" Show tabs in the main window at the top of the window",
+				" Tick this option, if you would like to see the tabs under the tool bar, instead of at the bottom of the window ",
+				true
+			)
 	};
 
-	public static final String [] FUZZING = 
+	public static final PrefEntry [] FUZZING = 
 	{
-		/**
-		 * The preferences used for keeping the "On The Wire" tab 
-		 * always selected.
-		 * 
-		 * This is a boolean preference.
-		 * 
-		 * [0]
-		 */
-		"fuzz.ui.show.wire",
-
-		/**
-		 * The preferences used for also showing the responses 
-		 * received "On The Wire" tab.
-		 * 
-		 * This is a boolean preference.
-		 * 
-		 * [1]
-		 */
-		"fuzz.ui.wire.responses",
-
-		/**
-		 * The preferences used for "Re-send POST Data if 100 
-		 * Continue is received"
-		 * 
-		 * This is a boolean preference.
-		 * 
-		 * [2]
-		 */
-		"fuzz.100.continue",
-
-		/**
-		 * The preference for double clicking on an output line and 
-		 * displaying it in a browser
-		 * 
-		 * This is a boolean preference.
-		 * 
-		 * [3]
-		 */
-		"fuzz.output.browser"
+		
+		// 0
+		new PrefEntry(
+				"fuzz.max.timeout",
+				"Specify Socket Connection Timeout (in seconds): ",
+				"Increase/Decrease the number of seconds you wait for an open connection"
+			),
+		
+		// 1
+		new PrefEntry(
+				"fuzz.end.of.line",
+				" Use \"\\n\" instead of \"\\r\\n\" as an end of line character ",
+				"Tick this box, if you want to use \"\\n\" for each line put on the wire"
+			),
+		
+		// 2
+		new PrefEntry(
+				"fuzz.wrap.request",
+				" Word wrap text in the \"Request\" area",
+				"If ticked, the request text area will wrap the text to fit the size of the area",
+				true
+			),
+		
+		// 2
+		new PrefEntry(
+				"fuzz.wrap.response",
+				" Word wrap test in the \"Response\" area",
+				"Tick this box, to see all output text wrapped to the size of the response window",
+				true
+			)
 	};
 
-	/**
-	 * Proxy preferences for JBroFuzz, examples include if the 
-	 * proxy is enabled, the server and the port number.
-	 * 
-	 * @author nathan
-	 * @version 2.0
-	 * @since 2.0
-	 */
-	public static final String [] PROXY =
+
+	public static final PrefEntry [] FUZZINGONTHEWIRE = 
 	{
-		/**
-		 * The preference for enabling proxy support
-		 * 
-		 * This is a boolean preference.
-		 * 
-		 * 0
-		 */
-		"proxy.enabled",
-		
-		/**
-		 * The preference for setting the proxy server
-		 * 
-		 * This is a String preference.
-		 * 
-		 * 1
-		 */
-		"proxy.server",
-		
-		/**
-		 * The preference for setting the proxy port
-		 * 
-		 * This is a String preference.
-		 * 
-		 * 2
-		 */
-		"proxy.port",
-		
-		/**
-		 * The preference setting for the proxy username
-		 * 
-		 * This is a String preference.
-		 * 
-		 * 3
-		 */
-		"proxy.username",
-		
-		/**
-		 * The preference setting for the proxy password
-		 * 
-		 * This is a String preference.
-		 * 
-		 * 4
-		 */
-		"proxy.password"
+		// 0
+		new PrefEntry(
+				"fuzz.ui.show.wire",
+				" Show \"On The Wire\" tab after fuzzing has stopped or finished ",
+				"Tick this box, if you want to always see the \"On The Wire\" tab"
+			),
+
+		// 1
+		new PrefEntry(
+				"fuzz.ui.wire.responses",
+				" Display the Requests as well as the Responses received ",
+				"Tick this box to display the responses received for each request sent within the \"On The Wire\" tab"
+			)
+
+	};
+	
+	public static final PrefEntry [] FUZZINGOUTPUT =
+	{
+		// 0
+		new PrefEntry(
+				"fuzz.output.browser",
+				" Double click on a Response opens it up in a Browser ",
+				"Tick this box to open up response in a browser, instead of a text-based window"
+		)
 		
 	};
-
-	/**
-	 * If true, the response will wrap when opened in a new window
-	 */
-	public static final String WRAP_RESPONSE = "wrap.response";
-	/**
-	 * If true, the request will wrap when viewed in the fuzzing panel
-	 */
-	public static final String WRAP_REQUEST = "wrap.request";
+	
 	/**
 	 * The url text saved as a preference
 	 */

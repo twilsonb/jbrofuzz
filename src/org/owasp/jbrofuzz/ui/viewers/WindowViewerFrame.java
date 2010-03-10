@@ -129,8 +129,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		listPanel.setLayout(new BorderLayout());
 
 		// Get the preferences for wrapping lines of text
-		boolean wrapText = JBroFuzz.PREFS
-		.getBoolean(JBroFuzzPrefs.WRAP_RESPONSE, false);
+		boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[3].getId(), false);
 
 		if (wrapText) {
 
@@ -139,6 +138,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		} else {
 
 			listTextArea = new NonWrappingTextPane();
+			
 		}
 
 		// Refine the Text Area

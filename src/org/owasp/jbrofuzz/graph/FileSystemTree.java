@@ -261,7 +261,7 @@ class FileSystemTree extends JTree implements MouseListener {
 		final Object[] path = selectedPath.getPath();
 
 		// Get the directory location from preferences
-		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[1], System.getProperty("user.dir"));
+		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
 
 		// Get the file path
 		final StringBuffer stringPath = new StringBuffer(dirString);

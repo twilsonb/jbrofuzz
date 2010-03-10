@@ -216,7 +216,7 @@ public class FuzzingPanel extends AbstractPanel {
 				.createEmptyBorder(5, 5, 5, 5)));
 
 		// Get the preferences for wrapping lines of text
-		final boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.WRAP_REQUEST, false);
+		final boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[2].getId(), false);
 
 		if (wrapText) {
 			requestPane = new JTextPane();
@@ -349,7 +349,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 							// Get the preferences for the double click
 							final boolean openInBrowser = JBroFuzz.PREFS.getBoolean(
-									JBroFuzzPrefs.FUZZING[3], true);
+									JBroFuzzPrefs.FUZZINGOUTPUT[0].getId(), true);
 
 							final File directory = getFrame().getJBroFuzz().getHandler().getFuzzDirectory();
 							final File selFile = new File(directory, name + ".html");
@@ -408,8 +408,8 @@ public class FuzzingPanel extends AbstractPanel {
 		topPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		outputPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 
-		topPane.setDividerLocation(JBroFuzz.PREFS.getInt("UI.F.topSplitPanel", 440));
-		mainPane.setDividerLocation(JBroFuzz.PREFS.getInt("UI.F.mainSplitPanel", 262));
+		topPane.setDividerLocation(JBroFuzz.PREFS.getInt(JBroFuzzPrefs.UI[4].getId(), 440));
+		mainPane.setDividerLocation(JBroFuzz.PREFS.getInt(JBroFuzzPrefs.UI[5].getId(), 262));
 		
 		FuzzingPanel.this.add(mainPane, BorderLayout.CENTER);
 
@@ -827,7 +827,7 @@ public class FuzzingPanel extends AbstractPanel {
 					// Put the message on the console as it goes out on the wire
 					toConsole(currentMessage.getMessageForDisplayPurposes());
 
-					final boolean showRespWire = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[1], false);
+					final boolean showRespWire = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), true);
 
 					try {
 
@@ -835,12 +835,6 @@ public class FuzzingPanel extends AbstractPanel {
 						final Connection connection = new Connection(getTextURL(),
 								currentMessage.getMessage());
 
-						// If a 100 Continue is encountered, print what you put
-						// on the wire, typically the post data from the message
-						if (connection.isResponse100Continue()) {
-							toConsole(currentMessage
-									.getPostDataForDisplayPurposes());
-						}
 						// Update the message writer
 						outputMessage.setConnection(connection);
 
@@ -892,8 +886,8 @@ public class FuzzingPanel extends AbstractPanel {
 	@Override
 	public void stop() {
 
-		JBroFuzz.PREFS.putInt("UI.F.mainSplitPanel", mainPane.getDividerLocation());
-		JBroFuzz.PREFS.putInt("UI.F.topSplitPanel", topPane.getDividerLocation());
+		JBroFuzz.PREFS.putInt(JBroFuzzPrefs.UI[5].getId(), mainPane.getDividerLocation());
+		JBroFuzz.PREFS.putInt(JBroFuzzPrefs.UI[4].getId(), topPane.getDividerLocation());
 
 		if (stopped) {
 			return;
@@ -918,7 +912,7 @@ public class FuzzingPanel extends AbstractPanel {
 		onTextPane.setForeground(Color.GREEN);
 
 		// Get the preference for showing the "On The Wire" tab
-		final boolean showWireTab = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[0], false);
+		final boolean showWireTab = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZINGONTHEWIRE[0].getId(), true);
 
 		if (showWireTab) {
 			topRightPanel.setSelectedIndex(1);
