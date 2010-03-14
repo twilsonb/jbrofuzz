@@ -181,11 +181,19 @@ public class JBroFuzzPrefs {
 				true
 			),
 		
-		// 2
+		// 3
 		new PrefEntry(
 				"fuzz.wrap.response",
 				" Word wrap test in the \"Response\" area",
 				"Tick this box, to see all output text wrapped to the size of the response window",
+				true
+			),
+		
+		// 4
+		new PrefEntry(
+				"fuzz.wrap.authorization",
+				" Append authorization header",
+				"Tick this box to create an authorization header that includes the username and password supplied as a base64 encoded value",
 				true
 			)
 	};
