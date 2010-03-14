@@ -74,7 +74,7 @@ class FuzzPPanel extends AbstractPrefsPanel {
 
 		stoBox = new JComboBox(SOCKET_SECONDS);
 		stoBox.setSelectedIndex(stoPrefValue - 1);
-		stoBox.setMaximumRowCount(5);
+		stoBox.setMaximumRowCount(6);
 
 		// Re-enable the apply button in the event of a change
 		stoBox.addActionListener(new ActionListener() {
@@ -125,7 +125,7 @@ class FuzzPPanel extends AbstractPrefsPanel {
 		// The rest
 		for(int i = 0; i < checkBoxes.length; i++) {
 			JBroFuzz.PREFS.putBoolean(
-					JBroFuzzPrefs.FUZZING[i].getId(), 
+					JBroFuzzPrefs.FUZZING[i+1].getId(), 
 					checkBoxes[i].isSelected()
 			);
 		}
