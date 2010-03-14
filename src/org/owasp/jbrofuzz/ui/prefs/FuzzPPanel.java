@@ -97,9 +97,9 @@ class FuzzPPanel extends AbstractPrefsPanel {
 
 		for(int i = 0; i < checkBoxes.length; i++) {
 
-			final boolean boolEntry = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[i].getId(), true);
-			checkBoxes[i] = new JCheckBox(JBroFuzzPrefs.FUZZING[i].getTitle(), boolEntry);
-			checkBoxes[i].setToolTipText(JBroFuzzPrefs.FUZZING[i].getTooltip());
+			final boolean boolEntry = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[i + 1].getId(), true);
+			checkBoxes[i] = new JCheckBox(JBroFuzzPrefs.FUZZING[i + 1].getTitle(), boolEntry);
+			checkBoxes[i].setToolTipText(JBroFuzzPrefs.FUZZING[i + 1].getTooltip());
 			checkBoxes[i].setBorderPaintedFlat(true);
 			checkBoxes[i].addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
