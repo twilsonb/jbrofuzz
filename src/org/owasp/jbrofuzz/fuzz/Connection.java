@@ -69,7 +69,6 @@ class Connection {
 
 		final String protocol = url.getProtocol();
 		final String host = url.getHost();
-		final String userInfo = url.getUserInfo();
 		int port = url.getPort();
 
 		// Allow only HTTP/S as protocols
@@ -87,7 +86,7 @@ class Connection {
 		}
 
 
-		mainConnection = new SocketConnection(protocol, host, port, userInfo, message);
+		mainConnection = new SocketConnection(protocol, host, port, message);
 		
 	}
 

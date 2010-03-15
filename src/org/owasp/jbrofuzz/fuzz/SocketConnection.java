@@ -99,11 +99,12 @@ class SocketConnection {
 	 * @version 2.0
 	 * @since 0.1
 	 */
-	protected SocketConnection(final String protocol, final String host, final int port, final String userInfo, final String message)
+	protected SocketConnection(final String protocol, final String host, final int port, final String message)
 	throws ConnectionException {
 
 		final byte[] recv = new byte[SocketConnection.RECV_BUF_SIZE];
-
+		this.message = message;
+		
 		try {
 			if (protocol.equalsIgnoreCase("https")) {
 
@@ -123,28 +124,6 @@ class SocketConnection {
 
 				mSocket.connect(new InetSocketAddress(host, port),
 						socketTimeout);
-			}
-			
-			if (userInfo != null) { 
-				String encoding = new sun.misc.BASE64Encoder().encode(userInfo.getBytes());
-				String authHeader = "Proxy-Authorization: Basic " + encoding + "\n";
-				
-				// We must add the authorization header prior to the double end of line
-				final StringBuffer messageBuffer = new StringBuffer();
-				messageBuffer.append(message);
-				int index = messageBuffer.indexOf("\n\n");
-				if (index != -1) {
-					messageBuffer.delete(index, index+1);
-					messageBuffer.append(authHeader);
-					messageBuffer.append("\n");
-				} else {
-					messageBuffer.append(authHeader);
-				}	
-		
-				this.message = messageBuffer.toString();	
-				
-			} else {
-				this.message = message;
 			}
 
 			// Set buffers, streams, smile...
