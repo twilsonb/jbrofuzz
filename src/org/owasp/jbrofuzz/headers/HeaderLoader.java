@@ -30,7 +30,6 @@
 package org.owasp.jbrofuzz.headers;
 
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.tree.TreePath;

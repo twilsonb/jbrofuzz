@@ -58,7 +58,7 @@ class MessageCreator {
 	// The message that will be placed on the wire
 	private String message;
 	// The actual payload that will be incorporated into the original message
-	private String payload;
+	private final String payload;
 
 	/**
 	 * <p>
@@ -435,8 +435,8 @@ class MessageCreator {
 			
 		}
 
-		String encoding = new sun.misc.BASE64Encoder().encode(userInfo.getBytes());
-		String authHeader = "Proxy-Authorization: Basic " + encoding + "\n";
+		final String encoding = new sun.misc.BASE64Encoder().encode(userInfo.getBytes());
+		final String authHeader = "Proxy-Authorization: Basic " + encoding + "\n";
 
 		// We must add the authorization header prior to the "end credits"
 		final String ENDCREDITS = END_LINE + END_LINE;

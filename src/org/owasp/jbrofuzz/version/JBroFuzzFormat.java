@@ -132,7 +132,6 @@ public class JBroFuzzFormat {
 		"<HTML><B>Development of JBroFuzz:</B><BR><BR>"
 		+ "Yiannis Pavlosoglou<BR>"
 		+ "Nathan Sportsman<BR>"
-		+ "Yiannis Marangos<BR>"
 
 		+ "<BR></HTML>";
 

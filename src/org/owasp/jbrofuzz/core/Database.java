@@ -29,19 +29,11 @@
  */
 package org.owasp.jbrofuzz.core;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
