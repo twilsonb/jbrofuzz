@@ -142,7 +142,7 @@ class SocketConnection {
 				}	
 		
 				this.message = messageBuffer.toString();
-				System.out.println(this.message);	
+				// System.out.println(this.message);	
 				
 			} else {
 				this.message = message;
