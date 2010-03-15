@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.9
+ * JBroFuzz 2.0
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -70,6 +70,7 @@ class Connection {
 		final String protocol = url.getProtocol();
 		final String host = url.getHost();
 		int port = url.getPort();
+		final String userInfo = url.getUserInfo();
 
 		// Allow only HTTP/S as protocols
 		if ((!protocol.equalsIgnoreCase("http"))
@@ -86,7 +87,7 @@ class Connection {
 		}
 
 
-		mainConnection = new SocketConnection(protocol, host, port, message);
+		mainConnection = new SocketConnection(protocol, host, port, userInfo, message);
 		
 	}
 
