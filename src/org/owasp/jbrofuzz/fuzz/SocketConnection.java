@@ -127,7 +127,7 @@ class SocketConnection {
 			
 			if (userInfo != null) { 
 				String encoding = new sun.misc.BASE64Encoder().encode(userInfo.getBytes());
-				String authHeader = "Proxy-Authorization: Basic " + encoding;
+				String authHeader = "Proxy-Authorization: Basic " + encoding + "\n";
 				
 				// We must add the authorization header prior to the double end of line
 				final StringBuffer messageBuffer = new StringBuffer();
@@ -136,13 +136,12 @@ class SocketConnection {
 				if (index != -1) {
 					messageBuffer.delete(index, index+1);
 					messageBuffer.append(authHeader);
-					messageBuffer.append("\n\n");
+					messageBuffer.append("\n");
 				} else {
 					messageBuffer.append(authHeader);
 				}	
 		
-				this.message = messageBuffer.toString();
-				// System.out.println(this.message);	
+				this.message = messageBuffer.toString();	
 				
 			} else {
 				this.message = message;
