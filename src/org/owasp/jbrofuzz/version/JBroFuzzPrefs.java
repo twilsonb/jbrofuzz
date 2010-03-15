@@ -192,7 +192,7 @@ public class JBroFuzzPrefs {
 		// 4
 		new PrefEntry(
 				"fuzz.auth.base64",
-				" Append BASE64 authorization header from URL username:password",
+				" Append BASE64 \"Proxy-Authorization: Basic\" header from URL username:password",
 				"Tick this box to create an authorization header that includes the username and password supplied as a base64 encoded value"
 			)
 	};
