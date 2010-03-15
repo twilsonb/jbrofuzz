@@ -819,7 +819,7 @@ public class FuzzingPanel extends AbstractPanel {
 					}
 
 					final String payload = f.next();
-					final MessageCreator currentMessage = new MessageCreator(getTextRequest(), encoding, payload, start, end);
+					final MessageCreator currentMessage = new MessageCreator(getTextURL(), getTextRequest(), encoding, payload, start, end);
 					final MessageWriter outputMessage = new MessageWriter(this);
 
 					final int co_k = outputTableModel.addNewRow(outputMessage);

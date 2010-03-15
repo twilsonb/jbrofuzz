@@ -190,12 +190,11 @@ public class JBroFuzzPrefs {
 			),
 		
 		// 4
-		//new PrefEntry(
-		//		"fuzz.wrap.authorization",
-		//		" Append authorization header",
-		//		"Tick this box to create an authorization header that includes the username and password supplied as a base64 encoded value",
-		//		true
-		//	)
+		new PrefEntry(
+				"fuzz.auth.base64",
+				" Append BASE64 authorization header from URL username:password",
+				"Tick this box to create an authorization header that includes the username and password supplied as a base64 encoded value"
+			)
 	};
 
 
