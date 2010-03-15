@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.9
+ * JBroFuzz 2.0
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -190,12 +190,12 @@ public class JBroFuzzPrefs {
 			),
 		
 		// 4
-		new PrefEntry(
-				"fuzz.wrap.authorization",
-				" Append authorization header",
-				"Tick this box to create an authorization header that includes the username and password supplied as a base64 encoded value",
-				true
-			)
+		//new PrefEntry(
+		//		"fuzz.wrap.authorization",
+		//		" Append authorization header",
+		//		"Tick this box to create an authorization header that includes the username and password supplied as a base64 encoded value",
+		//		true
+		//	)
 	};
 
 

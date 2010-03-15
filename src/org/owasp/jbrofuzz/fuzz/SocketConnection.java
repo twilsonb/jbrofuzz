@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 1.9
+ * JBroFuzz 2.0
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -99,10 +99,8 @@ class SocketConnection {
 	 * @version 2.0
 	 * @since 0.1
 	 */
-	protected SocketConnection(final String protocol, final String host, final int port, final String message)
+	protected SocketConnection(final String protocol, final String host, final int port, final String userInfo, final String message)
 	throws ConnectionException {
-
-		this.message = message;
 
 		final byte[] recv = new byte[SocketConnection.RECV_BUF_SIZE];
 
@@ -126,7 +124,29 @@ class SocketConnection {
 				mSocket.connect(new InetSocketAddress(host, port),
 						socketTimeout);
 			}
-
+			
+			if (userInfo != null) { 
+				String encoding = new sun.misc.BASE64Encoder().encode(userInfo.getBytes());
+				String authHeader = "Proxy-Authorization: Basic " + encoding;
+				
+				// We must add the authorization header prior to the double end of line
+				final StringBuffer messageBuffer = new StringBuffer();
+				messageBuffer.append(message);
+				int index = messageBuffer.indexOf("\n\n");
+				if (index != -1) {
+					messageBuffer.delete(index, index+1);
+					messageBuffer.append(authHeader);
+					messageBuffer.append("\n\n");
+				} else {
+					messageBuffer.append(authHeader);
+				}	
+		
+				this.message = messageBuffer.toString();
+				System.out.println(this.message);	
+				
+			} else {
+				this.message = message;
+			}
 
 			// Set buffers, streams, smile...
 			mSocket.setSendBufferSize(this.message.getBytes().length);
