@@ -29,8 +29,12 @@
  */
 package org.owasp.jbrofuzz.core;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -100,7 +104,21 @@ public final class Verifier {
 		if ("fuzzers.jbrf".equalsIgnoreCase(fileName)) {
 		
 			if (prototypes == null) {
-	        	String inputContents = Verifier.parseFile(fileName);
+				
+				// Check for the existence of fuzzers.jbrf within the
+				// current user directory
+				final boolean extFilePresent = checkExternalFile(fileName);
+				String inputContents;
+				
+				if(extFilePresent){
+			
+					inputContents = Verifier.parseExtFile(fileName);
+					
+				} else {
+					
+					inputContents = Verifier.parseFile(fileName);
+					
+				}
 	    		
 	    		prototypes = new HashMap<String, Prototype>();
 	        	
@@ -130,6 +148,133 @@ public final class Verifier {
         
 	}
 	
+	/**
+	 * <p>Checks for the presence of an external file within the 
+	 * current directory.</p>
+	 * 
+	 * @param fileName
+	 * @return	true if the file is present and can be read, false
+	 * 			otherwise.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.1
+	 * @since 2.1
+	 */
+	private static boolean checkExternalFile(String fileName) {
+		
+		String dirString;
+		try {
+			
+			dirString = System.getProperty("user.dir");
+			
+		} catch (SecurityException e) {
+			
+			return false;
+			
+		}
+		final File inputFile = new File(dirString + File.separator + fileName);
+		
+		if (inputFile.exists()) {
+			
+			if (inputFile.isDirectory()) {
+				
+				return false;
+			}
+			if (!inputFile.canRead()) {
+				
+				return false;
+				
+			}
+			
+			return true;
+			
+		} else {
+			
+			return false;
+			
+		}
+		
+	}
+	
+	/**
+	 * <p>Return the contents of an internal file a String.</p>
+	 *  
+	 * @param fileName e.g. fuzzers.jbrf; headers.jbrf
+	 * @return the contents of the file as a String
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.1
+	 * @since 2.1
+	 */
+	private static String parseExtFile(String fileName) {
+		
+		final File inputFile = new File(System.getProperty("user.dir") + File.separator + fileName);
+				
+		if (inputFile.exists()) {
+			if (inputFile.isDirectory()) {
+				
+				return "File is a directory:\n\n" + fileName;
+			}
+			if (!inputFile.canRead()) {
+				
+				return "File cannot be read:\n\n" + fileName;
+				
+			}
+		} else {
+			
+			return "File does not exist:\n\n" + fileName;
+			
+		}
+		
+		int counter = 0;
+		InputStream in = null;
+		FileInputStream fis = null;
+		StringBuffer fileContents = new StringBuffer();
+		try {
+			fis = new FileInputStream(inputFile);
+			in = new BufferedInputStream(fis);
+
+			int c;
+			// Read, having as upper maximum the int maximum
+			while (((c = in.read()) > 0) && (counter <= MAX_CHARS)) {
+				// Allow the character only if its printable ascii or \n
+				if ((CharUtils.isAsciiPrintable((char) c))
+						|| (((char) c) == '\n')) {
+					fileContents.append((char) c);
+				}
+				counter++;
+				
+			}
+
+			in.close();
+			fis.close();
+
+		} catch (IOException e) {
+			
+			return "Attempting to open the file caused an I/O Error:\n\n" + fileName;
+
+		} finally {
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(fis);
+		}
+		
+		if(counter == MAX_CHARS) {
+			fileContents.append("\n... stopped reading after 32 Mbytes.\n");
+		}
+		return fileContents.toString();
+
+	}
+	
+	/**
+	 * <p>Return the contents of an internal file a String.</p>
+	 *  
+	 * @param fileName e.g. fuzzers.jbrf; headers.jbrf
+	 * @return the contents of the file as a String
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.0
+	 * @since 2.0
+	 */
 	private static String parseFile(String fileName) {
 		
 		// The value 33624 is the 2.0 fuzzers.jbrf char count
@@ -258,7 +403,7 @@ public final class Verifier {
 			if (_fla[2].length() > MAX_PROTO_NAME_LENGTH) {
 				continue;
 			}
-	
+			
 			int noPayloads = 0;
 			try {
 				noPayloads = Integer.parseInt(_fla[3]);
@@ -318,7 +463,7 @@ public final class Verifier {
 			// Alas! Finally create a prototype
 			final Prototype proto = 
 				new Prototype(inputTypeChar, _fla[1], _fla[2]);
-	
+			
 			// If categories do exist in the second line
 			if (_sla.length > 0) {
 	
