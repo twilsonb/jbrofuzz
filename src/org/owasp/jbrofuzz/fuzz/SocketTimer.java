@@ -51,7 +51,7 @@ package org.owasp.jbrofuzz.fuzz;
 class SocketTimer extends Thread {
 
 	// Rate at which timer is checked
-	private transient final int m_rate = Byte.MAX_VALUE;
+	private static final int m_rate = Byte.MAX_VALUE;
 	
 	// Length of the Timer timeout in milliseconds
 	private transient final int m_length;

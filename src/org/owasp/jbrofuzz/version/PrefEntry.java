@@ -29,12 +29,32 @@
  */
 package org.owasp.jbrofuzz.version;
 
+/**
+ * <p>A preference entry is a class holding the id (e.g.
+ * ui.window.width) the title (as displayed in the 
+ * Preferences menu, as well as the tool tip (i.e. a short
+ * description) for that preference entry.</p>
+ * 
+ * @author subere@uncon.org
+ * @version 2.0
+ * @since 2.0
+ */
 public class PrefEntry {
 
 	private String id, title, tooltip;
 
 	private boolean requiresRestart;
 	
+	/**
+	 * <p>Constructor, passing the id (e.g. ui.window.width) the title 
+	 * (as displayed in the Preferences menu, as well as the tool 
+	 * tip (i.e. a short description) for that preference 
+	 * entry.</p>
+	 * 
+	 * @param id
+	 * @param title
+	 * @param tooltip
+	 */
 	protected PrefEntry(String id, String title, String tooltip) {
 		super();
 		this.id = id;
@@ -42,7 +62,20 @@ public class PrefEntry {
 		this.tooltip = tooltip;
 		requiresRestart = false;
 	}
-	
+
+	/**
+	 * <p>Constructor, passing the id (e.g. ui.window.width) the title 
+	 * (as displayed in the Preferences menu, as well as the tool 
+	 * tip (i.e. a short description) for that preference 
+	 * entry.</p>
+	 * 
+	 * @param id
+	 * @param title
+	 * @param tooltip
+	 * @param requiresRestart
+	 * 			whether or not the preference requires a restart of 
+	 * 			JBroFuzz to be applied correctly
+	 */
 	protected PrefEntry(String id, String title, String tooltip, boolean requiresRestart) {
 		super();
 		this.id = id;
@@ -51,10 +84,26 @@ public class PrefEntry {
 		this.requiresRestart = requiresRestart;
 	}
 
+	/**
+	 * <p>Get the id, e.g. ui.window.width</p>
+	 * 
+	 * @return A String value such as the above
+	 * 
+	 */
 	public final String getId() {
 		return id;
 	}
 
+	/**
+	 * <p>Return the title, e.g. "Fuzzing Directory (where data is saved)"</p>
+	 * 
+	 * <p>If the preference entry has been instaniated using the boolean
+	 * "requiresRestart" set to true, then after the title the String 
+	 * " (requires restart) " will be appended.</p>
+	 * 
+	 * @return A String value such as the above
+	 * 
+	 */
 	public final String getTitle() {
 		if(requiresRestart) {
 			return title + " (requires restart)";
@@ -63,6 +112,12 @@ public class PrefEntry {
 		}
 	}
 
+	/**
+	 * <p>Return the tool tip, e.g. " Select Directory to Save Fuzzing Data "</p>
+	 * 
+	 * @return A String value such as the above
+	 * 
+	 */
 	public final String getTooltip() {
 		return tooltip;
 	}

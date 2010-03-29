@@ -70,7 +70,9 @@ public class PayloadsPanel extends AbstractPanel {
 	private final JSplitPane mainSplitPanel, rightSplitPanel;
 
 	// The JPanels carrying the components
-	protected final JPanel categoriesPanel, payloadsPanel, fuzzersPanel;
+	private final JPanel categoriesPanel;
+	
+	protected final JPanel payloadsPanel, fuzzersPanel;
 
 	// The JTables carrying the data
 	protected final JTable payloadsTable, fuzzersTable, categoriesTable;

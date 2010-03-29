@@ -42,6 +42,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.text.BadLocationException;
 
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
@@ -258,7 +259,7 @@ public class GraphingPanel extends AbstractPanel {
 						.getLineEndOffset(console.getLineCount() - 500));
 				console.replaceSelection("...\n");
 			} catch (BadLocationException e) {
-				getFrame().log("Could not clear the console", 3);
+				Logger.log("Could not clear the console", 3);
 			}
 		}
 

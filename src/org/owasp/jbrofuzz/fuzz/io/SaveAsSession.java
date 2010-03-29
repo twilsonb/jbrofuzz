@@ -36,6 +36,7 @@ import java.io.PrintWriter;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
@@ -46,7 +47,7 @@ public class SaveAsSession {
 
 		// Set the Fuzzing Panel as the one to view
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-		mWindow.log("Save As Fuzzing Session", 1);
+		Logger.log("Save As Fuzzing Session", 1);
 
 		JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
@@ -57,7 +58,7 @@ public class SaveAsSession {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 
 			File file = fc.getSelectedFile();
-			mWindow.log("Saving: " + file.getName(), 1);
+			Logger.log("Saving: " + file.getName(), 1);
 
 			String path = file.getAbsolutePath().toLowerCase();
 			if (!path.endsWith(".jbrofuzz")) {
@@ -98,7 +99,7 @@ public class SaveAsSession {
 				out.println("[End]");
 
 				if (out.checkError()) {
-					mWindow.log("An Error Occured while saving", 4);
+					Logger.log("An Error Occured while saving", 4);
 				}
 
 				out.close();
@@ -106,9 +107,9 @@ public class SaveAsSession {
 				mWindow.setOpenFileTo(file);
 
 			} catch (FileNotFoundException e) {
-				mWindow.log("FileNotFoundException", 4);
+				Logger.log("FileNotFoundException", 4);
 			} catch (SecurityException e) {
-				mWindow.log("SecurityException", 4);
+				Logger.log("SecurityException", 4);
 			}
 
 		} // User clicks "Save"

@@ -360,8 +360,7 @@ class EncoderHashCore {
 		try {
 			MessageDigest md5 = MessageDigest.getInstance("MD5");
 			md5.update(encodeText.getBytes(), 0, encodeText.length());
-			byte[] hash = new byte[32];
-			hash = md5.digest();
+			byte[] hash = md5.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: MD5 could not be found...";
@@ -384,8 +383,7 @@ class EncoderHashCore {
 		try {
 			MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
 			sha1.update(encodeText.getBytes(), 0, encodeText.length());
-			byte[] hash = new byte[40];
-			hash = sha1.digest();
+			byte[] hash = sha1.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-1 could not be found...";
@@ -397,8 +395,7 @@ class EncoderHashCore {
 		try {
 			MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
 			sha256.update(encodeText.getBytes(), 0, encodeText.length());
-			byte[] hash = new byte[64];
-			hash = sha256.digest();
+			byte[] hash = sha256.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-256 could not be found...";
@@ -410,8 +407,7 @@ class EncoderHashCore {
 		try {
 			MessageDigest sha384 = MessageDigest.getInstance("SHA-384");
 			sha384.update(encodeText.getBytes(), 0, encodeText.length());
-			byte[] hash = new byte[96];
-			hash = sha384.digest();
+			byte[] hash = sha384.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-384 could not be found...";
@@ -423,8 +419,7 @@ class EncoderHashCore {
 		try {
 			MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
 			sha512.update(encodeText.getBytes(), 0, encodeText.length());
-			byte[] hash = new byte[128];
-			hash = sha512.digest();
+			byte[] hash = sha512.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
 		} catch (NoSuchAlgorithmException e1) {
 			return "Error: SHA-512 could not be found...";

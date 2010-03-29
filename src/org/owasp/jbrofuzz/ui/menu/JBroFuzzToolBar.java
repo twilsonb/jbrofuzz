@@ -40,6 +40,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import org.owasp.jbrofuzz.help.Topics;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
@@ -164,7 +165,7 @@ public class JBroFuzzToolBar extends JToolBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						getFrame().log("Pause functionality has not yet being implemented", 2);
+						Logger.log("Pause functionality has not yet being implemented", 2);
 
 					}
 				});
@@ -237,8 +238,7 @@ public class JBroFuzzToolBar extends JToolBar {
 						try {
 							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 						} catch (final IOException ex) {
-							JBroFuzzToolBar.this
-							.getFrame()
+							Logger
 							.log(
 									"Could not launch link in external browser",
 									3);

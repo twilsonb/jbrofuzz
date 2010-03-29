@@ -39,6 +39,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.MessageWriter;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
@@ -57,9 +58,6 @@ public class FileHandler {
 
 	// The max value in bytes of the file being read 32 Mbytes
 	public static final int MAX_BYTES = 33554432;
-
-	// The main window frame gui
-	private JBroFuzz mJBroFuzz;
 
 	// The fuzz directory of operation
 	private File fuzzDirectory;
@@ -86,9 +84,8 @@ public class FileHandler {
 	 * @version 1.3
 	 * @since 1.2
 	 */
-	public FileHandler(final JBroFuzz mJBroFuzz) {
+	public FileHandler() {
 
-		this.mJBroFuzz = mJBroFuzz;
 		count = 0;
 		createNewDirectory();
 
@@ -148,7 +145,7 @@ public class FileHandler {
 
 			if (fuzzDirectory.exists()) {
 
-				mJBroFuzz.getWindow().log(
+				Logger.log(
 						"The \"fuzz\" directory being used, already exists", 1);
 
 			} else {
@@ -156,13 +153,11 @@ public class FileHandler {
 				final boolean success = fuzzDirectory.mkdirs();
 				if (!success) {
 
-					mJBroFuzz
-					.getWindow()
+					Logger
 					.log(
 							"Failed to create new \"fuzz\" directory, no data will be written to file.",
 							4);
-					mJBroFuzz
-					.getWindow()
+					Logger
 					.log(
 							"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
 							0);
@@ -176,18 +171,15 @@ public class FileHandler {
 			final boolean success = fuzzDirectory.mkdirs();
 			if (!success) {
 
-				mJBroFuzz
-				.getWindow()
+				Logger
 				.log(
 						"Failed to create \"fuzz\" directory, no data will be written to file.",
 						4);
-				mJBroFuzz
-				.getWindow()
+				Logger
 				.log(
 						"Run JBroFuzz from the command line: \"java -jar JBroFuzz.jar\"",
 						0);
-				mJBroFuzz
-				.getWindow()
+				Logger
 				.log(
 						"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
 						0);
@@ -316,7 +308,7 @@ public class FileHandler {
 			FileUtils.touch(toWrite);
 			FileUtils.writeStringToFile(toWrite, outputMessage.toString());
 		} catch (IOException e) {
-			mJBroFuzz.getWindow().log("Error writting fuzz file: " + fileName, 3);
+			Logger.log("Error writting fuzz file: " + fileName, 3);
 		}
 	}
 

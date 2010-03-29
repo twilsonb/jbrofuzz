@@ -103,7 +103,7 @@ public final class Verifier {
 		
 		if ("fuzzers.jbrf".equalsIgnoreCase(fileName)) {
 		
-			if (prototypes == null) {
+//			if (prototypes == null) {
 				
 				// Check for the existence of fuzzers.jbrf within the
 				// current user directory
@@ -123,19 +123,19 @@ public final class Verifier {
 	    		prototypes = new HashMap<String, Prototype>();
 	        	
 	        	Verifier.parsePrototypes(prototypes, inputContents);
-	        }
+//	        }
 
 	        return prototypes;
 	        
 		} else if ("headers.jbrf".equalsIgnoreCase(fileName)) {
 			
-			if (headers == null) {
+//			if (headers == null) {
 				String headerContents = Verifier.parseFile(fileName);
 				
 				headers = new HashMap<String, Prototype>();
 				
 				Verifier.parsePrototypes(headers, headerContents);
-			}
+//			}
 			
 			return headers; 
 			

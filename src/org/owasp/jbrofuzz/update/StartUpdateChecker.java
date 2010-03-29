@@ -182,7 +182,7 @@ public class StartUpdateChecker extends JDialog {
 	 * @version 1.7
 	 * @since 1.3
 	 */
-	public StartUpdateChecker(final JBroFuzzWindow parent) {
+	protected StartUpdateChecker(final JBroFuzzWindow parent) {
 
 		super(parent, " JBroFuzz - New Version Available ", true);
 

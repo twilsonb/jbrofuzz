@@ -53,6 +53,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.actions.CopyAction;
 import org.owasp.jbrofuzz.ui.actions.CutAction;
 import org.owasp.jbrofuzz.ui.actions.PasteAction;
@@ -293,7 +294,7 @@ public abstract class AbstractPanel extends JPanel {
 						try {
 							Browser.displayURL(f.toURI().toString());
 						} catch (final IOException ex) {
-							getFrame()
+							Logger
 							.log(
 									"Could not launch link in external browser",
 									3);

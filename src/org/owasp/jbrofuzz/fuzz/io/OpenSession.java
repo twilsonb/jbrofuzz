@@ -42,6 +42,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
 
@@ -54,7 +55,7 @@ public class OpenSession {
 
 		// Set the Fuzzing Panel as the one to view
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-		mWindow.log("Open Fuzzing Session", 1);
+		Logger.log("Open Fuzzing Session", 1);
 
 		JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
@@ -65,7 +66,7 @@ public class OpenSession {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 
 			File file = fc.getSelectedFile();
-			mWindow.log("Opening: " + file.getName(), 1);
+			Logger.log("Opening: " + file.getName(), 1);
 
 			String path = file.getAbsolutePath().toLowerCase();
 			// If the file does not end in .jbrofuzz, return
@@ -103,11 +104,11 @@ public class OpenSession {
 
 			} catch (FileNotFoundException e) {
 
-				mWindow.log("FileNotFoundException", 3);
+				Logger.log("FileNotFoundException", 3);
 
 			} catch (IOException e) {
 
-				mWindow.log("IOException", 3);
+				Logger.log("IOException", 3);
 
 			} finally {
 
@@ -219,7 +220,7 @@ public class OpenSession {
 					}
 
 					if (!fuzzer_happy) {
-						mWindow.log("Could not open and add Fuzzer: "
+						Logger.log("Could not open and add Fuzzer: "
 								+ fileInput[i], 3);
 					} else {
 

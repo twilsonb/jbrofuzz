@@ -87,7 +87,7 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "2.0";
+	public static final String VERSION = "2.1";
 
 	/**
 	 * <p>
@@ -235,8 +235,36 @@ public class JBroFuzzFormat {
 			return "Maia "; /* - Goddess of Growth */
 		}
 		if (versionNumber.equalsIgnoreCase("2.1")) {
-			return "Janus ";
+			return "Neto "; /* - Lusitanian mythology */
 		}
+		if (versionNumber.equalsIgnoreCase("2.2")) {
+			return "Belus "; /* - Babylonia god of war */
+		}
+		if (versionNumber.equalsIgnoreCase("2.3")) {
+			return "Oro "; /* - Polynesian mythology */
+		}
+		if (versionNumber.equalsIgnoreCase("2.4")) {
+			return "Ogoun "; /* Haitian Vodou, preserves fire */
+		}
+		if (versionNumber.equalsIgnoreCase("2.5")) {
+			return "Thor "; /* Norse, OWASP Sweden 2010 */
+		}
+		if (versionNumber.equalsIgnoreCase("2.6")) {
+			return "Virtus "; /* Roman God of bravery */
+		}
+		if (versionNumber.equalsIgnoreCase("2.7")) {
+			return "Tyr "; /* Norse, associated with single combat */
+		}
+		if (versionNumber.equalsIgnoreCase("2.8")) {
+			return "Freyja "; /* Goddess of many, many things */
+		}
+		if (versionNumber.equalsIgnoreCase("2.9")) {
+			return "Tohil "; /* Mayan God of the elements & war */
+		}
+		if (versionNumber.equalsIgnoreCase("3.0")) {
+			return "Kali "; /* Kali - Goddess of time & war */
+		}
+
 		return "Zeus ";
 	}
 
