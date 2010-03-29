@@ -43,6 +43,7 @@ import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
@@ -93,14 +94,14 @@ class FileSystemTree extends JTree implements MouseListener {
 				if(stringFile.startsWith(GR_PANEL)) {
 					
 					// An error occured
-					graphingPanel.getFrame().log(stringFile, 4);
+					Logger.log(stringFile, 4);
 					
 				} else {
 					
 					final File pathFile = new File(stringFile);
 					
 					if (pathFile.isFile()) {
-						graphingPanel.getFrame()
+						Logger
 						.log(GR_PANEL + "Cannot graph individual files",	4);
 						
 					} else {
@@ -127,7 +128,7 @@ class FileSystemTree extends JTree implements MouseListener {
 				if(stringFile.startsWith(GR_PANEL)) {
 					
 					// An error occured
-					graphingPanel.getFrame().log(stringFile, 4);
+					Logger.log(stringFile, 4);
 					
 				} else {
 					
@@ -141,7 +142,7 @@ class FileSystemTree extends JTree implements MouseListener {
 						Browser.displayURL(parentFile.toURI().toString());
 						
 					} catch (final IOException ex) {
-						graphingPanel.getFrame()
+						Logger
 						.log(GR_PANEL + 
 								"Could not open containing folder: " + parentFile.toString(),
 								3);
@@ -162,7 +163,7 @@ class FileSystemTree extends JTree implements MouseListener {
 				if(stringFile.startsWith(GR_PANEL)) {
 					
 					// An error occured
-					graphingPanel.getFrame().log(stringFile, 4);
+					Logger.log(stringFile, 4);
 					
 				} else {
 					
@@ -174,7 +175,7 @@ class FileSystemTree extends JTree implements MouseListener {
 						Browser.displayURL(pathFile.toURI().toString());
 						
 					} catch (final IOException ex) {
-						graphingPanel.getFrame().log(
+						Logger.log(
 								GR_PANEL + "Could not open file in browser: " + pathFile.toString(),
 							3
 						);
@@ -195,7 +196,7 @@ class FileSystemTree extends JTree implements MouseListener {
 				if(stringFile.startsWith(GR_PANEL)) {
 					
 					// An error occured
-					graphingPanel.getFrame().log(stringFile, 4);
+					Logger.log(stringFile, 4);
 					
 				} else {
 					
@@ -218,7 +219,7 @@ class FileSystemTree extends JTree implements MouseListener {
 				if(stringFile.startsWith(GR_PANEL)) {
 					
 					// An error occured
-					graphingPanel.getFrame().log(stringFile, 4);
+					Logger.log(stringFile, 4);
 					
 				} else {
 

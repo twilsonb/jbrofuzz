@@ -42,6 +42,7 @@ import javax.swing.SwingUtilities;
 import org.owasp.jbrofuzz.help.Faq;
 import org.owasp.jbrofuzz.help.Shortcuts;
 import org.owasp.jbrofuzz.help.Topics;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -126,8 +127,7 @@ class JMenuHelp extends JMenu {
 							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 						} catch (final IOException ex) {
 
-							mainMenuBar
-							.getFrame()
+							Logger
 							.log(
 									"Could not launch link in external browser",
 									3);

@@ -105,6 +105,13 @@ class SocketConnection {
 		final byte[] recv = new byte[SocketConnection.RECV_BUF_SIZE];
 		this.message = message;
 		
+		// Get the timeout value on the Socket
+		socketTimeout = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.FUZZING[0].getId(), 7);
+		// validate
+		if( (socketTimeout < 1) || (socketTimeout > 51) ) {
+			socketTimeout = 7;
+		}
+		
 		try {
 			if (protocol.equalsIgnoreCase("https")) {
 
@@ -115,7 +122,7 @@ class SocketConnection {
 
 				// Handle HTTPS differently then HTTP
 				mSocket = mSSLSocketFactory.createSocket(host, port);
-				mSocket.setSoTimeout(socketTimeout);
+				mSocket.setSoTimeout(socketTimeout * 1000);
 
 			} else {
 
@@ -123,7 +130,7 @@ class SocketConnection {
 				mSocket = new Socket();
 
 				mSocket.connect(new InetSocketAddress(host, port),
-						socketTimeout);
+						socketTimeout * 1000);
 			}
 
 			// Set buffers, streams, smile...
@@ -136,12 +143,6 @@ class SocketConnection {
 			// Put message on the wire
 			outStream.write(this.message.getBytes());
 
-			// Get the timeout value on the Socket
-			socketTimeout = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.FUZZING[0].getId(), 7);
-			// validate
-			if( (socketTimeout < 1) || (socketTimeout > 51) ) {
-				socketTimeout = 7;
-			}
 			// Start timer
 			final SocketTimer timer = new SocketTimer(this, socketTimeout * 1000);
 			timer.start();
@@ -227,13 +228,13 @@ class SocketConnection {
 			
 			} else {
 				
-				return new String ("000");
+				return "000";
 				
 			}
 
 		} catch (Exception exception1) {
 
-			return new String("---");
+			return "---";
 
 		}
 

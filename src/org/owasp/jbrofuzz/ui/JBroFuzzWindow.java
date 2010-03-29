@@ -49,6 +49,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
 import org.owasp.jbrofuzz.graph.GraphingPanel;
 import org.owasp.jbrofuzz.payloads.PayloadsPanel;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.system.SystemPanel;
 import org.owasp.jbrofuzz.ui.menu.JBroFuzzMenuBar;
 import org.owasp.jbrofuzz.ui.menu.JBroFuzzToolBar;
@@ -215,7 +216,7 @@ public class JBroFuzzWindow extends JFrame {
 		pane.add(tb, BorderLayout.PAGE_START);
 		pane.add(tp, BorderLayout.CENTER);
 
-		log("System Launch, Welcome!", 1);
+		Logger.log("System Launch, Welcome!", 1);
 
 		// Check for a new version at startup
 		boolean checkNewVersion = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[0].getId(), true);
@@ -306,7 +307,7 @@ public class JBroFuzzWindow extends JFrame {
 		}
 
 		dispose();
-
+		Logger.log("System Exit. Goodbye...", 1);
 	}
 
 	/**
@@ -461,24 +462,6 @@ public class JBroFuzzWindow extends JFrame {
 
 	}
 
-	/**
-	 * <p>
-	 * Method for logging values within the system event log.
-	 * </p>
-	 * 
-	 * @param str
-	 *            String The text to be logged
-	 * @param level
-	 *            The severity level <= 0 => [INFO] Violet Informational == 1 =>
-	 *            [OPPR] Blue Operational == 2 => [WARN] Green Warning == 3 =>
-	 *            [SHOT] Amber Shout - light error >= 4 => [ERRR] Red Error
-	 * 
-	 */
-	public final void log(final String str, final int level) {
-
-		cp.start(str, level);
-
-	}
 
 	/**
 	 * Close, in UI terms the file being used, setting it to the default

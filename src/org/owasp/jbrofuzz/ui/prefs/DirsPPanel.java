@@ -49,6 +49,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class DirsPPanel extends AbstractPrefsPanel {
@@ -108,7 +109,7 @@ class DirsPPanel extends AbstractPrefsPanel {
 									
 								} catch (IOException e) {
 									
-									dialog.getJBroFuzzWindow().log(e.getMessage(), 4);
+									Logger.log(e.getMessage(), 4);
 									
 								}
 								

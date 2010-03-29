@@ -54,6 +54,7 @@ import org.owasp.jbrofuzz.fuzz.io.SaveAsSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveSession;
 import org.owasp.jbrofuzz.headers.HeaderFrame;
 import org.owasp.jbrofuzz.payloads.OpenLocationDialog;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.actions.CopyAction;
@@ -244,26 +245,22 @@ public class JBroFuzzMenuBar extends JMenuBar {
 									.updateComponentTreeUI(JBroFuzzMenuBar.this
 											.getFrame());
 								} catch (final UnsupportedLookAndFeelException e) {
-									JBroFuzzMenuBar.this
-									.getFrame()
+									Logger
 									.log(
 											"An error occured while setting the Look & Feel",
 											5);
 								} catch (final IllegalAccessException e) {
-									JBroFuzzMenuBar.this
-									.getFrame()
+									Logger
 									.log(
 											"An error occured while setting the Look & Feel",
 											5);
 								} catch (final ClassNotFoundException e) {
-									JBroFuzzMenuBar.this
-									.getFrame()
+									Logger
 									.log(
 											"An error occured while setting the Look & Feel",
 											5);
 								} catch (final InstantiationException e) {
-									JBroFuzzMenuBar.this
-									.getFrame()
+									Logger
 									.log(
 											"An error occured while setting the Look & Feel",
 											5);
@@ -801,7 +798,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						getFrame().log("Pause functionality has not yet being implemented", 2);
+						Logger.log("Pause functionality has not yet being implemented", 2);
 
 					}
 				});

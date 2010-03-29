@@ -69,6 +69,7 @@ import org.owasp.jbrofuzz.fuzz.ui.OutputTable;
 import org.owasp.jbrofuzz.fuzz.ui.ResponseTableModel;
 import org.owasp.jbrofuzz.fuzz.ui.RightClickPopups;
 import org.owasp.jbrofuzz.payloads.PayloadsDialog;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
@@ -281,7 +282,7 @@ public class FuzzingPanel extends AbstractPanel {
 				try {
 					requestPane.setCaretPosition(sFuzz);
 				} catch (IllegalArgumentException  vad_arg) {
-					getFrame().log("Could not pinpoint the position where the fuzzer is", 3);
+					Logger.log("Could not pinpoint the position where the fuzzer is", 3);
 				}
 				requestPane.setSelectionStart(sFuzz);
 				requestPane.setSelectionEnd(eFuzz);
@@ -360,8 +361,7 @@ public class FuzzingPanel extends AbstractPanel {
 								try {
 									Browser.displayURL(selFile.toURI().toString());
 								} catch (final IOException ex) {
-									getFrame()
-									.log(
+									Logger.log(
 											"Could not launch link in external browser",
 											3);
 								}
@@ -476,7 +476,7 @@ public class FuzzingPanel extends AbstractPanel {
 			);
 
 		} else {
-			getFrame().log("Could not add the Fuzzer with ID: " + fuzzerId, 3);
+			Logger.log("Could not add the Fuzzer with ID: " + fuzzerId, 3);
 		}
 
 	}
@@ -871,7 +871,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 			} catch (NoSuchFuzzerException exp) {
 
-				getFrame().log("The fuzzer could not be found...", 3);
+				Logger.log("The fuzzer could not be found...", 3);
 			}
 
 		}
@@ -955,7 +955,7 @@ public class FuzzingPanel extends AbstractPanel {
 			eDoc.insertString(eDoc.getLength(), input, attr);
 
 		} catch (BadLocationException e2) {
-			mWindow.log("Fuzzing Panel: Could not clear the \"On the Wire\" console", 3);
+			Logger.log("Fuzzing Panel: Could not clear the \"On the Wire\" console", 3);
 		}
 
 		onTextPane.setCaretPosition(eDoc.getLength());

@@ -102,12 +102,11 @@ public class JBroFuzz {
 	public JBroFuzz() {
 
 		mDatabase = new Database();
+		mHandler = new FileHandler();
 
 		mFormat = new JBroFuzzFormat();
 		mWindow = new JBroFuzzWindow(this);
 		JBroFuzzWindow.createAndShowGUI(mWindow);
-
-		mHandler = new FileHandler(this);
 
 	}
 

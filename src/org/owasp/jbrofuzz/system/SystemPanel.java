@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.0
+ * JBroFuzz 1.9
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -33,7 +33,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -58,7 +62,8 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.8
+ * @version 2.1
+ * @since 1.8
  */
 public class SystemPanel extends AbstractPanel {
 
@@ -66,8 +71,7 @@ public class SystemPanel extends AbstractPanel {
 
 	private final JTextPane listTextArea;
 
-	private DefaultStyledDocument mDefaultStyledDocument;
-
+	private DefaultStyledDocument styleDoc;
 	// The line count
 	private int lineCount;
 
@@ -80,8 +84,7 @@ public class SystemPanel extends AbstractPanel {
 	 */
 	public SystemPanel(final JBroFuzzWindow m) {
 
-		super(" System ", m);
-
+		super(" System (0) ", m);
 		lineCount = 0;
 
 		// Set the enabled options: Start, Stop, Graph, Add, Remove
@@ -94,20 +97,21 @@ public class SystemPanel extends AbstractPanel {
 				.createTitledBorder(" System Logger "), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 
-		mDefaultStyledDocument = new DefaultStyledDocument();
-		listTextArea = new JTextPane(mDefaultStyledDocument);
+		styleDoc = new DefaultStyledDocument();
+		listTextArea = new JTextPane(styleDoc);
 		listTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		listTextArea.setOpaque(true);
 		listTextArea.setEditable(false);
 		listTextArea.setBackground(Color.BLACK);
 
 		// Right click: Cut, Copy, Paste, Select All
 		AbstractPanel.popupText(listTextArea, false, true, false, true);
 
-		final JScrollPane listTextScrollPane = new JScrollPane(listTextArea);
-		listTextScrollPane.setVerticalScrollBarPolicy(20);
-		listTextScrollPane.setHorizontalScrollBarPolicy(31);
+		final JScrollPane scrollPane = new JScrollPane(listTextArea);
+		scrollPane.setVerticalScrollBarPolicy(20);
+		scrollPane.setHorizontalScrollBarPolicy(31);
 		// listTextScrollPane.setPreferredSize(new Dimension(850, 320));
-		listPanel.add(listTextScrollPane);
+		listPanel.add(scrollPane);
 
 		// The top and bottom split components
 		final JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 50, 33));
@@ -128,6 +132,7 @@ public class SystemPanel extends AbstractPanel {
 
 		listTextArea.setCaretPosition(0);
 
+		this.monitorLog();
 	}
 
 	@Override
@@ -137,7 +142,7 @@ public class SystemPanel extends AbstractPanel {
 		final SimpleDateFormat dateTime = new SimpleDateFormat(
 				"dd.MM.yyyy HH:mm:ss:SSS", new Locale("en"));
 
-		start("JBroFuzz Timestamp --- " + dateTime.format(currentTime)
+		Logger.log("JBroFuzz Timestamp --- " + dateTime.format(currentTime)
 				+ " --- JBroFuzz Timestamp", 0);
 
 	}
@@ -152,51 +157,8 @@ public class SystemPanel extends AbstractPanel {
 
 	@Override
 	public void start() {
-
-		// Set the enabled options: Start, Stop, Graph, Add, Remove
-		setOptionsAvailable(false, false, true, false, false);
-
-		start("[System Health Check Start]", 2);
-		start("[System Info Start]", 1);
-		final String systemInfo = "  [Java]\r\n" + "    Vendor:  "
-		+ System.getProperty("java.vendor") + "\r\n" + "    Version: "
-		+ System.getProperty("java.version") + "\r\n"
-		+ "    Installed at: " + System.getProperty("java.home")
-		+ "\r\n" + "    Website: "
-		+ System.getProperty("java.vendor.url") + "\r\n"
-		+ "  [User]\r\n" + "    User: "
-		+ System.getProperty("user.name") + "\r\n" + "    Home dir: "
-		+ System.getProperty("user.home") + "\r\n"
-		+ "    Current dir: " + System.getProperty("user.dir") + "\r\n"
-		+ "  [O/S]\r\n" + "    Name: " + System.getProperty("os.name")
-		+ "\r\n" + "    Version: " + System.getProperty("os.version")
-		+ "\r\n" + "    Architecture: " + System.getProperty("os.arch")
-		+ "\r\n";
-
-		final String[] info = systemInfo.split("\r\n");
-
-		for (final String element : info) {
-			SystemPanel.this.start(element, 0);
-		}
-		start("[System Info End]", 1);
-
-		start("[Testing Warning Levels Start]", 1);
-		start("  Informational - no issue - no tab counter increment", 0);
-		start("  Opperational - operation changed - no tab counter increment",
-				1);
-		start(
-				"  Warning - still functional - an operation change did not complete",
-				2);
-		start(
-				"  Shout - controlable error occured - bad news but not the worst",
-				3);
-		start(
-				"  Error - something that was meant to happen, didn't complete as expected",
-				4);
-		start("[Testing Warning Levels End]", 1);
-
-		start("[System Health Check End]", 2);
-
+		
+		Logger.log();
 	}
 
 	/**
@@ -218,52 +180,39 @@ public class SystemPanel extends AbstractPanel {
 	 *            >= 4 => [ERRR] Red Error<br>
 	 *            
 	 * @author subere@uncon.org
-	 * @version 1.8
+	 * @version 2.1
+	 * @since 1.8
 	 */
-	public void start(final String str, int level) {
+	private void start(final String str, final int level) {
 
-		final Date currentTime = new Date();
-		final SimpleDateFormat dateTime = new SimpleDateFormat(
-				"dd.MM.yyyy HH:mm:ss", new Locale("en"));
+		final StringBuffer toLog = new StringBuffer();
 
-		StringBuffer toLog = new StringBuffer();
-		toLog.append('[');
-		toLog.append(dateTime.format(currentTime));
-		toLog.append(']');
-
-		Color c;
+		Color cColour;
 		if (level <= 0) {
-			toLog.append("[INFO]");
-			c = Color.BLUE;
-			lineCount++;
+			cColour = new Color(152, 229, 255);
 		} else if (level == 1) {
-			toLog.append("[OPPR]");
-			c = Color.GREEN;
-			lineCount++;
+			cColour = Color.GREEN;
 		} else if (level == 2) {
-			toLog.append("[WARN]");
-			c = Color.YELLOW;
-			lineCount++;
+			cColour = Color.YELLOW;
 		} else if (level == 3) {
-			toLog.append("[SHOT]");
-			c = new Color(255, 128, 0);
-			lineCount++;
+			cColour = new Color(255, 128, 0);
 		} else {
-			toLog.append("[ERRR]");
-			c = Color.RED;
-			lineCount++;
+			cColour = Color.RED;
 		}
 		toLog.append(str);
 		toLog.append('\n');
 
+		lineCount++;
+		lineCount %= 10;
+		
 		try {
 
-			SimpleAttributeSet attr = new SimpleAttributeSet();
-			StyleConstants.setForeground(attr, c);
-			mDefaultStyledDocument.insertString(mDefaultStyledDocument
+			final SimpleAttributeSet attr = new SimpleAttributeSet();
+			StyleConstants.setForeground(attr, cColour);
+			styleDoc.insertString(styleDoc
 					.getLength(), toLog.toString(), attr);
 
-			listTextArea.setCaretPosition(mDefaultStyledDocument.getLength());
+			listTextArea.setCaretPosition(styleDoc.getLength());
 
 		} catch (BadLocationException ex) {
 
@@ -284,8 +233,9 @@ public class SystemPanel extends AbstractPanel {
 			getFrame().getTp().setTitleAt(tab, " System (" + lineCount + ")");
 		}
 
-		lineCount %= 10;
 	}
+
+
 
 	@Override
 	public void stop() {
@@ -294,5 +244,72 @@ public class SystemPanel extends AbstractPanel {
 		setOptionsAvailable(true, false, true, true, false);
 
 	}
+
+
+
+
+
+
+
+
+
+	private final void monitorLog(){
+
+		// Create the monitor with 1 second polling interval
+		final SimpleFileMonitor monitor;
+		try {
+			monitor = new SimpleFileMonitor (1000, Logger.getLogFile());
+
+			monitor.addListener (new FileListener(){
+
+				@Override
+				public void fileChanged(final File file) {
+					writeLinesFromFile(monitor);
+				}
+
+			});
+		} catch (IOException e) {
+			start("Log file is corrupted or does not exist", 4);
+		}
+
+
+	}
+	
+	private void writeLinesFromFile(final SimpleFileMonitor monitor){
+		
+		try {
+			final long length = monitor.getLastLength();
+
+			final ArrayList<String> linesToWrite = Logger.readLogFile(length);
+			
+			for(int i=0; i<linesToWrite.size(); i++) {
+				
+				final String line = linesToWrite.get(i);
+
+				if (line.indexOf("[INFO]")!=-1) {
+					start(line,0);
+				}else if (line.indexOf("[OPPR]")!=-1) {
+					start(line,1);
+				}else if (line.indexOf("[WARN]")!=-1) {
+					start(line,2);
+				}else if (line.indexOf("[SHOT]")!=-1) {
+					start(line,3);
+				}else {
+					start(line,4);
+				}
+				
+			}
+
+
+		} catch (FileNotFoundException e) {
+			start("Log file not found",4);
+		} catch (IOException e) {
+			start("Error reading log file",4);
+		}
+	}
+
+
+
+
 
 }

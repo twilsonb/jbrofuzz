@@ -59,6 +59,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
@@ -224,7 +225,7 @@ KeyListener {
 						}
 					} catch (Exception e1) {
 
-						parent
+						Logger
 						.log(
 								"Open Location: An error occured while cutting",
 								2);
@@ -251,7 +252,7 @@ KeyListener {
 						}
 					} catch (Exception e1) {
 
-						parent
+						Logger
 						.log(
 								"Open Location: An error occured while copying",
 								2);
@@ -279,7 +280,7 @@ KeyListener {
 											.getTransferData(DataFlavor.stringFlavor)));
 						}
 					} catch (Exception e1) {
-						parent
+						Logger
 						.log(
 								"Open Location: An error occured while pasting",
 								2);
@@ -379,7 +380,7 @@ KeyListener {
 				}
 
 			} catch (UnsupportedEncodingException e) {
-				m.log("Open Location: Unsupported URL Encoding Exception", 3);
+				Logger.log("Open Location: Unsupported URL Encoding Exception", 3);
 				// If no file is specified, add a /
 				if (inputURL.getFile().isEmpty()) {
 					req_url.append('/');
@@ -430,7 +431,7 @@ KeyListener {
 			m.getPanelFuzzing().setTextRequest(req_url.toString());
 
 		} catch (MalformedURLException e) {
-			m.log("Open Location: Could not interpret the URL provided", 3);
+			Logger.log("Open Location: Could not interpret the URL provided", 3);
 		}
 
 	}

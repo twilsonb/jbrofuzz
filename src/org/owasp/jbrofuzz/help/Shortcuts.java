@@ -48,6 +48,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
 
@@ -134,10 +135,10 @@ public class Shortcuts extends JFrame {
 				try {
 					boolean complete = helpPane.print();
 					if (!complete) {
-						parent.log("User cancelled Printing", 1);
+						Logger.log("User cancelled Printing", 1);
 					}
 				} catch (PrinterException prException) {
-					parent.log("A Printing Exception Occured", 4);
+					Logger.log("A Printing Exception Occured", 4);
 				}
 
 			}

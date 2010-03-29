@@ -47,6 +47,7 @@ import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 
 import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.version.ImageCreator;
@@ -96,7 +97,7 @@ public class RightClickPopups {
 				try {
 					Browser.displayURL(f.toURI().toString());
 				} catch (final IOException ex) {
-					mFuzzingPanel.getFrame()
+					Logger
 					.log(
 							"Could not launch link in external browser",
 							3);
@@ -144,7 +145,7 @@ public class RightClickPopups {
 				try {
 					Browser.displayURL(f.toURI().toString());
 				} catch (final IOException ex) {
-					mFuzzingPanel.getFrame()
+					Logger
 					.log(
 							"Could not launch link in external browser",
 							3);
