@@ -44,6 +44,7 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
+import org.owasp.jbrofuzz.system.Logger;
 
 /**
  * <p><code>Verifier</code> checks and loads the 
@@ -65,14 +66,14 @@ public final class Verifier {
 	// The maximum number of chars to be read from file, regardless
 	private static final int MAX_CHARS = Character.MAX_VALUE;
 	// The maximum number of lines allowed to be read from the file
-	private static final int MAX_LINES = 2048;
+	private static final int MAX_LINES = 4096;
 	// The maximum length of a line allowed
-	private static final int MAX_LINE_LENGTH = 512;
+	private static final int MAX_LINE_LENGTH = 2048;
 
 	// The maximum name length for a prototype
 	private static final int MAX_PROTO_NAME_LENGTH = Byte.MAX_VALUE;
 	// The maximum number of payloads in a prototype
-	private static final int MAX_NO_OF_PAYLOADS = Byte.MAX_VALUE;
+	private static final int MAX_NO_OF_PAYLOADS = 1024;
 	// The maximum number of categories of a prototype
 	private static final int MAX_NO_OF_CATEGORIES = Byte.MAX_VALUE;
 	
@@ -259,7 +260,9 @@ public final class Verifier {
 		}
 		
 		if(counter == MAX_CHARS) {
-			fileContents.append("\n... stopped reading after 32 Mbytes.\n");
+			final String maxMessage = "\n... stopped reading file after " + MAX_CHARS + " characters.\n";
+			fileContents.append(maxMessage);
+			Logger.log(maxMessage, 3);
 		}
 		return fileContents.toString();
 
@@ -277,8 +280,7 @@ public final class Verifier {
 	 */
 	private static String parseFile(String fileName) {
 		
-		// The value 33624 is the 2.0 fuzzers.jbrf char count
-		final StringBuffer fileContents = new StringBuffer(33624);
+		final StringBuffer fileContents = new StringBuffer();
 
 		// Attempt to read from the jar file
 		final URL fileURL = ClassLoader.getSystemClassLoader().getResource(fileName);
@@ -310,8 +312,10 @@ public final class Verifier {
 			in.close();
 
 			if(counter == MAX_CHARS) {
+
 				throw new RuntimeException(ERROR_MSG
-						+ "maximum characters read from " + fileName);
+						+ "\n... stopped reading file :" + fileName + "\nafter " + MAX_CHARS + " characters.\n\n");
+				
 			}
 			
 		} catch (final IOException e1) {
