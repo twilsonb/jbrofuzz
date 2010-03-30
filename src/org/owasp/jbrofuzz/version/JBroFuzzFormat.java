@@ -38,6 +38,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.lang.StringUtils;
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.system.Logger;
 
 /**
  * <p>
@@ -58,7 +60,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class JBroFuzzFormat {
 
-	
+
 
 	private final static String DATE_FORMAT = "DDD-yyyy-MM-dd-HH-mm-ss";
 
@@ -128,7 +130,7 @@ public class JBroFuzzFormat {
 	 * @sinse 1.8
 	 */
 	public static final String DEVELOPMENT_TEAM =
-		
+
 		"<HTML><B>Development of JBroFuzz:</B><BR><BR>"
 		+ "Yiannis Pavlosoglou<BR>"
 		+ "Nathan Sportsman<BR>"
@@ -289,22 +291,37 @@ public class JBroFuzzFormat {
 	 * 
 	 * @param mJBroFuzz
 	 *            JBroFuzz
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.1
+	 * @since 1.5
 	 */
 	private static final int setLookAndFeel() {
+
+		final boolean metalLook = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[2].getId(), true);
+		if(metalLook) {
+			Logger.log("Using Default Metal Look & Feel", 0);
+			return 0;
+		} 
+
 		try {
 			String oSystem = System.getProperty("os.name");
 			if (oSystem == null) {
+				Logger.log("Could not obtain Operating System Name", 2);
 				return 1;
 			}
 			oSystem = oSystem.toLowerCase(Locale.ENGLISH);
 			if (oSystem.startsWith("windows")) {
+				Logger.log("Setting Windows Look & Feel", 0);
 				UIManager
 				.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			}
 			if (oSystem.startsWith("linux")) {
+				Logger.log("Setting Nimbus Look & Feel", 0);
 				UIManager
 				.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 			}
+			
 		} catch (final UnsupportedLookAndFeelException e) {
 			return 2;
 		} catch (final ClassNotFoundException e) {
@@ -317,6 +334,7 @@ public class JBroFuzzFormat {
 			return 6;
 		}
 		return 0;
+
 	}
 
 	/**

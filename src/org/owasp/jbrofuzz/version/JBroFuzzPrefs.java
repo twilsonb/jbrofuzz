@@ -137,6 +137,7 @@ public class JBroFuzzPrefs {
 		 * a user at startup of a new version. True represents yes.
 		 * 
 		 * This is a boolean preference.
+		 * 0
 		 */
 		new PrefEntry(
 				"startup.check.new-version",
@@ -147,11 +148,28 @@ public class JBroFuzzPrefs {
 		/**
 		 * The preference related to the location of the tabs. True implies the 
 		 * tab 
+		 * 
+		 * This is a boolean preference.
+		 * 1
 		 */
 		new PrefEntry(
 				"ui.jbrofuzz.tabs",
 				" Show tabs in the main window at the top of the window",
 				" Tick this option, if you would like to see the tabs under the tool bar, instead of at the bottom of the window ",
+				true
+			),
+		
+		/**
+		 * Use the default metal Look & Feel. True implies metal will be set,
+		 * regardless
+		 * 
+		 * This is a boolean preference.
+		 * 2
+		 */
+		new PrefEntry(
+				"ui.look.metal",
+				" Always use the Metal Look & Feel",
+				" Tick this option, if you do not want any customisations at startup regarding look and feel changes",
 				true
 			)
 	};
