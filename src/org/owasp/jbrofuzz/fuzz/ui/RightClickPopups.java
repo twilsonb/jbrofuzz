@@ -43,6 +43,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.text.JTextComponent;
 
@@ -318,6 +319,98 @@ public class RightClickPopups {
 		i0_add.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				mFuzzingPanel.add();
+			}
+		});
+
+		i1_cut.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				area.cut();
+			}
+		});
+
+		i2_copy.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				area.copy();
+			}
+		});
+
+		i3_paste.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				if (area.isEditable()) {
+					area.paste();
+				}
+			}
+		});
+
+		i4_select.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				area.selectAll();
+			}
+		});
+
+		area.addMouseListener(new MouseAdapter() {
+			private void checkForTriggerEvent(final MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					area.requestFocus();
+					popmenu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+
+			@Override
+			public void mousePressed(final MouseEvent e) {
+				checkForTriggerEvent(e);
+			}
+
+			@Override
+			public void mouseReleased(final MouseEvent e) {
+				checkForTriggerEvent(e);
+			}
+		});
+	}
+	
+	public static final void rightClickOnTheWireTextComponent(final FuzzingPanel mFuzzingPanel, final JTextPane area) {
+
+		final JPopupMenu popmenu = new JPopupMenu();
+
+		final JMenuItem i0_clear = new JMenuItem("Clear");
+		final JMenuItem i1_cut = new JMenuItem("Cut");
+		final JMenuItem i2_copy = new JMenuItem("Copy");
+		final JMenuItem i3_paste = new JMenuItem("Paste");
+		final JMenuItem i4_select = new JMenuItem("Select All");
+
+		i0_clear.setIcon(ImageCreator.IMG_CLEAR);
+		i1_cut.setIcon(ImageCreator.IMG_CUT);
+		i2_copy.setIcon(ImageCreator.IMG_COPY);
+		i3_paste.setIcon(ImageCreator.IMG_PASTE);
+		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
+
+		i0_clear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K,
+				ActionEvent.CTRL_MASK));
+		i1_cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+				ActionEvent.CTRL_MASK));
+		i2_copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+				ActionEvent.CTRL_MASK));
+		i3_paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
+				ActionEvent.CTRL_MASK));
+		i4_select.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
+				ActionEvent.CTRL_MASK));
+
+		popmenu.add(i0_clear);
+		popmenu.addSeparator();
+		popmenu.add(i1_cut);
+		popmenu.add(i2_copy);
+		popmenu.add(i3_paste);
+		popmenu.addSeparator();
+		popmenu.add(i4_select);
+
+		if (!area.isEditable()) {
+			i3_paste.setEnabled(false);
+			i1_cut.setEnabled(false);
+		}
+
+		i0_clear.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				mFuzzingPanel.clearOnTheWire();
 			}
 		});
 
