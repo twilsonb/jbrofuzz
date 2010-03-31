@@ -225,11 +225,21 @@ public class JBroFuzzPrefs {
 				"Tick this box, if you want to always see the \"On The Wire\" tab"
 			),
 
-		// 1
+		/**
+		 * Select what to display within the "On The Wire" tab inside the Fuzzing Panel. 
+		 * 
+		 * This is an integer preference.
+		 *  0 means Show Nothing
+		 *  1 means Show just requests
+		 *  2 means Show just responses
+		 *  3 means Show everything (both requests and responses 
+		 * 
+		 * 1 <- First element of the array
+		 */
 		new PrefEntry(
 				"fuzz.ui.wire.responses",
-				" Display the Requests as well as the Responses received ",
-				"Tick this box to display the responses received for each request sent within the \"On The Wire\" tab"
+				" Display as output \"On The Wire\": ",
+				" Select to display nothing, just the requests, just the responses, or both the requests and responses within the \"On The Wire\" tab"
 			)
 
 	};

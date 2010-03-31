@@ -114,8 +114,10 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		final JMenuItem close = new JMenuItem("Close");
 
 		final JMenuItem openLocation = new JMenuItem("Open Location...");
+		
 		final JMenuItem clearOutput = new JMenuItem("Clear All Output", ImageCreator.IMG_CLEAR);
 		final JMenuItem clearFuzzers = new JMenuItem("Clear All Fuzzers", ImageCreator.IMG_CLEAR);
+		final JMenuItem clearOnTheWire = new JMenuItem("Clear On The Wire", ImageCreator.IMG_CLEAR);
 
 		final JMenuItem save = new JMenuItem("Save", ImageCreator.IMG_SAVE);
 		final JMenuItem saveAs = new JMenuItem("Save as...", ImageCreator.IMG_SAVE_AS);
@@ -133,6 +135,9 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		openLocation.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
+		clearOnTheWire.setAccelerator(KeyStroke.getKeyStroke('K', Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+
 		clearOutput.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
@@ -147,11 +152,13 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		file.add(close);
 		file.addSeparator();
 		file.add(openLocation);
-		file.add(clearOutput);
-		file.add(clearFuzzers);
 		file.addSeparator();
 		file.add(save);
 		file.add(saveAs);
+		file.addSeparator();
+		file.add(clearOutput);
+		file.add(clearFuzzers);
+		file.add(clearOnTheWire);
 		file.addSeparator();
 		file.add(exit);
 
@@ -547,6 +554,20 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		});
 
 
+		// File -> Clear On The Wire
+		clearOnTheWire.addActionListener(new ActionListener() {
+
+			public void actionPerformed(final ActionEvent aEvent) {
+
+				fuzzing.setSelected(true);
+				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
+
+					mFrameWindow.getPanelFuzzing().clearOnTheWire();
+
+			}
+
+		});
+		
 		// File -> Save
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent aEvent) {
