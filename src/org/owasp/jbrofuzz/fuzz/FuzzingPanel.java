@@ -788,10 +788,6 @@ public class FuzzingPanel extends AbstractPanel {
 		urlField.setBackground(Color.BLACK);
 		urlField.setForeground(Color.WHITE);
 
-		// Get the default value
-		final int showOnTheWire = JBroFuzz.PREFS.getInt(
-									JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
-
 		// Don't show anything if setting is such
 //		if(showOnTheWire != 0) {
 //			toConsole("\n--> [JBROFUZZ FUZZING START] -->\n\n");
@@ -838,6 +834,10 @@ public class FuzzingPanel extends AbstractPanel {
 					if (stopped) {
 						return;
 					}
+
+					// Get the default value
+					final int showOnTheWire = JBroFuzz.PREFS.getInt(
+												JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
 
 					final String payload = f.next();
 					final MessageCreator currentMessage = new MessageCreator(getTextURL(), getTextRequest(), encoding, payload, start, end);
