@@ -32,26 +32,34 @@ package org.owasp.jbrofuzz.fuzz.ui;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.ButtonGroup;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.version.ImageCreator;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 import com.Ostermiller.util.Browser;
 
@@ -378,12 +386,14 @@ public class RightClickPopups {
 		final JMenuItem i3_paste = new JMenuItem("Paste");
 		final JMenuItem i4_select = new JMenuItem("Select All");
 
+		// Icons
 		i0_clear.setIcon(ImageCreator.IMG_CLEAR);
 		i1_cut.setIcon(ImageCreator.IMG_CUT);
 		i2_copy.setIcon(ImageCreator.IMG_COPY);
 		i3_paste.setIcon(ImageCreator.IMG_PASTE);
 		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
 
+		// Accelerators 
 		i0_clear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K,
 				ActionEvent.CTRL_MASK));
 		i1_cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
@@ -395,11 +405,60 @@ public class RightClickPopups {
 		i4_select.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
 				ActionEvent.CTRL_MASK));
 
-		popmenu.add(i0_clear);
-		popmenu.addSeparator();
+		// Show -> Nothing , Requests, Responses, Both
+		
+		final JMenu ix_show = new JMenu("Show");
+		// show.setIcon(ImageCreator.IMG_LKF);
+		final String[] showOptions = {"Nothing", "Requests", "Responses", "Both" };
+		final ButtonGroup group = new ButtonGroup();
+
+		// Get the default value
+		final int showOnTheWire = JBroFuzz.PREFS.getInt(
+									JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
+		
+		for (int i = 0; i < showOptions.length; i++) {
+			
+			final JRadioButtonMenuItem rButton1 = 
+										new JRadioButtonMenuItem(showOptions[i]);
+			group.add(rButton1);
+			ix_show.add(rButton1);
+			
+			if(i == showOnTheWire) {
+				rButton1.setSelected(true);
+			}
+
+			rButton1.putClientProperty("Show Name", i);
+
+			rButton1.addItemListener(new ItemListener() {
+				public void itemStateChanged(final ItemEvent iEvent) {
+					final JRadioButtonMenuItem rbi = (JRadioButtonMenuItem) iEvent
+					.getSource();
+
+					if (rbi.isSelected()) {
+						final int selection = (Integer) rbi.getClientProperty("Show Name");
+
+						SwingUtilities.invokeLater(new Runnable() {
+							public void run() {
+
+								JBroFuzz.PREFS.putInt(
+										JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(),
+										selection );
+
+							}
+						});
+
+					}
+				}
+			});
+		}
+		
+		// Add to the popup menu
 		popmenu.add(i1_cut);
 		popmenu.add(i2_copy);
 		popmenu.add(i3_paste);
+		popmenu.addSeparator();
+		popmenu.add(i0_clear);
+		popmenu.add(ix_show);
 		popmenu.addSeparator();
 		popmenu.add(i4_select);
 
