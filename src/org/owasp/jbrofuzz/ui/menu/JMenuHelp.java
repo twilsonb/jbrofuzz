@@ -43,6 +43,7 @@ import org.owasp.jbrofuzz.help.Faq;
 import org.owasp.jbrofuzz.help.Shortcuts;
 import org.owasp.jbrofuzz.help.Topics;
 import org.owasp.jbrofuzz.system.Logger;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -50,12 +51,13 @@ import com.Ostermiller.util.Browser;
 
 class JMenuHelp extends JMenu {
 
-	private static final long serialVersionUID = 364420126164053633L;
+	private static final long serialVersionUID = 5161865891267439105L;
 
 	protected JMenuHelp(final JBroFuzzMenuBar mainMenuBar) {
 		
 		super("Help");
-		
+		final JBroFuzzWindow mainFrame = mainMenuBar.getFrame();
+
 		// Help
 		final JMenuItem topics = new JMenuItem("Topics",
 				ImageCreator.IMG_TOPICS);
@@ -89,7 +91,7 @@ class JMenuHelp extends JMenu {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new Faq(mainMenuBar.getFrame());
+						new Faq(mainFrame);
 					}
 				});
 			}
@@ -100,7 +102,7 @@ class JMenuHelp extends JMenu {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new Topics(mainMenuBar.getFrame());
+						new Topics(mainFrame);
 					}
 				});
 			}
@@ -111,7 +113,7 @@ class JMenuHelp extends JMenu {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new Shortcuts(mainMenuBar.getFrame());
+						new Shortcuts(mainFrame);
 					}
 				});
 			}
@@ -143,7 +145,7 @@ class JMenuHelp extends JMenu {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new AboutBox(mainMenuBar.getFrame(),
+						new AboutBox(mainFrame,
 								AboutBox.DISCLAIMER);
 					}
 				});
@@ -155,7 +157,7 @@ class JMenuHelp extends JMenu {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new AboutBox(mainMenuBar.getFrame(),
+						new AboutBox(mainFrame,
 								AboutBox.ABOUT);
 					}
 				});

@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.owasp.jbrofuzz.system.Logger;
 
 /**
  * <p>
@@ -63,7 +64,7 @@ public class Database {
 
 	final private Map<String, Prototype> prototypes;
 
-	private final static String ZERO_FUZZER_NAME = "Zero Fuzzers";
+	private final static String ZERO_FUZZER_CATEGORY = "Zero Fuzzers";
 
 	/**
 	 * <p>Constructs a database of fuzzers, by loading
@@ -78,19 +79,61 @@ public class Database {
 	public Database() {
 
 		prototypes = Verifier.loadFile("fuzzers.jbrf");
+		addZeroFuzzers();
+		Logger.log("Database loaded with " + prototypes.size() + " fuzzers", 0);
+
+	}
+	
+	/**
+	 * <p>Constructs a database of fuzzers, by loading
+	 * the corresponding prototypes from any external
+	 * file location and adding zero fuzzers.</p> 
+	 * 
+	 * <p>In the event of an error, default towards 
+	 * loading the in-build "fuzzers.jbrf" file, in a
+	 * similar way as that of invoking the parameterless
+	 * Database() constructor.</p>
+	 * 
+	 * @see #createFuzzer(String, int)
+	 * @param fuzzersFilePath The absolute file path
+	 * of the .jbrf file
+	 *  
+	 * @author subere@uncon.org
+	 * @version 2.1
+	 * @since 2.1 
+	 */
+	public Database(String fuzzersFilePath) {
+		
+		prototypes = Verifier.loadAnyFile(fuzzersFilePath);
+		addZeroFuzzers();
+		Logger.log("Database loaded with " + prototypes.size() + " fuzzers", 0);
+		
+	}
+	
+	/**
+	 * <p>Method for adding the zero fuzzers to the 
+	 * database.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.1
+	 * @since 2.1
+	 */
+	private void addZeroFuzzers() {
+		
+		Logger.log("Adding 5 Zero Fuzzers to the fuzzing Database", 0);
 
 		// Add the Zero Fuzzers
-		final Prototype pt0 = new Prototype('Z', "999-ZER-10K", "10000 Plain Requests");
-		final Prototype pt1 = new Prototype('Z', "999-ZER-1KI", "1000 Plain Requests");
-		final Prototype pt2 = new Prototype('Z', "999-ZER-100", "100 Plain Requests");
-		final Prototype pt3 = new Prototype('Z', "999-ZER-TEN", "10 Plain Requests");
-		final Prototype pt4 = new Prototype('Z', "999-ZER-ONE", "1 Plain Request");
+		final Prototype pt0 = new Prototype('Z', "000-ZER-10K", "10000 Plain Requests");
+		final Prototype pt1 = new Prototype('Z', "000-ZER-1KI", "1000 Plain Requests");
+		final Prototype pt2 = new Prototype('Z', "000-ZER-100", "100 Plain Requests");
+		final Prototype pt3 = new Prototype('Z', "000-ZER-TEN", "10 Plain Requests");
+		final Prototype pt4 = new Prototype('Z', "000-ZER-ONE", "1 Plain Request");
 
-		pt0.addCategory(ZERO_FUZZER_NAME);
-		pt1.addCategory(ZERO_FUZZER_NAME);
-		pt2.addCategory(ZERO_FUZZER_NAME);
-		pt3.addCategory(ZERO_FUZZER_NAME);
-		pt4.addCategory(ZERO_FUZZER_NAME);
+		pt0.addCategory(ZERO_FUZZER_CATEGORY);
+		pt1.addCategory(ZERO_FUZZER_CATEGORY);
+		pt2.addCategory(ZERO_FUZZER_CATEGORY);
+		pt3.addCategory(ZERO_FUZZER_CATEGORY);
+		pt4.addCategory(ZERO_FUZZER_CATEGORY);
 
 		for (int i = 0; i < 10000; i++) {
 
@@ -110,12 +153,11 @@ public class Database {
 			}
 		}
 
-		prototypes.put("999-ZER-10K", pt0);
-		prototypes.put("999-ZER-1KI", pt1);
-		prototypes.put("999-ZER-100", pt2);
-		prototypes.put("999-ZER-TEN", pt3);
-		prototypes.put("999-ZER-ONE", pt4);
-
+		prototypes.put("000-ZER-10K", pt0);
+		prototypes.put("000-ZER-1KI", pt1);
+		prototypes.put("000-ZER-100", pt2);
+		prototypes.put("000-ZER-TEN", pt3);
+		prototypes.put("000-ZER-ONE", pt4);
 	}
 
 	/**
