@@ -39,6 +39,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -47,8 +48,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableRowSorter;
 
+import org.owasp.jbrofuzz.fuzz.io.LoadFuzzers;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.ui.menu.JBroFuzzMenuBar;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
@@ -98,6 +101,8 @@ public class PayloadsPanel extends AbstractPanel {
 
 		super(" Payloads ", m);
 		setLayout(new BorderLayout());
+		// Set the enabled options: Start, Stop, Pause, Add, Remove
+		setOptionsAvailable(true, false, false, false, false);
 
 		// Categories: First table with one column of all the different
 		// categories
@@ -445,10 +450,55 @@ public class PayloadsPanel extends AbstractPanel {
 
 	@Override
 	public void start() {
+
+		final JBroFuzzWindow mFrameWindow = getFrame();
+		final JBroFuzzMenuBar mainMenuBar = mFrameWindow.getJBroMenuBar();
+		
+		if (mFrameWindow.getPanelFuzzing().isStopped()) {
+
+			mainMenuBar.setSelectedPanelCheckBox(JBroFuzzWindow.ID_PANEL_PAYLOADS);
+			mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
+
+			new LoadFuzzers(mFrameWindow);
+
+		} else {
+			
+			mainMenuBar.setSelectedPanelCheckBox(JBroFuzzWindow.ID_PANEL_FUZZING);
+			mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
+
+			final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+					"Fuzzing Session Running. Stop Fuzzing?",
+					" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
+
+			if (choice == JOptionPane.YES_OPTION) {
+				final int c = mFrameWindow.getTp().getSelectedIndex();
+				final AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
+				.getComponent(c);
+				p.stop();
+
+				mainMenuBar.setSelectedPanelCheckBox(JBroFuzzWindow.ID_PANEL_PAYLOADS);
+				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
+
+				new LoadFuzzers(mFrameWindow);
+
+			}
+		}
 	}
 
 	@Override
 	public void stop() {
+	}
+	
+	public void updateFuzzers() {
+		
+		categoriesTable.setRowSorter(null);
+		categoriesTableModel.setData(
+				getFrame().getJBroFuzz().getDatabase()
+				.getAllCategories());
+		
+		sorter = new TableRowSorter<SingleColumnModel>(categoriesTableModel);
+		categoriesTable.setRowSorter(sorter);
+		
 	}
 
 }

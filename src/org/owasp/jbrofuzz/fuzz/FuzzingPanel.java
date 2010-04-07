@@ -809,7 +809,7 @@ public class FuzzingPanel extends AbstractPanel {
 			// If no fuzzers have been added, send a single plain request
 			if (fuzzers_added < 1) {
 
-				category = "999-ZER-ONE";
+				category = "000-ZER-ONE";
 				encoding = FuzzerTable.ENCODINGS[0];
 				start = 0;
 				end = 0;

@@ -80,13 +80,13 @@ public class JBroFuzz {
 
 	}
 
-	private final transient FileHandler mHandler;
+	private final FileHandler mHandler;
 
-	private final transient JBroFuzzFormat mFormat;
+	private final JBroFuzzFormat mFormat;
 
-	private final transient JBroFuzzWindow mWindow;
+	private final JBroFuzzWindow mWindow;
 
-	private final transient Database mDatabase;
+	private Database mDatabase;
 
 	/**
 	 * <p>
@@ -122,6 +122,21 @@ public class JBroFuzz {
 
 		return mDatabase;
 
+	}
+	
+	/**
+	 * <p>Set the database to the database specified.</p>
+	 * 
+	 * @param db The input Database of fuzzers.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.1
+	 * @since 2.1
+	 */
+	public void setDatabase(final Database db) {
+		
+		mDatabase = db;
+		
 	}
 
 	/**

@@ -40,7 +40,6 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -49,11 +48,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.owasp.jbrofuzz.encode.EncoderHashFrame;
-import org.owasp.jbrofuzz.fuzz.io.OpenSession;
-import org.owasp.jbrofuzz.fuzz.io.SaveAsSession;
-import org.owasp.jbrofuzz.fuzz.io.SaveSession;
 import org.owasp.jbrofuzz.headers.HeaderFrame;
-import org.owasp.jbrofuzz.payloads.OpenLocationDialog;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
@@ -71,7 +66,7 @@ import org.owasp.jbrofuzz.version.ImageCreator;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.8
+ * @version 2.1
  * @since 0.1
  */
 public class JBroFuzzMenuBar extends JMenuBar {
@@ -85,7 +80,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 	private final JMenuItem start, pause, stop, add, remove;
 	// Used under the view JMenu as items
 	private final JCheckBoxMenuItem graphing, fuzzing, payloads, system;
-
+	
 	/**
 	 * 
 	 * @param mFrameWindow
@@ -95,72 +90,18 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		super();
 		this.mFrameWindow = mFrameWindow;
 
-		final JMenu file = new JMenu("File");
+		// final JMenu file = new JMenu("File");
 		final JMenu edit = new JMenu("Edit");
 		view = new JMenu("View");
 		panel = new JMenu("Panel");
 		options = new JMenu("Options");
 
-		this.add(file);
+		this.add(new JMenuFile(this));
 		this.add(edit);
 		this.add(view);
 		this.add(panel);
 		this.add(options);
 		this.add(new JMenuHelp(this));
-
-		// File
-		final JMenuItem newFile = new JMenuItem("New", ImageCreator.IMG_NEW);
-		final JMenuItem open = new JMenuItem("Open File...", ImageCreator.IMG_OPEN);
-		final JMenuItem close = new JMenuItem("Close");
-
-		final JMenuItem openLocation = new JMenuItem("Open Location...");
-		
-		final JMenuItem clearOutput = new JMenuItem("Clear All Output", ImageCreator.IMG_CLEAR);
-		final JMenuItem clearFuzzers = new JMenuItem("Clear All Fuzzers", ImageCreator.IMG_CLEAR);
-		final JMenuItem clearOnTheWire = new JMenuItem("Clear On The Wire", ImageCreator.IMG_CLEAR);
-
-		final JMenuItem save = new JMenuItem("Save", ImageCreator.IMG_SAVE);
-		final JMenuItem saveAs = new JMenuItem("Save as...", ImageCreator.IMG_SAVE_AS);
-		final JMenuItem exit = new JMenuItem("Exit", ImageCreator.IMG_EXIT);
-
-		newFile.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
-		open.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
-		close.setAccelerator(KeyStroke.getKeyStroke('W', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
-		openLocation.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
-		clearOnTheWire.setAccelerator(KeyStroke.getKeyStroke('K', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
-		clearOutput.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
-		save.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
-		exit.setAccelerator(KeyStroke.getKeyStroke('1', Toolkit
-				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
-
-		file.add(newFile);
-		file.add(open);
-		file.add(close);
-		file.addSeparator();
-		file.add(openLocation);
-		file.addSeparator();
-		file.add(save);
-		file.add(saveAs);
-		file.addSeparator();
-		file.add(clearOutput);
-		file.add(clearFuzzers);
-		file.add(clearOnTheWire);
-		file.addSeparator();
-		file.add(exit);
 
 		// Edit
 
@@ -341,307 +282,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 		// The action listeners for each component...
 		//
 
-		// File -> New
-		newFile.addActionListener(new ActionListener() {
 
-			public void actionPerformed(final ActionEvent even) {
-
-				fuzzing.setSelected(true);
-				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-
-				if (mFrameWindow.getPanelFuzzing().isStopped()) {
-
-					mFrameWindow.getPanelFuzzing().clearAllFields();
-					mFrameWindow.setTitle("Untitled");
-					// Create a new directory to store all data
-					mFrameWindow.getJBroFuzz().getHandler()
-					.createNewDirectory();
-
-				} else {
-
-					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
-							"Fuzzing Session Running. Stop Fuzzing?",
-							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
-
-					if (choice == JOptionPane.YES_OPTION) {
-						final int c = getFrame().getTp().getSelectedIndex();
-						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
-						.getComponent(c);
-						p.stop();
-
-						mFrameWindow.getPanelFuzzing().clearAllFields();
-						mFrameWindow.setTitle("Untitled");
-						// Create a new directory to store all data
-						mFrameWindow.getJBroFuzz().getHandler()
-						.createNewDirectory();
-					}
-
-				}
-
-			}
-
-		});
-
-		// File -> Open
-		open.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent aEvent) {
-
-				fuzzing.setSelected(true);
-				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-
-				if (mFrameWindow.getPanelFuzzing().isStopped()) {
-
-					new OpenSession(mFrameWindow);
-
-				} else {
-					
-					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
-							"Fuzzing Session Running. Stop Fuzzing?",
-							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
-
-					if (choice == JOptionPane.YES_OPTION) {
-						final int c = getFrame().getTp().getSelectedIndex();
-						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
-						.getComponent(c);
-						p.stop();
-
-						new OpenSession(mFrameWindow);
-
-					}
-				}
-
-			}
-		});
-
-		// File -> Close
-		close.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent aEvent) {
-
-				fuzzing.setSelected(true);
-				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-
-				if (mFrameWindow.getPanelFuzzing().isStopped()) {
-
-					getFrame().setCloseFile();
-					mFrameWindow.setTitle("Untitled");
-
-				} else {
-					
-					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
-							"Fuzzing Session Running. Stop Fuzzing?",
-							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
-
-					if (choice == JOptionPane.YES_OPTION) {
-						final int c = getFrame().getTp().getSelectedIndex();
-						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
-						.getComponent(c);
-						p.stop();
-
-						getFrame().setCloseFile();
-						mFrameWindow.setTitle("Untitled");
-
-					}
-
-				}
-
-			}
-		});
-
-		// File -> Open Location
-		openLocation.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent aEvent) {
-
-				fuzzing.setSelected(true);
-				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-
-				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
-
-					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
-							"Fuzzing Session Running. Stop Fuzzing?",
-							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
-
-					if (choice == JOptionPane.YES_OPTION) {
-						final int c = getFrame().getTp().getSelectedIndex();
-						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
-						.getComponent(c);
-						p.stop();
-
-						new OpenLocationDialog(getFrame());
-
-					}
-
-				} else {
-
-					new OpenLocationDialog(getFrame());
-
-				}
-
-			}
-		});
-
-
-		// File -> Clear Output
-		clearOutput.addActionListener(new ActionListener() {
-
-			public void actionPerformed(final ActionEvent aEvent) {
-
-				fuzzing.setSelected(true);
-				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-
-				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
-
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
-							"Fuzzing Session Running. Stop Fuzzing?",
-							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
-
-					if (choice == JOptionPane.YES_OPTION) {
-						int c = getFrame().getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) getFrame().getTp()
-						.getComponent(c);
-						p.stop();
-
-						mFrameWindow.getPanelFuzzing().clearOutputTable();
-						// Create a new directory to store all data
-						mFrameWindow.getJBroFuzz().getHandler()
-						.createNewDirectory();
-					}
-
-				} else {
-
-					mFrameWindow.getPanelFuzzing().clearOutputTable();
-					// Create a new directory to store all data
-					mFrameWindow.getJBroFuzz().getHandler()
-					.createNewDirectory();
-
-				}
-
-			}
-
-		});
-
-		// File -> Clear Fuzzers
-		clearFuzzers.addActionListener(new ActionListener() {
-
-			public void actionPerformed(final ActionEvent aEvent) {
-
-				fuzzing.setSelected(true);
-				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-
-				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
-
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
-							"Fuzzing Session Running. Stop Fuzzing?",
-							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
-
-					if (choice == JOptionPane.YES_OPTION) {
-						int c = getFrame().getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) getFrame().getTp()
-						.getComponent(c);
-						p.stop();
-
-						mFrameWindow.getPanelFuzzing().clearFuzzersTable();
-
-					}
-
-				} else {
-
-					mFrameWindow.getPanelFuzzing().clearFuzzersTable();
-
-				}
-
-			}
-
-		});
-
-
-		// File -> Clear On The Wire
-		clearOnTheWire.addActionListener(new ActionListener() {
-
-			public void actionPerformed(final ActionEvent aEvent) {
-
-				fuzzing.setSelected(true);
-				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-
-					mFrameWindow.getPanelFuzzing().clearOnTheWire();
-
-			}
-
-		});
-		
-		// File -> Save
-		save.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent aEvent) {
-
-				fuzzing.setSelected(true);
-				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-
-				if (mFrameWindow.getPanelFuzzing().isStopped()) {
-
-					new SaveSession(mFrameWindow);
-
-				} else {
-
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
-							"Fuzzing Session Running. Stop Fuzzing?",
-							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
-
-					if (choice == JOptionPane.YES_OPTION) {
-						int c = getFrame().getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) getFrame().getTp()
-						.getComponent(c);
-						p.stop();
-
-						new SaveSession(mFrameWindow);
-
-					}
-
-				}
-
-			}
-		});
-
-		// File -> Save as
-		saveAs.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent aEvent) {
-
-				fuzzing.setSelected(true);
-				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-
-				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
-
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
-							"Fuzzing Session Running. Stop Fuzzing?",
-							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
-
-					if (choice == JOptionPane.YES_OPTION) {
-						int c = getFrame().getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) getFrame().getTp()
-						.getComponent(c);
-						p.stop();
-
-						new SaveAsSession(mFrameWindow);
-
-					}
-
-				} else {
-
-					new SaveAsSession(mFrameWindow);
-
-				}
-
-			}
-		});
-
-		// File -> Exit
-		exit.addActionListener(new ActionListener() {
-			public void actionPerformed(final ActionEvent e) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						JBroFuzzMenuBar.this.getFrame().closeFrame();
-					}
-				});
-			}
-		});
 
 		graphing.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
@@ -941,6 +582,33 @@ public class JBroFuzzMenuBar extends JMenuBar {
 			add.setEnabled(b[3]);
 			remove.setEnabled(b[4]);
 
+		}
+
+	}
+	
+	/**
+	 * <p>Method for checking which checkbox is set from the 
+	 * "Panel" menu item.</p>
+	 * 
+	 * @param checkBoxID e.g. JBroFuzzWindow.ID_PANEL_FUZZING
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.1
+	 * @since 2.1
+	 */
+	public void setSelectedPanelCheckBox(int checkBoxID) {
+		
+		if(checkBoxID == JBroFuzzWindow.ID_PANEL_FUZZING) {
+			fuzzing.setEnabled(true);
+		}
+		if(checkBoxID == JBroFuzzWindow.ID_PANEL_GRAPHING) {
+			graphing.setEnabled(true);
+		}
+		if(checkBoxID == JBroFuzzWindow.ID_PANEL_PAYLOADS) {
+			payloads.setEnabled(true);
+		}
+		if(checkBoxID == JBroFuzzWindow.ID_PANEL_SYSTEM) {
+			system.setEnabled(true);
 		}
 
 	}
