@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.0
+ * JBroFuzz 2.1
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -34,6 +34,7 @@ package org.owasp.jbrofuzz.encode;
 * 
 */
 public class ZBase32 {
+	
     private static char[] encoding = "ybndrfg8ejkmcpqxot1uwisza345h769".toCharArray();
     private static byte[] decoding;
     

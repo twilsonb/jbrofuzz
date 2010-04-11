@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.0
+ * JBroFuzz 2.1
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -79,7 +79,7 @@ public class JBroFuzzFormat {
 		+ "site is vulnerable or not; this requires further human analysis. <BR><BR>However, certain payload categories, like XSS, "
 		+ "are crafted to try to successfully exploit flaws. Thus the human analyst would have to review the results "
 		+ "in order to recognize if exploitation succeeded or not.<BR><BR>"
-		+ "The author of JBroFuzz takes no "
+		+ "The authors of JBroFuzz takes no "
 		+ "legal or other responsibility for any problems that "
 		+ "might occur while running this program.<BR></HTML>";
 
@@ -126,7 +126,7 @@ public class JBroFuzzFormat {
 	 * about box.</p>
 	 * 
 	 * @author subere@uncon.org
-	 * @version 2.0
+	 * @version 2.1
 	 * @sinse 1.8
 	 */
 	public static final String DEVELOPMENT_TEAM =
@@ -134,7 +134,7 @@ public class JBroFuzzFormat {
 		"<HTML><B>Development of JBroFuzz:</B><BR><BR>"
 		+ "Yiannis Pavlosoglou<BR>"
 		+ "Nathan Sportsman<BR>"
-
+		+ "Ranulf Green<BR>"
 		+ "<BR></HTML>";
 
 	public static final Dimension ZERO_DIM = new Dimension(0,0);
