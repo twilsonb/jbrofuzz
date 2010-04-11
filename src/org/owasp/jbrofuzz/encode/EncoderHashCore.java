@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.0
+ * JBroFuzz 2.1
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -168,7 +168,7 @@ class EncoderHashCore {
 	
 	// Decode Z-Base32
 	private static String decodeZBase32(final String decodeText) {
-		return new String(ZBase32.decode(decodeText));
+		return ZBase32.decode(decodeText);
 	}
 	
 	// Decode Binary
@@ -332,12 +332,12 @@ class EncoderHashCore {
 	
 	// Encode Base32
 	private static String encodeBase32(final String encodeText) {
-		return new String (Base32.encode(encodeText.getBytes()));
+		return Base32.encode(encodeText.getBytes());
 	}
 	
 	// Encode Z-Base32
 	private static String encodeZBase32(final String encodeText) {
-		return new String (ZBase32.encode(encodeText));
+		return ZBase32.encode(encodeText);
 	}
 	
 	// Encode Binary
