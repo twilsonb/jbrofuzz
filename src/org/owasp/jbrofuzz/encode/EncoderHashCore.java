@@ -53,7 +53,7 @@ class EncoderHashCore {
 	
 	protected static final String[] CODES = {
 		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", 
-		"Base64", "MD5 Hash", "SHA-1 Hash", "SHA-256 Hash",
+		"Base64", "Base32", "Z-Base32", "MD5 Hash", "SHA-1 Hash", "SHA-256 Hash",
 		"SHA-384 Hash", "SHA-512 Hash", "Hexadecimal (low)", "Hexadecimal (UPP)", 
 		"Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)",
 		"Escape: HTML", "Escape: CSV", "Escape: Java", "Escape: JavaScript",
@@ -61,7 +61,7 @@ class EncoderHashCore {
 	};
 	
 	private final static String IS_DECODABLE[] = {
-		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", "Base64", "Hexadecimal (low)",
+		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", "Base64", "Base32", "Z-Base32","Hexadecimal (low)",
 		"Hexadecimal (UPP)", "Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)",
 		"Escape: HTML", "Escape: CSV", "Escape: Java", "Escape: JavaScript",
 		"Escape: XML"
@@ -73,6 +73,8 @@ class EncoderHashCore {
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-16LE\");",
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-16BE\");",
 		"MIME Base64 uses a 64-character alphabet consisting of upper- and lower-case Roman alphabet characters (A-Z, a-z), the numerals (0-9), and the \"+\" and \"/\" symbols. The \"=\" symbol is also used as a special suffix code.", 
+		"MIME Base32 uses a 32-character alphabet, as defined by RFC 4648, consisting of upper-case Roman alphabet characters (A-Z), the numerals (2-7), and the \"=\" symbol.",
+		"Z-Base32 is a Base32 encoding designed to be easier for human use and more compact, currently used in Phil Zimmermann's ZRTP protocol.",
 		"The 128-bit (16-byte) MD5 hashes (also termed message digests) are typically represented as a sequence of 32 hexadecimal digits. The hash of the zero-length string is: MD5(\"\") = d41d8cd98f00b204e9800998ecf8427e", 
 		"SHA-1 (as well as SHA-0) produces a 160-bit digest from a message with a maximum length of (2^64 - 1) bits.  Encoding is performed parsing by getting the bytes in encodeText.getBytes() standard. ", 
 		"SHA-256 produces a 256-bit digest from a message with a maximum length of (2^64-1) bits. Encoding is performed parsing by getting the bytes in encodeText.getBytes() standard. ",
@@ -126,6 +128,10 @@ class EncoderHashCore {
 				return decodeUrlUtf16LE(decodeText);
 			else if (type.equalsIgnoreCase("Base64"))
 				return decodeBase64(decodeText);
+			else if (type.equalsIgnoreCase("Base32"))
+				return decodeBase32(decodeText);
+			else if (type.equalsIgnoreCase("Z-Base32"))
+				return decodeZBase32(decodeText);
 			else if (type.equalsIgnoreCase("Hexadecimal (low)"))
 				return decodeHexLow(decodeText);
 			else if (type.equalsIgnoreCase("Hexadecimal (UPP)"))
@@ -153,6 +159,16 @@ class EncoderHashCore {
 	// Decode Base64
 	private static String decodeBase64(final String decodeText) {
 		return new String(Base64.decodeBase64(decodeText.getBytes()));
+	}
+	
+	// Decode Base32
+	private static String decodeBase32(final String decodeText) {
+		return new String(Base32.decode(decodeText));
+	}
+	
+	// Decode Z-Base32
+	private static String decodeZBase32(final String decodeText) {
+		return new String(ZBase32.decode(decodeText));
 	}
 	
 	// Decode Binary
@@ -269,6 +285,10 @@ class EncoderHashCore {
 			return encodeUrlUtf16LE(encodeText);
 		else if (type.equalsIgnoreCase("Base64"))
 			return encodeBase64(encodeText);
+		else if (type.equalsIgnoreCase("Base32"))
+			return encodeBase32(encodeText);
+		else if (type.equalsIgnoreCase("Z-Base32"))
+			return encodeZBase32(encodeText);
 		else if (type.equalsIgnoreCase("MD5 Hash"))
 			return encodeMd5Hash(encodeText);
 		else if (type.equalsIgnoreCase("SHA-1 Hash"))			
@@ -308,6 +328,16 @@ class EncoderHashCore {
 	// Encode Base64
 	private static String encodeBase64(final String encodeText) {
 		return new String(Base64.encodeBase64(encodeText.getBytes()));
+	}
+	
+	// Encode Base32
+	private static String encodeBase32(final String encodeText) {
+		return new String (Base32.encode(encodeText.getBytes()));
+	}
+	
+	// Encode Z-Base32
+	private static String encodeZBase32(final String encodeText) {
+		return new String (ZBase32.encode(encodeText));
 	}
 	
 	// Encode Binary
