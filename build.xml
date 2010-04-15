@@ -110,6 +110,7 @@
 		<copy todir="jar/temp/jbrofuzz/fuzzers">
 			<fileset dir="tar">
 				<include name="*.jbrf" />
+				<include name="README-FUZZERS" />
 			</fileset>
 		</copy>
 		
