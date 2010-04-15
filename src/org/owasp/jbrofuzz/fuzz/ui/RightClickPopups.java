@@ -34,7 +34,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -49,7 +48,6 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
@@ -63,9 +61,11 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 import com.Ostermiller.util.Browser;
 
-public class RightClickPopups {
+public final class RightClickPopups {
 
-	public static final void rightClickOutputTable(final FuzzingPanel mFuzzingPanel, final JTable area) {
+	private RightClickPopups() {} // Private constructor
+	
+	public static void rightClickOutputTable(final FuzzingPanel mFuzzingPanel, final JTable area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
@@ -167,9 +167,17 @@ public class RightClickPopups {
 		i2_clear.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				if (!mFuzzingPanel.isStopped()) {
+				if (mFuzzingPanel.isStopped()) {
 
-					int choice = JOptionPane.showConfirmDialog(mFuzzingPanel.getFrame(),
+					mFuzzingPanel.clearOutputTable();
+					// Create a new directory to store all data
+					mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
+					.createNewDirectory();
+					
+				} else {
+					// Clear all output and create a directory only if a fuzzing session is not
+					// currently running
+					final int choice = JOptionPane.showConfirmDialog(mFuzzingPanel.getFrame(),
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
@@ -183,13 +191,6 @@ public class RightClickPopups {
 						.createNewDirectory();
 					}
 
-				} else {
-
-					mFuzzingPanel.clearOutputTable();
-					// Create a new directory to store all data
-					mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
-					.createNewDirectory();
-
 				}
 
 
@@ -201,7 +202,7 @@ public class RightClickPopups {
 		i3_copy.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				StringBuffer selectionBuffer = new StringBuffer();
+				final StringBuffer selectionBuffer = new StringBuffer();
 				final int[] selection = area.getSelectedRows();
 
 				for (final int element : selection) {
@@ -210,11 +211,11 @@ public class RightClickPopups {
 						selectionBuffer.append(area.getModel().getValueAt(
 								area.convertRowIndexToModel(element), i));
 						if (i < area.getColumnCount() - 1) {
-							selectionBuffer.append(",");
+							selectionBuffer.append(',');
 						}
 
 					}
-					selectionBuffer.append("\n");
+					selectionBuffer.append('\n');
 				}
 
 				final JTextArea myTempArea = new JTextArea();
@@ -287,7 +288,7 @@ public class RightClickPopups {
 
 	}
 
-	public static final void rightClickRequestTextComponent(final FuzzingPanel mFuzzingPanel, final JTextComponent area) {
+	public static void rightClickRequestTextComponent(final FuzzingPanel mFuzzingPanel, final JTextComponent area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
@@ -302,15 +303,6 @@ public class RightClickPopups {
 		i2_copy.setIcon(ImageCreator.IMG_COPY);
 		i3_paste.setIcon(ImageCreator.IMG_PASTE);
 		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
-
-		i1_cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				ActionEvent.CTRL_MASK));
-		i2_copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-				ActionEvent.CTRL_MASK));
-		i3_paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-				ActionEvent.CTRL_MASK));
-		i4_select.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				ActionEvent.CTRL_MASK));
 
 		popmenu.add(i0_add);
 		popmenu.addSeparator();
@@ -376,7 +368,7 @@ public class RightClickPopups {
 		});
 	}
 	
-	public static final void rightClickOnTheWireTextComponent(final FuzzingPanel mFuzzingPanel, final JTextPane area) {
+	public static void rightClickOnTheWireTextComponent(final FuzzingPanel mFuzzingPanel, final JTextPane area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
@@ -392,18 +384,6 @@ public class RightClickPopups {
 		i2_copy.setIcon(ImageCreator.IMG_COPY);
 		i3_paste.setIcon(ImageCreator.IMG_PASTE);
 		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
-
-		// Accelerators 
-		i0_clear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K,
-				ActionEvent.CTRL_MASK));
-		i1_cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-				ActionEvent.CTRL_MASK));
-		i2_copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-				ActionEvent.CTRL_MASK));
-		i3_paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-				ActionEvent.CTRL_MASK));
-		i4_select.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A,
-				ActionEvent.CTRL_MASK));
 
 		// Show -> Nothing , Requests, Responses, Both
 		
@@ -520,7 +500,7 @@ public class RightClickPopups {
 	}
 
 
-	public static final void rightClickFuzzersTable(final FuzzingPanel mFuzzingPanel, final JTable area) {
+	public static void rightClickFuzzersTable(final FuzzingPanel mFuzzingPanel, final JTable area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
@@ -564,11 +544,10 @@ public class RightClickPopups {
 					mFuzzingPanel.getFrame().getJBroFuzz().
 					getDatabase().getPayloads(fuzzerRowId);
 
-				StringBuffer myPayloadsBuffer = new StringBuffer();
+				final StringBuffer myPayloadsBuffer = new StringBuffer();
 				for(String si : fuzzerPayloads) {
 					myPayloadsBuffer.append(si);
-					myPayloadsBuffer.append('\n');
-					myPayloadsBuffer.append('\n');
+					myPayloadsBuffer.append("\n\n");
 				}
 
 				new PropertiesViewer(mFuzzingPanel,
@@ -589,9 +568,13 @@ public class RightClickPopups {
 					return;
 				}
 
-				if (!mFuzzingPanel.isStopped()) {
+				if (mFuzzingPanel.isStopped()) {
 
-					int choice = JOptionPane.showConfirmDialog(mFuzzingPanel.getFrame(),
+					((FuzzersTableModel)area.getModel()).removeRow(area.convertRowIndexToModel(c));
+					
+				} else {
+
+					final int choice = JOptionPane.showConfirmDialog(mFuzzingPanel.getFrame(),
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
@@ -604,10 +587,6 @@ public class RightClickPopups {
 						// new WindowViewerFrame(mFuzzingPanel, name);						
 					}
 
-				} else {
-
-					((FuzzersTableModel)area.getModel()).removeRow(area.convertRowIndexToModel(c));
-
 				}
 
 			}
@@ -617,9 +596,13 @@ public class RightClickPopups {
 		i2_clear.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				if (!mFuzzingPanel.isStopped()) {
+				if (mFuzzingPanel.isStopped()) {
 
-					int choice = JOptionPane.showConfirmDialog(mFuzzingPanel.getFrame(),
+					mFuzzingPanel.clearFuzzersTable();
+
+				} else {
+					// Clear the fuzzers if and only if a current fuzzing session is not running
+					final int choice = JOptionPane.showConfirmDialog(mFuzzingPanel.getFrame(),
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
@@ -630,10 +613,6 @@ public class RightClickPopups {
 						mFuzzingPanel.clearFuzzersTable();
 
 					}
-
-				} else {
-
-					mFuzzingPanel.clearFuzzersTable();
 
 				}
 
@@ -646,7 +625,7 @@ public class RightClickPopups {
 		i3_copy.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				StringBuffer selectionBuffer = new StringBuffer();
+				final StringBuffer selectionBuffer = new StringBuffer();
 				final int[] selection = area.getSelectedRows();
 
 				for (final int element : selection) {
@@ -655,11 +634,11 @@ public class RightClickPopups {
 						selectionBuffer.append(area.getModel().getValueAt(
 								area.convertRowIndexToModel(element), i));
 						if (i < area.getColumnCount() - 1) {
-							selectionBuffer.append(",");
+							selectionBuffer.append(',');
 						}
 
 					}
-					selectionBuffer.append("\n");
+					selectionBuffer.append('\n');
 				}
 
 				final JTextArea myTempArea = new JTextArea();
