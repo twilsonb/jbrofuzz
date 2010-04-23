@@ -31,11 +31,23 @@ package org.owasp.jbrofuzz.fuzz;
 
 import java.io.IOException;
 
-class ConnectionException extends IOException {
+/**
+ * <p>Signals that while connecting on the wire, either via HTTP or
+ * HTTPS, an I/O exception of some sort has occurred. This class 
+ * is the general class of exceptions produced by failed or 
+ * interrupted I/O operations within JBroFuzz.<p>
+ * 
+ * <p>It is an extension of IOException</p>
+ * 
+ * @author subere@uncon.org
+ * @version 2.2
+ * @since 1.5
+ */
+public class ConnectionException extends IOException {
 
 	private static final long serialVersionUID = 73278167420801202L;
 
-	protected ConnectionException(final String message) {
+	public ConnectionException(final String message) {
 
 		super(message);
 
