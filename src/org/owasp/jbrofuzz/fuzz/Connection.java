@@ -50,14 +50,14 @@ import javax.net.ssl.TrustManager;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 2.0
+ * @version 2.2
  * @since 0.1
  */
-class Connection {
+public class Connection {
 	
 	private SocketConnection mainConnection;
 	
-	protected Connection(final String urlString, final String message)
+	public Connection(final String urlString, final String message)
 	throws ConnectionException {
 		
 		URL url;

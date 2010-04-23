@@ -34,6 +34,9 @@
 			<fileset dir="bin">
 				<include name="**/*.class" />
 			</fileset>
+			<fileset dir="src">
+				<include name="**/*.java" />
+			</fileset>
 			<fileset dir="tar">
 				<include name="headers.jbrf" />
 				<include name="fuzzers.jbrf" />
