@@ -37,24 +37,24 @@ import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.fuzz.MessageWriter;
 
 /**
- * <p>
- * The Table Model for the output consisting of six fields.
- * </p>
+ * <p>The Table Model for the output consisting of 
+ * six fields.</p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 2.2 
+ * @since 1.3
  */
 public class ResponseTableModel extends AbstractTableModel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6355322682668793754L;
+
 	// The names of the columns within the table of generators
-	private static final String[] COLUMNNAMES = { "No", "Target", "Timestamp",
-		"Status", "Response Time", "Response Size" };
+	private static final String[] COLUMNNAMES = { 
+		"No", "Target", "Payload", "Status Code", 
+		"Time Taken (ms)", "Bytes Received" 
+	};
 	// The vector of ResponseOutputs
-	private Vector<ResponseOutput> dataVector;
+	private static Vector<ResponseOutput> dataVector = new Vector<ResponseOutput>();
 	// The integer counter
 	private int counter;
 
@@ -63,17 +63,13 @@ public class ResponseTableModel extends AbstractTableModel {
 	 * to a JTable.
 	 */
 	public ResponseTableModel() {
-
-		dataVector = new Vector<ResponseOutput>();
+		super();
 		counter = 0;
 
 	}
 
 	/**
-	 * <p>
-	 * Methods adds a new row, showing "Sending..." and the remaining default
-	 * values.
-	 * </p>
+	 * <p>Method for adding a row to the output table.</p>
 	 * 
 	 * @param outputMessage
 	 *            The message to be outputed
@@ -81,45 +77,48 @@ public class ResponseTableModel extends AbstractTableModel {
 	 * @return int the count of elements in the model
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 2.2
 	 * @since 1.2
 	 */
 	public int addNewRow(MessageWriter outputMessage) {
 
 		dataVector.add(new ResponseOutput(
 
-				outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
-				.getStartDateShort(), "Sending  - ...", "000000 ms",
-				"00000000 bytes"
+				outputMessage.getFileName(), 
+				outputMessage.getTextURL(), 
+				StringUtils.abbreviate(outputMessage.getPayload(), 50), 
+				outputMessage.getStatus(),
+				StringUtils.leftPad("" + outputMessage.getResponseTime(), 5, '0'),
+				StringUtils.leftPad("" + outputMessage.getByteCount(), 8, '0')
 
 		));
 
-		fireTableRowsInserted(counter, counter);
-
 		counter++;
-
+		fireTableRowsInserted(counter, counter);
+		// dataVector.setSize(counter);
 		return counter;
 	}
 
 	/**
 	 * Return the total number of columns
-	 * 
+	 * s
 	 * @return int
 	 */
 	public int getColumnCount() {
-		return 6;
+		return COLUMNNAMES.length;
 	}
 
 	@Override
 	public String getColumnName(final int columnIndex) {
 
-		String out = "";
-
-		if ((columnIndex < 6) && (columnIndex >= 0)) {
-			out = ResponseTableModel.COLUMNNAMES[columnIndex];
-		}
-
-		return out;
+//		String out = "";
+//
+//		if ((columnIndex < 6) && (columnIndex >= 0)) {
+//			out = ResponseTableModel.COLUMNNAMES[columnIndex];
+//		}
+//
+//		return out;
+		return ResponseTableModel.COLUMNNAMES[columnIndex];
 
 	}
 
@@ -129,7 +128,11 @@ public class ResponseTableModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getRowCount() {
-		return dataVector.size();
+		// System.out.println("Data Vector Size: " + dataVector.size());
+		// System.out.println("Counter is: " + counter);
+		// return dataVector.size();
+		// does not work: return counter;
+		return counter;
 	}
 
 	/**
@@ -143,8 +146,11 @@ public class ResponseTableModel extends AbstractTableModel {
 	 */
 	public Object getValueAt(final int row, final int column) {
 
-		if ((row < dataVector.size()) && (row >= 0) && (column < 6)
-				&& (column >= 0)) {
+//		if ((row < dataVector.size()) && (row >= 0) && (column < 6)
+//				&& (column >= 0)) {
+		if ( (row <= counter) && (row >= 0) && 
+				(column < COLUMNNAMES.length) && (column >= 0) ) {
+
 			final ResponseOutput record = dataVector.get(row);
 			switch (column) {
 			case 0:
@@ -167,31 +173,13 @@ public class ResponseTableModel extends AbstractTableModel {
 
 	}
 
-	/**
-	 * <p>
-	 * Removes a row at a given index.
-	 * </p>
-	 * 
-	 * @param row
-	 * 
-	 * @author subere@uncon.org
-	 * @version 1.3
-	 * @since 1.2
-	 */
-	public void removeRow(int row) {
-
-		if ((row > -1) && (row < dataVector.size())) {
-			dataVector.removeElementAt(row);
-			fireTableRowsDeleted(0, row);
-			counter--;
-		}
-	}
-
 	@Override
 	public void setValueAt(Object o, int rowIndex, int columnIndex) {
 
-		if ((rowIndex < dataVector.size()) && (rowIndex >= 0)
-				&& (columnIndex < 6) && (columnIndex >= 0)) {
+//		if ((rowIndex < dataVector.size()) && (rowIndex >= 0)
+//				&& (columnIndex < 6) && (columnIndex >= 0)) {
+		if ( (rowIndex <= counter) && (rowIndex >= 0) && 
+				(columnIndex < COLUMNNAMES.length) && (columnIndex >= 0) ) {
 
 			ResponseOutput current = dataVector.get(rowIndex);
 			switch (columnIndex) {
@@ -221,42 +209,20 @@ public class ResponseTableModel extends AbstractTableModel {
 		}
 
 	}
+	
+	/**
+	 * <p>Method for getting rid of all the rows
+	 * of the table model.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.2
+	 * @since 2.2
+	 */
+	public void clearAllRows() {
 
-	public void updateRow(MessageWriter outputMessage, int row) {
-
-		ResponseOutput response = new ResponseOutput(
-
-				outputMessage.getFileName(), 
-				outputMessage.getTextURL(), 
-				outputMessage.getStartDateShort(),
-				"Finished - " + outputMessage.getStatus(), 
-				StringUtils.leftPad("" + outputMessage.getResponseTime(), 6, '0') + " ms",
-				StringUtils.leftPad("" + outputMessage.getByteCount(), 8, '0') + " bytes"
-
-		);
-
-		dataVector.setElementAt(response, row - 1);
-		fireTableRowsUpdated(row - 1, row - 1);
+		dataVector.removeAllElements();
+		this.fireTableRowsDeleted(0, counter);
+		counter = 0;
 
 	}
-
-	public void updateRow(MessageWriter outputMessage, int row, Exception e) {
-
-		ResponseOutput response = new ResponseOutput(
-
-				outputMessage.getFileName(), outputMessage.getTextURL(), outputMessage
-				.getStartDateShort(), "[Error]  - " + e.getMessage(),
-				StringUtils.leftPad("" + outputMessage.getResponseTime(), 6,
-				'0')
-				+ " ms", StringUtils.leftPad(""
-						+ outputMessage.getByteCount(), 8, '0')
-						+ " bytes"
-
-		);
-
-		dataVector.setElementAt(response, row - 1);
-		fireTableRowsUpdated(row - 1, row - 1);
-
-	}
-
 }

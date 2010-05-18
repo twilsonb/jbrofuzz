@@ -47,7 +47,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
@@ -368,7 +367,7 @@ public final class RightClickPopups {
 		});
 	}
 	
-	public static void rightClickOnTheWireTextComponent(final FuzzingPanel mFuzzingPanel, final JTextPane area) {
+	public static void rightClickOnTheWireTextComponent(final FuzzingPanel mFuzzingPanel, final JTextArea area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
 
