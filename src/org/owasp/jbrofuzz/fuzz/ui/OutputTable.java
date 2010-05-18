@@ -31,9 +31,12 @@ package org.owasp.jbrofuzz.fuzz.ui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.text.Collator;
+import java.util.Comparator;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
@@ -42,34 +45,48 @@ import javax.swing.table.TableRowSorter;
  * Fuzzing panel.</p>
  * 
  * @author subere@uncon.org
- * @version 1.8
+ * @version 2.2
  * @since 1.8
  */
 public class OutputTable extends JTable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 165423542L;
-
+	private static final long serialVersionUID = 6380470019501381003L;
+	
 	public OutputTable(final ResponseTableModel model) {
 
 		super(model);
-
+		setAutoCreateRowSorter(true);
+		setRowSorter(new TableRowSorter<ResponseTableModel>(model));
 		final TableRowSorter<ResponseTableModel> sorter = 
-			new TableRowSorter<ResponseTableModel>(model);
-		setRowSorter(sorter);
+			new TableRowSorter<ResponseTableModel>(model) {
+			
+		    public Comparator<String> getComparator(int column) {
+		    	return
+		    	new Comparator<String>() {
+		    	    public int compare(String s1, String s2) {
+		    	        String[] strings1 = s1.split("\\s");
+		    	        String[] strings2 = s2.split("\\s");
+		    	        return strings1[strings1.length - 1]
+		    	            .compareTo(strings2[strings2.length - 1]);
+		    	    }
+		    	};
 
-		setColumnSelectionAllowed(false);
-		setRowSelectionAllowed(true);
-
-		setFont(new Font("Monospaced", Font.BOLD, 12));
-		setBackground(Color.BLACK);
-		setForeground(Color.WHITE);
-
-		setSurrendersFocusOnKeystroke(true);
-		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
+//		        Comparator comparator = super.getComparator(column);
+//		        if (comparator != null) {
+//		            return comparator;
+//		        }
+//		        Class columnClass = getModel().getColumnClass(column);
+//		        if (columnClass == String.class) {
+//		            return Collator.getInstance();
+//		        }
+//		        if (Comparable.class.isAssignableFrom(columnClass)) {
+//		            return COMPARABLE_COMPARATOR;
+//		        }
+//		        return Collator.getInstance();
+		    }
+		};
+		// setRowSorter(sorter);
+		
 		// Set the column widths
 		TableColumn column = null;
 		for (int i = 0; i < model.getColumnCount(); i++) {
@@ -84,7 +101,7 @@ public class OutputTable extends JTable {
 				column.setPreferredWidth(120);
 			}
 			if (i == 3) {
-				column.setPreferredWidth(80);
+				column.setPreferredWidth(20);
 			}
 			if (i == 4) {
 				column.setPreferredWidth(20);
@@ -94,6 +111,42 @@ public class OutputTable extends JTable {
 			}
 		}
 
-
 	}
+	
+	public final boolean isCellEditable(int row, int column) {
+		return false;
+	}
+	
+	public final boolean getColumnSelectionAllowed() {
+		return false;
+	}
+	
+	public final boolean getRowSelectionAllowed() {
+		return true;
+	}
+	
+	public final Font getFont() {
+		return new Font("Monospaced", Font.BOLD, 12);
+	}
+	
+	public final boolean getDragEnabled() {
+		return false;
+	}
+	
+	public final int getSelectionMode() {
+		return ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
+	}
+	
+	public final Color getBackground() {
+		return Color.BLACK;
+	}
+	
+	public final Color getForeground() {
+		return Color.WHITE;
+	}
+	
+	public final boolean getSurrendersFocusOnKeystroke() {
+		return true;
+	}
+	
 }

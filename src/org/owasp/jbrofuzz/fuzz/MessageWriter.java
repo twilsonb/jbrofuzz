@@ -48,7 +48,7 @@ public class MessageWriter {
 	private transient final Date start;
 	private transient Date end;
 	private transient String status;
-
+	private transient String payload;
 	private transient int replyByteLength;
 
 	protected MessageWriter(final FuzzingPanel fuzzingPanel) {
@@ -62,6 +62,8 @@ public class MessageWriter {
 		textURL = fuzzingPanel.getTextURL();
 		// Set the default status
 		status = "---";
+		// Set the current payload
+		payload = fuzzingPanel.getPayload();
 		// Initialise the byte length
 		replyByteLength = 0;
 
@@ -90,6 +92,9 @@ public class MessageWriter {
 
 	}
 
+	public String getPayload() {
+		return payload;
+	}
 	public int getByteCount() {
 
 		return replyByteLength;

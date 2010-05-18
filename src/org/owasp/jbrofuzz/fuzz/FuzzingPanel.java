@@ -52,10 +52,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.Element;
 import javax.swing.text.StyledEditorKit;
 
 import org.apache.commons.lang.StringUtils;
@@ -65,6 +62,7 @@ import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
+import org.owasp.jbrofuzz.fuzz.ui.WireTextArea;
 import org.owasp.jbrofuzz.fuzz.ui.OutputTable;
 import org.owasp.jbrofuzz.fuzz.ui.ResponseTableModel;
 import org.owasp.jbrofuzz.fuzz.ui.RightClickPopups;
@@ -162,7 +160,7 @@ public class FuzzingPanel extends AbstractPanel {
 	private int counter;
 
 	// The "On The Wire" console
-	private final JTextPane onTextPane;
+	private final WireTextArea mWireTextArea;
 
 	// The frame window
 	private final JBroFuzzWindow mWindow;
@@ -172,6 +170,8 @@ public class FuzzingPanel extends AbstractPanel {
 	private final JTabbedPane topRightPanel;
 
 	private boolean stopped;
+	
+	private String payload;
 
 	/**
 	 * This constructor is used for the " Fuzzing " panel that resides under the
@@ -185,22 +185,25 @@ public class FuzzingPanel extends AbstractPanel {
 		super(" Fuzzing ", mWindow);
 
 		this.mWindow = mWindow;
-		counter = 1;
-
+		counter = 0;
+		payload = "";
 		stopped = true;
+
 		// Set the enabled options: Start, Stop, Pause, Add, Remove
 		setOptionsAvailable(true, false, false, true, false);
 
-		// The URL panel
+		// The Target panel
 		final JPanel targetPanel = new JPanel(new BorderLayout());
 		targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" URL "), BorderFactory.createEmptyBorder(
+				.createTitledBorder(" Target "), BorderFactory.createEmptyBorder(
 						1, 1, 1, 1)));
-
+		
+		
 		urlField = new JTextField();
 		urlField.setEditable(true);
 		urlField.setVisible(true);
 		urlField.setFont(new Font("Verdana", Font.BOLD, 12));
+		urlField.setToolTipText("[{Protocol} :// {Host} [:{Port}]]");
 		urlField.setMargin(new Insets(1, 1, 1, 1));
 		urlField.setBackground(Color.WHITE);
 		urlField.setForeground(Color.BLACK);
@@ -303,16 +306,12 @@ public class FuzzingPanel extends AbstractPanel {
 				BorderFactory.createTitledBorder(" Requests "), BorderFactory
 				.createEmptyBorder(5, 5, 5, 5)));
 
-		onTextPane = new JTextPane();
-		onTextPane.setFont(new Font("Verdana", Font.PLAIN, 10));
-		onTextPane.setEditable(false);
-		onTextPane.setBackground(Color.BLACK);
-		onTextPane.setForeground(Color.GREEN);
+		mWireTextArea = new WireTextArea();
 
 		// Right click: Cut, Copy, Paste, Select All
-		RightClickPopups.rightClickOnTheWireTextComponent(this, onTextPane);
+		RightClickPopups.rightClickOnTheWireTextComponent(this, mWireTextArea);
 
-		final JScrollPane consoleScrollPane = new JScrollPane(onTextPane,
+		final JScrollPane consoleScrollPane = new JScrollPane(mWireTextArea,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -329,6 +328,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 		outputTableModel = new ResponseTableModel();
 		mOutputTable = new OutputTable(outputTableModel);
+		
 		RightClickPopups.rightClickOutputTable(this, mOutputTable);
 
 		mOutputTable.addMouseListener(new MouseAdapter() {
@@ -378,6 +378,7 @@ public class FuzzingPanel extends AbstractPanel {
 		});
 
 		final JScrollPane outputScrollPane = new JScrollPane(mOutputTable);
+		// mOutputTable.setFillsViewportHeight(true);
 		outputScrollPane.setVerticalScrollBarPolicy(20);
 		// outputScrollPane.setPreferredSize(new Dimension(840, 130));
 		outputPanel.add(outputScrollPane);
@@ -499,7 +500,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 		urlField.setText("");
 		requestPane.setText("");
-		onTextPane.setText("");
+		mWireTextArea.setText("");
 
 		// topRightPanel.setTitleAt(1, " On The Wire ");
 		// topRightPanel.setSelectedIndex(0);
@@ -507,9 +508,9 @@ public class FuzzingPanel extends AbstractPanel {
 		while (fuzzersTable.getRowCount() > 0) {
 			mFuzzTableModel.removeRow(0);
 		}
-		while (mOutputTable.getRowCount() > 0) {
-			outputTableModel.removeRow(0);
-		}
+		
+		outputTableModel.clearAllRows();
+		
 
 		urlField.requestFocusInWindow();
 	}
@@ -527,15 +528,12 @@ public class FuzzingPanel extends AbstractPanel {
 	 * 
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.8
+	 * @version 2.2
 	 * @since 1.8
 	 */
 	public void clearOutputTable() {
 
-		while(mOutputTable.getRowCount() > 0) {
-			outputTableModel.removeRow(0);
-		}
-
+		outputTableModel.clearAllRows();
 		urlField.requestFocusInWindow();
 
 	}
@@ -574,7 +572,7 @@ public class FuzzingPanel extends AbstractPanel {
 	 */
 	public void clearOnTheWire() {
 		
-		onTextPane.setText("");
+		mWireTextArea.setText("");
 		urlField.requestFocusInWindow();
 
 	}
@@ -770,7 +768,7 @@ public class FuzzingPanel extends AbstractPanel {
 	 * </p>
 	 * 
 	 * @author subere@uncon.org
-	 * @version 2.0
+	 * @version 2.2
 	 * @since 1.0
 	 */
 	@Override
@@ -787,14 +785,6 @@ public class FuzzingPanel extends AbstractPanel {
 		urlField.setEditable(false);
 		urlField.setBackground(Color.BLACK);
 		urlField.setForeground(Color.WHITE);
-
-		// Don't show anything if setting is such
-//		if(showOnTheWire != 0) {
-//			toConsole("\n--> [JBROFUZZ FUZZING START] -->\n\n");
-//		}
-
-		onTextPane.setBackground(Color.BLACK);
-		onTextPane.setForeground(Color.WHITE);
 
 		topRightPanel.setSelectedIndex(1);
 
@@ -838,18 +828,19 @@ public class FuzzingPanel extends AbstractPanel {
 					// Get the default value
 					final int showOnTheWire = JBroFuzz.PREFS.getInt(
 												JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
-
-					final String payload = f.next();
+					// Set the payload, has to be called 
+					// before the MessageWriter constructor
+					payload = f.next();
 					final MessageCreator currentMessage = new MessageCreator(getTextURL(), getTextRequest(), encoding, payload, start, end);
 					final MessageWriter outputMessage = new MessageWriter(this);
 
-					final int co_k = outputTableModel.addNewRow(outputMessage);
+					// final int co_k = outputTableModel.addNewRow(outputMessage);
 
 					// Put the message on the console as it goes out on the wire
 					if( (showOnTheWire == 1) || // 1 show only requests
 						(showOnTheWire == 3) ) {// 3 show both requests and responses 
 						// Show message
-						toConsole(currentMessage.getMessageForDisplayPurposes());
+						mWireTextArea.setText(currentMessage.getMessageForDisplayPurposes());
 					}
 
 					try {
@@ -866,12 +857,13 @@ public class FuzzingPanel extends AbstractPanel {
 							(showOnTheWire == 3) ) {// 3 for showing requests and responses
 							
 								// toConsole("\n-->\n--> [JBROFUZZ FUZZING RESPONSE] -->\n-->\n");
-								toConsole(connection.getReply());
+							mWireTextArea.setText(connection.getReply());
 								
 						}
 
 						// Update the last row, indicating success
-						outputTableModel.updateRow(outputMessage, co_k);
+						// outputTableModel.updateRow(outputMessage, co_k);
+						outputTableModel.addNewRow(outputMessage);
 
 					} catch (ConnectionException e1) {
 
@@ -883,11 +875,12 @@ public class FuzzingPanel extends AbstractPanel {
 							(showOnTheWire == 3) ) {// 3 for showing requests and responses
 							
 							// toConsole("\n--> [JBROFUZZ FUZZING RESPONSE] <--\n");
-							toConsole(e1.getMessage());
+							mWireTextArea.setText(e1.getMessage());
 						}
 
 						// Update the last row, indicating an error
-						outputTableModel.updateRow(outputMessage, co_k, e1);
+						// outputTableModel.updateRow(outputMessage, co_k, e1);
+						outputTableModel.addNewRow(outputMessage);
 
 					}
 					
@@ -939,8 +932,6 @@ public class FuzzingPanel extends AbstractPanel {
 		urlField.setEditable(true);
 		urlField.setBackground(Color.WHITE);
 		urlField.setForeground(Color.BLACK);
-		onTextPane.setBackground(Color.BLACK);
-		onTextPane.setForeground(Color.GREEN);
 
 		// Get the preference for showing the "On The Wire" tab
 		final boolean showWireTab = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZINGONTHEWIRE[0].getId(), true);
@@ -952,44 +943,9 @@ public class FuzzingPanel extends AbstractPanel {
 		}
 
 	}
-
-	/**
-	 * <p>
-	 * Method for writing content to the "On The Wire" console.
-	 * </p>
-	 * <p>
-	 * Content is written as a 1000 character FILO, i.e. a maximum of 1000
-	 * characters is displayed at any one time.
-	 * </p>
-	 * 
-	 * @param input
-	 *            The input string.
-	 * 
-	 * @author subere@uncon.org
-	 * @version 2.0
-	 * @since 1.5
-	 */
-	private void toConsole(final String input) {
-
-		final Document eDoc = onTextPane.getDocument();
-		final Element eElement = eDoc.getDefaultRootElement();
-		// Copy attribute Set
-		final AttributeSet attr = eElement.getAttributes().copyAttributes();
-
-		try {
-			// Use a FILO for the output to the console
-			final int totLength = eDoc.getLength() - Integer.MAX_VALUE;
-			if (totLength > 1) {
-				eDoc.remove(0, totLength);
-			}
-
-			eDoc.insertString(eDoc.getLength(), input, attr);
-
-		} catch (BadLocationException e2) {
-			Logger.log("Fuzzing Panel: Could not clear the \"On the Wire\" console", 3);
-		}
-
-		onTextPane.setCaretPosition(eDoc.getLength());
-
+	
+	public String getPayload() {
+		return payload;
 	}
+
 }
