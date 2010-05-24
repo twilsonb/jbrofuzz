@@ -31,12 +31,9 @@ package org.owasp.jbrofuzz.fuzz.ui;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.text.Collator;
 import java.util.Comparator;
 
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.RowSorter;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
@@ -52,40 +49,10 @@ public class OutputTable extends JTable {
 
 	private static final long serialVersionUID = 6380470019501381003L;
 	
-	public OutputTable(final ResponseTableModel model) {
+	public OutputTable(final OutputTableModel model) {
 
 		super(model);
-		setAutoCreateRowSorter(true);
-		setRowSorter(new TableRowSorter<ResponseTableModel>(model));
-		final TableRowSorter<ResponseTableModel> sorter = 
-			new TableRowSorter<ResponseTableModel>(model) {
-			
-		    public Comparator<String> getComparator(int column) {
-		    	return
-		    	new Comparator<String>() {
-		    	    public int compare(String s1, String s2) {
-		    	        String[] strings1 = s1.split("\\s");
-		    	        String[] strings2 = s2.split("\\s");
-		    	        return strings1[strings1.length - 1]
-		    	            .compareTo(strings2[strings2.length - 1]);
-		    	    }
-		    	};
-
-//		        Comparator comparator = super.getComparator(column);
-//		        if (comparator != null) {
-//		            return comparator;
-//		        }
-//		        Class columnClass = getModel().getColumnClass(column);
-//		        if (columnClass == String.class) {
-//		            return Collator.getInstance();
-//		        }
-//		        if (Comparable.class.isAssignableFrom(columnClass)) {
-//		            return COMPARABLE_COMPARATOR;
-//		        }
-//		        return Collator.getInstance();
-		    }
-		};
-		// setRowSorter(sorter);
+		getTableHeader().setReorderingAllowed(false);
 		
 		// Set the column widths
 		TableColumn column = null;
@@ -131,10 +98,6 @@ public class OutputTable extends JTable {
 	
 	public final boolean getDragEnabled() {
 		return false;
-	}
-	
-	public final int getSelectionMode() {
-		return ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
 	}
 	
 	public final Color getBackground() {

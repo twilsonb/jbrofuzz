@@ -37,7 +37,7 @@ package org.owasp.jbrofuzz.fuzz.ui;
  * @version 1.3
  * @since 1.2
  */
-class ResponseOutput {
+class Output {
 
 	protected String one;
 	protected String two;
@@ -46,7 +46,7 @@ class ResponseOutput {
 	protected String five;
 	protected String six;
 
-	protected ResponseOutput(final String one, final String two,
+	protected Output(final String one, final String two,
 			final String three, final String four, final String five,
 			final String six) {
 

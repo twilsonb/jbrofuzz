@@ -52,6 +52,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableRowSorter;
 import javax.swing.text.Document;
 import javax.swing.text.StyledEditorKit;
 
@@ -62,10 +63,10 @@ import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
-import org.owasp.jbrofuzz.fuzz.ui.WireTextArea;
 import org.owasp.jbrofuzz.fuzz.ui.OutputTable;
-import org.owasp.jbrofuzz.fuzz.ui.ResponseTableModel;
+import org.owasp.jbrofuzz.fuzz.ui.OutputTableModel;
 import org.owasp.jbrofuzz.fuzz.ui.RightClickPopups;
+import org.owasp.jbrofuzz.fuzz.ui.WireTextArea;
 import org.owasp.jbrofuzz.payloads.PayloadsDialog;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
@@ -147,8 +148,11 @@ public class FuzzingPanel extends AbstractPanel {
 	// The JTable were results are outputted
 	private final OutputTable mOutputTable;
 
+	// The JTableRowSorter
+	private TableRowSorter<OutputTableModel> outputSorter;
+	
 	// And the table model that goes with it
-	private final ResponseTableModel outputTableModel;
+	private final OutputTableModel outputTableModel;
 
 	// The JTable of the generator
 	private final FuzzerTable fuzzersTable;
@@ -326,8 +330,10 @@ public class FuzzingPanel extends AbstractPanel {
 				.createTitledBorder(" Output "),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-		outputTableModel = new ResponseTableModel();
+		outputTableModel = new OutputTableModel();
 		mOutputTable = new OutputTable(outputTableModel);
+		outputSorter = new TableRowSorter<OutputTableModel>(outputTableModel);
+		// mOutputTable.setRowSorter(outputSorter);
 		
 		RightClickPopups.rightClickOutputTable(this, mOutputTable);
 
@@ -864,7 +870,9 @@ public class FuzzingPanel extends AbstractPanel {
 						// Update the last row, indicating success
 						// outputTableModel.updateRow(outputMessage, co_k);
 						outputTableModel.addNewRow(outputMessage);
-
+						outputSorter.sort();
+						mOutputTable.updateUI();
+						
 					} catch (ConnectionException e1) {
 
 						// Update the message writer
@@ -881,7 +889,9 @@ public class FuzzingPanel extends AbstractPanel {
 						// Update the last row, indicating an error
 						// outputTableModel.updateRow(outputMessage, co_k, e1);
 						outputTableModel.addNewRow(outputMessage);
-
+						outputSorter.sort();
+						mOutputTable.updateUI();
+						
 					}
 					
 //					if(showOnTheWire != 0) {
