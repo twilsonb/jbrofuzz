@@ -44,7 +44,7 @@ import org.owasp.jbrofuzz.fuzz.MessageWriter;
  * @version 2.2 
  * @since 1.3
  */
-public class ResponseTableModel extends AbstractTableModel {
+public class OutputTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 6355322682668793754L;
 
@@ -54,7 +54,7 @@ public class ResponseTableModel extends AbstractTableModel {
 		"Time Taken (ms)", "Bytes Received" 
 	};
 	// The vector of ResponseOutputs
-	private static Vector<ResponseOutput> dataVector = new Vector<ResponseOutput>();
+	private static Vector<Output> dataVector = new Vector<Output>();
 	// The integer counter
 	private int counter;
 
@@ -62,7 +62,7 @@ public class ResponseTableModel extends AbstractTableModel {
 	 * Default constructor for this web directory model. This is to be attached
 	 * to a JTable.
 	 */
-	public ResponseTableModel() {
+	public OutputTableModel() {
 		super();
 		counter = 0;
 
@@ -82,7 +82,7 @@ public class ResponseTableModel extends AbstractTableModel {
 	 */
 	public int addNewRow(MessageWriter outputMessage) {
 
-		dataVector.add(new ResponseOutput(
+		dataVector.add(new Output(
 
 				outputMessage.getFileName(), 
 				outputMessage.getTextURL(), 
@@ -105,20 +105,15 @@ public class ResponseTableModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getColumnCount() {
+		
 		return COLUMNNAMES.length;
+		
 	}
 
 	@Override
 	public String getColumnName(final int columnIndex) {
 
-//		String out = "";
-//
-//		if ((columnIndex < 6) && (columnIndex >= 0)) {
-//			out = ResponseTableModel.COLUMNNAMES[columnIndex];
-//		}
-//
-//		return out;
-		return ResponseTableModel.COLUMNNAMES[columnIndex];
+		return OutputTableModel.COLUMNNAMES[columnIndex];
 
 	}
 
@@ -128,11 +123,9 @@ public class ResponseTableModel extends AbstractTableModel {
 	 * @return int
 	 */
 	public int getRowCount() {
-		// System.out.println("Data Vector Size: " + dataVector.size());
-		// System.out.println("Counter is: " + counter);
-		// return dataVector.size();
-		// does not work: return counter;
+
 		return counter;
+		
 	}
 
 	/**
@@ -151,7 +144,7 @@ public class ResponseTableModel extends AbstractTableModel {
 		if ( (row <= counter) && (row >= 0) && 
 				(column < COLUMNNAMES.length) && (column >= 0) ) {
 
-			final ResponseOutput record = dataVector.get(row);
+			final Output record = dataVector.get(row);
 			switch (column) {
 			case 0:
 				return record.getFirst();
@@ -172,7 +165,7 @@ public class ResponseTableModel extends AbstractTableModel {
 		return "";
 
 	}
-
+	
 	@Override
 	public void setValueAt(Object o, int rowIndex, int columnIndex) {
 
@@ -181,7 +174,7 @@ public class ResponseTableModel extends AbstractTableModel {
 		if ( (rowIndex <= counter) && (rowIndex >= 0) && 
 				(columnIndex < COLUMNNAMES.length) && (columnIndex >= 0) ) {
 
-			ResponseOutput current = dataVector.get(rowIndex);
+			Output current = dataVector.get(rowIndex);
 			switch (columnIndex) {
 			case 0:
 				current.one = o.toString();
@@ -209,7 +202,7 @@ public class ResponseTableModel extends AbstractTableModel {
 		}
 
 	}
-	
+
 	/**
 	 * <p>Method for getting rid of all the rows
 	 * of the table model.</p>
