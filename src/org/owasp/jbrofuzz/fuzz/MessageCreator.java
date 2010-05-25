@@ -93,7 +93,7 @@ class MessageCreator {
 
 		// By now we have the complete message with the payload in the right
 		// location
-		// this.message = doAppendCRLF(this.message);
+		this.message = doAppendCRLF(this.message);
 		
 		// Do a Content-Length re-write, under certain conditions
 		this.message = doContentLengthReWrite(this.message);
