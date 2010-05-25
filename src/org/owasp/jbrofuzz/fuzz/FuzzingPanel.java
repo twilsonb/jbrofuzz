@@ -333,7 +333,7 @@ public class FuzzingPanel extends AbstractPanel {
 		outputTableModel = new OutputTableModel();
 		mOutputTable = new OutputTable(outputTableModel);
 		outputSorter = new TableRowSorter<OutputTableModel>(outputTableModel);
-		// mOutputTable.setRowSorter(outputSorter);
+		mOutputTable.setRowSorter(outputSorter);
 		
 		RightClickPopups.rightClickOutputTable(this, mOutputTable);
 
@@ -870,8 +870,8 @@ public class FuzzingPanel extends AbstractPanel {
 						// Update the last row, indicating success
 						// outputTableModel.updateRow(outputMessage, co_k);
 						outputTableModel.addNewRow(outputMessage);
-						outputSorter.sort();
-						mOutputTable.updateUI();
+						// outputSorter.sort();
+						// mOutputTable.updateUI();
 						
 					} catch (ConnectionException e1) {
 
@@ -889,8 +889,8 @@ public class FuzzingPanel extends AbstractPanel {
 						// Update the last row, indicating an error
 						// outputTableModel.updateRow(outputMessage, co_k, e1);
 						outputTableModel.addNewRow(outputMessage);
-						outputSorter.sort();
-						mOutputTable.updateUI();
+						// outputSorter.sort();
+						// mOutputTable.updateUI();
 						
 					}
 					
