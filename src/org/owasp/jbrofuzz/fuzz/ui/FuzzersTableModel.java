@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.1
+ * JBroFuzz 2.2
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -29,43 +29,34 @@
  */
 package org.owasp.jbrofuzz.fuzz.ui;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
 /**
- * <p>
- * The fuzzing table model used within the generators table of the "TCP Fuzzing"
- * panel.
- * </p>
+ * <p>The table model for the fuzzers, displayed on the top,
+ * right hand side of the "Fuzzing" tab.</p>
  * 
  * @author subere@uncon.org
- * @version 1.9
- * @since 1.9
+ * @version 2.2
+ * @since 1.2
  */
 public class FuzzersTableModel extends AbstractTableModel {
 
-	private static final long serialVersionUID = -2073798761991443962L;
+	private static final long serialVersionUID = 8133287501650660903L;
 
 	// The names of the columns within the table of generators
 	private static final String[] COLUMNNAMES = 
 	{ "Fuzzer ID", "Encoding", "Start", "End" };
 
-	// The vector of data
-	private Vector<FuzzerRow> dataVector;
-	// The panel that the model is attached to
-	// private JBroFuzzWindow fPanel;
+	// The vector of fuzzer row data
+	private ArrayList<FuzzerRow> dataVector;
 
 	/**
-	 * <p>
-	 * Main Constructor passes the Fuzzing Panel.
-	 * </p>
-	 * 
-	 * @param fPanel
-	 *            FuzzingPanel
+	 * <p>Main Constructor passes the Fuzzing Panel.</p>
 	 */
 	public FuzzersTableModel() {
-		dataVector = new Vector<FuzzerRow>();
+		dataVector = new ArrayList<FuzzerRow>();
 	}
 
 	/**
@@ -176,13 +167,13 @@ public class FuzzersTableModel extends AbstractTableModel {
 	 * 
 	 * @see
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 2.2
 	 * @since 1.2
 	 */
 	public void removeRow(final int row) {
 
 		if ((row > -1) && (row < dataVector.size())) {
-			dataVector.removeElementAt(row);
+			dataVector.remove(row);
 			fireTableRowsDeleted(0, row);
 		}
 	}

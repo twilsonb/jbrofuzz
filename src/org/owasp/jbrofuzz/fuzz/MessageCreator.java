@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.1
+ * JBroFuzz 2.2
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -120,7 +120,7 @@ class MessageCreator {
 	 * @since 1.2
 	 */
 	public String getMessage() {
-
+		
 		return message;
 
 	}

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.1
+ * JBroFuzz 2.2
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -187,8 +187,8 @@ public class JBroFuzzPrefs {
 		// 1
 		new PrefEntry(
 				"fuzz.end.of.line",
-				" Use \"\\n\" instead of \"\\r\\n\" as an end of line character ",
-				"Tick this box, if you want to use \"\\n\" for each line put on the wire"
+				" Use \"\\r\\n\" instead of \"\\n\" as an end of line character ",
+				"Tick this box, if you want to use \"\\r\\n\" for each line put on the wire"
 			),
 		
 		// 2
