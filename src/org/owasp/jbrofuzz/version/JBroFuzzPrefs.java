@@ -53,11 +53,19 @@ public class JBroFuzzPrefs {
 	 */
 	public static final PrefEntry [] DIRS = 
 	{
-		// 0
+		// 0 The actual directory e.g. /opt/data/files
 		new PrefEntry(
 				"save.dir",
 				" Fuzzing Directory (where data is saved) ",
 				" Select Directory to Save Fuzzing Data "
+			),
+		// 1 To allow for files to be written in an 
+		// alternative location
+		new PrefEntry(
+				"save.dir.select",
+				" Specify Fuzzing Directory",
+				" Untick this box to save all data in the directory from which JBroFuzz is launched ",
+				true
 			)
 		
 	};

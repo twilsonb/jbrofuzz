@@ -45,7 +45,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class FuzzPPanel extends AbstractPrefsPanel {
 
-	private static final long serialVersionUID = -6307578507750425289L;
+	private static final long serialVersionUID = 1154452563244021077L;
 
 	// Declare any static constants
 	private static final String[] SOCKET_SECONDS = 

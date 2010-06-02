@@ -99,13 +99,20 @@ public class FileHandler {
 	 * is created.</p>
 	 * 
 	 * @author subere@uncon.org
-	 * @version 2.0
+	 * @version 2.3
 	 * @since 1.5
 	 */
 	public final void createNewDirectory() {
 
-		// Get the root directory location from preferences
-		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
+		// Get the directory location from preferences
+		final boolean saveElsewhere = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
+		// Use the user directory if the box is not ticked, under: "Preferences"->"Directory Locations"
+		final String dirString;
+		if(saveElsewhere) {
+			dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
+		} else {
+			dirString = System.getProperty("user.dir");
+		}		
 		
 		// Create the /jbrofuzz directory in the current folder
 		rootDirectory = new File(dirString);

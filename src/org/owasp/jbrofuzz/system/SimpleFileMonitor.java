@@ -43,7 +43,7 @@ import java.io.File;
  * </p>
  * 
  * @author ranulf@seleucus.net
- * @version 1.0
+ * @version 2.2
  * @since 2.0
  */
 class SimpleFileMonitor 
