@@ -49,8 +49,14 @@ class JohnyWalker {
 	protected JohnyWalker(final GraphingPanel gPanel) {
 
 		// Get the directory location from preferences
-		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(),
-				System.getProperty("user.dir"));
+		final boolean saveElsewhere = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
+		// Use the user directory if the box is not ticked, under: "Preferences"->"Directory Locations"
+		final String dirString;
+		if(saveElsewhere) {
+			dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
+		} else {
+			dirString = System.getProperty("user.dir");
+		}		
 
 		directory = new File(dirString + File.separator + "jbrofuzz"
 				+ File.separator + "fuzz");

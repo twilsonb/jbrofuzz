@@ -43,6 +43,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -54,11 +55,11 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class DirsPPanel extends AbstractPrefsPanel {
 
-	private static final long serialVersionUID = -7358976067347647005L;
-	
 	private final JTextField dirTextField;
 	
 	private final PrefDialog dialog;
+	
+	private final JCheckBox dirBox;
 	
 	protected DirsPPanel(final PrefDialog dialog) {
 		
@@ -73,6 +74,17 @@ class DirsPPanel extends AbstractPrefsPanel {
 		dirPanel.setLayout(new BoxLayout(dirPanel, BoxLayout.LINE_AXIS));
 		// A very important line when it comes to BoxLayout
 		dirPanel.setAlignmentX(0.0f);
+		
+		// Tick box for selecting your own directory
+		final boolean boolEntry = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
+		dirBox = new JCheckBox(JBroFuzzPrefs.DIRS[1].getTitle(), boolEntry);
+		dirBox.setToolTipText(JBroFuzzPrefs.DIRS[1].getTooltip());
+		dirBox.setBorderPaintedFlat(true);
+		
+		add(dirBox);
+		add(Box.createRigidArea(new Dimension(0, 20)));
+		
+		// Preference for the directory location where files are stored
 		dirPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(JBroFuzzPrefs.DIRS[0].getTitle()), BorderFactory.createEmptyBorder(
 						1, 1, 1, 1)));
@@ -86,6 +98,35 @@ class DirsPPanel extends AbstractPrefsPanel {
 		// For 2.0 release
 		browseDirButton.setEnabled(true);
 		
+		dirPanel.add(dirTextField, BorderLayout.NORTH);
+		dirPanel.add(browseDirButton);
+		add(dirPanel);
+		add(Box.createRigidArea(new Dimension(0, 300)));
+		
+		if(boolEntry) {
+			browseDirButton.setEnabled(true);
+			dirTextField.setEnabled(true);
+		} else {
+			browseDirButton.setEnabled(false);
+			dirTextField.setEnabled(false);
+		}
+		// Listener for the tick box
+		dirBox.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+
+				if(dirBox.isSelected()) {
+					browseDirButton.setEnabled(true);
+					dirTextField.setEnabled(true);
+				} else {
+					browseDirButton.setEnabled(false);
+					dirTextField.setEnabled(false);
+				}
+				dialog.setApplyEnabled(true);
+
+			}
+		});
+		
+		// Listener for the browse directory
 		browseDirButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -122,19 +163,22 @@ class DirsPPanel extends AbstractPrefsPanel {
 			}
 		});
 
-		dirPanel.add(dirTextField, BorderLayout.NORTH);
-		dirPanel.add(browseDirButton);
-		add(dirPanel);
-		add(Box.createRigidArea(new Dimension(0, 300)));
+		
 
 
 	}
 	
 	public void apply() {
-
+		
 		JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[0].getId(), dirTextField.getText());
-		dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().createNewDirectory();
-		dirTextField.setText(dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().getCanonicalPath());
+		
+		if(dirBox.isSelected()) {
+			JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
+			dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().createNewDirectory();
+			dirTextField.setText(dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().getCanonicalPath());
+		} else {
+			JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DIRS[1].getId(), false);
+		}
 		
 	}
 }

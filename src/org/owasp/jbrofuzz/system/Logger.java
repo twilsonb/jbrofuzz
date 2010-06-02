@@ -89,10 +89,21 @@ public final class Logger {
 	 * if required.</p>
 	 * 
 	 * @throws IOException
+	 * 
+	 * @version 2.2
+	 * @since 2.0
 	 */
 	private static void checkOrCreateDirs() throws IOException{
-		// Get the root directory location from preferences
-		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
+
+		// Get the directory location from preferences
+		final boolean saveElsewhere = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
+		// Use the user directory if the box is not ticked, under: "Preferences"->"Directory Locations"
+		final String dirString;
+		if(saveElsewhere) {
+			dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
+		} else {
+			dirString = System.getProperty("user.dir");
+		}		
 
 		new File(dirString);
 

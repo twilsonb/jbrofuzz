@@ -241,7 +241,6 @@ public class SystemPanel extends AbstractPanel {
 	public void stop() {
 
 		// Set the enabled options: Start, Stop, Graph, Add, Remove
-		setOptionsAvailable(true, false, true, true, false);
 
 	}
 

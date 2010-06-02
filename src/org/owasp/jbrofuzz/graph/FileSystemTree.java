@@ -248,6 +248,9 @@ class FileSystemTree extends JTree implements MouseListener {
 	 * @return String The toString() of the file location, or a 
 	 * value  that starts with "Graphing Panel" in case of an
 	 * error.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.3
 	 */
 	private final String getFileFromPath(final TreePath selectedPath) {
 		
@@ -262,7 +265,14 @@ class FileSystemTree extends JTree implements MouseListener {
 		final Object[] path = selectedPath.getPath();
 
 		// Get the directory location from preferences
-		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
+		final boolean saveElsewhere = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
+		// Use the user directory if the box is not ticked, under: "Preferences"->"Directory Locations"
+		final String dirString;
+		if(saveElsewhere) {
+			dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
+		} else {
+			dirString = System.getProperty("user.dir");
+		}		
 
 		// Get the file path
 		final StringBuffer stringPath = new StringBuffer(dirString);

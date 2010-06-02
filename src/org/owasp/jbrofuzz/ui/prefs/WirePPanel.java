@@ -36,7 +36,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -45,10 +44,19 @@ import javax.swing.JRadioButton;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
+/**
+ * <p>Class for displaying the preferences, under Ctrl+P,
+ * of "Fuzzing: On the Wire".</p>
+ * 
+ * @author subere@uncon.org
+ * @version 2.2
+ * @since 2.0
+ *
+ */
 class WirePPanel extends AbstractPrefsPanel {
 
-	private static final long serialVersionUID = 4718844109726649392L;
-	
+	private static final long serialVersionUID = -6794971039096994742L;
+
 	// The array of check boxes used from the FUZZINGONTHEWIRE preferences
 	private final JCheckBox [] checkBoxes = new JCheckBox[JBroFuzzPrefs.FUZZINGONTHEWIRE.length];
 	
