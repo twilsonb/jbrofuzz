@@ -39,7 +39,6 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
-import org.owasp.jbrofuzz.fuzz.io.LoadFuzzers;
 import org.owasp.jbrofuzz.fuzz.io.OpenSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveAsSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveSession;
@@ -282,8 +281,8 @@ public class JMenuFile extends JMenu {
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
 					if (choice == JOptionPane.YES_OPTION) {
-						int c = mFrameWindow.getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
+						final int c = mFrameWindow.getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -316,12 +315,12 @@ public class JMenuFile extends JMenu {
 
 				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
 
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
 					if (choice == JOptionPane.YES_OPTION) {
-						int c = mFrameWindow.getTp().getSelectedIndex();
+						final int c = mFrameWindow.getTp().getSelectedIndex();
 						AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
 						.getComponent(c);
 						p.stop();
