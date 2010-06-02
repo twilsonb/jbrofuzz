@@ -39,6 +39,15 @@ import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.core.Prototype;
 import org.owasp.jbrofuzz.core.Verifier;
 
+/**
+ * <p>Class responsible for loading the headers
+ * from file.</p>
+ * 
+ * @author subere@uncon.org
+ * @version 2.3
+ * @since 2.3
+ *
+ */
 class HeaderLoader {
 
 	private static final String HEADER = "JBroFuzz Headers Collection";
@@ -49,16 +58,16 @@ class HeaderLoader {
 
 	private int globalCounter;
 
-	private Map<String, Prototype> headers_;
+	private Map<String, Prototype> headersMap;
 
 	public HeaderLoader() {
 
 		myNode = new HeaderTreeNode(HEADER);
 		globalCounter = 0;
 
-		headers_ = Verifier.loadFile("headers.jbrf");
+		headersMap = Verifier.loadFile("headers.jbrf");
 		
-	} // constructor
+	} 
 
 	/**
 	 * <p>
@@ -141,11 +150,11 @@ class HeaderLoader {
 			return Header.ZERO;
 		}
 
-		for(String headerName : headers_.keySet()) {
+		for(String headerName : headersMap.keySet()) {
 			
-			Prototype proto = headers_.get(headerName);
+			final Prototype proto = headersMap.get(headerName);
 			
-			int catLength = proto.getNoOfCategories();
+			final int catLength = proto.getNoOfCategories();
 			
 			final String[] categories = new String[catLength];
 			proto.getCategories().toArray(categories);
@@ -168,7 +177,7 @@ class HeaderLoader {
 			}
 			// We have found the header we were looking for
 			if(success == 0) {
-				int noOfFields = proto.size();
+				final int noOfFields = proto.size();
 				
 				final String[] output = new String[noOfFields];
 				proto.getPayloads().toArray(output);
@@ -200,11 +209,11 @@ class HeaderLoader {
 	protected void load() {
 
 		
-		for (String hd : headers_.keySet()) {
+		for (String hd : headersMap.keySet()) {
 			
-			Prototype pt = headers_.get(hd);
+			final Prototype pt = headersMap.get(hd);
 
-			String [] catArray = new String[pt.getNoOfCategories()];
+			final String [] catArray = new String[pt.getNoOfCategories()];
 			pt.getCategories().toArray(catArray);
 			
 			addNodes(catArray, myNode);

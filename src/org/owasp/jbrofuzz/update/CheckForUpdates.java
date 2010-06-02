@@ -72,7 +72,7 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.3
+ * @version 2.3
  * @since 1.2
  */
 public class CheckForUpdates extends JDialog {
@@ -87,10 +87,10 @@ public class CheckForUpdates extends JDialog {
 	private static final int SIZE_Y = 400;
 
 	// The JPanels inside the main window
-	private JTextArea mainLabel;
+	private final JTextArea mainLabel;
 
 	// The start/stop and close button
-	private JButton startStop, close;
+	private final JButton startStop, close;
 
 	// The boolean checking for a new version
 	private boolean newVersionExists;
@@ -209,7 +209,7 @@ public class CheckForUpdates extends JDialog {
 				parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
 				parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
 		);
-		
+
 		this.setSize(CheckForUpdates.SIZE_X, CheckForUpdates.SIZE_Y);
 		setResizable(false);
 		setVisible(true);
@@ -222,7 +222,7 @@ public class CheckForUpdates extends JDialog {
 		close.setEnabled(true);
 
 		// Remove all action listeners from the start/stop button
-		ActionListener[] acArray = startStop.getActionListeners();
+		final ActionListener[] acArray = startStop.getActionListeners();
 		for (ActionListener listener : acArray) {
 			startStop.removeActionListener(listener);
 		}
@@ -297,27 +297,23 @@ public class CheckForUpdates extends JDialog {
 
 		try {
 
-			URL url = new URL(JBroFuzzFormat.URL_WEBSITE);
-			URLConnection urlc = url.openConnection();
-			int statusCode = ((HttpURLConnection) urlc).getResponseCode();
+			final URL url = new URL(JBroFuzzFormat.URL_WEBSITE);
+			final URLConnection urlc = url.openConnection();
+			final int statusCode = ((HttpURLConnection) urlc).getResponseCode();
+			// If a 200 has been received back...
+			if (statusCode == 200) {
 
-			if (statusCode != 200) {
-				mainLabel.append("[FAIL]\n"
-						+ "Connection returned the following code: "
-						+ statusCode + "\n");
-
-			} else {
 				mainLabel.append("[ OK ]\n"
 						+ "Checking JBroFuzz Website...\t\t\t\t");
 
 				// byte[] buffer = new byte[65535];
-				BufferedReader instream = new BufferedReader(
+				final BufferedReader instream = new BufferedReader(
 						new InputStreamReader(urlc.getInputStream()));
 
 				if (instream != null) {
 
 					// Typically returns -1
-					long contentLength = urlc.getContentLength();
+					final long contentLength = urlc.getContentLength();
 
 					if (contentLength > Integer.MAX_VALUE) {
 
@@ -329,7 +325,7 @@ public class CheckForUpdates extends JDialog {
 
 					int c;
 					int l = 0;
-					StringBuffer body = new StringBuffer(131072);
+					final StringBuffer body = new StringBuffer(131072);
 					// 
 					while (((c = instream.read()) != -1) && (l < 131072)) {
 						body.append((char) c);
@@ -340,6 +336,13 @@ public class CheckForUpdates extends JDialog {
 					response = body.toString();
 
 				} // null-check (should really revisit the distro causing this
+
+
+			} else { // We have not received back a 200 status code
+
+				mainLabel.append("[FAIL]\n"
+						+ "Connection returned the following code: "
+						+ statusCode + "\n");
 
 			} // else statement for a 200 response
 
@@ -386,6 +389,13 @@ public class CheckForUpdates extends JDialog {
 
 				if (latest != 0.0) {
 
+					mainLabel
+					.append("\n"
+							+ "Could not interpret JBroFuzz version\nnumbers.\n\nTo check manually, visit:\n\n"
+							+ JBroFuzzFormat.URL_WEBSITE);
+
+				} else {
+					
 					if (latest > current) {
 						mainLabel.append("\nJBroFuzz " + latest
 								+ " is available for download.");
@@ -397,12 +407,7 @@ public class CheckForUpdates extends JDialog {
 						mainLabel
 						.append("\nYou are running the latest version.");
 					}
-
-				} else {
-					mainLabel
-					.append("\n"
-							+ "Could not interpret JBroFuzz version\nnumbers.\n\nTo check manually, visit:\n\n"
-							+ JBroFuzzFormat.URL_WEBSITE);
+					
 				}
 
 			} else {

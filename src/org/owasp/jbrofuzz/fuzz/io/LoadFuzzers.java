@@ -41,9 +41,6 @@ import org.owasp.jbrofuzz.util.FuzzerFileFilter;
 
 public class LoadFuzzers {
 
-	// The maximum number of chars to be read from file, regardless
-	private final static int MAX_CHARS = Character.MAX_VALUE;
-
 	public LoadFuzzers(JBroFuzzWindow mWindow) {
 
 		// Set the Payloads Panel as the one to view

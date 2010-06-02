@@ -69,10 +69,10 @@ public class ZBase32 {
         return encode(fix(in).getBytes());
     }
     
-    public static String encode(byte[] in) {
+    public static String encode(final byte[] in) {
     	init();
-        byte[] input         = in;
-        StringBuilder output = new StringBuilder();
+        final byte[] input         = in;
+        final StringBuilder output = new StringBuilder();
         
         int special = input.length % 5;
         int normal  = input.length - special;

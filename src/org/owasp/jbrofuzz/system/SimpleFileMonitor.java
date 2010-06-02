@@ -74,17 +74,6 @@ class SimpleFileMonitor
 	}
 
 	/**
-	 * Stop the file monitor polling.
-	 */
-	public void stop() {
-		timer.cancel();
-	}
-
-
-
-
-
-	/**
 	 * Add listener to this file monitor.
 	 * 
 	 * @param fileListener  Listener to add.

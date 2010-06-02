@@ -35,8 +35,9 @@ package org.owasp.jbrofuzz.encode;
 * 
 */
 public class Base32 {
-   private static final String base32Chars =
+   private static final String BASE32CHARS =
        "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+   
    private static final int[] base32Lookup =
    { 0xFF,0xFF,0x1A,0x1B,0x1C,0x1D,0x1E,0x1F, // '0', '1', '2', '3', '4', '5', '6', '7'
      0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF, // '8', '9', ':', ';', '<', '=', '>', '?'
@@ -94,7 +95,7 @@ public class Base32 {
                if (index == 0)
                    i++;
            }
-           base32.append(base32Chars.charAt(digit));
+           base32.append(BASE32CHARS.charAt(digit));
        }
 
        // begin fix

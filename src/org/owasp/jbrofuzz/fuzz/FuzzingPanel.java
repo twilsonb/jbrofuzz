@@ -50,8 +50,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.Document;
 import javax.swing.text.StyledEditorKit;
@@ -61,6 +59,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzerModelListener;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
 import org.owasp.jbrofuzz.fuzz.ui.OutputTable;
@@ -100,44 +99,12 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 1.9
+ * @version 2.2
  * @since 0.2
  */
 public class FuzzingPanel extends AbstractPanel {
 
-	/**
-	 * <p>
-	 * Inner class used to detect changes to the data managed by the fuzzers
-	 * table model, where all the fuzzers and corresponding payloads are stored.
-	 * </p>
-	 * 
-	 * <p>
-	 * This class implements the TableModelListener interface and is called via
-	 * addTableModelListener() to catch events on the fuzzers table.
-	 * </p>
-	 * 
-	 * @author subere@uncon.org
-	 * @since 1.1
-	 * 
-	 */
-	private class PayloadsModelListener implements TableModelListener {
-
-		public void tableChanged(final TableModelEvent event) {
-
-			final int total = fuzzersTable.getRowCount();
-			
-			if (total > 0) {
-
-				setOptionRemove(true);
-
-			} else {
-
-				setOptionRemove(false);
-			}
-		}
-	}
-
-	private static final long serialVersionUID = 16982374020211L;
+	private static final long serialVersionUID = 6520864430220861584L;
 
 	// The JTextField
 	private final JTextField urlField;
@@ -166,9 +133,6 @@ public class FuzzingPanel extends AbstractPanel {
 	// The "On The Wire" console
 	private final WireTextArea mWireTextArea;
 
-	// The frame window
-	private final JBroFuzzWindow mWindow;
-
 	private final JSplitPane mainPane, topPane;
 
 	private final JTabbedPane topRightPanel;
@@ -188,7 +152,6 @@ public class FuzzingPanel extends AbstractPanel {
 
 		super(" Fuzzing ", mWindow);
 
-		this.mWindow = mWindow;
 		counter = 0;
 		payload = "";
 		stopped = true;
@@ -273,7 +236,7 @@ public class FuzzingPanel extends AbstractPanel {
 		mFuzzTableModel = new FuzzersTableModel();
 		fuzzersTable = new FuzzerTable(mFuzzTableModel);
 		fuzzersTable.getModel().addTableModelListener(
-				new PayloadsModelListener());
+				new FuzzerModelListener(this, fuzzersTable));
 		// fuzzersTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		RightClickPopups.rightClickFuzzersTable(this, fuzzersTable);
 		fuzzersTable.addMouseListener(new MouseAdapter() {
@@ -365,7 +328,9 @@ public class FuzzingPanel extends AbstractPanel {
 
 							Browser.init();
 								try {
+
 									Browser.displayURL(selFile.toURI().toString());
+
 								} catch (final IOException ex) {
 									Logger.log(
 											"Could not launch link in external browser",

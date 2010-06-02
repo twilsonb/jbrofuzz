@@ -55,6 +55,8 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class DirsPPanel extends AbstractPrefsPanel {
 
+	private static final long serialVersionUID = 8224780932033125038L;
+
 	private final JTextField dirTextField;
 	
 	private final PrefDialog dialog;

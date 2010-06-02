@@ -31,24 +31,22 @@ package org.owasp.jbrofuzz.fuzz.ui;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Comparator;
 
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableRowSorter;
 
 /**
  * <p>Class for representing output table within the 
  * Fuzzing panel.</p>
  * 
  * @author subere@uncon.org
- * @version 2.2
+ * @version 2.3
  * @since 1.8
  */
 public class OutputTable extends JTable {
 
-	private static final long serialVersionUID = 6380470019501381003L;
-	
+	private static final long serialVersionUID = 4638431854344279853L;
+
 	public OutputTable(final OutputTableModel model) {
 
 		super(model);
