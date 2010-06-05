@@ -48,7 +48,7 @@ public class JBroFuzzPrefs {
 	 * deleting empty directories.
 	 * 
 	 * @author subere@uncon.org
-	 * @version 2.0
+	 * @version 2.3
 	 * @since 2.0
 	 */
 	public static final PrefEntry [] DIRS = 
@@ -60,14 +60,21 @@ public class JBroFuzzPrefs {
 				" Select Directory to Save Fuzzing Data "
 			),
 		// 1 To allow for files to be written in an 
-		// alternative location
+		// alternative location: boolean
 		new PrefEntry(
 				"save.dir.select",
 				" Specify Fuzzing Directory",
 				" Untick this box to save all data in the directory from which JBroFuzz is launched ",
 				true
+			),
+		// 2 Used in: File -> Save, File -> Open, File -> Save As 
+		// (show this directory as the last location
+		// String: Last save location
+		new PrefEntry(
+				"save.dir.jbrofuzz.last",
+				" Last Save Location Directory for .jbrofuzz Files",
+				" Change this value to specify the directory where a .jbrofuzz file was last saved"
 			)
-		
 	};
 	
 	/**

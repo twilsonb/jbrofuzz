@@ -36,17 +36,19 @@ import java.io.PrintWriter;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
  * <p>Class Responsible for saving the fuzzing session a user 
  * sees in the "Fuzzing" tab.</p>
  * 
  * @author subere@uncon.org
- * @version 1.8
+ * @version 2.3
  * @since 1.2
  */
 public class SaveSession {
@@ -64,7 +66,19 @@ public class SaveSession {
 
 			JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
-			JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
+			final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[2].getId(), System.getProperty("user.dir"));
+			JFileChooser fc;
+			try {
+				if( (new File(dirString).isDirectory()) ) {
+					fc = new JFileChooser(dirString);
+				} else {
+					fc = new JFileChooser();
+				}
+			} catch (SecurityException e1) {
+				fc = new JFileChooser();
+				Logger.log("A security exception occured, while attempting to save to a directory", 4);
+			}
+			
 			fc.setFileFilter(filter);
 
 			int returnVal = fc.showSaveDialog(mWindow);
@@ -121,8 +135,13 @@ public class SaveSession {
 			}
 
 			out.close();
-			// Update the UI with the filename
+			// Finally, tell the frame this is the file opened
+			// and save the directory location
 			mWindow.setOpenFileTo(file);
+			final String parentDir = file.getParent();
+			if(parentDir != null) {
+				JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
+			}
 
 		} catch (FileNotFoundException e) {
 			Logger.log("FileNotFoundException", 4);
