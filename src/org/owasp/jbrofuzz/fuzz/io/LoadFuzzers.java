@@ -34,10 +34,12 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.FuzzerFileFilter;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 public class LoadFuzzers {
 
@@ -49,7 +51,19 @@ public class LoadFuzzers {
 
 		FuzzerFileFilter filter = new FuzzerFileFilter();
 
-		JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
+		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[3].getId(), System.getProperty("user.dir"));
+		JFileChooser fc;
+		try {
+			if( (new File(dirString).isDirectory()) ) {
+				fc = new JFileChooser(dirString);
+			} else {
+				fc = new JFileChooser();
+			}
+		} catch (SecurityException e1) {
+			fc = new JFileChooser();
+			Logger.log("A security exception occured, while attempting to point to a directory", 4);
+		}
+		
 		fc.setFileFilter(filter);
 
 		int returnVal = fc.showOpenDialog(mWindow);
@@ -71,6 +85,12 @@ public class LoadFuzzers {
 			Database updateDB = new Database(path);
 			mWindow.getJBroFuzz().setDatabase(updateDB);
 			mWindow.getPanelPayloads().updateFuzzers();
+			
+			// Finally save as a preference the directory location
+			final String parentDir = file.getParent();
+			if(parentDir != null) {
+				JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[3].getId(), parentDir);
+			}
 
 		}
 

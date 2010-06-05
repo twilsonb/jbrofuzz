@@ -73,7 +73,13 @@ public class JBroFuzzPrefs {
 		new PrefEntry(
 				"save.dir.jbrofuzz.last",
 				" Last Save Location Directory for .jbrofuzz Files",
-				" Change this value to specify the directory where a .jbrofuzz file was last saved"
+				" Change this value to specify the directory where a .jbrofuzz file was last opened from or saved to"
+			),
+		// 3 Used in: File -> Load Fuzzers...
+		new PrefEntry(
+				"save.dir.jbrf.last",
+				" Last Load Fuzzers Location Directory for .jbrf Payload Files",
+				" Change this value to specify the directory where a .jbrf file was last loaded from"
 			)
 	};
 	
