@@ -41,10 +41,12 @@ import javax.swing.JOptionPane;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 public class OpenSession {
 
@@ -59,7 +61,19 @@ public class OpenSession {
 
 		JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
-		JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
+		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[2].getId(), System.getProperty("user.dir"));
+		JFileChooser fc;
+		try {
+			if( (new File(dirString).isDirectory()) ) {
+				fc = new JFileChooser(dirString);
+			} else {
+				fc = new JFileChooser();
+			}
+		} catch (SecurityException e1) {
+			fc = new JFileChooser();
+			Logger.log("A security exception occured, while attempting to point to a directory", 4);
+		}
+		
 		fc.setFileFilter(filter);
 
 		int returnVal = fc.showOpenDialog(mWindow);
@@ -239,8 +253,12 @@ public class OpenSession {
 			mWindow.getPanelFuzzing().setTextRequest(_req);
 			mWindow.getPanelFuzzing().setTextURL(_url);
 			// Finally, tell the frame this is the file opened
+			// and save the directory location
 			mWindow.setOpenFileTo(file);
-
+			final String parentDir = file.getParent();
+			if(parentDir != null) {
+				JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
+			}
 		}
 
 	}
