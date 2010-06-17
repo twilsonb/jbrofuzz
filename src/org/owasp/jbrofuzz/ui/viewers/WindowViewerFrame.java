@@ -97,6 +97,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 	private final JTextPane listTextArea;
 	private JTextField entry;
 	private JLabel status;
+	private int lastIndex = 0;
 
 
 	/**
@@ -204,9 +205,22 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 				if (ke.getKeyCode() == 27) {
 					WindowViewerFrame.this.dispose();
 				}
+				if (ke.getKeyCode() == 10){
+					search();
+				}
 			}
 		});
 
+		entry.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 10){
+					search();
+				}
+			}
+		});
+		
+		
 		class FileLoader extends SwingWorker<String, Object> { // NO_UCD
 
 			@Override
@@ -249,15 +263,25 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		try {
 			String content = listTextArea.getDocument().getText(0, listTextArea.getDocument().getLength());
 			int index = content.indexOf(s, 0);
-
+			
+			if (lastIndex != 0 && lastIndex >= index){
+				int tempIndex = content.indexOf(s, lastIndex +1);
+				index = tempIndex;
+			}
+			
 			if (index >= 0) {   // match found
 				int end = index + s.length();
 				hilit.addHighlight(index, end, painter);
 				listTextArea.setCaretPosition(index);
 				entry.setBackground(entryBg);
 				message("Phrase found: '" + s + "'");
-
-			} else {
+				lastIndex = index;
+			} else if (lastIndex > 0){
+				entry.setBackground(ERROR_COLOR);
+				message("End reached. Starting from top again...");
+				lastIndex = 0;
+			}
+			else {
 				entry.setBackground(ERROR_COLOR);
 				message("Phrase not found...");
 			}
@@ -283,6 +307,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 	}
 
 	public void changedUpdate(DocumentEvent ev) {
+		search();
 	}
 
 	private class CancelAction extends AbstractAction {
