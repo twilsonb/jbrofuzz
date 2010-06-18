@@ -265,10 +265,47 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("x-wap-profile", Color.blue);
 		keywords.put("x-prototype-version", Color.blue);
 		keywords.put("x-requested-with", Color.blue);
-
+		
+		// "|\\B+\\<.?html\\>+\\B|"
+		String prefixHTML = "|\\B+\\<.?";
+		String suffixHTML = "+\\>\\B|";
+		keywords.put(prefixHTML + " " + suffixHTML, Color.blue);
+		keywords.put(prefixHTML + "html" + suffixHTML, Color.green);
+		keywords.put(prefixHTML + "hr" + suffixHTML, Color.pink);
+		keywords.put(prefixHTML + "header.*" + suffixHTML, Color.cyan);
+		keywords.put(prefixHTML + "body" + suffixHTML, Color.red);
+		keywords.put(prefixHTML + "title" + suffixHTML, Color.yellow);
+		keywords.put(prefixHTML + "b" + suffixHTML, Color.blue);
+		keywords.put(prefixHTML + "i" + suffixHTML, Color.green);
+		keywords.put(prefixHTML + "u" + suffixHTML, Color.pink);
+		keywords.put(prefixHTML + "sup" + suffixHTML, Color.cyan);
+		keywords.put(prefixHTML + "sub" + suffixHTML, Color.yellow);
+		keywords.put(prefixHTML + "tt" + suffixHTML, Color.magenta);
+		keywords.put(prefixHTML + "h+\\d" + suffixHTML, Color.pink);
+		keywords.put(prefixHTML + "small" + suffixHTML, Color.darkGray);
+		keywords.put(prefixHTML + "big" + suffixHTML, Color.green);
+		keywords.put(prefixHTML + "font" + suffixHTML, Color.pink);
+		keywords.put(prefixHTML + "p" + suffixHTML, Color.darkGray);
+		keywords.put(prefixHTML + "center" + suffixHTML, Color.blue);
+		keywords.put(prefixHTML + "br" + suffixHTML, Color.gray);
+		keywords.put(prefixHTML + "nobr " + suffixHTML, Color.red);
+		keywords.put(prefixHTML + "blockquote" + suffixHTML, Color.green);
+		keywords.put(prefixHTML + "li" + suffixHTML, Color.blue);
+		keywords.put(prefixHTML + "ul" + suffixHTML, Color.gray);
+		keywords.put(prefixHTML + "ol" + suffixHTML, Color.green);
+		keywords.put(prefixHTML + "a" + suffixHTML, Color.blue);
+		keywords.put(prefixHTML + "table" + suffixHTML, Color.yellow);
+		keywords.put(prefixHTML + "td" + suffixHTML, Color.magenta);
+		keywords.put(prefixHTML + "tr" + suffixHTML, Color.pink);
+		keywords.put(prefixHTML + "div" + suffixHTML, Color.green);
+		keywords.put(prefixHTML + "footer" + suffixHTML , Color.green);
+		keywords.put(prefixHTML + "iframe" + suffixHTML, Color.lightGray);
+		keywords.put(prefixHTML + "span" + suffixHTML, Color.magenta);
+		keywords.put(prefixHTML + "!--+\\B|", Color.orange);
+		keywords.put("|\\B+.?" + "--" + suffixHTML, Color.orange);
 		style = new SimpleAttributeSet();
 	}
-
+	
 	private void highlightString(final Color col, final int begin,
 			final int length, final boolean flag, final boolean bold) {
 

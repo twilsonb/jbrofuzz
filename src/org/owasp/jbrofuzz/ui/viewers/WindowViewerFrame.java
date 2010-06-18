@@ -39,6 +39,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -58,13 +61,19 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.StyledEditorKit;
 
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
+import org.owasp.jbrofuzz.util.TextHighlighter;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
@@ -184,8 +193,23 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		bottomPanel.add(progressBar);
 
 		listTextArea.setCaretPosition(0);
+		// doSyntaxHighlight();
+		listTextArea.setEditorKit(new StyledEditorKit() {
+
+			private static final long serialVersionUID = -6085642347022880064L;
+
+			@Override
+			public Document createDefaultDocument() {
+				return new TextHighlighter();
+			}
+
+		});
+
+
 		listPanel.add(listTextScrollPane);
 
+		
+		
 		// Global Frame Issues
 		pane.add(listPanel, BorderLayout.CENTER);
 		pane.add(bottomPanel, BorderLayout.SOUTH);
@@ -233,21 +257,21 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 						FileHandler.readFile(inputFile)
 						
 				);
-
+				
 				return "done";
 			}
 
 			@Override
 			protected void done() {
-
 				progressBar.setIndeterminate(false);
 				progressBar.setValue(100);
-
+				doSyntaxHighlight();
+				listTextArea.repaint();
 			}
 		}
-
+			
 		(new FileLoader()).execute();
-
+		
 	}
 
 	private void search() {
@@ -291,13 +315,50 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		}
 
 	}
+	private void doSyntaxHighlight() {
+		Hashtable<String, Color> regExTerm = loadRegExTerms();
+		StyledDocument sd = listTextArea.getStyledDocument();
+		Object[] colorList = regExTerm.values().toArray();
+		for (int i = 0; i < regExTerm.size(); i++){
+			String pattern = regExTerm.keys().nextElement().toString();
+			Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+			Matcher m = p.matcher(listTextArea.getText());
+			while(m.find()) {
+			  int start = m.start();
+			  int end = pattern.length();
+			  Style style = listTextArea.addStyle("test", null);
+			  StyleConstants.setForeground(style, (Color) colorList[i]);
+			  sd.setCharacterAttributes(start, end, style, false);
+			}
+		}
+		listTextArea.setStyledDocument(sd);
+	}
 
+	private Hashtable<String, Color> loadRegExTerms() {
+		Hashtable<String, Color> ht = new Hashtable<String, Color>();
+		ht.put("<!--", Color.red);
+		ht.put("-->", Color.red);
+		ht.put("<a>", Color.blue);
+		ht.put("</a>", Color.blue);
+		ht.put("<head>", Color.green);
+		ht.put("</head>", Color.green);
+		ht.put("<body>", Color.red);
+		ht.put("</body>", Color.red);
+		ht.put("http", Color.green);
+		return ht;
+	}
+
+	
 	private void message(String msg) {
 		status.setText(StringUtils.abbreviate(msg, 40));
 	}
 
 	// DocumentListener methods
 
+	public void highlightText(DocumentEvent ev){
+		
+	}
+	
 	public void insertUpdate(DocumentEvent ev) {
 		search();
 	}
