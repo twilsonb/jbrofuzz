@@ -42,7 +42,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Enumeration;
 import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -64,8 +66,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
@@ -87,7 +87,10 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  */
 public class EncoderHashFrame extends JFrame {
 
-	private static final long serialVersionUID = 8808832051334720865L;
+	private static final long serialVersionUID = 2342345235235234L;
+
+	private static final Preferences PREFS = Preferences.userRoot().node("owasp/jbrofuzz");
+	
 	// Dimensions of the frame
 	private static final int SIZE_X = 650;
 	private static final int SIZE_Y = 400;
@@ -108,7 +111,7 @@ public class EncoderHashFrame extends JFrame {
 	
 	private JPanel recordingPanel;
 
-	public EncoderHashFrame(final JBroFuzzWindow parent) {
+	public EncoderHashFrame() {
 		
 		if (windowIsShowing) {
 			return;
@@ -221,8 +224,8 @@ public class EncoderHashFrame extends JFrame {
 		int i = 0;
 		for (i = 0; i <= 50; i++){
 			treeCounter = i;
-			String encValue = JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[0]+ "." + i, "");
-			String decValue = JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[1] + "." + i, "");
+			String encValue = PREFS.get(JBroFuzzPrefs.ENCODER[0]+ "." + i, "");
+			String decValue = PREFS.get(JBroFuzzPrefs.ENCODER[1] + "." + i, "");
 			if (encValue.length() > 0){
 				context += treeCounter + ":  " + encValue + " => " + decValue + " \n";
 			}
@@ -270,7 +273,7 @@ public class EncoderHashFrame extends JFrame {
 		
 		// Traverse tree from root
 		TreeNode root = (TreeNode) tree.getModel().getRoot();
-		parent.getPanelPayloads().expandAll(tree, new TreePath(root), true);
+		expandAll(tree, new TreePath(root), true);
 
 		// Bottom three buttons
 		swap = new JButton(" Swap ");
@@ -468,9 +471,9 @@ public class EncoderHashFrame extends JFrame {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Where to show the encoder/hash frame
-		this.setLocation(
-				parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
-				parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
+		this.setLocation( 111, 111
+				// parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
+				// parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
 		);
 
 		this.setSize(EncoderHashFrame.SIZE_X, EncoderHashFrame.SIZE_Y);
@@ -557,17 +560,59 @@ public class EncoderHashFrame extends JFrame {
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		
 		// Save the values of the encode/decode as a preference
-		JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[0] + "." + treeCounter, enTextPane.getText());
-		JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[1] + "." + treeCounter, deTextPane.getText());
+		PREFS.put(JBroFuzzPrefs.ENCODER[0] + "." + treeCounter, enTextPane.getText());
+		PREFS.put(JBroFuzzPrefs.ENCODER[1] + "." + treeCounter, deTextPane.getText());
 		if (node != null)
-			JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[2] + "." + treeCounter, node.toString());
+			PREFS.put(JBroFuzzPrefs.ENCODER[2] + "." + treeCounter, node.toString());
 		
 		try {
-			JBroFuzz.PREFS.sync();
+			PREFS.sync();
 		} catch (BackingStoreException e) {
 			e.printStackTrace();
 		}
 		treeCounter++;
 		encode.setText("encode " + treeCounter);
+	}
+	
+	/**
+	 * <p>
+	 * Method for completely expanding or collapsing a given <code>JTree</code>.
+	 * </p>
+	 * 
+	 * <p>
+	 * Originally, from the Java Developers Almanac 1.4.
+	 * </p>
+	 * 
+	 * @param tree
+	 *            The JTree to be expanded/collapsed
+	 * @param parent
+	 *            The parent TreePath from which to begin
+	 * @param expand
+	 *            If true, expands all nodes in the tree, else collapse all
+	 *            nodes.
+	 * 
+	 * @author subere@uncon.org
+	 * @version 1.5
+	 * @since 1.2
+	 */
+	public void expandAll(JTree tree, TreePath parent, boolean expand) {
+		// Traverse children
+		TreeNode node = (TreeNode) parent.getLastPathComponent();
+		if (node.getChildCount() >= 0) {
+
+			for (Enumeration<TreeNode> e = node.children(); e.hasMoreElements();) {
+
+				TreeNode n = e.nextElement();
+				TreePath path = parent.pathByAddingChild(n);
+				expandAll(tree, path, expand);
+			}
+		}
+
+		// Expansion or collapse must be done bottom-up
+		if (expand) {
+			tree.expandPath(parent);
+		} else {
+			tree.collapsePath(parent);
+		}
 	}
 }

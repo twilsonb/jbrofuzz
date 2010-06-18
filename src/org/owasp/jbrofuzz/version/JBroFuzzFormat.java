@@ -33,12 +33,12 @@ import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.prefs.Preferences;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.lang.StringUtils;
-import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.system.Logger;
 
 /**
@@ -55,12 +55,13 @@ import org.owasp.jbrofuzz.system.Logger;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 2.2
+ * @version 2.3
  * @since 1.4
  */
 public class JBroFuzzFormat {
 
 
+	private static final Preferences PREFS = Preferences.userRoot().node("owasp/jbrofuzz");
 
 	private final static String DATE_FORMAT = "DDD-yyyy-MM-dd-HH-mm-ss";
 
@@ -293,12 +294,12 @@ public class JBroFuzzFormat {
 	 *            JBroFuzz
 	 * 
 	 * @author subere@uncon.org
-	 * @version 2.1
+	 * @version 2.3
 	 * @since 1.5
 	 */
 	private static final int setLookAndFeel() {
 
-		final boolean metalLook = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[2].getId(), true);
+		final boolean metalLook = PREFS.getBoolean(JBroFuzzPrefs.GENERAL[2].getId(), true);
 		if(metalLook) {
 			Logger.log("Using Default Metal Look & Feel", 0);
 			return 0;

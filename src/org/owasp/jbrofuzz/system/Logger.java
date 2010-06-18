@@ -38,8 +38,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.prefs.Preferences;
 
-import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
@@ -51,10 +51,12 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * </p>
  * 
  * @author ranulf@seleucus.net
- * @version 1.0
+ * @version 2.3
  * @since 2.0
  */
 public final class Logger {
+
+	private static final Preferences PREFS = Preferences.userRoot().node("owasp/jbrofuzz");
 
 	private static File logDirectory;
 
@@ -96,11 +98,11 @@ public final class Logger {
 	private static void checkOrCreateDirs() throws IOException{
 
 		// Get the directory location from preferences
-		final boolean saveElsewhere = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
+		final boolean saveElsewhere = PREFS.getBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
 		// Use the user directory if the box is not ticked, under: "Preferences"->"Directory Locations"
 		final String dirString;
 		if(saveElsewhere) {
-			dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
+			dirString = PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
 		} else {
 			dirString = System.getProperty("user.dir");
 		}		

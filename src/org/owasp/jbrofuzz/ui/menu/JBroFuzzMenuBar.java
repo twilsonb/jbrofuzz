@@ -66,7 +66,7 @@ import org.owasp.jbrofuzz.version.ImageCreator;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 2.1
+ * @version 2.3
  * @since 0.1
  */
 public class JBroFuzzMenuBar extends JMenuBar {
@@ -518,7 +518,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new EncoderHashFrame(JBroFuzzMenuBar.this.getFrame());
+						new EncoderHashFrame();
 					}
 				});
 			}

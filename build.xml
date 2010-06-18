@@ -28,8 +28,84 @@
 		</javac>
 	</target>
 
+	<target name="archive-encoder" depends="compile" description="Creating Java Archive: ${app.name}Encoder.jar">
+		<echo>Creating Java Archive: ${app.name}Encoder.jar</echo>
+		<jar compress="true" destfile="jar/${app.name}Encoder.jar">
+			
+			<fileset dir="bin">
+				<include name="org/owasp/jbrofuzz/encode/*.class" />
+				<include name="org/owasp/jbrofuzz/version/*.class" />
+				<include name="org/owasp/jbrofuzz/system/Logger.class" />
+			</fileset>
+			
+			<fileset dir="src">
+				<include name="org/owasp/jbrofuzz/encode/*.java" />
+				<include name="org/owasp/jbrofuzz/version/*.java" />
+				<include name="org/owasp/jbrofuzz/system/Logger.java" />
+			</fileset>
+			
+			<fileset dir="">
+				<include name="LICENSE/*.txt" />
+				<include name="release/splashscreen.png" />
+			</fileset>
+			
+			<zipfileset src="lib/commons-lang-2.4.jar" />
+			<zipfileset src="lib/commons-io-1.4.jar" />
+			<zipfileset src="lib/commons-codec-1.3.jar" />
+
+			<fileset dir="release">
+				<include name="icons/*.png" />
+			</fileset>
+			
+			<manifest>
+				<attribute name="Build-By" value="subere@uncon.org" />
+				<attribute name="Implementation-Title" value="org.owasp.jbrofuzz.core" />
+				<attribute name="Implementation-Vendor" value="Open Web Application Security Project" />
+				<attribute name="Implementation-Version" value="2.3" />
+				<attribute name="Main-Class" value="org.owasp.jbrofuzz.encode.JBroFuzzEncoder" />
+				<attribute name="SplashScreen-Image" value="release/splashscreen.png" />				
+			</manifest>
+			
+		</jar>
+	</target>	
+	
+	<target name="archive-core" depends="compile" description="Creating JBroFuzz Core API: jbrofuzz-core-2.3.jar">
+		<echo>Creating JBroFuzz Core API: jbrofuzz-core-2.3.jar</echo>
+		<jar compress="true" destfile="jar/jbrofuzz-core-2.3.jar">
+			
+			<fileset dir="bin">
+				<include name="org/owasp/jbrofuzz/core/*.class" />
+				<include name="org/owasp/jbrofuzz/io/FileHandler.class" />
+				<include name="org/owasp/jbrofuzz/system/Logger.class" />
+			</fileset>
+			
+			<fileset dir="src">
+				<include name="org/owasp/jbrofuzz/core/*.java" />
+				<include name="org/owasp/jbrofuzz/io/FileHandler.java" />
+				<include name="org/owasp/jbrofuzz/system/Logger.java" />
+			</fileset>
+			
+			<fileset dir="tar">
+				<include name="fuzzers.jbrf" />
+			</fileset>
+
+			<fileset dir="">
+				<include name="LICENSE/*.txt" />
+			</fileset>
+
+			<zipfileset src="lib/commons-lang-2.4.jar" />
+			<zipfileset src="lib/commons-io-1.4.jar" />
+			<manifest>
+				<attribute name="Build-By" value="subere@uncon.org" />
+				<attribute name="Implementation-Title" value="org.owasp.jbrofuzz.core" />
+				<attribute name="Implementation-Vendor" value="Open Web Application Security Project" />
+				<attribute name="Implementation-Version" value="2.3" />
+			</manifest>
+		</jar>
+	</target>
+	
 	<target name="archive" depends="compile" description="Creating Java Archive: ${app.name}.jar">
-		<echo>Creating Java Archive</echo>
+		<echo>Creating Java Archive: JBroFuzz.jar</echo>
 		<jar compress="true" destfile="jar/${app.name}.jar">
 			<fileset dir="bin">
 				<include name="**/*.class" />
@@ -73,7 +149,13 @@
 		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpathref="master-classpath" />
 		<launch4j configFile="./release/launch4j.xml" />
 	</target>
-	
+
+	<target name="exe-encoder" depends="archive-encoder" description="Creating Executable: JBroFuzzEncoder.exe">
+		<echo>Creating Executable: JBroFuzz.exe</echo>
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpathref="master-classpath" />
+		<launch4j configFile="./release/launch4j-encoder.xml" />
+	</target>
+
 	<target name="clean" description="Removing the /bin and /jar directory contents">
 		<echo>Removing the /bin and /jar directory contents</echo>
 		<delete verbose="true" failonerror="false" includeemptydirs="true">
@@ -86,7 +168,7 @@
 		</delete>
 	</target>
 
-	<target name="release" depends="archive,exe" description="Packaging up releases for JBroFuzz">
+	<target name="release" depends="archive,archive-encoder,archive-core,exe,exe-encoder" description="Packaging up releases for JBroFuzz">
 		<echo>Packaging a release of JBroFuzz</echo>
 		
 		<mkdir dir="jar/temp" />
@@ -99,6 +181,8 @@
 		
 		<copy file="jar/${app.name}.jar" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/${app.name}.exe" todir="jar/temp/jbrofuzz" />
+		<copy file="jar/${app.name}Encoder.jar" todir="jar/temp/jbrofuzz" />
+		<copy file="jar/${app.name}Encoder.exe" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/jbrofuzz.sh" todir="jar/temp/jbrofuzz" />
 
 		<copy file="release/README" todir="jar/temp/jbrofuzz" />
@@ -121,7 +205,7 @@
 		<zip compress="true" destfile="jar/jbrofuzz-jar-xx.zip">
 			<fileset dir="jar/temp">
 				<include name="jbrofuzz/**" />
-				<exclude name="jbrofuzz/${app.name}.exe" />
+				<exclude name="jbrofuzz/*.exe" />
 			</fileset>
 		</zip>
 		
@@ -129,7 +213,7 @@
 		<zip compress="true" destfile="jar/jbrofuzz-exe-xx.zip">
 			<fileset dir="jar/temp">
 				<include name="jbrofuzz/**" />
-				<exclude name="jbrofuzz/${app.name}.jar" />
+				<exclude name="jbrofuzz/*.jar" />
 				<exclude name="jbrofuzz/README" />
 				<exclude name="jbrofuzz/jbrofuzz.sh" />
 			</fileset>
