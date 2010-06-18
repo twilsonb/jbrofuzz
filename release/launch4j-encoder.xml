@@ -1,0 +1,46 @@
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <obj>w32api\crt2.o</obj>
+  <obj>head\guihead.o</obj>
+  <obj>head\head.o</obj>
+  <lib>w32api\libmingw32.a</lib>
+  <lib>w32api\libgcc.a</lib>
+  <lib>w32api\libmsvcrt.a</lib>
+  <lib>w32api\libkernel32.a</lib>
+  <lib>w32api\libuser32.a</lib>
+  <lib>w32api\libadvapi32.a</lib>
+  <lib>w32api\libshell32.a</lib>
+  <jar>..\jar\JBroFuzzEncoder.jar</jar>
+  <outfile>..\jar\JBroFuzzEncoder.exe</outfile>
+  <errTitle>JBroFuzzEncoder</errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>true</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>icon.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <initialHeapSize>64</initialHeapSize>
+    <maxHeapSize>128</maxHeapSize>
+  </jre>
+  <versionInfo>
+    <fileVersion>2.3.0.0</fileVersion>
+    <txtFileVersion>2.3.0.0</txtFileVersion>
+    <fileDescription>JBroFuzz Encoder/Hasher</fileDescription>
+    <copyright>Copyright 2007 - 2010 (c) subere@uncon.org</copyright>
+    <productVersion>2.3.0.0</productVersion>
+    <txtProductVersion>2.3.0.0</txtProductVersion>
+    <productName>JBroFuzzEncoder</productName>
+    <companyName>JBroFuzzEncoder</companyName>
+    <internalName>JBroFuzzEncoder</internalName>
+    <originalFilename>JBroFuzzEncoder.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>
