@@ -84,8 +84,11 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * and received.
  * </p>
  * 
+ * @author daemonmidi@gmail.com
+ * @version 2.3
+ * 
  * @author subere@uncon.org
- * @version 2.0
+ * @version 2.3
  * @since 0.2
  */
 public class WindowViewerFrame extends JFrame implements DocumentListener {
@@ -184,7 +187,6 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		final JProgressBar progressBar = new JProgressBar();
 		progressBar.setString("   ");
 		progressBar.setStringPainted(true);
-		// progressBar.setBounds(410, 265, 120, 20);
 
 		// Define the bottom panel with the progress bar
 		final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
@@ -265,7 +267,6 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 			protected void done() {
 				progressBar.setIndeterminate(false);
 				progressBar.setValue(100);
-				doSyntaxHighlight();
 				listTextArea.repaint();
 			}
 		}
@@ -315,39 +316,6 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		}
 
 	}
-	private void doSyntaxHighlight() {
-		Hashtable<String, Color> regExTerm = loadRegExTerms();
-		StyledDocument sd = listTextArea.getStyledDocument();
-		Object[] colorList = regExTerm.values().toArray();
-		for (int i = 0; i < regExTerm.size(); i++){
-			String pattern = regExTerm.keys().nextElement().toString();
-			Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-			Matcher m = p.matcher(listTextArea.getText());
-			while(m.find()) {
-			  int start = m.start();
-			  int end = pattern.length();
-			  Style style = listTextArea.addStyle("test", null);
-			  StyleConstants.setForeground(style, (Color) colorList[i]);
-			  sd.setCharacterAttributes(start, end, style, false);
-			}
-		}
-		listTextArea.setStyledDocument(sd);
-	}
-
-	private Hashtable<String, Color> loadRegExTerms() {
-		Hashtable<String, Color> ht = new Hashtable<String, Color>();
-		ht.put("<!--", Color.red);
-		ht.put("-->", Color.red);
-		ht.put("<a>", Color.blue);
-		ht.put("</a>", Color.blue);
-		ht.put("<head>", Color.green);
-		ht.put("</head>", Color.green);
-		ht.put("<body>", Color.red);
-		ht.put("</body>", Color.red);
-		ht.put("http", Color.green);
-		return ht;
-	}
-
 	
 	private void message(String msg) {
 		status.setText(StringUtils.abbreviate(msg, 40));
