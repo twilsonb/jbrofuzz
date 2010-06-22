@@ -49,9 +49,9 @@ import org.apache.commons.codec.binary.Base64;
  * @version 2.0
  * @since 2.0
  */
-class EncoderHashCore {
+public class EncoderHashCore {
 	
-	protected static final String[] CODES = {
+	public static final String[] CODES = {
 		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", 
 		"Base64", "Base32", "Z-Base32", "MD5 Hash", "SHA-1 Hash", "SHA-256 Hash",
 		"SHA-384 Hash", "SHA-512 Hash", "Hexadecimal (low)", "Hexadecimal (UPP)", 
@@ -93,7 +93,7 @@ class EncoderHashCore {
 		"Escapes the characters in a String using XML entities. For example: \"bread\" & \"butter\" => &quot;bread&quot; &amp; &quot;butter&quot;. Supports only the five basic XML entities (gt, lt, quot, amp, apos). Does not support DTDs or external entities. Note that unicode characters greater than 0x7f are as of 3.0, no longer escaped. "
 	};
 	
-	protected static boolean isDecoded(final String type) {
+	public static boolean isDecoded(final String type) {
 		for (int i=0; i<IS_DECODABLE.length; i++)
 			if (type.equalsIgnoreCase(IS_DECODABLE[i])) {
 				return true;
@@ -115,7 +115,7 @@ class EncoderHashCore {
 		
 	}
 	
-	protected static String decode(final String decodeText, final String type) {
+	public static String decode(final String decodeText, final String type) {
 			if (!isDecoded(type))
 				return "Error: String cannot be decoded...";
 			else if (type.equalsIgnoreCase("URL Cp1252"))
@@ -274,7 +274,7 @@ class EncoderHashCore {
 		}
 	}
 	
-	protected static String encode(final String encodeText, final String type) {
+	public static String encode(final String encodeText, final String type) {
 		if (type.equalsIgnoreCase("URL Cp1252"))
 			return encodeUrlWindows1252(encodeText);
 		else if (type.equalsIgnoreCase("URL UTF-8"))

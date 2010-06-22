@@ -51,6 +51,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
@@ -63,7 +64,7 @@ import com.Ostermiller.util.Browser;
 public final class RightClickPopups {
 
 	private RightClickPopups() {} // Private constructor
-	
+
 	public static void rightClickOutputTable(final FuzzingPanel mFuzzingPanel, final JTable area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
@@ -126,10 +127,10 @@ public final class RightClickPopups {
 				}
 				final String name = (String) area.getModel()
 				.getValueAt(area.convertRowIndexToModel(c), 0);
-				
+
 				final File directory = mFuzzingPanel.getFrame().getJBroFuzz().getHandler().getFuzzDirectory();
 				final File selFile = new File(directory, name + ".html");
-				
+
 				new WindowViewerFrame(mFuzzingPanel, selFile);
 
 			}
@@ -172,7 +173,7 @@ public final class RightClickPopups {
 					// Create a new directory to store all data
 					mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
 					.createNewDirectory();
-					
+
 				} else {
 					// Clear all output and create a directory only if a fuzzing session is not
 					// currently running
@@ -287,14 +288,83 @@ public final class RightClickPopups {
 
 	}
 
+
+	private static JMenu buildEncodeMenu(final JTextComponent area){
+		JMenu encodeMenu = new JMenu("Encode");
+
+		JMenuItem[] encodeList = new JMenuItem[EncoderHashCore.CODES.length];
+
+		for(int i=0;i<encodeList.length;i++){
+
+			final int index = i;
+			final JMenuItem encode = new JMenuItem(EncoderHashCore.CODES[i]);
+			encodeMenu.add(encode);
+
+			encode.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent arg0) {
+					String toEncode = area.getSelectedText();
+					if(toEncode != null){
+						String encoded = EncoderHashCore.encode(toEncode, EncoderHashCore.CODES[index]);
+						area.replaceSelection(encoded);				
+					}			
+				}
+			});
+
+		}
+
+
+
+
+
+		return encodeMenu;
+
+	}
+
+	private static JMenu buildDecodeMenu(final JTextComponent area){
+		JMenu decodeMenu = new JMenu("Decode");
+
+		JMenuItem[] decodeList = new JMenuItem[EncoderHashCore.CODES.length];
+
+		for(int i=0;i<decodeList.length;i++){
+
+			final int index = i;
+
+			if(EncoderHashCore.isDecoded(EncoderHashCore.CODES[index])){
+
+				final JMenuItem decode = new JMenuItem(EncoderHashCore.CODES[i]);
+				decodeMenu.add(decode);
+				decode.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent arg0) {
+						String toDecode = area.getSelectedText();
+						if(toDecode != null ){
+							String decoded = EncoderHashCore.decode(toDecode, EncoderHashCore.CODES[index]);
+							area.replaceSelection(decoded);	
+						}
+					}
+				});
+			}
+		}
+
+
+		return decodeMenu;
+	}
+
+
+
 	public static void rightClickRequestTextComponent(final FuzzingPanel mFuzzingPanel, final JTextComponent area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
+
+		final JMenu encodeMenu = buildEncodeMenu(area);
+		final JMenu decodeMenu = buildDecodeMenu(area);
 
 		final JMenuItem i0_add = new JMenuItem("Add");
 		final JMenuItem i1_cut = new JMenuItem("Cut");
 		final JMenuItem i2_copy = new JMenuItem("Copy");
 		final JMenuItem i3_paste = new JMenuItem("Paste");
+
 		final JMenuItem i4_select = new JMenuItem("Select All");
 
 		i0_add.setIcon(ImageCreator.IMG_ADD);
@@ -308,6 +378,8 @@ public final class RightClickPopups {
 		popmenu.add(i1_cut);
 		popmenu.add(i2_copy);
 		popmenu.add(i3_paste);
+		popmenu.add(encodeMenu);
+		popmenu.add(decodeMenu);
 		popmenu.addSeparator();
 		popmenu.add(i4_select);
 
@@ -366,7 +438,7 @@ public final class RightClickPopups {
 			}
 		});
 	}
-	
+
 	public static void rightClickOnTheWireTextComponent(final FuzzingPanel mFuzzingPanel, final JTextArea area) {
 
 		final JPopupMenu popmenu = new JPopupMenu();
@@ -385,7 +457,7 @@ public final class RightClickPopups {
 		i4_select.setIcon(ImageCreator.IMG_SELECTALL);
 
 		// Show -> Nothing , Requests, Responses, Both
-		
+
 		final JMenu ix_show = new JMenu("Show");
 		// show.setIcon(ImageCreator.IMG_LKF);
 		final String[] showOptions = {"Nothing", "Requests", "Responses", "Both" };
@@ -393,15 +465,15 @@ public final class RightClickPopups {
 
 		// Get the default value
 		final int showOnTheWire = JBroFuzz.PREFS.getInt(
-									JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
-		
+				JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
+
 		for (int i = 0; i < showOptions.length; i++) {
-			
+
 			final JRadioButtonMenuItem rButton1 = 
-										new JRadioButtonMenuItem(showOptions[i]);
+				new JRadioButtonMenuItem(showOptions[i]);
 			group.add(rButton1);
 			ix_show.add(rButton1);
-			
+
 			if(i == showOnTheWire) {
 				rButton1.setSelected(true);
 			}
@@ -430,7 +502,7 @@ public final class RightClickPopups {
 				}
 			});
 		}
-		
+
 		// Add to the popup menu
 		popmenu.add(i1_cut);
 		popmenu.add(i2_copy);
@@ -570,7 +642,7 @@ public final class RightClickPopups {
 				if (mFuzzingPanel.isStopped()) {
 
 					((FuzzersTableModel)area.getModel()).removeRow(area.convertRowIndexToModel(c));
-					
+
 				} else {
 
 					final int choice = JOptionPane.showConfirmDialog(mFuzzingPanel.getFrame(),
