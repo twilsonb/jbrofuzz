@@ -40,11 +40,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Enumeration;
 import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -55,6 +56,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
@@ -66,6 +68,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
@@ -76,7 +79,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * for a variety of different schemes, as well as hashing functionality.
  * </p>
  * 
- * @author subere@uncon.org
+ * @author daemonmidi@gamil.com
  * @version 2.3
  * @since 1.5
  * 
@@ -89,30 +92,32 @@ public class EncoderHashFrame extends JFrame {
 
 	private static final long serialVersionUID = 2342345235235234L;
 
-	private static final Preferences PREFS = Preferences.userRoot().node("owasp/jbrofuzz");
-	
 	// Dimensions of the frame
 	private static final int SIZE_X = 650;
 	private static final int SIZE_Y = 400;
 
-	private JSplitPane horizontalSplitPane, verticalSplitPaneLeft, verticalSplitPaneRight, commentSplitPane;
+	private JSplitPane horizontalSplitPane, verticalSplitPaneLeft,
+			verticalSplitPaneRight, commentSplitPane;
 
-	private JTextPane enTextPane, deTextPane, recordingTextPane;
+	private JTextPane enTextPane, deTextPane;
 
 	// The tree
-	private int treeCounter = 0;
+	private int listCounter = 0;
 	private JTree tree;
 
 	private JButton swap, encode, decode, close;
 
 	private static boolean windowIsShowing = false;
-	
+
 	private HashPanel commentPanel;
-	
+
 	private JPanel recordingPanel;
+	private String[][] recordingPanelData;
+	private String[] columnNames;
+	private JTable recordingTable;
 
 	public EncoderHashFrame() {
-		
+
 		if (windowIsShowing) {
 			return;
 		}
@@ -123,10 +128,11 @@ public class EncoderHashFrame extends JFrame {
 
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
-		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
 		// Create the nodes
-		final DefaultMutableTreeNode top = new DefaultMutableTreeNode("Codes/Hashes");
+		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
+				"Codes/Hashes");
+		setFont(new Font("SansSerif", Font.PLAIN, 12));
 		// Create a tree that allows one selection at a time
 		tree = new JTree(top);
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -138,18 +144,18 @@ public class EncoderHashFrame extends JFrame {
 
 		// Create all the right hand panels
 		for (int i = 0; i < EncoderHashCore.CODES.length; i++) {
-				top.add(new DefaultMutableTreeNode(EncoderHashCore.CODES[i]));
+			top.add(new DefaultMutableTreeNode(EncoderHashCore.CODES[i]));
 		}
 
 		final JPanel encoderPanel = new JPanel(new BorderLayout());
 		final JPanel decoderPanel = new JPanel(new BorderLayout());
 
 		encoderPanel
-		.setBorder(BorderFactory
-				.createCompoundBorder(
-						BorderFactory
-						.createTitledBorder(" Enter the plain text below to be encoded / hashed "),
-						BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+				.setBorder(BorderFactory
+						.createCompoundBorder(
+								BorderFactory
+										.createTitledBorder(" Enter the plain text below to be encoded / hashed "),
+								BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		decoderPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Enter the text below to be decoded "),
@@ -197,49 +203,21 @@ public class EncoderHashFrame extends JFrame {
 
 		decoderPanel.add(decodeScrollPane, BorderLayout.CENTER);
 
+		commentPanel = new HashPanel(""); recordingPanel = new JPanel(new
+				BorderLayout());
 		// Text panes -> Comment
-		commentPanel = new HashPanel("");
-		recordingPanel = new JPanel(new BorderLayout());
-		
-		recordingTextPane = new JTextPane();
-		recordingTextPane.putClientProperty("charset", "UTF-8");
-		recordingTextPane.setEditable(true);
-		recordingTextPane.setVisible(true);
-		recordingTextPane.setFont(new Font("Verdana", Font.PLAIN, 12));
+		recordingPanelData = refreshRecordingPane();
+		columnNames = new String[] { "Nr", "Encoded", "Decoded", "Codes/Hashes" };
+		recordingTable = new JTable(recordingPanelData, columnNames);
+		recordingTable.setEnabled(true);
 
-		recordingTextPane.setMargin(new Insets(1, 1, 1, 1));
-		recordingTextPane.setBackground(Color.WHITE);
-		enTextPane.setForeground(new Color(51, 102, 102));
-		
-		final JScrollPane recordingScrollPane = new JScrollPane(recordingTextPane,
+		final JScrollPane recordingScrollPane = new JScrollPane(recordingTable,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
 		recordingPanel.add(recordingScrollPane, BorderLayout.CENTER);
 
-		
-		// loading content of last runs
-		String context = "";
-		int loose = 0;
-		int i = 0;
-		for (i = 0; i <= 50; i++){
-			treeCounter = i;
-			String encValue = PREFS.get(JBroFuzzPrefs.ENCODER[0]+ "." + i, "");
-			String decValue = PREFS.get(JBroFuzzPrefs.ENCODER[1] + "." + i, "");
-			if (encValue.length() > 0){
-				context += treeCounter + ":  " + encValue + " => " + decValue + " \n";
-			}
-			else{
-			   loose++;
-			}
-		}
-		treeCounter = i - loose;
-		if (treeCounter > 40) treeCounter = 0; // reset and start overwriting existing values;
-		if (treeCounter < 0 ) treeCounter = 0; // reset and start overwriting existing values;
-		if (i > 0 && i <= 40) treeCounter = i;
-		treeCounter++;
-		recordingTextPane.setText(context);
-		
+		enTextPane.setForeground(new Color(51, 102, 102));
+
 		horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		verticalSplitPaneLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		verticalSplitPaneRight = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -247,30 +225,30 @@ public class EncoderHashFrame extends JFrame {
 
 		commentSplitPane.setLeftComponent(verticalSplitPaneLeft);
 		commentSplitPane.setRightComponent(verticalSplitPaneRight);
-		
+
 		verticalSplitPaneLeft.setTopComponent(encoderPanel);
 		verticalSplitPaneLeft.setBottomComponent(decoderPanel);
 
 		verticalSplitPaneRight.setTopComponent(commentPanel);
 		verticalSplitPaneRight.setBottomComponent(recordingPanel);
-		
+
 		horizontalSplitPane.setLeftComponent(leftScrollPane);
 		horizontalSplitPane.setRightComponent(commentSplitPane);
 
-		
 		// Set the minimum size for all components
 		leftScrollPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		verticalSplitPaneLeft.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		commentSplitPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
-		
+
 		encoderPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		decoderPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		commentPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
-		
+
 		horizontalSplitPane.setDividerLocation(180);
 		verticalSplitPaneLeft.setDividerLocation(SIZE_Y / 2);
+		verticalSplitPaneRight.setDividerLocation(SIZE_Y / 2);
 		commentSplitPane.setDividerLocation(280);
-		
+
 		// Traverse tree from root
 		TreeNode root = (TreeNode) tree.getModel().getRoot();
 		expandAll(tree, new TreePath(root), true);
@@ -286,7 +264,7 @@ public class EncoderHashFrame extends JFrame {
 		encode.setToolTipText(desc);
 		decode.setToolTipText(desc);
 		close.setToolTipText(" Close this window ");
-		
+
 		swap.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -306,7 +284,7 @@ public class EncoderHashFrame extends JFrame {
 					public void run() {
 
 						calculate(true);
-
+						saveValues();
 					}
 				});
 			}
@@ -318,7 +296,7 @@ public class EncoderHashFrame extends JFrame {
 					public void run() {
 
 						calculate(false);
-
+						saveValues();
 					}
 				});
 			}
@@ -359,7 +337,33 @@ public class EncoderHashFrame extends JFrame {
 			}
 		});
 
+		// mouse listener for table
+		recordingTable.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String clear = (String) recordingTable.getValueAt(recordingTable.getSelectedRow(),1);
+				String enc = (String) recordingTable.getValueAt(recordingTable.getSelectedRow(), 2);
+				enTextPane.setText(clear);
+				deTextPane.setText(enc);
+			}
 
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+		});
+		
 		// Keyboard listener on the decoded text pane for escape to cancel
 		deTextPane.addKeyListener(new KeyAdapter() {
 			@Override
@@ -374,6 +378,18 @@ public class EncoderHashFrame extends JFrame {
 
 		// Keyboard listener on the encoded text pane for escape to cancel
 		enTextPane.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 27) {
+					windowIsShowing = false;
+					saveValues();
+					dispose();
+				}
+			}
+		});
+
+		// Keyboard listener on the encoded text pane for escape to cancel
+		recordingTable.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
@@ -414,48 +430,51 @@ public class EncoderHashFrame extends JFrame {
 				}
 			}
 		});
-		
-		tree.addTreeSelectionListener( new TreeSelectionListener() {
+
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(final TreeSelectionEvent e) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-				
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+						.getLastSelectedPathComponent();
+
 				if (node == null) {
 					return;
 				}
 				final String coderName = node.toString();
-				
-				decode.setEnabled( EncoderHashCore.isDecoded(coderName) );
-				commentPanel.setText( EncoderHashCore.getComment(coderName) );
+
+				decode.setEnabled(EncoderHashCore.isDecoded(coderName));
+				commentPanel.setText(EncoderHashCore.getComment(coderName));
 			}
 		});
 
-        // alt+enter to encode
-        Action doEncode = new AbstractAction() {
+		// alt+enter to encode
+		Action doEncode = new AbstractAction() {
 
 			private static final long serialVersionUID = -7686474340015136816L;
 
 			public void actionPerformed(final ActionEvent e) {
-                calculate(true);
-            }
-        };
+				calculate(true);
+			}
+		};
 
-        enTextPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-            .put(KeyStroke.getKeyStroke(Event.ENTER, Event.ALT_MASK), "doEncode");
-        enTextPane.getActionMap().put("doEncode", doEncode);
-        
-        // alt+backspace to decode
-        Action doDecode = new AbstractAction() {
+		enTextPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+				.put(KeyStroke.getKeyStroke(Event.ENTER, Event.ALT_MASK),
+						"doEncode");
+		enTextPane.getActionMap().put("doEncode", doEncode);
+
+		// alt+backspace to decode
+		Action doDecode = new AbstractAction() {
 
 			private static final long serialVersionUID = 3083350774016663021L;
 
 			public void actionPerformed(final ActionEvent e) {
-                calculate(false);
-            }
-        };
+				calculate(false);
+			}
+		};
 
-        enTextPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-        .put(KeyStroke.getKeyStroke(Event.BACK_SPACE, Event.ALT_MASK), "doDecode");
-        enTextPane.getActionMap().put("doDecode", doDecode);
+		enTextPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(Event.BACK_SPACE, Event.ALT_MASK),
+				"doDecode");
+		enTextPane.getActionMap().put("doDecode", doDecode);
 
 		// Bottom buttons
 
@@ -471,10 +490,7 @@ public class EncoderHashFrame extends JFrame {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Where to show the encoder/hash frame
-		this.setLocation( 111, 111
-				// parent.getLocation().x + (parent.getWidth() - SIZE_X) / 2, 
-				// parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
-		);
+		this.setLocation(111, 111);
 
 		this.setSize(EncoderHashFrame.SIZE_X, EncoderHashFrame.SIZE_Y);
 		setMinimumSize(new Dimension(SIZE_X / 2, SIZE_Y / 2));
@@ -492,20 +508,21 @@ public class EncoderHashFrame extends JFrame {
 		});
 
 		/*
-		// acutally replaced by new window on right side.
-		// Load the values of encode/decode from the preferences		
-		enTextPane.setText(JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[0] + ".0", ""));
-	    deTextPane.setText(JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[1] +".0", ""));
-
-		final String encoder_type = JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[2]+".1", "");
-		
-		for (i=0; i < EncoderHashCore.CODES.length; i++)
-			if ( EncoderHashCore.CODES[i].equalsIgnoreCase(encoder_type) ) {
-				tree.setSelectionRow( i+1 );
-				break;
-			}
+		 * // acutally replaced by new window on right side. // Load the values
+		 * of encode/decode from the preferences
+		 * enTextPane.setText(JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[0] +
+		 * ".0", ""));
+		 * deTextPane.setText(JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[1] +".0",
+		 * ""));
+		 * 
+		 * final String encoder_type =
+		 * JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[2]+".1", "");
+		 * 
+		 * for (i=0; i < EncoderHashCore.CODES.length; i++) if (
+		 * EncoderHashCore.CODES[i].equalsIgnoreCase(encoder_type) ) {
+		 * tree.setSelectionRow( i+1 ); break; }
 		 */
-		}
+	}
 
 	/**
 	 * <p>
@@ -521,12 +538,13 @@ public class EncoderHashFrame extends JFrame {
 	 */
 	private void calculate(boolean isToEncode) {
 
-		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		
+		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+				.getLastSelectedPathComponent();
+
 		if (node == null) {
 			return;
 		}
-		
+
 		final String s = node.toString();
 		if (isToEncode) {
 			final String encodeText = enTextPane.getText();
@@ -536,44 +554,102 @@ public class EncoderHashFrame extends JFrame {
 			enTextPane.setText(EncoderHashCore.decode(decodeText, s));
 		}
 	}
-	
+
 	/**
-	 * <p>Swap the texts in the encoding and decoding panels.</p>
+	 * <p>
+	 * update recordingPaneTextField
+	 * </p>
+	 * 
+	 * @return context updated Text for recordingTextPane
+	 *
+	 * @author daemonmidi@gmail.com
+	 * @version 1.0
+	 * @since 2.3
+	 */
+	private String[][] refreshRecordingPane() {
+		String[][] returnObject = new String[50][4];
+		int loose = 0;
+		for (int i = 0; i < 50; i++) {
+			String encValue = JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[0] + "."
+					+ i, "");
+			String decValue = JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[1] + "."
+					+ i, "");
+			String engineValue = JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[2] + "." + i, "");
+			if (encValue.length() > 0) {
+				returnObject[i][0] = String.valueOf(i);
+				returnObject[i][1] = encValue;
+				returnObject[i][2] = decValue;
+				returnObject[i][3] = engineValue;
+			} else {
+				loose++;
+				returnObject[i][0] = String.valueOf(i);
+				returnObject[i][1] = "";
+				returnObject[i][2] = "";
+				returnObject[i][3] = "";
+			}
+		}
+
+		return returnObject;
+	}
+
+	/**
+	 * <p>
+	 * Save Key/Value/Encoder Data to UserPrefs and store them for late useage
+	 * </p>
+	 * 
+	 * @version 1.0
+	 * @since 2.3
+	 */
+	private void saveValues() {
+
+		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+				.getLastSelectedPathComponent();
+
+		// Save the values of the encode/decode as a preference
+		JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[0] + "." + listCounter,
+				enTextPane.getText());
+		JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[1] + "." + listCounter,
+				deTextPane.getText());
+		if (node != null)
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[2] + "." + listCounter,
+					node.toString());
+
+		try {
+			JBroFuzz.PREFS.sync();
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
+		listCounter++;
+		if (listCounter >= 50) listCounter = listCounter - 50;
+		recordingTable.setValueAt(enTextPane.getText(), listCounter, 1);
+		recordingTable.setValueAt(deTextPane.getText(), listCounter, 2);
+		if (node != null){
+			recordingTable.setValueAt(node.toString(), listCounter, 3);
+		}
+		else {
+			recordingTable.setValueAt("", listCounter, 3);
+		}
+	}
+
+	/**
+	 * <p>
+	 * Swap the texts in the encoding and decoding panels.
+	 * </p>
 	 * 
 	 * @author subere@uncon.org
 	 * @version 2.3
 	 * @since 2.3
 	 */
 	private void swapTexts() {
-		
+
 		final String enText = enTextPane.getText();
 		final String deText = deTextPane.getText();
-		
+
 		enTextPane.setText(deText);
 		deTextPane.setText(enText);
-		
+
 	}
-	
-	
-	private void saveValues() {
-		
-		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		
-		// Save the values of the encode/decode as a preference
-		PREFS.put(JBroFuzzPrefs.ENCODER[0] + "." + treeCounter, enTextPane.getText());
-		PREFS.put(JBroFuzzPrefs.ENCODER[1] + "." + treeCounter, deTextPane.getText());
-		if (node != null)
-			PREFS.put(JBroFuzzPrefs.ENCODER[2] + "." + treeCounter, node.toString());
-		
-		try {
-			PREFS.sync();
-		} catch (BackingStoreException e) {
-			e.printStackTrace();
-		}
-		treeCounter++;
-		encode.setText("encode " + treeCounter);
-	}
-	
+
 	/**
 	 * <p>
 	 * Method for completely expanding or collapsing a given <code>JTree</code>.
