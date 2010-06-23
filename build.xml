@@ -178,12 +178,14 @@
 		<mkdir dir="jar/temp" />
 		<mkdir dir="jar/temp/jbrofuzz" />
 		<mkdir dir="jar/temp/jbrofuzz/fuzzers" />
+		<mkdir dir="jar/temp/jbrofuzz/library" />
 		
 		<copy file="jar/${app.name}.jar" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/${app.name}.exe" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/${app.name}Encoder.jar" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/${app.name}Encoder.exe" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/jbrofuzz.sh" todir="jar/temp/jbrofuzz" />
+		<copy file="jar/jbrofuzz-core-2.3.jar" todir="jar/temp/jbrofuzz/library" />
 
 		<copy file="release/README" todir="jar/temp/jbrofuzz" />
 		<copy file="release/INSTALL" todir="jar/temp/jbrofuzz" />

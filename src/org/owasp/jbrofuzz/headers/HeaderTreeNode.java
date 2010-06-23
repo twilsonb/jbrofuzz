@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -39,7 +39,7 @@ class HeaderTreeNode extends DefaultMutableTreeNode {
 
 	private static final long serialVersionUID = -2215677803093884221L;
 	
-	private boolean nodeIsDirectory;
+	private final boolean nodeIsDirectory;
 
 	protected HeaderTreeNode(final Object myObject) {
 		super(myObject);

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -85,14 +85,14 @@ KeyListener {
 	private static final int SIZE_Y = 180;
 
 	// The buttons
-	private JButton ok, cancel;
+	private final JButton ok, cancel;
 
 	// The frame that the sniffing panel is attached
-	private JBroFuzzWindow m;
+	private final JBroFuzzWindow m;
 
 	private final JPopupMenu popmenu;
 
-	private JComboBox urlBox, methodBox, charsetBox, versionBox;
+	private final JComboBox urlBox, methodBox, charsetBox, versionBox;
 
 	/**
 	 * <p>
@@ -212,9 +212,9 @@ KeyListener {
 		i1.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				Clipboard clipboard = Toolkit.getDefaultToolkit()
+				final Clipboard clipboard = Toolkit.getDefaultToolkit()
 				.getSystemClipboard();
-				Transferable clipData = clipboard.getContents(clipboard);
+				final Transferable clipData = clipboard.getContents(clipboard);
 
 				if (clipData != null) {
 					try {
@@ -223,7 +223,7 @@ KeyListener {
 							((JTextComponent) urlBox.getEditor()
 									.getEditorComponent()).cut();
 						}
-					} catch (Exception e1) {
+					} catch (final Exception e1) {
 
 						Logger
 						.log(
@@ -239,9 +239,9 @@ KeyListener {
 		i2.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				Clipboard clipboard = Toolkit.getDefaultToolkit()
+				final Clipboard clipboard = Toolkit.getDefaultToolkit()
 				.getSystemClipboard();
-				Transferable clipData = clipboard.getContents(clipboard);
+				final Transferable clipData = clipboard.getContents(clipboard);
 
 				if (clipData != null) {
 					try {
@@ -250,7 +250,7 @@ KeyListener {
 							((JTextComponent) urlBox.getEditor()
 									.getEditorComponent()).copy();
 						}
-					} catch (Exception e1) {
+					} catch (final Exception e1) {
 
 						Logger
 						.log(
@@ -266,9 +266,9 @@ KeyListener {
 		i3.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				Clipboard clipboard = Toolkit.getDefaultToolkit()
+				final Clipboard clipboard = Toolkit.getDefaultToolkit()
 				.getSystemClipboard();
-				Transferable clipData = clipboard.getContents(clipboard);
+				final Transferable clipData = clipboard.getContents(clipboard);
 
 				if (clipData != null) {
 					try {
@@ -279,7 +279,7 @@ KeyListener {
 									.replaceSelection((String) (clipData
 											.getTransferData(DataFlavor.stringFlavor)));
 						}
-					} catch (Exception e1) {
+					} catch (final Exception e1) {
 						Logger
 						.log(
 								"Open Location: An error occured while pasting",
@@ -321,7 +321,7 @@ KeyListener {
 		add(buttonPanel, BorderLayout.SOUTH);
 
 		// Set the URL text
-		String url_displaying = parent.getPanelFuzzing().getTextURL();
+		final String url_displaying = parent.getPanelFuzzing().getTextURL();
 		((JTextComponent) urlBox.getEditor().getEditorComponent())
 		.setText(url_displaying);
 		((JTextComponent) urlBox.getEditor().getEditorComponent()).selectAll();
@@ -355,9 +355,9 @@ KeyListener {
 
 		}
 		try {
-			URL inputURL = new URL(in_url_s);
+			final URL inputURL = new URL(in_url_s);
 
-			StringBuffer out_url = new StringBuffer();
+			final StringBuffer out_url = new StringBuffer();
 			out_url.append(inputURL.getProtocol());
 			out_url.append("://");
 			out_url.append(inputURL.getHost());
@@ -366,7 +366,7 @@ KeyListener {
 				out_url.append(inputURL.getPort());
 			}
 
-			StringBuffer req_url = new StringBuffer();
+			final StringBuffer req_url = new StringBuffer();
 			req_url.append(methodBox.getModel().getElementAt(
 					methodBox.getSelectedIndex()));
 			req_url.append(' ');
@@ -379,7 +379,7 @@ KeyListener {
 					"UTF-8"));
 				}
 
-			} catch (UnsupportedEncodingException e) {
+			} catch (final UnsupportedEncodingException e) {
 				Logger.log("Open Location: Unsupported URL Encoding Exception", 3);
 				// If no file is specified, add a /
 				if (inputURL.getFile().isEmpty()) {
@@ -430,7 +430,7 @@ KeyListener {
 			m.getPanelFuzzing().setTextURL(out_url.toString());
 			m.getPanelFuzzing().setTextRequest(req_url.toString());
 
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			Logger.log("Open Location: Could not interpret the URL provided", 3);
 		}
 

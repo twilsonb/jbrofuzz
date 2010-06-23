@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -76,7 +76,7 @@ public class Prototype {
 		String beginning;
 		try {
 			beginning = param.substring(0, 5);
-		} catch (IndexOutOfBoundsException e1) {
+		} catch (final IndexOutOfBoundsException e1) {
 			return param;
 		}
 		if (!beginning.startsWith("f(x)=")) {
@@ -166,11 +166,11 @@ public class Prototype {
 		return false;
 	}
 
-	private transient List<String> categories, payloads;
+	private transient final List<String> categories, payloads;
 
-	private transient String name, uniqId;
+	private transient final String name, uniqId;
 
-	private transient char type;
+	private transient final char type;
 
 	private transient String comment;
 
@@ -384,7 +384,7 @@ public class Prototype {
 		final String[] categoriesArray = new String[categories.size()];
 		categories.toArray(categoriesArray);
 
-		for (String s : categoriesArray) {
+		for (final String s : categoriesArray) {
 			if (s.equalsIgnoreCase(category)) {
 				return true;
 			}

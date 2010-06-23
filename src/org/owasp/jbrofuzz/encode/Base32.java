@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -68,7 +68,7 @@ public class Base32 {
        }
        // end fix
 
-       StringBuffer base32 = new StringBuffer(((bytes.length+7)*8/5)+add);
+       final StringBuffer base32 = new StringBuffer(((bytes.length+7)*8/5)+add);
 
        while(i < bytes.length)
        {
@@ -115,7 +115,7 @@ public class Base32 {
    static public byte[] decode(final String base32)
    {
        int    i, index, lookup, offset, digit;
-       byte[] bytes = new byte[base32.length()*5/8];
+       final byte[] bytes = new byte[base32.length()*5/8];
 
        for(i = 0, index = 0, offset = 0; i < base32.length(); i++)
        {

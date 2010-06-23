@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -166,12 +166,12 @@ class SocketConnection {
 
 			reply = new String(baos.toByteArray());
 
-		} catch (MalformedURLException e1) {
+		} catch (final MalformedURLException e1) {
 
 			reply = "Malformed URL: " + e1.getMessage() + "\n";
 			throw new ConnectionException(reply);
 
-		} catch (IOException e3) {
+		} catch (final IOException e3) {
 
 			reply = "An IO Error occured: " + e3.getMessage() + 
 			". \n\nThis could also be a Connection Timeout, " +
@@ -232,7 +232,7 @@ class SocketConnection {
 				
 			}
 
-		} catch (Exception exception1) {
+		} catch (final Exception exception1) {
 
 			return "---";
 

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -43,7 +43,7 @@ class HashPanel extends JPanel {
 
 	private static final long serialVersionUID = -1270470006553668063L;
 
-	private JTextPane hashTextPane;
+	private final JTextPane hashTextPane;
 	
 	protected HashPanel(final String header) {
 	

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -51,7 +51,7 @@ public class SaveAsSession {
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 		Logger.log("Save As Fuzzing Session", 1);
 
-		JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
+		final JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
 		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[2].getId(), System.getProperty("user.dir"));
 		JFileChooser fc;
@@ -61,14 +61,14 @@ public class SaveAsSession {
 			} else {
 				fc = new JFileChooser();
 			}
-		} catch (SecurityException e1) {
+		} catch (final SecurityException e1) {
 			fc = new JFileChooser();
 			Logger.log("A security exception occured, while attempting to save as to a directory", 4);
 		}
 				
 		fc.setFileFilter(filter);
 
-		int returnVal = fc.showSaveDialog(mWindow);
+		final int returnVal = fc.showSaveDialog(mWindow);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 
 			File file = fc.getSelectedFile();
@@ -80,7 +80,7 @@ public class SaveAsSession {
 			}
 
 			if (file.exists()) {
-				int choice = JOptionPane.showConfirmDialog(fc,
+				final int choice = JOptionPane.showConfirmDialog(fc,
 						"File already exists. Do you \nwant to replace it?",
 						" JBroFuzz - Save ", JOptionPane.YES_NO_OPTION);
 
@@ -89,14 +89,14 @@ public class SaveAsSession {
 			}
 
 			// Get the values from the frame
-			String _url = mWindow.getPanelFuzzing().getTextURL();
-			String _req = mWindow.getPanelFuzzing().getTextRequest();
-			String _pld = mWindow.getPanelFuzzing().getTextPayloads();
+			final String _url = mWindow.getPanelFuzzing().getTextURL();
+			final String _req = mWindow.getPanelFuzzing().getTextRequest();
+			final String _pld = mWindow.getPanelFuzzing().getTextPayloads();
 
 			// Write the file
 			try {
 
-				PrintWriter out = new PrintWriter(file);
+				final PrintWriter out = new PrintWriter(file);
 
 				out.println("[JBroFuzz]");
 				out.println(JBroFuzzFormat.VERSION);
@@ -125,9 +125,9 @@ public class SaveAsSession {
 					JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
 				}
 
-			} catch (FileNotFoundException e) {
+			} catch (final FileNotFoundException e) {
 				Logger.log("FileNotFoundException", 4);
-			} catch (SecurityException e) {
+			} catch (final SecurityException e) {
 				Logger.log("SecurityException", 4);
 			}
 

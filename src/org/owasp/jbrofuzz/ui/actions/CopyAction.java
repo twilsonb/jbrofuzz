@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -52,13 +52,13 @@ public class CopyAction extends TextAction {
 
 				if (evt != null) {
 
-					Object o = evt.getSource();
+					final Object o = evt.getSource();
 
 					if (o instanceof JTable) {
 
 						final JTable table = (JTable) o;
 
-						StringBuffer selectionBuffer = new StringBuffer();
+						final StringBuffer selectionBuffer = new StringBuffer();
 						final int[] selection = table.getSelectedRows();
 
 						for (final int element : selection) {

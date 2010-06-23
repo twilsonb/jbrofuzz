@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -78,34 +78,42 @@ public class OutputTable extends JTable {
 
 	}
 	
+	@Override
 	public final boolean isCellEditable(int row, int column) {
 		return false;
 	}
 	
+	@Override
 	public final boolean getColumnSelectionAllowed() {
 		return false;
 	}
 	
+	@Override
 	public final boolean getRowSelectionAllowed() {
 		return true;
 	}
 	
+	@Override
 	public final Font getFont() {
 		return new Font("Monospaced", Font.BOLD, 12);
 	}
 	
+	@Override
 	public final boolean getDragEnabled() {
 		return false;
 	}
 	
+	@Override
 	public final Color getBackground() {
 		return Color.BLACK;
 	}
 	
+	@Override
 	public final Color getForeground() {
 		return Color.WHITE;
 	}
 	
+	@Override
 	public final boolean getSurrendersFocusOnKeystroke() {
 		return true;
 	}

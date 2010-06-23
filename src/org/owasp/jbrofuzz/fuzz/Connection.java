@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -55,7 +55,7 @@ import javax.net.ssl.TrustManager;
  */
 public class Connection {
 	
-	private SocketConnection mainConnection;
+	private final SocketConnection mainConnection;
 	
 	public Connection(final String urlString, final String message)
 	throws ConnectionException {
@@ -63,7 +63,7 @@ public class Connection {
 		URL url;
 		try {
 			url = new URL(urlString);
-		} catch (MalformedURLException e1) {
+		} catch (final MalformedURLException e1) {
 			throw new ConnectionException("Malformed URL : " + e1.getMessage() + "\n");
 		}
 
@@ -143,9 +143,9 @@ public class Connection {
 
 			return context.getSocketFactory();
 
-		} catch (KeyManagementException e) {
+		} catch (final KeyManagementException e) {
 			throw new ConnectionException("No SSL algorithm support.");
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			throw new ConnectionException("Exception when setting up the Naive key management.");
 		}
 

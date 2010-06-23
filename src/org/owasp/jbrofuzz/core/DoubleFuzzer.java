@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -117,8 +117,8 @@ public class DoubleFuzzer implements Iterator<String[]> {
 	 */
 	public long getCurrentValue() {
 		
-		long cur1 = fuzzer1.getCurrentValue();
-		long cur2 = fuzzer2.getCurrentValue();
+		final long cur1 = fuzzer1.getCurrentValue();
+		final long cur2 = fuzzer2.getCurrentValue();
 		
 		if (cur1 > cur2) {
 			return cur1;

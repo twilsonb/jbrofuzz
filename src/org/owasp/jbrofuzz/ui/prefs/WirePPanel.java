@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -93,9 +93,9 @@ class WirePPanel extends AbstractPrefsPanel {
 		}
 		
 		// What to put on the wire (FUZZINGONTHEWIRE[1] skipped above)
-		ButtonGroup group = new ButtonGroup();
+		final ButtonGroup group = new ButtonGroup();
 		
-		JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,
+		final JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,
 				25, 0));
 		// radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.LINE_AXIS));
 		// A very important line when it comes to BoxLayout
@@ -140,6 +140,7 @@ class WirePPanel extends AbstractPrefsPanel {
 
 	}
 	
+	@Override
 	public void apply() {
 		
 		for(int i = 0; i < checkBoxes.length; i++) {

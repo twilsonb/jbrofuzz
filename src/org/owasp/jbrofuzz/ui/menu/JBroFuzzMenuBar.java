@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -418,7 +418,7 @@ public class JBroFuzzMenuBar extends JMenuBar {
 					@Override
 					public String doInBackground() {
 
-						int c = getFrame().getTp().getSelectedIndex();
+						final int c = getFrame().getTp().getSelectedIndex();
 						p = (AbstractPanel) getFrame().getTp().getComponent(c);
 						p.start();
 
@@ -444,8 +444,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						int c = getFrame().getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) getFrame().getTp()
+						final int c = getFrame().getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -473,8 +473,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						int c = getFrame().getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) getFrame().getTp()
+						final int c = getFrame().getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.add();
 
@@ -502,8 +502,8 @@ public class JBroFuzzMenuBar extends JMenuBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						int c = getFrame().getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) getFrame().getTp()
+						final int c = getFrame().getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) getFrame().getTp()
 						.getComponent(c);
 						p.remove();
 

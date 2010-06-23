@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -99,7 +99,7 @@ class JohnyWalker {
 
 		final File[] children = directory.listFiles();
 
-		for (File f : children) {
+		for (final File f : children) {
 
 			final FileSystemTreeNode node = new FileSystemTreeNode(f.getName());
 

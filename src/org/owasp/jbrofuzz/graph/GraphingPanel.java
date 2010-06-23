@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -258,7 +258,7 @@ public class GraphingPanel extends AbstractPanel {
 				console.select(console.getLineStartOffset(0), console
 						.getLineEndOffset(console.getLineCount() - 500));
 				console.replaceSelection("...\n");
-			} catch (BadLocationException e) {
+			} catch (final BadLocationException e) {
 				Logger.log("Could not clear the console", 3);
 			}
 		}

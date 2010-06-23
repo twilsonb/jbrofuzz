@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -136,7 +136,7 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 
 		// Set the minimum size for all components
 		leftScrollPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
-		for (JPanel jp : panels) {
+		for (final JPanel jp : panels) {
 			jp.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		}
 		splitPane.setDividerLocation(150);
@@ -171,7 +171,7 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						for(AbstractPrefsPanel p : panels) {
+						for(final AbstractPrefsPanel p : panels) {
 							p.apply();
 						}
 						PrefDialog.this.dispose();
@@ -198,7 +198,7 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						for(AbstractPrefsPanel p : panels) {
+						for(final AbstractPrefsPanel p : panels) {
 							p.apply();
 						}
 						applyBut.setEnabled(false);

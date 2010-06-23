@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -74,7 +74,7 @@ final class FuzzersRowListener implements ListSelectionListener {
 			d = payloadsPanel.fuzzersTable.convertRowIndexToModel(d);
 			name = (String) payloadsPanel.fuzzersTableModel.getValueAt(d, 0);
 
-		} catch (IndexOutOfBoundsException e) {
+		} catch (final IndexOutOfBoundsException e) {
 			return;
 		}
 		final String id = payloadsPanel.getFrame().getJBroFuzz().getDatabase()

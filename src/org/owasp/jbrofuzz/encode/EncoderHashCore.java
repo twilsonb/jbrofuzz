@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -37,12 +37,12 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.BinaryCodec;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  * @author Yiannis Marangos
@@ -205,7 +205,7 @@ public class EncoderHashCore {
 	private static String decodeHexLow(final String decodeText) {
 		try {
 			return new String(Hex.decodeHex(decodeText.toCharArray()));
-		} catch (DecoderException e) {
+		} catch (final DecoderException e) {
 			return "Error: Hex value cannot be decoded...";
 		}
 	}
@@ -221,7 +221,7 @@ public class EncoderHashCore {
 		final QuotedPrintableCodec codec = new QuotedPrintableCodec();
 		try {
 			return codec.decode(decodeText);
-		} catch (DecoderException e) {
+		} catch (final DecoderException e) {
 			return "Error: RFC 1521 MIME value cannot be decoded...";
 		}
 	}
@@ -231,9 +231,9 @@ public class EncoderHashCore {
 		final URLCodec codec = new URLCodec();
 		try {
 			return codec.decode(decodeText, "UTF-8");
-		} catch (DecoderException e) {
+		} catch (final DecoderException e) {
 			return "Error: www-form-urlencoded value cannot be decoded...";
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			return "Error: www-form-urlencoded value cannot be decoded...";
 		} 
 	}
@@ -242,7 +242,7 @@ public class EncoderHashCore {
 	private static String decodeUrlUtf16BE(final String decodeText) {
 		try {
 			return URLDecoder.decode(decodeText, "UTF-16BE");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			return "Error: String cannot be encoded...";
 		}
 	}
@@ -251,7 +251,7 @@ public class EncoderHashCore {
 	private static String decodeUrlUtf16LE(final String decodeText) {
 		try {
 			return URLDecoder.decode(decodeText, "UTF-16LE");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			return "Error: String cannot be encoded...";
 		}
 	}
@@ -260,7 +260,7 @@ public class EncoderHashCore {
 	private static String decodeUrlUtf8(final String decodeText) {
 		try {
 			return URLDecoder.decode(decodeText, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			return "Error: String cannot be encoded...";
 		}
 	}
@@ -269,7 +269,7 @@ public class EncoderHashCore {
 	private static String decodeUrlWindows1252(final String decodeText) {
 		try {
 			return URLDecoder.decode(decodeText, "windows-1252");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			return "Error: String cannot be encoded...";
 		}
 	}
@@ -388,11 +388,11 @@ public class EncoderHashCore {
 	// Encode MD5 Hash
 	private static String encodeMd5Hash(final String encodeText) {
 		try {
-			MessageDigest md5 = MessageDigest.getInstance("MD5");
+			final MessageDigest md5 = MessageDigest.getInstance("MD5");
 			md5.update(encodeText.getBytes(), 0, encodeText.length());
-			byte[] hash = md5.digest();
+			final byte[] hash = md5.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
-		} catch (NoSuchAlgorithmException e1) {
+		} catch (final NoSuchAlgorithmException e1) {
 			return "Error: MD5 could not be found...";
 		}
 	}
@@ -403,7 +403,7 @@ public class EncoderHashCore {
 		final QuotedPrintableCodec codec = new QuotedPrintableCodec();
 		try {
 			return codec.encode(encodeText);
-		} catch (EncoderException e) {
+		} catch (final EncoderException e) {
 			return "Error: Sting input cannot be decoded";
 		}
 	}
@@ -411,11 +411,11 @@ public class EncoderHashCore {
 	// Encode SHA-1 Hash
 	private static String encodeSha1Hash(final String encodeText) {
 		try {
-			MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+			final MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
 			sha1.update(encodeText.getBytes(), 0, encodeText.length());
-			byte[] hash = sha1.digest();
+			final byte[] hash = sha1.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
-		} catch (NoSuchAlgorithmException e1) {
+		} catch (final NoSuchAlgorithmException e1) {
 			return "Error: SHA-1 could not be found...";
 		}
 	}
@@ -423,11 +423,11 @@ public class EncoderHashCore {
 	// Encode SHA-256 Hash
 	private static String encodeSha256Hash(final String encodeText) {
 		try {
-			MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+			final MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
 			sha256.update(encodeText.getBytes(), 0, encodeText.length());
-			byte[] hash = sha256.digest();
+			final byte[] hash = sha256.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
-		} catch (NoSuchAlgorithmException e1) {
+		} catch (final NoSuchAlgorithmException e1) {
 			return "Error: SHA-256 could not be found...";
 		}
 	}
@@ -435,11 +435,11 @@ public class EncoderHashCore {
 	// Encode SHA-384 Hash
 	private static String encodeSha384Hash(final String encodeText) {
 		try {
-			MessageDigest sha384 = MessageDigest.getInstance("SHA-384");
+			final MessageDigest sha384 = MessageDigest.getInstance("SHA-384");
 			sha384.update(encodeText.getBytes(), 0, encodeText.length());
-			byte[] hash = sha384.digest();
+			final byte[] hash = sha384.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
-		} catch (NoSuchAlgorithmException e1) {
+		} catch (final NoSuchAlgorithmException e1) {
 			return "Error: SHA-384 could not be found...";
 		}
 	}
@@ -447,21 +447,21 @@ public class EncoderHashCore {
 	// Encode SHA-512 Hash
 	private static String encodeSha512Hash(final String encodeText) {
 		try {
-			MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
+			final MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
 			sha512.update(encodeText.getBytes(), 0, encodeText.length());
-			byte[] hash = sha512.digest();
+			final byte[] hash = sha512.digest();
 			return new String(Hex.encodeHex(hash)).toUpperCase();
-		} catch (NoSuchAlgorithmException e1) {
+		} catch (final NoSuchAlgorithmException e1) {
 			return "Error: SHA-512 could not be found...";
 		}
 	}
 	
 	// Encode www-form-url
 	private static String encodeUrlCodec(final String encodeText) {
-		URLCodec codec = new URLCodec();
+		final URLCodec codec = new URLCodec();
 		try {
 			return codec.encode(encodeText, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			return "Error: Sting input cannot be decoded";
 		}
 	}
@@ -470,7 +470,7 @@ public class EncoderHashCore {
 	private static String encodeUrlUtf16BE(final String encodeText) {
 		try {
 			return URLEncoder.encode(encodeText, "UTF-16BE");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			return "Error: String cannot be encoded...";
 		}
 	}
@@ -479,7 +479,7 @@ public class EncoderHashCore {
 	private static String encodeUrlUtf16LE(final String encodeText) {
 		try {
 			return URLEncoder.encode(encodeText, "UTF-16LE");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			return "Error: String cannot be encoded...";
 		}
 	}
@@ -488,7 +488,7 @@ public class EncoderHashCore {
 	private static String encodeUrlUtf8(final String encodeText) {
 		try {
 			return URLEncoder.encode(encodeText, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			return "Error: String cannot be encoded...";
 		}
 	}
@@ -497,7 +497,7 @@ public class EncoderHashCore {
 	private static String encodeUrlWindows1252(final String encodeText) {
 		try {
 			return URLEncoder.encode(encodeText, "windows-1252");
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			return "Error: String cannot be encoded...";
 		}
 	}

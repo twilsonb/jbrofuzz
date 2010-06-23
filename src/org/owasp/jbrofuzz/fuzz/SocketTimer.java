@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -93,6 +93,7 @@ class SocketTimer extends Thread {
 		}
 	}
 
+	@Override
 	public void run() {
 		// Infinite loop...
 		for (;;) {
@@ -100,7 +101,7 @@ class SocketTimer extends Thread {
 			try { 
 				Thread.sleep(m_rate);
 			}
-			catch (InterruptedException ioe) {
+			catch (final InterruptedException ioe) {
 				continue;
 			}
 

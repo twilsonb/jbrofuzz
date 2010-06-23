@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -99,7 +99,7 @@ public class PayloadsDialog extends JDialog {
 				count = categoriesTable.convertRowIndexToModel(count);
 				value = (String) catTableModel.getValueAt(count, 0);
 
-			} catch (IndexOutOfBoundsException e) {
+			} catch (final IndexOutOfBoundsException e) {
 				return;
 			}
 
@@ -147,7 +147,7 @@ public class PayloadsDialog extends JDialog {
 				dount = fuzzersTable.convertRowIndexToModel(dount);
 				name = (String) fTableModel.getValueAt(dount, 0);
 
-			} catch (IndexOutOfBoundsException e) {
+			} catch (final IndexOutOfBoundsException e) {
 				return;
 			}
 			final String fuzzerID = mWindow.getJBroFuzz().getDatabase().getIdFromName(name);
@@ -255,7 +255,7 @@ public class PayloadsDialog extends JDialog {
 		catTableModel.setData(mWindow.getJBroFuzz().getDatabase()
 				.getAllCategories());
 
-		TableRowSorter<SingleColumnModel> sorter = 
+		final TableRowSorter<SingleColumnModel> sorter = 
 			new TableRowSorter<SingleColumnModel>(catTableModel);
 		categoriesTable.setRowSorter(sorter);
 

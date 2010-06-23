@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -55,22 +55,27 @@ public class WireTextArea extends JTextArea {
 		super(doc);
 	}
 
+	@Override
 	public Font getFont() {
 		return new Font("Verdana", Font.PLAIN, 10);
 	}
 
+	@Override
 	public  boolean isEditable() {
 		return false;
 	}
 
+	@Override
 	public Color getBackground() {
 		return Color.BLACK;
 	}
 
+	@Override
 	public Color getForeground() {
 		return Color.GREEN;
 	}
 
+	@Override
 	protected Document createDefaultModel() {
 
 		return new PlainDocument() {
@@ -81,6 +86,7 @@ public class WireTextArea extends JTextArea {
 			// 0; // Byte.MAX_VALUE; // Character.MAX_VALUE; // 65535; // 133323; // Character.MAX_VALUE;
 			private static final int MAX_VALUE = Character.MAX_VALUE;
 
+			@Override
 			public void insertString(final int offs, final String str, final AttributeSet a) throws BadLocationException {
 
 				final int overflow = offs + str.length() - MAX_VALUE;
@@ -100,6 +106,7 @@ public class WireTextArea extends JTextArea {
 		};
 	}
 
+	@Override
 	public void setText(final String t) {
 		
 		try {
@@ -110,7 +117,7 @@ public class WireTextArea extends JTextArea {
 			// Set the caret position
 			this.setCaretPosition(doc.getLength());
 			
-		} catch (BadLocationException e) {
+		} catch (final BadLocationException e) {
 			Logger.log("WireTextArea: Bad Location Exception", 3);
 		}
 		

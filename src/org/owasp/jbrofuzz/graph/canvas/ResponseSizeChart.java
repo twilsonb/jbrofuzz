@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -58,11 +58,11 @@ public class ResponseSizeChart {
 	 */
 	private static final int MAX_CHARS = 1048576;
 	// The x-axis filenames
-	private String[] xData;
+	private final String[] xData;
 	// The y-axis data
-	private int[] yData;
+	private final int[] yData;
 
-	private DefaultCategoryDataset dataset;
+	private final DefaultCategoryDataset dataset;
 
 	// Constants
 	private static final String END_SIGNATURE = "--jbrofuzz-->\n";

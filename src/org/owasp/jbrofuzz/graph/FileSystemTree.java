@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -279,7 +279,7 @@ class FileSystemTree extends JTree implements MouseListener {
 		stringPath.append(File.separator);
 		stringPath.append("jbrofuzz");
 
-		for (Object node : path) {
+		for (final Object node : path) {
 
 			stringPath.append(System.getProperty("file.separator"));
 			stringPath.append(node.toString());

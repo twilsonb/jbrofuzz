@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -41,9 +41,9 @@ package org.owasp.jbrofuzz.version;
  */
 public class PrefEntry {
 
-	private String id, title, tooltip;
+	private final String id, title, tooltip;
 
-	private boolean requiresRestart;
+	private final boolean requiresRestart;
 	
 	/**
 	 * <p>Constructor, passing the id (e.g. ui.window.width) the title 

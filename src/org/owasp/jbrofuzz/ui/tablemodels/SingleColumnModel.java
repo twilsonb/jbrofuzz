@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -48,9 +48,9 @@ public class SingleColumnModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 7819538656432704429L;
 
-	private String columnName;
+	private final String columnName;
 
-	private ArrayList<String> dataVector;
+	private final ArrayList<String> dataVector;
 
 	/**
 	 * <p>

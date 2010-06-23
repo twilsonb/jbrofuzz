@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -69,6 +69,7 @@ class OutputPPanel extends AbstractPrefsPanel {
 
 	}
 	
+	@Override
 	public void apply() { 
 		
 		for(int i = 0; i < checkBoxes.length; i++) {

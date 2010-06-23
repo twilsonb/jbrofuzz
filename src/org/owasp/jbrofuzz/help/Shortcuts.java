@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -133,11 +133,11 @@ public class Shortcuts extends JFrame {
 			public void actionPerformed(final ActionEvent aEvent) {
 
 				try {
-					boolean complete = helpPane.print();
+					final boolean complete = helpPane.print();
 					if (!complete) {
 						Logger.log("User cancelled Printing", 1);
 					}
-				} catch (PrinterException prException) {
+				} catch (final PrinterException prException) {
 					Logger.log("A Printing Exception Occured", 4);
 				}
 

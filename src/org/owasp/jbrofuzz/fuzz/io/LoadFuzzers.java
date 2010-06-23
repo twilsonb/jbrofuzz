@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -49,7 +49,7 @@ public class LoadFuzzers {
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_PAYLOADS);
 		Logger.log("Load Fuzzers from file", 1);
 
-		FuzzerFileFilter filter = new FuzzerFileFilter();
+		final FuzzerFileFilter filter = new FuzzerFileFilter();
 
 		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[3].getId(), System.getProperty("user.dir"));
 		JFileChooser fc;
@@ -59,20 +59,20 @@ public class LoadFuzzers {
 			} else {
 				fc = new JFileChooser();
 			}
-		} catch (SecurityException e1) {
+		} catch (final SecurityException e1) {
 			fc = new JFileChooser();
 			Logger.log("A security exception occured, while attempting to point to a directory", 4);
 		}
 		
 		fc.setFileFilter(filter);
 
-		int returnVal = fc.showOpenDialog(mWindow);
+		final int returnVal = fc.showOpenDialog(mWindow);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-			File file = fc.getSelectedFile();
+			final File file = fc.getSelectedFile();
 			Logger.log("Opening: " + file.getName(), 1);
 
-			String path = file.getAbsolutePath().toLowerCase();
+			final String path = file.getAbsolutePath().toLowerCase();
 			// If the file does not end in .jbrf, return
 			if (!path.endsWith(".jbrf")) {
 
@@ -82,7 +82,7 @@ public class LoadFuzzers {
 				return;
 			}
 
-			Database updateDB = new Database(path);
+			final Database updateDB = new Database(path);
 			mWindow.getJBroFuzz().setDatabase(updateDB);
 			mWindow.getPanelPayloads().updateFuzzers();
 			
