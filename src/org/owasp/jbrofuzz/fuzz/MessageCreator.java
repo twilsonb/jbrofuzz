@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -177,7 +177,7 @@ class MessageCreator {
 
 			postDataString = message.split("\r\n\r\n")[1];
 
-		} catch (Exception e1) {
+		} catch (final Exception e1) {
 
 			postDataString = message;
 
@@ -233,7 +233,7 @@ class MessageCreator {
 			try {
 				return codec.encode(payload, "UTF-8");
 
-			} catch (UnsupportedEncodingException e) {
+			} catch (final UnsupportedEncodingException e) {
 
 				e.printStackTrace();
 				return payload;
@@ -254,7 +254,7 @@ class MessageCreator {
 
 				return URLEncoder.encode(payload, "UTF-8");
 
-			} catch (UnsupportedEncodingException e) {
+			} catch (final UnsupportedEncodingException e) {
 
 				e.printStackTrace();
 				return payload;
@@ -269,7 +269,7 @@ class MessageCreator {
 
 				return URLEncoder.encode(payload, "UTF-16");
 
-			} catch (UnsupportedEncodingException e) {
+			} catch (final UnsupportedEncodingException e) {
 
 				e.printStackTrace();
 				return payload;
@@ -337,7 +337,7 @@ class MessageCreator {
 		final String contLengthString = message.substring(ctl + TOBEFOUND.length(), neol);
 		try {
 			contentLength = Integer.parseInt(contLengthString);
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			contentLength = 0;
 		}
 
@@ -355,7 +355,7 @@ class MessageCreator {
 			newMsgBuffer.append(' ');
 			newMsgBuffer.append(postValue.getBytes("ISO-8859-1").length);
 
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 
 			// TODO: Log this exception
 			newMsgBuffer.append(' ');
@@ -423,7 +423,7 @@ class MessageCreator {
 			
 			currentURL = new URL(url);
 			
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			
 			return message;
 		}

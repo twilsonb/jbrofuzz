@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -50,7 +50,7 @@ public class FuzzersTableModel extends AbstractTableModel {
 	{ "Fuzzer ID", "Encoding", "Start", "End" };
 
 	// The vector of fuzzer row data
-	private ArrayList<FuzzerRow> dataVector;
+	private final ArrayList<FuzzerRow> dataVector;
 
 	/**
 	 * <p>Main Constructor passes the Fuzzing Panel.</p>
@@ -188,7 +188,7 @@ public class FuzzersTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
 
-		FuzzerRow record = dataVector.get(row);
+		final FuzzerRow record = dataVector.get(row);
 
 		if(column == 0) {
 			record.setId((String) value);

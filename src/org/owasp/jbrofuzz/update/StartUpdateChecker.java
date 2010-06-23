@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -140,7 +140,7 @@ public class StartUpdateChecker extends JDialog {
 				return ZERO_VERSION;
 			} // else statement for a 200 response
 
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			return ZERO_VERSION;
 		} finally {
 			IOUtils.closeQuietly(instream);
@@ -157,7 +157,7 @@ public class StartUpdateChecker extends JDialog {
 					// Return the value, if found
 					return Double.parseDouble(webVersion);
 
-				} catch (NumberFormatException e) {
+				} catch (final NumberFormatException e) {
 					// Return 0.0 if an error occurs
 					return ZERO_VERSION;
 
@@ -196,7 +196,7 @@ public class StartUpdateChecker extends JDialog {
 		double current;
 		try {
 			current = Double.parseDouble(JBroFuzzFormat.VERSION);
-		} catch (NumberFormatException e1) {
+		} catch (final NumberFormatException e1) {
 			current = StartUpdateChecker.ZERO_VERSION;
 		}
 		if (latest <= current) {
@@ -247,7 +247,7 @@ public class StartUpdateChecker extends JDialog {
 						Browser.init();
 						try {
 							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
-						} catch (IOException e) {
+						} catch (final IOException e) {
 
 						}
 						StartUpdateChecker.this.dispose();

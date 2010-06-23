@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -36,7 +36,7 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 //Check for an updated version
 public final class StartUpdateCheck extends SwingWorker<String, Object> {
 
-	private JBroFuzzWindow mWindow;
+	private final JBroFuzzWindow mWindow;
 	
 	public StartUpdateCheck(final JBroFuzzWindow mWindow) {
 		this.mWindow = mWindow;

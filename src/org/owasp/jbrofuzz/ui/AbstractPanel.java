@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -75,11 +75,11 @@ public abstract class AbstractPanel extends JPanel {
 
 	private static final long serialVersionUID = -4932876100272401793L;
 
-	private JBroFuzzWindow frame;
+	private final JBroFuzzWindow frame;
 
-	private String name;
+	private final String name;
 
-	private boolean[] optionsAvailable;
+	private final boolean[] optionsAvailable;
 
 	/**
 	 * <p>
@@ -142,13 +142,13 @@ public abstract class AbstractPanel extends JPanel {
 	@SuppressWarnings("unchecked")
 	public void expandAll(JTree tree, TreePath parent, boolean expand) {
 		// Traverse children
-		TreeNode node = (TreeNode) parent.getLastPathComponent();
+		final TreeNode node = (TreeNode) parent.getLastPathComponent();
 		if (node.getChildCount() >= 0) {
 
-			for (Enumeration<TreeNode> e = node.children(); e.hasMoreElements();) {
+			for (final Enumeration<TreeNode> e = node.children(); e.hasMoreElements();) {
 
-				TreeNode n = e.nextElement();
-				TreePath path = parent.pathByAddingChild(n);
+				final TreeNode n = e.nextElement();
+				final TreePath path = parent.pathByAddingChild(n);
 				expandAll(tree, path, expand);
 			}
 		}
@@ -269,11 +269,11 @@ public abstract class AbstractPanel extends JPanel {
 		i0_open.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				JTabbedPane pane = getFrame().getTp();
+				final JTabbedPane pane = getFrame().getTp();
 				final int d = pane.getSelectedIndex();
 				if (d >= 0) {
 
-					String s = ((AbstractPanel) pane.getComponent(d)).getName();
+					final String s = ((AbstractPanel) pane.getComponent(d)).getName();
 
 					if (s.equalsIgnoreCase(getFrame().getPanelFuzzing()
 							.getName())) {
@@ -314,7 +314,7 @@ public abstract class AbstractPanel extends JPanel {
 		i2_copy.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				StringBuffer selectionBuffer = new StringBuffer();
+				final StringBuffer selectionBuffer = new StringBuffer();
 				final int[] selection = area.getSelectedRows();
 
 				for (final int element : selection) {
@@ -357,11 +357,11 @@ public abstract class AbstractPanel extends JPanel {
 		i5_props.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 
-				JTabbedPane pane = getFrame().getTp();
+				final JTabbedPane pane = getFrame().getTp();
 				final int d = pane.getSelectedIndex();
 				if (d >= 0) {
 
-					String s = ((AbstractPanel) pane.getComponent(d)).getName();
+					final String s = ((AbstractPanel) pane.getComponent(d)).getName();
 
 					if (s.equalsIgnoreCase(getFrame().getPanelFuzzing()
 							.getName())) {
@@ -395,7 +395,7 @@ public abstract class AbstractPanel extends JPanel {
 					if (s.equalsIgnoreCase(getFrame().getPanelWebDirectories()
 							.getName())) {
 
-						StringBuffer output = new StringBuffer();
+						final StringBuffer output = new StringBuffer();
 
 						for (int i = 0; i < area.getColumnCount(); i++) {
 

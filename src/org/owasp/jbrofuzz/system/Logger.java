@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -175,7 +175,7 @@ public final class Logger {
 		// append the contents to the current log file
 		try{
 			appendToLogFile(toLog.toString());
-		}catch(IOException ioe){
+		}catch(final IOException ioe){
 			ioe.printStackTrace();
 		}
 
@@ -196,7 +196,7 @@ public final class Logger {
 			fWriter.write(error);
 			fWriter.close();
 			
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IOException();
 		}
 

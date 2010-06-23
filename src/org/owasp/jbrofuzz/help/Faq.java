@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -225,7 +225,7 @@ public class Faq extends JFrame implements TreeSelectionListener {
 			if (s.equalsIgnoreCase(NODENAMES[i])) {
 				try {
 					faqEditorPane.setPage(faqURL[i]);
-				} catch (IOException e1) {
+				} catch (final IOException e1) {
 					faqEditorPane.setText("Could not find page: " + faqURL[i]);
 				}
 				faqScrollPane.setViewportView(faqEditorPane);

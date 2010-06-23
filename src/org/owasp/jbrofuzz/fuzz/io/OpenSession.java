@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -59,7 +59,7 @@ public class OpenSession {
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 		Logger.log("Open Fuzzing Session", 1);
 
-		JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
+		final JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
 		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[2].getId(), System.getProperty("user.dir"));
 		JFileChooser fc;
@@ -69,20 +69,20 @@ public class OpenSession {
 			} else {
 				fc = new JFileChooser();
 			}
-		} catch (SecurityException e1) {
+		} catch (final SecurityException e1) {
 			fc = new JFileChooser();
 			Logger.log("A security exception occured, while attempting to point to a directory", 4);
 		}
 		
 		fc.setFileFilter(filter);
 
-		int returnVal = fc.showOpenDialog(mWindow);
+		final int returnVal = fc.showOpenDialog(mWindow);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-			File file = fc.getSelectedFile();
+			final File file = fc.getSelectedFile();
 			Logger.log("Opening: " + file.getName(), 1);
 
-			String path = file.getAbsolutePath().toLowerCase();
+			final String path = file.getAbsolutePath().toLowerCase();
 			// If the file does not end in .jbrofuzz, return
 			if (!path.endsWith(".jbrofuzz")) {
 
@@ -116,11 +116,11 @@ public class OpenSession {
 
 				in.close();
 
-			} catch (FileNotFoundException e) {
+			} catch (final FileNotFoundException e) {
 
 				Logger.log("FileNotFoundException", 3);
 
-			} catch (IOException e) {
+			} catch (final IOException e) {
 
 				Logger.log("IOException", 3);
 
@@ -173,7 +173,7 @@ public class OpenSession {
 				return;
 
 			// Get the request from the file
-			StringBuffer _reqBuffer = new StringBuffer();
+			final StringBuffer _reqBuffer = new StringBuffer();
 			for (int i = 9; i < payloadsLine; i++) {
 				_reqBuffer.append(fileInput[i] + "\n");
 			}
@@ -188,11 +188,11 @@ public class OpenSession {
 
 				boolean fuzzer_happy = true;
 
-				String[] payloadArray = fileInput[i].split(",");
+				final String[] payloadArray = fileInput[i].split(",");
 				// Each line must have 4 elements
 				if (payloadArray.length == 4) {
 
-					String fuzz_id = payloadArray[0];
+					final String fuzz_id = payloadArray[0];
 					String encoding_ = payloadArray[1];
 					int start = 0;
 					int end = 0;
@@ -204,7 +204,7 @@ public class OpenSession {
 
 					// Work on the encoding you are reading in
 					boolean encoding_found = false;
-					for (String lamda : FuzzerTable.ENCODINGS) {
+					for (final String lamda : FuzzerTable.ENCODINGS) {
 						if(lamda.equalsIgnoreCase(encoding_)) {
 							encoding_found = true;
 						}
@@ -229,7 +229,7 @@ public class OpenSession {
 								|| (end > _reqBuffer.length())) {
 							fuzzer_happy = false;
 						}
-					} catch (NumberFormatException e) {
+					} catch (final NumberFormatException e) {
 						fuzzer_happy = false;
 					}
 
@@ -247,8 +247,8 @@ public class OpenSession {
 			// These max values of abbreviation are also used in the Fuzzing
 			// Panel
 			// geters
-			String _req = StringUtils.abbreviate(_reqBuffer.toString(), 16384);
-			String _url = StringUtils.abbreviate(fileInput[7], 1024);
+			final String _req = StringUtils.abbreviate(_reqBuffer.toString(), 16384);
+			final String _url = StringUtils.abbreviate(fileInput[7], 1024);
 
 			mWindow.getPanelFuzzing().setTextRequest(_req);
 			mWindow.getPanelFuzzing().setTextURL(_url);

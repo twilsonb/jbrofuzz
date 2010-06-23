@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -121,7 +121,7 @@ public class JBroFuzzWindow extends JFrame {
 	private final SystemPanel cp;
 
 	// The toolbar of the window
-	private JBroFuzzToolBar tb;
+	private final JBroFuzzToolBar tb;
 
 	// The file to which the window saves to
 	private File currentFile;
@@ -166,7 +166,7 @@ public class JBroFuzzWindow extends JFrame {
 		// Set the corresponding borders for each panel
 
 		// The tabbed pane, setup according to preferences
-		boolean tabsAtTop = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[1].getId(), true);
+		final boolean tabsAtTop = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[1].getId(), true);
 		if (tabsAtTop) {
 			tp = new JTabbedPane(SwingConstants.TOP);
 		} else {
@@ -188,11 +188,11 @@ public class JBroFuzzWindow extends JFrame {
 			public void stateChanged(ChangeEvent evt) {
 
 				// Get current tab
-				JTabbedPane pane = (JTabbedPane) evt.getSource();
+				final JTabbedPane pane = (JTabbedPane) evt.getSource();
 				final int c = pane.getSelectedIndex();
 				if (c >= 0) {
 
-					boolean[] b = new boolean[5];
+					final boolean[] b = new boolean[5];
 					b[0] = ((AbstractPanel) pane.getComponent(c))
 					.isStartedEnabled();
 					b[1] = ((AbstractPanel) pane.getComponent(c))
@@ -219,7 +219,7 @@ public class JBroFuzzWindow extends JFrame {
 		Logger.log("System Launch, Welcome!", 1);
 
 		// Check for a new version at startup
-		boolean checkNewVersion = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[0].getId(), true);
+		final boolean checkNewVersion = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.GENERAL[0].getId(), true);
 		if (checkNewVersion) {
 			(new StartUpdateCheck(JBroFuzzWindow.this)).execute();
 		}

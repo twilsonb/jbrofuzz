@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -51,9 +51,9 @@ public class StatusCodeChart {
 
 	private static final int MAX_CHARS = 32;
 	// The x-axis filenames
-	private String[] xData;
+	private final String[] xData;
 	// The y-axis data
-	private String[] yData;
+	private final String[] yData;
 
 	private DefaultPieDataset dataset;
 
@@ -149,7 +149,7 @@ public class StatusCodeChart {
 
 		final HashMap<String, Integer> map = new HashMap<String, Integer>();
 
-		for (String n : yData) {
+		for (final String n : yData) {
 
 			if (map.containsKey(n)) {
 				map.put(n, map.get(n) + 1);

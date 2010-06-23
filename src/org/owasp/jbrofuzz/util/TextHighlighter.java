@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -71,8 +71,8 @@ public class TextHighlighter extends DefaultStyledDocument {
 	 */
 	private static final long serialVersionUID = 3812224127502539817L;
 
-	private HashMap<String, Color> keywords;
-	private MutableAttributeSet style;
+	private final HashMap<String, Color> keywords;
+	private final MutableAttributeSet style;
 
 	/**
 	 * Default Constructor for the TextHighlighter, extending the DefaultStyled
@@ -267,8 +267,8 @@ public class TextHighlighter extends DefaultStyledDocument {
 		keywords.put("x-requested-with", Color.blue);
 		
 		// "|\\B+\\<.?html\\>+\\B|"
-		String prefixHTML = "|\\B+\\<.?";
-		String suffixHTML = "+\\>\\B|";
+		final String prefixHTML = "|\\B+\\<.?";
+		final String suffixHTML = "+\\>\\B|";
 		keywords.put(prefixHTML + " " + suffixHTML, Color.blue);
 		keywords.put(prefixHTML + "html" + suffixHTML, Color.green);
 		keywords.put(prefixHTML + "hr" + suffixHTML, Color.pink);

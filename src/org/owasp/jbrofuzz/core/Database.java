@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -315,14 +315,14 @@ public class Database {
 		final HashSet<String> o = new HashSet<String>();
 
 		final String[] ids = getAllPrototypeIDs();
-		for (String id : ids) {
+		for (final String id : ids) {
 
 			final List<String> catArrayList = prototypes.get(id)
 			.getCategories();
 			final String[] categoriesArray = new String[catArrayList.size()];
 			catArrayList.toArray(categoriesArray);
 
-			for (String cCategory : categoriesArray) {
+			for (final String cCategory : categoriesArray) {
 
 				o.add(cCategory);
 
@@ -396,7 +396,7 @@ public class Database {
 		final String[] input = new String[set.size()];
 		set.toArray(input);
 
-		for (String key : input) {
+		for (final String key : input) {
 			output.append(prototypes.get(key).getName());
 			output.append('\n');
 		}
@@ -423,7 +423,7 @@ public class Database {
 	public String getIdFromName(final String name) {
 
 		final String[] ids = getAllPrototypeIDs();
-		for (String id : ids) {
+		for (final String id : ids) {
 			final Prototype cPrototype = prototypes.get(id);
 			if (name.equalsIgnoreCase(cPrototype.getName())) {
 				return id;
@@ -472,7 +472,7 @@ public class Database {
 	public String[] getPayloads(final String uniqId) {
 
 		if (containsPrototype(uniqId)) {
-			Prototype cPrototype = prototypes.get(uniqId);
+			final Prototype cPrototype = prototypes.get(uniqId);
 			final String[] output = new String[cPrototype.size()];
 			return cPrototype.getPayloads().toArray(output);
 		} else {
@@ -519,15 +519,15 @@ public class Database {
 		final HashSet<String> o = new HashSet<String>();
 		final String[] ids = getAllPrototypeIDs();
 
-		for (String id : ids) {
+		for (final String id : ids) {
 
-			Prototype g = prototypes.get(id);
+			final Prototype g = prototypes.get(id);
 			if (g.isAMemberOfCategory(category)) {
 				o.add(g.getName());
 			}
 		}
 
-		String[] uCategotiesArray = new String[o.size()];
+		final String[] uCategotiesArray = new String[o.size()];
 		o.toArray(uCategotiesArray);
 
 		return uCategotiesArray;

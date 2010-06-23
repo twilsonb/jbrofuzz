@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -150,7 +150,7 @@ class DirsPPanel extends AbstractPrefsPanel {
 									
 									dirTextField.setText(selDirFile.getCanonicalPath());
 									
-								} catch (IOException e) {
+								} catch (final IOException e) {
 									
 									Logger.log(e.getMessage(), 4);
 									
@@ -170,6 +170,7 @@ class DirsPPanel extends AbstractPrefsPanel {
 
 	}
 	
+	@Override
 	public void apply() {
 		
 		JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[0].getId(), dirTextField.getText());

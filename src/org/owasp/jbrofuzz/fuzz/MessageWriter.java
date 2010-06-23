@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -48,7 +48,7 @@ public class MessageWriter {
 	private transient final Date start;
 	private transient Date end;
 	private transient String status;
-	private transient String payload;
+	private transient final String payload;
 	private transient int replyByteLength;
 
 	protected MessageWriter(final FuzzingPanel fuzzingPanel) {

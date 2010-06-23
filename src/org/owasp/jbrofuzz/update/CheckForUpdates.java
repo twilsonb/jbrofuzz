@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -223,7 +223,7 @@ public class CheckForUpdates extends JDialog {
 
 		// Remove all action listeners from the start/stop button
 		final ActionListener[] acArray = startStop.getActionListeners();
-		for (ActionListener listener : acArray) {
+		for (final ActionListener listener : acArray) {
 			startStop.removeActionListener(listener);
 		}
 
@@ -274,8 +274,8 @@ public class CheckForUpdates extends JDialog {
 		close.setEnabled(false);
 
 		// Remove all action listeners
-		ActionListener[] acArray = startStop.getActionListeners();
-		for (ActionListener listener : acArray) {
+		final ActionListener[] acArray = startStop.getActionListeners();
+		for (final ActionListener listener : acArray) {
 			startStop.removeActionListener(listener);
 		}
 
@@ -346,13 +346,13 @@ public class CheckForUpdates extends JDialog {
 
 			} // else statement for a 200 response
 
-		} catch (MalformedURLException e) {
+		} catch (final MalformedURLException e) {
 			mainLabel.append("[FAIL]\n" + "Malformed URL violation: "
 					+ e.getMessage());
 
-		} catch (UnsupportedEncodingException e) {
+		} catch (final UnsupportedEncodingException e) {
 			mainLabel.append("[FAIL]\n" + "Encoding error: " + e.getMessage());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			mainLabel.append("[FAIL]\n" + "Fatal transport error: "
 					+ e.getMessage());
 		} finally {
@@ -383,7 +383,7 @@ public class CheckForUpdates extends JDialog {
 					mainLabel.append("\nCurrent Version is: "
 							+ JBroFuzzFormat.VERSION + "\n\n");
 
-				} catch (NumberFormatException e) {
+				} catch (final NumberFormatException e) {
 					mainLabel.append("[FAIL]\n");
 				}
 

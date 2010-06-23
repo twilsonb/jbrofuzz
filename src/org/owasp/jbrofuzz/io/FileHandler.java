@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -214,7 +214,7 @@ public class FileHandler {
 
 		try {
 			return rootDirectory.getCanonicalPath();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			return "";
 		}
 
@@ -274,7 +274,7 @@ public class FileHandler {
 		int counter = 0;
 		InputStream in = null;
 		FileInputStream fis = null;
-		StringBuffer fileContents = new StringBuffer();
+		final StringBuffer fileContents = new StringBuffer();
 		try {
 			fis = new FileInputStream(inputFile);
 			in = new BufferedInputStream(fis);
@@ -290,7 +290,7 @@ public class FileHandler {
 			in.close();
 			fis.close();
 
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			
 			return "Attempting to open the file caused an I/O Error:\n\n" + fileName;
 
@@ -309,12 +309,12 @@ public class FileHandler {
 
 		final String fileName = outputMessage.getFileName() + ".html";
 
-		File toWrite = new File(fuzzDirectory, fileName);
+		final File toWrite = new File(fuzzDirectory, fileName);
 
 		try {
 			FileUtils.touch(toWrite);
 			FileUtils.writeStringToFile(toWrite, outputMessage.toString());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			Logger.log("Error writting fuzz file: " + fileName, 3);
 		}
 	}

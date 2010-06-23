@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -118,6 +118,7 @@ class FuzzPPanel extends AbstractPrefsPanel {
 
 	}
 
+	@Override
 	public void apply() { 
 
 		// Fuzzing... -> Socket Timeout

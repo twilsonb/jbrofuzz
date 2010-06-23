@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -45,7 +45,9 @@ public class CrossProductFuzzer implements Iterator<String[]> {
 	// The two fuzzers that constitute the double fuzzer
 	private final Fuzzer fuzzer1, fuzzer2;
 
-	private transient long cValue, maxValue;
+	private transient long cValue;
+
+	private final transient long maxValue;
 	
 	private transient String payload1, payload2;
 		

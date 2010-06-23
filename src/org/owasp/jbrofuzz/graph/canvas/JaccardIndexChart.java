@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -52,14 +52,14 @@ public class JaccardIndexChart {
 
 	private static final int MAX_CHARS = 1048576;
 	// The x-axis filenames
-	private String[] xData;
+	private final String[] xData;
 	// The y-axis data
-	private double[] yData;
+	private final double[] yData;
 	// The data to be displayed
-	private DefaultCategoryDataset dataset;
+	private final DefaultCategoryDataset dataset;
 
 	// The hash set with all the characters of the first response
-	private HashSet<Character> firstSet;
+	private final HashSet<Character> firstSet;
 
 	// Constants
 	private final static String END_SIGNATURE = "--jbrofuzz-->\n";
@@ -197,7 +197,7 @@ public class JaccardIndexChart {
 		plot.setBackgroundImage(ImageCreator.IMG_OWASP_MED.getImage());
 		plot.setBackgroundImageAlignment(Align.TOP_RIGHT);
 
-		CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
+		final CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
 		renderer
 		.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
 

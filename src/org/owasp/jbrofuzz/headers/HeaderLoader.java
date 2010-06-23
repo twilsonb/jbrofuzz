@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -58,7 +58,7 @@ class HeaderLoader {
 
 	private int globalCounter;
 
-	private Map<String, Prototype> headersMap;
+	private final Map<String, Prototype> headersMap;
 
 	public HeaderLoader() {
 
@@ -150,7 +150,7 @@ class HeaderLoader {
 			return Header.ZERO;
 		}
 
-		for(String headerName : headersMap.keySet()) {
+		for(final String headerName : headersMap.keySet()) {
 			
 			final Prototype proto = headersMap.get(headerName);
 			
@@ -171,7 +171,7 @@ class HeaderLoader {
 						i = 32;
 					}
 					
-				} catch (ArrayIndexOutOfBoundsException exp) {
+				} catch (final ArrayIndexOutOfBoundsException exp) {
 					i = 32;
 				}
 			}
@@ -183,7 +183,7 @@ class HeaderLoader {
 				proto.getPayloads().toArray(output);
 				
 				final StringBuffer myBuffer = new StringBuffer();
-				for(String payload : output) {
+				for(final String payload : output) {
 					myBuffer.append(payload);
 					myBuffer.append('\n');
 				}
@@ -209,7 +209,7 @@ class HeaderLoader {
 	protected void load() {
 
 		
-		for (String hd : headersMap.keySet()) {
+		for (final String hd : headersMap.keySet()) {
 			
 			final Prototype pt = headersMap.get(hd);
 

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -50,13 +50,13 @@ public class ZBase32 {
     }
     
     private static String fix(String in){
-    	int a = in.length()-((in.length()/10)*10);
+    	final int a = in.length()-((in.length()/10)*10);
     	if (a == 1 || a == 6){
-    		StringBuffer buf = new StringBuffer();
+    		final StringBuffer buf = new StringBuffer();
     		buf.append(in).append(" ");
      		return buf.toString();
     	}else if (a == 0 || a == 5){
-    		StringBuffer buf = new StringBuffer();
+    		final StringBuffer buf = new StringBuffer();
     		buf.append(in).append("  ");
      		return buf.toString();
     	}else{
@@ -74,8 +74,8 @@ public class ZBase32 {
         final byte[] input         = in;
         final StringBuilder output = new StringBuilder();
         
-        int special = input.length % 5;
-        int normal  = input.length - special;
+        final int special = input.length % 5;
+        final int normal  = input.length - special;
         
         for (int i = 0; i < normal; i += 5) {
             output.append(
@@ -186,15 +186,15 @@ public class ZBase32 {
     
     public static String decode(String in) {
     	init();
-    	String input = fix(in);
-        int expOrgSize = (int)Math.floor(input.length() / 1.6);
-        int expPadSize = ((int)Math.ceil(expOrgSize / 5.0)) * 8;
-        StringBuilder s= new StringBuilder(input);
+    	final String input = fix(in);
+        final int expOrgSize = (int)Math.floor(input.length() / 1.6);
+        final int expPadSize = ((int)Math.ceil(expOrgSize / 5.0)) * 8;
+        final StringBuilder s= new StringBuilder(input);
         for (int i = 0; i < expPadSize; i++) {
             s.append("=");
         }
         
-        char[] data    = s.toString().toLowerCase().toCharArray();
+        final char[] data    = s.toString().toLowerCase().toCharArray();
         int dataLen    = data.length;
         while (dataLen > 0) {
             if (!ignore(data[dataLen - 1]))
@@ -203,25 +203,25 @@ public class ZBase32 {
             dataLen--;
         }
         
-        java.util.List<Byte> output = new java.util.ArrayList<Byte>();
+        final java.util.List<Byte> output = new java.util.ArrayList<Byte>();
         int i = 0;
-        int e = dataLen - 8;
+        final int e = dataLen - 8;
         for (i = next(data, i, e); i < e; i = next(data, i, e)) {
-        	byte b1 = decoding[data[i++]];
+        	final byte b1 = decoding[data[i++]];
             i = next(data, i, e);
-            byte b2 = decoding[data[i++]];
+            final byte b2 = decoding[data[i++]];
             i = next(data, i, e);
-            byte b3 = decoding[data[i++]];
+            final byte b3 = decoding[data[i++]];
             i = next(data, i, e);
-            byte b4 = decoding[data[i++]];
+            final byte b4 = decoding[data[i++]];
             i = next(data, i, e);
-            byte b5 = decoding[data[i++]];
+            final byte b5 = decoding[data[i++]];
             i = next(data, i, e);
-            byte b6 = decoding[data[i++]];
+            final byte b6 = decoding[data[i++]];
             i = next(data, i, e);
-            byte b7 = decoding[data[i++]];
+            final byte b7 = decoding[data[i++]];
             i = next(data, i, e);
-            byte b8 = decoding[data[i++]];
+            final byte b8 = decoding[data[i++]];
             
             output.add((byte) ((b1 << 3) | (b2 >> 2)));
             output.add((byte) ((b2 << 6) | (b3 << 1) | (b4 >> 4)));
@@ -252,16 +252,16 @@ public class ZBase32 {
             output.add((byte) (((decoding[data[dataLen - 2]]) << 5) | (decoding[data[dataLen - 1]])));
         }
         
-        byte[] b = toPrimitive(output.toArray(new Byte[0]));
+        final byte[] b = toPrimitive(output.toArray(new Byte[0]));
         return trim(new String(b));
     }
     
     private static String trim(String s) {
-        char[] c = s.toCharArray();
+        final char[] c = s.toCharArray();
         int end  = c.length;
         
         for (int i = c.length - 1; i >= 0; i--) {
-            if (((int)c[i]) != 0)
+            if ((c[i]) != 0)
                 break;
             
             end = i;
@@ -282,7 +282,7 @@ public class ZBase32 {
     }
     
     private static byte[] toPrimitive(Byte[] bytes) {
-        byte[] result = new byte[bytes.length];
+        final byte[] result = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
             result[i] = bytes[i];
         }

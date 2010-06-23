@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -86,12 +86,12 @@ public class FuzzerTable extends JTable {
 	@Override
 	public TableCellEditor getCellEditor(int row, int column) {
 
-		JComboBox comboxBox = new JComboBox(ENCODINGS);
+		final JComboBox comboxBox = new JComboBox(ENCODINGS);
 		comboxBox.setFont(new Font("Monospaced", Font.BOLD, 12));
 		comboxBox.setBackground(Color.BLACK);
 		comboxBox.setForeground(Color.WHITE);
 
-		int modelColumn = convertColumnIndexToModel( column );
+		final int modelColumn = convertColumnIndexToModel( column );
 
 		if (modelColumn == 1) 
 			return new DefaultCellEditor(comboxBox);
@@ -102,7 +102,7 @@ public class FuzzerTable extends JTable {
 
 	@Override
 	public TableCellRenderer getCellRenderer(int row, int column)	{
-		int modelColumn = convertColumnIndexToModel( column );
+		final int modelColumn = convertColumnIndexToModel( column );
 
 		if (modelColumn == 1)
 			return new ComboBoxRenderer ();

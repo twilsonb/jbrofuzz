@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -90,7 +90,7 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "2.2";
+	public static final String VERSION = "2.3";
 
 	/**
 	 * <p>
@@ -105,7 +105,7 @@ public class JBroFuzzFormat {
 	 * About menu.
 	 * 
 	 */
-	public static final String URL_WEBSITE = "http://www.owasp.org/index.php/Category:OWASP_JBroFuzz";
+	public static final String URL_WEBSITE = "http://www.owasp.org/index.php/JBroFuzz";
 
 	/**
 	 * <p>
@@ -127,7 +127,7 @@ public class JBroFuzzFormat {
 	 * about box.</p>
 	 * 
 	 * @author subere@uncon.org
-	 * @version 2.1
+	 * @version 2.3
 	 * @sinse 1.8
 	 */
 	public static final String DEVELOPMENT_TEAM =
@@ -136,6 +136,7 @@ public class JBroFuzzFormat {
 		+ "Yiannis Pavlosoglou<BR>"
 		+ "Nathan Sportsman<BR>"
 		+ "Ranulf Green<BR>"
+		+ "Markus Miedaner<BR>"
 		+ "<BR></HTML>";
 
 	public static final Dimension ZERO_DIM = new Dimension(0,0);
@@ -244,13 +245,13 @@ public class JBroFuzzFormat {
 			return "Belus "; /* - Babylonia god of war */
 		}
 		if (versionNumber.equalsIgnoreCase("2.3")) {
-			return "Oro "; /* - Polynesian mythology */
+			return "Thor "; /* Norse, OWASP Sweden 2010 */
 		}
 		if (versionNumber.equalsIgnoreCase("2.4")) {
 			return "Ogoun "; /* Haitian Vodou, preserves fire */
 		}
 		if (versionNumber.equalsIgnoreCase("2.5")) {
-			return "Thor "; /* Norse, OWASP Sweden 2010 */
+			return "Oro "; /* - Polynesian mythology */ 
 		}
 		if (versionNumber.equalsIgnoreCase("2.6")) {
 			return "Virtus "; /* Roman God of bravery */

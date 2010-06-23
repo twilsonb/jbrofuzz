@@ -71,7 +71,7 @@ public class SystemPanel extends AbstractPanel {
 
 	private final JTextPane listTextArea;
 
-	private DefaultStyledDocument styleDoc;
+	private final DefaultStyledDocument styleDoc;
 	// The line count
 	private int lineCount;
 
@@ -214,7 +214,7 @@ public class SystemPanel extends AbstractPanel {
 
 			listTextArea.setCaretPosition(styleDoc.getLength());
 
-		} catch (BadLocationException ex) {
+		} catch (final BadLocationException ex) {
 
 			ex.printStackTrace();
 
@@ -267,7 +267,7 @@ public class SystemPanel extends AbstractPanel {
 				}
 
 			});
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			start("Log file is corrupted or does not exist", 4);
 		}
 
@@ -300,9 +300,9 @@ public class SystemPanel extends AbstractPanel {
 			}
 
 
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e) {
 			start("Log file not found",4);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			start("Error reading log file",4);
 		}
 	}

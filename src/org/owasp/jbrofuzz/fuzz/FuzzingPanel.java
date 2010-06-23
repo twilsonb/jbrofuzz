@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -116,7 +116,7 @@ public class FuzzingPanel extends AbstractPanel {
 	private final OutputTable mOutputTable;
 
 	// The JTableRowSorter
-	private TableRowSorter<OutputTableModel> outputSorter;
+	private final TableRowSorter<OutputTableModel> outputSorter;
 	
 	// And the table model that goes with it
 	private final OutputTableModel outputTableModel;
@@ -251,7 +251,7 @@ public class FuzzingPanel extends AbstractPanel {
 				requestPane.grabFocus();
 				try {
 					requestPane.setCaretPosition(sFuzz);
-				} catch (IllegalArgumentException  vad_arg) {
+				} catch (final IllegalArgumentException  vad_arg) {
 					Logger.log("Could not pinpoint the position where the fuzzer is", 3);
 				}
 				requestPane.setSelectionStart(sFuzz);
@@ -310,7 +310,7 @@ public class FuzzingPanel extends AbstractPanel {
 							int cRow = mOutputTable.getSelectedRow();
 							try {
 								cRow = mOutputTable.convertRowIndexToModel(cRow);
-							} catch (IndexOutOfBoundsException e) {
+							} catch (final IndexOutOfBoundsException e) {
 								return;
 							}
 							final String name = (String) mOutputTable.getModel()
@@ -838,7 +838,7 @@ public class FuzzingPanel extends AbstractPanel {
 						// outputSorter.sort();
 						// mOutputTable.updateUI();
 						
-					} catch (ConnectionException e1) {
+					} catch (final ConnectionException e1) {
 
 						// Update the message writer
 						outputMessage.setException(e1);
@@ -868,7 +868,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 				}
 
-			} catch (NoSuchFuzzerException exp) {
+			} catch (final NoSuchFuzzerException exp) {
 
 				Logger.log("The fuzzer could not be found...", 3);
 			}

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -39,9 +39,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.Hashtable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -61,19 +58,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-import javax.swing.text.StyledEditorKit;
 
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
-import org.owasp.jbrofuzz.util.TextHighlighter;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
@@ -85,9 +76,6 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * </p>
  * 
  * @author daemonmidi@gmail.com
- * @version 2.3
- * 
- * @author subere@uncon.org
  * @version 2.3
  * @since 0.2
  */
@@ -107,8 +95,8 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 	private final transient Highlighter.HighlightPainter painter;
 
 	private final JTextPane listTextArea;
-	private JTextField entry;
-	private JLabel status;
+	private final JTextField entry;
+	private final JLabel status;
 	private int lastIndex = 0;
 
 
@@ -142,7 +130,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		listPanel.setLayout(new BorderLayout());
 
 		// Get the preferences for wrapping lines of text
-		boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[3].getId(), false);
+		final boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[3].getId(), false);
 
 		if (wrapText) {
 
@@ -170,8 +158,8 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		entryBg = entry.getBackground();
 		entry.getDocument().addDocumentListener(this);
 
-		InputMap im = entry.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		ActionMap am = entry.getActionMap();
+		final InputMap im = entry.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		final ActionMap am = entry.getActionMap();
 		im.put(KeyStroke.getKeyStroke("ESCAPE"), CANCEL_ACTION);
 		am.put(CANCEL_ACTION, new CancelAction());
 
@@ -196,7 +184,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 
 		listTextArea.setCaretPosition(0);
 		// doSyntaxHighlight();
-		listTextArea.setEditorKit(new StyledEditorKit() {
+/*		listTextArea.setEditorKit(new StyledEditorKit() {
 
 			private static final long serialVersionUID = -6085642347022880064L;
 
@@ -206,7 +194,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 			}
 
 		});
-
+*/
 
 		listPanel.add(listTextScrollPane);
 
@@ -278,7 +266,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 	private void search() {
 		hilit.removeAllHighlights();
 
-		String s = entry.getText();
+		final String s = entry.getText();
 		if (s.length() <= 0) {
 			message("Nothing to search");
 			return;
@@ -286,16 +274,16 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 
 
 		try {
-			String content = listTextArea.getDocument().getText(0, listTextArea.getDocument().getLength());
+			final String content = listTextArea.getDocument().getText(0, listTextArea.getDocument().getLength());
 			int index = content.indexOf(s, 0);
 			
 			if (lastIndex != 0 && lastIndex >= index){
-				int tempIndex = content.indexOf(s, lastIndex +1);
+				final int tempIndex = content.indexOf(s, lastIndex +1);
 				index = tempIndex;
 			}
 			
 			if (index >= 0) {   // match found
-				int end = index + s.length();
+				final int end = index + s.length();
 				hilit.addHighlight(index, end, painter);
 				listTextArea.setCaretPosition(index);
 				entry.setBackground(entryBg);
@@ -311,7 +299,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 				message("Phrase not found...");
 			}
 
-		} catch (BadLocationException e) {
+		} catch (final BadLocationException e) {
 			e.printStackTrace();
 		}
 

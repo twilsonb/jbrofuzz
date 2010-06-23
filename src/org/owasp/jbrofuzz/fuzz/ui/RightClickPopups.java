@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -290,9 +290,9 @@ public final class RightClickPopups {
 
 
 	private static JMenu buildEncodeMenu(final JTextComponent area){
-		JMenu encodeMenu = new JMenu("Encode");
+		final JMenu encodeMenu = new JMenu("Encode");
 
-		JMenuItem[] encodeList = new JMenuItem[EncoderHashCore.CODES.length];
+		final JMenuItem[] encodeList = new JMenuItem[EncoderHashCore.CODES.length];
 
 		for(int i=0;i<encodeList.length;i++){
 
@@ -303,9 +303,9 @@ public final class RightClickPopups {
 			encode.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
-					String toEncode = area.getSelectedText();
+					final String toEncode = area.getSelectedText();
 					if(toEncode != null){
-						String encoded = EncoderHashCore.encode(toEncode, EncoderHashCore.CODES[index]);
+						final String encoded = EncoderHashCore.encode(toEncode, EncoderHashCore.CODES[index]);
 						area.replaceSelection(encoded);				
 					}			
 				}
@@ -322,9 +322,9 @@ public final class RightClickPopups {
 	}
 
 	private static JMenu buildDecodeMenu(final JTextComponent area){
-		JMenu decodeMenu = new JMenu("Decode");
+		final JMenu decodeMenu = new JMenu("Decode");
 
-		JMenuItem[] decodeList = new JMenuItem[EncoderHashCore.CODES.length];
+		final JMenuItem[] decodeList = new JMenuItem[EncoderHashCore.CODES.length];
 
 		for(int i=0;i<decodeList.length;i++){
 
@@ -337,9 +337,9 @@ public final class RightClickPopups {
 				decode.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent arg0) {
-						String toDecode = area.getSelectedText();
+						final String toDecode = area.getSelectedText();
 						if(toDecode != null ){
-							String decoded = EncoderHashCore.decode(toDecode, EncoderHashCore.CODES[index]);
+							final String decoded = EncoderHashCore.decode(toDecode, EncoderHashCore.CODES[index]);
 							area.replaceSelection(decoded);	
 						}
 					}
@@ -616,7 +616,7 @@ public final class RightClickPopups {
 					getDatabase().getPayloads(fuzzerRowId);
 
 				final StringBuffer myPayloadsBuffer = new StringBuffer();
-				for(String si : fuzzerPayloads) {
+				for(final String si : fuzzerPayloads) {
 					myPayloadsBuffer.append(si);
 					myPayloadsBuffer.append("\n\n");
 				}

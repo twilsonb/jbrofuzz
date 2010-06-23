@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -77,6 +77,7 @@ abstract class AbstractPrefsPanel extends JPanel {
 	 * @version 2.0
 	 * @since 2.0
 	 */
+	@Override
 	public final String getName() {
 		return this.name;
 	}

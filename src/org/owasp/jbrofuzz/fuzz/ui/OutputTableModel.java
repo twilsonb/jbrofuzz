@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -47,7 +47,7 @@ public class OutputTableModel extends DefaultTableModel {
 	public OutputTableModel() {
 		super();
 		
-		for(String column : COLUMNNAMES) {
+		for(final String column : COLUMNNAMES) {
 			this.addColumn(column);
 		}
 		

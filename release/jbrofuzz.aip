@@ -4,20 +4,20 @@
     <ROW Property="ALLUSERS" Value="2"/>
     <ROW Property="ARPCOMMENTS" Value="This installer database contains the logic and data required to install [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPCONTACT" Value="OWASP Foundation"/>
-    <ROW Property="ARPHELPLINK" Value="http://www.owasp.org/index.php/Category:OWASP_JBroFuzz"/>
-    <ROW Property="ARPHELPTELEPHONE" Value="http://www.owasp.org/index.php/Category:OWASP_JBroFuzz"/>
+    <ROW Property="ARPHELPLINK" Value="http://www.owasp.org/index.php/JBroFuzz"/>
+    <ROW Property="ARPHELPTELEPHONE" Value="http://www.owasp.org/index.php/JBroFuzz"/>
     <ROW Property="ARPNOMODIFY" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="ARPNOREPAIR" Value="1"/>
     <ROW Property="ARPPRODUCTICON" Value="icon.exe" Type="8"/>
-    <ROW Property="ARPURLINFOABOUT" Value="http://www.owasp.org/index.php/Category:OWASP_JBroFuzz"/>
-    <ROW Property="ARPURLUPDATEINFO" Value="http://www.owasp.org/index.php/Category:OWASP_JBroFuzz"/>
+    <ROW Property="ARPURLINFOABOUT" Value="http://www.owasp.org/index.php/JBroFuzz"/>
+    <ROW Property="ARPURLUPDATEINFO" Value="http://www.owasp.org/index.php/JBroFuzz"/>
     <ROW Property="BannerBitmap" MultiBuildValue="DefaultBuild:default_banner.bmp" Type="1"/>
     <ROW Property="DialogBitmap" MultiBuildValue="DefaultBuild:default_dialog.bmp" Type="1"/>
     <ROW Property="Manufacturer" Value="OWASP" ValueLocId="*"/>
-    <ROW Property="ProductCode" Value="1033:{54596385-758A-4860-8E04-B6D45339BA12} " Type="16"/>
+    <ROW Property="ProductCode" Value="1033:{8D3170D6-1A9C-4BED-ACF6-4525EEA31934} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1033"/>
     <ROW Property="ProductName" Value="JBroFuzz" ValueLocId="*"/>
-    <ROW Property="ProductVersion" Value="2.2.0"/>
+    <ROW Property="ProductVersion" Value="2.3.0"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND"/>
     <ROW Property="UpgradeCode" Value="{8563E053-CB25-42AF-BAC9-B42EE0F78B49}"/>
     <ROW Property="WindowsFamily9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
@@ -28,24 +28,29 @@
     <ROW Directory="SHORTCUTDIR" Directory_Parent="TARGETDIR" DefaultDir="SHORTC~1|SHORTCUTDIR" IsPseudoRoot="1"/>
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
     <ROW Directory="examples_DIR" Directory_Parent="APPDIR" DefaultDir="examples"/>
+    <ROW Directory="library_DIR" Directory_Parent="APPDIR" DefaultDir="library"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="JBroFuzz.exe" ComponentId="{B1DC31D5-8201-4C72-A4A5-E6B74455C10D}" Directory_="APPDIR" Attributes="0" KeyPath="JBroFuzz.exe"/>
+    <ROW Component="JBroFuzzEncoder.exe" ComponentId="{EF7B50DA-6B09-47F5-ACFD-13218CF8EDB4}" Directory_="APPDIR" Attributes="0" KeyPath="JBroFuzzEncoder.exe"/>
     <ROW Component="SHORTCUTDIR" ComponentId="{C73B277C-E65E-487F-ADD1-6AF8B779EB83}" Directory_="SHORTCUTDIR" Attributes="0"/>
     <ROW Component="example_01_http_version.jbrofuzz" ComponentId="{B38BA569-9D87-4E78-9109-97BBE9EFBE1D}" Directory_="examples_DIR" Attributes="0" KeyPath="example_01_http_version.jbrofuzz" Type="0"/>
+    <ROW Component="jbrofuzz_core_2.3.jar" ComponentId="{6C97423B-8C11-4339-9D6D-2F6A83F318DC}" Directory_="library_DIR" Attributes="0" KeyPath="jbrofuzz_core_2.3.jar" Type="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
-    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Attributes="0" Components="JBroFuzz.exe SHORTCUTDIR example_01_http_version.jbrofuzz"/>
+    <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Attributes="0" Components="JBroFuzz.exe SHORTCUTDIR example_01_http_version.jbrofuzz JBroFuzzEncoder.exe jbrofuzz_core_2.3.jar"/>
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
     <ROW File="JBroFuzz.exe" Component_="JBroFuzz.exe" FileName="JBroFuzz.exe" Attributes="0" SourcePath="..\jar\JBroFuzz.exe" SelfReg="false" Sequence="1"/>
+    <ROW File="JBroFuzzEncoder.exe" Component_="JBroFuzzEncoder.exe" FileName="JBroFu~1.exe|JBroFuzzEncoder.exe" Attributes="0" SourcePath="..\jar\JBroFuzzEncoder.exe" SelfReg="false" Sequence="8"/>
     <ROW File="example_01_http_version.jbrofuzz" Component_="example_01_http_version.jbrofuzz" FileName="exampl~1.jbr|example-01-http-version.jbrofuzz" Attributes="0" SourcePath="..\jar\examples\example-01-http-version.jbrofuzz" SelfReg="false" Sequence="2"/>
     <ROW File="example_02_http_methods.jbrofuzz" Component_="example_01_http_version.jbrofuzz" FileName="exampl~2.jbr|example-02-http-methods.jbrofuzz" Attributes="0" SourcePath="..\jar\examples\example-02-http-methods.jbrofuzz" SelfReg="false" Sequence="3"/>
     <ROW File="example_03_charset_buffer_overflow.jbrofuzz" Component_="example_01_http_version.jbrofuzz" FileName="exampl~3.jbr|example-03-charset-buffer-overflow.jbrofuzz" Attributes="0" SourcePath="..\jar\examples\example-03-charset-buffer-overflow.jbrofuzz" SelfReg="false" Sequence="4"/>
     <ROW File="example_04_mobile_symbian.jbrofuzz" Component_="example_01_http_version.jbrofuzz" FileName="exampl~4.jbr|example-04-mobile-symbian.jbrofuzz" Attributes="0" SourcePath="..\jar\examples\example-04-mobile-symbian.jbrofuzz" SelfReg="false" Sequence="5"/>
     <ROW File="example_05_chrome_version_fuzz.jbrofuzz" Component_="example_01_http_version.jbrofuzz" FileName="exampl~5.jbr|example-05-chrome-version-fuzz.jbrofuzz" Attributes="0" SourcePath="..\jar\examples\example-05-chrome-version-fuzz.jbrofuzz" SelfReg="false" Sequence="6"/>
     <ROW File="example_06_user_agents_google.jbrofuzz" Component_="example_01_http_version.jbrofuzz" FileName="exampl~6.jbr|example-06-user-agents-google.jbrofuzz" Attributes="0" SourcePath="..\jar\examples\example-06-user-agents-google.jbrofuzz" SelfReg="false" Sequence="7"/>
+    <ROW File="jbrofuzz_core_2.3.jar" Component_="jbrofuzz_core_2.3.jar" FileName="jbrofu~1.jar|jbrofuzz-core-2.3.jar" Attributes="0" SourcePath="..\jar\jbrofuzz-core-2.3.jar" SelfReg="false" Sequence="9"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
     <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="0" PackageFolder="." Languages="en" InstallationType="4"/>
@@ -114,6 +119,8 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
     <ROW Shortcut="JBroFuzz" Directory_="SHORTCUTDIR" Name="JBroFuzz" Component_="JBroFuzz.exe" Target="[#JBroFuzz.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="JBroFuzzEncoder" Directory_="SHORTCUTDIR" Name="JBroFu~1|JBroFuzzEncoder" Component_="JBroFuzzEncoder.exe" Target="[#JBroFuzzEncoder.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="JBroFuzzEncoder_1" Directory_="DesktopFolder" Name="JBroFu~1|JBroFuzzEncoder" Component_="JBroFuzzEncoder.exe" Target="[#JBroFuzzEncoder.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
     <ROW Shortcut="JBroFuzz_1" Directory_="DesktopFolder" Name="JBroFuzz" Component_="JBroFuzz.exe" Target="[#JBroFuzz.exe]" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">

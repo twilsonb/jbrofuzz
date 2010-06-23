@@ -24,8 +24,8 @@ import org.owasp.jbrofuzz.ui.AbstractPanel;
  */
 public class FuzzerModelListener implements TableModelListener {
 
-	private AbstractPanel p;
-	private FuzzerTable t;
+	private final AbstractPanel p;
+	private final FuzzerTable t;
 	
 	public FuzzerModelListener(final AbstractPanel p, final FuzzerTable t) {
 	

@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -46,6 +46,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Enumeration;
 import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -68,7 +69,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
@@ -79,14 +79,10 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * for a variety of different schemes, as well as hashing functionality.
  * </p>
  * 
- * @author daemonmidi@gamil.com
+ * @author daemonmidi@gmail.com
+ * @author subere@uncon.org
  * @version 2.3
  * @since 1.5
- * 
- * @author Yiannis Marangos
- * @version 2.0
- * @since 2.0
- * 
  */
 public class EncoderHashFrame extends JFrame {
 
@@ -95,6 +91,8 @@ public class EncoderHashFrame extends JFrame {
 	// Dimensions of the frame
 	private static final int SIZE_X = 650;
 	private static final int SIZE_Y = 400;
+
+	private static final Preferences PREFS = Preferences.userRoot().node("owasp/jbrofuzz");
 
 	private JSplitPane horizontalSplitPane, verticalSplitPaneLeft,
 			verticalSplitPaneRight, commentSplitPane;
@@ -203,8 +201,8 @@ public class EncoderHashFrame extends JFrame {
 
 		decoderPanel.add(decodeScrollPane, BorderLayout.CENTER);
 
-		commentPanel = new HashPanel(""); recordingPanel = new JPanel(new
-				BorderLayout());
+		commentPanel = new HashPanel("");
+		recordingPanel = new JPanel(new BorderLayout());
 		// Text panes -> Comment
 		recordingPanelData = refreshRecordingPane();
 		columnNames = new String[] { "Nr", "Encoded", "Decoded", "Codes/Hashes" };
@@ -250,7 +248,7 @@ public class EncoderHashFrame extends JFrame {
 		commentSplitPane.setDividerLocation(280);
 
 		// Traverse tree from root
-		TreeNode root = (TreeNode) tree.getModel().getRoot();
+		final TreeNode root = (TreeNode) tree.getModel().getRoot();
 		expandAll(tree, new TreePath(root), true);
 
 		// Bottom three buttons
@@ -259,7 +257,8 @@ public class EncoderHashFrame extends JFrame {
 		decode = new JButton(" Decode ");
 		close = new JButton(" Close ");
 
-		swap.setToolTipText(" Swap the contents of encoded text with the decoded text ");
+		swap
+				.setToolTipText(" Swap the contents of encoded text with the decoded text ");
 		final String desc = "Select an encoding or hashing scheme from the left hard side";
 		encode.setToolTipText(desc);
 		decode.setToolTipText(desc);
@@ -326,23 +325,14 @@ public class EncoderHashFrame extends JFrame {
 			}
 		});
 
-		// Keyboard listener on the treeView for Ctrl+Return to Encode
-		tree.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					windowIsShowing = false;
-					saveValues();
-				}
-			}
-		});
-
 		// mouse listener for table
 		recordingTable.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String clear = (String) recordingTable.getValueAt(recordingTable.getSelectedRow(),1);
-				String enc = (String) recordingTable.getValueAt(recordingTable.getSelectedRow(), 2);
+				final String clear = (String) recordingTable.getValueAt(
+						recordingTable.getSelectedRow(), 1);
+				final String enc = (String) recordingTable.getValueAt(
+						recordingTable.getSelectedRow(), 2);
 				enTextPane.setText(clear);
 				deTextPane.setText(enc);
 			}
@@ -363,7 +353,7 @@ public class EncoderHashFrame extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 			}
 		});
-		
+
 		// Keyboard listener on the decoded text pane for escape to cancel
 		deTextPane.addKeyListener(new KeyAdapter() {
 			@Override
@@ -407,6 +397,7 @@ public class EncoderHashFrame extends JFrame {
 				if (ke.getKeyCode() == 27) {
 					windowIsShowing = false;
 					saveValues();
+					dispose();
 				}
 			}
 		});
@@ -416,6 +407,8 @@ public class EncoderHashFrame extends JFrame {
 			public void keyPressed(final KeyEvent ke) {
 				if (ke.getKeyCode() == 27) {
 					windowIsShowing = false;
+					saveValues();
+					dispose();
 				}
 			}
 		});
@@ -433,7 +426,7 @@ public class EncoderHashFrame extends JFrame {
 
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(final TreeSelectionEvent e) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+				final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 						.getLastSelectedPathComponent();
 
 				if (node == null) {
@@ -447,7 +440,7 @@ public class EncoderHashFrame extends JFrame {
 		});
 
 		// alt+enter to encode
-		Action doEncode = new AbstractAction() {
+		final Action doEncode = new AbstractAction() {
 
 			private static final long serialVersionUID = -7686474340015136816L;
 
@@ -462,7 +455,7 @@ public class EncoderHashFrame extends JFrame {
 		enTextPane.getActionMap().put("doEncode", doEncode);
 
 		// alt+backspace to decode
-		Action doDecode = new AbstractAction() {
+		final Action doDecode = new AbstractAction() {
 
 			private static final long serialVersionUID = 3083350774016663021L;
 
@@ -504,6 +497,7 @@ public class EncoderHashFrame extends JFrame {
 			public void windowClosing(final WindowEvent e) {
 				windowIsShowing = false;
 				saveValues();
+				dispose();
 			}
 		});
 
@@ -561,20 +555,21 @@ public class EncoderHashFrame extends JFrame {
 	 * </p>
 	 * 
 	 * @return context updated Text for recordingTextPane
-	 *
+	 * 
 	 * @author daemonmidi@gmail.com
 	 * @version 1.0
 	 * @since 2.3
 	 */
 	private String[][] refreshRecordingPane() {
-		String[][] returnObject = new String[50][4];
+		final String[][] returnObject = new String[50][4];
 		int loose = 0;
 		for (int i = 0; i < 50; i++) {
-			String encValue = JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[0] + "."
-					+ i, "");
-			String decValue = JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[1] + "."
-					+ i, "");
-			String engineValue = JBroFuzz.PREFS.get(JBroFuzzPrefs.ENCODER[2] + "." + i, "");
+			final String encValue = PREFS.get(JBroFuzzPrefs.ENCODER[0]
+					+ "." + i, "");
+			final String decValue = PREFS.get(JBroFuzzPrefs.ENCODER[1]
+					+ "." + i, "");
+			final String engineValue = PREFS.get(
+					JBroFuzzPrefs.ENCODER[2] + "." + i, "");
 			if (encValue.length() > 0) {
 				returnObject[i][0] = String.valueOf(i);
 				returnObject[i][1] = encValue;
@@ -606,27 +601,27 @@ public class EncoderHashFrame extends JFrame {
 				.getLastSelectedPathComponent();
 
 		// Save the values of the encode/decode as a preference
-		JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[0] + "." + listCounter,
+		PREFS.put(JBroFuzzPrefs.ENCODER[0] + "." + listCounter,
 				enTextPane.getText());
-		JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[1] + "." + listCounter,
+		PREFS.put(JBroFuzzPrefs.ENCODER[1] + "." + listCounter,
 				deTextPane.getText());
 		if (node != null)
-			JBroFuzz.PREFS.put(JBroFuzzPrefs.ENCODER[2] + "." + listCounter,
+			PREFS.put(JBroFuzzPrefs.ENCODER[2] + "." + listCounter,
 					node.toString());
 
 		try {
-			JBroFuzz.PREFS.sync();
-		} catch (BackingStoreException e) {
+			PREFS.sync();
+		} catch (final BackingStoreException e) {
 			e.printStackTrace();
 		}
 		listCounter++;
-		if (listCounter >= 50) listCounter = listCounter - 50;
+		if (listCounter >= 50)
+			listCounter = listCounter - 50;
 		recordingTable.setValueAt(enTextPane.getText(), listCounter, 1);
 		recordingTable.setValueAt(deTextPane.getText(), listCounter, 2);
-		if (node != null){
+		if (node != null) {
 			recordingTable.setValueAt(node.toString(), listCounter, 3);
-		}
-		else {
+		} else {
 			recordingTable.setValueAt("", listCounter, 3);
 		}
 	}
@@ -673,13 +668,14 @@ public class EncoderHashFrame extends JFrame {
 	 */
 	public void expandAll(JTree tree, TreePath parent, boolean expand) {
 		// Traverse children
-		TreeNode node = (TreeNode) parent.getLastPathComponent();
+		final TreeNode node = (TreeNode) parent.getLastPathComponent();
 		if (node.getChildCount() >= 0) {
 
-			for (Enumeration<TreeNode> e = node.children(); e.hasMoreElements();) {
+			for (final Enumeration<TreeNode> e = node.children(); e
+					.hasMoreElements();) {
 
-				TreeNode n = e.nextElement();
-				TreePath path = parent.pathByAddingChild(n);
+				final TreeNode n = e.nextElement();
+				final TreePath path = parent.pathByAddingChild(n);
 				expandAll(tree, path, expand);
 			}
 		}

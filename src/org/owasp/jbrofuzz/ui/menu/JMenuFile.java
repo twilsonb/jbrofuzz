@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -276,7 +276,7 @@ public class JMenuFile extends JMenu {
 
 				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
 
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
@@ -321,7 +321,7 @@ public class JMenuFile extends JMenu {
 
 					if (choice == JOptionPane.YES_OPTION) {
 						final int c = mFrameWindow.getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
+						final AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -367,13 +367,13 @@ public class JMenuFile extends JMenu {
 
 				} else {
 
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
 					if (choice == JOptionPane.YES_OPTION) {
-						int c = mFrameWindow.getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
+						final int c = mFrameWindow.getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
 						.getComponent(c);
 						p.stop();
 
@@ -395,13 +395,13 @@ public class JMenuFile extends JMenu {
 
 				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
 
-					int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
 							"Fuzzing Session Running. Stop Fuzzing?",
 							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
 
 					if (choice == JOptionPane.YES_OPTION) {
-						int c = mFrameWindow.getTp().getSelectedIndex();
-						AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
+						final int c = mFrameWindow.getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
 						.getComponent(c);
 						p.stop();
 

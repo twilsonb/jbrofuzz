@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -131,7 +131,7 @@ public final class Verifier {
 		} else if ("headers.jbrf".equalsIgnoreCase(fileName)) {
 
 			//			if (headers == null) {
-			String headerContents = Verifier.parseFile(fileName);
+			final String headerContents = Verifier.parseFile(fileName);
 
 			headers = new HashMap<String, Prototype>();
 
@@ -209,7 +209,7 @@ public final class Verifier {
 
 			dirString = System.getProperty("user.dir");
 
-		} catch (SecurityException e) {
+		} catch (final SecurityException e) {
 
 			return false;
 
@@ -310,7 +310,7 @@ public final class Verifier {
 		int counter = 0;
 		InputStream in = null;
 		FileInputStream fis = null;
-		StringBuffer fileContents = new StringBuffer();
+		final StringBuffer fileContents = new StringBuffer();
 		try {
 			fis = new FileInputStream(inputFile);
 			in = new BufferedInputStream(fis);
@@ -330,7 +330,7 @@ public final class Verifier {
 			in.close();
 			fis.close();
 
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			return "Attempting to open the file caused an I/O Error:\n\n" + fileName;
 
@@ -383,7 +383,7 @@ public final class Verifier {
 		int counter = 0;
 		InputStream in = null;
 		FileInputStream fis = null;
-		StringBuffer fileContents = new StringBuffer();
+		final StringBuffer fileContents = new StringBuffer();
 		try {
 			fis = new FileInputStream(inputFile);
 			in = new BufferedInputStream(fis);
@@ -403,7 +403,7 @@ public final class Verifier {
 			in.close();
 			fis.close();
 
-		} catch (IOException e) {
+		} catch (final IOException e) {
 
 			return "Attempting to open the file caused an I/O Error:\n\n" + fuzzersFilePath;
 
@@ -524,7 +524,7 @@ public final class Verifier {
 					continue;
 				}
 
-			} catch (IndexOutOfBoundsException e1) {
+			} catch (final IndexOutOfBoundsException e1) {
 				continue;
 			}
 
@@ -591,21 +591,21 @@ public final class Verifier {
 				if (!fileInput[i + 2].startsWith(">>")) {
 					continue;
 				}
-			} catch (IndexOutOfBoundsException e) {
+			} catch (final IndexOutOfBoundsException e) {
 				continue;
 			}
 
 			String line2 = "";
 			try {
 				line2 = fileInput[i + 1].substring(1);
-			} catch (IndexOutOfBoundsException e) {
+			} catch (final IndexOutOfBoundsException e) {
 				continue;
 			}
 
 			String comment = "";
 			try {
 				comment = fileInput[i + 2].substring(2);
-			} catch (IndexOutOfBoundsException e) {
+			} catch (final IndexOutOfBoundsException e) {
 				continue;
 			}
 
@@ -652,7 +652,7 @@ public final class Verifier {
 
 					proto.addPayload(fileInput[i + 2 + j]);
 
-				} catch (IndexOutOfBoundsException e) {
+				} catch (final IndexOutOfBoundsException e) {
 					continue;
 				}
 			}

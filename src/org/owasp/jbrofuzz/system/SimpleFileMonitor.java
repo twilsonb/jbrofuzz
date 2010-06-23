@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.2
+ * JBroFuzz 2.3
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -29,8 +29,9 @@
  */
 package org.owasp.jbrofuzz.system;
 
-import java.util.*;
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 
@@ -95,6 +96,7 @@ class SimpleFileMonitor
 	 */
 	private class FileMonitorNotifier extends TimerTask
 	{
+		@Override
 		public void run()
 		{
 			final long newModifiedTime  = logFile.exists() ? logFile.lastModified() : -1;
