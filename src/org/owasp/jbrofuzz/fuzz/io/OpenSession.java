@@ -52,214 +52,222 @@ public class OpenSession {
 
 	// The maximum number of chars to be read from file, regardless
 	private final static int MAX_CHARS = Short.MAX_VALUE;
-
+	private JBroFuzzWindow mWindow;
+	
 	public OpenSession(JBroFuzzWindow mWindow) {
+		new OpenSession(mWindow, "");
+		this.mWindow = mWindow;
+	}
 
+	public OpenSession(JBroFuzzWindow mWindow, String fileName) {
+		this.mWindow = mWindow;
+		File file = null;
 		// Set the Fuzzing Panel as the one to view
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 		Logger.log("Open Fuzzing Session", 1);
 
 		final JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
+		final String dirString = JBroFuzz.PREFS.get(
+				JBroFuzzPrefs.DIRS[2].getId(), System.getProperty("user.dir"));
 
-		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[2].getId(), System.getProperty("user.dir"));
-		JFileChooser fc;
-		try {
-			if( (new File(dirString).isDirectory()) ) {
-				fc = new JFileChooser(dirString);
-			} else {
-				fc = new JFileChooser();
-			}
-		} catch (final SecurityException e1) {
-			fc = new JFileChooser();
-			Logger.log("A security exception occured, while attempting to point to a directory", 4);
-		}
-		
-		fc.setFileFilter(filter);
+		JFileChooser fc = new JFileChooser();
 
-		final int returnVal = fc.showOpenDialog(mWindow);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-			final File file = fc.getSelectedFile();
-			Logger.log("Opening: " + file.getName(), 1);
-
-			final String path = file.getAbsolutePath().toLowerCase();
-			// If the file does not end in .jbrofuzz, return
-			if (!path.endsWith(".jbrofuzz")) {
-
-				JOptionPane.showMessageDialog(fc,
-						"The file selected is not a valid .jbrofuzz file",
-						" JBroFuzz - Open ", JOptionPane.WARNING_MESSAGE);
-				return;
-			}
-
-			// Clear up the display
-			mWindow.getPanelFuzzing().clearAllFields();
-
-			// Start opening the file
-			final StringBuffer fileContents = new StringBuffer();
-
-			BufferedReader in = null;
+		if (fileName.length() == 0 || fileName.equals("")) {
 			try {
+				if ((new File(dirString).isDirectory())) {
+					fc = new JFileChooser(dirString);
+				} else {
+					fc = new JFileChooser();
+				}
+			} catch (final SecurityException e1) {
+				fc = new JFileChooser();
+				Logger.log(
+						"A security exception occured, while attempting to point to a directory",
+						4);
+			}
 
-				in = new BufferedReader(new FileReader(file));
+			fc.setFileFilter(filter);
 
-				int counter = 0;
-				int c;
-				while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
-					// Allow the character only if its printable ascii or \n
-					if ((CharUtils.isAsciiPrintable((char) c))
-							|| (((char) c) == '\n')) {
-						fileContents.append((char) c);
-					}
-					counter++;
+			final int returnVal = fc.showOpenDialog(mWindow);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+				file = fc.getSelectedFile();
+			}
+		} else {
+			file = new File(fileName);
+		}
+		Logger.log("Opening: " + file.getName(), 1);
+
+		final String path = file.getAbsolutePath().toLowerCase();
+		// If the file does not end in .jbrofuzz, return
+		if (!path.endsWith(".jbrofuzz")) {
+
+			JOptionPane.showMessageDialog(fc,
+					"The file selected is not a valid .jbrofuzz file",
+					" JBroFuzz - Open ", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		// Clear up the display
+		mWindow.getPanelFuzzing().clearAllFields();
+
+		// Start opening the file
+		final StringBuffer fileContents = new StringBuffer();
+
+		BufferedReader in = null;
+		int counter = 0;
+		try {
+
+			in = new BufferedReader(new FileReader(file));
+
+			int c;
+			while (((c = in.read()) > 0) && (counter < MAX_CHARS)) {
+				// Allow the character only if its printable ascii or \n
+				if ((CharUtils.isAsciiPrintable((char) c))
+						|| (((char) c) == '\n')) {
+					fileContents.append((char) c);
+				}
+				counter++;
+			}
+
+			in.close();
+		} catch (final FileNotFoundException e) {
+
+			Logger.log("FileNotFoundException", 3);
+
+		} catch (final IOException e) {
+
+			Logger.log("IOException", 3);
+
+		} finally {
+
+			IOUtils.closeQuietly(in);
+
+		}
+
+		// Validate it to extremes
+		final String[] fileInput = fileContents.toString().split("\n");
+		final int len = fileInput.length;
+
+		/*
+		 * // Check the number of lines if (len < 8) return; // Check the
+		 * location of each of the fields if
+		 */
+		 if (!fileInput[0].equals("[JBroFuzz]")) return;
+		 if (!fileInput[2].equals("[Fuzzing]")) return;
+		 if (!fileInput[4].equals("[Comment]")) return;
+		 if (!fileInput[6].equals("[URL]")) return;
+		 if (!fileInput[8].equals("[Request]")) return; // Check that the file
+		 // finishes with an 'End' 
+		 if (!fileInput[len - 1].equals("[End]")) return;
+		 
+		// Find the line where the 'Payloads' are
+		int payloadsLine = 0;
+		for (int i = len - 1; i >= 0; i--) {
+
+			if (fileInput[i].equals("[Payloads]")) {
+				// Check that there is only 1 instance
+				if (payloadsLine != 0) {
+					return;
+				} else {
+					payloadsLine = i;
 				}
 
-				in.close();
-
-			} catch (final FileNotFoundException e) {
-
-				Logger.log("FileNotFoundException", 3);
-
-			} catch (final IOException e) {
-
-				Logger.log("IOException", 3);
-
-			} finally {
-
-				IOUtils.closeQuietly(in);
-
 			}
 
-			// Validate it to extremes
-			final String[] fileInput = fileContents.toString().split("\n");
-			final int len = fileInput.length;
+		}
 
-			// Check the number of lines
-			if (len < 8)
-				return;
-			// Check the location of each of the fields
-			if (!fileInput[0].equals("[JBroFuzz]"))
-				return;
-			if (!fileInput[2].equals("[Fuzzing]"))
-				return;
-			if (!fileInput[4].equals("[Comment]"))
-				return;
-			if (!fileInput[6].equals("[URL]"))
-				return;
-			if (!fileInput[8].equals("[Request]"))
-				return;
-			// Check that the file finishes with an 'End'
-			if (!fileInput[len - 1].equals("[End]"))
-				return;
+		// If you can't find the 'Payloads' line, return
+		if (payloadsLine == 0) return;
 
-			// Find the line where the 'Payloads' are
-			int payloadsLine = 0;
-			for (int i = len - 1; i >= 0; i--) {
+		// Get the request from the file
+		final StringBuffer _reqBuffer = new StringBuffer();
+		for (int i = 9; i < payloadsLine; i++) {
+			_reqBuffer.append(fileInput[i] + "\n");
+		}
 
-				if (fileInput[i].equals("[Payloads]")) {
-					// Check that there is only 1 instance
-					if (payloadsLine != 0) {
-						return;
-					} else {
-						payloadsLine = i;
-					}
+		// If the number of available payload lines is greater than 1024,
+		// return
+		if (len - 1 - payloadsLine - 1 > 1024) return;
 
+		// Get the payloads from the file
+		for (int i = payloadsLine + 1; i < len - 1; i++) {
+
+			boolean fuzzer_happy = true;
+
+			final String[] payloadArray = fileInput[i].split(",");
+			// Each line must have 4 elements
+			if (payloadArray.length == 4) {
+				final String fuzz_id = payloadArray[0];
+				String encoding_ = payloadArray[1];
+				int start = 0;
+				int end = 0;
+				
+				// The fuzzer id must also exist in the database
+				if (!mWindow.getJBroFuzz().getDatabase().containsPrototype(fuzz_id)) {
+					fuzzer_happy = false;
 				}
 
-			}
+				// Work on the encoding you are reading in
+				boolean encoding_found = false;
+				for (final String lamda : FuzzerTable.ENCODINGS) {
+					if (lamda.equalsIgnoreCase(encoding_)) {
+						encoding_found = true;
+					}
+				}
 
-			// If you can't find the 'Payloads' line, return
-			if (payloadsLine == 0)
-				return;
+				// Set the default encoding, the first one
+				if (!encoding_found) {
+					encoding_ = FuzzerTable.ENCODINGS[0];
+				}
 
-			// Get the request from the file
-			final StringBuffer _reqBuffer = new StringBuffer();
-			for (int i = 9; i < payloadsLine; i++) {
-				_reqBuffer.append(fileInput[i] + "\n");
-			}
-
-			// If the number of available payload lines is greater than 1024,
-			// return
-			if (len - 1 - payloadsLine - 1 > 1024)
-				return;
-
-			// Get the payloads from the file
-			for (int i = payloadsLine + 1; i < len - 1; i++) {
-
-				boolean fuzzer_happy = true;
-
-				final String[] payloadArray = fileInput[i].split(",");
-				// Each line must have 4 elements
-				if (payloadArray.length == 4) {
-
-					final String fuzz_id = payloadArray[0];
-					String encoding_ = payloadArray[1];
-					int start = 0;
-					int end = 0;
-					// The fuzzer id must also exist in the database
-					if (!mWindow.getJBroFuzz().getDatabase().containsPrototype(
-							fuzz_id)) {
+				// The start and end integers should be happy
+				try {
+					start = Integer.parseInt(payloadArray[2]);
+					end = Integer.parseInt(payloadArray[3]);
+					// Numbers must be positive
+					if ((start < 0) || (end < 0)) {
 						fuzzer_happy = false;
 					}
-
-					// Work on the encoding you are reading in
-					boolean encoding_found = false;
-					for (final String lamda : FuzzerTable.ENCODINGS) {
-						if(lamda.equalsIgnoreCase(encoding_)) {
-							encoding_found = true;
-						}
-					}
-
-					// Set the default encoding, the first one
-					if(!encoding_found) {
-						encoding_ = FuzzerTable.ENCODINGS[0];
-					}
-
-
-					// The start and end integers should be happy
-					try {
-						start = Integer.parseInt(payloadArray[2]);
-						end = Integer.parseInt(payloadArray[3]);
-						// Numbers must be positive
-						if ((start < 0) || (end < 0)) {
-							fuzzer_happy = false;
-						}
-						// Numbers must be less than the length of the request
-						if ((start > _reqBuffer.length())
-								|| (end > _reqBuffer.length())) {
-							fuzzer_happy = false;
-						}
-					} catch (final NumberFormatException e) {
+					// Numbers must be less than the length of the request
+					if ((start > _reqBuffer.length())
+							|| (end > _reqBuffer.length())) {
 						fuzzer_happy = false;
 					}
-
-					if (!fuzzer_happy) {
-						Logger.log("Could not open and add Fuzzer: "
-								+ fileInput[i], 3);
-					} else {
-
-						mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_, start, end);
-
-					}
+				} catch (final NumberFormatException e) {
+					fuzzer_happy = false;
 				}
-			}
 
-			// These max values of abbreviation are also used in the Fuzzing
-			// Panel
-			// geters
-			final String _req = StringUtils.abbreviate(_reqBuffer.toString(), 16384);
-			final String _url = StringUtils.abbreviate(fileInput[7], 1024);
+				if (!fuzzer_happy) {
+					Logger.log(
+							"Could not open and add Fuzzer: " + fileInput[i], 3);
+				} else {
 
-			mWindow.getPanelFuzzing().setTextRequest(_req);
-			mWindow.getPanelFuzzing().setTextURL(_url);
-			// Finally, tell the frame this is the file opened
-			// and save the directory location
-			mWindow.setOpenFileTo(file);
-			final String parentDir = file.getParent();
-			if(parentDir != null) {
-				JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
+					mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_,
+							start, end);
+
+				}
 			}
 		}
 
+		// These max values of abbreviation are also used in the Fuzzing
+		// Panel
+		// geters
+		final String _req = StringUtils.abbreviate(_reqBuffer.toString(), 16384);
+		final String _url = StringUtils.abbreviate(fileInput[7], 1024);
+
+		mWindow.getPanelFuzzing().setTextRequest(_req);
+		mWindow.getPanelFuzzing().setTextURL(_url);
+		// Finally, tell the frame this is the file opened
+		// and save the directory location
+		mWindow.setOpenFileTo(file);
+		final String parentDir = file.getParent();
+		if (parentDir != null) {
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
+		}
+	}
+	
+	public JBroFuzzWindow getmWindow(){
+		return mWindow;
 	}
 }
