@@ -245,13 +245,6 @@ public class SystemPanel extends AbstractPanel {
 	}
 
 
-
-
-
-
-
-
-
 	private final void monitorLog(){
 
 		// Create the monitor with 1 second polling interval
@@ -306,9 +299,4 @@ public class SystemPanel extends AbstractPanel {
 			start("Error reading log file",4);
 		}
 	}
-
-
-
-
-
 }
