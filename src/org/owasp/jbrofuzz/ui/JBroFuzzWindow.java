@@ -610,5 +610,4 @@ public class JBroFuzzWindow extends JFrame {
 				+ JBroFuzzFormat.centerAbbreviate(s, 256));
 
 	}
-
 }
