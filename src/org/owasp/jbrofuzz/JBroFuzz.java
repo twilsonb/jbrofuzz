@@ -32,9 +32,12 @@ package org.owasp.jbrofuzz;
 import java.util.prefs.Preferences;
 
 import org.owasp.jbrofuzz.core.Database;
+import org.owasp.jbrofuzz.io.CommandLineInterpreter;
 import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+
+import sun.tools.jar.CommandLine;
 
 /**
  * <p>
@@ -55,6 +58,13 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * @since 0.1
  */
 public class JBroFuzz {
+	private final FileHandler mHandler;
+
+	private final JBroFuzzFormat mFormat;
+
+	private final JBroFuzzWindow mWindow;
+
+	private Database mDatabase;
 
 	public static final Preferences PREFS = Preferences.userRoot().node("owasp/jbrofuzz");
 
@@ -68,25 +78,15 @@ public class JBroFuzz {
 	 */
 	public static void main(final String[] args) {
 
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-
-			public void run() {
-
-				new JBroFuzz();
-
-			}
-
-		});
-
+		CommandLineInterpreter cli = new CommandLineInterpreter();
+		if (cli.process(args) <= 0 ){
+			javax.swing.SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					new JBroFuzz();
+				}
+			});
+		}
 	}
-
-	private final FileHandler mHandler;
-
-	private final JBroFuzzFormat mFormat;
-
-	private final JBroFuzzWindow mWindow;
-
-	private Database mDatabase;
 
 	/**
 	 * <p>
@@ -106,7 +106,7 @@ public class JBroFuzz {
 
 		mFormat = new JBroFuzzFormat();
 		mWindow = new JBroFuzzWindow(this);
-		JBroFuzzWindow.createAndShowGUI(mWindow);
+		// JBroFuzzWindow.createAndShowGUI(mWindow);
 
 	}
 
