@@ -46,65 +46,78 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 /**
  * <p>Class Responsible for saving the fuzzing session a user 
  * sees in the "Fuzzing" tab.</p>
+ * @author daemonmidi@gmail.com
+ * @version 2.4
+ * @since 2.4
+ * 
  * 
  * @author subere@uncon.org
  * @version 2.3
  * @since 1.2
  */
 public class SaveSession {
+	
+	public SaveSession (final JBroFuzzWindow mWindow){
+		new SaveSession(mWindow, "");
+	}
 
-	public SaveSession(final JBroFuzzWindow mWindow) {
+	public SaveSession(final JBroFuzzWindow mWindow, String fileName) {
 
 		// Set the Fuzzing Panel as the one to view
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 		Logger.log("Save Fuzzing Session", 1);
 
-		File file = mWindow.getCurrentFileOpened();
+		File file = null; 
+		
+		if (fileName.length() == 0 || fileName.equals("")){
+			file = mWindow.getCurrentFileOpened();
+			// If there is no file opened, show a dialog
+			if (!mWindow.isCurrentFileOpened() || (fileName.length() == 0 && fileName.equals(""))) {
 
-		// If there is no file opened, show a dialog
-		if (!mWindow.isCurrentFileOpened()) {
+				final JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 
-			final JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
-
-			final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[2].getId(), System.getProperty("user.dir"));
-			JFileChooser fc;
-			try {
-				if( (new File(dirString).isDirectory()) ) {
-					fc = new JFileChooser(dirString);
-				} else {
+				final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[2].getId(), System.getProperty("user.dir"));
+				JFileChooser fc;
+				try {
+					if( (new File(dirString).isDirectory()) ) {
+						fc = new JFileChooser(dirString);
+					} else {
+						fc = new JFileChooser();
+					}
+				} catch (final SecurityException e1) {
 					fc = new JFileChooser();
+					Logger.log("A security exception occured, while attempting to save to a directory", 4);
 				}
-			} catch (final SecurityException e1) {
-				fc = new JFileChooser();
-				Logger.log("A security exception occured, while attempting to save to a directory", 4);
-			}
-			
-			fc.setFileFilter(filter);
+				
+				fc.setFileFilter(filter);
 
-			final int returnVal = fc.showSaveDialog(mWindow);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				final int returnVal = fc.showSaveDialog(mWindow);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-				file = fc.getSelectedFile();
-				Logger.log("Saving: " + file.getName(), 1);
+					file = fc.getSelectedFile();
+					Logger.log("Saving: " + file.getName(), 1);
 
+				}
+				
 				String path = file.getAbsolutePath().toLowerCase();
 				if (!path.endsWith(".jbrofuzz"))
 					file = new File(path += ".jbrofuzz");
 
 				if (file.exists()) {
-					final int choice = JOptionPane
-					.showConfirmDialog(
-							fc,
-							"File already exists. Do you \nwant to replace it?",
-							" JBroFuzz - Save ",
-							JOptionPane.YES_NO_OPTION);
-
-					if (choice == JOptionPane.NO_OPTION)
-						return;
+					final int choice = JOptionPane.showConfirmDialog(
+								fc,
+								"File already exists. Do you \nwant to replace it?",
+								" JBroFuzz - Save ",
+								JOptionPane.YES_NO_OPTION);
+					if (choice == JOptionPane.NO_OPTION) return;
 				}
-
-			}
-		} // if file opened
+			} 
+		}
+		else{
+			// we do have a file name allready;
+			file = new File(fileName);
+		}
+		// if file opened now
 
 		// Get the values from the frame
 		final String _url = mWindow.getPanelFuzzing().getTextURL();
@@ -142,12 +155,11 @@ public class SaveSession {
 			if(parentDir != null) {
 				JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
 			}
-
+			
 		} catch (final FileNotFoundException e) {
 			Logger.log("FileNotFoundException", 4);
 		} catch (final SecurityException e) {
 			Logger.log("SecurityException", 4);
 		}
-
 	}
 }
