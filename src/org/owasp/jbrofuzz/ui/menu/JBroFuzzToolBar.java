@@ -290,5 +290,4 @@ public class JBroFuzzToolBar extends JToolBar {
 			remove.setEnabled(b[4]);
 		}
 	}
-
 }
