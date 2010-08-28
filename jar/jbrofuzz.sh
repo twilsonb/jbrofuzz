@@ -6,7 +6,7 @@ JAVA_PARAMS="-Xmx512m"
 
 # Launch JBroFuzz
 if [ -r ./JBroFuzz.jar ]; then
-    $JAVA $JAVA_PARAMS -jar ./JBroFuzz.jar
+    $JAVA $JAVA_PARAMS -jar ./JBroFuzz.jar $@
     exit 0;
 fi
 
