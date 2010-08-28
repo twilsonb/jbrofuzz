@@ -1,0 +1,23 @@
+
+OWASP                                 JBroFuzz                                            OWASP
+NAME:
+  JBroFuzz - Open Web Application Security Project (OWASP) - HTTP/HTTPS Fuzzer
+SYNOPSIS:
+  java -jar JBroFuzz.jar [option]
+DESCRIPTION:
+  A simple asynchronous fuzzer. See website for details.
+OPTIONS:
+  OptionSyntax
+    -i | --input  INPUTFILE    read session parameters from file and execute session.
+                               Without the -s flag no GUI will be opened.
+                               Responses of the system fuzzed will be stored in usual way.
+    -s | --show                show GUI at the end of the fuzzing session
+    -h | --help                show this help
+    -n | --no-execute          do not execute the fuzzing session
+EXAMPLES:
+  java -jar JBroFuzz.jar -h                               print this help file
+  java -jar JBroFuzz.jar -i Session.jbrofuzz              load & execute Session.jbrofuzz, no GUI
+  java -jar JBroFuzz.jar -i Session.jbrofuzz -s           load & execute Session.jbrofuzz, with GUI
+  java -jar JBroFuzz.jar -i Session.jbrofuzz -s -n        load Session.jbrofuzz, with GUI, no execute
+  java -jar JBroFuzz.jar (-s)                             Start JBroFuzz in the usual manner.
+                                                          The -s is optional.

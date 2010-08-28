@@ -121,6 +121,7 @@
 				<include name="release/splashscreen.png" />
 				<include name="LICENSE/*.txt" />
 				<include name="help/*.html" />
+				<include name="help/*.txt" />
 			</fileset>
 			<fileset dir="release">
 				<include name="icons/*.png" />

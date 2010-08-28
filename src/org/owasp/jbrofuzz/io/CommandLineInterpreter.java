@@ -1,4 +1,41 @@
+/**
+ * JBroFuzz 2.3
+ *
+ * JBroFuzz - A stateless network protocol fuzzer for web applications.
+ * 
+ * Copyright (C) 2007 - 2010 subere@uncon.org
+ *
+ * This file is part of JBroFuzz.
+ * 
+ * JBroFuzz is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * JBroFuzz is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with JBroFuzz.  If not, see <http://www.gnu.org/licenses/>.
+ * Alternatively, write to the Free Software Foundation, Inc., 51 
+ * Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * 
+ * Verbatim copying and distribution of this entire program file is 
+ * permitted in any medium without royalty provided this notice 
+ * is preserved. 
+ * 
+ */
 package org.owasp.jbrofuzz.io;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.URL;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Database;
@@ -10,11 +47,8 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 public class CommandLineInterpreter{
 	private FileHandler mHandler;
-	
 	private JBroFuzzFormat mFormat;
-	
 	private JBroFuzzWindow mWindow;
-	
 	private Database mDatabase;
 
 	/**
@@ -28,6 +62,7 @@ public class CommandLineInterpreter{
 		String outputFileName = "";
 		int returnValue = 1; // everything went fine
 		boolean result = false;
+		boolean doNotFuzz = false;
 
 		/*
 		 * Linux commandline interface style 
@@ -52,33 +87,48 @@ public class CommandLineInterpreter{
 			else if (args[j].equals("-s") || args[j].equals("--showResults")){
 				result = true;
 			}
+			else if (args[j].equals("-n") || args[j].equals("--no-execute")){
+				doNotFuzz = true;
+			}
+			else{
+				if(j>0){
+					if(!(args[j-1].equals("-i") || args[j-1].equals("--input") || args[j-1].equals("-o") || args[j-1].equals("--output"))){
+						System.out.println("jbrofuzz: Unrecognized option '"+args[j]+"'");
+						printHelp();
+						System.exit(0);
+					}
+				}
+			}
 			j++;
 		}
-		
+
 		mDatabase = new Database();
 		mHandler = new FileHandler();
-		
+
 		mFormat = new JBroFuzzFormat();
 		mWindow = new JBroFuzzWindow(new JBroFuzz());
-		
+
 		if (inputFileName.length() > 0 && !inputFileName.equals("")){
 			// setup new session
 			OpenSession os = new OpenSession(mWindow, inputFileName);
-		
+
 			// start fuzzing
-			final int c = mWindow.getTp().getSelectedIndex();
-			AbstractPanel p = (AbstractPanel) mWindow.getTp().getComponent(c);
-			p = (AbstractPanel) mWindow.getTp().getComponent(c);
-			p.start();
-			p.stop();
-			if (mWindow.getPanelFuzzing().isStopped()){
+			//if(!doNotFuzz){
+				final int c = mWindow.getTp().getSelectedIndex();
+				AbstractPanel p = (AbstractPanel) mWindow.getTp().getComponent(c);
+				p = (AbstractPanel) mWindow.getTp().getComponent(c);
+				p.start();
 				p.stop();
-			}
+				if (mWindow.getPanelFuzzing().isStopped()){
+					p.stop();
+				}
+			//}
 		
+
 			// write the results to output file
 			// tbd. see writeOutputfile() for further info;
 			// if (outputFileName.length() > 0 || !outputFileName.equals("")) returnValue = writeOutputFile(mWindow, outputFileName);
-		
+
 			// open result window for further analysis
 			if (result) JBroFuzzWindow.createAndShowGUI(os.getmWindow());
 		}
@@ -86,9 +136,9 @@ public class CommandLineInterpreter{
 			// no commandline options
 			JBroFuzzWindow.createAndShowGUI(mWindow);
 		}
-			return returnValue;
+		return returnValue;
 	}
-	
+
 	/**
 	 * @author daemonmidi@gmail.com
 	 * @verision 2.4
@@ -100,19 +150,18 @@ public class CommandLineInterpreter{
 	public int writeOutputFile(JBroFuzzWindow mWindow, String fileName){
 		// Write requests and response into seperate file
 		// tbd.
-		
-		
+	
 		// write Session to File.
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_SYSTEM);
 		if (mWindow.getPanelFuzzing().isStopped()){
 			new SaveSession(mWindow, fileName);
 		}
-		
-		System.out.println("Fuzzing Session finished. Output written to: " + fileName);
+
+		System.out.println("jbrofuzz: Fuzzing Session finished. Output written to: " + fileName);
 		return 0;
 	}
-	
-	
+
+
 	/**
 	 * Print commandline help
 	 * @author daemonmidi
@@ -120,42 +169,18 @@ public class CommandLineInterpreter{
 	 * @since 2.4
 	 */
 	public void printHelp(){
-		// help - should be replaced by printing content of a file.
-		System.out.println("\n");
-		System.out.println("\n");
-		System.out.println("\n");
-		System.out.println("OWASP                                 JBroFuzz                                            OWASP");
-		
-		System.out.println("Name");
-		System.out.println("            JBroFuzz - Open Wep Application Security Project (OWASP) - Fuzzer");
-		System.out.println("");
-		System.out.println("Synopsis");
-		System.out.println("          java -jar JBroFuzz.jar [option]");
-		System.out.println("");
-		System.out.println("Description");
-		System.out.println(" A simple asynchronous fuzzer. See website for details.");
-		System.out.println("Options");
-		System.out.println("  OptionSyntax");
-		System.out.println("    -i | --input  INPUTFILE    read session parameters from file and execute session.");
-		System.out.println("                               Without the -s flag no GUI will be opened.");
-		System.out.println("                               Responses of the system fuzzed will be stored in usual way.");
-		System.out.println("");
-		System.out.println("    -s | --show                show GUI at the end of the fuzzing session");
-		System.out.println("");
-		System.out.println("    -h | --help                show this help");
-		System.out.println("");
-		System.out.println("Examples");
-		System.out.println("");
-		System.out.println(" java -jar JBroFuzz.jar -h                               print this output");
-		System.out.println(" ");
-		System.out.println(" java -jar JBroFuzz.jar -i Session.jbrofuzz              replay session as saved to Session.jbrofuzz ");
-		System.out.println("                                                         without starting the GUI.");
-		System.out.println(" ");
-		System.out.println(" java -jar JBroFuzz.jar -i Session.jbrofuzz -s           replay session as saved to Session.jbrofuzz ");
-		System.out.println("                                                         and open GUI when finished fuzzing.");
-		System.out.println("");
-		System.out.println(" java -jar JBroFuzz.jar (-s)                             Start JBroFuzz in the usual manner.");
-		System.out.println("                                                         The -s is optional.");
-		System.out.println("");
+		String helpfileloc = "help/command-line-help.txt";
+		StringBuilder sb = new StringBuilder();
+		String line;
+		try {
+			BufferedReader a = new BufferedReader(new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream(helpfileloc)));
+			while((line = a.readLine()) != null){
+				sb.append(line+"\n");
+			}
+			System.out.println(sb.toString());
+		} catch (IOException e) {
+			System.out.println("Help file not found");
+			System.exit(0);
+		}
 	}
 }
