@@ -51,7 +51,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  */
 public class EncoderHashCore {
 	
-	public static final String[] CODES = {
+	public static final String[] CODES = { "Plain Text",
 		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", 
 		"Base64", "Base32", "Z-Base32", "MD5 Hash", "SHA-1 Hash", "SHA-256 Hash",
 		"SHA-384 Hash", "SHA-512 Hash", "Hexadecimal (low)", "Hexadecimal (UPP)", 
@@ -60,7 +60,7 @@ public class EncoderHashCore {
 		"Escape: SQL", "Escape: XML"
 	};
 	
-	private final static String IS_DECODABLE[] = {
+	private final static String IS_DECODABLE[] = { "Plain Text",
 		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", "Base64", "Base32", "Z-Base32","Hexadecimal (low)",
 		"Hexadecimal (UPP)", "Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)",
 		"Escape: HTML", "Escape: CSV", "Escape: Java", "Escape: JavaScript",
@@ -68,6 +68,7 @@ public class EncoderHashCore {
 	};
 	
 	private static final String[] COMMENTS = {
+		"This is a null decoder",
 		"This is using the java URL decoder, but with: URLDecoder.decode(decodeText, \"windows-1252\");", 
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-8\");",
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-16LE\");",
@@ -118,6 +119,8 @@ public class EncoderHashCore {
 	public static String decode(final String decodeText, final String type) {
 			if (!isDecoded(type))
 				return "Error: String cannot be decoded...";
+			else if (type.equalsIgnoreCase("Plain Text"))
+				return decodeText;
 			else if (type.equalsIgnoreCase("URL Cp1252"))
 				return decodeUrlWindows1252(decodeText);
 			else if (type.equalsIgnoreCase("URL UTF-8"))
@@ -277,6 +280,8 @@ public class EncoderHashCore {
 	public static String encode(final String encodeText, final String type) {
 		if (type.equalsIgnoreCase("URL Cp1252"))
 			return encodeUrlWindows1252(encodeText);
+		else if (type.equalsIgnoreCase("Plain Text"))
+			return encodeText;
 		else if (type.equalsIgnoreCase("URL UTF-8"))
 			return encodeUrlUtf8(encodeText);
 		else if (type.equalsIgnoreCase("URL UTF-16BE"))

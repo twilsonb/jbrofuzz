@@ -37,8 +37,6 @@ import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
-import sun.tools.jar.CommandLine;
-
 /**
  * <p>
  * Filename: JBroFuzz.java

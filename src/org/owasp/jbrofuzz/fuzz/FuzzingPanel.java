@@ -59,6 +59,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzerModelListener;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
@@ -771,10 +772,10 @@ public class FuzzingPanel extends AbstractPanel {
 			if (fuzzers_added < 1) {
 
 				category = "000-ZER-ONE";
-				encoding = FuzzerTable.ENCODINGS[0];
+				encoding = EncoderHashCore.CODES[0];
 				start = 0;
 				end = 0;
-
+			
 			} else {
 
 				category = (String) mFuzzTableModel.getValueAt(i, 0);
@@ -839,7 +840,6 @@ public class FuzzingPanel extends AbstractPanel {
 						// mOutputTable.updateUI();
 						
 					} catch (final ConnectionException e1) {
-
 						// Update the message writer
 						outputMessage.setException(e1);
 

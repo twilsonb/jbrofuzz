@@ -32,13 +32,15 @@ package org.owasp.jbrofuzz.fuzz.ui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
+
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
 
 /**
  * <p>Class for representing fuzzer's table within the 
@@ -56,8 +58,6 @@ public class FuzzerTable extends JTable {
 	private static final long serialVersionUID = 1876543211323L;
 
 	// The types of encodings allowed within the encoding column
-	public static final String[] ENCODINGS = {"Standard", "Uppercase", "Lowercase", "URL Encode", "HTML Encode", "UTF-8", "UTF-16"};
-
 	public FuzzerTable(final FuzzersTableModel model) {
 
 		super(model);
@@ -82,11 +82,11 @@ public class FuzzerTable extends JTable {
 		}
 
 	}
-
+	
 	@Override
 	public TableCellEditor getCellEditor(int row, int column) {
 
-		final JComboBox comboxBox = new JComboBox(ENCODINGS);
+		final JComboBox comboxBox = new JComboBox(EncoderHashCore.CODES);
 		comboxBox.setFont(new Font("Monospaced", Font.BOLD, 12));
 		comboxBox.setBackground(Color.BLACK);
 		comboxBox.setForeground(Color.WHITE);

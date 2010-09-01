@@ -32,13 +32,8 @@ package org.owasp.jbrofuzz.fuzz;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Locale;
-
-import org.apache.commons.codec.net.URLCodec;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
@@ -73,9 +68,8 @@ class MessageCreator {
 	protected MessageCreator(final String url, final String message, final String encoding, final String payload, final int start, final int finish) {
 
 		// Perform the necessary encoding on the payload specified
-
-		this.payload = doPayloadEncoding(encoding, payload);
-
+		this.payload = EncoderHashCore.encode(payload, encoding);
+	
 		// Split the message and add in-between
 		// TODO: Calculate the length of the message
 		final StringBuffer messageBuffer = new StringBuffer();
@@ -97,13 +91,13 @@ class MessageCreator {
 		
 		// Do a Content-Length re-write, under certain conditions
 		this.message = doContentLengthReWrite(this.message);
-
+		
+		
 		// Do a Base64, basic auth header append
 		final boolean addAuthHeader = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[4].getId(), true);
 		if(addAuthHeader) {
 			this.message = doBasicAuthHeader(url, this.message);
 		}
-
 	}
 
 	/**
@@ -201,85 +195,6 @@ class MessageCreator {
 	public String getPayload() {
 
 		return payload;
-
-	}
-
-
-	/**
-	 * <p>Method returns the encoded payload, based on the encoding provided 
-	 * and the payload value inputted.</p>
-	 * 
-	 * @param encoding
-	 * @param payload
-	 * @return
-	 */
-	private String doPayloadEncoding(final String encoding, final String payload) {
-
-		// Encoding 1: Uppercase
-		if(encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[1])) {
-			return payload.toUpperCase(Locale.ENGLISH);
-		} 
-
-		// Encoding 2: Lowercase
-		if(encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[2])) {
-			return payload.toLowerCase(Locale.ENGLISH);
-		} 
-
-		// Encoding 3: www-form-urlencoded 
-		if(encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[3])) {
-
-			final URLCodec codec = new URLCodec();
-
-			try {
-				return codec.encode(payload, "UTF-8");
-
-			} catch (final UnsupportedEncodingException e) {
-
-				e.printStackTrace();
-				return payload;
-
-			}
-
-		}
-
-		// Encoding 4: HTML encode	
-		if (encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[4])) {
-			return StringEscapeUtils.escapeHtml(payload);
-		} 
-
-		// Encoding 5: UTF-8
-		if (encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[5])) {
-
-			try {
-
-				return URLEncoder.encode(payload, "UTF-8");
-
-			} catch (final UnsupportedEncodingException e) {
-
-				e.printStackTrace();
-				return payload;
-
-			}
-		}
-
-		// Encoding 6: UTF-16
-		if(encoding.equalsIgnoreCase(FuzzerTable.ENCODINGS[6])) {
-
-			try {
-
-				return URLEncoder.encode(payload, "UTF-16");
-
-			} catch (final UnsupportedEncodingException e) {
-
-				e.printStackTrace();
-				return payload;
-			}
-
-		}
-
-		// By default, return the payload value
-		return payload;
-
 
 	}
 

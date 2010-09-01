@@ -113,7 +113,7 @@ public class CommandLineInterpreter{
 			OpenSession os = new OpenSession(mWindow, inputFileName);
 
 			// start fuzzing
-			//if(!doNotFuzz){
+			if(!doNotFuzz){
 				final int c = mWindow.getTp().getSelectedIndex();
 				AbstractPanel p = (AbstractPanel) mWindow.getTp().getComponent(c);
 				p = (AbstractPanel) mWindow.getTp().getComponent(c);
@@ -122,7 +122,7 @@ public class CommandLineInterpreter{
 				if (mWindow.getPanelFuzzing().isStopped()){
 					p.stop();
 				}
-			//}
+			}
 		
 
 			// write the results to output file
