@@ -66,17 +66,15 @@ public class Connection {
 		} catch (final MalformedURLException e1) {
 			throw new ConnectionException("Malformed URL : " + e1.getMessage() + "\n");
 		}
-
 		final String protocol = url.getProtocol();
 		final String host = url.getHost();
 		int port = url.getPort();
-
 		// Allow only HTTP/S as protocols
 		if ((!protocol.equalsIgnoreCase("http"))
 				&& (!protocol.equalsIgnoreCase("https"))) {
 			throw new ConnectionException("Protocol is not http://, nor is it https://\n");
 		}
-
+		
 		// Set default ports
 		if (protocol.equalsIgnoreCase("https") && (port == -1)) {
 			port = 443;
@@ -84,10 +82,10 @@ public class Connection {
 		if (protocol.equalsIgnoreCase("http") && (port == -1)) {
 			port = 80;
 		}
-
-
+			
 		mainConnection = new SocketConnection(protocol, host, port, message);
 		
+		System.out.println("connected the socket");
 	}
 
 	public String getMessage() {

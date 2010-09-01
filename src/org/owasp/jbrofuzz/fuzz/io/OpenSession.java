@@ -42,7 +42,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
@@ -210,7 +210,7 @@ public class OpenSession {
 
 				// Work on the encoding you are reading in
 				boolean encoding_found = false;
-				for (final String lamda : FuzzerTable.ENCODINGS) {
+				for (final String lamda : EncoderHashCore.CODES) {
 					if (lamda.equalsIgnoreCase(encoding_)) {
 						encoding_found = true;
 					}
@@ -218,7 +218,7 @@ public class OpenSession {
 
 				// Set the default encoding, the first one
 				if (!encoding_found) {
-					encoding_ = FuzzerTable.ENCODINGS[0];
+					encoding_ = EncoderHashCore.CODES[0];
 				}
 
 				// The start and end integers should be happy

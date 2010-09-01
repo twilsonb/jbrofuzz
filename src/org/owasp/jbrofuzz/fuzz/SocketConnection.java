@@ -128,7 +128,6 @@ class SocketConnection {
 
 				// Handle HTTP differently then HTTPS
 				mSocket = new Socket();
-
 				mSocket.connect(new InetSocketAddress(host, port),
 						socketTimeout * 1000);
 			}
@@ -142,7 +141,6 @@ class SocketConnection {
 
 			// Put message on the wire
 			outStream.write(this.message.getBytes());
-
 			// Start timer
 			final SocketTimer timer = new SocketTimer(this, socketTimeout * 1000);
 			timer.start();
