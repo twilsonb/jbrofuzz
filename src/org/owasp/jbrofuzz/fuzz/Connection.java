@@ -84,8 +84,6 @@ public class Connection {
 		}
 			
 		mainConnection = new SocketConnection(protocol, host, port, message);
-		
-		System.out.println("connected the socket");
 	}
 
 	public String getMessage() {
