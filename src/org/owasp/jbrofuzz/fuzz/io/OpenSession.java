@@ -199,7 +199,7 @@ public class OpenSession {
 			// Each line must have 4 elements
 			if (payloadArray.length == 4) {
 				final String fuzz_id = payloadArray[0];
-				String encoding_ = payloadArray[1];
+				String[] encoding_ = {payloadArray[1]};
 				int start = 0;
 				int end = 0;
 				
@@ -211,14 +211,14 @@ public class OpenSession {
 				// Work on the encoding you are reading in
 				boolean encoding_found = false;
 				for (final String lamda : EncoderHashCore.CODES) {
-					if (lamda.equalsIgnoreCase(encoding_)) {
+					if (lamda.equalsIgnoreCase(encoding_[0])) {
 						encoding_found = true;
 					}
 				}
 
 				// Set the default encoding, the first one
 				if (!encoding_found) {
-					encoding_ = EncoderHashCore.CODES[0];
+					encoding_[0] = EncoderHashCore.CODES[0];
 				}
 
 				// The start and end integers should be happy
@@ -242,9 +242,8 @@ public class OpenSession {
 					Logger.log(
 							"Could not open and add Fuzzer: " + fileInput[i], 3);
 				} else {
-
-					mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_,
-							start, end);
+					// TODO- I've not integrated multiple encoders into saved sessions or save sessions yet
+				mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_, start, end);
 
 				}
 			}

@@ -43,6 +43,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 
 /**
  * @author Yiannis Marangos
@@ -505,5 +506,33 @@ public class EncoderHashCore {
 		} catch (final UnsupportedEncodingException e) {
 			return "Error: String cannot be encoded...";
 		}
+	}
+
+	public static String encodeMany(String payload, EncodersRow[] encoding) {
+		String encoded = payload;
+		String payloadTemp;
+		for(int i=0;i<encoding.length;i++){
+			String encoder = encoding[i].getEncoder();
+			if(encoder.equals("Match & Replace")){
+				// match and replace
+				payloadTemp = matchAndReplace(encoding[i].getPrefixOrMatch(), encoding[i].getSuffixOrReplace(), encoded);
+			}else if(encoder.equals("Prefix & Suffix")){
+				// prefix and suffix
+				payloadTemp = prefixAndSuffix(encoding[i].getPrefixOrMatch(), encoding[i].getSuffixOrReplace(), encoded);
+			}else{
+				payloadTemp = encode(encoded, encoder);
+			}
+			encoded = payloadTemp;
+		}
+		return encoded;
+	}
+	
+	private static String matchAndReplace(String match, String replace, String input){
+		return input.replaceAll(match, replace);
+		
+	}
+	
+	private static String prefixAndSuffix(String prefix, String suffix, String input){
+		return prefix+input+suffix;
 	}
 }

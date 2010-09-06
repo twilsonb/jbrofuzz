@@ -666,14 +666,13 @@ public class EncoderHashFrame extends JFrame {
 	 * @version 1.5
 	 * @since 1.2
 	 */
+
+	@SuppressWarnings("unchecked")
 	public void expandAll(JTree tree, TreePath parent, boolean expand) {
 		// Traverse children
 		final TreeNode node = (TreeNode) parent.getLastPathComponent();
 		if (node.getChildCount() >= 0) {
-
-			for (final Enumeration<TreeNode> e = node.children(); e
-					.hasMoreElements();) {
-
+			for (final Enumeration<TreeNode> e = node.children(); e.hasMoreElements();) {
 				final TreeNode n = e.nextElement();
 				final TreePath path = parent.pathByAddingChild(n);
 				expandAll(tree, path, expand);

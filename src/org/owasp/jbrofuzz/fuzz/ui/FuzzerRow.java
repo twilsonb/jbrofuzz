@@ -42,8 +42,6 @@ class FuzzerRow {
 
 	// The fuzzer name, e.g. LDAP Injection
 	private String name;
-	// The encoding of the fuzzer
-	private String encoding;
 	// The fuzzer id, e.g. LDP-INJ
 	private String id;
 	// The fuzzer entry start point
@@ -58,10 +56,9 @@ class FuzzerRow {
 	 * @param start The fuzzer start point
 	 * @param end The fuzzer end point
 	 */
-	protected FuzzerRow(String id, String encoding, int start, int end) {
+	protected FuzzerRow(String id,int start, int end) {
 
 		this.id = id;
-		this.encoding = encoding;
 		this.start = start;
 		this.end = end;
 
@@ -79,20 +76,6 @@ class FuzzerRow {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * @return the encoding
-	 */
-	public String getEncoding() {
-		return encoding;
-	}
-
-	/**
-	 * @param encoding the encoding to set
-	 */
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
 	}
 
 	/**

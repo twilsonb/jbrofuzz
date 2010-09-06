@@ -162,6 +162,8 @@ public class JBroFuzzWindow extends JFrame {
 		fp = new FuzzingPanel(this);
 		pp = new PayloadsPanel(this);
 		cp = new SystemPanel(this);
+		
+		
 
 		// Set the corresponding borders for each panel
 

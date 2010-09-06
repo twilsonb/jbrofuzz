@@ -34,6 +34,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
+import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
@@ -65,11 +66,10 @@ class MessageCreator {
 	 */
 	private final String END_LINE;
 
-	protected MessageCreator(final String url, final String message, final String encoding, final String payload, final int start, final int finish) {
+	protected MessageCreator(final String url, final String message, final EncodersRow[] encoding, final String payload, final int start, final int finish) {
 
 		// Perform the necessary encoding on the payload specified
-		this.payload = EncoderHashCore.encode(payload, encoding);
-	
+		this.payload = EncoderHashCore.encodeMany(payload, encoding);
 		// Split the message and add in-between
 		// TODO: Calculate the length of the message
 		final StringBuffer messageBuffer = new StringBuffer();
@@ -349,8 +349,8 @@ class MessageCreator {
 			return message;
 			
 		}
-
-		final String encoding = new sun.misc.BASE64Encoder().encode(userInfo.getBytes());
+		final String encoding = EncoderHashCore.encode(userInfo, "Base64");
+		//final String encoding = new sun.misc.BASE64Encoder().encode(userInfo.getBytes());
 		final String authHeader = "Proxy-Authorization: Basic " + encoding + "\n";
 
 		// We must add the authorization header prior to the "end credits"

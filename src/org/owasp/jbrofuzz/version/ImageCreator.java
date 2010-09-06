@@ -312,5 +312,40 @@ public class ImageCreator {
 	 */
 	public static final ImageIcon IMG_UPDATE = new ImageIcon(
 			ClassLoader.getSystemClassLoader().getResource("icons/update.png"));
+	
+	/**
+	 * <p>The up image icon.</p>
+	 * 
+	 * @version 1.0
+	 */
+	public static final ImageIcon IMG_UP = new ImageIcon(
+			ClassLoader.getSystemClassLoader().getResource("icons/up.png"));
+	
+	/**
+	 * <p>The up-all image icon.</p>
+	 * 
+	 * @version 1.0
+	 */
+	public static final ImageIcon IMG_UPALL = new ImageIcon(
+			ClassLoader.getSystemClassLoader().getResource("icons/up-all.png"));
+	
+	/**
+	 * <p>The down image icon.</p>
+	 * 
+	 * @version 1.0
+	 */
+	public static final ImageIcon IMG_DOWN = new ImageIcon(
+			ClassLoader.getSystemClassLoader().getResource("icons/down.png"));
+	
+	/**
+	 * <p>The down-all image icon.</p>
+	 * 
+	 * @version 1.0
+	 */
+	public static final ImageIcon IMG_DOWNALL = new ImageIcon(
+			ClassLoader.getSystemClassLoader().getResource("icons/down-all.png"));
+
+
+
 
 }

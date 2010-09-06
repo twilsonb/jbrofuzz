@@ -418,7 +418,7 @@ public class PayloadsDialog extends JDialog {
 						final String selID = mWindow.getJBroFuzz().
 						getDatabase().getIdFromName(name);
 
-						mWindow.getPanelFuzzing().addFuzzer(selID, EncoderHashCore.CODES[0], start, end);
+						mWindow.getPanelFuzzing().addFuzzer(selID, new String[]{EncoderHashCore.CODES[0]}, start, end);
 						PayloadsDialog.this.dispose();
 
 					}
