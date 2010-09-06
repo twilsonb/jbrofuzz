@@ -37,12 +37,67 @@ package org.owasp.jbrofuzz.version;
  * be: JBroFuzzPrefs.DIRS[0]</p>
  * 
  * @author subere@uncon.org
- * @version 2.0
+ * @version 2.4
  * @since 2.0
  *
  */
 public class JBroFuzzPrefs {
 
+	/**
+	 * Preferences related to checking for updates
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 2.4
+	 * 
+	 */
+	public static final PrefEntry [] UPDATE =
+	{
+		// 0 proxy enabled: boolean
+		new PrefEntry(
+				"update.proxy.enabled",
+				" Enable Proxy ",
+				" Tick this box to use a proxy when checking for new versions of JBroFuzz "
+			),
+		// 1, proxy host: string e.g. www.myproxy.com
+		new PrefEntry(
+				"update.proxy.host",
+				" Proxy Host ",
+				" Specify the host that will be used for your proxy "
+			),
+		// 2, proxy port: int e.g. 8080
+		new PrefEntry(
+				"update.proxy.port",
+				" Proxy Port ",
+				" Specify the post number [1 - 65535] "
+			),
+		// 3, proxy requires authentication: boolean
+		new PrefEntry(
+				"update.proxy.req-auth",
+				" Requires Authentication ",
+				" Tick this box if your proxy requires authentication "
+			),
+		// 4, proxy authentication type, basic, ntlm, etc: 
+		// integer 1 is basic
+		new PrefEntry(
+				"update.proxy.auth-type",
+				" Authentication Type ",
+				" Only Basic Authentication is supported "
+			),
+		// 5 proxy user
+		new PrefEntry(
+				"update.proxy.user",
+				" Username ",
+				" The username for authentication "
+			),
+		// 6 proxy password
+		new PrefEntry(
+				"update.proxy.pass",
+				" Password ",
+				" The password for authentication "
+			)
+		
+	};
 	/**
 	 * Preferences related to directory locations, creating or 
 	 * deleting empty directories.
@@ -50,6 +105,7 @@ public class JBroFuzzPrefs {
 	 * @author subere@uncon.org
 	 * @version 2.3
 	 * @since 2.0
+	 * 
 	 */
 	public static final PrefEntry [] DIRS = 
 	{

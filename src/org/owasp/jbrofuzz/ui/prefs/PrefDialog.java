@@ -63,13 +63,16 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 2.0
+ * @version 2.4
  * @since 2.0
  */
 public class PrefDialog extends JDialog implements TreeSelectionListener {
 
-	private static final long serialVersionUID = -335514965523117410L;
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6206219050510937296L;
+	
 	private static final int SIZE_X = 650;
 	private static final int SIZE_Y = 400;
 
@@ -78,7 +81,12 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 	// The main split pane
 	private final JSplitPane splitPane;
 
-	private final AbstractPrefsPanel[] panels = new AbstractPrefsPanel[5];
+	private final AbstractPrefsPanel[] panels = new AbstractPrefsPanel[6];
+	
+	public enum PrefsPanel { 
+		PREFERENCES, DIRECTORIES, FUZZING, 
+		ONTHEWIRE, OUTPUT, UPDATE
+	}
 	
 	private final JBroFuzzWindow parent;
 	
@@ -92,10 +100,10 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 	 * @param parent
 	 * 
 	 * @author subere@uncon.org
-	 * @version 2.0
+	 * @version 2.4
 	 * @since 2.0
 	 */
-	public PrefDialog(final JBroFuzzWindow parent) {
+	public PrefDialog(final JBroFuzzWindow parent, PrefsPanel panelType) {
 
 		super(parent, " JBroFuzz - Preferences ", true);
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
@@ -108,7 +116,8 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 		panels[1] = new DirsPPanel(this);
 		panels[2] = new FuzzPPanel(this);
 		panels[3] = new WirePPanel(this);
-		panels[4] = new OutputPPanel(this);		
+		panels[4] = new OutputPPanel(this);
+		panels[5] = new UpdatePPanel(this);
 
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
@@ -144,9 +153,28 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 		// Traverse tree from root
 		final TreeNode root = (TreeNode) tree.getModel().getRoot();
 		parent.getPanelPayloads().expandAll(tree, new TreePath(root), true);
-		// Select the first row
-		tree.setSelectionRow(3);
 
+		// Select the row specified by the enum
+		switch(panelType) {
+			
+		case PREFERENCES: tree.setSelectionRow(0); 
+			break;
+		case DIRECTORIES: tree.setSelectionRow(1); 
+			break;
+		case FUZZING: tree.setSelectionRow(2); 
+			break;
+		case ONTHEWIRE: tree.setSelectionRow(3); 
+			break;
+		case OUTPUT: tree.setSelectionRow(4); 
+			break;
+		case UPDATE: tree.setSelectionRow(5); 
+			break;
+			
+		default: tree.setSelectionRow(0); 
+			break;
+		}
+		
+		
 		// Bottom three buttons
 		JButton okBut, cancelBut;
 		
@@ -237,6 +265,7 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 		setResizable(true);
 		setVisible(true);
 	}
+	
 
 	public void valueChanged(final TreeSelectionEvent tEvent) {
 

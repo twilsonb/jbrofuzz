@@ -55,7 +55,7 @@ import org.owasp.jbrofuzz.system.Logger;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 2.3
+ * @version 2.4
  * @since 1.4
  */
 public class JBroFuzzFormat {
@@ -90,7 +90,7 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "2.3";
+	public static final String VERSION = "2.4";
 
 	/**
 	 * <p>
@@ -134,7 +134,6 @@ public class JBroFuzzFormat {
 
 		"<HTML><B>Development of JBroFuzz:</B><BR><BR>"
 		+ "Yiannis Pavlosoglou<BR>"
-		+ "Nathan Sportsman<BR>"
 		+ "Ranulf Green<BR>"
 		+ "Markus Miedaner<BR>"
 		+ "<BR></HTML>";
