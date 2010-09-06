@@ -66,13 +66,16 @@ import org.owasp.jbrofuzz.version.ImageCreator;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 2.3
+ * @version 2.4
  * @since 0.1
  */
 public class JBroFuzzMenuBar extends JMenuBar {
 
-	private static final long serialVersionUID = -5135673814026322378L;
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6653470603012430621L;
+	
 	private final JBroFuzzWindow mFrameWindow;
 	// The menu items
 	private final JMenu view, panel, options; // , help;
@@ -540,7 +543,9 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new PrefDialog(JBroFuzzMenuBar.this.getFrame());
+						new PrefDialog(
+								JBroFuzzMenuBar.this.getFrame(), 
+								PrefDialog.PrefsPanel.PREFERENCES);
 					}
 				});
 

@@ -41,6 +41,9 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 class OutputPPanel extends AbstractPrefsPanel {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = -5132235157071990705L;
 	
 	private final JCheckBox [] checkBoxes = new JCheckBox[JBroFuzzPrefs.FUZZINGOUTPUT.length];

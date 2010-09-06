@@ -60,6 +60,8 @@ import javax.swing.WindowConstants;
 
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.ui.menu.JBroFuzzMenuBar;
+import org.owasp.jbrofuzz.ui.prefs.PrefDialog;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -72,7 +74,7 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 2.3
+ * @version 2.4
  * @since 1.2
  */
 public class CheckForUpdates extends JDialog {
@@ -80,8 +82,8 @@ public class CheckForUpdates extends JDialog {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1410800645463737781L;
-
+	private static final long serialVersionUID = -3559816997365442282L;
+	
 	// Dimensions of the about box
 	private static final int SIZE_X = 650;
 	private static final int SIZE_Y = 400;
@@ -90,7 +92,7 @@ public class CheckForUpdates extends JDialog {
 	private final JTextArea mainLabel;
 
 	// The start/stop and close button
-	private final JButton startStop, close;
+	private final JButton startStop, proxy, close;
 
 	// The boolean checking for a new version
 	private boolean newVersionExists;
@@ -104,7 +106,7 @@ public class CheckForUpdates extends JDialog {
 	 *            The JBroFuzzPanel from to which this JDialog is attached
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.3
+	 * @version 2.4
 	 * @since 1.2
 	 */
 	public CheckForUpdates(final JBroFuzzWindow parent) {
@@ -154,12 +156,15 @@ public class CheckForUpdates extends JDialog {
 		// Bottom buttons
 
 		startStop = new JButton("Check");
+		proxy = new JButton("Proxy");
 		close = new JButton("Close");
 
 		startStop.setToolTipText("Check online for a latest version");
+		proxy.setToolTipText("Configure proxy settings");
 		close.setToolTipText("Close this window");
 
 		southPanel.add(startStop);
+		southPanel.add(proxy);
 		southPanel.add(close);
 
 		// Action Listeners
@@ -189,6 +194,17 @@ public class CheckForUpdates extends JDialog {
 			}
 		});
 
+		proxy.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent aEvent) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						CheckForUpdates.this.dispose();
+						new PrefDialog(parent, PrefDialog.PrefsPanel.UPDATE);
+					}
+				});
+			}
+		});
+		
 		close.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -219,6 +235,7 @@ public class CheckForUpdates extends JDialog {
 		if (!startStop.isEnabled()) {
 			return;
 		}
+		proxy.setEnabled(true);
 		close.setEnabled(true);
 
 		// Remove all action listeners from the start/stop button
@@ -237,12 +254,18 @@ public class CheckForUpdates extends JDialog {
 							try {
 								Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 								startStop.setEnabled(false);
+								proxy.setEnabled(true);
 								close.setEnabled(true);
 							} catch (final IOException ex) {
 								mainLabel
 								.append("\nAn error occured while attempting to open the browser:\n\n"
 										+ JBroFuzzFormat.URL_WEBSITE);
 							}
+							
+							// Close the dialog, if you're opening
+							// up a browser
+							CheckForUpdates.this.dispose();
+							
 						}
 					});
 				}
@@ -254,6 +277,7 @@ public class CheckForUpdates extends JDialog {
 					SwingUtilities.invokeLater(new Runnable() {
 						public void run() {
 							startStop.setEnabled(false);
+							proxy.setEnabled(true);
 							close.setEnabled(true);
 						}
 					});
@@ -271,6 +295,7 @@ public class CheckForUpdates extends JDialog {
 		// Prior to beginning reset the button's action listener
 		startStop.setEnabled(true);
 		startStop.setText("Stop");
+		proxy.setEnabled(false);
 		close.setEnabled(false);
 
 		// Remove all action listeners
@@ -285,6 +310,7 @@ public class CheckForUpdates extends JDialog {
 					public void run() {
 						startStop.setEnabled(false);
 						// TODO: worker.interrupt();
+						proxy.setEnabled(true);
 						close.setEnabled(true);
 					}
 				});
@@ -387,7 +413,7 @@ public class CheckForUpdates extends JDialog {
 					mainLabel.append("[FAIL]\n");
 				}
 
-				if (latest != 0.0) {
+				if (latest == 0.0) {
 
 					mainLabel
 					.append("\n"
