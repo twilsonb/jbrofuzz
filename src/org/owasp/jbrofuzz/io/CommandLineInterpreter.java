@@ -30,26 +30,26 @@
 package org.owasp.jbrofuzz.io;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+//import java.io.File;
+//import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.net.URL;
+//import java.io.StringReader;
+//import java.net.URL;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.core.Database;
+//import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.fuzz.io.OpenSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveSession;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+//import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 public class CommandLineInterpreter{
-	private FileHandler mHandler;
-	private JBroFuzzFormat mFormat;
+//	private FileHandler mHandler;
+//	private JBroFuzzFormat mFormat;
 	private JBroFuzzWindow mWindow;
-	private Database mDatabase;
+//	private Database mDatabase;
 
 	/**
 	 * @author daemonmidi@gmail.com
@@ -59,7 +59,7 @@ public class CommandLineInterpreter{
 	 */
 	public int process(String [] args){
 		String inputFileName = "";
-		String outputFileName = "";
+//		String outputFileName = "";
 		int returnValue = 1; // everything went fine
 		boolean result = false;
 		boolean doNotFuzz = false;
@@ -82,7 +82,7 @@ public class CommandLineInterpreter{
 				inputFileName = args[j+1];
 			}
 			else if (args[j].equals("-o") || args[j].equals("--output")){
-				outputFileName = args[j+1];
+//				outputFileName = args[j+1];
 			}
 			else if (args[j].equals("-s") || args[j].equals("--showResults")){
 				result = true;
@@ -102,10 +102,10 @@ public class CommandLineInterpreter{
 			j++;
 		}
 
-		mDatabase = new Database();
-		mHandler = new FileHandler();
+//		mDatabase = new Database();
+//		mHandler = new FileHandler();
 
-		mFormat = new JBroFuzzFormat();
+//		mFormat = new JBroFuzzFormat();
 		mWindow = new JBroFuzzWindow(new JBroFuzz());
 
 		if (inputFileName.length() > 0 && !inputFileName.equals("")){

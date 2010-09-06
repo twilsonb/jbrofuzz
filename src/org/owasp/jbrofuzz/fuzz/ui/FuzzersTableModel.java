@@ -47,7 +47,7 @@ public class FuzzersTableModel extends AbstractTableModel {
 
 	// The names of the columns within the table of generators
 	private static final String[] COLUMNNAMES = 
-	{ "Fuzzer ID", "Encoding", "Start", "End" };
+	{ "Fuzzer ID", "Start", "End" };
 
 	// The vector of fuzzer row data
 	private final ArrayList<FuzzerRow> dataVector;
@@ -62,10 +62,10 @@ public class FuzzersTableModel extends AbstractTableModel {
 	/**
 	 * <p>Add a fuzzer row to the table</p>
 	 */
-	public void addRow(String name, String encoding, String type, String id, int point1,
+	public void addRow(String name, String type, String id, int point1,
 			int point2) {
 
-		dataVector.add(new FuzzerRow(id, encoding, point1, point2));
+		dataVector.add(new FuzzerRow(id, point1, point2));
 
 		dataVector.trimToSize();
 		fireTableRowsInserted(dataVector.size(), dataVector.size());
@@ -129,10 +129,8 @@ public class FuzzersTableModel extends AbstractTableModel {
 		case 0:
 			return record.getId();
 		case 1:
-			return record.getEncoding();
-		case 2:
 			return Integer.valueOf(record.getStartPoint());
-		case 3:
+		case 2:
 			return Integer.valueOf(record.getEndPoint());
 			//		case 6:
 			//			return Integer.valueOf(record.getPoint3());
@@ -154,7 +152,7 @@ public class FuzzersTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public boolean isCellEditable(final int row, final int column) {
-		return column == 1;
+		return false;
 	}
 
 	/**
@@ -194,12 +192,9 @@ public class FuzzersTableModel extends AbstractTableModel {
 			record.setId((String) value);
 		}
 		if(column == 1) {
-			record.setEncoding((String) value);
-		}
-		if(column == 2) {
 			record.setStartPoint(((Integer) value).intValue());
 		}
-		if(column == 3) {
+		if(column == 2) {
 			record.setEndPoint(((Integer) value).intValue());
 		}
 

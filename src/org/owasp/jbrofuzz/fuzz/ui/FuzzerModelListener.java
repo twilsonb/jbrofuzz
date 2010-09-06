@@ -2,7 +2,6 @@ package org.owasp.jbrofuzz.fuzz.ui;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 
 
@@ -28,10 +27,8 @@ public class FuzzerModelListener implements TableModelListener {
 	private final FuzzerTable t;
 	
 	public FuzzerModelListener(final AbstractPanel p, final FuzzerTable t) {
-	
 		this.p = p;
 		this.t = t;
-		
 	}
 	
 	public void tableChanged(final TableModelEvent event) {
@@ -46,5 +43,6 @@ public class FuzzerModelListener implements TableModelListener {
 
 			p.setOptionRemove(false);
 		}
+	
 	}
 }

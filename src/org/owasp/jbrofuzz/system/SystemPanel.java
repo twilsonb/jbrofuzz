@@ -84,7 +84,7 @@ public class SystemPanel extends AbstractPanel {
 	 */
 	public SystemPanel(final JBroFuzzWindow m) {
 
-		super(" System (0) ", m);
+		super(" System ", m);
 		lineCount = 0;
 
 		// Set the enabled options: Start, Stop, Graph, Add, Remove
@@ -209,32 +209,31 @@ public class SystemPanel extends AbstractPanel {
 
 			final SimpleAttributeSet attr = new SimpleAttributeSet();
 			StyleConstants.setForeground(attr, cColour);
-			styleDoc.insertString(styleDoc
-					.getLength(), toLog.toString(), attr);
-
+			styleDoc.insertString(styleDoc.getLength(), toLog.toString(), attr);
 			listTextArea.setCaretPosition(styleDoc.getLength());
-
 		} catch (final BadLocationException ex) {
 
 			ex.printStackTrace();
 
 		}
 
+		//updateTabText();
+
+	}
+	
+	/*public void updateTabText(){
 		// Fix the disappearing tab problem
 		int tab = -1;
-		final int totalTabs = getFrame().getTp().getComponentCount();
+		JTabbedPane tp = getFrame().getTp(); 
+		final int totalTabs = tp.getComponentCount();
 		for (int i = 0; i < totalTabs; i++) {
-			final String title = getFrame().getTp().getTitleAt(i);
+			final String title = tp.getTitleAt(i);
 			if (title.startsWith(" System")) {
 				tab = i;
 			}
 		}
-		if ((tab > -1)) {
-			getFrame().getTp().setTitleAt(tab, " System (" + lineCount + ")");
-		}
-
 	}
-
+*/
 
 
 	@Override
@@ -258,7 +257,6 @@ public class SystemPanel extends AbstractPanel {
 				public void fileChanged(final File file) {
 					writeLinesFromFile(monitor);
 				}
-
 			});
 		} catch (final IOException e) {
 			start("Log file is corrupted or does not exist", 4);
@@ -273,11 +271,9 @@ public class SystemPanel extends AbstractPanel {
 			final long length = monitor.getLastLength();
 
 			final ArrayList<String> linesToWrite = Logger.readLogFile(length);
-			
 			for(int i=0; i<linesToWrite.size(); i++) {
 				
 				final String line = linesToWrite.get(i);
-
 				if (line.indexOf("[INFO]")!=-1) {
 					start(line,0);
 				}else if (line.indexOf("[OPPR]")!=-1) {

@@ -30,17 +30,11 @@
 package org.owasp.jbrofuzz.fuzz.ui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-
-
-import org.owasp.jbrofuzz.encode.EncoderHashCore;
 
 /**
  * <p>Class for representing fuzzer's table within the 
@@ -73,9 +67,6 @@ public class FuzzerTable extends JTable {
 			if (i == 0) {
 				column.setPreferredWidth(50);
 			}
-			if (i == 1) {
-				column.setPreferredWidth(50);
-			}
 			else {
 				column.setPreferredWidth(15);
 			}
@@ -85,51 +76,16 @@ public class FuzzerTable extends JTable {
 	
 	@Override
 	public TableCellEditor getCellEditor(int row, int column) {
-
-		final JComboBox comboxBox = new JComboBox(EncoderHashCore.CODES);
-		comboxBox.setFont(new Font("Monospaced", Font.BOLD, 12));
-		comboxBox.setBackground(Color.BLACK);
-		comboxBox.setForeground(Color.WHITE);
-
-		final int modelColumn = convertColumnIndexToModel( column );
-
-		if (modelColumn == 1) 
-			return new DefaultCellEditor(comboxBox);
-		else
-			return super.getCellEditor(row, column);
+		return super.getCellEditor(row, column);
 
 	}
 
 	@Override
 	public TableCellRenderer getCellRenderer(int row, int column)	{
-		final int modelColumn = convertColumnIndexToModel( column );
-
-		if (modelColumn == 1)
-			return new ComboBoxRenderer ();
-		else
-			return super.getCellRenderer(row, column);
+		return super.getCellRenderer(row, column);
 
 	}
 
 
 }
 
-class ComboBoxRenderer extends JComboBox implements TableCellRenderer {
-
-	private static final long serialVersionUID = 2240748527651063324L;
-
-	@Override
-	public String getToolTipText() {
-		return "Select an Encoding from the Drop-Down Menu";
-	}
-
-	public Component getTableCellRendererComponent(
-			JTable table, Object value, boolean isSelected,
-			boolean hasFocus, int row, int column)	{
-
-		setBorder(null);
-		removeAllItems();
-		addItem( value );
-		return this;
-	}
-}
