@@ -192,6 +192,21 @@ public class CrossProductFuzzer implements Iterator<String[]> {
 		
 	}
 	
+	/**
+	 * <p>This method should be trusted or used in the conventional
+	 * way that an iterator requires remove to be implemented.</p>
+	 * 
+	 * <p>Instead, during fuzzing, remove() can be called to
+	 * step back to the previous element.</p>
+	 * 
+	 * <p>This need is typical, in replay scenarios where something
+	 * worth investigating has been discovered and a quick, step
+	 * back step forward is executed.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 2.4
+	 */
 	public void remove() {
 		
 		cValue--;

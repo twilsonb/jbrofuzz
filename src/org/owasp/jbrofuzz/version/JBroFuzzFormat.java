@@ -127,7 +127,7 @@ public class JBroFuzzFormat {
 	 * about box.</p>
 	 * 
 	 * @author subere@uncon.org
-	 * @version 2.3
+	 * @version 2.4
 	 * @sinse 1.8
 	 */
 	public static final String DEVELOPMENT_TEAM =
@@ -135,7 +135,7 @@ public class JBroFuzzFormat {
 		"<HTML><B>Development of JBroFuzz:</B><BR><BR>"
 		+ "Yiannis Pavlosoglou<BR>"
 		+ "Ranulf Green<BR>"
-		+ "Markus Miedaner<BR>"
+		+ "Markus Maria Miedaner<BR>"
 		+ "<BR></HTML>";
 
 	public static final Dimension ZERO_DIM = new Dimension(0,0);
