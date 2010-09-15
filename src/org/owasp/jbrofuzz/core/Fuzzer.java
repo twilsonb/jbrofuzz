@@ -41,9 +41,15 @@ import org.apache.commons.lang.StringUtils;
  * the payloads and the fuzzer type information.
  * </p>
  * 
+ * <p>This class is limited by the long primitive data type, i.e. we can only
+ * create Fuzzers that iterate up to the value of a 64-bit signed two's 
+ * complement integer. The maximum number of values we can iterate 
+ * through are: <b>9,223,372,036,854,775,807</b> (inclusive).</p>
+ * 
+ * <p>For larger values, you can use the FuzzerBigInteger class.</p>
  * 
  * @author subere@uncon.org
- * @version 1.9
+ * @version 2.4
  * @since 1.2
  */
 public class Fuzzer implements Iterator<String> {
@@ -161,16 +167,16 @@ public class Fuzzer implements Iterator<String> {
 	}
 
 	/**
-	 * <p>Return the maximum value of the iteration as a String.</p>
+	 * <p>Return the maximum value of the iteration as a long.</p>
 	 * 
 	 * <p>For Zero Fuzzers and Replacive Fuzzers, this value will be
 	 * the number of payloads that the fuzzer has, i.e. the length of 
 	 * the alphabet that the fuzzer carries.</p>
 	 * 
-	 * @return as String, the numeric value, e.g. '1048576'
+	 * @return as long, the numeric value, e.g. '1048576'
 	 * 
 	 * @author subere@uncon.org
-	 * @version 1.8
+	 * @version 2.4
 	 * @since 1.2
 	 */
 	public long getMaximumValue() {
@@ -265,6 +271,21 @@ public class Fuzzer implements Iterator<String> {
 
 	}
 
+	/**
+	 * <p>This method should be trusted or used in the conventional
+	 * way that an iterator requires remove to be implemented.</p>
+	 * 
+	 * <p>Instead, during fuzzing, remove() can be called to
+	 * step back to the previous element.</p>
+	 * 
+	 * <p>This need is typical, in replay scenarios where something
+	 * worth investigating has been discovered and a quick, step
+	 * back step forward is executed.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 2.4
+	 */
 	public void remove() {
 		cValue--;
 	}

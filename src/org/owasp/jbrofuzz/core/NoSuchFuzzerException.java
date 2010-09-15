@@ -29,13 +29,30 @@
  */
 package org.owasp.jbrofuzz.core;
 
+/**
+ * <p>Signals that the fuzzer that is being attempted to be accessed,
+ * cannot be found.</p>
+ * 
+ * @author subere@uncon.org
+ * @version 2.4
+ * @since 2.4
+ */
 public class NoSuchFuzzerException extends Exception {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 8529955831182129925L;
 
-	public NoSuchFuzzerException(final String message) {
+	/**
+	 * <p>Constructs a new Exception with its stack trace and 
+	 * detail message filled in.</p>
+	 * 
+	 * @param detailMessage
+	 */
+	public NoSuchFuzzerException(final String detailMessage) {
 
-		super(message);
+		super(detailMessage);
 
 	}
 

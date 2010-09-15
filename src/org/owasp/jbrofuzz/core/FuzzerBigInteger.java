@@ -64,6 +64,28 @@ public class FuzzerBigInteger implements Iterator<String> {
 
 	private transient BigInteger cValue, maxValue;
 
+	/**
+	 * <p>This constructor is available through the factory method, 
+	 * createFuzzerBigInteger(), available in the Database class.</p>
+	 * 
+	 * <p>The length specifies the number of digits, in terms of characters that
+	 * the Fuzzer will be used for. This is required for recursive and zero fuzzers,
+	 * where an iteration is taking place.</p>
+	 * 
+	 * @see Database.createFuzzerBigInteger(String id, int length)
+	 * 
+	 * @param prototype The prototype id, as read from the fuzzers.jbrf file
+	 * 					e.g. "031-B16-HEX" for the hexadecimal alphabet 	 
+	 * 
+	 * @param len		The length of the fuzzer, required for recursive and zero
+	 * 					fuzzers. This should always be a positive integer.
+	 * 		
+	 * @throws NoSuchFuzzerException
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 1.2
+	 */
 	protected FuzzerBigInteger(final Prototype prototype, final int len) throws NoSuchFuzzerException {
 
 		this.prototype = prototype;
@@ -92,37 +114,108 @@ public class FuzzerBigInteger implements Iterator<String> {
 
 	}
 
-
+	/**
+	 * <p>Get the current String value that the fuzzer is on.</p>
+	 * 
+	 * <p>Say that you have the hexadecimal fuzzer with ID 
+	 * '031-B16-HEX' of length 10. This implies that there 
+	 * will be 16^10 = 2^40 of values to iterate through.</p>
+	 * 
+	 * <p>This method gives you the ability to know to return on the 
+	 * current iteration, the numeric value we are currently on.</p>
+	 * 
+	 * @return as a String, the numeric value, e.g. "1099511627776"
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 2.4
+	 */
 	public String getCurrectValue() {
 
 		return cValue.toString();
 
 	}
 
+	/**
+	 * <p>Returns the Fuzzer unique ID, in the format of, say, "030-XSS-BRK".</p>
+	 * 
+	 * <p>This is also the unique ID used by the Prototype and the Database.</p>
+	 * 
+	 * @return the unique ID as String
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 2.4
+	 */
 	public String getId() {
 
 		return prototype.getId();
 
 	}
 
+	/**
+	 * <p>Return the maximum value of the iteration as a String.</p>
+	 * 
+	 * <p>For Zero Fuzzers and Replacive Fuzzers, this value will be
+	 * the number of payloads that the fuzzer has, i.e. the length of 
+	 * the alphabet that the fuzzer carries.</p>
+	 * 
+	 * @return as String, the numeric value, e.g. '1048576'
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 2.4
+	 */
 	public String getMaximumValue() {
 
 		return maxValue.toString();
 
 	}
 
+	/**
+	 * <p>Returns the Fuzzer name, as a String, say, 'Hexadecimal Fuzzer'.</p>
+	 * 
+	 * @return the fuzzer name as String
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 2.4
+	 */
 	public String getName() {
 
 		return prototype.getName();
 
 	}
 
+	/**
+	 * <p>Check whether or not the fuzzer iterator has a next element.</p>
+	 * 
+	 * @return true if the fuzzer has more elements to return during its 
+	 * 				iteration
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 1.2
+	 */
 	public boolean hasNext() {
 
 		return cValue.compareTo(maxValue) < 0;
 
 	}
 
+	/**
+	 * <p>Return the next element of the fuzzer during iteration.</p>
+	 * 
+	 * <p>This method should be used to access fuzzing payloads, after
+	 * construction of the fuzzer object.</p>
+	 * 
+	 * @return String	The next fuzzer payload, during the iteration 
+	 * 					process
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 1.2
+	 */
 	public String next() {
 
 		final StringBuffer output = new StringBuffer("");
@@ -170,9 +263,24 @@ public class FuzzerBigInteger implements Iterator<String> {
 
 	}
 
+	/**
+	 * <p>This method should not be trusted or used in the conventional
+	 * way that an iterator requires remove to be implemented.</p>
+	 * 
+	 * <p>Instead, during fuzzing, remove() can be called to
+	 * step back to the previous element.</p>
+	 * 
+	 * <p>This need is typical, in replay scenarios where something
+	 * worth investigating has been discovered and a quick, step
+	 * back step forward is executed.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.4
+	 * @since 2.4
+	 */
 	public void remove() {
 
-		cValue = cValue.add(BigInteger.ONE);
+		cValue = cValue.subtract(BigInteger.ONE);
 
 	}
 

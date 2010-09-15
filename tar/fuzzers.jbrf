@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2010 
 # subere@uncon.org
-# version 2.2
+# version 2.4
 #
 
 P:001-HTT-PMT:HTTP Methods:15
@@ -811,7 +811,7 @@ Z
 =
 
 R:040-B32-HEX:Base32 (Extended HEX) Alphabet:32
-> Alphabets | Number Systems | Base | Recursive Fuzzers | uppercase fuzzers
+> Alphabets | Number Systems | Base | Recursive Fuzzers
 >>This is a comment line to be changed in the future
 0
 1

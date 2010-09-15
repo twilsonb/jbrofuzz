@@ -49,9 +49,9 @@
 				<include name="release/splashscreen.png" />
 			</fileset>
 			
-			<zipfileset src="lib/commons-lang-2.4.jar" />
+			<zipfileset src="lib/commons-lang-2.5.jar" />
 			<zipfileset src="lib/commons-io-1.4.jar" />
-			<zipfileset src="lib/commons-codec-1.3.jar" />
+			<zipfileset src="lib/commons-codec-1.4.jar" />
 
 			<fileset dir="release">
 				<include name="icons/*.png" />
@@ -61,7 +61,7 @@
 				<attribute name="Build-By" value="subere@uncon.org" />
 				<attribute name="Implementation-Title" value="org.owasp.jbrofuzz.core" />
 				<attribute name="Implementation-Vendor" value="Open Web Application Security Project" />
-				<attribute name="Implementation-Version" value="2.3" />
+				<attribute name="Implementation-Version" value="2.4" />
 				<attribute name="Main-Class" value="org.owasp.jbrofuzz.encode.JBroFuzzEncoder" />
 				<attribute name="SplashScreen-Image" value="release/splashscreen.png" />				
 			</manifest>
@@ -69,9 +69,9 @@
 		</jar>
 	</target>	
 	
-	<target name="archive-core" depends="compile" description="Creating JBroFuzz Core API: jbrofuzz-core-2.3.jar">
-		<echo>Creating JBroFuzz Core API: jbrofuzz-core-2.3.jar</echo>
-		<jar compress="true" destfile="jar/jbrofuzz-core-2.3.jar">
+	<target name="archive-core" depends="compile" description="Creating JBroFuzz Core API: jbrofuzz-core-2.4.jar">
+		<echo>Creating JBroFuzz Core API: jbrofuzz-core-2.4.jar</echo>
+		<jar compress="true" destfile="jar/jbrofuzz-core-2.4.jar">
 			
 			<fileset dir="bin">
 				<include name="org/owasp/jbrofuzz/core/*.class" />
@@ -93,13 +93,13 @@
 				<include name="LICENSE/*.txt" />
 			</fileset>
 
-			<zipfileset src="lib/commons-lang-2.4.jar" />
+			<zipfileset src="lib/commons-lang-2.5.jar" />
 			<zipfileset src="lib/commons-io-1.4.jar" />
 			<manifest>
 				<attribute name="Build-By" value="subere@uncon.org" />
 				<attribute name="Implementation-Title" value="org.owasp.jbrofuzz.core" />
 				<attribute name="Implementation-Vendor" value="Open Web Application Security Project" />
-				<attribute name="Implementation-Version" value="2.3" />
+				<attribute name="Implementation-Version" value="2.4" />
 			</manifest>
 		</jar>
 	</target>
@@ -126,17 +126,16 @@
 			<fileset dir="release">
 				<include name="icons/*.png" />
 			</fileset>
-			<zipfileset src="lib/commons-codec-1.3.jar" />
-			<zipfileset src="lib/commons-lang-2.4.jar" />
+			<zipfileset src="lib/commons-codec-1.4.jar" />
 			<zipfileset src="lib/commons-io-1.4.jar" />
-			<zipfileset src="lib/commons-logging-1.1.jar" />
-			<zipfileset src="lib/junit-4.5.jar" />
-			<zipfileset src="lib/ostermillerutils_1_07_00.jar" />
+			<zipfileset src="lib/commons-lang-2.5.jar" />
+			<zipfileset src="lib/commons-logging-1.1.1.jar" />
+			<zipfileset src="lib/httpclient-4.0.2.jar" />
+			<zipfileset src="lib/httpmime-4.0.2.jar" />
 			<zipfileset src="lib/jcommon-1.0.16.jar" />
 			<zipfileset src="lib/jfreechart-1.0.13.jar" />
-			<zipfileset src="lib/httpclient-4.0.1.jar" />
-			<zipfileset src="lib/httpmime-4.0.1.jar" />
-			<zipfileset src="lib/httpcore-4.0.1.jar" />
+			<zipfileset src="lib/junit-4.5.jar" />
+			<zipfileset src="lib/ostermillerutils_1_07_00.jar" />
 			<manifest>
 				<attribute name="Main-Class" value="org.owasp.jbrofuzz.JBroFuzz" />
 				<attribute name="Build-By" value="subere@uncon.org" />
@@ -186,7 +185,7 @@
 		<copy file="jar/${app.name}Encoder.jar" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/${app.name}Encoder.exe" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/jbrofuzz.sh" todir="jar/temp/jbrofuzz" />
-		<copy file="jar/jbrofuzz-core-2.3.jar" todir="jar/temp/jbrofuzz/library" />
+		<copy file="jar/jbrofuzz-core-2.4.jar" todir="jar/temp/jbrofuzz/library" />
 
 		<copy file="release/README" todir="jar/temp/jbrofuzz" />
 		<copy file="release/INSTALL" todir="jar/temp/jbrofuzz" />
