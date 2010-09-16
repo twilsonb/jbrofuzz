@@ -40,8 +40,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Enumeration;
@@ -63,6 +61,8 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -264,6 +264,22 @@ public class EncoderHashFrame extends JFrame {
 		decode.setToolTipText(desc);
 		close.setToolTipText(" Close this window ");
 
+		// recording table selection listener.
+		recordingTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				listCounter = recordingTable.getSelectedRow();
+				final String clear = (String) recordingTable.getValueAt(
+						recordingTable.getSelectedRow(), 1);
+				final String enc = (String) recordingTable.getValueAt(
+						recordingTable.getSelectedRow(), 2);
+				enTextPane.setText(clear);
+				deTextPane.setText(enc);
+				
+			}
+		});
+		
 		swap.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -324,36 +340,7 @@ public class EncoderHashFrame extends JFrame {
 				}
 			}
 		});
-
-		// mouse listener for table
-		recordingTable.addMouseListener(new MouseListener() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				final String clear = (String) recordingTable.getValueAt(
-						recordingTable.getSelectedRow(), 1);
-				final String enc = (String) recordingTable.getValueAt(
-						recordingTable.getSelectedRow(), 2);
-				enTextPane.setText(clear);
-				deTextPane.setText(enc);
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-			}
-		});
-
+		
 		// Keyboard listener on the decoded text pane for escape to cancel
 		deTextPane.addKeyListener(new KeyAdapter() {
 			@Override
@@ -617,9 +604,9 @@ public class EncoderHashFrame extends JFrame {
 		try {
 			PREFS.sync();
 		} catch (final BackingStoreException e) {
-			System.out.println("An exception occurred while storing the values.");
+			e.printStackTrace();
 		}
-		listCounter++;
+		
 		if (listCounter >= 50)
 			listCounter = listCounter - 50;
 		recordingTable.setValueAt(enTextPane.getText(), listCounter, 1);
@@ -629,6 +616,9 @@ public class EncoderHashFrame extends JFrame {
 		} else {
 			recordingTable.setValueAt("", listCounter, 3);
 		}
+		recordingTable.getSelectionModel().setSelectionInterval(listCounter, listCounter);
+		
+		listCounter++;
 	}
 
 	/**
