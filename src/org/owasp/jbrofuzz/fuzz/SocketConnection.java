@@ -94,7 +94,10 @@ class SocketConnection {
 	 *            established.
 	 * 
 	 * @throws ConnectionException
-	 * 
+	 * @author daemonmidi@gmail.com
+	 * @version 2.4
+	 * @since 2.3
+	 *
 	 * @author subere@uncon.org
 	 * @version 2.0
 	 * @since 0.1
@@ -171,7 +174,7 @@ class SocketConnection {
 
 		} catch (final IOException e3) {
 
-			reply = "An IO Error occured: " + e3.getMessage() + 
+			reply = "An IO Error occured: " + 
 			". \n\nThis could also be a Connection Timeout, " +
 			"\ntry increasing the value under Preferences ->" +
 			" Fuzzing\n";
