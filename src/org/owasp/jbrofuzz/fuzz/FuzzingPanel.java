@@ -804,9 +804,13 @@ public class FuzzingPanel extends AbstractPanel {
 	 * If no encoder or fuzzer selected, use a default value (Plain Text encoder).
 	 * </p>
 	 * 
+	 * @author daemonmidi@gmail.com
+	 * @version 2.4
+	 * @since 2.3
+	 * 
 	 * @author subere@uncon.org
 	 * @author ranulf
-	 * @version 3.2
+	 * @version 2.3
 	 * @since 1.0
 	 */
 	@Override
@@ -909,7 +913,7 @@ public class FuzzingPanel extends AbstractPanel {
 							(showOnTheWire == 3) ) {// 3 for showing requests and responses
 							
 							// toConsole("\n--> [JBROFUZZ FUZZING RESPONSE] <--\n");
-							mWireTextArea.setText(e1.getMessage());
+							mWireTextArea.setText("A connection exception occurred." );
 						}
 
 						// Update the last row, indicating an error
