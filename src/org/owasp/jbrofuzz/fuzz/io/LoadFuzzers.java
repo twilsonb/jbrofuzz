@@ -54,7 +54,7 @@ public class LoadFuzzers {
 		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[3].getId(), System.getProperty("user.dir"));
 		JFileChooser fc;
 		try {
-			if( (new File(dirString).isDirectory()) ) {
+			if( (new File(dirString).isDirectory())) {
 				fc = new JFileChooser(dirString);
 			} else {
 				fc = new JFileChooser();

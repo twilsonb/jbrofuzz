@@ -4,6 +4,7 @@
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
  * Copyright (C) 2007 - 2010 subere@uncon.org
+ * changes for version 2.4 made by daemonmidi@gmail.com
  *
  * This file is part of JBroFuzz.
  * 
@@ -33,10 +34,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
@@ -74,7 +77,7 @@ public class OpenSession {
 
 		if (fileName.length() == 0 || fileName.equals("")) {
 			try {
-				if ((new File(dirString).isDirectory())) {
+				if ((new File(dirString).isDirectory())){
 					fc = new JFileChooser(dirString);
 				} else {
 					fc = new JFileChooser();
@@ -100,14 +103,14 @@ public class OpenSession {
 
 		final String path = file.getAbsolutePath().toLowerCase();
 		// If the file does not end in .jbrofuzz, return
-		if (!path.endsWith(".jbrofuzz")) {
-
+		JBroFuzzFileFilter jbfff = new JBroFuzzFileFilter();
+		if (!path.endsWith(".jbrofuzz") || !jbfff.accept(file)) {
 			JOptionPane.showMessageDialog(fc,
 					"The file selected is not a valid .jbrofuzz file",
 					" JBroFuzz - Open ", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
-
+		
 		// Clear up the display
 		mWindow.getPanelFuzzing().clearAllFields();
 
