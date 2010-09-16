@@ -4,7 +4,7 @@
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
  * Copyright (C) 2007 - 2010 subere@uncon.org
- *
+ * hardening for version 2.4 by daemonmidi@gmail.com
  * This file is part of JBroFuzz.
  * 
  * JBroFuzz is free software: you can redistribute it and/or modify
@@ -113,7 +113,7 @@ public class HammingDistanceChart {
 			inBuffReader.close();
 
 		} catch (final IOException e1) {
-
+			System.out.println("An IOException occurred.");
 		} finally {
 
 			IOUtils.closeQuietly(inBuffReader);
@@ -170,7 +170,7 @@ public class HammingDistanceChart {
 			inBuffReader.close();
 
 		} catch (final IOException e1) {
-
+			System.out.println("An IOException occurred.");
 		} finally {
 
 			IOUtils.closeQuietly(inBuffReader);
