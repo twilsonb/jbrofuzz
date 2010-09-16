@@ -592,6 +592,11 @@ public class EncoderHashFrame extends JFrame {
 	 * Save Key/Value/Encoder Data to UserPrefs and store them for late useage
 	 * </p>
 	 * 
+	 * @author daemonmidi@gmail.com
+	 * @version 2.4
+	 * @since 2.3
+
+	 * @author subere@uncon.org 
 	 * @version 1.0
 	 * @since 2.3
 	 */
@@ -612,7 +617,7 @@ public class EncoderHashFrame extends JFrame {
 		try {
 			PREFS.sync();
 		} catch (final BackingStoreException e) {
-			e.printStackTrace();
+			System.out.println("An exception occurred while storing the values.");
 		}
 		listCounter++;
 		if (listCounter >= 50)
