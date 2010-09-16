@@ -1,10 +1,9 @@
 /**
- * JBroFuzz 2.3
+ * JBroFuzz 2.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
  * Copyright (C) 2007 - 2010 subere@uncon.org
- *
  * This file is part of JBroFuzz.
  * 
  * JBroFuzz is free software: you can redistribute it and/or modify
@@ -45,6 +44,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.system.Logger;
+import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
 
 /**
  * <p><code>Verifier</code> checks and loads the 
@@ -198,9 +198,15 @@ public final class Verifier {
 	 * @return	true if the file is present and can be read, false
 	 * 			otherwise.
 	 * 
+	 * @author daemonmidi@gmail.com
+	 * @version 2.4
+	 * @since 2.4
+	 *
 	 * @author subere@uncon.org
-	 * @version 2.1
+	 * @version 2.3
 	 * @since 2.1
+	 *
+	 *
 	 */
 	private static boolean checkExternalFile(String fileName) {
 
@@ -215,7 +221,11 @@ public final class Verifier {
 
 		}
 		final File inputFile = new File(dirString + File.separator + fileName);
-
+		JBroFuzzFileFilter jbfff = new JBroFuzzFileFilter();
+		if (!jbfff.accept(inputFile)){
+			return false;
+		}
+		
 		if (inputFile.exists()) {
 
 			if (inputFile.isDirectory()) {
@@ -291,6 +301,11 @@ public final class Verifier {
 
 		final File inputFile = new File(System.getProperty("user.dir") + File.separator + fileName);
 
+		JBroFuzzFileFilter jbfff = new JBroFuzzFileFilter();
+		if (!jbfff.accept(inputFile)){
+			return "This file is not accepted";
+		}
+		
 		if (inputFile.exists()) {
 			if (inputFile.isDirectory()) {
 
