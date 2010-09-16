@@ -4,6 +4,7 @@
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
  * Copyright (C) 2007 - 2010 subere@uncon.org
+ * hardening for version 2.4 by daemonmidi@gmail.com
  *
  * This file is part of JBroFuzz.
  * 
@@ -248,7 +249,7 @@ public class StartUpdateChecker extends JDialog {
 						try {
 							Browser.displayURL(JBroFuzzFormat.URL_WEBSITE);
 						} catch (final IOException e) {
-
+							System.out.println("An IOException occurred.");
 						}
 						StartUpdateChecker.this.dispose();
 					}
