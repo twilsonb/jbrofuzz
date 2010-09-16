@@ -271,7 +271,7 @@ public class FuzzingPanel extends AbstractPanel {
 		encoderPanel = new JPanel(new BorderLayout());
 		
 		encoderPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" Payload manipulation (rules applied top first) "),
+				BorderFactory.createTitledBorder(" Added Fuzzer Transforms (rules applied top first) "),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		
 		// The fuzzing table and model
