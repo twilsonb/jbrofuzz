@@ -89,8 +89,14 @@ class MessageCreator {
 		// location
 		this.message = doAppendCRLF(this.message);
 		
+		final boolean addConnectionClosedHeader = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[5].getId(), true);
+		if(addConnectionClosedHeader){
+			this.message = doConnectionCloseHeader(this.message);			
+		}
+		
 		// Do a Content-Length re-write, under certain conditions
 		this.message = doContentLengthReWrite(this.message);
+		
 		
 		
 		// Do a Base64, basic auth header append
@@ -98,6 +104,45 @@ class MessageCreator {
 		if(addAuthHeader) {
 			this.message = doBasicAuthHeader(url, this.message);
 		}
+	}
+
+	/**
+	 * Internal method to add 'Connection: close' header if a 'Connection' header does not 
+	 * exist and the preferences check-box is enabled.
+	 * 
+	 * @author Ranulf
+	 * @param message
+	 * @return String The Altered Method
+	 */
+	private String doConnectionCloseHeader(String message) {
+		final String TOBEFOUND = "Connection:";
+		// Find the location of the "Connection: close"
+		final int ctl = message.toLowerCase().indexOf("\n"+TOBEFOUND.toLowerCase());
+		// Provided a content length character sequence exists in
+		// the request
+		System.out.println(ctl);
+		if(ctl != -1) {
+			// if the connection close already exists, don't do anything
+			return message;
+		}else{
+			// if the connection close does not exist, add it.
+			// We must add the connection header prior to the "end credits"
+			final String ENDCREDITS = END_LINE + END_LINE;
+			// If no "end credits" have been found
+			final int eoh = message.indexOf(ENDCREDITS);
+			if(eoh == -1) {
+				// Append some end credits to this request
+				// make it a bit more healthy perhaps
+				
+				return message + TOBEFOUND + " close" + ENDCREDITS;
+
+			} else {
+				return stringReplace(ENDCREDITS, message, END_LINE + TOBEFOUND + " close" + ENDCREDITS);
+			}
+		}
+		
+		
+	
 	}
 
 	/**
