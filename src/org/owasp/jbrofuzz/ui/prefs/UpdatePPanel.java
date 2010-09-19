@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.3
+ * JBroFuzz 2.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -59,6 +59,8 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  */
 public class UpdatePPanel extends AbstractPrefsPanel {
 
+	private static final long serialVersionUID = 1563550388184120338L;
+
 	private final JCheckBox proxyEnabledBox, proxyReqAuthBox;
 	
 	private final JTextField hostTextField, portTextField, userTextField, passTextField;
@@ -104,7 +106,6 @@ public class UpdatePPanel extends AbstractPrefsPanel {
 		userTextField.setPreferredSize(new Dimension(60, 20));
 		
 		// Password text field
-		final String passEntry = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[6].getId(), "");
 		passTextField = new JTextField(userEntry);
 		passTextField.setToolTipText(JBroFuzzPrefs.UPDATE[6].getTooltip());
 		passTextField.setFont(new Font("Verdana", Font.PLAIN, 12));
