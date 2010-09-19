@@ -111,6 +111,8 @@ class MessageCreator {
 	 * exist and the preferences check-box is enabled.
 	 * 
 	 * @author Ranulf
+	 * @version 2.4
+	 * @since 2.4
 	 * @param message
 	 * @return String The Altered Method
 	 */
@@ -120,7 +122,6 @@ class MessageCreator {
 		final int ctl = message.toLowerCase().indexOf("\n"+TOBEFOUND.toLowerCase());
 		// Provided a content length character sequence exists in
 		// the request
-		System.out.println(ctl);
 		if(ctl != -1) {
 			// if the connection close already exists, don't do anything
 			return message;
