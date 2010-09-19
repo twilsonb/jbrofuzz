@@ -42,7 +42,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
@@ -58,12 +60,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.ui.menu.JBroFuzzMenuBar;
 import org.owasp.jbrofuzz.ui.prefs.PrefDialog;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 import com.Ostermiller.util.Browser;
 
@@ -324,7 +328,33 @@ public class CheckForUpdates extends JDialog {
 		try {
 
 			final URL url = new URL(JBroFuzzFormat.URL_WEBSITE);
-			final URLConnection urlc = url.openConnection();
+			final URLConnection urlc;
+
+			final boolean proxyEnabled = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.UPDATE[0].getId(), false);
+			if(proxyEnabled) {
+				
+				final String proxy = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[1].getId(), "");
+				final int port = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.UPDATE[2].getId(), -1);
+				// A note here, proxy has no http:// or https://
+				Proxy myProxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxy, port));	
+				urlc = url.openConnection(myProxy);
+				// Username:Password, yawn
+				
+				final boolean proxyReqAuth = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.UPDATE[3].getId(), false);
+				if(proxyReqAuth) {
+					
+					final String user = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[4].getId(), "");
+					final String pass = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[5].getId(), "");
+					final String encodedPassword = EncoderHashCore.encode(user + ":" + pass, "Base64");
+					urlc.setRequestProperty( "Proxy-Authorization", encodedPassword );					
+				}
+				
+			} else {
+				
+				 urlc = url.openConnection();
+				 
+			}
+			
 			final int statusCode = ((HttpURLConnection) urlc).getResponseCode();
 			// If a 200 has been received back...
 			if (statusCode == 200) {
