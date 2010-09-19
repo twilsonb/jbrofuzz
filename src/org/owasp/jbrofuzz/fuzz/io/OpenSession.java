@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.3
+ * JBroFuzz 2.4
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -34,12 +34,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
