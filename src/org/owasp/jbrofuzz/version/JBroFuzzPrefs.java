@@ -58,45 +58,45 @@ public class JBroFuzzPrefs {
 				"update.proxy.enabled",
 				" Enable Proxy ",
 				" Tick this box to use a proxy when checking for new versions of JBroFuzz "
-			),
+		),
 		// 1, proxy host: string e.g. www.myproxy.com
 		new PrefEntry(
 				"update.proxy.host",
 				" Proxy Host ",
 				" Specify the host that will be used for your proxy "
-			),
+		),
 		// 2, proxy port: int e.g. 8080
 		new PrefEntry(
 				"update.proxy.port",
 				" Proxy Port ",
 				" Specify the post number [1 - 65535] "
-			),
+		),
 		// 3, proxy requires authentication: boolean
 		new PrefEntry(
 				"update.proxy.req-auth",
 				" Requires Authentication ",
 				" Tick this box if your proxy requires authentication "
-			),
+		),
 		// 4, proxy authentication type, basic, ntlm, etc: 
 		// integer 1 is basic
 		new PrefEntry(
 				"update.proxy.auth-type",
 				" Authentication Type ",
 				" Only Basic Authentication is supported "
-			),
+		),
 		// 5 proxy user
 		new PrefEntry(
 				"update.proxy.user",
 				" Username ",
 				" The username for authentication "
-			),
+		),
 		// 6 proxy password
 		new PrefEntry(
 				"update.proxy.pass",
 				" Password ",
 				" The password for authentication "
-			)
-		
+		)
+
 	};
 	/**
 	 * Preferences related to directory locations, creating or 
@@ -114,7 +114,7 @@ public class JBroFuzzPrefs {
 				"save.dir",
 				" Fuzzing Directory (where data is saved) ",
 				" Select Directory to Save Fuzzing Data "
-			),
+		),
 		// 1 To allow for files to be written in an 
 		// alternative location: boolean
 		new PrefEntry(
@@ -122,7 +122,7 @@ public class JBroFuzzPrefs {
 				" Specify Fuzzing Directory",
 				" Untick this box to save all data in the directory from which JBroFuzz is launched ",
 				true
-			),
+		),
 		// 2 Used in: File -> Save, File -> Open, File -> Save As 
 		// (show this directory as the last location
 		// String: Last save location
@@ -130,15 +130,15 @@ public class JBroFuzzPrefs {
 				"save.dir.jbrofuzz.last",
 				" Last Save Location Directory for .jbrofuzz Files",
 				" Change this value to specify the directory where a .jbrofuzz file was last opened from or saved to"
-			),
+		),
 		// 3 Used in: File -> Load Fuzzers...
 		new PrefEntry(
 				"save.dir.jbrf.last",
 				" Last Load Fuzzers Location Directory for .jbrf Payload Files",
 				" Change this value to specify the directory where a .jbrf file was last loaded from"
-			)
+		)
 	};
-	
+
 	/**
 	 * The UI preferences for the main and other windows.
 	 * 
@@ -154,15 +154,15 @@ public class JBroFuzzPrefs {
 				" Main window location on the x-axis",
 				" Change this value, in order to change where the window is located",
 				true
-			),
-			
+		),
+
 		// 1
 		new PrefEntry(
 				"ui.jbrofuzz.y",
 				" Main window location on the y-axis",
 				" Change this value, in order to change where the window is located",
 				true
-			),
+		),
 
 		// 2
 		new PrefEntry(
@@ -171,7 +171,7 @@ public class JBroFuzzPrefs {
 				" Change this value, in order to change the window width",
 				true
 		),
-		
+
 		// 3
 		new PrefEntry(
 				"ui.jbrofuzz.height",
@@ -179,7 +179,7 @@ public class JBroFuzzPrefs {
 				" Change this value, in order to change the window height",
 				true
 		),
-		
+
 		// 4 topPane
 		new PrefEntry(
 				"ui.f.topsplitpanel",
@@ -187,7 +187,7 @@ public class JBroFuzzPrefs {
 				" Change this value, in order to change the top divider location",
 				true
 		),
-		
+
 		// 5 mainPane
 		new PrefEntry(
 				"ui.f.mainsplitpanel",
@@ -196,9 +196,9 @@ public class JBroFuzzPrefs {
 				true
 		)
 
-			
+
 	};
-	
+
 	/**
 	 * General preferences for JBroFuzz, examples include checking for a new
 	 * version at startup.
@@ -220,8 +220,8 @@ public class JBroFuzzPrefs {
 				"startup.check.new-version",
 				" Check for a new version at startup ",
 				" Untick this option, if you do not want to be notified about new versions at startup "
-			),
-		
+		),
+
 		/**
 		 * The preference related to the location of the tabs. True implies the 
 		 * tab 
@@ -234,8 +234,8 @@ public class JBroFuzzPrefs {
 				" Show tabs in the main window at the top of the window",
 				" Tick this option, if you would like to see the tabs under the tool bar, instead of at the bottom of the window ",
 				true
-			),
-		
+		),
+
 		/**
 		 * Use the default metal Look & Feel. True implies metal will be set,
 		 * regardless
@@ -248,48 +248,55 @@ public class JBroFuzzPrefs {
 				" Always use the Metal Look & Feel",
 				" Tick this option, if you do not want any customisations at startup regarding look and feel changes",
 				true
-			)
+		)
 	};
 
 	public static final PrefEntry [] FUZZING = 
 	{
-		
+
 		// 0
 		new PrefEntry(
 				"fuzz.max.timeout",
 				"Specify Socket Connection Timeout (in seconds): ",
 				"Increase/Decrease the number of seconds you wait for an open connection"
-			),
-		
+		),
+
 		// 1
 		new PrefEntry(
 				"fuzz.end.of.line",
 				" Use \"\\r\\n\" instead of \"\\n\" as an end of line character ",
 				"Tick this box, if you want to use \"\\r\\n\" for each line put on the wire"
-			),
-		
+		),
+
 		// 2
 		new PrefEntry(
 				"fuzz.wrap.request",
 				" Word wrap text in the \"Request\" area",
 				"If ticked, the request text area will wrap the text to fit the size of the area",
 				true
-			),
-		
+		),
+
 		// 3
 		new PrefEntry(
 				"fuzz.wrap.response",
 				" Word wrap test in the \"Response\" area",
 				"Tick this box, to see all output text wrapped to the size of the response window",
 				true
-			),
-		
+		),
+
 		// 4
 		new PrefEntry(
 				"fuzz.auth.base64",
 				" Append BASE64 \"Proxy-Authorization: Basic\" header from URL username:password",
 				"Tick this box to create an authorization header that includes the username and password supplied as a base64 encoded value"
-			)
+		),
+		// 5
+		new PrefEntry(
+				"fuzz.auth.base64",
+				" Append \"Connection: close\" header",
+				"Tick this box if you wish to ensure Socket connections are appropriately closed"
+		)
+
 	};
 
 
@@ -300,7 +307,7 @@ public class JBroFuzzPrefs {
 				"fuzz.ui.show.wire",
 				" Show \"On The Wire\" tab after fuzzing has stopped or finished ",
 				"Tick this box, if you want to always see the \"On The Wire\" tab"
-			),
+		),
 
 		/**
 		 * Select what to display within the "On The Wire" tab inside the Fuzzing Panel. 
@@ -317,10 +324,10 @@ public class JBroFuzzPrefs {
 				"fuzz.ui.wire.responses",
 				" Display as output \"On The Wire\": ",
 				" Select to display nothing, just the requests, just the responses, or both the requests and responses within the \"On The Wire\" tab"
-			)
+		)
 
 	};
-	
+
 	public static final PrefEntry [] FUZZINGOUTPUT =
 	{
 		// 0
@@ -329,9 +336,9 @@ public class JBroFuzzPrefs {
 				" Double click on a Response opens it up in a Browser ",
 				"Tick this box to open up response in a browser, instead of a text-based window"
 		)
-		
+
 	};
-	
+
 	/**
 	 * The url text saved as a preference
 	 */
