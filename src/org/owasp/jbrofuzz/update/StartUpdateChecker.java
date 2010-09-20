@@ -73,13 +73,16 @@ import com.Ostermiller.util.Browser;
  * version is identified on the website.</p>
  * 
  * @author subere@uncon.org
- * @version 1.7
+ * @version 2.5
  * @since 1.3
  */
 public class StartUpdateChecker extends JDialog {
 
-	private static final long serialVersionUID = 5920384008550160901L;
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9196081991196086812L;
+	
 	// Dimensions of the update dialog
 	private static final int SIZE_X = 440;
 	private static final int SIZE_Y = 220;
@@ -100,7 +103,7 @@ public class StartUpdateChecker extends JDialog {
 	 * @return double of the version or 0.0 in case of an error
 	 * 
 	 * @author subere@uncon.org
-	 * @version 2.4
+	 * @version 2.5
 	 * @since 1.3
 	 */
 	private static double getWebsiteVersion() {
@@ -126,10 +129,10 @@ public class StartUpdateChecker extends JDialog {
 				final boolean proxyReqAuth = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.UPDATE[3].getId(), false);
 				if(proxyReqAuth) {
 					
-					final String user = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[4].getId(), "");
-					final String pass = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[5].getId(), "");
+					final String user = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[5].getId(), "");
+					final String pass = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[6].getId(), "");
 					final String encodedPassword = EncoderHashCore.encode(user + ":" + pass, "Base64");
-					urlc.setRequestProperty( "Proxy-Authorization", encodedPassword );					
+					urlc.setRequestProperty( "Proxy-Authorization", "Basic " + encodedPassword );					
 				}
 				
 			} else {
@@ -137,7 +140,8 @@ public class StartUpdateChecker extends JDialog {
 				 urlc = url.openConnection();
 				 
 			}
-			
+			urlc.setRequestProperty("User-Agent", "JBroFuzz/" + JBroFuzzFormat.VERSION);
+
 			final int statusCode = ((HttpURLConnection) urlc).getResponseCode();
 
 			if (statusCode == HttpURLConnection.HTTP_OK) {

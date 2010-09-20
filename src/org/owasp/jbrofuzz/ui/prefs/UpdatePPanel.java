@@ -41,6 +41,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -53,18 +54,18 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * of "Check for Updates".</p>
  * 
  * @author subere@uncon.org
- * @version 2.4
+ * @version 2.5
  * @since 2.4
  *
  */
 public class UpdatePPanel extends AbstractPrefsPanel {
 
-	private static final long serialVersionUID = 1563550388184120338L;
-
 	private final JCheckBox proxyEnabledBox, proxyReqAuthBox;
 	
 	private final JTextField hostTextField, portTextField, userTextField, passTextField;
 
+	private final JComboBox authTypeBox;
+	
 	private static final Dimension V_SPACE = new Dimension(0, 20);
 	
 	protected UpdatePPanel(final PrefDialog dialog) {
@@ -97,20 +98,27 @@ public class UpdatePPanel extends AbstractPrefsPanel {
 		proxyReqAuthBox.setToolTipText(JBroFuzzPrefs.UPDATE[3].getTooltip());
 		proxyReqAuthBox.setBorderPaintedFlat(true);
 		
+		// TODO: 4, proxy authentication type, basic, ntlm, etc: 
+		// integer 1 is basic
+		final String[] authTypeArray = { "HTTP" };
+		authTypeBox = new JComboBox(authTypeArray);
+		authTypeBox.setToolTipText(JBroFuzzPrefs.UPDATE[4].getTooltip());
+
 		// User text field
 		final String userEntry = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[5].getId(), "");
 		userTextField = new JTextField(userEntry);
 		userTextField.setToolTipText(JBroFuzzPrefs.UPDATE[5].getTooltip());
 		userTextField.setFont(new Font("Verdana", Font.PLAIN, 12));
 		userTextField.setMargin(new Insets(1, 1, 1, 1));
-		userTextField.setPreferredSize(new Dimension(60, 20));
+		userTextField.setPreferredSize(new Dimension(80, 20));
 		
 		// Password text field
-		passTextField = new JTextField(userEntry);
+		final String passEntry = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[6].getId(), "");
+		passTextField = new JTextField(passEntry);
 		passTextField.setToolTipText(JBroFuzzPrefs.UPDATE[6].getTooltip());
 		passTextField.setFont(new Font("Verdana", Font.PLAIN, 12));
 		passTextField.setMargin(new Insets(1, 1, 1, 1));
-		passTextField.setPreferredSize(new Dimension(60, 20));
+		passTextField.setPreferredSize(new Dimension(80, 20));
 		
 		// Panels for our friends above: Host & Port
 		final JPanel hostPortPanel = new JPanel(new GridBagLayout());
@@ -146,7 +154,15 @@ public class UpdatePPanel extends AbstractPrefsPanel {
 
 		//Panel for our friends above: Username & Password
 		final JPanel userPassPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,
-				15, 15));
+				15, 0));
+		userPassPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(
+						"Authentication"
+				), 
+				BorderFactory.createEmptyBorder(
+		1, 1, 1, 1)));
+		// userPassPanel.add(new JLabel("Type"));
+		userPassPanel.add(authTypeBox);
 		userPassPanel.add(new JLabel(JBroFuzzPrefs.UPDATE[5].getTitle()));
 		userPassPanel.add(userTextField);
 		userPassPanel.add(new JLabel(JBroFuzzPrefs.UPDATE[6].getTitle()));
@@ -160,6 +176,7 @@ public class UpdatePPanel extends AbstractPrefsPanel {
 			hostTextField.setEnabled(true);
 			portTextField.setEnabled(true);
 			proxyReqAuthBox.setEnabled(true);
+			authTypeBox.setEnabled(true);
 			userTextField.setEnabled(true);
 			passTextField.setEnabled(true);
 			
@@ -168,17 +185,20 @@ public class UpdatePPanel extends AbstractPrefsPanel {
 			hostTextField.setEnabled(false);
 			portTextField.setEnabled(false);
 			proxyReqAuthBox.setEnabled(false);
+			authTypeBox.setEnabled(false);
 			userTextField.setEnabled(false);
 			passTextField.setEnabled(false);
 			
 		}
 		if(proxyReqAuthBox.isSelected()) {
 			
+			authTypeBox.setEnabled(true);
 			userTextField.setEnabled(true);
 			passTextField.setEnabled(true);
 			
 		} else {
 			
+			authTypeBox.setEnabled(false);
 			userTextField.setEnabled(false);
 			passTextField.setEnabled(false);
 			
@@ -193,14 +213,31 @@ public class UpdatePPanel extends AbstractPrefsPanel {
 					hostTextField.setEnabled(true);
 					portTextField.setEnabled(true);
 					proxyReqAuthBox.setEnabled(true);
+					authTypeBox.setEnabled(true);
 					userTextField.setEnabled(true);
 					passTextField.setEnabled(true);
+					
+					if(proxyReqAuthBox.isSelected()) {
+						
+						authTypeBox.setEnabled(true);
+						userTextField.setEnabled(true);
+						passTextField.setEnabled(true);
+						
+					} else {
+						
+						authTypeBox.setEnabled(false);
+						userTextField.setEnabled(false);
+						passTextField.setEnabled(false);
+						
+					}
+
 					
 				} else {
 					
 					hostTextField.setEnabled(false);
 					portTextField.setEnabled(false);
 					proxyReqAuthBox.setEnabled(false);
+					authTypeBox.setEnabled(false);
 					userTextField.setEnabled(false);
 					passTextField.setEnabled(false);
 					
@@ -215,11 +252,13 @@ public class UpdatePPanel extends AbstractPrefsPanel {
 				
 				if(proxyReqAuthBox.isSelected()) {
 					
+					authTypeBox.setEnabled(true);
 					userTextField.setEnabled(true);
 					passTextField.setEnabled(true);
 					
 				} else {
 					
+					authTypeBox.setEnabled(false);
 					userTextField.setEnabled(false);
 					passTextField.setEnabled(false);
 					
@@ -251,9 +290,12 @@ public class UpdatePPanel extends AbstractPrefsPanel {
 			
 			JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.UPDATE[3].getId(), proxyReqAuthBox.isSelected());
 			
+			// 4, proxy authentication type, basic, ntlm, etc: 
+			// integer 1 is basic
+
 			if(proxyReqAuthBox.isSelected()) {
-				JBroFuzz.PREFS.put(JBroFuzzPrefs.UPDATE[4].getId(), userTextField.getText());
-				JBroFuzz.PREFS.put(JBroFuzzPrefs.UPDATE[5].getId(), passTextField.getText());				
+				JBroFuzz.PREFS.put(JBroFuzzPrefs.UPDATE[5].getId(), userTextField.getText());
+				JBroFuzz.PREFS.put(JBroFuzzPrefs.UPDATE[6].getId(), passTextField.getText());				
 			}
 		}
 		

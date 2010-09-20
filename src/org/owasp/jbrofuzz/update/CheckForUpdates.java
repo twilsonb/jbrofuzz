@@ -78,11 +78,11 @@ import com.Ostermiller.util.Browser;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 2.4
+ * @version 2.5
  * @since 1.2
  */
 public class CheckForUpdates extends JDialog {
-
+	
 	/**
 	 * 
 	 */
@@ -343,10 +343,10 @@ public class CheckForUpdates extends JDialog {
 				final boolean proxyReqAuth = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.UPDATE[3].getId(), false);
 				if(proxyReqAuth) {
 					
-					final String user = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[4].getId(), "");
-					final String pass = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[5].getId(), "");
+					final String user = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[5].getId(), "");
+					final String pass = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[6].getId(), "");
 					final String encodedPassword = EncoderHashCore.encode(user + ":" + pass, "Base64");
-					urlc.setRequestProperty( "Proxy-Authorization", encodedPassword );					
+					urlc.setRequestProperty( "Proxy-Authorization", "Basic " + encodedPassword );					
 				}
 				
 			} else {
@@ -354,6 +354,7 @@ public class CheckForUpdates extends JDialog {
 				 urlc = url.openConnection();
 				 
 			}
+			urlc.setRequestProperty("User-Agent", "JBroFuzz/" + JBroFuzzFormat.VERSION);
 			
 			final int statusCode = ((HttpURLConnection) urlc).getResponseCode();
 			// If a 200 has been received back...
