@@ -146,7 +146,7 @@ class JMenuHelp extends JMenu {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						new AboutBox(mainFrame,
-								AboutBox.DISCLAIMER);
+								AboutBox.Tab.DISCLAIMER);
 					}
 				});
 			}
@@ -158,7 +158,7 @@ class JMenuHelp extends JMenu {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						new AboutBox(mainFrame,
-								AboutBox.ABOUT);
+								AboutBox.Tab.ABOUT);
 					}
 				});
 			}

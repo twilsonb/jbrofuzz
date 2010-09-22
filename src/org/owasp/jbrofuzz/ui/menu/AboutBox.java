@@ -35,11 +35,13 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -47,12 +49,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import org.owasp.jbrofuzz.version.ImageCreator;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 /**
  * <p>
@@ -60,43 +60,27 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * </p>
  * 
  * @author subere@uncon.org
- * @version 2.0
+ * @version 2.5
  * @since 1.3
  */
-class AboutBox extends JDialog {
+public final class AboutBox extends JDialog implements KeyListener {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7515292150164781290L;
+	private static final long serialVersionUID = 2826027958413054181L;
 
 	/**
-	 * <p>
-	 * Constant for the about tab to be displayed.
-	 * </p>
+	 * <p>Enum for selected which tab is selected.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.5
+	 * @since 2.5
+	 *
 	 */
-	protected static final int ABOUT = 0;
-
-	/**
-	 * <p>
-	 * Constant for the license tab to be displayed.
-	 * </p>
-	 */
-	private static final int LICENSE = 1;
-
-	/**
-	 * <p>
-	 * Constant for the disclaimer tab to be displayed.
-	 * </p>
-	 */
-	protected static final int DISCLAIMER = 2;
-
-	/**
-	 * <p>
-	 * Constant for the acknowledgements tab to be displayed.
-	 * </p>
-	 */
-	private static final int ACKNOWLEDGEMENTS = 3;
+	protected enum Tab {
+		ABOUT, LICENSE, DISCLAIMER, ACKNOWLEDGEMENTS, CODE
+	}
 
 	// Dimensions of the about box
 	private static final int SIZE_X = 450;
@@ -114,7 +98,7 @@ class AboutBox extends JDialog {
 	 * @param parent
 	 * @param tab
 	 */
-	protected AboutBox(final JFrame parent, final int tab) {
+	protected AboutBox(final JFrame parent, final Tab selectedTab) {
 
 		super(parent, " JBroFuzz - About ", true);
 
@@ -124,76 +108,25 @@ class AboutBox extends JDialog {
 		setLayout(new BorderLayout());
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 
-		final URL licenseURL = ClassLoader.getSystemClassLoader().getResource(
-		"LICENSE/gpl-license.txt");
-		final URL disclaimerURL = ClassLoader.getSystemClassLoader()
-		.getResource("LICENSE/NOTICE.txt");
-
-		// The about editor label
-		final JLabel about = new JLabel(JBroFuzzFormat.ABOUT,
-				ImageCreator.IMG_OWASP, SwingConstants.LEFT);
-		about.setIconTextGap(20);
-		about.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-
-		// The license editor pane
-		JEditorPane license;
-		try {
-			license = new JEditorPane(licenseURL);
-
-		} catch (final IOException e) {
-			license = new JEditorPane();
-			license.setText("GPL Licence file cannot be found");
-		}
-		license.setEditable(false);
-
-		final JScrollPane lcsScrollPane = new JScrollPane(license);
-		lcsScrollPane.setVerticalScrollBarPolicy(20);
-		lcsScrollPane.setHorizontalScrollBarPolicy(30);
-
-		// The disclaimer editor label
-		final JLabel disclaimer = new JLabel(JBroFuzzFormat.DISCLAIMER,
-				ImageCreator.IMG_OWASP, SwingConstants.LEFT);
-		disclaimer.setIconTextGap(20);
-		disclaimer.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-
-		// The acknoledgement editor pane
-		JEditorPane acknoledgements;
-		try {
-			acknoledgements = new JEditorPane(disclaimerURL);
-		} catch (final IOException e) {
-			acknoledgements = new JEditorPane();
-			acknoledgements.setText("Acknoledgements file cannot be found");
-		}
-		acknoledgements.setEditable(false);
-
-		final JScrollPane ackScrollPane = new JScrollPane(acknoledgements);
-		ackScrollPane.setVerticalScrollBarPolicy(20);
-		ackScrollPane.setHorizontalScrollBarPolicy(30);
-
-		// The code development team editor label
-		final JLabel code = new JLabel(JBroFuzzFormat.DEVELOPMENT_TEAM,
-				ImageCreator.IMG_OWASP, SwingConstants.LEFT);
-		code.setIconTextGap(20);
-		code.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-
-
 		// The tabbed pane holding all the different tabs
 		tabbedPane = new JTabbedPane();
-		tabbedPane.add(about, " About ");
-		tabbedPane.add(lcsScrollPane, " License ");
-		tabbedPane.add(disclaimer, " Disclaimer ");
-		tabbedPane.add(ackScrollPane, " Acknowledgements ");
-		tabbedPane.add(code, " Code ");
+		tabbedPane.add(createAbout(), " About ");
+		tabbedPane.add(createLicense(), " License ");
+		tabbedPane.add(createDisclaimer(), " Disclaimer ");
+		tabbedPane.add(createAcknowledgements(), " Acknowledgements ");
+		tabbedPane.add(createCode(), " Code ");
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 		// Set the tab to be displayed
-		setTab(tab);
+		setTab(selectedTab);
 
 		// OK Button
 		final JButton ok = new JButton("  OK  ");
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,
 				15, 15));
 		buttonPanel.add(ok);
+		
+		// Listeners
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent aEvent) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -203,6 +136,9 @@ class AboutBox extends JDialog {
 				});
 			}
 		});
+		ok.addKeyListener(this);
+		tabbedPane.addKeyListener(this);
+		
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		// Where to show the about box
@@ -211,30 +147,185 @@ class AboutBox extends JDialog {
 				parent.getLocation().y + (parent.getHeight() - SIZE_Y) / 2
 		);
 
-
 		this.setSize(AboutBox.SIZE_X, AboutBox.SIZE_Y);
 		setMinimumSize(new Dimension(SIZE_X, SIZE_Y));
-		setResizable(true);
+		setResizable(false);
 		setVisible(true);
 	}
+	
+	public void keyTyped(final KeyEvent kEvent) {
+		// 
+	}
+	
+	public void keyPressed(final KeyEvent kEvent) {
+		if (kEvent.getKeyCode() == 27) {
 
-	private void setTab(final int tab) {
-		switch (tab) {
-		case 0:
-			tabbedPane.setSelectedIndex(AboutBox.ABOUT);
+			AboutBox.this.dispose();
+
+		}
+	}
+	
+	public void keyReleased(final KeyEvent kEvent) {
+		// 
+	}
+	
+
+	private JComponent createCode() {
+
+		final JLabel codeLabel = new JLabel(ImageCreator.IMG_OWASP);
+		codeLabel.setLocation(20, 45);
+		codeLabel.setSize(100, 100);
+
+		final URL codeURL = ClassLoader.getSystemClassLoader()
+		.getResource("LICENSE/CODE.txt");
+		JEditorPane code; 
+		try {
+			code = new JEditorPane(codeURL);
+			
+		} catch (final IOException eAbout) {
+			code = new JEditorPane();
+			code.setText("Code information cannot be found!");
+		}
+		code.setEditable(false);
+		code.addKeyListener(this);
+		
+		final JScrollPane codeScroll = new JScrollPane(code);
+		codeScroll.setVerticalScrollBarPolicy(20);
+		codeScroll.setHorizontalScrollBarPolicy(30);
+		codeScroll.setLocation(140, 5);
+		codeScroll.setSize(290, 185);
+		
+		final JPanel codePanel = new JPanel();
+		codePanel.setLayout(null);
+		codePanel.add(codeLabel);
+		codePanel.add(codeScroll);
+		return codePanel;
+
+	}
+	
+	private JComponent createAcknowledgements() {
+
+		final URL acknowledgementsURL = ClassLoader.getSystemClassLoader()
+		.getResource("LICENSE/ACKNOWLEDGEMENTS.txt");
+		// The acknoledgement editor pane
+		JEditorPane acknowledgements;
+		try {
+			acknowledgements = new JEditorPane(acknowledgementsURL);
+		} catch (final IOException e) {
+			acknowledgements = new JEditorPane();
+			acknowledgements.setText("Acknoledgements file cannot be found");
+		}
+		acknowledgements.setEditable(false);
+		acknowledgements.addKeyListener(this);
+		
+		final JScrollPane ackScrollPane = new JScrollPane(acknowledgements);
+		ackScrollPane.setVerticalScrollBarPolicy(20);
+		ackScrollPane.setHorizontalScrollBarPolicy(30);
+		return ackScrollPane;
+	}
+	
+	private JComponent createDisclaimer() {
+
+		final JLabel disclaimerLabel = new JLabel(ImageCreator.IMG_OWASP);
+		disclaimerLabel.setLocation(20, 45);
+		disclaimerLabel.setSize(100, 100);
+
+		final URL disclaimerURL = ClassLoader.getSystemClassLoader()
+		.getResource("LICENSE/DISCLAIMER.txt");
+		JEditorPane disclaimer; // TextPane = new JEditorPane("text/html", JBroFuzzFormat.ABOUT);
+		try {
+			disclaimer = new JEditorPane(disclaimerURL);
+			
+		} catch (final IOException eAbout) {
+			disclaimer = new JEditorPane();
+			disclaimer.setText("About information cannot be found!");
+		}
+		disclaimer.setEditable(false);
+		disclaimer.addKeyListener(this);
+		
+		final JScrollPane disclaimerScroll = new JScrollPane(disclaimer);
+		disclaimerScroll.setVerticalScrollBarPolicy(20);
+		disclaimerScroll.setHorizontalScrollBarPolicy(30);
+		disclaimerScroll.setLocation(140, 5);
+		disclaimerScroll.setSize(290, 185);
+		
+		final JPanel disclaimerPanel = new JPanel();
+		disclaimerPanel.setLayout(null);
+		disclaimerPanel.add(disclaimerLabel);
+		disclaimerPanel.add(disclaimerScroll);
+		return disclaimerPanel;
+		
+	}
+	
+	private JComponent createLicense() {
+	
+		final URL licenseURL = ClassLoader.getSystemClassLoader().getResource(
+		"LICENSE/gpl-license.txt");
+		// The license editor pane
+		JEditorPane license;
+		try {
+			license = new JEditorPane(licenseURL);
+
+		} catch (final IOException e) {
+			license = new JEditorPane();
+			license.setText("GPL Licence file cannot be found!");
+		}
+		license.setEditable(false);
+		license.addKeyListener(this);
+
+		final JScrollPane lcsScrollPane = new JScrollPane(license);
+		lcsScrollPane.setVerticalScrollBarPolicy(20);
+		lcsScrollPane.setHorizontalScrollBarPolicy(30);
+		return lcsScrollPane;
+	}
+	
+	private JComponent createAbout() {
+		
+		final JLabel aboutLabel = new JLabel(ImageCreator.IMG_OWASP);
+		aboutLabel.setLocation(20, 45);
+		aboutLabel.setSize(100, 100);
+
+		final URL aboutURL = ClassLoader.getSystemClassLoader()
+		.getResource("LICENSE/ABOUT.txt");
+		JEditorPane about; // TextPane = new JEditorPane("text/html", JBroFuzzFormat.ABOUT);
+		try {
+			about = new JEditorPane(aboutURL);
+			
+		} catch (final IOException eAbout) {
+			about = new JEditorPane();
+			about.setText("About information cannot be found!");
+		}
+		about.setEditable(false);
+		about.addKeyListener(this);
+		
+		final JScrollPane aboutScroll = new JScrollPane(about);
+		aboutScroll.setVerticalScrollBarPolicy(20);
+		aboutScroll.setHorizontalScrollBarPolicy(30);
+		aboutScroll.setLocation(140, 5);
+		aboutScroll.setSize(290, 185);
+		
+		final JPanel aboutPanel = new JPanel();
+		aboutPanel.setLayout(null);
+		aboutPanel.add(aboutLabel);
+		aboutPanel.add(aboutScroll);
+		return aboutPanel;
+		
+	}
+	
+	private void setTab(final Tab myTab) {
+		switch (myTab) {
+		case ABOUT: tabbedPane.setSelectedIndex(0);
 			break;
-		case 1:
-			tabbedPane.setSelectedIndex(AboutBox.LICENSE);
+		case LICENSE: tabbedPane.setSelectedIndex(1);
 			break;
-		case 2:
-			tabbedPane.setSelectedIndex(AboutBox.DISCLAIMER);
+		case DISCLAIMER: tabbedPane.setSelectedIndex(2);
 			break;
-		case 3:
-			tabbedPane.setSelectedIndex(AboutBox.ACKNOWLEDGEMENTS);
+		case ACKNOWLEDGEMENTS: tabbedPane.setSelectedIndex(3);
 			break;
-		default:
-			tabbedPane.setSelectedIndex(0);
-		break;
+		case CODE: tabbedPane.setSelectedIndex(4);
+			break;
+		default: tabbedPane.setSelectedIndex(0);
+			break;
 		}
 	}
 }

@@ -1,0 +1,5 @@
+JBroFuzz generates requests and records the responses. It does not attempt to identify if a particular site is vulnerable or not; this requires further human analysis. 
+
+However, certain payload categories, like XSS, are crafted to try to successfully exploit flaws. Thus the human analyst would have to review the results in order to recognize if exploitation succeeded or not.
+
+The authors of JBroFuzz takes no legal or other responsibility for any problems that might occur while running this program.

@@ -223,7 +223,7 @@ public class JBroFuzzToolBar extends JToolBar {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						new AboutBox(JBroFuzzToolBar.this.getFrame(),
-								AboutBox.ABOUT);
+								AboutBox.Tab.ABOUT);
 					}
 				});
 			}

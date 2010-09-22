@@ -1,0 +1,9 @@
+
+JBroFuzz 2.4
+Codename: Ogoun
+
+Copyright 2010
+subere@uncon.org
+
+A stateless network protocol fuzzer
+for web applications.
