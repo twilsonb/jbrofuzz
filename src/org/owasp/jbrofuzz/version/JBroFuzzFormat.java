@@ -72,20 +72,6 @@ public class JBroFuzzFormat {
 
 	/**
 	 * <p>
-	 * The text, in html format, shown in the disclaimer box.
-	 * </p>
-	 */
-	public static final String DISCLAIMER = 
-		"<HTML>JBroFuzz generates requests and records the responses. It does not attempt to identify if a particular "
-		+ "site is vulnerable or not; this requires further human analysis. <BR><BR>However, certain payload categories, like XSS, "
-		+ "are crafted to try to successfully exploit flaws. Thus the human analyst would have to review the results "
-		+ "in order to recognize if exploitation succeeded or not.<BR><BR>"
-		+ "The authors of JBroFuzz takes no "
-		+ "legal or other responsibility for any problems that "
-		+ "might occur while running this program.<BR></HTML>";
-
-	/**
-	 * <p>
 	 * The version of JBroFuzz in String format and always of the form "x.x"
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
@@ -108,37 +94,10 @@ public class JBroFuzzFormat {
 	public static final String URL_WEBSITE = "http://www.owasp.org/index.php/JBroFuzz";
 
 	/**
-	 * <p>
-	 * The text, in html format, shown in the about box.
-	 * </p>
+	 * <p>A dimension of zero size, in height & width.</p>
 	 */
-	public static final String ABOUT =
-
-		"<HTML><B>JBroFuzz Version:  " + VERSION + "<BR>" + "Codename: "
-		+ JBroFuzzFormat.getCodeName(JBroFuzzFormat.VERSION)
-		+ "</B><BR><BR>" + "<B>Copyright &copy; " + YEAR
-		+ " subere@uncon.org</B><BR><BR>" + "Running Under  Java "
-		+ System.getProperty("java.version") + "<BR><BR>"
-		+ "<B>A stateless network protocol fuzzer <BR>"
-		+ "for web applications." + "</B><BR></HTML>";
-
-	/**
-	 * <p>The text displayed under the code tab, in the
-	 * about box.</p>
-	 * 
-	 * @author subere@uncon.org
-	 * @version 2.4
-	 * @sinse 1.8
-	 */
-	public static final String DEVELOPMENT_TEAM =
-
-		"<HTML><B>Development of JBroFuzz:</B><BR><BR>"
-		+ "Yiannis Pavlosoglou<BR>"
-		+ "Ranulf Green<BR>"
-		+ "Markus Maria Miedaner<BR>"
-		+ "<BR></HTML>";
-
 	public static final Dimension ZERO_DIM = new Dimension(0,0);
+	
 	/**
 	 * <p>
 	 * Method for abbreviating the given String to a particular length, by

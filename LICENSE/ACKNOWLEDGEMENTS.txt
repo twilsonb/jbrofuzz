@@ -1,0 +1,35 @@
+JBroFuzz is licensed under the GNU General Public License v3; 
+a copy should be included within this distribution; if not 
+you can find it at http://www.gnu.org/licenses/gpl.txt
+
+Most of the icons used within the JBroFuzz are from the 
+Tango Icon Library, part of the Tango Desktop Project. 
+The Tango Desktop Project exists to create a consistent 
+user experience for Open Source software. See:
+http://tango.freedesktop.org for further information.
+
+Some of the XSS generators included and their respective
+payloads come from XSSDB. Many thanks to GNUCITIZEN 
+(http://www.gnucitizen.org) for their hard work in 
+putting together XSSDB. In particular, .mario pdp 
+(architect) as well as all the others.
+
+This product includes software developed by The Apache 
+Software Foundation (http://www.apache.org).The commons 
+codec, httpclient and logging libraries used are licensed 
+under the Apache License that should also be included 
+within this distribution.
+
+This product includes JFreeChart and JCommon. Both JFreeChart
+and JCommon are licensed under the GNU Lesser General Public 
+License; a copy should be included within this distribution; 
+if not you can find it at http://www.gnu.org/licenses/lgpl.txt
+
+This product includes JUnit. JUnit is Open Source Software, 
+released under the Common Public License Version 1.0.
+
+This product includes OstermillerUtils. OstermillerUtils are
+licensed under the GNU Lesser General Public License; a copy 
+should be included within this distribution; If not you can 
+find it at http://www.gnu.org/licenses/lgpl.txt
+

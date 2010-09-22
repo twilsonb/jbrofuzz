@@ -1,0 +1,7 @@
+
+The Crazy JBroFuzz Development Team:
+
+Yiannis Pavlosoglou
+Ranulf Green
+Markus Maria Miedaner
+
