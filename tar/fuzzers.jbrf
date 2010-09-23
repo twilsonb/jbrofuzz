@@ -1277,3 +1277,33 @@ z
 |
 }
 ~
+
+P:048-WIN-VAR:Windows Environment Variables:26
+> O/S Variables | Replacive Fuzzers
+>> XP, Vista, 7 Special variable aliases or placeholders for basic system properties
+%ALLUSERSPROFILE%
+%APPDATA%
+%COMPUTERNAME%
+%COMSPEC%
+%HOMEDRIVE%
+%HOMEPATH%
+%PATH%
+%PATHEXT%
+%PROGRAMFILES%
+%PROMPT%
+%SYSTEMDRIVE%
+%SYSTEMROOT%
+%TEMP%
+%TMP%
+%USERNAME%
+%USERPROFILE%
+%WINDIR%
+%DATE%
+%TIME%
+%CD%
+%ERRORLEVEL%
+%RANDOM%
+%CommonProgramFiles%
+%LOCALAPPDATA%
+%ProgramData%
+%Public%

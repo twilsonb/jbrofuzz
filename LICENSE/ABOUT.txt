@@ -1,9 +1,9 @@
 
-JBroFuzz 2.4
-Codename: Ogoun
+JBroFuzz 2.5
+Codename: Oro
 
 Copyright 2010
 subere@uncon.org
 
-A stateless network protocol fuzzer
-for web applications.
+A stateless network protocol 
+fuzzer for web applications.
