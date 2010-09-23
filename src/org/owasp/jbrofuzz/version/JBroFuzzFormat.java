@@ -76,7 +76,7 @@ public class JBroFuzzFormat {
 	 * where 'x' is a single digit in the range of [0-9].
 	 * </p>
 	 */
-	public static final String VERSION = "2.4";
+	public static final String VERSION = "2.5";
 
 	/**
 	 * <p>
