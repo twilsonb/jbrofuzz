@@ -79,14 +79,6 @@ public class JBroFuzzFormat {
 	public static final String VERSION = "2.5";
 
 	/**
-	 * <p>
-	 * The year in which the current <code>VERSION</code> of JBroFuzz was
-	 * released.
-	 * </p>
-	 */
-	private static final String YEAR = "2010";
-
-	/**
 	 * The web site used via means of the selecting "JBroFuzz Website on the
 	 * About menu.
 	 * 
@@ -134,101 +126,101 @@ public class JBroFuzzFormat {
 	 * 
 	 * @return String
 	 */
-	private static final String getCodeName(final String versionNumber) {
-
-		if (versionNumber.equalsIgnoreCase("0.1")) {
-			return "Vesta "; /* - Goddess of the Home */
-		}
-		if (versionNumber.equalsIgnoreCase("0.2")) {
-			return "Jupiter "; /* - King of the Gods */
-		}
-		if (versionNumber.equalsIgnoreCase("0.3")) {
-			return "Juno "; /* - Queen of the Gods */
-		}
-		if (versionNumber.equalsIgnoreCase("0.4")) {
-			return "Neptune "; /* - God of the Sea */
-		}
-		if (versionNumber.equalsIgnoreCase("0.5")) {
-			return "Pluto "; /* - God of Death */
-		}
-		if (versionNumber.equalsIgnoreCase("0.6")) {
-			return "Apollo "; /* - God of the Sun */
-		}
-		if (versionNumber.equalsIgnoreCase("0.7")) {
-			return "Selene "; /* - Goddess of the Moon */
-		}
-		if (versionNumber.equalsIgnoreCase("0.8")) {
-			return "Mars "; /* - God of War */
-		}
-		if (versionNumber.equalsIgnoreCase("0.9")) {
-			return "Dioni "; /* - Goddess of Love */
-		}
-		if (versionNumber.equalsIgnoreCase("1.0")) {
-			return "Cupid "; /* - God of Love */
-		}
-		if (versionNumber.equalsIgnoreCase("1.1")) {
-			return "Mercury "; /* - Messenger of the Gods */
-		}
-		if (versionNumber.equalsIgnoreCase("1.2")) {
-			return "Athena "; /* - Goddess of Wisdom */
-		}
-		if (versionNumber.equalsIgnoreCase("1.3")) {
-			return "Ceres "; /* - The Earth Goddess */
-		}
-		if (versionNumber.equalsIgnoreCase("1.4")) {
-			return "Proserpine "; /* - Goddess of the Underworld */
-		}
-		if (versionNumber.equalsIgnoreCase("1.5")) {
-			return "Vulcan "; /* - The Smith God */
-		}
-		if (versionNumber.equalsIgnoreCase("1.6")) {
-			return "Bacchus "; /* - God of Wine */
-		}
-		if (versionNumber.equalsIgnoreCase("1.7")) {
-			return "Saturn "; /* - God of Time */
-		}
-		if (versionNumber.equalsIgnoreCase("1.8")) {
-			return "Chrome "; /* - God of Doors */
-		}
-		if (versionNumber.equalsIgnoreCase("1.9")) {
-			return "Uranus "; /* - Father of Saturn */
-		}
-		if (versionNumber.equalsIgnoreCase("2.0")) {
-			return "Maia "; /* - Goddess of Growth */
-		}
-		if (versionNumber.equalsIgnoreCase("2.1")) {
-			return "Neto "; /* - Lusitanian mythology */
-		}
-		if (versionNumber.equalsIgnoreCase("2.2")) {
-			return "Belus "; /* - Babylonia god of war */
-		}
-		if (versionNumber.equalsIgnoreCase("2.3")) {
-			return "Thor "; /* Norse, OWASP Sweden 2010 */
-		}
-		if (versionNumber.equalsIgnoreCase("2.4")) {
-			return "Ogoun "; /* Haitian Vodou, preserves fire */
-		}
-		if (versionNumber.equalsIgnoreCase("2.5")) {
-			return "Oro "; /* - Polynesian mythology */ 
-		}
-		if (versionNumber.equalsIgnoreCase("2.6")) {
-			return "Virtus "; /* Roman God of bravery */
-		}
-		if (versionNumber.equalsIgnoreCase("2.7")) {
-			return "Tyr "; /* Norse, associated with single combat */
-		}
-		if (versionNumber.equalsIgnoreCase("2.8")) {
-			return "Freyja "; /* Goddess of many, many things */
-		}
-		if (versionNumber.equalsIgnoreCase("2.9")) {
-			return "Tohil "; /* Mayan God of the elements & war */
-		}
-		if (versionNumber.equalsIgnoreCase("3.0")) {
-			return "Kali "; /* Kali - Goddess of time & war */
-		}
-
-		return "Zeus ";
-	}
+//	private static final String getCodeName(final String versionNumber) {
+//
+//		if (versionNumber.equalsIgnoreCase("0.1")) {
+//			return "Vesta "; /* - Goddess of the Home */
+//		}
+//		if (versionNumber.equalsIgnoreCase("0.2")) {
+//			return "Jupiter "; /* - King of the Gods */
+//		}
+//		if (versionNumber.equalsIgnoreCase("0.3")) {
+//			return "Juno "; /* - Queen of the Gods */
+//		}
+//		if (versionNumber.equalsIgnoreCase("0.4")) {
+//			return "Neptune "; /* - God of the Sea */
+//		}
+//		if (versionNumber.equalsIgnoreCase("0.5")) {
+//			return "Pluto "; /* - God of Death */
+//		}
+//		if (versionNumber.equalsIgnoreCase("0.6")) {
+//			return "Apollo "; /* - God of the Sun */
+//		}
+//		if (versionNumber.equalsIgnoreCase("0.7")) {
+//			return "Selene "; /* - Goddess of the Moon */
+//		}
+//		if (versionNumber.equalsIgnoreCase("0.8")) {
+//			return "Mars "; /* - God of War */
+//		}
+//		if (versionNumber.equalsIgnoreCase("0.9")) {
+//			return "Dioni "; /* - Goddess of Love */
+//		}
+//		if (versionNumber.equalsIgnoreCase("1.0")) {
+//			return "Cupid "; /* - God of Love */
+//		}
+//		if (versionNumber.equalsIgnoreCase("1.1")) {
+//			return "Mercury "; /* - Messenger of the Gods */
+//		}
+//		if (versionNumber.equalsIgnoreCase("1.2")) {
+//			return "Athena "; /* - Goddess of Wisdom */
+//		}
+//		if (versionNumber.equalsIgnoreCase("1.3")) {
+//			return "Ceres "; /* - The Earth Goddess */
+//		}
+//		if (versionNumber.equalsIgnoreCase("1.4")) {
+//			return "Proserpine "; /* - Goddess of the Underworld */
+//		}
+//		if (versionNumber.equalsIgnoreCase("1.5")) {
+//			return "Vulcan "; /* - The Smith God */
+//		}
+//		if (versionNumber.equalsIgnoreCase("1.6")) {
+//			return "Bacchus "; /* - God of Wine */
+//		}
+//		if (versionNumber.equalsIgnoreCase("1.7")) {
+//			return "Saturn "; /* - God of Time */
+//		}
+//		if (versionNumber.equalsIgnoreCase("1.8")) {
+//			return "Chrome "; /* - God of Doors */
+//		}
+//		if (versionNumber.equalsIgnoreCase("1.9")) {
+//			return "Uranus "; /* - Father of Saturn */
+//		}
+//		if (versionNumber.equalsIgnoreCase("2.0")) {
+//			return "Maia "; /* - Goddess of Growth */
+//		}
+//		if (versionNumber.equalsIgnoreCase("2.1")) {
+//			return "Neto "; /* - Lusitanian mythology */
+//		}
+//		if (versionNumber.equalsIgnoreCase("2.2")) {
+//			return "Belus "; /* - Babylonia god of war */
+//		}
+//		if (versionNumber.equalsIgnoreCase("2.3")) {
+//			return "Thor "; /* Norse, OWASP Sweden 2010 */
+//		}
+//		if (versionNumber.equalsIgnoreCase("2.4")) {
+//			return "Ogoun "; /* Haitian Vodou, preserves fire */
+//		}
+//		if (versionNumber.equalsIgnoreCase("2.5")) {
+//			return "Oro "; /* - Polynesian mythology */ 
+//		}
+//		if (versionNumber.equalsIgnoreCase("2.6")) {
+//			return "Virtus "; /* Roman God of bravery */
+//		}
+//		if (versionNumber.equalsIgnoreCase("2.7")) {
+//			return "Tyr "; /* Norse, associated with single combat */
+//		}
+//		if (versionNumber.equalsIgnoreCase("2.8")) {
+//			return "Freyja "; /* Goddess of many, many things */
+//		}
+//		if (versionNumber.equalsIgnoreCase("2.9")) {
+//			return "Tohil "; /* Mayan God of the elements & war */
+//		}
+//		if (versionNumber.equalsIgnoreCase("3.0")) {
+//			return "Kali "; /* Kali - Goddess of time & war */
+//		}
+//
+//		return "Zeus ";
+//	}
 
 	/**
 	 * 

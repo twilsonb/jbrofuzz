@@ -43,13 +43,10 @@ import org.owasp.jbrofuzz.fuzz.io.OpenSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveSession;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-//import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
 public class CommandLineInterpreter{
-//	private FileHandler mHandler;
-//	private JBroFuzzFormat mFormat;
+
 	private JBroFuzzWindow mWindow;
-//	private Database mDatabase;
 
 	/**
 	 * @author daemonmidi@gmail.com
@@ -59,7 +56,6 @@ public class CommandLineInterpreter{
 	 */
 	public int process(String [] args){
 		String inputFileName = "";
-//		String outputFileName = "";
 		int returnValue = 1; // everything went fine
 		boolean result = false;
 		boolean doNotFuzz = false;
@@ -102,10 +98,6 @@ public class CommandLineInterpreter{
 			j++;
 		}
 
-//		mDatabase = new Database();
-//		mHandler = new FileHandler();
-
-//		mFormat = new JBroFuzzFormat();
 		mWindow = new JBroFuzzWindow(new JBroFuzz());
 
 		if (inputFileName.length() > 0 && !inputFileName.equals("")){

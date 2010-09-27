@@ -37,7 +37,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 
@@ -65,15 +64,9 @@ public class EncodersTable extends JTable {
 		setForeground(Color.WHITE);
 
 		// Set the column widths
-		TableColumn column = null;
+		// TableColumn column = null;
 		for (int i = 0; i < model.getColumnCount(); i++) {
-			column = getColumnModel().getColumn(i);
-			if (i == 0) {
-				column.setPreferredWidth(30);
-			}
-			else {
-				column.setPreferredWidth(30);
-			}
+			getColumnModel().getColumn(i).setPreferredWidth(30);
 		}
 
 	}

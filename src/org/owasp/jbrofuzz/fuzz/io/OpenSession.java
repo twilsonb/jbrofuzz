@@ -65,7 +65,6 @@ public class OpenSession {
 		File file = null;
 		// Set the Fuzzing Panel as the one to view
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-		Logger.log("Open Fuzzing Session", 1);
 
 		final JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
 		final String dirString = JBroFuzz.PREFS.get(
@@ -97,7 +96,6 @@ public class OpenSession {
 		} else {
 			file = new File(fileName);
 		}
-		Logger.log("Opening: " + file.getName(), 1);
 
 		final String path = file.getAbsolutePath().toLowerCase();
 		// If the file does not end in .jbrofuzz, return
@@ -149,26 +147,49 @@ public class OpenSession {
 		// Validate it to extremes
 		final String[] fileInput = fileContents.toString().split("\n");
 		final int len = fileInput.length;
-
+		if(len < 8) {
+			Logger.log("Invalid File: Contains less than 8 lines", 2);
+			return;
+		}
 		/*
 		 * // Check the number of lines if (len < 8) return; // Check the
 		 * location of each of the fields if
 		 */
-		 if (!fileInput[0].equals("[JBroFuzz]")) return;
-		 if (!fileInput[2].equals("[Fuzzing]")) return;
-		 if (!fileInput[4].equals("[Comment]")) return;
-		 if (!fileInput[6].equals("[URL]")) return;
-		 if (!fileInput[8].equals("[Request]")) return; // Check that the file
+		 if (!fileInput[0].equals("[JBroFuzz]")) {
+			 Logger.log("Invalid File: Line 1 is not [JBroFuzz]", 2);
+			 return;
+		 }
+		 if (!fileInput[2].equals("[Fuzzing]")) {
+			 Logger.log("Invalid File: Line 3 is not [Fuzzing]", 2);
+			 return;
+		 }
+		 if (!fileInput[4].equals("[Comment]")) {
+			 Logger.log("Invalid File: Line 5 is not [Comment]", 2);
+			 return;
+		 }
+		 if (!fileInput[6].equals("[URL]")) {
+			 Logger.log("Invalid File: Line 7 is not [URL]", 2);
+			 return;
+		 }
+		 if (!fileInput[8].equals("[Request]")) {
+			 Logger.log("Invalid File: Line 9 is not [Request]", 2);
+			 return;
+		 }
 		 // finishes with an 'End' 
-		 if (!fileInput[len - 1].equals("[End]")) return;
+		 if (!fileInput[len - 1].equals("[End]")) {
+			 Logger.log("Invalid File: Last line is not [End]", 2);
+			 return;
+		 }
 		 
-		// Find the line where the 'Payloads' are
+		 
+		// Find the line where the [Payloads] line is
 		int payloadsLine = 0;
 		for (int i = len - 1; i >= 0; i--) {
 
 			if (fileInput[i].equals("[Payloads]")) {
 				// Check that there is only 1 instance
 				if (payloadsLine != 0) {
+					Logger.log("Invalid File: Found 2 instances of [Payloads]", 2);
 					return;
 				} else {
 					payloadsLine = i;
@@ -178,8 +199,11 @@ public class OpenSession {
 
 		}
 
-		// If you can't find the 'Payloads' line, return
-		if (payloadsLine == 0) return;
+		// If you can't find the [Payloads] line, return
+		if (payloadsLine == 0) {
+			Logger.log("Invalid File: Cannot find a [Payloads] line", 2);
+			return;
+		}
 
 		// Get the request from the file
 		final StringBuffer _reqBuffer = new StringBuffer();
@@ -189,7 +213,10 @@ public class OpenSession {
 
 		// If the number of available payload lines is greater than 1024,
 		// return
-		if (len - 1 - payloadsLine - 1 > 1024) return;
+		if (len - 1 - payloadsLine - 1 > 1024) {
+			Logger.log("Invalid File: More than 1024 Payload lines identified", 2);
+			return;
+		}
 
 		// Get the payloads from the file
 		for (int i = payloadsLine + 1; i < len - 1; i++) {
@@ -197,31 +224,19 @@ public class OpenSession {
 			boolean fuzzer_happy = true;
 
 			final String[] payloadArray = fileInput[i].split(",");
-			// Each line must have 4 elements
-			if (payloadArray.length == 4) {
+			// Each line must have 3 elements
+			if (payloadArray.length != 3) {
+				Logger.log("Invalid File: Line " + i + " does not contain 3 elements", 2);
+			} else {
 				final String fuzz_id = payloadArray[0];
-				String[] encoding_ = {payloadArray[1]};
-				int start = 0;
-				int end = 0;
-				
+
 				// The fuzzer id must also exist in the database
 				if (!mWindow.getJBroFuzz().getDatabase().containsPrototype(fuzz_id)) {
 					fuzzer_happy = false;
 				}
 
-				// Work on the encoding you are reading in
-				boolean encoding_found = false;
-				for (final String lamda : EncoderHashCore.CODES) {
-					if (lamda.equalsIgnoreCase(encoding_[0])) {
-						encoding_found = true;
-					}
-				}
-
-				// Set the default encoding, the first one
-				if (!encoding_found) {
-					encoding_[0] = EncoderHashCore.CODES[0];
-				}
-
+				int start = 0;
+				int end = 0;
 				// The start and end integers should be happy
 				try {
 					start = Integer.parseInt(payloadArray[2]);
@@ -244,7 +259,7 @@ public class OpenSession {
 							"Could not open and add Fuzzer: " + fileInput[i], 3);
 				} else {
 					// TODO- I've not integrated multiple encoders into saved sessions or save sessions yet
-				mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_, start, end);
+					mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_, start, end);
 
 				}
 			}
