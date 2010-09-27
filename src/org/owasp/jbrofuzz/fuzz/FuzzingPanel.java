@@ -484,7 +484,7 @@ public class FuzzingPanel extends AbstractPanel {
 	 * @param point1
 	 * @param point2
 	 */
-	public void addFuzzer(final String fuzzerId, String[] encoders, final int point1, final int point2) {
+	public void addFuzzer(final String fuzzerId, final int point1, final int point2) {
 
 		final Database cDatabase = getFrame().getJBroFuzz().getDatabase();
 
@@ -499,15 +499,6 @@ public class FuzzingPanel extends AbstractPanel {
 					point1,
 					point2
 			);
-			if(encoders.length==0 || encoders.length == 1){
-				encodersTableList.add();
-			}
-			else{
-				encodersTableList.addAll(encoders);
-			}
-
-			
-			
 
 		} else {
 			Logger.log("Could not add the Fuzzer with ID: " + fuzzerId, 3);

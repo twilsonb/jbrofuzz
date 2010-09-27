@@ -60,6 +60,11 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  */
 public class UpdatePPanel extends AbstractPrefsPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6601607213870707446L;
+
 	private final JCheckBox proxyEnabledBox, proxyReqAuthBox;
 	
 	private final JTextField hostTextField, portTextField, userTextField, passTextField;
