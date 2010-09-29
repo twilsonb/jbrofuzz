@@ -79,9 +79,8 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * for a variety of different schemes, as well as hashing functionality.
  * </p>
  * 
- * @author daemonmidi@gmail.com
- * @author subere@uncon.org
- * @version 2.3
+ * @author daemonmidi@gmail.com, subere@uncon.org
+ * @version 2.5
  * @since 1.5
  */
 public class EncoderHashFrame extends JFrame {
@@ -123,7 +122,8 @@ public class EncoderHashFrame extends JFrame {
 
 		// really inspired from Paros Proxy, but as a frame
 		setTitle(" JBroFuzz - Encoder/Hash ");
-
+		setJMenuBar(new EncoderHashMenuBar(this));
+		
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 
@@ -482,9 +482,7 @@ public class EncoderHashFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(final WindowEvent e) {
-				windowIsShowing = false;
-				saveValues();
-				dispose();
+				closeFrame();
 			}
 		});
 
@@ -503,6 +501,22 @@ public class EncoderHashFrame extends JFrame {
 		 * EncoderHashCore.CODES[i].equalsIgnoreCase(encoder_type) ) {
 		 * tree.setSelectionRow( i+1 ); break; }
 		 */
+	}
+	
+	/**
+	 * <p>Method called for saving the preferences of each 
+	 * encode/decode message and closing the frame.</p>
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.5
+	 * @since 2.5
+	 */
+	public void closeFrame() {
+		
+		windowIsShowing = false;
+		saveValues();
+		dispose();
+		
 	}
 
 	/**
@@ -575,17 +589,12 @@ public class EncoderHashFrame extends JFrame {
 	}
 
 	/**
-	 * <p>
-	 * Save Key/Value/Encoder Data to UserPrefs and store them for late useage
-	 * </p>
+	 * <p>Save Key/Value/Encoder Data to UserPrefs and store them 
+	 * for late usage.</p>
 	 * 
-	 * @author daemonmidi@gmail.com
+	 * @author daemonmidi@gmail.com, subere@uncon.org 
 	 * @version 2.4
-	 * @since 2.3
-
-	 * @author subere@uncon.org 
-	 * @version 1.0
-	 * @since 2.3
+	 * @since 1.0
 	 */
 	private void saveValues() {
 
