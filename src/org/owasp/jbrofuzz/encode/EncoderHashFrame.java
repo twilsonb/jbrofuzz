@@ -40,6 +40,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Enumeration;
@@ -69,6 +70,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.owasp.jbrofuzz.ui.menu.AboutBox;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
@@ -83,7 +85,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * @version 2.5
  * @since 1.5
  */
-public class EncoderHashFrame extends JFrame {
+public class EncoderHashFrame extends JFrame implements KeyListener {
 
 	private static final long serialVersionUID = 2342345235235234L;
 
@@ -104,8 +106,6 @@ public class EncoderHashFrame extends JFrame {
 
 	private JButton swap, encode, decode, close;
 
-	private static boolean windowIsShowing = false;
-
 	private HashPanel commentPanel;
 
 	private JPanel recordingPanel;
@@ -114,11 +114,6 @@ public class EncoderHashFrame extends JFrame {
 	private JTable recordingTable;
 
 	public EncoderHashFrame() {
-
-		if (windowIsShowing) {
-			return;
-		}
-		windowIsShowing = true;
 
 		// really inspired from Paros Proxy, but as a frame
 		setTitle(" JBroFuzz - Encoder/Hash ");
@@ -321,7 +316,6 @@ public class EncoderHashFrame extends JFrame {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						windowIsShowing = false;
 						saveValues();
 						dispose();
 					}
@@ -329,87 +323,14 @@ public class EncoderHashFrame extends JFrame {
 			}
 		});
 
-		// Keyboard listener on the treeView for escape to cancel
-		tree.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					windowIsShowing = false;
-					saveValues();
-					dispose();
-				}
-			}
-		});
-		
-		// Keyboard listener on the decoded text pane for escape to cancel
-		deTextPane.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					windowIsShowing = false;
-					saveValues();
-					dispose();
-				}
-			}
-		});
-
-		// Keyboard listener on the encoded text pane for escape to cancel
-		enTextPane.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					windowIsShowing = false;
-					saveValues();
-					dispose();
-				}
-			}
-		});
-
-		// Keyboard listener on the encoded text pane for escape to cancel
-		recordingTable.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					windowIsShowing = false;
-					saveValues();
-					dispose();
-				}
-			}
-		});
-
-		// Keyboard listeners on the buttons for escape to cancel
-		encode.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					windowIsShowing = false;
-					saveValues();
-					dispose();
-				}
-			}
-		});
-
-		decode.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					windowIsShowing = false;
-					saveValues();
-					dispose();
-				}
-			}
-		});
-
-		close.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 27) {
-					windowIsShowing = false;
-					saveValues();
-					dispose();
-				}
-			}
-		});
+		// Keyboard listener for escape to close the window
+		tree.addKeyListener(this);
+		deTextPane.addKeyListener(this);
+		enTextPane.addKeyListener(this);
+		recordingTable.addKeyListener(this);
+		encode.addKeyListener(this);
+		decode.addKeyListener(this);
+		close.addKeyListener(this);
 
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(final TreeSelectionEvent e) {
@@ -503,6 +424,23 @@ public class EncoderHashFrame extends JFrame {
 		 */
 	}
 	
+	public void keyTyped(final KeyEvent kEvent) {
+		// 
+	}
+	
+	public void keyPressed(final KeyEvent kEvent) {
+		if (kEvent.getKeyCode() == 27) {
+
+			EncoderHashFrame.this.dispose();
+
+		}
+	}
+	
+	public void keyReleased(final KeyEvent kEvent) {
+		// 
+	}
+
+	
 	/**
 	 * <p>Method called for saving the preferences of each 
 	 * encode/decode message and closing the frame.</p>
@@ -513,7 +451,6 @@ public class EncoderHashFrame extends JFrame {
 	 */
 	public void closeFrame() {
 		
-		windowIsShowing = false;
 		saveValues();
 		dispose();
 		
