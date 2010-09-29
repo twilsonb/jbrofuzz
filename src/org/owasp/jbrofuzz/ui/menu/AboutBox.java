@@ -78,7 +78,7 @@ public final class AboutBox extends JDialog implements KeyListener {
 	 * @since 2.5
 	 *
 	 */
-	protected enum Tab {
+	public enum Tab {
 		ABOUT, LICENSE, DISCLAIMER, ACKNOWLEDGEMENTS, CODE
 	}
 
@@ -97,8 +97,12 @@ public final class AboutBox extends JDialog implements KeyListener {
 	 * 
 	 * @param parent
 	 * @param tab
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.5
+	 * @since 2.5
 	 */
-	protected AboutBox(final JFrame parent, final Tab selectedTab) {
+	public AboutBox(final JFrame parent, final Tab selectedTab) {
 
 		super(parent, " JBroFuzz - About ", true);
 
