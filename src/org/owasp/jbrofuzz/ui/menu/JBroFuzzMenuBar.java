@@ -40,6 +40,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -47,7 +48,6 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.owasp.jbrofuzz.encode.EncoderHashFrame;
 import org.owasp.jbrofuzz.headers.HeaderFrame;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
@@ -521,7 +521,14 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new EncoderHashFrame();
+						JOptionPane.showMessageDialog(
+								JBroFuzzMenuBar.this.getFrame(), 
+								"This functionality has now being " +
+								"replaced by a standalone\n\n" +
+								"JBroFuzzEncoder executable.\n\n" +
+								"It can be found in the installation directory " +
+								"of JBroFuzz."
+							);
 					}
 				});
 			}

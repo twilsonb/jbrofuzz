@@ -63,7 +63,10 @@ public class EncoderHashMenuBar extends JMenuBar {
 		help = new JMenu("Help");
 		
 		exit = new JMenuItem("Exit", ImageCreator.IMG_EXIT);
-		
+
+		exit.setAccelerator(KeyStroke.getKeyStroke('1', Toolkit
+				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+
 		disclaimer = new JMenuItem("Disclaimer", ImageCreator.IMG_DISCLAIMER);
 		
 		about = new JMenuItem("About", ImageCreator.IMG_ABOUT);

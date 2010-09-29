@@ -35,12 +35,14 @@
 			<fileset dir="bin">
 				<include name="org/owasp/jbrofuzz/encode/*.class" />
 				<include name="org/owasp/jbrofuzz/version/*.class" />
-				<include name="org/owasp/jbrofuzz/system/Logger.class" />
+				<include name="org/owasp/jbrofuzz/ui/menu/*.class" />
+				<include name="org/owasp/jbrofuzz/system/*.class" />
 			</fileset>
 			
 			<fileset dir="src">
 				<include name="org/owasp/jbrofuzz/encode/*.java" />
 				<include name="org/owasp/jbrofuzz/version/*.java" />
+				<include name="org/owasp/jbrofuzz/ui/menu/AboutBox.java" />
 				<include name="org/owasp/jbrofuzz/system/Logger.java" />
 			</fileset>
 			
