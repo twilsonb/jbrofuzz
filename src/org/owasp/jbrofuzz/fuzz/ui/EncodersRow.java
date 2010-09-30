@@ -54,6 +54,5 @@ public class EncodersRow {
 		return suffixOrReplace;
 	}
 	
-
 	
 }

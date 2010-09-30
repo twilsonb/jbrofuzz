@@ -30,8 +30,6 @@
 package org.owasp.jbrofuzz.fuzz.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -40,7 +38,6 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
-import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 public class SaveAsSession {
@@ -65,7 +62,7 @@ public class SaveAsSession {
 			fc = new JFileChooser();
 			Logger.log("A security exception occured, while attempting to save as to a directory", 4);
 		}
-				
+
 		fc.setFileFilter(filter);
 
 		final int returnVal = fc.showSaveDialog(mWindow);
@@ -87,51 +84,17 @@ public class SaveAsSession {
 				if (choice == JOptionPane.NO_OPTION)
 					return;
 			}
+			// call a SaveSession
+			new SaveSession(mWindow, file.getName());
 
-			// Get the values from the frame
-			final String _url = mWindow.getPanelFuzzing().getTextURL();
-			final String _req = mWindow.getPanelFuzzing().getTextRequest();
-			final String _pld = mWindow.getPanelFuzzing().getTextPayloads();
-
-			// Write the file
-			try {
-
-				final PrintWriter out = new PrintWriter(file);
-
-				out.println("[JBroFuzz]");
-				out.println(JBroFuzzFormat.VERSION);
-				out.println("[Fuzzing]");
-				out.println(JBroFuzzFormat.DATE);
-				out.println("[Comment]");
-				out.println("_");
-				out.println("[URL]");
-				out.println(_url);
-				out.println("[Request]");
-				out.println(_req);
-				out.println("[Payloads]");
-				out.println(_pld);
-				out.println("[End]");
-
-				if (out.checkError()) {
-					Logger.log("An Error Occured while saving", 4);
-				}
-
-				out.close();
-				// Finally, tell the frame this is the file opened
-				// and save the directory location
-				mWindow.setOpenFileTo(file);
-				final String parentDir = file.getParent();
-				if(parentDir != null) {
-					JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
-				}
-
-			} catch (final FileNotFoundException e) {
-				Logger.log("FileNotFoundException", 4);
-			} catch (final SecurityException e) {
-				Logger.log("SecurityException", 4);
+			final String parentDir = file.getParent();
+			if(parentDir != null) {
+				JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
 			}
 
-		} // User clicks "Save"
+		} 
 
-	}
+	} // User clicks "Save"
+
 }
+

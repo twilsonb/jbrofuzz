@@ -37,6 +37,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
+import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
@@ -57,11 +60,18 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  */
 public class SaveSession {
 	
+	private final JBroFuzzWindow mWindow;
+	private final FuzzersTableModel mFuzzTableModel;
+	
 	public SaveSession (final JBroFuzzWindow mWindow){
+		this.mWindow = mWindow;
+		mFuzzTableModel = mWindow.getPanelFuzzing().getFuzzersTableModel();
 		new SaveSession(mWindow, "");
 	}
 
 	public SaveSession(final JBroFuzzWindow mWindow, String fileName) {
+		this.mWindow = mWindow;
+		mFuzzTableModel = mWindow.getPanelFuzzing().getFuzzersTableModel();
 
 		// Set the Fuzzing Panel as the one to view
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
@@ -122,8 +132,9 @@ public class SaveSession {
 		// Get the values from the frame
 		final String _url = mWindow.getPanelFuzzing().getTextURL();
 		final String _req = mWindow.getPanelFuzzing().getTextRequest();
-		final String _pld = mWindow.getPanelFuzzing().getTextPayloads();
-
+		final String _pld = getTextFuzzers();
+		final String _trn = getTextTransforms();
+		
 		// Write the file
 		try {
 
@@ -139,8 +150,10 @@ public class SaveSession {
 			out.println(_url);
 			out.println("[Request]");
 			out.println(_req);
-			out.println("[Payloads]");
+			out.println("[Fuzzers]");
 			out.println(_pld);
+			out.println("[Transforms]");
+			out.println(_trn);
 			out.println("[End]");
 
 			if (out.checkError()) {
@@ -161,5 +174,97 @@ public class SaveSession {
 		} catch (final SecurityException e) {
 			Logger.log("SecurityException", 4);
 		}
+	}
+	
+	/**
+	 * <p>
+	 * Get the values of the Payloads from their table, limited to a maximum of
+	 * 1024 rows.
+	 * </p>
+	 * <p>
+	 * Return the values in Comma Separated Fields.
+	 * </p>
+	 * 
+	 * @return The values of Payloads Table as CSV Text
+	 * 
+	 * @author ranulf
+	 * @version 2.5
+	 * @since 2.5
+	 */
+	public String getTextFuzzers() {
+
+
+		final int rows = mFuzzTableModel.getRowCount();
+		if (rows == 0) {
+			return "";
+		}
+
+		final StringBuffer output = new StringBuffer();
+		// MAX_LINES = 1024
+		for (int row = 0; row < Math.min(rows, 1024); row++) {
+
+			for (int column = 0; column < 3; column++) {
+				output.append(mFuzzTableModel.getValueAt(row, column));
+				// Append a ',' but not for the last value
+				if (column != mFuzzTableModel.getColumnCount() - 1) {
+					output.append(',');
+				}
+			}
+			// Append a new line, but not for the last line
+			if (row != Math.min(rows, 1024) - 1) {
+				output.append('\n');
+			}
+			
+		}
+
+		return output.toString();
+	}
+	
+	private static String encodersRowString(EncodersRow row){
+		
+		StringBuffer sbRet = new StringBuffer();
+		
+		sbRet.append(row.getEncoder());
+		sbRet.append(',');
+		sbRet.append(EncoderHashCore.encode(row.getPrefixOrMatch(),"Z-Base32"));
+		sbRet.append(',');
+		sbRet.append(EncoderHashCore.encode(row.getSuffixOrReplace(),"Z-Base32"));
+		
+		return sbRet.toString();
+		
+	}
+
+	public String getTextTransforms() {
+	
+		StringBuffer out = new StringBuffer();
+
+		final int rows = mFuzzTableModel.getRowCount();
+		if (rows == 0) {
+			return "";
+		}
+
+		for (int fuzzerRow = 0; fuzzerRow < Math.min(rows, 1024); fuzzerRow++) {
+			
+			EncodersRow[] encoderRows = mWindow.getPanelFuzzing().getEncoders(fuzzerRow);
+			
+			for (int encoderRow = 0; encoderRow < encoderRows.length; encoderRow++) {
+				out.append(fuzzerRow);
+				out.append(',');
+				out.append(SaveSession.encodersRowString(encoderRows[encoderRow]));
+				// if we are on the last encoder row, don't append a \n
+				if(encoderRow != encoderRows.length - 1) {
+					out.append('\n');
+				}
+			}
+			
+			if (fuzzerRow != rows - 1) {
+				out.append('\n');
+			}
+			
+		}
+	
+				
+		return out.toString();
+			
 	}
 }
