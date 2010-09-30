@@ -499,6 +499,8 @@ public class FuzzingPanel extends AbstractPanel {
 					point1,
 					point2
 			);
+			
+			encodersTableList.add();
 
 		} else {
 			Logger.log("Could not add the Fuzzer with ID: " + fuzzerId, 3);
@@ -622,47 +624,7 @@ public class FuzzingPanel extends AbstractPanel {
 		return StringUtils.leftPad(Integer.toString(counter), 10, '0');
 	}
 
-	/**
-	 * <p>
-	 * Get the values of the Payloads from their table, limited to a maximum of
-	 * 1024 rows.
-	 * </p>
-	 * <p>
-	 * Return the values in Comma Separated Fields.
-	 * </p>
-	 * 
-	 * @return The values of Payloads Table as CSV Text
-	 * 
-	 * @author subere@uncon.org
-	 * @version 1.3
-	 * @since 1.2
-	 */
-	public String getTextPayloads() {
-
-		final int rows = mFuzzTableModel.getRowCount();
-		if (rows == 0) {
-			return "";
-		}
-
-		final StringBuffer output = new StringBuffer();
-		// MAX_LINES = 1024
-		for (int row = 0; row < Math.min(rows, 1024); row++) {
-
-			for (int column = 0; column < mFuzzTableModel.getColumnCount(); column++) {
-				output.append(mFuzzTableModel.getValueAt(row, column));
-				// Append a ',' but not for the last value
-				if (column != mFuzzTableModel.getColumnCount() - 1) {
-					output.append(',');
-				}
-			}
-			// Append a new line, but not for the last line
-			if (row != Math.min(rows, 1024) - 1) {
-				output.append('\n');
-			}
-		}
-
-		return output.toString();
-	}
+	
 
 	/**
 	 * <p>
@@ -837,7 +799,7 @@ public class FuzzingPanel extends AbstractPanel {
 			
 			}else {
 				category = (String) mFuzzTableModel.getValueAt(i, 0);
-				encoders = getEncoders();
+				encoders = getEncoders(i);
 				start = ((Integer) mFuzzTableModel.getValueAt(i, 1)).intValue();
 				end = ((Integer) mFuzzTableModel.getValueAt(i, 2)).intValue();
 
@@ -978,8 +940,10 @@ public class FuzzingPanel extends AbstractPanel {
 		return payload;
 	}
 	
-	private EncodersRow[] getEncoders(){
-		EncodersTableModel a = encodersTableList.getEncoderTableModel(fuzzersTable.getSelectedRow());
+	public EncodersRow[] getEncoders(int fuzzerRow){
+		
+		EncodersTableModel a = encodersTableList.getEncoderTableModel(fuzzerRow);
+		
 		if(a==null){
 			EncodersRow row = new EncodersRow("Plain Text","","");
 			return new EncodersRow[]{row};
@@ -1028,8 +992,11 @@ public class FuzzingPanel extends AbstractPanel {
 		fuzzersTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 	
 			public void valueChanged(ListSelectionEvent arg0) {
+				
 				int row = fuzzersTable.getSelectedRow();
-				if(row!=-1){
+				
+				if(row > -1){
+					
 					FuzzingPanel.this.getEncodersTableList().show(row);
 					int c = FuzzingPanel.this.getEncodersTableList().getEncoderCount(row);
 					if(c==0){
@@ -1050,6 +1017,10 @@ public class FuzzingPanel extends AbstractPanel {
 	
 	public EncodersToolBar getEncoderToolBar(){
 		return controlPanel;
+	}
+
+	public FuzzersTableModel getFuzzersTableModel() {
+		return mFuzzTableModel;
 	}
 
 }

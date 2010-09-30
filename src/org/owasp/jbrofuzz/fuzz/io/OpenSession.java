@@ -182,14 +182,14 @@ public class OpenSession {
 		 }
 		 
 		 
-		// Find the line where the [Payloads] line is
+		// Find the line where the [Fuzzers] line is
 		int payloadsLine = 0;
 		for (int i = len - 1; i >= 0; i--) {
 
-			if (fileInput[i].equals("[Payloads]")) {
+			if (fileInput[i].equals("[Fuzzers]")) {
 				// Check that there is only 1 instance
 				if (payloadsLine != 0) {
-					Logger.log("Invalid File: Found 2 instances of [Payloads]", 2);
+					Logger.log("Invalid File: Found 2 instances of [Fuzzers]", 2);
 					return;
 				} else {
 					payloadsLine = i;
@@ -259,7 +259,7 @@ public class OpenSession {
 							"Could not open and add Fuzzer: " + fileInput[i], 3);
 				} else {
 					// TODO- I've not integrated multiple encoders into saved sessions or save sessions yet
-					mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_, start, end);
+					// mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_, start, end);
 
 				}
 			}

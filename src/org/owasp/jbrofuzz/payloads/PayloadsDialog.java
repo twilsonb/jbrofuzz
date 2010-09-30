@@ -59,7 +59,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
-import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.ui.tablemodels.SingleColumnModel;
@@ -418,7 +417,7 @@ public class PayloadsDialog extends JDialog {
 						final String selID = mWindow.getJBroFuzz().
 						getDatabase().getIdFromName(name);
 
-						mWindow.getPanelFuzzing().addFuzzer(selID, new String[]{EncoderHashCore.CODES[0]}, start, end);
+						mWindow.getPanelFuzzing().addFuzzer(selID, start, end);
 						PayloadsDialog.this.dispose();
 
 					}
