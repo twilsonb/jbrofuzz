@@ -33,17 +33,10 @@
 		<jar compress="true" destfile="jar/${app.name}Encoder.jar">
 			
 			<fileset dir="bin">
-				<include name="org/owasp/jbrofuzz/encode/*.class" />
-				<include name="org/owasp/jbrofuzz/version/*.class" />
-				<include name="org/owasp/jbrofuzz/ui/menu/*.class" />
-				<include name="org/owasp/jbrofuzz/system/*.class" />
+				<include name="**/*.class" />
 			</fileset>
-			
 			<fileset dir="src">
-				<include name="org/owasp/jbrofuzz/encode/*.java" />
-				<include name="org/owasp/jbrofuzz/version/*.java" />
-				<include name="org/owasp/jbrofuzz/ui/menu/AboutBox.java" />
-				<include name="org/owasp/jbrofuzz/system/Logger.java" />
+				<include name="**/*.java" />
 			</fileset>
 			
 			<fileset dir="">
@@ -76,28 +69,10 @@
 			<jar compress="true" destfile="jar/${app.name}Header.jar">
 				
 				<fileset dir="bin">
-					<include name="org/owasp/jbrofuzz/headers/*.class" />
-					<include name="org/owasp/jbrofuzz/version/*.class" />
-					<include name="org/owasp/jbrofuzz/ui/menu/*.class" />
-					<include name="org/owasp/jbrofuzz/system/*.class" />
-					<include name="org/owasp/jbrofuzz/util/*.class" />
-					<include name="org/owasp/jbrofuzz/core/Verifier.class" />
-					<include name="org/owasp/jbrofuzz/core/Prototype.class" />
-					<include name="org/owasp/jbrofuzz/graph/FileSystemTree*.class" />
-					<include name="org/owasp/jbrofuzz/JBroFuzz.class" />
+					<include name="**/*.class" />
 				</fileset>
-				
-				
 				<fileset dir="src">
-					<include name="org/owasp/jbrofuzz/headers/*.java" />
-					<include name="org/owasp/jbrofuzz/version/*.java" />
-					<include name="org/owasp/jbrofuzz/ui/menu/*.java" />
-					<include name="org/owasp/jbrofuzz/system/*.java" />
-					<include name="org/owasp/jbrofuzz/util/*.java" />
-					<include name="org/owasp/jbrofuzz/core/Verifier.java" />
-					<include name="org/owasp/jbrofuzz/core/Prototype.java" />
-					<include name="org/owasp/jbrofuzz/graph/FileSystemTree*.java" />
-					<include name="org/owasp/jbrofuzz/JBroFuzz.java" />					
+					<include name="**/*.java" />
 				</fileset>
 				
 				<fileset dir="tar">
@@ -174,7 +149,6 @@
 				<include name="**/*.java" />
 			</fileset>
 			<fileset dir="tar">
-				<include name="headers.jbrf" />
 				<include name="fuzzers.jbrf" />
 			</fileset>
 			<fileset dir="">
