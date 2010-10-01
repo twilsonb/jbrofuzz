@@ -38,7 +38,6 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -70,7 +69,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.owasp.jbrofuzz.ui.menu.AboutBox;
 import org.owasp.jbrofuzz.version.ImageCreator;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;

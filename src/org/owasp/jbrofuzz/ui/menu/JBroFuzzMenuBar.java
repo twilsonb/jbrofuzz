@@ -48,7 +48,6 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.owasp.jbrofuzz.headers.HeaderFrame;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;

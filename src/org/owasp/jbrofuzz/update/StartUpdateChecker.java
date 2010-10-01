@@ -149,10 +149,6 @@ public class StartUpdateChecker extends JDialog {
 				instream = new BufferedReader(new InputStreamReader(urlc
 						.getInputStream()));
 
-				if (instream == null) {
-					return ZERO_VERSION;
-				}
-
 				// Typically returns -1
 				final long contentLength = urlc.getContentLength();
 
