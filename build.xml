@@ -61,7 +61,7 @@
 			
 			<manifest>
 				<attribute name="Build-By" value="subere@uncon.org" />
-				<attribute name="Implementation-Title" value="org.owasp.jbrofuzz.core" />
+				<attribute name="Implementation-Title" value="org.owasp.jbrofuzz.encode" />
 				<attribute name="Implementation-Vendor" value="Open Web Application Security Project" />
 				<attribute name="Implementation-Version" value="2.4" />
 				<attribute name="Main-Class" value="org.owasp.jbrofuzz.encode.JBroFuzzEncoder" />
@@ -69,7 +69,65 @@
 			</manifest>
 			
 		</jar>
-	</target>	
+	</target>
+	
+	<target name="archive-header" depends="compile" description="Creating Java Archive: ${app.name}Header.jar">
+			<echo>Creating Java Archive: ${app.name}Header.jar</echo>
+			<jar compress="true" destfile="jar/${app.name}Header.jar">
+				
+				<fileset dir="bin">
+					<include name="org/owasp/jbrofuzz/headers/*.class" />
+					<include name="org/owasp/jbrofuzz/version/*.class" />
+					<include name="org/owasp/jbrofuzz/ui/menu/*.class" />
+					<include name="org/owasp/jbrofuzz/system/*.class" />
+					<include name="org/owasp/jbrofuzz/util/*.class" />
+					<include name="org/owasp/jbrofuzz/core/Verifier.class" />
+					<include name="org/owasp/jbrofuzz/core/Prototype.class" />
+					<include name="org/owasp/jbrofuzz/graph/FileSystemTree*.class" />
+					<include name="org/owasp/jbrofuzz/JBroFuzz.class" />
+				</fileset>
+				
+				
+				<fileset dir="src">
+					<include name="org/owasp/jbrofuzz/headers/*.java" />
+					<include name="org/owasp/jbrofuzz/version/*.java" />
+					<include name="org/owasp/jbrofuzz/ui/menu/*.java" />
+					<include name="org/owasp/jbrofuzz/system/*.java" />
+					<include name="org/owasp/jbrofuzz/util/*.java" />
+					<include name="org/owasp/jbrofuzz/core/Verifier.java" />
+					<include name="org/owasp/jbrofuzz/core/Prototype.java" />
+					<include name="org/owasp/jbrofuzz/graph/FileSystemTree*.java" />
+					<include name="org/owasp/jbrofuzz/JBroFuzz.java" />					
+				</fileset>
+				
+				<fileset dir="tar">
+					<include name="headers.jbrf" />
+				</fileset>
+				
+				<fileset dir="">
+					<include name="LICENSE/*.txt" />
+					<include name="release/splashscreen.png" />
+				</fileset>
+				
+				<zipfileset src="lib/commons-lang-2.5.jar" />
+				<zipfileset src="lib/commons-io-1.4.jar" />
+				<zipfileset src="lib/commons-codec-1.4.jar" />
+
+				<fileset dir="release">
+					<include name="icons/*.png" />
+				</fileset>
+				
+				<manifest>
+					<attribute name="Build-By" value="subere@uncon.org" />
+					<attribute name="Implementation-Title" value="org.owasp.jbrofuzz.headers" />
+					<attribute name="Implementation-Vendor" value="Open Web Application Security Project" />
+					<attribute name="Implementation-Version" value="2.4" />
+					<attribute name="Main-Class" value="org.owasp.jbrofuzz.headers.JBroFuzzHeader" />
+					<attribute name="SplashScreen-Image" value="release/splashscreen.png" />				
+				</manifest>
+				
+			</jar>
+		</target>
 	
 	<target name="archive-core" depends="compile" description="Creating JBroFuzz Core API: jbrofuzz-core-2.4.jar">
 		<echo>Creating JBroFuzz Core API: jbrofuzz-core-2.4.jar</echo>
@@ -157,7 +215,13 @@
 		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpathref="master-classpath" />
 		<launch4j configFile="./release/launch4j-encoder.xml" />
 	</target>
-
+	
+	<target name="exe-header" depends="archive-header" description="Creating Executable: JBroFuzzHeader.exe">
+		<echo>Creating Executable: JBroFuzz.exe</echo>
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpathref="master-classpath" />
+		<launch4j configFile="./release/launch4j-header.xml" />
+	</target>
+		
 	<target name="clean" description="Removing the /bin and /jar directory contents">
 		<echo>Removing the /bin and /jar directory contents</echo>
 		<delete verbose="true" failonerror="false" includeemptydirs="true">
@@ -170,7 +234,7 @@
 		</delete>
 	</target>
 
-	<target name="release" depends="archive,archive-encoder,archive-core,exe,exe-encoder" description="Packaging up releases for JBroFuzz">
+	<target name="release" depends="archive,archive-header,archive-encoder,archive-core,exe,exe-encoder,exe-header" description="Packaging up releases for JBroFuzz">
 		<echo>Packaging a release of JBroFuzz</echo>
 		
 		<mkdir dir="jar/temp" />
@@ -186,6 +250,8 @@
 		<copy file="jar/${app.name}.exe" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/${app.name}Encoder.jar" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/${app.name}Encoder.exe" todir="jar/temp/jbrofuzz" />
+		<copy file="jar/${app.name}Header.jar" todir="jar/temp/jbrofuzz" />
+		<copy file="jar/${app.name}Header.exe" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/jbrofuzz.sh" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/jbrofuzz-core-2.4.jar" todir="jar/temp/jbrofuzz/library" />
 
@@ -237,6 +303,6 @@
 	    </javadoc>
 	</target>
 
-	<target depends="clean,init,compile,archive" name="build" />
+	<target depends="clean,init,compile,archive,archive-header,archive-encoder,archive-core" name="build" />
 
 </project>

@@ -58,7 +58,6 @@ import javax.swing.tree.TreePath;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.graph.FileSystemTreeModel;
 import org.owasp.jbrofuzz.graph.FileSystemTreeNode;
-import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
 import org.owasp.jbrofuzz.version.ImageCreator;
@@ -69,7 +68,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * corresponding categories.</p>
  * 
  * @author subere@uncon.org
- * @version 1.9
+ * @version 2.5
  * @since 1.9
  */
 public class HeaderFrame extends JFrame implements TreeSelectionListener, KeyListener {
@@ -89,16 +88,10 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener, KeyLis
 	// The header's loader
 	private HeaderLoader mHeadersLoader;
 
-	private static boolean windowIsShowing = false;
-
-	public HeaderFrame(final JBroFuzzWindow parent) {
-
-		if (windowIsShowing) {
-			return;
-		}
-		windowIsShowing = true;
+	public HeaderFrame() {
 
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
+		setJMenuBar(new HeaderMenuBar(this));
 		setTitle(" JBroFuzz - Browser Headers ");
 		setLayout(new BorderLayout());
 
@@ -290,9 +283,7 @@ public class HeaderFrame extends JFrame implements TreeSelectionListener, KeyLis
 
 	}
 
-	private final void closeFrame() {
-
-		windowIsShowing = false;
+	final void closeFrame() {
 
 		JBroFuzz.PREFS.putInt("UI.H.mainSplitPanel", mainSplitPanel.getDividerLocation());
 		JBroFuzz.PREFS.putInt("UI.H.rHSplitPanel", rHSplitPanel.getDividerLocation());
