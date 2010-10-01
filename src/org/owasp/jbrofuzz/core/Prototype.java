@@ -165,6 +165,72 @@ public class Prototype {
 
 		return false;
 	}
+	
+	/*
+	 * <p>Method to confirm if a fuzzer ID is of a valid format.</p>
+	 * <p>Returns true if the String is a valid ID.</p>
+	 * 
+	 * @param fuzzerID e.g. 001-HTT-PMT
+	 * 
+	 * @author subere@uncon.org
+	 * @version 2.5
+	 * @since 2.5
+	 */
+	public static boolean isValidFuzzerID(final String fuzzerID) {
+		
+		final int fuzzerLength = fuzzerID.length();
+		
+		if(fuzzerLength != 11) {
+			return false;
+		}
+		
+		if(!Character.isDigit(fuzzerID.charAt(0))) {
+			return false;
+		}
+		
+		if(!Character.isDigit(fuzzerID.charAt(1))) {
+			return false;
+		}
+		
+		if(!Character.isDigit(fuzzerID.charAt(2))) {
+			return false;
+		}
+		
+		if(fuzzerID.charAt(3) != '-') {
+			return false;
+		}
+				
+		if(!Character.isLetter(fuzzerID.charAt(4))) {
+			return false;
+		}
+		
+		if(!Character.isLetter(fuzzerID.charAt(5))) {
+			return false;
+		}
+		
+		if(!Character.isLetter(fuzzerID.charAt(6))) {
+			return false;
+		}
+		
+		if(fuzzerID.charAt(7) != '-') {
+			return false;
+		}
+		
+		if(!Character.isLetter(fuzzerID.charAt(8))) {
+			return false;
+		}
+		
+		if(!Character.isLetter(fuzzerID.charAt(9))) {
+			return false;
+		}
+		
+		if(!Character.isLetter(fuzzerID.charAt(10))) {
+			return false;
+		}
+		
+		return true;
+		
+	}
 
 	private transient final List<String> categories, payloads;
 

@@ -46,8 +46,8 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 
 /**
- * @author Yiannis Marangos
- * @version 2.0
+ * @author subere@uncon.org, Yiannis Marangos
+ * @version 2.5
  * @since 2.0
  */
 public class EncoderHashCore {
@@ -100,6 +100,23 @@ public class EncoderHashCore {
 			if (type.equalsIgnoreCase(IS_DECODABLE[i])) {
 				return true;
 			}
+		return false;
+	}
+	
+	/**
+	 * <p>Check if a code is a valid code.</p>
+	 * 
+	 * @param code
+	 * @return
+	 * 
+	 * @since 2.5
+	 */
+	public static boolean isValidCode(final String code) {
+		for(String loopingString : CODES) {
+			if(loopingString.equals(code)) {
+				return true;
+			}
+		}
 		return false;
 	}
 	
