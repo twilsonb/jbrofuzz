@@ -43,6 +43,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.core.Prototype;
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
@@ -53,7 +55,7 @@ public class OpenSession {
 	// The maximum number of chars to be read from file, regardless
 	private final static int MAX_CHARS = Short.MAX_VALUE;
 	private JBroFuzzWindow mWindow;
-	
+
 	public OpenSession(JBroFuzzWindow mWindow) {
 		new OpenSession(mWindow, "");
 		this.mWindow = mWindow;
@@ -105,7 +107,7 @@ public class OpenSession {
 					" JBroFuzz - Open ", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
-		
+
 		// Clear up the display
 		mWindow.getPanelFuzzing().clearAllFields();
 
@@ -143,135 +145,213 @@ public class OpenSession {
 
 		}
 
-		// Validate it to extremes
-		final String[] fileInput = fileContents.toString().split("\n");
-		final int len = fileInput.length;
-		if(len < 8) {
-			Logger.log("Invalid File: Contains less than 8 lines", 2);
+		// Validate particular lines to particular values
+		final String[] fileContentsArray = fileContents.toString().split("\n");
+		final int fileNoOfLines = fileContentsArray.length;
+		
+		// Cannot have less than 12 lines
+		if(fileNoOfLines < 12) {
+			Logger.log("Invalid File: Contains less than 8 lines", 3);
 			return;
 		}
-		/*
-		 * // Check the number of lines if (len < 8) return; // Check the
-		 * location of each of the fields if
-		 */
-		 if (!fileInput[0].equals("[JBroFuzz]")) {
-			 Logger.log("Invalid File: Line 1 is not [JBroFuzz]", 2);
-			 return;
-		 }
-		 if (!fileInput[2].equals("[Fuzzing]")) {
-			 Logger.log("Invalid File: Line 3 is not [Fuzzing]", 2);
-			 return;
-		 }
-		 if (!fileInput[4].equals("[Comment]")) {
-			 Logger.log("Invalid File: Line 5 is not [Comment]", 2);
-			 return;
-		 }
-		 if (!fileInput[6].equals("[URL]")) {
-			 Logger.log("Invalid File: Line 7 is not [URL]", 2);
-			 return;
-		 }
-		 if (!fileInput[8].equals("[Request]")) {
-			 Logger.log("Invalid File: Line 9 is not [Request]", 2);
-			 return;
-		 }
-		 // finishes with an 'End' 
-		 if (!fileInput[len - 1].equals("[End]")) {
-			 Logger.log("Invalid File: Last line is not [End]", 2);
-			 return;
-		 }
-		 
-		 
-		// Find the line where the [Fuzzers] line is
-		int payloadsLine = 0;
-		for (int i = len - 1; i >= 0; i--) {
 
-			if (fileInput[i].equals("[Fuzzers]")) {
+		if (!fileContentsArray[0].equals("[JBroFuzz]")) {
+			Logger.log("Invalid File: Line 1 is not [JBroFuzz]", 3);
+			return;
+		}
+		
+		if (!fileContentsArray[2].equals("[Fuzzing]")) {
+			Logger.log("Invalid File: Line 3 is not [Fuzzing]", 3);
+			return;
+		}
+		
+		if (!fileContentsArray[4].equals("[Comment]")) {
+			Logger.log("Invalid File: Line 5 is not [Comment]", 3);
+			return;
+		}
+		
+		if (!fileContentsArray[6].equals("[URL]")) {
+			Logger.log("Invalid File: Line 7 is not [URL]", 3);
+			return;
+		}
+
+		if (!fileContentsArray[8].equals("[Request]")) {
+			Logger.log("Invalid File: Line 9 is not [Request]", 3);
+			return;
+		}		
+		
+		// Find the line where the [Fuzzers] line is
+		int fuzzersLine = 0;
+		for (int fuzzerLineCounter = fileNoOfLines - 1; fuzzerLineCounter > 0; fuzzerLineCounter--) {
+
+			if (fileContentsArray[fuzzerLineCounter].equals("[Fuzzers]")) {
 				// Check that there is only 1 instance
-				if (payloadsLine != 0) {
-					Logger.log("Invalid File: Found 2 instances of [Fuzzers]", 2);
+				if (fuzzersLine != 0) {
+					Logger.log("Invalid File: Found 2 instances of [Fuzzers]", 3);
 					return;
 				} else {
-					payloadsLine = i;
+					fuzzersLine = fuzzerLineCounter;
 				}
 
 			}
-
+		} // If you can't find the [Fuzzers] line, return
+		if (fuzzersLine == 0) {
+			Logger.log("Invalid File: Cannot find a [Fuzzers] line", 3);
+			return;
 		}
-
-		// If you can't find the [Payloads] line, return
-		if (payloadsLine == 0) {
-			Logger.log("Invalid File: Cannot find a [Payloads] line", 2);
+		
+		// Find the line where the [Transforms] line is
+		int transformsLine = 0;
+		for (int transformsLineCounter = fileNoOfLines - 1; transformsLineCounter > 0; transformsLineCounter--) {
+			
+			if (fileContentsArray[transformsLineCounter].equals("[Transforms]")) {
+				// Check that there is only 1 instance
+				if (transformsLine != 0) {
+					Logger.log("Invalid File: Found 2 instances of [Transforms]", 3);
+					return;
+				} else {
+					transformsLine = transformsLineCounter;
+				}
+			}
+		}
+		if (transformsLine == 0) {
+			Logger.log("Invalid File: Cannot find a [Transforms] line", 3);
+			return;
+		}
+		
+		// File ends with [End] 
+		if (!fileContentsArray[fileNoOfLines - 1].equals("[End]")) {
+			Logger.log("Invalid File: Last line is not [End]", 3);
 			return;
 		}
 
-		// Get the request from the file
-		final StringBuffer _reqBuffer = new StringBuffer();
-		for (int i = 9; i < payloadsLine; i++) {
-			_reqBuffer.append(fileInput[i] + "\n");
-		}
 
-		// If the number of available payload lines is greater than 1024,
-		// return
-		if (len - 1 - payloadsLine - 1 > 1024) {
-			Logger.log("Invalid File: More than 1024 Payload lines identified", 2);
+		// -> Target URL
+		final String targetString = StringUtils.abbreviate(fileContentsArray[7], MAX_CHARS);
+		mWindow.getPanelFuzzing().setTextURL(targetString);
+		
+		// -> Request
+		final StringBuffer requestBuffer = new StringBuffer();
+		for(int reqLineCount = 9; reqLineCount < fuzzersLine; reqLineCount++) {
+			requestBuffer.append(fileContentsArray[reqLineCount]);
+			requestBuffer.append('\n');
+		}
+		mWindow.getPanelFuzzing().setTextRequest(requestBuffer.toString());
+
+		// If more than 1024 lines of fuzzers, return
+		if (fileNoOfLines - 1 - fuzzersLine - 1 > 1024) {
+			Logger.log("Invalid File: More than 1024 Fuzzers Identified", 3);
 			return;
 		}
+		
+		// -> Load Fuzzers to Table
+		for (int i = fuzzersLine + 2; i < transformsLine; i++) {
 
-		// Get the payloads from the file
-		for (int i = payloadsLine + 1; i < len - 1; i++) {
+			final String[] payloadArray = fileContentsArray[i].split(",");
 
-			boolean fuzzer_happy = true;
-
-			final String[] payloadArray = fileInput[i].split(",");
 			// Each line must have 3 elements
 			if (payloadArray.length != 3) {
 				Logger.log("Invalid File: Line " + i + " does not contain 3 elements", 2);
-			} else {
-				final String fuzz_id = payloadArray[0];
+				continue;
+			} 
 
-				// The fuzzer id must also exist in the database
-				if (!mWindow.getJBroFuzz().getDatabase().containsPrototype(fuzz_id)) {
-					fuzzer_happy = false;
-				}
+			// Assign local variables for line: 044-USR-AGN,39,177
+			// fuzz_id = 044-USR-AGN
+			// start = 39
+			// end = 177
+			final String fuzzerID = payloadArray[0];
+			int start = 0;
+			int end = 0;
 
-				int start = 0;
-				int end = 0;
-				// The start and end integers should be happy
-				try {
-					start = Integer.parseInt(payloadArray[2]);
-					end = Integer.parseInt(payloadArray[3]);
-					// Numbers must be positive
-					if ((start < 0) || (end < 0)) {
-						fuzzer_happy = false;
-					}
-					// Numbers must be less than the length of the request
-					if ((start > _reqBuffer.length())
-							|| (end > _reqBuffer.length())) {
-						fuzzer_happy = false;
-					}
-				} catch (final NumberFormatException e) {
-					fuzzer_happy = false;
-				}
-
-				if (!fuzzer_happy) {
-					Logger.log(
-							"Could not open and add Fuzzer: " + fileInput[i], 3);
-				} else {
-					// TODO- I've not integrated multiple encoders into saved sessions or save sessions yet
-					// mWindow.getPanelFuzzing().addFuzzer(fuzz_id, encoding_, start, end);
-
-				}
+			// The fuzzer id must be valid
+			if (!Prototype.isValidFuzzerID(fuzzerID)) {
+				Logger.log("Fuzzer Line Syntax Error: " + i + " Invalid Fuzzer ID Format", 2);
+				continue;
 			}
+
+			// The fuzzer id must also exist in the database
+			if (!mWindow.getJBroFuzz().getDatabase().containsPrototype(fuzzerID)) {
+				Logger.log("Could not find Fuzzer with ID: " + fuzzerID, 2);
+				continue;
+			}
+
+			// The start and end integers should be happy
+			try {
+				start = Integer.parseInt(payloadArray[1]);
+				end = Integer.parseInt(payloadArray[2]);
+			} catch (final NumberFormatException e) {
+				Logger.log("Fuzzer Line Syntax Error: Number Format Exception", 2);
+				continue;
+			}
+
+			// Numbers must be positive
+			if ((start < 0) || (end < 0)) {
+				Logger.log("Fuzzer Line Syntax Error: Negative Value", 2);
+				continue;
+			}
+			// Numbers must be less than the length of the request
+			if ((start > requestBuffer.length()) || (end > requestBuffer.length())) {
+				Logger.log("Fuzzer Line Syntax Error: Value Larger than Request", 2);
+				continue;
+			}
+
+			mWindow.getPanelFuzzing().addFuzzer(fuzzerID, start, end);
+						
 		}
+		
+		// -> Load Transforms to Table
 
-		// These max values of abbreviation are also used in the Fuzzing
-		// Panel
-		// geters
-		final String _req = StringUtils.abbreviate(_reqBuffer.toString(), 16384);
-		final String _url = StringUtils.abbreviate(fileInput[7], 1024);
+		// If more than 1024 lines of transforms, return
+		if (fileNoOfLines - 1 - transformsLine - 1 > 1024) {
+			Logger.log("Invalid File: More than 1024 Transforms Identified", 3);
+			return;
+		}
+				
+		for (int j = transformsLine + 2; j < fileNoOfLines - 1; j++) {
 
-		mWindow.getPanelFuzzing().setTextRequest(_req);
-		mWindow.getPanelFuzzing().setTextURL(_url);
+			final String[] transformLineArray = fileContentsArray[j].split(",");
+
+			// Each line must have 4 elements
+			if (transformLineArray.length != 4) {
+				Logger.log("Invalid File: Line " + j + " does not contain 4 elements", 2);
+				continue;
+			} 
+
+			// Assign local variables for line: 1,Hexadecimal (UPP),,
+			int fuzzerNumber = 0;
+			final String encoder = StringUtils.abbreviate(transformLineArray[1], MAX_CHARS);
+			final String prefix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[2],"Z-Base32"), MAX_CHARS);
+			final String suffix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[3],"Z-Base32"), MAX_CHARS);
+
+			// The encoder code must be valid
+			if (!EncoderHashCore.isValidCode(encoder)) {
+				Logger.log("Transform Line Syntax Error: Invalid Encode/Hash Code", 2);
+				continue;
+			}
+
+			// The transform number should be happy
+			try {
+				fuzzerNumber = Integer.parseInt(transformLineArray[0]);
+			} catch (final NumberFormatException e) {
+				Logger.log("Transform Line Syntax Error: Number Format Exception", 2);
+				continue;
+			}
+
+			// Numbers must be positive
+			if ( fuzzerNumber < 0 ) {
+				Logger.log("Transform Line Syntax Error: Negative Value", 2);
+				continue;
+			}
+			// Numbers must be less than the total number of fuzzers
+			if ( fuzzerNumber >  transformsLine - fuzzersLine) {
+				Logger.log("Transform Line Syntax Error: Transform Outside Fuzzer Range", 2);
+				continue;
+			}
+
+			mWindow.getPanelFuzzing().addTransform(fuzzerNumber, encoder, prefix, suffix);
+						
+		}		
+
 		// Finally, tell the frame this is the file opened
 		// and save the directory location
 		mWindow.setOpenFileTo(file);
@@ -280,7 +360,7 @@ public class OpenSession {
 			JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
 		}
 	}
-	
+
 	public JBroFuzzWindow getmWindow(){
 		return mWindow;
 	}

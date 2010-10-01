@@ -1023,4 +1023,10 @@ public class FuzzingPanel extends AbstractPanel {
 		return mFuzzTableModel;
 	}
 
+	public void addTransform(int fuzzerNumber, String encoder, String prefix,
+			String suffix) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
