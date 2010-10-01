@@ -77,7 +77,7 @@ public final class Verifier {
 	// The maximum number of categories of a prototype
 	private static final int MAX_NO_OF_CATEGORIES = Byte.MAX_VALUE;
 
-	private static final String ERROR_MSG = "\n\n\tBroken JBroFuzz Installation:\n\t";
+	private static final String ERROR_MSG = "\n\n\tBroken JBroFuzz Installation:\n\n\t";
 
 
 	private static Map<String, Prototype> prototypes, headers = null;

@@ -539,7 +539,14 @@ public class JBroFuzzMenuBar extends JMenuBar {
 
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						new HeaderFrame(JBroFuzzMenuBar.this.getFrame());
+						JOptionPane.showMessageDialog(
+								JBroFuzzMenuBar.this.getFrame(), 
+								"This functionality has now being " +
+								"replaced by a standalone\n\n" +
+								"JBroFuzzHeader executable.\n\n" +
+								"It can be found in the installation directory " +
+								"of JBroFuzz."
+							);
 					}
 				});
 			}
