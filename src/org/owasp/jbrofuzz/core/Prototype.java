@@ -200,15 +200,15 @@ public class Prototype {
 			return false;
 		}
 				
-		if(!Character.isLetter(fuzzerID.charAt(4))) {
+		if(!Character.isLetterOrDigit(fuzzerID.charAt(4))) {
 			return false;
 		}
 		
-		if(!Character.isLetter(fuzzerID.charAt(5))) {
+		if(!Character.isLetterOrDigit(fuzzerID.charAt(5))) {
 			return false;
 		}
 		
-		if(!Character.isLetter(fuzzerID.charAt(6))) {
+		if(!Character.isLetterOrDigit(fuzzerID.charAt(6))) {
 			return false;
 		}
 		
@@ -216,15 +216,15 @@ public class Prototype {
 			return false;
 		}
 		
-		if(!Character.isLetter(fuzzerID.charAt(8))) {
+		if(!Character.isLetterOrDigit(fuzzerID.charAt(8))) {
 			return false;
 		}
 		
-		if(!Character.isLetter(fuzzerID.charAt(9))) {
+		if(!Character.isLetterOrDigit(fuzzerID.charAt(9))) {
 			return false;
 		}
 		
-		if(!Character.isLetter(fuzzerID.charAt(10))) {
+		if(!Character.isLetterOrDigit(fuzzerID.charAt(10))) {
 			return false;
 		}
 		

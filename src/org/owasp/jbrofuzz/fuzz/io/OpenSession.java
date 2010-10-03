@@ -245,13 +245,13 @@ public class OpenSession {
 		}
 		
 		// -> Load Fuzzers to Table
-		for (int i = fuzzersLine + 2; i < transformsLine; i++) {
+		for (int i = fuzzersLine + 1; i < transformsLine; i++) {
 
 			final String[] payloadArray = fileContentsArray[i].split(",");
 
 			// Each line must have 3 elements
 			if (payloadArray.length != 3) {
-				Logger.log("Invalid File: Line " + i + " does not contain 3 elements", 2);
+				Logger.log("Invalid File: Line " + (i + 1) + " does not contain 3 elements", 2);
 				continue;
 			} 
 
@@ -265,7 +265,7 @@ public class OpenSession {
 
 			// The fuzzer id must be valid
 			if (!Prototype.isValidFuzzerID(fuzzerID)) {
-				Logger.log("Fuzzer Line Syntax Error: " + i + " Invalid Fuzzer ID Format", 2);
+				Logger.log("Fuzzer Line Syntax Error: " + (i + 1) + " Invalid Fuzzer ID Format", 2);
 				continue;
 			}
 
@@ -295,6 +295,7 @@ public class OpenSession {
 				continue;
 			}
 
+			Logger.log("Adding Fuzzer: " + "\t" + (i + 1) + "\t" + fileContentsArray[i], 1);
 			mWindow.getPanelFuzzing().addFuzzer(fuzzerID, start, end);
 						
 		}
@@ -307,22 +308,28 @@ public class OpenSession {
 			return;
 		}
 				
-		for (int j = transformsLine + 2; j < fileNoOfLines - 1; j++) {
+		for (int j = transformsLine + 1; j < fileNoOfLines - 1; j++) {
 
 			final String[] transformLineArray = fileContentsArray[j].split(",");
-
+			
 			// Each line must have 4 elements
 			if (transformLineArray.length != 4) {
-				Logger.log("Invalid File: Line " + j + " does not contain 4 elements", 2);
+				Logger.log("Invalid File: Line " + (j + 1) + " does not contain 4 elements", 2);
 				continue;
 			} 
 
 			// Assign local variables for line: 1,Hexadecimal (UPP),,
 			int fuzzerNumber = 0;
 			final String encoder = StringUtils.abbreviate(transformLineArray[1], MAX_CHARS);
-			final String prefix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[2],"Z-Base32"), MAX_CHARS);
-			final String suffix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[3],"Z-Base32"), MAX_CHARS);
-
+			String prefix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[2],"Z-Base32"), MAX_CHARS);
+			if(prefix.equals("<~jbrofuzz-empty~>")) {
+				prefix = "";
+			}
+			String suffix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[3],"Z-Base32"), MAX_CHARS);
+			if(suffix.equals("<~jbrofuzz-empty~>")) {
+				suffix = "";
+			}
+			
 			// The encoder code must be valid
 			if (!EncoderHashCore.isValidCode(encoder)) {
 				Logger.log("Transform Line Syntax Error: Invalid Encode/Hash Code", 2);
@@ -337,9 +344,9 @@ public class OpenSession {
 				continue;
 			}
 
-			// Numbers must be positive
-			if ( fuzzerNumber < 0 ) {
-				Logger.log("Transform Line Syntax Error: Negative Value", 2);
+			// Numbers must be greater than or equal to one
+			if ( fuzzerNumber < 1 ) {
+				Logger.log("Transform Line Syntax Error: Value Less Than One", 2);
 				continue;
 			}
 			// Numbers must be less than the total number of fuzzers
@@ -348,6 +355,7 @@ public class OpenSession {
 				continue;
 			}
 
+			Logger.log("Adding Transform: " + "\t" + (j + 1) + "\t" + "on Fuzzer: " + fuzzerNumber + " with encoder: " + encoder + "...", 1);
 			mWindow.getPanelFuzzing().addTransform(fuzzerNumber, encoder, prefix, suffix);
 						
 		}		
