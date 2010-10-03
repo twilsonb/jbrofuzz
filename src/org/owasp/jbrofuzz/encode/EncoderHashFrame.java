@@ -79,14 +79,13 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * for a variety of different schemes, as well as hashing functionality.
  * </p>
  * 
- * @author daemonmidi@gmail.com, subere@uncon.org
+ * @author daemonmidi@gmail.com, subere@uncon.org, ranulf
  * @version 2.5
  * @since 1.5
  */
 public class EncoderHashFrame extends JFrame implements KeyListener {
 
-	private static final long serialVersionUID = 2342345235235234L;
-
+	private static final long serialVersionUID = 4722716158445936723L;
 	// Dimensions of the frame
 	private static final int SIZE_X = 650;
 	private static final int SIZE_Y = 400;
@@ -94,7 +93,7 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 	private static final Preferences PREFS = Preferences.userRoot().node("owasp/jbrofuzz");
 
 	private JSplitPane horizontalSplitPane, verticalSplitPaneLeft,
-			verticalSplitPaneRight, commentSplitPane;
+	verticalSplitPaneRight, commentSplitPane;
 
 	private JTextPane enTextPane, deTextPane;
 
@@ -102,7 +101,7 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 	private int listCounter = 0;
 	private JTree tree;
 
-	private JButton swap, encode, decode, close;
+	private JButton swap, encode, decode, clear, close;
 
 	private HashPanel commentPanel;
 
@@ -116,13 +115,13 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 		// really inspired from Paros Proxy, but as a frame
 		setTitle(" JBroFuzz - Encoder/Hash ");
 		setJMenuBar(new EncoderHashMenuBar(this));
-		
+
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 		setLayout(new BorderLayout());
 
 		// Create the nodes
 		final DefaultMutableTreeNode top = new DefaultMutableTreeNode(
-				"Codes/Hashes");
+		"Codes/Hashes");
 		setFont(new Font("SansSerif", Font.PLAIN, 12));
 		// Create a tree that allows one selection at a time
 		tree = new JTree(top);
@@ -142,11 +141,11 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 		final JPanel decoderPanel = new JPanel(new BorderLayout());
 
 		encoderPanel
-				.setBorder(BorderFactory
-						.createCompoundBorder(
-								BorderFactory
-										.createTitledBorder(" Enter the plain text below to be encoded / hashed "),
-								BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		.setBorder(BorderFactory
+				.createCompoundBorder(
+						BorderFactory
+						.createTitledBorder(" Enter the plain text below to be encoded / hashed "),
+						BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		decoderPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Enter the text below to be decoded "),
@@ -248,18 +247,20 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 		swap = new JButton(" Swap ");
 		encode = new JButton(" Encode/Hash ");
 		decode = new JButton(" Decode ");
+		clear = new JButton(" Clear ");
 		close = new JButton(" Close ");
 
 		swap
-				.setToolTipText(" Swap the contents of encoded text with the decoded text ");
+		.setToolTipText(" Swap the contents of encoded text with the decoded text ");
 		final String desc = "Select an encoding or hashing scheme from the left hard side";
 		encode.setToolTipText(desc);
 		decode.setToolTipText(desc);
+		clear.setToolTipText(" Clear content");
 		close.setToolTipText(" Close this window ");
 
 		// recording table selection listener.
 		recordingTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			
+
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
 				listCounter = recordingTable.getSelectedRow();
@@ -269,10 +270,10 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 						recordingTable.getSelectedRow(), 2);
 				enTextPane.setText(clear);
 				deTextPane.setText(enc);
-				
+
 			}
 		});
-		
+
 		swap.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -310,6 +311,32 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 			}
 		});
 
+		clear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int numRows = recordingTable.getRowCount();
+				int numCols = recordingTable.getColumnCount();
+				for(int i=0;i<numRows;i++){
+					for(int j=0;j<numCols;j++){
+						recordingTable.setValueAt("", i, j);	
+						
+					}
+					// Delete the values of the encode/decode as a preference
+					PREFS.remove(JBroFuzzPrefs.ENCODER[0] + "." + i);	
+					PREFS.remove(JBroFuzzPrefs.ENCODER[1] + "." + i);
+					PREFS.remove(JBroFuzzPrefs.ENCODER[2] + "." + i);
+				
+					try {
+						PREFS.sync();
+					} catch (final BackingStoreException ex) {
+						ex.printStackTrace();
+					}
+
+
+				}
+			}
+		});
+
+
 		close.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {
@@ -328,12 +355,13 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 		recordingTable.addKeyListener(this);
 		encode.addKeyListener(this);
 		decode.addKeyListener(this);
+		clear.addKeyListener(this);
 		close.addKeyListener(this);
 
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(final TreeSelectionEvent e) {
 				final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-						.getLastSelectedPathComponent();
+				.getLastSelectedPathComponent();
 
 				if (node == null) {
 					return;
@@ -356,8 +384,8 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 		};
 
 		enTextPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-				.put(KeyStroke.getKeyStroke(Event.ENTER, Event.ALT_MASK),
-						"doEncode");
+		.put(KeyStroke.getKeyStroke(Event.ENTER, Event.ALT_MASK),
+		"doEncode");
 		enTextPane.getActionMap().put("doEncode", doEncode);
 
 		// alt+backspace to decode
@@ -372,7 +400,7 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 
 		enTextPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke(Event.BACK_SPACE, Event.ALT_MASK),
-				"doDecode");
+		"doDecode");
 		enTextPane.getActionMap().put("doDecode", doDecode);
 
 		// Bottom buttons
@@ -382,6 +410,7 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 		buttonPanel.add(swap);
 		buttonPanel.add(encode);
 		buttonPanel.add(decode);
+		buttonPanel.add(clear);
 		buttonPanel.add(close);
 
 		// Add the split pane to this panel
@@ -421,11 +450,11 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 		 * tree.setSelectionRow( i+1 ); break; }
 		 */
 	}
-	
+
 	public void keyTyped(final KeyEvent kEvent) {
 		// 
 	}
-	
+
 	public void keyPressed(final KeyEvent kEvent) {
 		if (kEvent.getKeyCode() == 27) {
 
@@ -433,12 +462,12 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 
 		}
 	}
-	
+
 	public void keyReleased(final KeyEvent kEvent) {
 		// 
 	}
 
-	
+
 	/**
 	 * <p>Method called for saving the preferences of each 
 	 * encode/decode message and closing the frame.</p>
@@ -448,10 +477,10 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 	 * @since 2.5
 	 */
 	public void closeFrame() {
-		
+
 		saveValues();
 		dispose();
-		
+
 	}
 
 	/**
@@ -469,7 +498,7 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 	private void calculate(boolean isToEncode) {
 
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-				.getLastSelectedPathComponent();
+		.getLastSelectedPathComponent();
 
 		if (node == null) {
 			return;
@@ -501,9 +530,9 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 		int loose = 0;
 		for (int i = 0; i < 50; i++) {
 			final String encValue = PREFS.get(JBroFuzzPrefs.ENCODER[0]
-					+ "." + i, "");
+			                                                        + "." + i, "");
 			final String decValue = PREFS.get(JBroFuzzPrefs.ENCODER[1]
-					+ "." + i, "");
+			                                                        + "." + i, "");
 			final String engineValue = PREFS.get(
 					JBroFuzzPrefs.ENCODER[2] + "." + i, "");
 			if (encValue.length() > 0) {
@@ -534,8 +563,7 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 	private void saveValues() {
 
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
-				.getLastSelectedPathComponent();
-
+		.getLastSelectedPathComponent();
 		// Save the values of the encode/decode as a preference
 		PREFS.put(JBroFuzzPrefs.ENCODER[0] + "." + listCounter,
 				enTextPane.getText());
@@ -550,7 +578,7 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 		} catch (final BackingStoreException e) {
 			e.printStackTrace();
 		}
-		
+
 		if (listCounter >= 50)
 			listCounter = listCounter - 50;
 		recordingTable.setValueAt(enTextPane.getText(), listCounter, 1);
@@ -561,8 +589,7 @@ public class EncoderHashFrame extends JFrame implements KeyListener {
 			recordingTable.setValueAt("", listCounter, 3);
 		}
 		recordingTable.getSelectionModel().setSelectionInterval(listCounter, listCounter);
-		
-		listCounter++;
+
 	}
 
 	/**

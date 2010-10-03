@@ -46,34 +46,39 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 
 /**
- * @author subere@uncon.org, Yiannis Marangos
+ * @author subere@uncon.org,ranulf
  * @version 2.5
  * @since 2.0
  */
 public class EncoderHashCore {
 	
 	public static final String[] CODES = { "Plain Text",
-		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", 
+		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", "Double URL Cp1252", "Double URL UTF-8", "Double URL UTF-16BE", "Double URL UTF-16LE", 
 		"Base64", "Base32", "Z-Base32", "MD5 Hash", "SHA-1 Hash", "SHA-256 Hash",
 		"SHA-384 Hash", "SHA-512 Hash", "Hexadecimal (low)", "Hexadecimal (UPP)", 
 		"Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)",
 		"Escape: HTML", "Escape: CSV", "Escape: Java", "Escape: JavaScript",
-		"Escape: SQL", "Escape: XML"
+		"Escape: SQL", "Escape: XML", "UUencode"
 	};
 	
 	private final static String IS_DECODABLE[] = { "Plain Text",
-		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", "Base64", "Base32", "Z-Base32","Hexadecimal (low)",
+		"URL Cp1252", "URL UTF-8", "URL UTF-16BE", "URL UTF-16LE", "Double URL Cp1252", "Double URL UTF-8", "Double URL UTF-16BE", "Double URL UTF-16LE", 
+		"Base64", "Base32", "Z-Base32","Hexadecimal (low)",
 		"Hexadecimal (UPP)", "Binary", "www-form-urlencoded", "RFC 1521 MIME (eMail)",
 		"Escape: HTML", "Escape: CSV", "Escape: Java", "Escape: JavaScript",
-		"Escape: XML"
+		"Escape: XML", "UUencode"
 	};
 	
 	private static final String[] COMMENTS = {
-		"This is a null decoder",
+		"This is a null encoder/decoder",
 		"This is using the java URL decoder, but with: URLDecoder.decode(decodeText, \"windows-1252\");", 
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-8\");",
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-16LE\");",
 		"This is using the java URL decoder, but with: URLEncoder.encode(encodeText, \"UTF-16BE\");",
+		"This is using the java URL decoder twice, but with: URLDecoder.decode(URLDecoder.decode(decodeText, \"windows-1252\"));", 
+		"This is using the java URL decoder twice, but with: URLEncoder.encode(URLEncoder.encode(encodeText, \"UTF-8\"));",
+		"This is using the java URL decoder twice, but with: URLEncoder.encode(URLEncoder.encode(encodeText, \"UTF-16LE\"));",
+		"This is using the java URL decoder twice, but with: URLEncoder.encode(URLEncoder.encode(encodeText, \"UTF-16BE\"));",
 		"MIME Base64 uses a 64-character alphabet consisting of upper- and lower-case Roman alphabet characters (A-Z, a-z), the numerals (0-9), and the \"+\" and \"/\" symbols. The \"=\" symbol is also used as a special suffix code.", 
 		"MIME Base32 uses a 32-character alphabet, as defined by RFC 4648, consisting of upper-case Roman alphabet characters (A-Z), the numerals (2-7), and the \"=\" symbol.",
 		"Z-Base32 is a Base32 encoding designed to be easier for human use and more compact, currently used in Phil Zimmermann's ZRTP protocol.",
@@ -92,7 +97,8 @@ public class EncoderHashCore {
 		"Escapes the characters in a String using Java String rules. Deals correctly with quotes and control-chars (tab, backslash, cr, ff, etc.) So a tab becomes the characters '\\' and 't'. The only difference between Java strings and JavaScript strings is that in JavaScript, a single quote and forward-slash (/) are escaped.", 
 		"Escapes the characters in a String using JavaScript String rules. The only difference between Java strings and JavaScript strings is that in JavaScript, a single quote must be escaped.",
 		"Escapes the characters in a String to be suitable to pass to an SQL query. \nFor example, \n\nstatement.executeQuery(\"SELECT * FROM MOVIES WHERE TITLE='\" + StringEscapeUtils.escapeSql(\"McHale's Navy\")  At present, this method only turns single-quotes into doubled single-quotes (\"McHale's Navy\" => \"McHale''s Navy\"). It does not handle the cases of percent (%) or underscore (_) for use in LIKE clauses.\n\nsee http://www.jguru.com/faq/view.jsp?EID=8881 ", 
-		"Escapes the characters in a String using XML entities. For example: \"bread\" & \"butter\" => &quot;bread&quot; &amp; &quot;butter&quot;. Supports only the five basic XML entities (gt, lt, quot, amp, apos). Does not support DTDs or external entities. Note that unicode characters greater than 0x7f are as of 3.0, no longer escaped. "
+		"Escapes the characters in a String using XML entities. For example: \"bread\" & \"butter\" => &quot;bread&quot; &amp; &quot;butter&quot;. Supports only the five basic XML entities (gt, lt, quot, amp, apos). Does not support DTDs or external entities. Note that unicode characters greater than 0x7f are as of 3.0, no longer escaped. ",
+		"UUencoder: Uuencoding is a form of binary-to-text encoding that originated in the Unix program uuencode, for encoding binary data for transmission over the uucp mail system."
 	};
 	
 	public static boolean isDecoded(final String type) {
@@ -147,6 +153,14 @@ public class EncoderHashCore {
 				return decodeUrlUtf16BE(decodeText);
 			else if (type.equalsIgnoreCase("URL UTF-16LE"))
 				return decodeUrlUtf16LE(decodeText);
+			else if (type.equalsIgnoreCase("Double URL Cp1252"))
+				return decodeUrlWindows1252(decodeUrlWindows1252(decodeText));
+			else if (type.equalsIgnoreCase("Double URL UTF-8"))
+				return decodeUrlUtf8(decodeUrlUtf8(decodeText));
+			else if (type.equalsIgnoreCase("Double URL UTF-16BE"))
+				return decodeUrlUtf16BE(decodeUrlUtf16BE(decodeText));
+			else if (type.equalsIgnoreCase("Double URL UTF-16LE"))
+				return decodeUrlUtf16LE(decodeUrlUtf16LE(decodeText));			
 			else if (type.equalsIgnoreCase("Base64"))
 				return decodeBase64(decodeText);
 			else if (type.equalsIgnoreCase("Base32"))
@@ -173,8 +187,16 @@ public class EncoderHashCore {
 				return decodeEscJavaScript(decodeText);
 			else if (type.equalsIgnoreCase("Escape: Xml"))
 				return decodeEscXml(decodeText);
+			else if (type.equalsIgnoreCase("UUencode")){
+				return decodeUU(decodeText);
+			}
 			else
 				return  "Error: Decoding type not found...";
+	}
+	
+	// decode UU
+	private static String decodeUU(final String decodeText){
+		return new String(UUEncode.decode(decodeText));
 	}
 	
 	// Decode Base64
@@ -296,16 +318,24 @@ public class EncoderHashCore {
 	}
 	
 	public static String encode(final String encodeText, final String type) {
-		if (type.equalsIgnoreCase("URL Cp1252"))
-			return encodeUrlWindows1252(encodeText);
-		else if (type.equalsIgnoreCase("Plain Text"))
+		if (type.equalsIgnoreCase("Plain Text"))
 			return encodeText;
+		else if (type.equalsIgnoreCase("URL Cp1252"))
+			return encodeUrlWindows1252(encodeText);	
 		else if (type.equalsIgnoreCase("URL UTF-8"))
 			return encodeUrlUtf8(encodeText);
 		else if (type.equalsIgnoreCase("URL UTF-16BE"))
 			return encodeUrlUtf16BE(encodeText);
 		else if (type.equalsIgnoreCase("URL UTF-16LE"))
 			return encodeUrlUtf16LE(encodeText);
+		else if (type.equalsIgnoreCase("Double URL Cp1252"))
+			return encodeUrlWindows1252(encodeUrlWindows1252(encodeText));	
+		else if (type.equalsIgnoreCase("Double URL UTF-8"))
+			return encodeUrlUtf8(encodeUrlUtf8(encodeText));
+		else if (type.equalsIgnoreCase("Double URL UTF-16BE"))
+			return encodeUrlUtf16BE(encodeUrlUtf16BE(encodeText));
+		else if (type.equalsIgnoreCase("Double URL UTF-16LE"))
+			return encodeUrlUtf16LE(encodeUrlUtf16LE(encodeText));
 		else if (type.equalsIgnoreCase("Base64"))
 			return encodeBase64(encodeText);
 		else if (type.equalsIgnoreCase("Base32"))
@@ -344,8 +374,14 @@ public class EncoderHashCore {
 			return encodeEscSql(encodeText);
 		else if (type.equalsIgnoreCase("Escape: XML"))
 			return encodeEscXml(encodeText);
+		else if (type.equalsIgnoreCase("UUencode"))
+			return encodeUU(encodeText);
 		else
 			return "Error: Encoding type not found...";
+	}
+	
+	private static String encodeUU(final String encodeText){
+		return new String(UUEncode.encode(encodeText));
 	}
 
 	// Encode Base64
@@ -482,6 +518,7 @@ public class EncoderHashCore {
 	// Encode www-form-url
 	private static String encodeUrlCodec(final String encodeText) {
 		final URLCodec codec = new URLCodec();
+	
 		try {
 			return codec.encode(encodeText, "UTF-8");
 		} catch (final UnsupportedEncodingException e) {
