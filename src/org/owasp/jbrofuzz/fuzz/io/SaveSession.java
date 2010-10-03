@@ -226,9 +226,21 @@ public class SaveSession {
 		
 		sbRet.append(row.getEncoder());
 		sbRet.append(',');
-		sbRet.append(EncoderHashCore.encode(row.getPrefixOrMatch(),"Z-Base32"));
+		
+		final String prefix = row.getPrefixOrMatch(); 
+		if(prefix.isEmpty()) {
+			sbRet.append(EncoderHashCore.encode("<~jbrofuzz-empty~>","Z-Base32"));
+		} else {
+			sbRet.append(EncoderHashCore.encode(prefix,"Z-Base32"));
+		}
 		sbRet.append(',');
-		sbRet.append(EncoderHashCore.encode(row.getSuffixOrReplace(),"Z-Base32"));
+
+		final String suffix = row.getSuffixOrReplace();
+		if(suffix.isEmpty()) {
+			sbRet.append(EncoderHashCore.encode("<~jbrofuzz-empty~>","Z-Base32"));
+		} else {
+			sbRet.append(EncoderHashCore.encode(suffix, "Z-Base32"));
+		}
 		
 		return sbRet.toString();
 		
@@ -248,7 +260,7 @@ public class SaveSession {
 			EncodersRow[] encoderRows = mWindow.getPanelFuzzing().getEncoders(fuzzerRow);
 			
 			for (int encoderRow = 0; encoderRow < encoderRows.length; encoderRow++) {
-				out.append(fuzzerRow);
+				out.append(fuzzerRow + 1);
 				out.append(',');
 				out.append(SaveSession.encodersRowString(encoderRows[encoderRow]));
 				// if we are on the last encoder row, don't append a \n
