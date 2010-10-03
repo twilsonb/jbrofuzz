@@ -226,22 +226,12 @@ public class SaveSession {
 		
 		sbRet.append(row.getEncoder());
 		sbRet.append(',');
-		
-		final String prefix = row.getPrefixOrMatch(); 
-		if(prefix.isEmpty()) {
-			sbRet.append(EncoderHashCore.encode("<~jbrofuzz-empty~>","Z-Base32"));
-		} else {
-			sbRet.append(EncoderHashCore.encode(prefix,"Z-Base32"));
-		}
+		sbRet.append(EncoderHashCore.encode(row.getPrefixOrMatch(),"Z-Base32"));
 		sbRet.append(',');
-
-		final String suffix = row.getSuffixOrReplace();
-		if(suffix.isEmpty()) {
-			sbRet.append(EncoderHashCore.encode("<~jbrofuzz-empty~>","Z-Base32"));
-		} else {
-			sbRet.append(EncoderHashCore.encode(suffix, "Z-Base32"));
-		}
-		
+		sbRet.append(EncoderHashCore.encode(row.getSuffixOrReplace(), "Z-Base32"));
+		/*
+		 * <~jbrofuzz-empty~>
+		 */		
 		return sbRet.toString();
 		
 	}
