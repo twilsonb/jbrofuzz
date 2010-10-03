@@ -295,7 +295,7 @@ public class OpenSession {
 				continue;
 			}
 
-			Logger.log("Adding Fuzzer: " + "\t" + (i + 1) + "\t" + fileContentsArray[i], 1);
+			Logger.log("Adding Fuzzer Line: " + "\t" + (i + 1) + "\t" + fileContentsArray[i], 1);
 			mWindow.getPanelFuzzing().addFuzzer(fuzzerID, start, end);
 						
 		}
@@ -312,30 +312,19 @@ public class OpenSession {
 
 			final String[] transformLineArray = fileContentsArray[j].split(",");
 			
-			// Each line must have 4 elements
-			if (transformLineArray.length != 4) {
+			// Each line must have 4 elements commas with empty ,, give a count of 2
+			if ((transformLineArray.length != 4) && (transformLineArray.length != 2)) {
 				Logger.log("Invalid File: Line " + (j + 1) + " does not contain 4 elements", 2);
 				continue;
 			} 
 
-			// Assign local variables for line: 1,Hexadecimal (UPP),,
-			int fuzzerNumber = 0;
-			final String encoder = StringUtils.abbreviate(transformLineArray[1], MAX_CHARS);
-			String prefix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[2],"Z-Base32"), MAX_CHARS);
-			if(prefix.equals("<~jbrofuzz-empty~>")) {
-				prefix = "";
-			}
-			String suffix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[3],"Z-Base32"), MAX_CHARS);
-			if(suffix.equals("<~jbrofuzz-empty~>")) {
-				suffix = "";
-			}
+			// Assign local variables for line: 1,Hexadecimal (UPP),asdf,fdsa
+			// fuzzerNumber = 1
+			// encoder = Hexadecimal (UPP)
+			// prefix = asdf
+			// suffix = fdsa
 			
-			// The encoder code must be valid
-			if (!EncoderHashCore.isValidCode(encoder)) {
-				Logger.log("Transform Line Syntax Error: Invalid Encode/Hash Code", 2);
-				continue;
-			}
-
+			int fuzzerNumber = 0;
 			// The transform number should be happy
 			try {
 				fuzzerNumber = Integer.parseInt(transformLineArray[0]);
@@ -343,7 +332,6 @@ public class OpenSession {
 				Logger.log("Transform Line Syntax Error: Number Format Exception", 2);
 				continue;
 			}
-
 			// Numbers must be greater than or equal to one
 			if ( fuzzerNumber < 1 ) {
 				Logger.log("Transform Line Syntax Error: Value Less Than One", 2);
@@ -355,7 +343,21 @@ public class OpenSession {
 				continue;
 			}
 
-			Logger.log("Adding Transform: " + "\t" + (j + 1) + "\t" + "on Fuzzer: " + fuzzerNumber + " with encoder: " + encoder + "...", 1);
+			final String encoder = StringUtils.abbreviate(transformLineArray[1], MAX_CHARS);
+			// The encoder code must be valid
+			if (!EncoderHashCore.isValidCode(encoder)) {
+				Logger.log("Transform Line Syntax Error: Invalid Encode/Hash Code", 2);
+				continue;
+			}
+
+			String prefix = "";
+			String suffix = "";
+			if (transformLineArray.length == 4) {
+				prefix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[2],"Z-Base32"), MAX_CHARS);
+				suffix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[3],"Z-Base32"), MAX_CHARS);
+			}
+			
+			Logger.log("Adding Transform Line:\t" + (j + 1) + "\tOn Fuzzer Row:\t" + fuzzerNumber, 1);
 			mWindow.getPanelFuzzing().addTransform(fuzzerNumber, encoder, prefix, suffix);
 						
 		}		
