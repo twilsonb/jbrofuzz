@@ -111,4 +111,12 @@ public class EncodersTableList{
 		
 	}
 
+	public void add(String encoding, String matchOrPrefix, String replaceOrSuffix) {
+		EncodersTableModel etm = new EncodersTableModel();
+		EncodersTable et = new EncodersTable(etm);
+		encodersTables.add(et);
+		etm.addRow(encoding, matchOrPrefix, replaceOrSuffix);
+		
+	}
+
 }

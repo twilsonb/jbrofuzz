@@ -1025,8 +1025,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 	public void addTransform(int fuzzerNumber, String encoder, String prefix,
 			String suffix) {
-		// TODO Auto-generated method stub
-		
+		encodersTableList.add(encoder, prefix, suffix);
 	}
 
 }
