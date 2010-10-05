@@ -35,10 +35,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
@@ -311,9 +313,10 @@ public class OpenSession {
 		for (int j = transformsLine + 1; j < fileNoOfLines - 1; j++) {
 
 			final String[] transformLineArray = fileContentsArray[j].split(",");
+			final int noOfElements = transformLineArray.length;
 			
 			// Each line must have 4 elements commas with empty ,, give a count of 2
-			if ((transformLineArray.length != 4) && (transformLineArray.length != 2)) {
+			if ( (noOfElements < 2) || (noOfElements > 4) ) {
 				Logger.log("Invalid File: Line " + (j + 1) + " does not contain 4 elements", 2);
 				continue;
 			} 
@@ -351,10 +354,29 @@ public class OpenSession {
 			}
 
 			String prefix = "";
+			if (transformLineArray.length >= 3) {
+				
+				try {
+					prefix = new String(Base64.decodeBase64(transformLineArray[2]), "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					Logger.log("Transform Line Syntax Error: Cannot Decode Prefix", 2);
+					continue;
+				}
+				prefix = StringUtils.abbreviate( prefix, MAX_CHARS);
+				
+			}
+			
 			String suffix = "";
-			if (transformLineArray.length == 4) {
-				prefix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[2],"Z-Base32"), MAX_CHARS);
-				suffix = StringUtils.abbreviate(EncoderHashCore.decode(transformLineArray[3],"Z-Base32"), MAX_CHARS);
+			if (transformLineArray.length >= 4) {
+				
+				try {
+					suffix = new String(Base64.decodeBase64(transformLineArray[3]), "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					Logger.log("Transform Line Syntax Error: Cannot Decode Suffix", 2);
+					continue;
+				}
+				suffix = StringUtils.abbreviate( suffix, MAX_CHARS);
+
 			}
 			
 			Logger.log("Adding Transform Line:\t" + (j + 1) + "\tOn Fuzzer Row:\t" + fuzzerNumber, 1);

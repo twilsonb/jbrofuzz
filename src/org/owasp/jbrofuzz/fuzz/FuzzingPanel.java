@@ -925,15 +925,6 @@ public class FuzzingPanel extends AbstractPanel {
 		urlField.setBackground(Color.WHITE);
 		urlField.setForeground(Color.BLACK);
 
-		// Get the preference for showing the "On The Wire" tab
-		//final boolean showWireTab = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZINGONTHEWIRE[0].getId(), true);
-
-//		if (showWireTab) {
-//			bottomPane.setSelectedIndex(1);
-//		} else {
-//			bottomPane.setSelectedIndex(0);
-//		}
-
 	}
 	
 	public String getPayload() {
@@ -1023,9 +1014,22 @@ public class FuzzingPanel extends AbstractPanel {
 		return mFuzzTableModel;
 	}
 
+	/**
+	 * <p>Method for adding a transform to a fuzzer.</p>
+	 * <p>This will appear within the transforms table, if
+	 * the corresponding fuzzer is clicked.</p>
+	 * 
+	 * @param fuzzerNumber
+	 * @param encoder
+	 * @param prefix
+	 * @param suffix
+	 */
 	public void addTransform(int fuzzerNumber, String encoder, String prefix,
 			String suffix) {
-		encodersTableList.add(encoder, prefix, suffix);
+		
+		encodersTableList.getEncoderTableModel(fuzzerNumber - 1).addRow(encoder, prefix, suffix);
+		//encodersTableList.add(encoder, prefix, suffix);
+		
 	}
 
 }

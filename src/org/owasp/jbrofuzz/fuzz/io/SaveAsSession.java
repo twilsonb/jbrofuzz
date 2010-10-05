@@ -31,70 +31,41 @@ package org.owasp.jbrofuzz.fuzz.io;
 
 import java.io.File;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
+/**
+ * <p>Class responsible for saving a fuzzing session
+ * based on the file already opened.</p>
+ * <p>If no file is identified, a file save-as is
+ * performed.</p>
+ * 
+ * @author daemonmidi@gmail.com, subere@uncon.org
+ * @version 2.5
+ * @since 1.2
+ */
 public class SaveAsSession {
 
 	public SaveAsSession(final JBroFuzzWindow mWindow) {
 
-		// Set the Fuzzing Panel as the one to view
+		// Set the fuzzing tab as the one showing
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-		Logger.log("Save As Fuzzing Session", 1);
-
-		final JBroFuzzFileFilter filter = new JBroFuzzFileFilter();
-
-		final String dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[2].getId(), System.getProperty("user.dir"));
-		JFileChooser fc;
-		try {
-			if( (new File(dirString).isDirectory()) ) {
-				fc = new JFileChooser(dirString);
-			} else {
-				fc = new JFileChooser();
-			}
-		} catch (final SecurityException e1) {
-			fc = new JFileChooser();
-			Logger.log("A security exception occured, while attempting to save as to a directory", 4);
-		}
-
-		fc.setFileFilter(filter);
-
-		final int returnVal = fc.showSaveDialog(mWindow);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-			File file = fc.getSelectedFile();
-			Logger.log("Saving: " + file.getName(), 1);
-
-			String path = file.getAbsolutePath().toLowerCase();
-			if (!path.endsWith(".jbrofuzz")) {
-				file = new File(path += ".jbrofuzz");
-			}
-
-			if (file.exists()) {
-				final int choice = JOptionPane.showConfirmDialog(fc,
-						"File already exists. Do you \nwant to replace it?",
-						" JBroFuzz - Save ", JOptionPane.YES_NO_OPTION);
-
-				if (choice == JOptionPane.NO_OPTION)
-					return;
-			}
-			// call a SaveSession
-			new SaveSession(mWindow, file.getName());
-
-			final String parentDir = file.getParent();
-			if(parentDir != null) {
+		
+		File myFile = Save.showSaveDialog(mWindow);
+		if( myFile != null ) {
+			
+			Save.writeFile(myFile, mWindow);
+			mWindow.setOpenFileTo(myFile);
+			
+			final String  parentDir = myFile.getParent();
+			if( parentDir != null ) {
 				JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
 			}
+			
+		}
 
-		} 
-
-	} // User clicks "Save"
+	} // User clicks "Save As"
 
 }
 
