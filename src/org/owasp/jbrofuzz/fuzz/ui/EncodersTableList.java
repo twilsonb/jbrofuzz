@@ -6,10 +6,9 @@ import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
 
 
 /**
- * <p>
- * This class is desinged to maintain a list of encodersTables/models which can be selected based on
- * the fuzzer which is selected in the LH pane.
- * </p>
+ * <p>This class is desinged to maintain a list of transform
+ * models, which are selectable when a fuzzer is clicked on
+ * the left hand side.</p>
  * 
  * @author ranulf
  * @version 2.5
@@ -34,6 +33,7 @@ public class EncodersTableList{
 	}
 	
 	public void show(int in){
+		
 		if(in >= 0){
 			EncodersTable t = encodersTables.get(in);
 			EncodersTableModel etm = (EncodersTableModel) encodersTables.get(in).getModel();
@@ -59,30 +59,7 @@ public class EncodersTableList{
 		EncodersTable et = new EncodersTable(etm);
 		encodersTables.add(et);
 		
-////		if(encodersTables.size()==1){
-//			etm.fireTableDataChanged();
-//			container.updateEncoderPanel(et);			
-//			container.getEncoderToolBar().enableAdd();
-////		}
 	}
-	
-//	public void add(String encoder){
-//		EncodersTableModel etm = new EncodersTableModel();
-//		EncodersTable et = new EncodersTable(etm);
-//		etm.setValueAt(encoder, etm.getRowCount(), 0);
-//		encodersTables.add(et);
-//		if(encodersTables.size()==1){
-//			etm.fireTableDataChanged();
-//			container.updateEncoderPanel(et);
-//			container.getEncoderToolBar().enableAdd();
-//		}		
-//	}
-//	
-//	public void addAll(String[] encoders){
-//		for(int i=0;i<encoders.length;i++){
-//			this.add(encoders[i]);
-//		}
-//	}
 	
 	
 	public EncodersTable getEncoderTable(int index){
