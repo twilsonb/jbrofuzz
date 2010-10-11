@@ -30,14 +30,11 @@
 package org.owasp.jbrofuzz.io;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.io.OpenSession;
-import org.owasp.jbrofuzz.fuzz.io.Save;
-import org.owasp.jbrofuzz.fuzz.io.SaveSession;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 
@@ -62,7 +59,6 @@ public class CommandLineInterpreter{
 		 * arguments must start with a '-' followed
 		 * by the shortcut for the argument
 		 * -i = --input == inputFileName will follow
-		 * -o = --output == outputFileName will follow
 		 * order of arguments doesn't matter
 		 */
 		int j = 0;
@@ -73,9 +69,6 @@ public class CommandLineInterpreter{
 			}
 			else if (args[j].equals("-i") || args[j].equals("--input")){
 				inputFileName = args[j+1];
-			}
-			else if (args[j].equals("-o") || args[j].equals("--output")){
-//				outputFileName = args[j+1];
 			}
 			else if (args[j].equals("-s") || args[j].equals("--showResults")){
 				result = true;
@@ -127,34 +120,6 @@ public class CommandLineInterpreter{
 		}
 		return returnValue;
 	}
-
-	/**
-	 * <p>Method for writing a file, given the window and 
-	 * corresponding filename.</p>
-	 * <p>This method needs revisiting, as I don't understand it.</p>
-	 * 
-	 * @param mWindow
-	 * @param fileName
-	 * @return returnCode int => > 0 == ok and < 0 == failed
-	 * 
-	 * @author daemonmidi@gmail.com, subere@uncon.org
-	 * @version 2.5
-	 * @since 2.4
-	 */
-	public int writeOutputFile(JBroFuzzWindow mWindow, String fileName){
-		// Write requests and response into seperate file
-		// tbd.
-		
-		File myFile = new File(fileName);
-		
-		if (mWindow.getPanelFuzzing().isStopped()){
-			Save.writeFile(myFile, mWindow);
-		}
-
-		System.out.println("jbrofuzz: Fuzzing Session finished. Output written to: " + fileName);
-		return 0;
-	}
-
 
 	/**
 	 * Print commandline help
