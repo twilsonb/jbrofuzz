@@ -63,15 +63,18 @@ public class OutputTable extends JTable {
 				column.setPreferredWidth(150);
 			}
 			if (i == 2) {
-				column.setPreferredWidth(120);
+				column.setPreferredWidth(60);
 			}
 			if (i == 3) {
-				column.setPreferredWidth(20);
+				column.setPreferredWidth(60);
 			}
 			if (i == 4) {
 				column.setPreferredWidth(20);
 			}
 			if (i == 5) {
+				column.setPreferredWidth(20);
+			}
+			if (i == 6) {
 				column.setPreferredWidth(60);
 			}
 		}

@@ -49,6 +49,7 @@ public class MessageWriter {
 	private transient Date end;
 	private transient String status;
 	private transient final String payload;
+	private transient final String encodedPayload;
 	private transient int replyByteLength;
 
 	protected MessageWriter(final FuzzingPanel fuzzingPanel) {
@@ -64,6 +65,8 @@ public class MessageWriter {
 		status = "---";
 		// Set the current payload
 		payload = fuzzingPanel.getPayload();
+		// Set the encoded paoylad
+		encodedPayload = fuzzingPanel.getEncodedPayload();
 		// Initialise the byte length
 		replyByteLength = 0;
 
@@ -203,6 +206,10 @@ public class MessageWriter {
 
 		return message.toString();
 
+	}
+
+	public String getEncodedPayload() {
+		return encodedPayload;
 	}
 
 }

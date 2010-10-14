@@ -34,7 +34,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
-import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
@@ -66,10 +65,10 @@ class MessageCreator {
 	 */
 	private final String END_LINE;
 
-	protected MessageCreator(final String url, final String message, final EncodersRow[] encoding, final String payload, final int start, final int finish) {
+	protected MessageCreator(final String url, final String message, final String payload, final int start, final int finish) {
 
 		// Perform the necessary encoding on the payload specified
-		this.payload = EncoderHashCore.encodeMany(payload, encoding);
+		this.payload = payload;
 		// Split the message and add in-between
 		// TODO: Calculate the length of the message
 		final StringBuffer messageBuffer = new StringBuffer();
