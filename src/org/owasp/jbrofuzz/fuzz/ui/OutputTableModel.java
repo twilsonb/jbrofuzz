@@ -40,7 +40,7 @@ public class OutputTableModel extends DefaultTableModel {
 	
 	// The names of the columns within the table of generators
 	private static final String[] COLUMNNAMES = { 
-		"No", "Target", "Payload", "Status Code", 
+		"No", "Target", "Payload", "Encoded Payload", "Status Code", 
 		"Time Taken (ms)", "Bytes Received" 
 	};
 	
@@ -60,6 +60,7 @@ public class OutputTableModel extends DefaultTableModel {
 				outputMessage.getFileName(), 
 				outputMessage.getTextURL(), 
 				StringUtils.abbreviate(outputMessage.getPayload(), 50), 
+				StringUtils.abbreviate(outputMessage.getEncodedPayload(), 50),
 				outputMessage.getStatus(),
 				StringUtils.leftPad("" + outputMessage.getResponseTime(), 5, '0'),
 				StringUtils.leftPad("" + outputMessage.getByteCount(), 8, '0')

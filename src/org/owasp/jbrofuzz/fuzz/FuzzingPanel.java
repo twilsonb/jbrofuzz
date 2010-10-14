@@ -56,6 +56,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersTable;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersTableList;
@@ -170,6 +171,8 @@ public class FuzzingPanel extends AbstractPanel {
 
 	// the encoders toolbar which Bottom RHS of the screen
 	private EncodersToolBar controlPanel;
+
+	private String encodedPayload;
 	
 	
 	/**
@@ -816,12 +819,13 @@ public class FuzzingPanel extends AbstractPanel {
 					}
 
 					// Get the default value
-					final int showOnTheWire = JBroFuzz.PREFS.getInt(
-												JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
+					final int showOnTheWire = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
 					// Set the payload, has to be called 
 					// before the MessageWriter constructor
 					payload = f.next();
-					final MessageCreator currentMessage = new MessageCreator(getTextURL(), getTextRequest(), encoders, payload, start, end);
+					// Perform the necessary encoding on the payload specified
+					encodedPayload = EncoderHashCore.encodeMany(payload, encoders);
+					final MessageCreator currentMessage = new MessageCreator(getTextURL(), getTextRequest(), encodedPayload, start, end);
 					final MessageWriter outputMessage = new MessageWriter(this);
 
 					// final int co_k = outputTableModel.addNewRow(outputMessage);
@@ -929,6 +933,10 @@ public class FuzzingPanel extends AbstractPanel {
 	
 	public String getPayload() {
 		return payload;
+	}
+	
+	public String getEncodedPayload() {
+		return encodedPayload;
 	}
 	
 	public EncodersRow[] getEncoders(int fuzzerRow){

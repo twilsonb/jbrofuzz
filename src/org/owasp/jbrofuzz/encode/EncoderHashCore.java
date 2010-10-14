@@ -34,6 +34,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
@@ -567,12 +568,14 @@ public class EncoderHashCore {
 		String payloadTemp;
 		for(int i=0;i<encoding.length;i++){
 			String encoder = encoding[i].getEncoder();
+			String pom = timeControl(encoding[i].getPrefixOrMatch());
+			String sor = timeControl(encoding[i].getSuffixOrReplace());
 			if(encoder.equals("Match & Replace")){
 				// match and replace
-				payloadTemp = matchAndReplace(encoding[i].getPrefixOrMatch(), encoding[i].getSuffixOrReplace(), encoded);
+				payloadTemp = matchAndReplace(pom, sor, encoded);
 			}else if(encoder.equals("Prefix & Suffix")){
 				// prefix and suffix
-				payloadTemp = prefixAndSuffix(encoding[i].getPrefixOrMatch(), encoding[i].getSuffixOrReplace(), encoded);
+				payloadTemp = prefixAndSuffix(pom, sor, encoded);
 			}else{
 				payloadTemp = encode(encoded, encoder);
 			}
@@ -581,6 +584,21 @@ public class EncoderHashCore {
 		return encoded;
 	}
 	
+	private static String timeControl(String in) {
+		// check to see if the prefix/suffix/match/replace is user defined or a time related control
+		//   "Epoch Time"   or   "DateFormat Time"
+		if(in.equals("Epoch Time")){
+			long ts = (new Date()).getTime();	
+			String out = String.valueOf(ts);
+			return out;	
+		}else if(in.equals("DateFormat Time")){
+			return in;
+		}else{
+			return in;
+		}
+
+	}
+
 	private static String matchAndReplace(String match, String replace, String input){
 		return input.replaceAll(match, replace);
 		

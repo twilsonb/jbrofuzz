@@ -31,10 +31,12 @@ package org.owasp.jbrofuzz.fuzz.ui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -70,31 +72,72 @@ public class EncodersTable extends JTable {
 		}
 
 	}
-	
-	
+
+
 	@Override
 	public TableCellEditor getCellEditor(int row, int column) {
 		String[] encodersList = new String[EncoderHashCore.CODES.length+2];
 		System.arraycopy(EncoderHashCore.CODES, 0, encodersList, 0, EncoderHashCore.CODES.length);
 		System.arraycopy(new String[]{"Match & Replace","Prefix & Suffix"}, 0, encodersList, EncoderHashCore.CODES.length, 2);
-		final JComboBox comboxBox = new JComboBox(encodersList);
-		comboxBox.setFont(new Font("Monospaced", Font.BOLD, 12));
-		comboxBox.setBackground(Color.WHITE);
-		comboxBox.setForeground(Color.BLACK);
-		final JTextField prefixOrMatch = new JTextField();
-		prefixOrMatch.setBackground(Color.WHITE);
-		prefixOrMatch.setForeground(Color.BLACK);
-		final JTextField suffixOrReplace = new JTextField();
-		suffixOrReplace.setBackground(Color.WHITE);
-		suffixOrReplace.setForeground(Color.BLACK);
+		final JComboBox encoderCombo = new JComboBox(encodersList);
+
+		String[] timeOptions = new String[]{new String(),"Epoch Time"/*,"DateFormat Time"*/};
+		final JComboBox pomcombo = new JComboBox(timeOptions);
+		pomcombo.setEditable(true);
+		//pomcombo.setEnabled(false);
+
+		final JComboBox sorcombo = new JComboBox(timeOptions);
+		sorcombo.setEditable(true);
+		//sorcombo.setEnabled(false);
+		
+		pomcombo.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent e) {
+				if(pomcombo.getSelectedItem().equals("Epoch Time") || pomcombo.getSelectedItem().equals("DateFormat Time")){
+					pomcombo.setEditable(false);
+				}else{
+					pomcombo.setEditable(true);
+				}
+			}
+			
+		});
+		
+		
+		sorcombo.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent e) {
+				if(sorcombo.getSelectedItem().equals("Epoch Time") || sorcombo.getSelectedItem().equals("DateFormat Time")){
+					sorcombo.setEditable(false);
+				}else{
+					sorcombo.setEditable(true);
+				}
+			}
+			
+		});
+/*
+		encoderCombo.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent e) {
+				String val = (String) encoderCombo.getSelectedItem();
+				if( val.equals("Prefix & Suffix") || val.equals("Match & Replace") ){
+					pomcombo.setEnabled(true);
+					sorcombo.setEnabled(true);
+				}else{
+					pomcombo.setEnabled(false);
+					sorcombo.setEnabled(false);
+				}
+			}
+		});
+*/
+
 		final int modelColumn = convertColumnIndexToModel( column );
 
 		if (modelColumn == 0) 
-			return new DefaultCellEditor(comboxBox);
+			return new DefaultCellEditor(encoderCombo);
 		if (modelColumn == 1)
-			return new DefaultCellEditor(prefixOrMatch);
+			return new DefaultCellEditor(pomcombo);
 		if (modelColumn == 2)
-			return new DefaultCellEditor(suffixOrReplace);
+			return new DefaultCellEditor(sorcombo);
 		else
 			return super.getCellEditor(row, column);
 	}
@@ -104,10 +147,16 @@ public class EncodersTable extends JTable {
 		final int modelColumn = convertColumnIndexToModel( column );
 		if (modelColumn == 0)
 			return new ComboBoxRenderer ();
+		else if(modelColumn == 1)
+			return new ComboBoxRenderer ();
+		else if(modelColumn == 2)
+			return new ComboBoxRenderer ();
 		else
 			return super.getCellRenderer(row, column);
 	}
-	
-	
+
+
+
+
 }
 
