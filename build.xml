@@ -35,10 +35,6 @@
 			<fileset dir="bin">
 				<include name="**/*.class" />
 			</fileset>
-			<fileset dir="src">
-				<include name="**/*.java" />
-			</fileset>
-			
 			<fileset dir="">
 				<include name="LICENSE/*.txt" />
 				<include name="release/splashscreen.png" />
@@ -71,10 +67,6 @@
 				<fileset dir="bin">
 					<include name="**/*.class" />
 				</fileset>
-				<fileset dir="src">
-					<include name="**/*.java" />
-				</fileset>
-				
 				<fileset dir="tar">
 					<include name="headers.jbrf" />
 				</fileset>
@@ -112,12 +104,18 @@
 				<include name="org/owasp/jbrofuzz/core/*.class" />
 				<include name="org/owasp/jbrofuzz/io/FileHandler.class" />
 				<include name="org/owasp/jbrofuzz/system/Logger.class" />
+				<include name="org/owasp/jbrofuzz/util/JBroFuzzFileFilter.class" />
+				<include name="org/owasp/jbrofuzz/version/JBroFuzzPrefs.class" />
+				<include name="org/owasp/jbrofuzz/version/PrefEntry.class" />
 			</fileset>
 			
 			<fileset dir="src">
 				<include name="org/owasp/jbrofuzz/core/*.java" />
 				<include name="org/owasp/jbrofuzz/io/FileHandler.java" />
 				<include name="org/owasp/jbrofuzz/system/Logger.java" />
+				<include name="org/owasp/jbrofuzz/util/JBroFuzzFileFilter.java" />
+				<include name="org/owasp/jbrofuzz/version/JBroFuzzPrefs.java" />
+				<include name="org/owasp/jbrofuzz/version/PrefEntry.java" />
 			</fileset>
 			
 			<fileset dir="tar">
@@ -144,9 +142,6 @@
 		<jar compress="true" destfile="jar/${app.name}.jar">
 			<fileset dir="bin">
 				<include name="**/*.class" />
-			</fileset>
-			<fileset dir="src">
-				<include name="**/*.java" />
 			</fileset>
 			<fileset dir="tar">
 				<include name="fuzzers.jbrf" />
