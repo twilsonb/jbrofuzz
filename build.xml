@@ -102,6 +102,7 @@
 			
 			<fileset dir="bin">
 				<include name="org/owasp/jbrofuzz/core/*.class" />
+				<include name="org/owasp/jbrofuzz/core/net/*.class" />
 				<include name="org/owasp/jbrofuzz/io/FileHandler.class" />
 				<include name="org/owasp/jbrofuzz/system/Logger.class" />
 				<include name="org/owasp/jbrofuzz/util/JBroFuzzFileFilter.class" />
@@ -111,6 +112,7 @@
 			
 			<fileset dir="src">
 				<include name="org/owasp/jbrofuzz/core/*.java" />
+				<include name="org/owasp/jbrofuzz/core/net/*.java" />
 				<include name="org/owasp/jbrofuzz/io/FileHandler.java" />
 				<include name="org/owasp/jbrofuzz/system/Logger.java" />
 				<include name="org/owasp/jbrofuzz/util/JBroFuzzFileFilter.java" />
@@ -132,7 +134,7 @@
 				<attribute name="Build-By" value="subere@uncon.org" />
 				<attribute name="Implementation-Title" value="org.owasp.jbrofuzz.core" />
 				<attribute name="Implementation-Vendor" value="Open Web Application Security Project" />
-				<attribute name="Implementation-Version" value="2.4" />
+				<attribute name="Implementation-Version" value="2.5" />
 			</manifest>
 		</jar>
 	</target>
