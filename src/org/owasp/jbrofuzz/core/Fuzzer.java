@@ -272,7 +272,7 @@ public class Fuzzer implements Iterator<String> {
 	}
 
 	/**
-	 * <p>This method should be trusted or used in the conventional
+	 * <p>This method should not be trusted or used in the conventional
 	 * way that an iterator requires remove to be implemented.</p>
 	 * 
 	 * <p>Instead, during fuzzing, remove() can be called to
