@@ -1,0 +1,29 @@
+{
+    "session":{
+        "sessionId": "", 
+        "timeStamp":"", 
+        "jVersion":"", 
+        "os":"", 
+        "message":[
+             "messageI":"",
+             "textRequest":"",
+             "encoding":"",
+             "payload":"",
+             "start":"",
+             "end":""
+        ], 
+        "response":[
+             "responseId":"",
+             "connectionId":"",
+             "statusCode":"",
+             "responseHeader":"",
+             "responseBody":"", 
+        ], 
+        "connection":{
+            "connectionId":"", 
+            "sessionId":"", 
+            "urlString":"", 
+            "messageId":[]", 
+            "responseId":[]}
+    }
+}
