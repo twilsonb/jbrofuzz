@@ -1,7 +1,7 @@
 [JBroFuzz]
-1.9
+2.5
 [Fuzzing]
-018-2010-01-18-12-17-30
+299-2010-10-26-14-46-14
 [Comment]
 _
 [URL]
@@ -14,6 +14,10 @@ Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 Accept-Language: en-gb,en;q=0.5
 Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
 
-[Payloads]
-044-USR-AGN,Standard,36,108
+
+
+[Fuzzers]
+044-USR-AGN,36,108
+[Transforms]
+1,Plain Text,,
 [End]

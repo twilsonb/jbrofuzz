@@ -1,9 +1,9 @@
 [JBroFuzz]
-1.8
+2.5
 [Fuzzing]
-023 2009-01-23 12-32-04
+299-2010-10-26-14-43-09
 [Comment]
-Fuzzing the X-SDCH Header with recursive and replasive fuzzers
+_
 [URL]
 http://localhost
 [Request]
@@ -18,9 +18,12 @@ Host: localhost
 Connection: Keep-Alive
 
 
-[Payloads]
-NUM-HEX-LOW,318,320
-032-B10-DEC,Standard,314,317
-037-B64-RFC,Standard,312,313
-002-INT-OVF,Standard,310,311
+
+[Fuzzers]
+032-B10-DEC,314,317
+037-B64-RFC,312,313
+002-INT-OVF,310,311
+
+[Transforms]
+
 [End]

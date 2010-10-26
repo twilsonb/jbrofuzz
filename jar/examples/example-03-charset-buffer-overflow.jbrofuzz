@@ -1,7 +1,7 @@
 [JBroFuzz]
-2.2
+2.5
 [Fuzzing]
-156-2010-06-05-23-15-50
+299-2010-10-26-14-43-09
 [Comment]
 _
 [URL]
@@ -16,6 +16,10 @@ Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
 
 
 
-[Payloads]
-041-BFO-EXP,Uppercase,294,298
+
+[Fuzzers]
+041-BFO-EXP,294,298
+
+[Transforms]
+
 [End]
