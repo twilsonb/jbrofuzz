@@ -1,7 +1,7 @@
 [JBroFuzz]
-1.2
+2.5
 [Fuzzing]
-023 2009-01-23 12-32-04
+299-2010-10-26-14-43-09
 [Comment]
 _
 [URL]
@@ -17,6 +17,10 @@ User-Agent: Mozilla/5.0 (SymbianOS/9.2; U; Series60/3.1 NokiaE90-1/210.34.75 Pro
 x-wap-profile: "http://nds1.nds.nokia.com/uaprof/NE90-1r100.xml"
 
 
-[Payloads]
-032-B10-DEC,Standard,571,572
+
+[Fuzzers]
+032-B10-DEC,571,572
+
+[Transforms]
+
 [End]

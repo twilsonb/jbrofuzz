@@ -1,7 +1,7 @@
 [JBroFuzz]
-1.8
+2.5
 [Fuzzing]
-023 2009-01-23 12-32-04
+299-2010-10-26-14-43-09
 [Comment]
 _
 [URL]
@@ -15,6 +15,10 @@ Accept-Language: en-gb,en;q=0.5
 Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
 
 
-[Payloads]
-001-HTT-PMT,Uppercase,0,3
+
+[Fuzzers]
+001-HTT-PMT,0,3
+
+[Transforms]
+
 [End]
