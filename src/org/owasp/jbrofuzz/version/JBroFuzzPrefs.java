@@ -98,6 +98,81 @@ public class JBroFuzzPrefs {
 		)
 
 	};
+	
+	public static final PrefEntry [] DBSETTINGS = {
+		// 0 proxy enabled: boolean
+		new PrefEntry(
+				"dbsettings.proxy.enabled",
+				" Enable Proxy ",
+				" Tick this box to use a proxy when connection to the database"
+		),
+		// 1, proxy host: string e.g. www.myproxy.com
+		new PrefEntry(
+				"dbsettings.proxy.host",
+				" Proxy Host ",
+				" Specify the host that will be used for your proxy "
+		),
+		// 2, proxy port: int e.g. 8080
+		new PrefEntry(
+				"dbsettings.proxy.port",
+				" Proxy Port ",
+				" Specify the post number [1 - 65535] "
+		),
+		// 3, proxy requires authentication: boolean
+		new PrefEntry(
+				"dbsettings.proxy.req-auth",
+				" Requires Authentication ",
+				" Tick this box if your proxy requires authentication "
+		),
+		// 4, proxy authentication type, basic, ntlm, etc: 
+		// integer 1 is basic
+		new PrefEntry(
+				"dbsettings.proxy.auth-type",
+				" Authentication Type ",
+				" Only Basic Authentication is supported "
+		),
+		// 5 proxy user
+		new PrefEntry(
+				"dbsettings.proxy.user",
+				" Username ",
+				" The username for authentication "
+		),
+		// 6 proxy password
+		new PrefEntry(
+				"dbsettings.proxy.pass",
+				" Password ",
+				" The password for authentication "
+		),
+		
+		// 7 db user name
+		new PrefEntry(
+				"dbsettings.db.user",
+				" Username ",
+				" The user for authentication "
+		),
+		
+		// 8 db user password
+		new PrefEntry(
+			    "dbsettings.db.password", 
+			    " Password ",
+			    " The password for authentication "
+	    ),
+		
+		// 9 db host
+		new PrefEntry(
+				"dbsettings.db.host",
+				" DB Host ",
+				" Specify the database host "
+		),
+		
+		// 10 db port
+		new PrefEntry(
+				"dbsettings.db.port",
+				" Database Port ",
+				" Specify the port number [1 - 65535] "
+		)
+	};
+	
 	/**
 	 * Preferences related to directory locations, creating or 
 	 * deleting empty directories.
