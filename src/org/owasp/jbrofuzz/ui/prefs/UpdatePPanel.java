@@ -249,7 +249,7 @@ public class UpdatePPanel extends AbstractPrefsPanel {
 				}
 				dialog.setApplyEnabled(true);
 
-			}
+		}
 		});
 		
 		proxyReqAuthBox.addActionListener(new ActionListener() {
@@ -303,8 +303,5 @@ public class UpdatePPanel extends AbstractPrefsPanel {
 				JBroFuzz.PREFS.put(JBroFuzzPrefs.UPDATE[6].getId(), passTextField.getText());				
 			}
 		}
-		
-
 	}
-
 }
