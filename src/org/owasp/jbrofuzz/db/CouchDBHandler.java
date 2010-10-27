@@ -2,16 +2,27 @@ package org.owasp.jbrofuzz.db;
 
 import java.io.IOException;
 
-import org.apache.commons.httpclient.HttpConnection;
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
+/**
+ * connector to a couchDB instance.
+ * 
+ * @author daemonmidi@gmail.com
+ * @since version 2.5
+ *
+ */
 public class CouchDBHandler{
 	private String protocol = "";
 	private String host = "";
@@ -79,7 +90,7 @@ public class CouchDBHandler{
 	
 	
 	/**
-	 * http-Put for rest interface to couchDB
+	 * http-GET for rest interface to couchDB
 	 * @author daemonmidi@gmail.com
 	 * @since version 2.6
 	 * @param url
@@ -88,7 +99,7 @@ public class CouchDBHandler{
 	private String sendGet(String url){
 		String responseBody = "";
 		HttpState state = new HttpState();
-		HttpConnection conn = new HttpConnection(getHost(), getPort());
+		org.apache.commons.httpclient.HttpConnection conn =  createConnection();
 		GetMethod method = new GetMethod();
 		try {
 			method.execute(state, conn);
@@ -96,6 +107,9 @@ public class CouchDBHandler{
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		finally{
+			conn.close();
 		}
 	    return responseBody;
 	  }
@@ -114,8 +128,8 @@ public class CouchDBHandler{
 	private String sendPut(String url, String requestBody){
 		String responseBody = "";
 		HttpState state = new HttpState();
-		org.apache.commons.httpclient.HttpConnection conn =  new org.apache.commons.httpclient.HttpConnection(getHost(), getPort());
-	    PutMethod method = new PutMethod(url);
+		org.apache.commons.httpclient.HttpConnection conn =  createConnection();
+		PutMethod method = new PutMethod(url);
 	    method.getParams().setParameter("retryHandler", new DefaultHttpRequestRetryHandler(3, false));
 	    method.setRequestBody(requestBody);
 	   	try {
@@ -125,6 +139,9 @@ public class CouchDBHandler{
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		finally{
+			conn.close();
 		}
 		return responseBody;
 	} 
@@ -142,7 +159,7 @@ public class CouchDBHandler{
 	private String sendDelete(String url){
 		String responseBody = "";
 		HttpState state = new HttpState();
-		org.apache.commons.httpclient.HttpConnection conn =  new org.apache.commons.httpclient.HttpConnection(getHost(), getPort());
+		org.apache.commons.httpclient.HttpConnection conn =  createConnection();
 	    DeleteMethod method = new DeleteMethod(url);
 	    method.getParams().setParameter("retryHandler", new DefaultHttpRequestRetryHandler(3, false));
 	   	try {
@@ -152,6 +169,9 @@ public class CouchDBHandler{
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		finally{
+			conn.close();
 		}
 	    return responseBody;
 	  }
@@ -172,6 +192,42 @@ public class CouchDBHandler{
 		else{
 			return 1;
 		}
+	}
+
+	/**
+	 * proxy integration for connection to couchdb
+	 * @author daemonmidi@gmail.com
+	 * @since version 2.5
+	 * @return HttpConnection
+	 */
+	private org.apache.commons.httpclient.HttpConnection  createConnection(){
+		org.apache.commons.httpclient.HttpConnection connection = null;
+		
+			final boolean proxyEnabled = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DBSETTINGS[0].getId(), false);
+			if(proxyEnabled) {
+				
+				final String proxy = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[1].getId(), "");
+				final int port = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.DBSETTINGS[2].getId(), -1);
+				
+				HostConfiguration hc = new HostConfiguration();
+				hc.setHost(getHost(), getPort());
+				hc.setProxy(proxy, port);
+				connection = new org.apache.commons.httpclient.HttpConnection(hc);
+				
+				// Username:Password, yawn
+				final boolean proxyReqAuth = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.UPDATE[3].getId(), false);
+				if(proxyReqAuth) {
+					final String user = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[5].getId(), "");
+					final String pass = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[6].getId(), "");
+					final String encodedPassword = EncoderHashCore.encode(user + ":" + pass, "Base64");
+					HttpConnectionParams params = new HttpConnectionParams();
+					params.setParameter("Proxy-Authorization", "Basic " + encodedPassword );
+					connection.setParams(params);	
+				}
+			} else {
+				connection = new org.apache.commons.httpclient.HttpConnection(getHost(), getPort());
+			}
+		return connection;
 	}
 	
 	
