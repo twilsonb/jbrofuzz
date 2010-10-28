@@ -136,19 +136,13 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		passTextField.setMargin(new Insets(1, 1, 1, 1));
 		passTextField.setPreferredSize(new Dimension(80, 20));
 
-		final String[] dbTypeArray = { "SQLLite (embedded)", "CouchDB" };
+		final String[] dbTypeArray = { "None", "SQLLite (embedded)", "CouchDB" };		
 		dbTypeBox = new JComboBox(dbTypeArray);
-		dbTypeBox.setToolTipText(JBroFuzzPrefs.DBSETTINGS[4].getTooltip()); // FIXME:
-																			// Q'n'D
-																			// -
-																			// I
-																			// know
-
-		final String dbUserEntry = JBroFuzz.PREFS.get(
-				JBroFuzzPrefs.DBSETTINGS[7].getId(), "");
+		dbTypeBox.setToolTipText(JBroFuzzPrefs.DBSETTINGS[11].getTooltip()); 
+		
+		final String dbUserEntry = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[7].getId(), "");
 		dbUserTextField = new JTextField(dbUserEntry);
-		dbUserTextField
-				.setToolTipText(JBroFuzzPrefs.DBSETTINGS[7].getTooltip());
+		dbUserTextField.setToolTipText(JBroFuzzPrefs.DBSETTINGS[7].getTooltip());
 		dbUserTextField.setFont(new Font("Veranda", Font.PLAIN, 12));
 		dbUserTextField.setMargin(new Insets(1, 1, 1, 1));
 		dbUserTextField.setPreferredSize(new Dimension(80, 20));
@@ -278,7 +272,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 			passTextField.setEnabled(false);
 		}
 
-		if (dbTypeBox.getSelectedIndex() == 0) {
+		if (dbTypeBox.getSelectedIndex() == 0 || dbTypeBox.getSelectedIndex() == 1) {
 			dbUserTextField.setEnabled(false);
 			dbPassTextField.setEnabled(false);
 			dbHostTextField.setEnabled(false);
@@ -298,7 +292,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 
 		dbTypeBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent aEvent1) {
-				if (dbTypeBox.getSelectedIndex() == 0) {
+				if (dbTypeBox.getSelectedIndex() == 0 || dbTypeBox.getSelectedIndex() == 1) {
 					dbUserTextField.setEnabled(false);
 					dbPassTextField.setEnabled(false);
 					dbHostTextField.setEnabled(false);
@@ -390,14 +384,27 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		add(userPassPanel);
 		add(Box.createRigidArea(V_SPACE));
 		add(dbTypePanel);
-		add(Box.createRigidArea(new Dimension(0, 300)));
+		add(Box.createRigidArea(new Dimension(20, 300)));
+		
+		
+		// select appropriate index.
+		if (!JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId() , "").equals("")){
+			for (int i = 0; i < dbTypeArray.length; i++){
+				if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(),"").toLowerCase().trim().equals(dbTypeArray[i].toLowerCase().trim())){
+					dbTypeBox.setSelectedIndex(i);
+					dbTypeBox.updateUI();
+					break; 
+				}
+			}
+		}
+
 	}
 
 	@Override
 	protected void apply() {
 		JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DBSETTINGS[0].getId(),
 				proxyEnabledBox.isSelected());
-		if (dbTypeBox.getSelectedIndex() == 0) {
+		if (dbTypeBox.getSelectedIndex() == 0 || dbTypeBox.getSelectedIndex() == 1) {
 			proxyEnabledBox.setSelected(false);
 			proxyReqAuthBox.setSelected(false);
 			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[1].getId(), "");
@@ -436,5 +443,6 @@ public class DatabasePanel extends AbstractPrefsPanel {
 				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[10].getId(), dbPortTextField.getText());
 			}
 		}
+		JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[11].getId(), dbTypeBox.getSelectedItem().toString());
 	}
 }
