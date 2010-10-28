@@ -170,7 +170,14 @@ public class JBroFuzzPrefs {
 				"dbsettings.db.port",
 				" Database Port ",
 				" Specify the port number [1 - 65535] "
-		)
+		),
+		
+		// 11 db type
+		new PrefEntry(
+				"dbsettings.db.type",
+				" Database Type ",
+				" Specify which kind of DB to use "
+		) 
 	};
 	
 	/**
