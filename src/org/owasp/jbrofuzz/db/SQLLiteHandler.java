@@ -25,14 +25,15 @@ public class SQLLiteHandler {
 		Connection conn = DriverManager.getConnection("jdbc:sqlite:test.db");
 		Statement stat = conn.createStatement();
 		stat.executeUpdate("drop table if exists session;");
-		stat.executeUpdate("drop table if exists connection");
-		stat.executeUpdate("drop table if exists message");
-		stat.executeUpdate("drop table if exists response");
+		stat.executeUpdate("drop table if exists connection;");
+		stat.executeUpdate("drop table if exists message;");
+		stat.executeUpdate("drop table if exists response;");
 
 		stat.executeUpdate("create table session (sessionId, timestamp, jVersion, Os);");
-		stat.executeUpdate("create table connection (connectionId, sessionId, urlString, messageId);");
-		stat.executeUpdate("create table message (messageId, conectionId, textRequest, encoding, payload, start, end);");
+		stat.executeUpdate("create table connection (connectionId, sessionId, urlString);");
+		stat.executeUpdate("create table message (messageId, connectionId, textRequest, encoding, payload, start, end);");
 		stat.executeUpdate("create table response (responseId, connectionId, statusCode, responseHeader, responseBody);");
+		conn.close();
 	}
 
 	/**
@@ -73,16 +74,15 @@ public class SQLLiteHandler {
 										);	
 		}
 		
-		returnValue = insertOrUpdateSessionTable(	conn, 
+		returnValue = insertOrUpdateSessionTable(conn, 
 									session.getSessionId(),
-									session.getConnectionDTO().getConnectionId(),
 									session.getTimestamp(), 
 									session.getJVersion(), 
 									session.getOs()
 									);
 		
 		ConnectionDTO connection = session.getConnectionDTO();
-		returnValue = insertOrUpdateConnectionTable(	conn, 
+		returnValue = insertOrUpdateConnectionTable(conn, 
 										connection.getConnectionId(), 
 										connection.getSessionId(), 
 										connection.getUrlString()
@@ -112,7 +112,7 @@ public class SQLLiteHandler {
 		int returnValue = 0;
 
 		try {
-			returnValue = insertOrUpdateSessionTable(conn, sessionId, connectionId, timestamp, jVersion, Os);
+			returnValue = insertOrUpdateSessionTable(conn, sessionId, timestamp, jVersion, Os);
 			returnValue = insertOrUpdateConnectionTable(conn, connectionId, sessionId, urlString);
 			returnValue = insertOrUpdateMessageTable(conn, messageId, connectionId, textRequest, encoding, payload, start, end);
 			returnValue = insertOrUpdateReponseTable(conn, responseId, connectionId, statusCode, responseHeader, responseBody);
@@ -142,12 +142,12 @@ public class SQLLiteHandler {
 	 * @return returnValue
 	 * @throws SQLException
 	 */
-	private int insertOrUpdateSessionTable(Connection conn, long sessionId, long connectionId, String timestamp, String jVersion, String Os) throws SQLException{
+	private int insertOrUpdateSessionTable(Connection conn, long sessionId, String timestamp, String jVersion, String Os) throws SQLException{
 		int returnValue = 1;
 		String sqlString1 = "";
-		if (sessionId > 0) {
+		if (sessionId >= 0) {
 			PreparedStatement st0 = conn
-					.prepareStatement("select count from session where sessionId = ?");
+					.prepareStatement("select count (*) from session where sessionId = ?");
 			st0.setLong(1, sessionId);
 			ResultSet rs0 = st0.executeQuery();
 			while (rs0.next()) {
@@ -163,7 +163,7 @@ public class SQLLiteHandler {
 					returnValue = st1.executeUpdate();
 				} else {
 					// new row
-					sqlString1 = "insert into session (sessionId, timestamp, jVersion, Os) value(?,?,?,?);";
+					sqlString1 = "insert into session (sessionId, timestamp, jVersion, Os) values (?,?,?,?);";
 					PreparedStatement st1 = conn.prepareStatement(sqlString1);
 					st1.setLong(1, sessionId); 
 					st1.setString(2, timestamp);
@@ -192,8 +192,8 @@ public class SQLLiteHandler {
 	private int insertOrUpdateConnectionTable(Connection conn, long connectionId, long sessionId, String urlString) throws SQLException{
 		int returnValue = 1;
 		String sqlString1 = "";
-		if (sessionId > 0) {
-			PreparedStatement st0 = conn.prepareStatement("select count from connection where connectionId = ?");
+		if (sessionId >= 0) {
+			PreparedStatement st0 = conn.prepareStatement("select count(*) from connection where connectionId = ?");
 			st0.setLong(1, sessionId);
 			ResultSet rs0 = st0.executeQuery();
 			while (rs0.next()) {
@@ -208,7 +208,7 @@ public class SQLLiteHandler {
 					returnValue = st1.executeUpdate();
 				} else {
 					// new row
-					sqlString1 = "insert into connection (connectionId, sessionId, urlString) value(?,?,?);";
+					sqlString1 = "insert into connection (connectionId, sessionId, urlString) values (?,?,?);";
 					PreparedStatement st1 = conn.prepareStatement(sqlString1);
 					st1.setLong(1, connectionId); 
 					st1.setLong(2, sessionId);
@@ -238,8 +238,8 @@ public class SQLLiteHandler {
 											String encoding, String payload, int start, int end) throws SQLException{
 		int returnValue = 1;
 		String sqlString1 = "";
-		if (messageId > 0) {
-			PreparedStatement st0 = conn.prepareStatement("select count from message where messageId = ?");
+		if (messageId >= 0) {
+			PreparedStatement st0 = conn.prepareStatement("select count(*) from message where messageId = ?");
 			st0.setLong(1, messageId);
 			ResultSet rs0 = st0.executeQuery();
 			while (rs0.next()) {
@@ -258,14 +258,15 @@ public class SQLLiteHandler {
 					returnValue = st1.executeUpdate();
 				} else {
 					// new row
-					sqlString1 = "insert into message (messageId, connectionId, textRequest, encoding, payload, start, end) value(?,?,?,?,?,?,?);";
+					sqlString1 = "insert into message (messageId, connectionId, textRequest, encoding, payload, start, end) values (?,?,?,?,?,?,?);";
 					PreparedStatement st1 = conn.prepareStatement(sqlString1);
-					st1.setLong(1, messageId); 
-					st1.setString(2, textRequest);
-					st1.setString(3, encoding);
-					st1.setString(4, payload);
-					st1.setInt(5, start);
-					st1.setInt(6,end);
+					st1.setLong(1, messageId);
+					st1.setLong(2, connectionId);
+					st1.setString(3, textRequest);
+					st1.setString(4, encoding);
+					st1.setString(5, payload);
+					st1.setInt(6, start);
+					st1.setInt(7,end);
 					returnValue = st1.executeUpdate();
 				}
 			}
@@ -288,8 +289,8 @@ public class SQLLiteHandler {
 	private int insertOrUpdateReponseTable(Connection conn, long responseId, long connectionId, int statusCode, String responseHeader, String responseBody) throws SQLException{
 		int returnValue = 1;
 		String sqlString1 = "";
-		if (responseId > 0) {
-			PreparedStatement st0 = conn.prepareStatement("select count from response where responseId = ?");
+		if (responseId >= 0) {
+			PreparedStatement st0 = conn.prepareStatement("select count(*) from response where responseId = ?");
 			st0.setLong(1, responseId);
 			ResultSet rs0 = st0.executeQuery();
 			while (rs0.next()) {
@@ -306,7 +307,7 @@ public class SQLLiteHandler {
 					returnValue = st1.executeUpdate();
 				} else {
 					// new row
-					sqlString1 = "insert into response (responseId, connectionId, statusCode, responseHeader, responseBody) value(?,?,?,?,?);";
+					sqlString1 = "insert into response (responseId, connectionId, statusCode, responseHeader, responseBody) values (?,?,?,?,?);";
 					PreparedStatement st1 = conn.prepareStatement(sqlString1);
 					st1.setLong(1, responseId); 
 					st1.setLong(2, connectionId);
@@ -327,11 +328,10 @@ public class SQLLiteHandler {
 	 * @return int; > 0 -> ok ; < 0 -> failed
 	 */
 	public SessionDTO read(Connection conn, long sessionId) {
-		String sql1 = "select count from session where sessionId = ?";
+		String sql1 = "select count(*) from session where sessionId = ?;";
 		SessionDTO session = new SessionDTO();
-		
 		try {
-			PreparedStatement st1 = conn.prepareStatement(sql1);
+			PreparedStatement st1 = conn.prepareStatement("select count(*) from session where sessionId = ?;");
 			ResultSet rs1 = st1.executeQuery();
 			while (rs1.next()){
 				if (rs1.getInt(1) > 1){
@@ -341,7 +341,7 @@ public class SQLLiteHandler {
 					session = readSession(conn, sessionId);
 				}
 			}
-			String sql2 = "Select count from connection where sessionId = ?";
+			String sql2 = "Select count(*) from connection where sessionId = ?";
 			PreparedStatement st2 = conn.prepareStatement(sql2);
 			st2.setLong(1, sessionId);
 			ResultSet rs2 = st2.executeQuery();
@@ -391,6 +391,7 @@ public class SQLLiteHandler {
 			session.setJVersion(rs1.getString(2));
 			session.setOs(rs1.getString(3));
 		}
+		session.setConnectionDTO(readConnection(conn, sessionId));
 		return session;
 	}
 	
@@ -405,7 +406,7 @@ public class SQLLiteHandler {
 	 */
 	private ConnectionDTO readConnection(Connection conn, long sessionId) throws SQLException {
 		ConnectionDTO connection = new ConnectionDTO();
-		String sql1 = "select connectionId, urlString where sessionId = ?";
+		String sql1 = "select connectionId, urlString from connection where sessionId = ?";
 		PreparedStatement st1 = conn.prepareStatement(sql1);
 		st1.setLong(1, sessionId);
 		ResultSet rs1 = st1.executeQuery();
@@ -437,6 +438,7 @@ public class SQLLiteHandler {
 			MessageDTO message = new MessageDTO();
 			String sql2 = "Select textRequest, encoding, payload, start, end from message where messageId = ?";
 			PreparedStatement st2 = conn.prepareStatement(sql2);
+			st2.setLong(1, rs1.getLong(1));
 			ResultSet rs2 = st2.executeQuery();
 			while (rs2.next()){
 				message.setConnectionId(connectionId);
@@ -450,7 +452,12 @@ public class SQLLiteHandler {
 			messages.add(message);
 		}
 		
-		return (MessageDTO[]) messages.toArray();
+		MessageDTO[] retVal = new MessageDTO[messages.size()];
+		for (int i = 0; i < messages.size(); i++){
+			retVal[i] = messages.get(i);
+		}
+		
+		return retVal;
 	}
 	
 	/**
@@ -473,6 +480,7 @@ public class SQLLiteHandler {
 			ResponseDTO response = new ResponseDTO();
 			String sql2 = "Select statusCode, responseHeader, responseBody from response where responseId = ?";
 			PreparedStatement st2 = conn.prepareStatement(sql2);
+			st2.setLong(1, rs1.getLong(1));
 			ResultSet rs2 = st2.executeQuery();
 			while (rs2.next()){
 				response.setConnectionId(connectionId);
@@ -483,7 +491,10 @@ public class SQLLiteHandler {
 			}
 			responses.add(response);
 		}
-		
-		return (ResponseDTO[]) responses.toArray();
+		ResponseDTO[] retVal = new ResponseDTO[responses.size()];
+		for (int i = 0; i < responses.size(); i++){
+			retVal[i] = responses.get(i);
+		}
+		return retVal;
 	}
 }

@@ -3,10 +3,12 @@ package org.owasp.jbrofuzz.db;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
 import org.owasp.jbrofuzz.db.dto.MessageDTO;
 import org.owasp.jbrofuzz.db.dto.ResponseDTO;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 
 public class CouchDBMapper {
 
@@ -24,8 +26,8 @@ public class CouchDBMapper {
 			//SessioDTO
 			if (couch.has("jVersion")) session.setJVersion(couch.getString("jVersion"));
 			if (couch.has("os")) session.setOs(couch.getString("os"));
-			if (couch.has("sessionId")) session.setSessionId(Long.valueOf(couch.getString("sessionid")));
-			if (couch.has("timestamp")) session.setTimestamp(couch.getString("timestamp"));
+			if (couch.has("sessionId")) session.setSessionId(Long.valueOf(couch.getString("sessionId")));
+			if (couch.has("timeStamp")) session.setTimestamp(couch.getString("timeStamp"));
 			
 			//connectionDTO
 			if (couch.has("connection")){
@@ -68,10 +70,11 @@ public class CouchDBMapper {
 					if (inhalt.has("connectionId")) response.setConnectionId(Long.valueOf(inhalt.getString("connectionId")));
 					if (inhalt.has("responseBody")) response.setResponseBody(inhalt.getString("responseBody"));
 					if (inhalt.has("responseHeader")) response.setResponseHeader(inhalt.getString("responseHeader"));
-					if (inhalt.has("responesId")) response.setResponseId(Long.valueOf(inhalt.getString("responseId")));
+					if (inhalt.has("responseId")) response.setResponseId(Long.valueOf(inhalt.getString("responseId")));
 					if (inhalt.has("statusCode")) response.setStatusCode(Integer.valueOf(inhalt.getString("statusCode")));
 					respAr[i] = response;
 				}
+				session.setResponse(respAr);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -79,6 +82,7 @@ public class CouchDBMapper {
 		return session;
 	}
 
+	
 	/**
 	 * maps content from SessionDTO into JSONObject for CouchDB
 	 * 
@@ -90,19 +94,19 @@ public class CouchDBMapper {
 	public JSONObject toCouch(SessionDTO session) {
 		JSONObject couch = new JSONObject();
 		try {
-			couch.append("jVersion", session.getJVersion());
-			couch.append("os", session.getOs());
-			couch.append("sessionId", String.valueOf(session.getSessionId()));
-			couch.append("timeStamp", session.getTimestamp());
+			couch.accumulate("jVersion", session.getJVersion());
+			couch.accumulate("os", session.getOs());
+			couch.accumulate("sessionId", String.valueOf(session.getSessionId()));
+			couch.accumulate("timeStamp", session.getTimestamp());
 			
 		//connectionDTO
 			ConnectionDTO conn = new ConnectionDTO();
 			conn = session.getConnectionDTO();
 			JSONObject connection = new JSONObject();
-			connection.append("connectionId" ,conn.getConnectionId());
-			connection.append("sessionId", conn.getSessionId());
-			connection.append("urlString", conn.getUrlString());
-			couch.append("connection", connection);
+			connection.accumulate("connectionId" ,conn.getConnectionId());
+			connection.accumulate("sessionId", conn.getSessionId());
+			connection.accumulate("urlString", conn.getUrlString());
+			couch.accumulate("connection", connection);
 			
 		//messageDTO
 			int laenge = session.getMessage().length;
@@ -112,16 +116,16 @@ public class CouchDBMapper {
 				JSONObject mess = new JSONObject();
 				MessageDTO nachricht = new MessageDTO();
 				nachricht = message[i];
-				mess.append("connectionId", nachricht.getConnectionId());
-				mess.append("encoding", nachricht.getEncoding());
-				mess.append("end", String.valueOf(nachricht.getEnd()));
-				mess.append("messageId", String.valueOf(nachricht.getMessageId()));
-				mess.append("payload", nachricht.getPayload());
-				mess.append("start", String.valueOf(nachricht.getStart()));
-				mess.append("textRequest", nachricht.getTextRequest());
+				mess.accumulate("connectionId", nachricht.getConnectionId());
+				mess.accumulate("encoding", nachricht.getEncoding());
+				mess.accumulate("end", String.valueOf(nachricht.getEnd()));
+				mess.accumulate("messageId", String.valueOf(nachricht.getMessageId()));
+				mess.accumulate("payload", nachricht.getPayload());
+				mess.accumulate("start", String.valueOf(nachricht.getStart()));
+				mess.accumulate("textRequest", nachricht.getTextRequest());
 				messAr.put(mess);
 			}
-			couch.append("message", messAr);
+			couch.put("message", messAr);
 			
 		//responseDTO
 			int laeng = session.getResponse().length;
@@ -131,14 +135,14 @@ public class CouchDBMapper {
 				JSONObject resp = new JSONObject();
 				ResponseDTO nachricht = new ResponseDTO();
 				nachricht = response[i];
-				resp.append("connectionId", String.valueOf(nachricht.getConnectionId()));
-				resp.append("responseBody", nachricht.getResponseBody());
-				resp.append("responseHeader", nachricht.getResponseHeader());
-				resp.append("responseId", String.valueOf(nachricht.getResponseId()));
-				resp.append("statusCode", String.valueOf(nachricht.getStatusCode()));
+				resp.accumulate("connectionId", String.valueOf(nachricht.getConnectionId()));
+				resp.accumulate("responseBody", nachricht.getResponseBody());
+				resp.accumulate("responseHeader", nachricht.getResponseHeader());
+				resp.accumulate("responseId", String.valueOf(nachricht.getResponseId()));
+				resp.accumulate("statusCode", String.valueOf(nachricht.getStatusCode()));
 				responseAr.put(resp);
 			}
-			couch.append("response", responseAr);
+			couch.put("response", responseAr);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
