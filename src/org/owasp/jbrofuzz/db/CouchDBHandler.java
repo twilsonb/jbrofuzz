@@ -3,6 +3,7 @@ package org.owasp.jbrofuzz.db;
 import java.io.IOException;
 
 import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.DeleteMethod;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
+
 
 /**
  * connector to a couchDB instance.
@@ -98,18 +100,19 @@ public class CouchDBHandler{
 	 */
 	private String sendGet(String url){
 		String responseBody = "";
-		HttpState state = new HttpState();
-		org.apache.commons.httpclient.HttpConnection conn =  createConnection();
-		GetMethod method = new GetMethod();
+		org.apache.commons.httpclient.HttpClient client = new HttpClient();
+		client.getParams().setParameter("http.useragent", "jbrofuzz");
+		GetMethod method = new GetMethod(url);
 		try {
-			method.execute(state, conn);
+			int returnCode = client.executeMethod(method);
+			responseBody = method.getResponseBodyAsString();
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		finally{
-			conn.close();
+			client.getHttpConnectionManager().closeIdleConnections(0);
 		}
 	    return responseBody;
 	  }
@@ -121,27 +124,24 @@ public class CouchDBHandler{
 	 * @since version 2.5
 	 * @param url
 	 * @return string responesBody
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
 	 */
-	@SuppressWarnings("deprecation")
 	private String sendPut(String url, String requestBody){
 		String responseBody = "";
-		HttpState state = new HttpState();
-		org.apache.commons.httpclient.HttpConnection conn =  createConnection();
+		org.apache.commons.httpclient.HttpClient client = new HttpClient();
+		client.getParams().setParameter("http.useragent", "jbrofuzz");
+		
 		PutMethod method = new PutMethod(url);
 	    method.getParams().setParameter("retryHandler", new DefaultHttpRequestRetryHandler(3, false));
-	    method.setRequestBody(requestBody);
+	    if (requestBody.length() > 0 ) method.setRequestBody(requestBody);
 	   	try {
-			method.execute(state, conn);
-			responseBody = method.getResponseBodyAsString();
+			int returnCode = client.executeMethod(method);
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		finally{
-			conn.close();
+			client.getHttpConnectionManager().closeIdleConnections(0);
 		}
 		return responseBody;
 	} 
@@ -158,12 +158,12 @@ public class CouchDBHandler{
 	 */
 	private String sendDelete(String url){
 		String responseBody = "";
-		HttpState state = new HttpState();
-		org.apache.commons.httpclient.HttpConnection conn =  createConnection();
 	    DeleteMethod method = new DeleteMethod(url);
+		org.apache.commons.httpclient.HttpClient client = new HttpClient();
+	    client.getParams().setParameter("http.useragent", "jbrofuzz");
 	    method.getParams().setParameter("retryHandler", new DefaultHttpRequestRetryHandler(3, false));
 	   	try {
-			method.execute(state, conn);
+			client.executeMethod(method);
 			responseBody = method.getResponseBodyAsString();
 		} catch (HttpException e) {
 			e.printStackTrace();
@@ -171,7 +171,7 @@ public class CouchDBHandler{
 			e.printStackTrace();
 		}
 		finally{
-			conn.close();
+			client.getHttpConnectionManager().closeIdleConnections(0);
 		}
 	    return responseBody;
 	  }
@@ -273,25 +273,6 @@ public class CouchDBHandler{
 	
 	
 	/**
-	 * create initial document to store data in
-	 * @author daemonmidi@gmail.com
-	 * @since version 2.5
-	 * @param documentId
-	 * @return int | > 0 OK | < 0 failed
-	 */
-	public int createDocument(String dbName, String documentId){
-		int returnValue = 0;
-		String response = "";
-		if (evaluateConfiguration() > 0){
-			String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbName + "/" + documentId;
-			response = sendPut(url, "");
-		}
-		if (response.length() == 0 || response.toLowerCase().contains("error")) returnValue = -1;
-		return returnValue;
-	}
-
-	
-	/**
 	 * @author daemonmidi@gmail.com
 	 * @since version 2.5
 	 * @param dbName
@@ -301,9 +282,12 @@ public class CouchDBHandler{
 	public int removeDocument(String dbName, String documentId){
 		int returnCode = 0;
 		String response ="";
+		String body = "";
+		JSONObject document = new JSONObject();
 		if (evaluateConfiguration() > 0){
 			String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbName + "/" + documentId;
 			response = sendDelete(url);
+			System.out.println("repsonse: " + response);
 		}
 		if (response.toLowerCase().contains("error")) returnCode = -1;
 		return returnCode;
@@ -334,14 +318,16 @@ public class CouchDBHandler{
 	 * @param documentId
 	 * @return response from DB as String
 	 */
-	public String updateDocument(String dbName, String documentId, JSONObject document){
+	public String createOrUpdateDocument(String dbName, String documentId, JSONObject document){
 		String response = "";
 		String body = "";
+		String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbName + "/" + documentId;
 		if (evaluateConfiguration() > 0){
 			String revision = getDocumentRevision(dbName, documentId);
-			String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbName;
 			try {
-				document.append("_rev", revision);
+				if (revision.length() > 0){
+					document.append("_rev", revision);
+				}
 				body = document.toString(); 
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -364,11 +350,11 @@ public class CouchDBHandler{
 		String response = "";
 		String revId = "";
 		if (evaluateConfiguration() > 0){
-			String url = getProtocol() + "://" + getHost() + ":" + getPort() + dbName + "/" + documentId; 
+			String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbName + "/" + documentId; 
 			response = sendGet(url);
 			try {
 				JSONObject jObject = new JSONObject(response);
-				if (jObject.get("_rev") != null){
+				if (jObject.has("_rev")){
 					revId = jObject.getString("_rev");
 				}
 			} catch (JSONException e) {
