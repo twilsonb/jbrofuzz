@@ -33,52 +33,57 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
+
 import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
+import javax.swing.text.Highlighter;
 import javax.swing.text.StyledEditorKit;
+
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
+import org.owasp.jbrofuzz.fuzz.io.FuzzFileUtils;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersTable;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersTableList;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersTableModel;
-import org.owasp.jbrofuzz.fuzz.ui.FuzzerModelListener;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzSplitPane;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
 import org.owasp.jbrofuzz.fuzz.ui.OutputTable;
 import org.owasp.jbrofuzz.fuzz.ui.OutputTableModel;
 import org.owasp.jbrofuzz.fuzz.ui.RightClickPopups;
 import org.owasp.jbrofuzz.fuzz.ui.WireTextArea;
+import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.payloads.PayloadsDialog;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.util.TextHighlighter;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
-import com.Ostermiller.util.Browser;
 
 /**
  * <p>
@@ -130,13 +135,13 @@ public class FuzzingPanel extends AbstractPanel {
 	private JTextPane requestPane;
 
 	// The JTable were results are outputted
-	private final OutputTable mOutputTable;
+	private OutputTable mOutputTable;
 
 	// The JTableRowSorter
-	private final TableRowSorter<OutputTableModel> outputSorter;
-	
+	private TableRowSorter<OutputTableModel> outputSorter;
+
 	// And the table model that goes with it
-	private final OutputTableModel outputTableModel;
+	private OutputTableModel outputTableModel;
 
 	// The JTable of the generator
 	private final FuzzerTable fuzzersTable;
@@ -150,13 +155,13 @@ public class FuzzingPanel extends AbstractPanel {
 	// The "On The Wire" console
 	private final WireTextArea mWireTextArea;
 
-	private final JSplitPane mainPane, bottomPane;
+	private final FuzzSplitPane mainPane, bottomPane;
 
 	// the new main tabbed pane to contain the 3 tabs: input, output and on the wire
 	private final JTabbedPane fuzzerWindowPane;
-	
-		private boolean stopped;
-	
+
+	private boolean stopped;
+
 	// the selected payload 
 	private String payload;
 
@@ -173,10 +178,21 @@ public class FuzzingPanel extends AbstractPanel {
 	private EncodersToolBar controlPanel;
 
 	private String encodedPayload;
-	
-	
-	/**
-	 * This constructor is used for the " Fuzzing " panel that resides under the
+
+	private JTextPane outputRequestPane;
+
+	private JTextPane outputResponsePane;
+
+	private int lastIndex;
+
+	private Color HILIT_COLOR  = Color.LIGHT_GRAY;
+
+	private JCheckBox csxReq;
+
+	private JCheckBox csxRes;
+
+
+	/* This constructor is used for the " Fuzzing " panel that resides under the
 	 * FrameWindow, within the corresponding tabbed panel.
 	 * 
 	 * @param mWindow
@@ -190,10 +206,6 @@ public class FuzzingPanel extends AbstractPanel {
 		payload = "";
 		stopped = true;
 
-	
-		
-		
-		
 		// Set the enabled options: Start, Stop, Pause, Add, Remove
 		setOptionsAvailable(true, false, false, true, false);
 
@@ -202,8 +214,8 @@ public class FuzzingPanel extends AbstractPanel {
 		targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Target "), BorderFactory.createEmptyBorder(
 						1, 1, 1, 1)));
-		
-		
+
+
 		urlField = new JTextField();
 		urlField.setEditable(true);
 		urlField.setVisible(true);
@@ -213,55 +225,15 @@ public class FuzzingPanel extends AbstractPanel {
 		urlField.setBackground(Color.WHITE);
 		urlField.setForeground(Color.BLACK);
 
+
+		requestPane = createEditablePane();
+
 		// Right click: Cut, Copy, Paste, Select All
 		AbstractPanel.popupText(urlField, true, true, true, true);
 
 		targetPanel.add(urlField);
 
-		// The request panel
-		final JPanel requestPanel = new JPanel(new BorderLayout());
-		requestPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(" Request "), BorderFactory
-				.createEmptyBorder(5, 5, 5, 5)));
 
-		// Get the preferences for wrapping lines of text
-		final boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[2].getId(), false);
-
-		if (wrapText) {
-			requestPane = new JTextPane();
-		} else {
-			requestPane = new NonWrappingTextPane();
-		}
-
-		requestPane.putClientProperty("charset", "UTF-8");
-		requestPane.setEditable(true);
-		requestPane.setVisible(true);
-		requestPane.setFont(new Font("Verdana", Font.PLAIN, 12));
-
-		requestPane.setMargin(new Insets(1, 1, 1, 1));
-		requestPane.setBackground(Color.WHITE);
-		requestPane.setForeground(Color.BLACK);
-
-		// Set the editor kit responsible for highlighting
-		requestPane.setEditorKit(new StyledEditorKit() {
-
-			private static final long serialVersionUID = -6085642347022880064L;
-
-			@Override
-			public Document createDefaultDocument() {
-				return new TextHighlighter();
-			}
-
-		});
-
-		// Right click: Cut, Copy, Paste, Select All
-		RightClickPopups.rightClickRequestTextComponent(this, requestPane);
-
-		// The message scroll pane where the message pane sits
-		final JScrollPane requestScrollPane = new JScrollPane(requestPane,
-				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		requestPanel.add(requestScrollPane);
 
 		// The generator panel
 		final JPanel generatorPanel = new JPanel(new BorderLayout());
@@ -270,24 +242,23 @@ public class FuzzingPanel extends AbstractPanel {
 				BorderFactory.createTitledBorder(" Added Fuzzers Table"),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
-		
+
 		encoderPanel = new JPanel(new BorderLayout());
-		
+
 		encoderPanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(" Added Fuzzer Transforms (rules applied top first) "),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-		
+
 		// The fuzzing table and model
 		mFuzzTableModel = new FuzzersTableModel();
 		fuzzersTable = new FuzzerTable(mFuzzTableModel);
-		fuzzersTable.getModel().addTableModelListener(
-				new FuzzerModelListener(this, fuzzersTable));
-		// fuzzersTable.setFont(new Font("Monospaced", Font.PLAIN, 12));
+
 		RightClickPopups.rightClickFuzzersTable(this, fuzzersTable);
-		fuzzersTable.addMouseListener(new MouseAdapter() {
+
+		fuzzersTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
 			@Override
-			public void mouseClicked(final MouseEvent mEvent) {
-				
+			public void valueChanged(ListSelectionEvent e) {
 				final int fRow = fuzzersTable.getSelectedRow();
 
 				final int sFuzz = ((Integer) fuzzersTable.getModel().getValueAt(fRow, 1)).intValue();
@@ -301,7 +272,7 @@ public class FuzzingPanel extends AbstractPanel {
 				}
 				requestPane.setSelectionStart(sFuzz);
 				requestPane.setSelectionEnd(eFuzz);
-				
+
 			}
 		});
 
@@ -329,11 +300,196 @@ public class FuzzingPanel extends AbstractPanel {
 		onTheWirePanel.setLayout(new BorderLayout());
 		onTheWirePanel.add(consoleScrollPane, BorderLayout.CENTER);
 
+
+
+
+
+
+
+
+		// Set the scroll areas
+		topPanel = new JPanel(new BorderLayout());
+		topPanel.add(targetPanel, BorderLayout.PAGE_START);
+		topPanel.add(createScrollingPanel(" Request ", requestPane), BorderLayout.CENTER);
+
+
+
+		// create the outlining tabbed pane
+		fuzzerWindowPane = new JTabbedPane();
+
+
+
+		bottomPane = new FuzzSplitPane(FuzzSplitPane.HORIZONTAL_SPLIT,FuzzSplitPane.FUZZ_BOTTOM);
+
+
+		bottomPane.setLeftComponent(generatorPanel);
+		bottomPane.setRightComponent(encoderPanel);
+
+
+		createEncodingPane();
+
+		mainPane = new FuzzSplitPane(FuzzSplitPane.VERTICAL_SPLIT,FuzzSplitPane.FUZZ_MAIN);
+
+		mainPane.setOneTouchExpandable(false);
+		mainPane.setTopComponent(topPanel);
+		mainPane.setBottomComponent(bottomPane);
+
+
+		// Allow for all areas to be resized to even not be seen
+		topPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		bottomPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+
+
+		//mainPane.setDividerLocation(JBroFuzz.PREFS.getInt(JBroFuzzPrefs.UI[5].getId(), 262));
+
+
+		// add the respective panes/panels to the tabbed pane
+		fuzzerWindowPane.addTab("Input",mainPane);
+		fuzzerWindowPane.addTab("Output", createOutputPanel());
+		fuzzerWindowPane.addTab("On the wire", onTheWirePanel);
+
+		FuzzingPanel.this.add(fuzzerWindowPane, BorderLayout.CENTER);
+
+		// Display the last displayed url/request
+		this.setTextURL(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_URL, ""));
+		this.setTextRequest(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_REQUEST, ""));
+
+		fuzzersTableSelectionListen();
+
+	}
+
+	private JPanel createScrollingPanel(String title, JTextPane textPane){
+
+		// The request panel
+		final JPanel panel = new JPanel(new BorderLayout());
+		// The message scroll pane where the message pane sits
+		final JScrollPane scrollPane = new JScrollPane(textPane,
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		panel.add(scrollPane);
+		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createTitledBorder(title), BorderFactory
+				.createEmptyBorder(5, 5, 5, 5)));
+
+		return panel;
+
+	}
+
+
+	private JTextPane createEditablePane(){
+
+
+		JTextPane textPane = new JTextPane();
+
+		// Get the preferences for wrapping lines of text
+		final boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[2].getId(), false);
+
+
+		if (wrapText) {
+			textPane = new JTextPane();
+		} else {
+			textPane = new NonWrappingTextPane();
+		}
+
+
+		textPane.putClientProperty("charset", "UTF-8");
+		textPane.setEditable(true);
+		textPane.setVisible(true);
+		textPane.setFont(new Font("Verdana", Font.PLAIN, 12));
+
+		textPane.setMargin(new Insets(1, 1, 1, 1));
+		textPane.setBackground(Color.WHITE);
+		textPane.setForeground(Color.BLACK);
+
+		// Set the editor kit responsible for highlighting
+		textPane.setEditorKit(new StyledEditorKit() {
+
+			private static final long serialVersionUID = -6085642347022880064L;
+
+			@Override
+			public Document createDefaultDocument() {
+				return new TextHighlighter();
+			}
+
+		});
+
+		// Right click: Cut, Copy, Paste, Select All
+		RightClickPopups.rightClickRequestTextComponent(this, textPane);
+
+		return textPane;
+	}
+
+	private JTextPane createSimplePane(){
+		JTextPane textPane = new JTextPane();
+		textPane.setMargin(new Insets(1, 1, 1, 1));
+		textPane.setBackground(Color.WHITE);
+		textPane.setForeground(Color.BLACK);
+		return textPane;
+
+	}
+	
+	private void outputSearch(JTextPane toSearch, JTextField entry, boolean ignoreCase) {
+		Highlighter hilit = new DefaultHighlighter();
+		toSearch.setHighlighter(hilit);
+		Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(HILIT_COLOR);
+
+		
+		final String s = entry.getText();
+		
+
+		try {
+			final String content = toSearch.getDocument().getText(0, toSearch.getDocument().getLength());
+			
+			int index = -1;
+			if(ignoreCase){
+				index = content.toLowerCase().indexOf(s.toLowerCase(), 0);
+			}else{
+				index = content.indexOf(s, 0);
+			}
+		
+			
+			if (lastIndex != 0 && lastIndex >= index){
+				
+				if(ignoreCase){
+					final int tempIndex = content.toLowerCase().indexOf(s.toLowerCase(), lastIndex +1);
+					index = tempIndex;
+				}else{
+					final int tempIndex = content.indexOf(s, lastIndex +1);
+					index = tempIndex;
+				}
+
+			}
+			
+			if (index >= 0) {   // match found
+				final int end = index + s.length();
+				hilit.addHighlight(index, end, painter);
+				toSearch.setCaretPosition(index);
+				lastIndex = index;
+			} else if (lastIndex > 0){
+				lastIndex = 0;
+			}
+			else {
+			}
+
+		} catch (final BadLocationException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+
+	private JPanel createOutputPanel(){
+		// the output split pane model
+
+		final FuzzSplitPane outputMainPane = new FuzzSplitPane(FuzzSplitPane.VERTICAL_SPLIT,FuzzSplitPane.OUTPUT_MAIN);
+		final FuzzSplitPane outputBottomPane = new FuzzSplitPane(FuzzSplitPane.HORIZONTAL_SPLIT,FuzzSplitPane.OUTPUT_BOTTOM);
+
+
 		// The output panel
-		final JPanel outputPanel = new JPanel(new BorderLayout());
+		final JPanel outputTablePanel = new JPanel(new BorderLayout());
 
 		// Update the border of the output panel
-		outputPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+		outputTablePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
 				.createTitledBorder(" Output "),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
@@ -341,110 +497,132 @@ public class FuzzingPanel extends AbstractPanel {
 		mOutputTable = new OutputTable(outputTableModel);
 		outputSorter = new TableRowSorter<OutputTableModel>(outputTableModel);
 		mOutputTable.setRowSorter(outputSorter);
-		
-		RightClickPopups.rightClickOutputTable(this, mOutputTable);
-
-		mOutputTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(final MouseEvent mEvent) {
-				if (mEvent.getClickCount() == 2) {
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-
-							int cRow = mOutputTable.getSelectedRow();
-							try {
-								cRow = mOutputTable.convertRowIndexToModel(cRow);
-							} catch (final IndexOutOfBoundsException e) {
-								return;
-							}
-							final String name = (String) mOutputTable.getModel()
-							.getValueAt(cRow, 0);
-
-
-							// Get the preferences for the double click
-							final boolean openInBrowser = JBroFuzz.PREFS.getBoolean(
-									JBroFuzzPrefs.FUZZINGOUTPUT[0].getId(), true);
-
-							final File directory = getFrame().getJBroFuzz().getHandler().getFuzzDirectory();
-							final File selFile = new File(directory, name + ".html");
-							
-							if(openInBrowser) {
-
-							Browser.init();
-								try {
-
-									Browser.displayURL(selFile.toURI().toString());
-
-								} catch (final IOException ex) {
-									Logger.log(
-											"Could not launch link in external browser",
-											3);
-								}
-							} else {
-
-								new WindowViewerFrame(FuzzingPanel.this, selFile);
-
-							}
-
-						}
-					});
-				}
-			}
-		});
-
 		final JScrollPane outputScrollPane = new JScrollPane(mOutputTable);
 		// mOutputTable.setFillsViewportHeight(true);
 		outputScrollPane.setVerticalScrollBarPolicy(20);
 		// outputScrollPane.setPreferredSize(new Dimension(840, 130));
-		outputPanel.add(outputScrollPane);
+		outputTablePanel.add(outputScrollPane);
+		outputTablePanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		RightClickPopups.rightClickOutputTable(this, mOutputTable);
 
-		// Set the scroll areas
-		topPanel = new JPanel(new BorderLayout());
-		topPanel.add(targetPanel, BorderLayout.PAGE_START);
-		topPanel.add(requestPanel, BorderLayout.CENTER);
 
+
+		outputRequestPane = createSimplePane();
+		outputRequestPane.setEditable(false);
+		outputResponsePane = createSimplePane();
+		outputResponsePane.setEditable(false);
+
+		JPanel bL = new JPanel(new BorderLayout());
+		JPanel bR = new JPanel(new BorderLayout());
 		
+		bL.add(createScrollingPanel(" Request ", outputRequestPane),BorderLayout.CENTER);
+		bR.add(createScrollingPanel(" Response ", outputResponsePane),BorderLayout.CENTER);
 		
-		// create the outlining tabbed pane
-		fuzzerWindowPane = new JTabbedPane();
-		
-		
-		
-		bottomPane = new JSplitPane();
-		
-		
-		bottomPane.setLeftComponent(generatorPanel);
-		bottomPane.setRightComponent(encoderPanel);
-		createEncodingPane();
-			
-		mainPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		final JTextField reqSearch = new JTextField();
+		final JTextField resSearch = new JTextField();
 	
-		mainPane.setOneTouchExpandable(false);
-		mainPane.setTopComponent(topPanel);
-		mainPane.setBottomComponent(bottomPane);
+		csxReq = new JCheckBox("Ignore Case");
+		csxRes = new JCheckBox("Ignore Case");
+		csxReq.setSelected(true);
+		csxRes.setSelected(true);
+	
+		
+		
+		resSearch.addKeyListener(new KeyAdapter(){
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 10){
+					outputSearch(outputResponsePane, resSearch, csxRes.isSelected());
+				}
+			}
+		});
+		reqSearch.addKeyListener(new KeyAdapter(){
+			@Override
+			public void keyPressed(final KeyEvent ke) {
+				if (ke.getKeyCode() == 10){
+					outputSearch(outputRequestPane, reqSearch, csxReq.isSelected());
+				}
+			}
+		});
+		
+		// configure the ignore case check boxes
+		JPanel pbL = new JPanel(new BorderLayout());
+		pbL.add(csxReq, BorderLayout.WEST);
+		pbL.add(reqSearch,BorderLayout.CENTER);
+		
+		JPanel pbR = new JPanel(new BorderLayout());
+		pbR.add(csxRes, BorderLayout.WEST);
+		pbR.add(resSearch, BorderLayout.CENTER);
+		
+		bL.add(pbL,BorderLayout.SOUTH);
+		bR.add(pbR,BorderLayout.SOUTH);
 
-		
-		// Allow for all areas to be resized to even not be seen
-		topPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
-		bottomPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
-		outputPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		outputBottomPane.setLeftComponent(bL);
+		outputBottomPane.setRightComponent(bR);
+		outputBottomPane.getLeftComponent().setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		outputBottomPane.getRightComponent().setMinimumSize(JBroFuzzFormat.ZERO_DIM);
+		outputBottomPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 
-		mainPane.setDividerLocation(JBroFuzz.PREFS.getInt(JBroFuzzPrefs.UI[5].getId(), 262));
-		
-		
-		// add the respective panes/panels to the tabbed pane
-		fuzzerWindowPane.addTab("Input",mainPane);
-		fuzzerWindowPane.addTab("Output", outputPanel);
-		fuzzerWindowPane.addTab("On the wire", onTheWirePanel);
-		
-		FuzzingPanel.this.add(fuzzerWindowPane, BorderLayout.CENTER);
+		outputMainPane.setTopComponent(outputTablePanel);
+		outputMainPane.setBottomComponent(outputBottomPane);
 
-		// Display the last displayed url/request
-		this.setTextURL(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_URL, ""));
-		this.setTextRequest(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_REQUEST, ""));
-		
-		fuzzersTableSelectionListen();
-		
+
+
+		// list selection listener
+		mOutputTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+			public void valueChanged(ListSelectionEvent e) {
+
+				int cRow = mOutputTable.getSelectedRow();
+				try {
+					cRow = mOutputTable.convertRowIndexToModel(cRow);
+				} catch (final IndexOutOfBoundsException iob) {
+					return;
+				}
+				final String name = (String) mOutputTable.getModel()
+				.getValueAt(cRow, 0);
+
+				class FileLoader extends SwingWorker<String, Object> { // NO_UCD
+
+					String fuzzerLineOutput = new String();
+					public String doInBackground() {
+
+						final File directory = getFrame().getJBroFuzz().getHandler().getFuzzDirectory();
+						final File selFile = new File(directory, name + ".html");
+						fuzzerLineOutput = FileHandler.readFile(selFile);
+						return "done";
+					}
+
+					protected void done() {
+						final String dbType = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "-1");
+						String request = new String();
+						String response = new String();
+						if(dbType.equals("None")){
+							response = FuzzFileUtils.getResponse(fuzzerLineOutput);
+							request = FuzzFileUtils.getRequest(fuzzerLineOutput);
+						}else if(dbType.equals("SQLLite (embedded)")){
+							// TODO: validation checks on the database
+							Logger.log("SQLITE database not implement - use none", 3);
+						}else{
+							// TODO: validation checks on the couch DB implementation
+							Logger.log("COUCHDB database not implement - use none", 3);
+						}
+					
+					
+						outputResponsePane.setText(response);
+						outputRequestPane.setText(request);
+						outputResponsePane.setCaretPosition(0);
+						outputResponsePane.setCaretPosition(0);
+						outputResponsePane.repaint();
+						outputRequestPane.repaint();
+					}
+				}
+				(new FileLoader()).execute();
+			}
+		});
+		JPanel outputPanel = new JPanel(new BorderLayout());
+		outputPanel.add(outputMainPane);
+		return outputPanel;
 	}
 
 	/**
@@ -502,7 +680,7 @@ public class FuzzingPanel extends AbstractPanel {
 					point1,
 					point2
 			);
-			
+
 			encodersTableList.add();
 
 		} else {
@@ -538,12 +716,12 @@ public class FuzzingPanel extends AbstractPanel {
 			mFuzzTableModel.removeRow(0);
 			encodersTableList.remove(0);
 		}
-		
+
 		outputTableModel.clearAllRows();
 		urlField.requestFocusInWindow();
 	}
 
-	
+
 
 	/**
 	 * <p>
@@ -563,7 +741,8 @@ public class FuzzingPanel extends AbstractPanel {
 
 		outputTableModel.clearAllRows();
 		urlField.requestFocusInWindow();
-
+		outputRequestPane.setText("");
+		outputResponsePane.setText("");
 	}
 
 	/**
@@ -590,7 +769,7 @@ public class FuzzingPanel extends AbstractPanel {
 		urlField.requestFocusInWindow();
 
 	}
-	
+
 	/**
 	 * <p>Clear the "On The Wire" text area. Also, set
 	 * the focus on the URL area.</p>
@@ -600,7 +779,7 @@ public class FuzzingPanel extends AbstractPanel {
 	 * @since 2.1
 	 */
 	public void clearOnTheWire() {
-		
+
 		mWireTextArea.setText("");
 		urlField.requestFocusInWindow();
 
@@ -627,7 +806,7 @@ public class FuzzingPanel extends AbstractPanel {
 		return StringUtils.leftPad(Integer.toString(counter), 10, '0');
 	}
 
-	
+
 
 	/**
 	 * <p>
@@ -799,7 +978,7 @@ public class FuzzingPanel extends AbstractPanel {
 				encoders = new EncodersRow[]{row};
 				start = 0;
 				end = 0;
-			
+
 			}else {
 				category = (String) mFuzzTableModel.getValueAt(i, 0);
 				encoders = getEncoders(i);
@@ -832,7 +1011,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 					// Put the message on the console as it goes out on the wire
 					if( (showOnTheWire == 1) || // 1 show only requests
-						(showOnTheWire == 3) ) {// 3 show both requests and responses 
+							(showOnTheWire == 3) ) {// 3 show both requests and responses 
 						// Show message
 						mWireTextArea.setText(currentMessage.getMessageForDisplayPurposes());
 					}
@@ -848,11 +1027,11 @@ public class FuzzingPanel extends AbstractPanel {
 
 						// Update the console (on the wire tab) with the output
 						if( (showOnTheWire == 2) ||	// 2 for showing only responses
-							(showOnTheWire == 3) ) {// 3 for showing requests and responses
-							
-								// toConsole("\n-->\n--> [JBROFUZZ FUZZING RESPONSE] -->\n-->\n");
+								(showOnTheWire == 3) ) {// 3 for showing requests and responses
+
+							// toConsole("\n-->\n--> [JBROFUZZ FUZZING RESPONSE] -->\n-->\n");
 							mWireTextArea.setText(connection.getReply());
-								
+
 						}
 
 						// Update the last row, indicating success
@@ -860,15 +1039,15 @@ public class FuzzingPanel extends AbstractPanel {
 						outputTableModel.addNewRow(outputMessage);
 						// outputSorter.sort();
 						// mOutputTable.updateUI();
-						
+
 					} catch (final ConnectionException e1) {
 						// Update the message writer
 						outputMessage.setException(e1);
 
 						// Update the console (on the wire tab) with the exception
 						if( (showOnTheWire == 2) ||	// 2 for showing only responses
-							(showOnTheWire == 3) ) {// 3 for showing requests and responses
-							
+								(showOnTheWire == 3) ) {// 3 for showing requests and responses
+
 							// toConsole("\n--> [JBROFUZZ FUZZING RESPONSE] <--\n");
 							mWireTextArea.setText("A connection exception occurred." );
 						}
@@ -878,15 +1057,24 @@ public class FuzzingPanel extends AbstractPanel {
 						outputTableModel.addNewRow(outputMessage);
 						// outputSorter.sort();
 						// mOutputTable.updateUI();
-						
+
 					}
-					
-//					if(showOnTheWire != 0) {
-//						toConsole("\n--> [JBROFUZZ FUZZING STOP] -->\n\n");
-//					}
-					
-					getFrame().getJBroFuzz().getHandler().writeFuzzFile(
-							outputMessage);
+
+					//					if(showOnTheWire != 0) {
+					//						toConsole("\n--> [JBROFUZZ FUZZING STOP] -->\n\n");
+					//					}
+					// TODO: update to handle database
+					final String dbType = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "-1");
+					if(dbType.equals("None")){
+						getFrame().getJBroFuzz().getHandler().writeFuzzFile(
+								outputMessage);	
+					}else if(dbType.equals("SQLLite (embedded)")){
+						// TODO: validation checks on the database
+						Logger.log("SQLITE database not implement - use none", 3);
+					}else{
+						// TODO: validation checks on the couch DB implementation
+						Logger.log("COUCHDB database not implement - use none", 3);
+					}
 
 				}
 
@@ -907,8 +1095,6 @@ public class FuzzingPanel extends AbstractPanel {
 	@Override
 	public void stop() {
 
-		JBroFuzz.PREFS.putInt(JBroFuzzPrefs.UI[5].getId(), mainPane.getDividerLocation());
-		
 		if (stopped) {
 			return;
 		}
@@ -916,7 +1102,7 @@ public class FuzzingPanel extends AbstractPanel {
 		// Start, Stop, Pause, Add, Remove
 		setOptionsAvailable(true, false, false, true, true);
 		final int total = fuzzersTable.getRowCount();
-		
+
 		if (total > 0) {
 			setOptionRemove(true);
 
@@ -930,26 +1116,26 @@ public class FuzzingPanel extends AbstractPanel {
 		urlField.setForeground(Color.BLACK);
 
 	}
-	
+
 	public String getPayload() {
 		return payload;
 	}
-	
+
 	public String getEncodedPayload() {
 		return encodedPayload;
 	}
-	
+
 	public EncodersRow[] getEncoders(int fuzzerRow){
-		
+
 		EncodersTableModel a = encodersTableList.getEncoderTableModel(fuzzerRow);
-		
+
 		if(a==null){
 			EncodersRow row = new EncodersRow("Plain Text","","");
 			return new EncodersRow[]{row};
 		}
 		return a.getEncoders();
 	}
-	
+
 	/**
 	 * <b>updateEncoderPanel</b>
 	 * <p>
@@ -967,35 +1153,35 @@ public class FuzzingPanel extends AbstractPanel {
 		encoderPanel.add(controlPanel, BorderLayout.EAST);
 		encoderPanel.updateUI();
 	}
-	
+
 	public EncodersTableList getEncodersTableList(){
 		return encodersTableList;
 	}
-	
+
 	private void createEncodingPane(){
-	
+
 		// create the encodersTableList
 		encodersTableList = new EncodersTableList(this);
 		// instantiate the control panel
 		controlPanel = new EncodersToolBar(this);
 		// add a null encoder to start with
 		this.updateEncoderPanel(null);
-		
+
 	}
-	
+
 	public FuzzerTable getFuzzersTable(){
 		return fuzzersTable;
 	}
-	
+
 	private void fuzzersTableSelectionListen(){
 		fuzzersTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-	
+
 			public void valueChanged(ListSelectionEvent arg0) {
-				
+
 				int row = fuzzersTable.getSelectedRow();
-				
+
 				if(row > -1){
-					
+
 					FuzzingPanel.this.getEncodersTableList().show(row);
 					int c = FuzzingPanel.this.getEncodersTableList().getEncoderCount(row);
 					if(c==0){
@@ -1009,11 +1195,11 @@ public class FuzzingPanel extends AbstractPanel {
 						controlPanel.enableAll();
 					}
 				}
-				
+
 			}
 		});
 	}
-	
+
 	public EncodersToolBar getEncoderToolBar(){
 		return controlPanel;
 	}
@@ -1034,10 +1220,10 @@ public class FuzzingPanel extends AbstractPanel {
 	 */
 	public void addTransform(int fuzzerNumber, String encoder, String prefix,
 			String suffix) {
-		
+
 		encodersTableList.getEncoderTableModel(fuzzerNumber - 1).addRow(encoder, prefix, suffix);
 		//encodersTableList.add(encoder, prefix, suffix);
-		
+
 	}
 
 }
