@@ -262,22 +262,37 @@ public class JBroFuzzPrefs {
 				true
 		),
 
-		// 4 topPane
-		new PrefEntry(
-				"ui.f.topsplitpanel",
-				" Fuzzing Panel Top Split Panel",
-				" Change this value, in order to change the top divider location",
-				true
-		),
-
-		// 5 mainPane
+		// 4 fuzz panel main pane
 		new PrefEntry(
 				"ui.f.mainsplitpanel",
 				" Fuzzing Panel Main Split Panel",
 				" Change this value, in order to change the main divider location",
 				true
-		)
+		),
 
+		// 5 fuzz panel lower pane
+		new PrefEntry(
+				"ui.f.bottomsplitpanel",
+				" Fuzzing Panel Bottom Split Panel",
+				" Change this value, in order to change the bottom divider location",
+				true
+		),
+		
+		// 6 output pane main frame
+		new PrefEntry(
+				"ui.o.mainsplitpanel",
+				" Output Panel Main Split Panel",
+				" Change this value, in order to change the main divider location",
+				true
+		),
+		
+		// 7 fuzz panel lower pane
+		new PrefEntry(
+				"ui.o.bottomsplitpanel",
+				" Output Panel Bottom Split Panel",
+				" Change this value, in order to change the bottom divider location",
+				true
+		)
 
 	};
 

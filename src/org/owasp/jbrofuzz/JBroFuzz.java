@@ -63,6 +63,7 @@ public class JBroFuzz {
 	private final JBroFuzzWindow mWindow;
 
 	private Database mDatabase;
+	
 
 	public static final Preferences PREFS = Preferences.userRoot().node("owasp/jbrofuzz");
 

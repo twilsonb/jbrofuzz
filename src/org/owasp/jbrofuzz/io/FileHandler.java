@@ -318,5 +318,6 @@ public class FileHandler {
 			Logger.log("Error writting fuzz file: " + fileName, 3);
 		}
 	}
+	
 
 }
