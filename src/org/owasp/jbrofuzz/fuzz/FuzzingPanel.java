@@ -1225,5 +1225,8 @@ public class FuzzingPanel extends AbstractPanel {
 		//encodersTableList.add(encoder, prefix, suffix);
 
 	}
-
+	
+	public OutputTable getOutputTable(){
+		return mOutputTable;
+	}
 }
