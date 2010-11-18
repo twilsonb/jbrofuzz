@@ -26,7 +26,7 @@ public class CouchDBMapper {
 			//SessioDTO
 			if (couch.has("jVersion")) session.setJVersion(couch.getString("jVersion"));
 			if (couch.has("os")) session.setOs(couch.getString("os"));
-			if (couch.has("sessionId")) session.setSessionId(Long.valueOf(couch.getString("sessionId")));
+			if (couch.has("sessionId")) session.setSessionId(couch.getLong("sessionId"));
 			if (couch.has("timeStamp")) session.setTimestamp(couch.getString("timeStamp"));
 			
 			//connectionDTO
@@ -34,7 +34,7 @@ public class CouchDBMapper {
 				JSONObject connection = couch.getJSONObject("connection");
 				ConnectionDTO conn = new ConnectionDTO();
 				if (connection.has("connectionId")) conn.setConnectionId(Long.valueOf(connection.getString("connectionId")));
-				if (connection.has("sessionId")) conn.setSessionid(Long.valueOf(connection.getString("sessionId")));
+				if (connection.has("sessionId")) conn.setSessionid(connection.getLong("sessionId"));
 				if (connection.has("urlString")) conn.setUrlString(connection.getString("urlString"));
 				session.setConnectionDTO(conn);
 			}

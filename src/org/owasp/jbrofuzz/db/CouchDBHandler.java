@@ -239,18 +239,25 @@ public class CouchDBHandler{
 	 * @return resultCode | > 0 OK | < 0 failed.
 	 * @throws Exception
 	 */
-	public int createDB(String dbName){
+	public String createDB(String dbName){
 		int returnCode = 0;
 		String response = "";
+		String dbNameReal = "";
+		if (Long.valueOf(dbName) < 0){
+			dbNameReal = getUUID();
+		}
+		else{
+			dbNameReal = dbName;
+		}
 		if (evaluateConfiguration() > 0){
-			String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbName;
+			String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbNameReal;
 			response = sendPut(url, "");
 		}
 		else{
 			returnCode = -1;
 		}
 		if (response.length() == 0 || response.toLowerCase().contains("error")) returnCode = -1;
-		return returnCode;
+		return dbNameReal;
 	}
 	
 	
@@ -411,5 +418,5 @@ public class CouchDBHandler{
 			list = sendGet(url);
 		}
 		return list;
-	}
+	}	
 }
