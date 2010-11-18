@@ -97,37 +97,6 @@ public class SQLLiteHandler {
 		return returnValue;
 	}
 	
-	/**
-	 * @author daemonmidi@gmail.com
-	 * @since version 2.5
-	 * @return int; > 0 -> ok ; < 0 -> failed
-	 * @throws SQLException
-	 */
-	public int store(long sessionId, String timestamp, String jVersion,
-			String Os, long connectionId, String urlString, long messageId,
-			String textRequest, String encoding, String payload, int start,
-			int end, int statusCode, String responseHeader,
-			String responseBody, long responseId, Connection conn) {
-
-		int returnValue = 0;
-
-		try {
-			returnValue = insertOrUpdateSessionTable(conn, sessionId, timestamp, jVersion, Os);
-			returnValue = insertOrUpdateConnectionTable(conn, connectionId, sessionId, urlString);
-			returnValue = insertOrUpdateMessageTable(conn, messageId, connectionId, textRequest, encoding, payload, start, end);
-			returnValue = insertOrUpdateReponseTable(conn, responseId, connectionId, statusCode, responseHeader, responseBody);
-		} catch (SQLException sqe) {
-			sqe.printStackTrace();
-		} finally {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-		}
-		return returnValue;
-	}
-	
 	
 	/**
 	 * insert or update the table session - based on the parameter provided.
@@ -145,7 +114,7 @@ public class SQLLiteHandler {
 	private int insertOrUpdateSessionTable(Connection conn, long sessionId, String timestamp, String jVersion, String Os) throws SQLException{
 		int returnValue = 1;
 		String sqlString1 = "";
-		if (sessionId >= 0) {
+		if (sessionId > 0 ) {
 			PreparedStatement st0 = conn
 					.prepareStatement("select count (*) from session where sessionId = ?");
 			st0.setLong(1, sessionId);
@@ -192,7 +161,7 @@ public class SQLLiteHandler {
 	private int insertOrUpdateConnectionTable(Connection conn, long connectionId, long sessionId, String urlString) throws SQLException{
 		int returnValue = 1;
 		String sqlString1 = "";
-		if (sessionId >= 0) {
+		if (sessionId > 0) {
 			PreparedStatement st0 = conn.prepareStatement("select count(*) from connection where connectionId = ?");
 			st0.setLong(1, sessionId);
 			ResultSet rs0 = st0.executeQuery();
@@ -496,5 +465,16 @@ public class SQLLiteHandler {
 			retVal[i] = responses.get(i);
 		}
 		return retVal;
+	}
+	
+	public long getLastId(Connection conn, String tableName) throws SQLException{
+		long lastId =  -1;
+		String sql1 = "select count(*) from ?";
+		PreparedStatement pst1 = conn.prepareStatement(sql1);
+		pst1.setString(1, tableName);
+		ResultSet rs1 = pst1.executeQuery();
+		lastId = rs1.getLong(1);
+		conn.close();
+		return lastId;
 	}
 }
