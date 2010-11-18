@@ -66,7 +66,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 
 	private final JTextField hostTextField, portTextField, userTextField,
 			passTextField, dbUserTextField, dbPassTextField, dbHostTextField,
-			dbPortTextField;
+			dbPortTextField, dbNameTextField;
 
 	private final JComboBox authTypeBox;
 
@@ -136,7 +136,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		passTextField.setMargin(new Insets(1, 1, 1, 1));
 		passTextField.setPreferredSize(new Dimension(80, 20));
 
-		final String[] dbTypeArray = { "None", "SQLLite (embedded)", "CouchDB" };		
+		final String[] dbTypeArray = { "SQLLite (embedded)", "CouchDB", "None"};		
 		dbTypeBox = new JComboBox(dbTypeArray);
 		dbTypeBox.setToolTipText(JBroFuzzPrefs.DBSETTINGS[11].getTooltip()); 
 		
@@ -166,14 +166,26 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		dbHostTextField.setPreferredSize(new Dimension(80, 20));
 
 		final String dbPortEntry = JBroFuzz.PREFS.get(
-				JBroFuzzPrefs.DBSETTINGS[9].getId(), "");
+				JBroFuzzPrefs.DBSETTINGS[10].getId(), "");
 		dbPortTextField = new JTextField(dbPortEntry);
 		dbPortTextField.setToolTipText(JBroFuzzPrefs.DBSETTINGS[10]
 				.getTooltip());
 		dbPortTextField.setFont(new Font("Veranda", Font.PLAIN, 12));
 		dbPortTextField.setMargin(new Insets(1, 1, 1, 1));
 		dbPortTextField.setPreferredSize(new Dimension(80, 20));
+		
+		//	JBroFuzzPrefs.DBSETTINGS[12].getId()  == dbType (SelectBox)
+		
+		final String dbNameEntry = JBroFuzz.PREFS.get(
+				JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
+		dbNameTextField = new JTextField(dbNameEntry);
+		dbNameTextField.setToolTipText(JBroFuzzPrefs.DBSETTINGS[12]
+				.getTooltip());
+		dbNameTextField.setFont(new Font("Veranda", Font.PLAIN, 12));
+		dbNameTextField.setMargin(new Insets(1, 1, 1, 1));
+		dbNameTextField.setPreferredSize(new Dimension(80, 20));
 
+		
 		// Panels for our friends above: Host & Port
 		final JPanel hostPortPanel = new JPanel(new GridBagLayout());
 		// A very important line when it comes to BoxLayout
@@ -220,6 +232,8 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		dbTypePanel.add(dbPassTextField);
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[10].getTitle()));
 		dbTypePanel.add(dbPortTextField);
+		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[12].getTitle()));
+		dbTypePanel.add(dbNameTextField);
 		dbTypePanel.setAlignmentX(0.0f);
 
 		// Panel for our friends above: Username & Password
@@ -272,7 +286,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 			passTextField.setEnabled(false);
 		}
 
-		if (dbTypeBox.getSelectedIndex() == 0 || dbTypeBox.getSelectedIndex() == 1) {
+		if (dbTypeBox.getSelectedIndex() == 3) {
 			dbUserTextField.setEnabled(false);
 			dbPassTextField.setEnabled(false);
 			dbHostTextField.setEnabled(false);
@@ -292,7 +306,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 
 		dbTypeBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent aEvent1) {
-				if (dbTypeBox.getSelectedIndex() == 0 || dbTypeBox.getSelectedIndex() == 1) {
+				if (dbTypeBox.getSelectedIndex() == 3) {
 					dbUserTextField.setEnabled(false);
 					dbPassTextField.setEnabled(false);
 					dbHostTextField.setEnabled(false);
@@ -404,7 +418,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 	protected void apply() {
 		JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DBSETTINGS[0].getId(),
 				proxyEnabledBox.isSelected());
-		if (dbTypeBox.getSelectedIndex() == 0 || dbTypeBox.getSelectedIndex() == 1) {
+		if (dbTypeBox.getSelectedIndex() == 3) {
 			proxyEnabledBox.setSelected(false);
 			proxyReqAuthBox.setSelected(false);
 			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[1].getId(), "");
@@ -417,6 +431,8 @@ public class DatabasePanel extends AbstractPrefsPanel {
 			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[8].getId(), "");
 			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[9].getId(), "");
 			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[10].getId(), "");
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[11].getId(), "");
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
 		} else {
 			if (proxyEnabledBox.isSelected()) {
 				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[1].getId(),
@@ -431,18 +447,20 @@ public class DatabasePanel extends AbstractPrefsPanel {
 				// integer 1 is basic
 
 				if (proxyReqAuthBox.isSelected()) {
+					JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[4].getId(), 
+							authTypeBox.getSelectedItem().toString());
 					JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[5].getId(),
 							userTextField.getText());
 					JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[6].getId(),
 							passTextField.getText());
 				}
-				
 				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[7].getId(), dbUserTextField.getText());
 				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[8].getId(), dbPassTextField.getText());
 				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[9].getId(), dbHostTextField.getText());
 				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[10].getId(), dbPortTextField.getText());
+				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[11].getId(), dbTypeBox.getSelectedItem().toString());
+				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[12].getId(), dbNameTextField.getText());
 			}
 		}
-		JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[11].getId(), dbTypeBox.getSelectedItem().toString());
 	}
 }
