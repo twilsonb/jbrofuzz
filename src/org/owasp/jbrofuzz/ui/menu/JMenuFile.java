@@ -362,8 +362,12 @@ public class JMenuFile extends JMenu {
 				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 
 				if (mFrameWindow.getPanelFuzzing().isStopped()) {
-
-					new SaveSession(mFrameWindow);
+					try{
+						new SaveSession(mFrameWindow);
+					}
+					catch(Exception e){
+						e.printStackTrace();
+					}
 
 				} else {
 
@@ -376,13 +380,15 @@ public class JMenuFile extends JMenu {
 						final AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
 						.getComponent(c);
 						p.stop();
-
-						new SaveSession(mFrameWindow);
-
+						
+						try{
+							new SaveSession(mFrameWindow);
+						}
+						catch(Exception e){
+							e.printStackTrace();
+						}
 					}
-
 				}
-
 			}
 		});
 
