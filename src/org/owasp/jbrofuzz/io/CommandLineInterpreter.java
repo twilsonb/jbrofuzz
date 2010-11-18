@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.core.Database;
+import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
 import org.owasp.jbrofuzz.fuzz.io.OpenSession;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
@@ -41,16 +43,27 @@ import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 public class CommandLineInterpreter{
 
 	private JBroFuzzWindow mWindow;
-
+	private OpenSession os;
+	
 	/**
 	 * @author daemonmidi@gmail.com
 	 * @since version 2.4
 	 * @param String [] args   - commandline arguments
 	 * @return int resultCode  - > 0 == ok and < 0 == failed
+	 * @throws NoSuchFuzzerException 
 	 */
-	public int process(String [] args){
+	public int process(String [] args) throws NoSuchFuzzerException{
 		String inputFileName = "";
-		int returnValue = 1; // everything went fine
+		String url = "";
+		String request = "";
+		String fuzzers = "";
+		String encoder = "";
+		String prefix = "";
+		String suffix = "";
+		int fuzzersStart = -1;
+		int fuzzersEnd = -1;
+		int fuzzerNumber = -1;
+		int returnValue = -1; // everything went wrong
 		boolean result = false;
 		boolean doNotFuzz = false;
 
@@ -63,6 +76,39 @@ public class CommandLineInterpreter{
 		 */
 		int j = 0;
 		while (j < args.length){
+			if (args[j].equals("-dDB") || args[j].equals("--dumpDB")){
+				//TODO Output as one as plain text followed by xml later on
+			}
+			if (args[j].equals("-e") || args[j].equals("--encoder")){
+				encoder = args[j +1];
+			}
+			if (args[j].equals("-f") || args[j].equals("--fuzzer")){
+				fuzzers = args[j + 1];
+			}
+			if (args[j].equals("-fe") || args[j].equals("--fuzzerEnd")){
+				try{
+					fuzzersEnd = Integer.valueOf(args[j +1]);
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+			if (args[j].equals("-fs") || args[j].equals("--fuzzerStart")){
+				try{
+					fuzzersStart = Integer.valueOf(args[j + 1]);
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+			if (args[j].equals("-fn") || args[j].equals("--fuzzerNumber")){
+				try{
+					fuzzerNumber = Integer.valueOf(args[j +1]);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 			if (args[j].equals("-h") || args[j].equals("--help")){
 				printHelp();
 				System.exit(0);
@@ -70,11 +116,24 @@ public class CommandLineInterpreter{
 			else if (args[j].equals("-i") || args[j].equals("--input")){
 				inputFileName = args[j+1];
 			}
+			else if (args[j].equals("-n") || args[j].equals("--no-execute")){
+				returnValue = -1;
+				return returnValue;
+			}
+			else if (args[j].equals("-p") || args[j].equals("--perfix")){
+				prefix = args[j +1];
+			}
+			else if (args[j].equals("-r") || args[j].equals("--request")){
+				request = args[j + 1 ];
+			}
 			else if (args[j].equals("-s") || args[j].equals("--showResults")){
 				result = true;
 			}
-			else if (args[j].equals("-n") || args[j].equals("--no-execute")){
-				doNotFuzz = true;
+			else if (args[j].equals("-su") || args[j].equals("--suffix")){
+				suffix = args[j + 1];
+			}
+			else if (args[j].equals("-u") || args[j].equals("--url")){
+				url = args[j + 1];
 			}
 			else{
 				if(j>0){
@@ -92,27 +151,55 @@ public class CommandLineInterpreter{
 
 		if (inputFileName.length() > 0 && !inputFileName.equals("")){
 			// setup new session
-			OpenSession os = new OpenSession(mWindow, inputFileName);
+			os = new OpenSession(mWindow, inputFileName);
 
-			// start fuzzing
-			if(!doNotFuzz){
-				final int c = mWindow.getTp().getSelectedIndex();
-				AbstractPanel p = (AbstractPanel) mWindow.getTp().getComponent(c);
-				p = (AbstractPanel) mWindow.getTp().getComponent(c);
-				p.start();
-				p.stop();
-				if (mWindow.getPanelFuzzing().isStopped()){
-					p.stop();
-				}
-			}
+		}	
+
+		// need new session but do not have an inputfile
 		
+		if (url.length() > 0 || !url.endsWith("")){
+			mWindow.getPanelFuzzing().setTextURL(url);
+		}
+		
+		if (request.length() > 0 || !request.endsWith("")){
+			mWindow.getPanelFuzzing().setTextRequest(request);
+		}
+		
+		if (fuzzers.length() > 0 || !fuzzers.endsWith("") && (fuzzersStart >= 0 && fuzzersEnd >= 0 && fuzzersEnd >= fuzzersStart)){
+			Database db = new Database();
+			mWindow.getJBroFuzz().setDatabase(db);
+			String fuzzerId = mWindow.getJBroFuzz().getDatabase().getIdFromName(fuzzers);
+			if (fuzzerId.length() == 0){
+				throw new NoSuchFuzzerException(fuzzers);
+			}
+			mWindow.getPanelFuzzing().addFuzzer(fuzzerId, fuzzersStart, fuzzersEnd);
+		}
+		
+		if (fuzzerNumber > 0 && encoder.length() > 0 && suffix.length() > 0 && prefix.length() >0){
+			mWindow.getPanelFuzzing().addTransform(fuzzerNumber, encoder, prefix, suffix);
+		}
 
-			// write the results to output file
-			// tbd. see writeOutputfile() for further info;
-			// if (outputFileName.length() > 0 || !outputFileName.equals("")) returnValue = writeOutputFile(mWindow, outputFileName);
-
-			// open result window for further analysis
-			if (result) JBroFuzzWindow.createAndShowGUI(os.getmWindow());
+		// start fuzzing
+		if(!doNotFuzz){
+			final int c = mWindow.getTp().getSelectedIndex();
+			AbstractPanel p = (AbstractPanel) mWindow.getTp().getComponent(c);
+			p = (AbstractPanel) mWindow.getTp().getComponent(c);
+			p.start();
+			p.stop();
+			if (mWindow.getPanelFuzzing().isStopped()){
+				p.stop();
+			}
+		}
+		else{
+			returnValue = -1;
+		}
+		
+		// write the results to output file
+		// tbd. see writeOutputfile() for further info;
+		// if (outputFileName.length() > 0 || !outputFileName.equals("")) returnValue = writeOutputFile(mWindow, outputFileName);	
+		// open result window for further analysis
+		if (result){ 
+			JBroFuzzWindow.createAndShowGUI(os.getmWindow());
 		}
 		else{
 			// no commandline options
