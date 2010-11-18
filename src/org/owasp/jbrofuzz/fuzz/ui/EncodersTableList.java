@@ -20,6 +20,15 @@ public class EncodersTableList{
 	ArrayList<EncodersTable>encodersTables;
 	FuzzingPanel container;
 	
+	/**
+	 * @author daemonmidi@gmail.com
+	 * @since verison 2.5
+	 * @return int count of encoders within the table
+	 */
+	public int getSize(){
+		return encodersTables.size();
+	}
+	
 	public EncodersTableList(FuzzingPanel container){
 		this.container = container;
 		encodersTables = new ArrayList<EncodersTable>();
