@@ -31,15 +31,23 @@ package org.owasp.jbrofuzz.fuzz.io;
 
 import java.io.File;
 
+import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.db.CouchDBHandler;
+import org.owasp.jbrofuzz.db.CouchDBMapper;
+import org.owasp.jbrofuzz.db.DTOCreator;
+import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
- * <p>Class responsible for saving a fuzzing session
- * based on the file already opened.</p>
- * <p>If no file is identified, a file save-as is
- * performed.</p>
+ * <p>
+ * Class responsible for saving a fuzzing session based on the file already
+ * opened.
+ * </p>
+ * <p>
+ * If no file is identified, a file save-as is performed.
+ * </p>
  * 
  * @author daemonmidi@gmail.com, subere@uncon.org
  * @version 2.5
@@ -47,29 +55,54 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  */
 public class SaveSession {
 
+	public SaveSession(final JBroFuzzWindow mWindow) throws Exception {
 
-	public SaveSession(final JBroFuzzWindow mWindow) {
-		
 		// Set the fuzzing tab as the one showing
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
-		// If there is a file already opened, save there
-		if(mWindow.isCurrentFileOpened()) {
-			
-			final File myFile = mWindow.getCurrentFileOpened();
-			Save.writeFile(myFile, mWindow); 
-			mWindow.setOpenFileTo(myFile);
-
-			final String  parentDir = myFile.getParent();
-			if( parentDir != null ) {
-				JBroFuzz.PREFS.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
+		if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("couchdb")){
+			DTOCreator dtoC = new DTOCreator();
+			CouchDBHandler couchHandler = new CouchDBHandler();
+			if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").length() > 0  && !JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").equals("")){
+				//start from scratch
+				long dbName = -1;
+				String documentId = couchHandler.getUUID();
+				SessionDTO session = dtoC.createSessionDTO(mWindow, dbName);
+				CouchDBMapper cdbMapper = new CouchDBMapper();
+				JSONObject document = cdbMapper.toCouch(session);
+				String dbNameReal = couchHandler.createDB(String.valueOf(dbName));
+				couchHandler.createOrUpdateDocument(dbNameReal, documentId, document);
 			}
-			
-		} else {
-			// If no file is open, create a new 'Save As' session
-			new SaveAsSession(mWindow);
-			
+			else if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").length() > 0 && !JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").equals("")){
+				//use exisiting db
+				couchHandler.createDB(JBroFuzzPrefs.DBSETTINGS[12].getId().toString());
+				SessionDTO session = dtoC.createSessionDTO(mWindow, -1);
+				CouchDBMapper cdbMapper = new CouchDBMapper();
+				JSONObject document = cdbMapper.toCouch(session);
+				couchHandler.createOrUpdateDocument(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""), couchHandler.getUUID(), document);
+			}
+			else{
+				throw new Exception("No DB Name provided");
+			}
 		}
-		
+		else {
+			// If there is a file already opened, save there
+			if (mWindow.isCurrentFileOpened()) {
+
+				final File myFile = mWindow.getCurrentFileOpened();
+				Save.writeFile(myFile, mWindow);
+				mWindow.setOpenFileTo(myFile);
+
+				final String parentDir = myFile.getParent();
+				if (parentDir != null) {
+					JBroFuzz.PREFS
+							.put(JBroFuzzPrefs.DIRS[2].getId(), parentDir);
+				}
+
+			} else {
+				// If no file is open, create a new 'Save As' session
+				new SaveAsSession(mWindow);
+
+			}	
+		}
 	}
-	
 }
