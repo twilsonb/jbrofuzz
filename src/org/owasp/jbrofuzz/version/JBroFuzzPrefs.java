@@ -176,9 +176,16 @@ public class JBroFuzzPrefs {
 		new PrefEntry(
 				"dbsettings.db.type",
 				" Database Type ",
-				" Specify which kind of DB to use "
-		) 
-	};
+				" Specify which kind of DB to use (None, SQLLite, CouchDB) "
+		),
+		
+		// 12 dbName,
+		new PrefEntry(
+				"dbsettings.db.dbName",
+				" DBName ",
+				" Specify the name of the DB to be used "
+				)
+		};
 	
 	/**
 	 * Preferences related to directory locations, creating or 
