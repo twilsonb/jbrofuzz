@@ -40,7 +40,15 @@ import javax.swing.table.TableModel;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.db.SQLLiteHandler;
+import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
+import org.owasp.jbrofuzz.db.dto.MessageDTO;
+import org.owasp.jbrofuzz.db.dto.ResponseDTO;
+import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
 import org.owasp.jbrofuzz.system.Logger;
@@ -208,6 +216,46 @@ public class Save {
 	}
 	
 	/**
+	 * @author daemonmidi@gmail.com
+	 * @since version 2.5
+	 * @param dbType
+	 * @param mWindow
+	 */
+	public static void writeDBEntry(final String dbType, final JBroFuzzWindow mWindow ){
+		if (dbType.equals("SQLLite")) writeSqlLite(mWindow);
+		else if (dbType.equals("CouchDB")) writeCouchDB(mWindow);
+	}
+	
+	
+	
+	/**
+	 * @author daemonmidi@gmail.com
+	 * @since version 2.5
+	 * @param mWindow
+	 */
+	private static void writeSqlLite(JBroFuzzWindow mWindow){
+		SQLLiteHandler slh = new SQLLiteHandler();
+		SessionDTO session = new SessionDTO();
+		MessageDTO[] messages = new MessageDTO[]{};
+		ResponseDTO[] responses = new ResponseDTO[]{};
+		ConnectionDTO connection = new ConnectionDTO();
+		
+		
+		
+	}
+	
+	
+	/**
+	 * @author daemonmidi@gmail.com
+	 * @since version 2.5
+	 * @param mWindow
+	 */
+	private static void writeCouchDB(JBroFuzzWindow mWindow){
+		
+	}
+	
+	
+	/**
 	 * <p>Method for obtaining the CSV output, given a table.</p>
 	 * <p>No "\n" is written at the end of the final line.</p>
 	 * 
@@ -251,6 +299,39 @@ public class Save {
 
 		return output.toString();
 
+	}
+
+	
+	/**
+	 * @author daemonmidi@gmail.com
+	 * @since version 2.5
+	 * @param inputTableModel
+	 * @return
+	 */
+	public static JSONArray getTableDataInJSON(final TableModel inputTableModel){
+		JSONArray tableData = new JSONArray();
+		final int totalRows = inputTableModel.getRowCount();
+		final int totalColumns = inputTableModel.getColumnCount();
+		if (totalRows < 1) {
+			return new JSONArray();
+		}
+
+		for (int currentRow = 0; currentRow < totalRows; currentRow++) {
+
+			for (int currentColumn = 0; currentColumn < totalColumns; currentColumn++) {
+				String name = inputTableModel.getColumnName(currentColumn);
+				String value = inputTableModel.getValueAt(currentColumn, currentRow).toString();
+				String cellString = "{\"" + name  + "\":\"" + value + "\"}";
+				JSONObject cell;
+				try {
+					cell = new JSONObject(cellString);
+					tableData.put(cell);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return tableData;
 	}
 	
 	/**
