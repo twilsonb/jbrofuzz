@@ -61,6 +61,8 @@ public class OpenSession {
 
 	public OpenSession(JBroFuzzWindow mWindow) {
 		new OpenSession(mWindow, "");
+		
+		
 		this.mWindow = mWindow;
 	}
 
