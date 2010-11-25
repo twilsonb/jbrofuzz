@@ -61,6 +61,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
+import org.owasp.jbrofuzz.db.SQLLiteHandler;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.fuzz.io.FuzzFileUtils;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
@@ -1065,9 +1066,8 @@ public class FuzzingPanel extends AbstractPanel {
 					//					}
 					// TODO: update to handle database
 					final String dbType = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "-1");
-					if(dbType.equals("None")){
-						getFrame().getJBroFuzz().getHandler().writeFuzzFile(
-								outputMessage);	
+					if(dbType.equals("None") || dbType.equals("CouchDB")){
+						getFrame().getJBroFuzz().getHandler().writeFuzzFile(outputMessage);	
 					}else if(dbType.equals("SQLLite (embedded)")){
 						// TODO: validation checks on the database
 						Logger.log("SQLITE database not implement - use none", 3);
