@@ -6,12 +6,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.Vector;
 
+import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
 import org.owasp.jbrofuzz.db.dto.MessageDTO;
 import org.owasp.jbrofuzz.db.dto.ResponseDTO;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
+import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 public class SQLLiteHandler {
 	/**
@@ -20,9 +23,18 @@ public class SQLLiteHandler {
 	 * @throws SQLException
 	 * @since version 2.5 Setting up the DB for usage.
 	 */
-	public void setUpDB() throws ClassNotFoundException, SQLException {
+	
+	public String setUpDB() throws ClassNotFoundException, SQLException {
 		Class.forName("org.sqlite.JDBC");
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:test.db");
+		String dbName = "";
+		// dbName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
+		if (dbName.length() <= 0  || dbName.equals("")){
+			Date dat = new Date();
+			dbName = String.valueOf(dat.getTime());
+		}
+		String connectionString = "jdbc:sqlite:"  + dbName + ".db";
+		Connection conn = DriverManager.getConnection(connectionString);
+		conn.setAutoCommit(false);
 		Statement stat = conn.createStatement();
 		stat.executeUpdate("drop table if exists session;");
 		stat.executeUpdate("drop table if exists connection;");
@@ -33,7 +45,10 @@ public class SQLLiteHandler {
 		stat.executeUpdate("create table connection (connectionId, sessionId, urlString);");
 		stat.executeUpdate("create table message (messageId, connectionId, textRequest, encoding, payload, start, end);");
 		stat.executeUpdate("create table response (responseId, connectionId, statusCode, responseHeader, responseBody);");
+		conn.commit();
+		conn.setAutoCommit(true);
 		conn.close();
+		return dbName;	
 	}
 
 	/**
@@ -41,9 +56,16 @@ public class SQLLiteHandler {
 	 * @since version 2.5
 	 * @return Connection
 	 * @throws SQLException
+	 * @throws ClassNotFoundException 
 	 */
-	public Connection getConnection() throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:sqlite:test.db");
+	public Connection getConnection(String dbName) throws SQLException, ClassNotFoundException {
+		Date dat = new Date();
+		if (dbName.length() == 0 && dbName.equals("")) {
+			dbName = dat.getYear() + "_" + dat.getMonth() + "_" + dat.getDay() + "_" + dat.getHours() + ":" + dat.getMinutes();
+		}
+		Class.forName("org.sqlite.JDBC");
+		String connectionString = "jdbc:sqlite:"  + dbName + ".db";
+		Connection conn = DriverManager.getConnection(connectionString);
 		return conn;
 	}
 	
@@ -205,6 +227,8 @@ public class SQLLiteHandler {
 	 */
 	private int insertOrUpdateMessageTable(Connection conn, long messageId, long connectionId, String textRequest, 
 											String encoding, String payload, int start, int end) throws SQLException{
+		
+		System.out.println("messageId: " + messageId + " connectionId: " + connectionId);
 		int returnValue = 1;
 		String sqlString1 = "";
 		if (messageId >= 0) {
