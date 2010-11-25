@@ -5,18 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
 import org.owasp.jbrofuzz.db.dto.MessageDTO;
 import org.owasp.jbrofuzz.db.dto.ResponseDTO;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
-import org.owasp.jbrofuzz.fuzz.io.Save;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
-import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 public class DTOCreator {
 
@@ -36,7 +32,9 @@ public class DTOCreator {
 		if (sessionId >= 0) {
 			session.setSessionId(sessionId);
 		} else {
-			session.setSessionId(getMaxId("session", con));
+			Date dat = new Date();
+			sessionId = dat.getTime();
+			session.setSessionId(sessionId);
 		}
 
 		session.setConnectionDTO(fillConnection(mWindow,
@@ -59,8 +57,10 @@ public class DTOCreator {
 	private ConnectionDTO fillConnection(JBroFuzzWindow mWindow,
 			long sessionId, Connection con, long connectionId) {
 		ConnectionDTO connection = new ConnectionDTO();
-		if (con != null)
-			connectionId = getPosMaxId(Long.valueOf(sessionId), con);
+
+		// connectionId = getPosMaxId(Long.valueOf(sessionId), con);
+		Date dat = new Date();
+		connectionId = dat.getTime();	
 		connection.setConnectionId(connectionId);
 		connection.setSessionid(sessionId);
 		connection.setUrlString(mWindow.getPanelFuzzing().getTextURL());
