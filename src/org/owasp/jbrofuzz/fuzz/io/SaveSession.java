@@ -30,6 +30,9 @@
 package org.owasp.jbrofuzz.fuzz.io;
 
 import java.io.File;
+import java.security.Timestamp;
+import java.sql.Time;
+import java.util.Date;
 
 import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
@@ -39,6 +42,7 @@ import org.owasp.jbrofuzz.db.DTOCreator;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
+
 
 /**
  * <p>
@@ -62,23 +66,27 @@ public class SaveSession {
 		if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("couchdb")){
 			DTOCreator dtoC = new DTOCreator();
 			CouchDBHandler couchHandler = new CouchDBHandler();
-			if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").length() > 0  && !JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").equals("")){
+			if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").length() <= 0  || JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").equals("")){
 				//start from scratch
-				long dbName = -1;
-				String documentId = couchHandler.getUUID();
-				SessionDTO session = dtoC.createSessionDTO(mWindow, dbName);
+				String dbName = "";
+				String documentId = "";
+				Date dat = new Date();
+				long sessionid = dat.getTime();
+				SessionDTO session = dtoC.createSessionDTO(mWindow, sessionid, null);
 				CouchDBMapper cdbMapper = new CouchDBMapper();
 				JSONObject document = cdbMapper.toCouch(session);
-				String dbNameReal = couchHandler.createDB(String.valueOf(dbName));
+				String dbNameReal = couchHandler.createDB(dbName);
 				couchHandler.createOrUpdateDocument(dbNameReal, documentId, document);
 			}
 			else if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").length() > 0 && !JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").equals("")){
-				//use exisiting db
-				couchHandler.createDB(JBroFuzzPrefs.DBSETTINGS[12].getId().toString());
-				SessionDTO session = dtoC.createSessionDTO(mWindow, -1);
+				//use provided dbName
+				Date dat = new Date();
+				String documentId = dat.getYear() + "_" + dat.getMonth() + "_" + dat.getDay() + "_" + dat.getHours() + ":" + dat.getMinutes();
+				long sessionid = dat.getTime();
+				SessionDTO session = dtoC.createSessionDTO(mWindow, sessionid, null);
 				CouchDBMapper cdbMapper = new CouchDBMapper();
 				JSONObject document = cdbMapper.toCouch(session);
-				couchHandler.createOrUpdateDocument(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""), couchHandler.getUUID(), document);
+				couchHandler.createOrUpdateDocument(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""), documentId, document);
 			}
 			else{
 				throw new Exception("No DB Name provided");

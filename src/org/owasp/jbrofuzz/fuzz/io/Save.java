@@ -310,15 +310,15 @@ public class Save {
 	 */
 	public static JSONArray getTableDataInJSON(final TableModel inputTableModel){
 		JSONArray tableData = new JSONArray();
-		final int totalRows = inputTableModel.getRowCount();
-		final int totalColumns = inputTableModel.getColumnCount();
+		final int totalRows = inputTableModel.getRowCount() -1;
+		final int totalColumns = inputTableModel.getColumnCount() -1;
 		if (totalRows < 1) {
 			return new JSONArray();
 		}
 
 		for (int currentRow = 0; currentRow < totalRows; currentRow++) {
 
-			for (int currentColumn = 0; currentColumn < totalColumns; currentColumn++) {
+			for (int currentColumn = 0; currentColumn < totalColumns-1; currentColumn++) {
 				String name = inputTableModel.getColumnName(currentColumn);
 				String value = inputTableModel.getValueAt(currentColumn, currentRow).toString();
 				String cellString = "{\"" + name  + "\":\"" + value + "\"}";
