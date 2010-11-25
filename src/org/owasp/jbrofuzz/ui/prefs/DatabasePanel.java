@@ -227,9 +227,9 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[7].getTitle()));
 		dbTypePanel.add(dbUserTextField);
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[8].getTitle()));
-		dbTypePanel.add(dbHostTextField);
-		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[9].getTitle()));
 		dbTypePanel.add(dbPassTextField);
+		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[9].getTitle()));
+		dbTypePanel.add(dbHostTextField);
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[10].getTitle()));
 		dbTypePanel.add(dbPortTextField);
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[12].getTitle()));
@@ -337,7 +337,6 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		// Listeners for the tick boxes
 		proxyEnabledBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent aEvent1) {
-
 				if (proxyEnabledBox.isSelected()) {
 					hostTextField.setEnabled(true);
 					portTextField.setEnabled(true);
@@ -416,8 +415,8 @@ public class DatabasePanel extends AbstractPrefsPanel {
 
 	@Override
 	protected void apply() {
-		JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DBSETTINGS[0].getId(),
-				proxyEnabledBox.isSelected());
+		System.out.println("apply: " + dbTypeBox.getSelectedIndex());
+		JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DBSETTINGS[0].getId(), proxyEnabledBox.isSelected());
 		if (dbTypeBox.getSelectedIndex() == 3) {
 			proxyEnabledBox.setSelected(false);
 			proxyReqAuthBox.setSelected(false);
@@ -454,13 +453,13 @@ public class DatabasePanel extends AbstractPrefsPanel {
 					JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[6].getId(),
 							passTextField.getText());
 				}
-				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[7].getId(), dbUserTextField.getText());
-				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[8].getId(), dbPassTextField.getText());
-				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[9].getId(), dbHostTextField.getText());
-				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[10].getId(), dbPortTextField.getText());
-				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[11].getId(), dbTypeBox.getSelectedItem().toString());
-				JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[12].getId(), dbNameTextField.getText());
 			}
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[7].getId(), dbUserTextField.getText());
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[8].getId(), dbPassTextField.getText());
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[9].getId(), dbHostTextField.getText());
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[10].getId(), dbPortTextField.getText());
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[11].getId(), dbTypeBox.getSelectedItem().toString());
+			JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[12].getId(), dbNameTextField.getText());
 		}
 	}
 }
