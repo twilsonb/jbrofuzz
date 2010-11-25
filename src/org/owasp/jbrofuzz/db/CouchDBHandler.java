@@ -1,6 +1,7 @@
 package org.owasp.jbrofuzz.db;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -26,9 +27,10 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  *
  */
 public class CouchDBHandler{
-	private String protocol = "";
-	private String host = "";
-	private int port = -1;
+	private String protocol = "http";
+	private String host = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[9].getId(), "");
+	private int port = Integer.valueOf(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[10].getId(), ""));
+
 	
 	/**
 	 * @author daemonmidi@gmail.com
@@ -129,12 +131,13 @@ public class CouchDBHandler{
 		String responseBody = "";
 		org.apache.commons.httpclient.HttpClient client = new HttpClient();
 		client.getParams().setParameter("http.useragent", "jbrofuzz");
-		
+				
 		PutMethod method = new PutMethod(url);
-	    method.getParams().setParameter("retryHandler", new DefaultHttpRequestRetryHandler(3, false));
+	    // method.getParams().setParameter("retryHandler", new DefaultHttpRequestRetryHandler(3, false));
 	    if (requestBody.length() > 0 ) method.setRequestBody(requestBody);
+	    
 	   	try {
-			int returnCode = client.executeMethod(method);
+	   		responseBody = method.getResponseBodyAsString();
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -161,7 +164,6 @@ public class CouchDBHandler{
 	    DeleteMethod method = new DeleteMethod(url);
 		org.apache.commons.httpclient.HttpClient client = new HttpClient();
 	    client.getParams().setParameter("http.useragent", "jbrofuzz");
-	    method.getParams().setParameter("retryHandler", new DefaultHttpRequestRetryHandler(3, false));
 	   	try {
 			client.executeMethod(method);
 			responseBody = method.getResponseBodyAsString();
@@ -236,15 +238,15 @@ public class CouchDBHandler{
 	 * @author daemonmidi@gmail.com
 	 * @since version 2.5
 	 * @param dbName
-	 * @return resultCode | > 0 OK | < 0 failed.
+	 * @return dbName | > 0 OK | < 0 failed.
 	 * @throws Exception
 	 */
 	public String createDB(String dbName){
-		int returnCode = 0;
 		String response = "";
 		String dbNameReal = "";
-		if (Long.valueOf(dbName) < 0){
-			dbNameReal = getUUID();
+		if (dbName.length() < 0 || dbName.equals("")){
+			Date dat = new Date();
+			dbNameReal = "jbrfuzz_" + dat.getTime(); 
 		}
 		else{
 			dbNameReal = dbName;
@@ -254,9 +256,9 @@ public class CouchDBHandler{
 			response = sendPut(url, "");
 		}
 		else{
-			returnCode = -1;
+			dbNameReal = "-1";
 		}
-		if (response.length() == 0 || response.toLowerCase().contains("error")) returnCode = -1;
+		if (response.length() == 0 || response.toLowerCase().contains("error")) dbNameReal = "-1";
 		return dbNameReal;
 	}
 	
@@ -294,30 +296,11 @@ public class CouchDBHandler{
 		if (evaluateConfiguration() > 0){
 			String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbName + "/" + documentId;
 			response = sendDelete(url);
-			System.out.println("repsonse: " + response);
 		}
 		if (response.toLowerCase().contains("error")) returnCode = -1;
 		return returnCode;
 	}
-	
-	
-	/**
-	 * get UUID for documentId
-	 * @author daemonmidi@gmail.com
-	 * @since version 2.5
-	 * @return int | > 0 OK | < 0 failed
-	 */
-	public String getUUID(){
-		String uuid = "";
-		if (evaluateConfiguration() > 0){
-			String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/_uuids";
-			uuid = sendPut(url, "");
-		}
-		if (uuid.toLowerCase().contains("error")) uuid = "";
-		return uuid;
-	}
-	
-	
+		
 	/**
 	 * update document with new data
 	 * @author daemonmidi@gmail.com
@@ -328,18 +311,22 @@ public class CouchDBHandler{
 	public String createOrUpdateDocument(String dbName, String documentId, JSONObject document){
 		String response = "";
 		String body = "";
+		if (documentId.length() < 0 || documentId.equals("")){
+			Date dat = new Date();
+			documentId = dat.getYear() + "_" + dat.getMonth() + "_" + dat.getDay() + "_" + dat.getHours() + ":" + dat.getMinutes();;
+		}
 		String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbName + "/" + documentId;
 		if (evaluateConfiguration() > 0){
 			String revision = getDocumentRevision(dbName, documentId);
 			try {
 				if (revision.length() > 0){
-					document.append("_rev", revision);
+					document.put("_rev", revision);
 				}
 				body = document.toString(); 
+				response = sendPut(url, body);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			response = sendPut(url, body);
 		}
 		return response;
 	}
