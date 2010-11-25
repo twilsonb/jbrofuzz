@@ -36,10 +36,11 @@ import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.sql.SQLException;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -61,7 +62,9 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
+import org.owasp.jbrofuzz.db.DTOCreator;
 import org.owasp.jbrofuzz.db.SQLLiteHandler;
+import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.fuzz.io.FuzzFileUtils;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
@@ -951,11 +954,13 @@ public class FuzzingPanel extends AbstractPanel {
 	 */
 	@Override
 	public void start() {
-
 		if (!stopped) {
 			return;
 		}
 		stopped = false;
+			
+		SQLLiteHandler sqlH = new SQLLiteHandler();
+		DTOCreator dtoC = new DTOCreator();
 
 		// Start, Stop, Pause, Add, Remove
 		setOptionsAvailable(false, true, false, false, false);
@@ -1069,18 +1074,28 @@ public class FuzzingPanel extends AbstractPanel {
 					if(dbType.equals("None") || dbType.equals("CouchDB")){
 						getFrame().getJBroFuzz().getHandler().writeFuzzFile(outputMessage);	
 					}else if(dbType.equals("SQLLite (embedded)")){
+						
 						// TODO: validation checks on the database
 						Logger.log("SQLITE database not implement - use none", 3);
-					}else{
-						// TODO: validation checks on the couch DB implementation
-						Logger.log("COUCHDB database not implement - use none", 3);
-					}
+						
+						Date dat = new Date();
+						String dbName = sqlH.setUpDB();
 
+						java.sql.Connection con = sqlH.getConnection(dbName);
+						SessionDTO session = dtoC.createSessionDTO(this.getFrame(), Long.valueOf(dbName), con);
+						sqlH.store(session, con);
+						
+					}
+					//TODO: CouchDB will be activated via saveSession
 				}
 
 			} catch (final NoSuchFuzzerException exp) {
-
 				Logger.log("The fuzzer could not be found...", 3);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 		}
