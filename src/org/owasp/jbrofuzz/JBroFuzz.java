@@ -78,12 +78,17 @@ public class JBroFuzz {
 	public static void main(final String[] args) {
 
 		CommandLineInterpreter cli = new CommandLineInterpreter();
+		try{
 		if (cli.process(args) <= 0 ){
 			javax.swing.SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					new JBroFuzz();
 				}
 			});
+		}
+		}
+		catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 
