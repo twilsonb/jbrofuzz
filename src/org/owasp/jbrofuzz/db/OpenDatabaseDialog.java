@@ -39,7 +39,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
  * <p>
- * The open location dialog.
+ * The open database dialog.
  * </p>
  * 
  * @author daemonmidi@gmail.com
@@ -81,7 +81,7 @@ KeyListener {
 	
 	private String sessionsCouch[] = {"not loaded yet"};
 
-	
+	private JBroFuzzWindow parent = null;
 	/**
 	 * <p>
 	 * Constructs a dialog box for (Ctrl+L) input of URL fields.
@@ -97,6 +97,7 @@ KeyListener {
 	public OpenDatabaseDialog(final JBroFuzzWindow parent) {
 
 		super(parent, " Open Database ", true);
+		this.parent = parent;
 		// setFont(new Font("SansSerif", Font.BOLD, 10));
 		setFont(new Font("Verdana", Font.BOLD, 12));
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
@@ -167,7 +168,7 @@ KeyListener {
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 
-						clickOK();
+						clickOK(parent);
 						OpenDatabaseDialog.this.dispose();
 
 					}
@@ -385,7 +386,7 @@ KeyListener {
 		}
 	}
 
-	private void clickOK() {
+	private void clickOK(JBroFuzzWindow mWindow) {
 		SessionDTO session = new SessionDTO();
 		String dbName = databaseBox.getSelectedItem().toString();
 		String documentId = "" ;sessionsCouchBox.getSelectedItem().toString();
@@ -416,7 +417,11 @@ KeyListener {
 				e.printStackTrace();
 			}
 		}
-		//TODO mapp SessionDTO to mWindow
+		
+		DTOCreator dtoC = new DTOCreator();
+		dtoC.fillWindow(session, mWindow);
+		mWindow.doLayout();
+		mWindow.repaint();
 	}
 
 	@Override
@@ -426,7 +431,7 @@ KeyListener {
 			OpenDatabaseDialog.this.dispose();
 		}
 		if (ke.getKeyCode() == 10) {
-			clickOK();
+			clickOK(parent);
 			OpenDatabaseDialog.this.dispose();
 		}
 
