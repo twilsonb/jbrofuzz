@@ -136,7 +136,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		passTextField.setMargin(new Insets(1, 1, 1, 1));
 		passTextField.setPreferredSize(new Dimension(80, 20));
 
-		final String[] dbTypeArray = { "SQLLite (embedded)", "CouchDB", "None"};		
+		final String[] dbTypeArray = { "SQLite", "CouchDB", "None"};		
 		dbTypeBox = new JComboBox(dbTypeArray);
 		dbTypeBox.setToolTipText(JBroFuzzPrefs.DBSETTINGS[11].getTooltip()); 
 		
