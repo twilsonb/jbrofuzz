@@ -46,6 +46,19 @@ public class DTOCreator {
 
 		return session;
 	}
+	
+	/**
+	 * go from DTO to mWindow
+	 * @author daemonmidi@gmail.com
+	 * @since version 2.5
+	 * @param session
+	 * @param mWindow
+	 * @return
+	 */
+	public JBroFuzzWindow fillWindow(SessionDTO session, JBroFuzzWindow mWindow){
+		//TODO
+		return mWindow; 
+	}
 
 	/**
 	 * @author daemonmidi@gmail.com
