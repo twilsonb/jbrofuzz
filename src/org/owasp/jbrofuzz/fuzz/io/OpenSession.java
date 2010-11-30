@@ -36,7 +36,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.prefs.Preferences;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -47,6 +48,7 @@ import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Prototype;
+import org.owasp.jbrofuzz.db.SQLiteHandler;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
@@ -80,7 +82,7 @@ public class OpenSession {
 		JFileChooser fc = new JFileChooser();
 
 		if ((fileName.length() == 0 || fileName.equals(""))
-				&& (!prefs.DBSETTINGS[11].getId().equals("SQLLite") && !prefs.DBSETTINGS[11]
+				&& (!prefs.DBSETTINGS[11].getId().equals("SQLite") && !prefs.DBSETTINGS[11]
 						.getId().equals("CouchDB"))) {
 			try {
 				if ((new File(dirString).isDirectory())) {
@@ -103,27 +105,44 @@ public class OpenSession {
 				setUpFromFile(file, fc);
 			}
 		} else if ((fileName.length() > 0 && !fileName.equals(""))
-				&& (!prefs.DBSETTINGS[11].getId().equals("SQLLite") && !prefs.DBSETTINGS[11]
+				&& (!prefs.DBSETTINGS[11].getId().equals("SQLite") && !prefs.DBSETTINGS[11]
 						.getId().equals("CouchDB"))) {
 			file = new File(fileName);
 			setUpFromFile(file, fc);
 		} else if ((fileName.length() == 0 || fileName.equals(""))
-				&& (prefs.DBSETTINGS[11].getId().equals("SQLLite"))) {
-			setUpFromSQLLite();
+				&& (prefs.DBSETTINGS[11].getId().equals("SQLite"))) {
+			setUpFromSQLite(this.mWindow);
 		} else if ((fileName.length() == 0 || fileName.equals(""))
 				&& (prefs.DBSETTINGS[11].getId().equals("CouchDB"))) {
-			setUpFromCouchDB();
+			setUpFromCouchDB(this.mWindow);
 		}
 
 	}
 
 	/**
-	 * load session from SQLLiteDB
+	 * load session from SQLiteDB
 	 * 
 	 * @author daemonmidi@gmail.com
+	 * @throws ClassNotFoundException 
+	 * @throws SQLException 
 	 * @since version 2.5
 	 */
-	public void setUpFromSQLLite() {
+	public void setUpFromSQLite(JBroFuzzWindow mWindow) {
+		
+		SQLiteHandler sqlH = new SQLiteHandler();
+		Connection conn;
+		try {
+			conn = sqlH.getConnection(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""));
+			sqlH.read(conn, -1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		// TODO fill me
 
 	}
@@ -134,7 +153,7 @@ public class OpenSession {
 	 * @author daemonmidi@gmail.com
 	 * @since version 2.5
 	 */
-	public void setUpFromCouchDB() {
+	public void setUpFromCouchDB(JBroFuzzWindow mWindow) {
 		// TODO fill me
 
 	}
