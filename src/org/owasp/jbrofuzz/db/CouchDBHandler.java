@@ -93,6 +93,12 @@ public class CouchDBHandler{
 	}
 	
 	
+	public String[] getDocumentIds(String dbName){
+		//TODO
+		String[] documentIds = new String[]{};
+		return documentIds;
+	}
+	
 	/**
 	 * http-GET for rest interface to couchDB
 	 * @author daemonmidi@gmail.com
