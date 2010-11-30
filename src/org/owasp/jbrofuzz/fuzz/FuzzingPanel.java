@@ -63,7 +63,7 @@ import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
 import org.owasp.jbrofuzz.db.DTOCreator;
-import org.owasp.jbrofuzz.db.SQLLiteHandler;
+import org.owasp.jbrofuzz.db.SQLiteHandler;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.fuzz.io.FuzzFileUtils;
@@ -604,7 +604,7 @@ public class FuzzingPanel extends AbstractPanel {
 						if(dbType.equals("None")){
 							response = FuzzFileUtils.getResponse(fuzzerLineOutput);
 							request = FuzzFileUtils.getRequest(fuzzerLineOutput);
-						}else if(dbType.equals("SQLLite (embedded)")){
+						}else if(dbType.equals("SQLite")){
 							// TODO: validation checks on the database
 							Logger.log("SQLITE database not implement - use none", 3);
 						}else{
@@ -959,7 +959,7 @@ public class FuzzingPanel extends AbstractPanel {
 		}
 		stopped = false;
 			
-		SQLLiteHandler sqlH = new SQLLiteHandler();
+		SQLiteHandler sqlH = new SQLiteHandler();
 		DTOCreator dtoC = new DTOCreator();
 
 		// Start, Stop, Pause, Add, Remove
@@ -1073,7 +1073,7 @@ public class FuzzingPanel extends AbstractPanel {
 					final String dbType = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "-1");
 					if(dbType.equals("None") || dbType.equals("CouchDB")){
 						getFrame().getJBroFuzz().getHandler().writeFuzzFile(outputMessage);	
-					}else if(dbType.equals("SQLLite (embedded)")){
+					}else if(dbType.equals("SQLite")){
 						
 						// TODO: validation checks on the database
 						Logger.log("SQLITE database not implement - use none", 3);
