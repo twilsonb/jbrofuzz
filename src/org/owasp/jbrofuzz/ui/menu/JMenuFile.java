@@ -278,8 +278,7 @@ public class JMenuFile extends JMenu {
 
 					if (choice == JOptionPane.YES_OPTION) {
 						final int c = mFrameWindow.getTp().getSelectedIndex();
-						final AbstractPanel p = (AbstractPanel) mFrameWindow.getTp()
-						.getComponent(c);
+						final AbstractPanel p = (AbstractPanel) mFrameWindow.getTp().getComponent(c);
 						p.stop();
 
 						new OpenDatabaseDialog(mFrameWindow);
