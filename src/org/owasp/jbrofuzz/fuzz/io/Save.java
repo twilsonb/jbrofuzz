@@ -44,7 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.db.SQLLiteHandler;
+import org.owasp.jbrofuzz.db.SQLiteHandler;
 import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
 import org.owasp.jbrofuzz.db.dto.MessageDTO;
 import org.owasp.jbrofuzz.db.dto.ResponseDTO;
@@ -222,7 +222,7 @@ public class Save {
 	 * @param mWindow
 	 */
 	public static void writeDBEntry(final String dbType, final JBroFuzzWindow mWindow ){
-		if (dbType.equals("SQLLite")) writeSqlLite(mWindow);
+		if (dbType.equals("SQLite")) writeSqlLite(mWindow);
 		else if (dbType.equals("CouchDB")) writeCouchDB(mWindow);
 	}
 	
@@ -234,7 +234,7 @@ public class Save {
 	 * @param mWindow
 	 */
 	private static void writeSqlLite(JBroFuzzWindow mWindow){
-		SQLLiteHandler slh = new SQLLiteHandler();
+		SQLiteHandler slh = new SQLiteHandler();
 		SessionDTO session = new SessionDTO();
 		MessageDTO[] messages = new MessageDTO[]{};
 		ResponseDTO[] responses = new ResponseDTO[]{};
