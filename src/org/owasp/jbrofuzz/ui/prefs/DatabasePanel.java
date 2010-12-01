@@ -30,11 +30,13 @@
 
 package org.owasp.jbrofuzz.ui.prefs;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,7 +79,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 	protected DatabasePanel(final PrefDialog dialog) {
 
 		super("Database Configuration");
-
+		
 		// Tick box for selecting your own directory
 		final boolean proxyEnabled = JBroFuzz.PREFS.getBoolean(
 				JBroFuzzPrefs.DBSETTINGS[0].getId(), false);
@@ -174,8 +176,6 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		dbPortTextField.setMargin(new Insets(1, 1, 1, 1));
 		dbPortTextField.setPreferredSize(new Dimension(80, 20));
 		
-		//	JBroFuzzPrefs.DBSETTINGS[12].getId()  == dbType (SelectBox)
-		
 		final String dbNameEntry = JBroFuzz.PREFS.get(
 				JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
 		dbNameTextField = new JTextField(dbNameEntry);
@@ -217,18 +217,21 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		hostPortPanel.add(portTextField, c);
 
 		// Panel for DB-Type selection
-		final JPanel dbTypePanel = new JPanel(new FlowLayout(FlowLayout.LEFT,
-				15, 0));
+		final JPanel dbTypePanel = new JPanel(new GridLayout(0,2));
 		dbTypePanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("DB-Type"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
+		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15,0));
+		dbTypePanel.add(new JLabel(""));
 		dbTypePanel.add(dbTypeBox);
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[7].getTitle()));
 		dbTypePanel.add(dbUserTextField);
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[8].getTitle()));
 		dbTypePanel.add(dbPassTextField);
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[9].getTitle()));
+		
+		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15,0));
 		dbTypePanel.add(dbHostTextField);
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[10].getTitle()));
 		dbTypePanel.add(dbPortTextField);
@@ -238,11 +241,10 @@ public class DatabasePanel extends AbstractPrefsPanel {
 
 		// Panel for our friends above: Username & Password
 		final JPanel userPassPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,
-				15, 0));
+		 		15, 0));
 		userPassPanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("Authentication"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		// userPassPanel.add(new JLabel("Type"));
 		userPassPanel.add(authTypeBox);
 		userPassPanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[5].getTitle()));
 		userPassPanel.add(userTextField);
@@ -397,8 +399,9 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		add(userPassPanel);
 		add(Box.createRigidArea(V_SPACE));
 		add(dbTypePanel);
+		add(topPanel);
+		add(bottomPanel);
 		add(Box.createRigidArea(new Dimension(20, 300)));
-		
 		
 		// select appropriate index.
 		if (!JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId() , "").equals("")){
@@ -415,7 +418,6 @@ public class DatabasePanel extends AbstractPrefsPanel {
 
 	@Override
 	protected void apply() {
-		System.out.println("apply: " + dbTypeBox.getSelectedIndex());
 		JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DBSETTINGS[0].getId(), proxyEnabledBox.isSelected());
 		if (dbTypeBox.getSelectedIndex() == 3) {
 			proxyEnabledBox.setSelected(false);
@@ -444,7 +446,6 @@ public class DatabasePanel extends AbstractPrefsPanel {
 
 				// 4, proxy authentication type, basic, ntlm, etc:
 				// integer 1 is basic
-
 				if (proxyReqAuthBox.isSelected()) {
 					JBroFuzz.PREFS.put(JBroFuzzPrefs.DBSETTINGS[4].getId(), 
 							authTypeBox.getSelectedItem().toString());

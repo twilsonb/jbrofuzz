@@ -73,8 +73,8 @@ public class PrefDialog extends JDialog implements TreeSelectionListener {
 	 */
 	private static final long serialVersionUID = -6206219050510937296L;
 	
-	private static final int SIZE_X = 650;
-	private static final int SIZE_Y = 400;
+	private static final int SIZE_X = 850;
+	private static final int SIZE_Y = 800;
 
 	// The tree
 	private final JTree tree;
