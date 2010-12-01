@@ -40,6 +40,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.owasp.jbrofuzz.db.OpenDatabaseDialog;
+import org.owasp.jbrofuzz.db.SyncDatabaseDialog;
 import org.owasp.jbrofuzz.fuzz.io.OpenSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveAsSession;
 import org.owasp.jbrofuzz.fuzz.io.SaveSession;
@@ -64,6 +65,7 @@ public class JMenuFile extends JMenu {
 
 		final JMenuItem openLocation = new JMenuItem("Open Location...");
 		final JMenuItem openDatabase = new JMenuItem("Open Database...");
+		final JMenuItem syncDatabase = new JMenuItem("Sync to remote DB...");
 		
 		final JMenuItem clearOutput = new JMenuItem("Clear All Output", ImageCreator.IMG_CLEAR);
 		final JMenuItem clearFuzzers = new JMenuItem("Clear All Fuzzers", ImageCreator.IMG_CLEAR);
@@ -90,6 +92,8 @@ public class JMenuFile extends JMenu {
 		openDatabase.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 		
+		syncDatabase.setAccelerator(KeyStroke.getKeyStroke('Y', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+		
 		loadFuzzers.setAccelerator(KeyStroke.getKeyStroke('M', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 
@@ -111,6 +115,7 @@ public class JMenuFile extends JMenu {
 		this.addSeparator();
 		this.add(openLocation);
 		this.add(openDatabase);
+		this.add(syncDatabase);
 		this.addSeparator();
 		this.add(save);
 		this.add(saveAs);
@@ -293,6 +298,40 @@ public class JMenuFile extends JMenu {
 				
 			}
 		});
+		
+
+		
+		// File -> Open Database
+		syncDatabase.addActionListener(new ActionListener(){
+			public void actionPerformed(final ActionEvent aEvent){
+
+				mainMenuBar.setSelectedPanelCheckBox(JBroFuzzWindow.ID_PANEL_FUZZING);
+				mFrameWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
+
+				if (!mFrameWindow.getPanelFuzzing().isStopped()) {
+
+					final int choice = JOptionPane.showConfirmDialog(mFrameWindow,
+							"Fuzzing Session Running. Stop Fuzzing?",
+							" JBroFuzz - Stop ", JOptionPane.YES_NO_OPTION);
+
+					if (choice == JOptionPane.YES_OPTION) {
+						final int c = mFrameWindow.getTp().getSelectedIndex();
+						final AbstractPanel p = (AbstractPanel) mFrameWindow.getTp().getComponent(c);
+						p.stop();
+
+						new SyncDatabaseDialog(mFrameWindow);
+
+					}
+
+				} else {
+
+					new SyncDatabaseDialog(mFrameWindow);
+
+				}
+				
+			}
+		});
+		
 		
 		// File -> Load Fuzzers
 		loadFuzzers.addActionListener(new ActionListener() {
