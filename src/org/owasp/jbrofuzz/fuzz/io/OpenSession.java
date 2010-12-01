@@ -48,7 +48,9 @@ import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Prototype;
+import org.owasp.jbrofuzz.db.DTOCreator;
 import org.owasp.jbrofuzz.db.SQLiteHandler;
+import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
@@ -63,8 +65,6 @@ public class OpenSession {
 
 	public OpenSession(JBroFuzzWindow mWindow) {
 		new OpenSession(mWindow, "");
-		
-		
 		this.mWindow = mWindow;
 	}
 
@@ -104,58 +104,10 @@ public class OpenSession {
 				file = fc.getSelectedFile();
 				setUpFromFile(file, fc);
 			}
-		} else if ((fileName.length() > 0 && !fileName.equals(""))
-				&& (!prefs.DBSETTINGS[11].getId().equals("SQLite") && !prefs.DBSETTINGS[11]
-						.getId().equals("CouchDB"))) {
+		} else if ((fileName.length() > 0 && !fileName.equals(""))) {
 			file = new File(fileName);
 			setUpFromFile(file, fc);
-		} else if ((fileName.length() == 0 || fileName.equals(""))
-				&& (prefs.DBSETTINGS[11].getId().equals("SQLite"))) {
-			setUpFromSQLite(this.mWindow);
-		} else if ((fileName.length() == 0 || fileName.equals(""))
-				&& (prefs.DBSETTINGS[11].getId().equals("CouchDB"))) {
-			setUpFromCouchDB(this.mWindow);
 		}
-
-	}
-
-	/**
-	 * load session from SQLiteDB
-	 * 
-	 * @author daemonmidi@gmail.com
-	 * @throws ClassNotFoundException 
-	 * @throws SQLException 
-	 * @since version 2.5
-	 */
-	public void setUpFromSQLite(JBroFuzzWindow mWindow) {
-		
-		SQLiteHandler sqlH = new SQLiteHandler();
-		Connection conn;
-		try {
-			conn = sqlH.getConnection(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""));
-			sqlH.read(conn, -1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		// TODO fill me
-
-	}
-
-	/**
-	 * load session from couchdb
-	 * 
-	 * @author daemonmidi@gmail.com
-	 * @since version 2.5
-	 */
-	public void setUpFromCouchDB(JBroFuzzWindow mWindow) {
-		// TODO fill me
-
 	}
 
 	/**
