@@ -27,7 +27,8 @@ public class SQLiteHandler {
 	public String setUpDB() throws ClassNotFoundException, SQLException {
 		Class.forName("org.sqlite.JDBC");
 		String dbName = "";
-		// dbName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
+		dbName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
+		System.out.println("Setting up Database: " + dbName);
 		if (dbName.length() <= 0  || dbName.equals("")){
 			Date dat = new Date();
 			dbName = String.valueOf(dat.getTime());
