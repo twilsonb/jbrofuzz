@@ -31,8 +31,7 @@ public class DTOCreator {
 	 * @param mWindow
 	 * @return SessionDTO filled
 	 */
-	public SessionDTO createSessionDTO(JBroFuzzWindow mWindow, long sessionId,
-			Connection con) {
+	public SessionDTO createSessionDTO(JBroFuzzWindow mWindow, long sessionId) {
 		SessionDTO session = new SessionDTO();
 
 		session.setJVersion(System.getProperty("java.version"));
@@ -47,11 +46,11 @@ public class DTOCreator {
 		}
 
 		session.setConnectionDTO(fillConnection(mWindow,
-				session.getSessionId(), con, -1));
+				session.getSessionId(), -1));
 		session.setMessage(fillMessages(mWindow, session.getConnectionDTO()
-				.getConnectionId(), con));
+				.getConnectionId()));
 		session.setResponse(fillResponse(mWindow, session.getConnectionDTO()
-				.getConnectionId(), con));
+				.getConnectionId()));
 
 		return session;
 	}
@@ -64,7 +63,7 @@ public class DTOCreator {
 	 * @return ConnectionDTO filled
 	 */
 	private ConnectionDTO fillConnection(JBroFuzzWindow mWindow,
-			long sessionId, Connection con, long connectionId) {
+			long sessionId, long connectionId) {
 		ConnectionDTO connection = new ConnectionDTO();
 
 		// connectionId = getPosMaxId(Long.valueOf(sessionId), con);
@@ -85,7 +84,7 @@ public class DTOCreator {
 	 * @return MessageDTO[] filled
 	 */
 	private MessageDTO[] fillMessages(JBroFuzzWindow mWindow,
-			long connectionId, Connection con) {
+			long connectionId) {
 		int i = 0;
 		Vector<MessageDTO> mesV = new Vector<MessageDTO>();
 		
@@ -127,7 +126,7 @@ public class DTOCreator {
 	 * @return ResponseDTO[] filled
 	 */
 	private ResponseDTO[] fillResponse(JBroFuzzWindow mWindow,
-			long connectionId, Connection con) {
+			long connectionId) {
 
 		int row = 0;
 		Vector<ResponseDTO> resV = new Vector<ResponseDTO>();
