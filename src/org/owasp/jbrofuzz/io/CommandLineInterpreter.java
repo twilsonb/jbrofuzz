@@ -65,7 +65,7 @@ public class CommandLineInterpreter{
 		int fuzzerNumber = -1;
 		int returnValue = -1; // everything went wrong
 		boolean result = false;
-		boolean doNotFuzz = false;
+		boolean doNotFuzz = true; // stealth mode :-)
 
 		/*
 		 * Linux commandline interface style 
@@ -125,6 +125,9 @@ public class CommandLineInterpreter{
 			}
 			else if (args[j].equals("-r") || args[j].equals("--request")){
 				request = args[j + 1 ];
+			}
+			else if (args[j].equals("-R") || args[j].equals("--run")){
+				doNotFuzz = false;
 			}
 			else if (args[j].equals("-s") || args[j].equals("--showResults")){
 				result = true;
