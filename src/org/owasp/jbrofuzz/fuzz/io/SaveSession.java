@@ -31,6 +31,7 @@ package org.owasp.jbrofuzz.fuzz.io;
 
 import java.io.File;
 import java.security.Timestamp;
+import java.sql.Connection;
 import java.sql.Time;
 import java.util.Date;
 
@@ -39,6 +40,7 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.db.CouchDBHandler;
 import org.owasp.jbrofuzz.db.CouchDBMapper;
 import org.owasp.jbrofuzz.db.DTOCreator;
+import org.owasp.jbrofuzz.db.SQLiteHandler;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
@@ -72,7 +74,7 @@ public class SaveSession {
 				String documentId = "";
 				Date dat = new Date();
 				long sessionid = dat.getTime();
-				SessionDTO session = dtoC.createSessionDTO(mWindow, sessionid, null);
+				SessionDTO session = dtoC.createSessionDTO(mWindow, sessionid);
 				CouchDBMapper cdbMapper = new CouchDBMapper();
 				JSONObject document = cdbMapper.toCouch(session);
 				String dbNameReal = couchHandler.createDB(dbName);
@@ -83,7 +85,7 @@ public class SaveSession {
 				Date dat = new Date();
 				String documentId = dat.getYear() + "_" + dat.getMonth() + "_" + dat.getDay() + "_" + dat.getHours() + ":" + dat.getMinutes();
 				long sessionid = dat.getTime();
-				SessionDTO session = dtoC.createSessionDTO(mWindow, sessionid, null);
+				SessionDTO session = dtoC.createSessionDTO(mWindow, sessionid);
 				CouchDBMapper cdbMapper = new CouchDBMapper();
 				JSONObject document = cdbMapper.toCouch(session);
 				couchHandler.createOrUpdateDocument(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""), documentId, document);
@@ -91,6 +93,20 @@ public class SaveSession {
 			else{
 				throw new Exception("No DB Name provided");
 			}
+		}
+		else if(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("sqlite")){
+			// write to SQLite in case somebody did sessin to file and now decides to go sqlite for whatever reason
+			DTOCreator dtoC = new DTOCreator();
+			SQLiteHandler sqlH = new SQLiteHandler();
+			sqlH.setUpDB();
+			String dbName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
+			if (dbName.length() == 0 || dbName.equals("")){
+				Date dat = new Date();
+				dbName = String.valueOf(dat.getTime());
+			}
+			Connection con = sqlH.getConnection(dbName);
+			SessionDTO session = dtoC.createSessionDTO(mWindow, -1);
+			sqlH.store(session, con);
 		}
 		else {
 			// If there is a file already opened, save there
