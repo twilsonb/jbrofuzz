@@ -33,6 +33,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Date;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -44,10 +47,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.db.CouchDBHandler;
+import org.owasp.jbrofuzz.db.CouchDBMapper;
+import org.owasp.jbrofuzz.db.DTOCreator;
 import org.owasp.jbrofuzz.db.SQLiteHandler;
-import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
-import org.owasp.jbrofuzz.db.dto.MessageDTO;
-import org.owasp.jbrofuzz.db.dto.ResponseDTO;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
@@ -236,12 +239,18 @@ public class Save {
 	private static void writeSqlLite(JBroFuzzWindow mWindow){
 		SQLiteHandler slh = new SQLiteHandler();
 		SessionDTO session = new SessionDTO();
-		MessageDTO[] messages = new MessageDTO[]{};
-		ResponseDTO[] responses = new ResponseDTO[]{};
-		ConnectionDTO connection = new ConnectionDTO();
 		
-		
-		
+		Connection con;
+		try {
+			con = slh.getConnection(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""));
+			DTOCreator dtoC = new DTOCreator();
+			session = dtoC.createSessionDTO(mWindow, -1);
+			slh.store(session, con);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -251,7 +260,12 @@ public class Save {
 	 * @param mWindow
 	 */
 	private static void writeCouchDB(JBroFuzzWindow mWindow){
-		
+		DTOCreator dtoc = new DTOCreator();
+		SessionDTO session = dtoc.createSessionDTO(mWindow, -1);
+		CouchDBHandler couchHanlder = new CouchDBHandler();
+		CouchDBMapper couchMapper = new CouchDBMapper();
+		Date dat = new Date();
+		couchHanlder.createOrUpdateDocument(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""), String.valueOf(dat.getTime()), couchMapper.toCouch(session));
 	}
 	
 	
