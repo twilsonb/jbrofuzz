@@ -54,8 +54,8 @@ KeyListener {
 	private static final long serialVersionUID = -5815321460026044259L;
 
 	// Dimensions of the generator dialog box
-	private static final int SIZE_X = 340;
-	private static final int SIZE_Y = 180;
+	private static final int SIZE_X = 440;
+	private static final int SIZE_Y = 280;
 
 	// The buttons
 	private final JButton ok, cancel;
