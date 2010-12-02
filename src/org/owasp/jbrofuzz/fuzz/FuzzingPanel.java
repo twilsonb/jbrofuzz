@@ -37,7 +37,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.sql.SQLException;
-import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -1012,10 +1011,7 @@ public class FuzzingPanel extends AbstractPanel {
 						}
 
 						// Update the last row, indicating success
-						// outputTableModel.updateRow(outputMessage, co_k);
 						outputTableModel.addNewRow(outputMessage);
-						// outputSorter.sort();
-						// mOutputTable.updateUI();
 
 					} catch (final ConnectionException e1) {
 						// Update the message writer
@@ -1030,16 +1026,10 @@ public class FuzzingPanel extends AbstractPanel {
 						}
 
 						// Update the last row, indicating an error
-						// outputTableModel.updateRow(outputMessage, co_k, e1);
 						outputTableModel.addNewRow(outputMessage);
-						// outputSorter.sort();
-						// mOutputTable.updateUI();
 
 					}
 
-					//					if(showOnTheWire != 0) {
-					//						toConsole("\n--> [JBROFUZZ FUZZING STOP] -->\n\n");
-					//					}
 					// TODO: update to handle database
 					final String dbType = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "-1");
 					if(dbType.equals("None") || dbType.equals("CouchDB")){
@@ -1047,15 +1037,11 @@ public class FuzzingPanel extends AbstractPanel {
 					}else if(dbType.equals("SQLite")){
 						
 						// TODO: validation checks on the database
-						Logger.log("SQLITE database not implement - use none", 3);
-						
-						Date dat = new Date();
 						String dbName = sqlH.setUpDB();
-
+						System.out.println("Stroring data to: " + dbName);
 						java.sql.Connection con = sqlH.getConnection(dbName);
-						SessionDTO session = dtoC.createSessionDTO(this.getFrame(), Long.valueOf(dbName), con);
+						SessionDTO session = dtoC.createSessionDTO(this.getFrame(), -1);
 						sqlH.store(session, con);
-						
 					}
 					//TODO: CouchDB will be activated via saveSession
 				}
