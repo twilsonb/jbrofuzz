@@ -43,6 +43,8 @@ import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
+
+
 /**
  * <p>
  * Class responsible for generating all the file I/O required for an instance of
@@ -54,19 +56,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * @version 2.0
  * @since 1.2
  */
-public class FileHandler {
-
-	// The max value in bytes of the file being read 32 Mbytes
-	public static final int MAX_BYTES = 33554432;
-
-	// The fuzz directory of operation
-	private File fuzzDirectory;
-
-	// The /jbrofuzz directory created at launch
-	private File rootDirectory;
-
-	// A counter for any File -> New directories created
-	private int count;
+public class FileHandler implements StorageInterface {
 
 	/**
 	 * <p>
@@ -87,156 +77,15 @@ public class FileHandler {
 	public FileHandler() {
 
 		count = 0;
-		createNewDirectory();
+		createNewLocation();
 
 	}
-
-	/**
-	 * <p>Method for creating a new directory with the date/time stamp.</p>
-	 * 
-	 * <p>If the directory with the current timestamp exists, a number from 
-	 * 000 to 999 is padded to the current timestamp and a new directory 
-	 * is created.</p>
-	 * 
-	 * @author subere@uncon.org
-	 * @version 2.3
-	 * @since 1.5
-	 */
-	public final void createNewDirectory() {
-
-		// Get the directory location from preferences
-		final boolean saveElsewhere = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
-		// Use the user directory if the box is not ticked, under: "Preferences"->"Directory Locations"
-		final String dirString;
-		if(saveElsewhere) {
-			dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
-		} else {
-			dirString = System.getProperty("user.dir");
-		}		
-		
-		// Create the /jbrofuzz directory in the current folder
-		rootDirectory = new File(dirString);
-
-		final StringBuffer directoryLocation = new StringBuffer();
-		directoryLocation.append(dirString);
-		directoryLocation.append(File.separator);
-		directoryLocation.append("jbrofuzz");
-
-		directoryLocation.append(File.separator);
-		directoryLocation.append("fuzz");
-		directoryLocation.append(File.separator);
-		directoryLocation.append(JBroFuzzFormat.DATE);
-
-		// Create the necessary directory with the corresponding timestamp
-		fuzzDirectory = new File(directoryLocation.toString());
-
-		// If the directory is already present, create a directory with a
-		// number at the end
-		if (fuzzDirectory.exists()) {
-			
-			count++;
-			count %= 1000;
-
-			directoryLocation.append('.');
-
-			if (count < 10) {
-				directoryLocation.append('0');
-			}
-			if (count < 100) {
-				directoryLocation.append('0');
-			}
-			directoryLocation.append(count);
-
-			// Create the necessary directory with the corresponding timestamp
-			fuzzDirectory = new File(directoryLocation.toString());
-
-			if (fuzzDirectory.exists()) {
-
-				Logger.log(
-						"The \"fuzz\" directory being used, already exists", 1);
-
-			} else {
-
-				final boolean success = fuzzDirectory.mkdirs();
-				if (!success) {
-
-					Logger
-					.log(
-							"Failed to create new \"fuzz\" directory, no data will be written to file.",
-							4);
-					Logger
-					.log(
-							"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
-							0);
-				}
-
-			}
-
-		} else {
-			// If the directory does not exist, create it
-			
-			final boolean success = fuzzDirectory.mkdirs();
-			if (!success) {
-
-				Logger
-				.log(
-						"Failed to create \"fuzz\" directory, no data will be written to file.",
-						4);
-				Logger
-				.log(
-						"Run JBroFuzz from the command line: \"java -jar JBroFuzz.jar\"",
-						0);
-				Logger
-				.log(
-						"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
-						0);
-
-			}
-
-		}
-	}
-
 	
 
-	/**
-	 * <p>
-	 * Return the canonical path of the directory location of the 'fuzz'
-	 * directory.
-	 * </p>
-	 * 
-	 * @return String the path of the 'fuzz' directory
-	 * 
-	 * @author subere@uncon.org
-	 * @version 2.0
-	 * @since 1.2
-	 */
-	public String getCanonicalPath() {
+	private File fuzzDirectory;
+	private File rootDirectory;
+	protected int count;
 
-		try {
-			return rootDirectory.getCanonicalPath();
-		} catch (final IOException e) {
-			return "";
-		}
-
-	}
-
-	public File getFuzzFile(String fileName) {
-
-		return new File(fuzzDirectory, fileName);
-
-	}
-
-	/**
-	 * <p>Return the directory which is currently being used 
-	 * for fuzz data</p>
-	 * 
-	 * @return File
-	 */
-	public File getFuzzDirectory() {
-
-		return fuzzDirectory;
-	}
-	
 	/**
 	 * <p>Method for returning the contents of any file as 
 	 * String.</p>
@@ -252,7 +101,7 @@ public class FileHandler {
 	 * @since 2.0
 	 */
 	public static String readFile(File inputFile) {
-
+	
 		final String fileName = inputFile.toString();
 		
 		if (inputFile.exists()) {
@@ -270,7 +119,7 @@ public class FileHandler {
 			return "File does not exist:\n\n" + fileName;
 			
 		}
-
+	
 		int counter = 0;
 		InputStream in = null;
 		FileInputStream fis = null;
@@ -278,7 +127,7 @@ public class FileHandler {
 		try {
 			fis = new FileInputStream(inputFile);
 			in = new BufferedInputStream(fis);
-
+	
 			int c;
 			// Read, having as upper maximum the int maximum
 			while (((c = in.read()) > 0) && (counter <= MAX_BYTES)) {
@@ -286,14 +135,14 @@ public class FileHandler {
 				counter++;
 				
 			}
-
+	
 			in.close();
 			fis.close();
-
+	
 		} catch (final IOException e) {
 			
 			return "Attempting to open the file caused an I/O Error:\n\n" + fileName;
-
+	
 		} finally {
 			IOUtils.closeQuietly(in);
 			IOUtils.closeQuietly(fis);
@@ -305,12 +154,132 @@ public class FileHandler {
 		return fileContents.toString();
 	}
 
+	@Override
+	public final void createNewLocation() {
+	
+		// Get the directory location from preferences
+		final boolean saveElsewhere = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
+		// Use the user directory if the box is not ticked, under: "Preferences"->"Directory Locations"
+		final String dirString;
+		if(saveElsewhere) {
+			dirString = JBroFuzz.PREFS.get(JBroFuzzPrefs.DIRS[0].getId(), System.getProperty("user.dir"));
+		} else {
+			dirString = System.getProperty("user.dir");
+		}		
+		
+		// Create the /jbrofuzz directory in the current folder
+		rootDirectory = new File(dirString);
+	
+		final StringBuffer directoryLocation = new StringBuffer();
+		directoryLocation.append(dirString);
+		directoryLocation.append(File.separator);
+		directoryLocation.append("jbrofuzz");
+	
+		directoryLocation.append(File.separator);
+		directoryLocation.append("fuzz");
+		directoryLocation.append(File.separator);
+		directoryLocation.append(JBroFuzzFormat.DATE);
+	
+		// Create the necessary directory with the corresponding timestamp
+		fuzzDirectory = new File(directoryLocation.toString());
+	
+		// If the directory is already present, create a directory with a
+		// number at the end
+		if (fuzzDirectory.exists()) {
+			
+			count++;
+			count %= 1000;
+	
+			directoryLocation.append('.');
+	
+			if (count < 10) {
+				directoryLocation.append('0');
+			}
+			if (count < 100) {
+				directoryLocation.append('0');
+			}
+			directoryLocation.append(count);
+	
+			// Create the necessary directory with the corresponding timestamp
+			fuzzDirectory = new File(directoryLocation.toString());
+	
+			if (fuzzDirectory.exists()) {
+	
+				Logger.log(
+						"The \"fuzz\" directory being used, already exists", 1);
+	
+			} else {
+	
+				final boolean success = fuzzDirectory.mkdirs();
+				if (!success) {
+	
+					Logger
+					.log(
+							"Failed to create new \"fuzz\" directory, no data will be written to file.",
+							4);
+					Logger
+					.log(
+							"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
+							0);
+				}
+	
+			}
+	
+		} else {
+			// If the directory does not exist, create it
+			
+			final boolean success = fuzzDirectory.mkdirs();
+			if (!success) {
+	
+				Logger
+				.log(
+						"Failed to create \"fuzz\" directory, no data will be written to file.",
+						4);
+				Logger
+				.log(
+						"Run JBroFuzz from the command line: \"java -jar JBroFuzz.jar\"",
+						0);
+				Logger
+				.log(
+						"Are you using Vista? Right click on JBroFuzz and \"Run As Administrator\"",
+						0);
+	
+			}
+	
+		}
+	}
+
+	@Override
+	public String getLocationCanonicalPath() {
+	
+		try {
+			return rootDirectory.getCanonicalPath();
+		} catch (final IOException e) {
+			return "";
+		}
+	
+	}
+
+	@Override
+	public String getFuzzURIString(String fileName) {
+	
+		return new File(fuzzDirectory, fileName).toURI().toString();
+	
+	}
+
+	@Override
+	public String getLocationURIString() {
+	
+		return fuzzDirectory.toURI().toString();
+	}
+
+	@Override
 	public void writeFuzzFile(MessageWriter outputMessage) {
-
+	
 		final String fileName = outputMessage.getFileName() + ".html";
-
+	
 		final File toWrite = new File(fuzzDirectory, fileName);
-
+	
 		try {
 			FileUtils.touch(toWrite);
 			FileUtils.writeStringToFile(toWrite, outputMessage.toString());
@@ -318,6 +287,7 @@ public class FileHandler {
 			Logger.log("Error writting fuzz file: " + fileName, 3);
 		}
 	}
+	
 	
 
 }

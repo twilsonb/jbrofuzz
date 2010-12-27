@@ -143,7 +143,7 @@ public class JMenuFile extends JMenu {
 					mFrameWindow.setTitle("Untitled");
 					// Create a new directory to store all data
 					mFrameWindow.getJBroFuzz().getHandler()
-					.createNewDirectory();
+					.createNewLocation();
 
 				} else {
 
@@ -161,7 +161,7 @@ public class JMenuFile extends JMenu {
 						mFrameWindow.setTitle("Untitled");
 						// Create a new directory to store all data
 						mFrameWindow.getJBroFuzz().getHandler()
-						.createNewDirectory();
+						.createNewLocation();
 					}
 
 				}
@@ -366,7 +366,7 @@ public class JMenuFile extends JMenu {
 						mFrameWindow.getPanelFuzzing().clearOutputTable();
 						// Create a new directory to store all data
 						mFrameWindow.getJBroFuzz().getHandler()
-						.createNewDirectory();
+						.createNewLocation();
 					}
 
 				} else {
@@ -374,7 +374,7 @@ public class JMenuFile extends JMenu {
 					mFrameWindow.getPanelFuzzing().clearOutputTable();
 					// Create a new directory to store all data
 					mFrameWindow.getJBroFuzz().getHandler()
-					.createNewDirectory();
+					.createNewLocation();
 
 				}
 

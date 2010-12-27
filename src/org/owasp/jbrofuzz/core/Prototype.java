@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.io.StorageInterface;
 
 /**
  * <p>
@@ -109,7 +109,7 @@ public class Prototype {
 
 		// Check that what you're creating is not too huge
 		final int len = input.length() * times;
-		if (len > FileHandler.MAX_BYTES) {
+		if (len > StorageInterface.MAX_BYTES) {
 			return parameter;
 		}
 

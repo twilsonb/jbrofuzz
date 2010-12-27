@@ -99,12 +99,12 @@ public final class RightClickPopups {
 					return;
 				}
 
-				final File f = mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
-				.getFuzzDirectory();
+				final String sURI = mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
+				.getLocationURIString();
 
 				Browser.init();
 				try {
-					Browser.displayURL(f.toURI().toString());
+					Browser.displayURL(sURI);
 				} catch (final IOException ex) {
 					Logger
 					.log(
@@ -128,8 +128,8 @@ public final class RightClickPopups {
 				final String name = (String) area.getModel()
 				.getValueAt(area.convertRowIndexToModel(c), 0);
 
-				final File directory = mFuzzingPanel.getFrame().getJBroFuzz().getHandler().getFuzzDirectory();
-				final File selFile = new File(directory, name + ".html");
+				final String sURi = mFuzzingPanel.getFrame().getJBroFuzz().getHandler().getLocationURIString();
+				final File selFile = new File(sURi, name + ".html");
 
 				new WindowViewerFrame(mFuzzingPanel, selFile);
 
@@ -147,12 +147,12 @@ public final class RightClickPopups {
 				final String fileName = (String) area.getModel()
 				.getValueAt(area.convertRowIndexToModel(c), 0)
 				+ ".html";
-				final File f = mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
-				.getFuzzFile(fileName);
+				final String s = mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
+				.getFuzzURIString(fileName);
 
 				Browser.init();
 				try {
-					Browser.displayURL(f.toURI().toString());
+					Browser.displayURL(s);
 				} catch (final IOException ex) {
 					Logger
 					.log(
@@ -172,7 +172,7 @@ public final class RightClickPopups {
 					mFuzzingPanel.clearOutputTable();
 					// Create a new directory to store all data
 					mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
-					.createNewDirectory();
+					.createNewLocation();
 
 				} else {
 					// Clear all output and create a directory only if a fuzzing session is not
@@ -188,7 +188,7 @@ public final class RightClickPopups {
 						mFuzzingPanel.clearOutputTable();
 						// Create a new directory to store all data
 						mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
-						.createNewDirectory();
+						.createNewLocation();
 					}
 
 				}

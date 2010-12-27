@@ -285,12 +285,12 @@ public abstract class AbstractPanel extends JPanel {
 						final String fileName = (String) area.getModel()
 						.getValueAt(area.convertRowIndexToModel(c), 0)
 						+ ".html";
-						final File f = getFrame().getJBroFuzz().getHandler()
-						.getFuzzFile(fileName);
+						final String sURI = getFrame().getJBroFuzz().getHandler()
+						.getFuzzURIString(fileName);
 
 						Browser.init();
 						try {
-							Browser.displayURL(f.toURI().toString());
+							Browser.displayURL(sURI);
 						} catch (final IOException ex) {
 							Logger
 							.log(
@@ -375,7 +375,7 @@ public abstract class AbstractPanel extends JPanel {
 						final String name = (String) area.getModel()
 						.getValueAt(area.convertRowIndexToModel(c), 0);
 						
-						final File directory = getFrame().getJBroFuzz().getHandler().getFuzzDirectory();
+						final String directory = getFrame().getJBroFuzz().getHandler().getLocationURIString();
 						final File selFile = new File(directory, name);
 						
 						new WindowViewerFrame(AbstractPanel.this, selFile);
