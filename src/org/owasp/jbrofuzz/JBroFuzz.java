@@ -34,6 +34,8 @@ import java.util.prefs.Preferences;
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.io.CommandLineInterpreter;
 import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.io.StorageHandler;
+import org.owasp.jbrofuzz.io.StorageInterface;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 
@@ -56,7 +58,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzFormat;
  * @since 0.1
  */
 public class JBroFuzz {
-	private final FileHandler mHandler;
+	private final StorageHandler mHandler;
 
 	private final JBroFuzzFormat mFormat;
 
@@ -106,7 +108,7 @@ public class JBroFuzz {
 	public JBroFuzz() {
 
 		mDatabase = new Database();
-		mHandler = new FileHandler();
+		mHandler = new StorageHandler();
 
 		mFormat = new JBroFuzzFormat();
 		mWindow = new JBroFuzzWindow(this);
@@ -165,7 +167,7 @@ public class JBroFuzz {
 	 * 
 	 * @return The file IO Object of JBroFuzz
 	 */
-	public FileHandler getHandler() {
+	public StorageInterface getHandler() {
 
 		return mHandler;
 

@@ -561,7 +561,7 @@ public class FuzzingPanel extends AbstractPanel {
 					String fuzzerLineOutput = new String();
 					public String doInBackground() {
 
-						final File directory = getFrame().getJBroFuzz().getHandler().getFuzzDirectory();
+						final String directory = getFrame().getJBroFuzz().getHandler().getLocationURIString();
 						final File selFile = new File(directory, name + ".html");
 						fuzzerLineOutput = FileHandler.readFile(selFile);
 						return "done";
