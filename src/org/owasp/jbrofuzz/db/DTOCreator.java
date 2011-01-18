@@ -13,6 +13,7 @@ import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
 import org.owasp.jbrofuzz.db.dto.MessageDTO;
 import org.owasp.jbrofuzz.db.dto.ResponseDTO;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
+import org.owasp.jbrofuzz.fuzz.MessageWriter;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersTable;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersTableModel;
@@ -31,30 +32,25 @@ public class DTOCreator {
 	 * @param mWindow
 	 * @return SessionDTO filled
 	 */
-	public SessionDTO createSessionDTO(JBroFuzzWindow mWindow, long sessionId) {
+	public SessionDTO createSessionDTO(MessageWriter outputMessage, long sessionId) {
 		SessionDTO session = new SessionDTO();
 
 		session.setJVersion(System.getProperty("java.version"));
 		session.setOs(System.getProperty("os.name"));
 		session.setTimestamp(Calendar.getInstance().getTime().toGMTString());
-		if (sessionId >= 0) {
-			session.setSessionId(sessionId);
-		} else {
-			Date dat = new Date();
-			sessionId = dat.getTime();
-			session.setSessionId(sessionId);
-		}
-
+		System.out.println("Markus: " + outputMessage.getMessage());
+		
+		/*
 		session.setConnectionDTO(fillConnection(mWindow,
 				session.getSessionId(), -1));
 		session.setMessage(fillMessages(mWindow, session.getConnectionDTO()
 				.getConnectionId()));
 		session.setResponse(fillResponse(mWindow, session.getConnectionDTO()
 				.getConnectionId()));
-
+		 */
 		return session;
 	}
-	
+
 	/**
 	 * @author daemonmidi@gmail.com
 	 * @since version 2.5
@@ -68,7 +64,7 @@ public class DTOCreator {
 
 		// connectionId = getPosMaxId(Long.valueOf(sessionId), con);
 		Date dat = new Date();
-		connectionId = dat.getTime();	
+		connectionId = dat.getTime();
 		connection.setConnectionId(connectionId);
 		connection.setSessionid(sessionId);
 		connection.setUrlString(mWindow.getPanelFuzzing().getTextURL());
@@ -83,22 +79,30 @@ public class DTOCreator {
 	 * @param sessiondId
 	 * @return MessageDTO[] filled
 	 */
-	private MessageDTO[] fillMessages(JBroFuzzWindow mWindow,
-			long connectionId) {
+	private MessageDTO[] fillMessages(JBroFuzzWindow mWindow, long connectionId) {
 		int i = 0;
 		Vector<MessageDTO> mesV = new Vector<MessageDTO>();
-		
-		
-		for (i = 0; i < mWindow.getPanelFuzzing().getOutputTable().getModel().getRowCount(); i++) {
+
+		for (i = 0; i < mWindow.getPanelFuzzing().getOutputTable().getModel()
+				.getRowCount(); i++) {
 			MessageDTO message = new MessageDTO();
 
 			message.setConnectionId(connectionId);
-			if (i < mWindow.getPanelFuzzing().getEncodersTableList().getSize() -1){
-				message.setEncoding(mWindow.getPanelFuzzing().getEncoders(Integer.valueOf(mWindow.getPanelFuzzing().getOutputTable().getModel().getValueAt(i, 0).toString())).toString());
-				message.setEnd(Integer.valueOf(mWindow.getPanelFuzzing().getFuzzersTable().getModel().getValueAt(i, 2).toString()));
-				message.setStart(Integer.valueOf(mWindow.getPanelFuzzing().getFuzzersTable().getModel().getValueAt(i, 1).toString()));
-			}
-			else{
+			if (i < mWindow.getPanelFuzzing().getEncodersTableList().getSize() - 1) {
+				message.setEncoding(mWindow
+						.getPanelFuzzing()
+						.getEncoders(
+								Integer.valueOf(mWindow.getPanelFuzzing()
+										.getOutputTable().getModel()
+										.getValueAt(i, 0).toString()))
+						.toString());
+				message.setEnd(Integer.valueOf(mWindow.getPanelFuzzing()
+						.getFuzzersTable().getModel().getValueAt(i, 2)
+						.toString()));
+				message.setStart(Integer.valueOf(mWindow.getPanelFuzzing()
+						.getFuzzersTable().getModel().getValueAt(i, 1)
+						.toString()));
+			} else {
 				message.setEncoding("todo");
 				message.setEnd(-1);
 				message.setStart(-1);
@@ -108,12 +112,12 @@ public class DTOCreator {
 			message.setTextRequest(mWindow.getPanelFuzzing().getTextRequest());
 			mesV.add(message);
 		}
-		
-		MessageDTO[] messages = new MessageDTO[mesV.size()] ;
-		for (int j = 0; j < mesV.size(); j++){
+
+		MessageDTO[] messages = new MessageDTO[mesV.size()];
+		for (int j = 0; j < mesV.size(); j++) {
 			messages[j] = mesV.get(j);
 		}
-		
+
 		System.out.println(i + " Messages created: " + messages.length);
 		return messages;
 	}
@@ -125,96 +129,108 @@ public class DTOCreator {
 	 * @param sessionId
 	 * @return ResponseDTO[] filled
 	 */
-	private ResponseDTO[] fillResponse(JBroFuzzWindow mWindow,
-			long connectionId) {
+	private ResponseDTO[] fillResponse(JBroFuzzWindow mWindow, long connectionId) {
 
 		int row = 0;
 		Vector<ResponseDTO> resV = new Vector<ResponseDTO>();
-		
-		while (row < mWindow.getPanelFuzzing().getOutputTable().getModel().getRowCount()) {
+
+		while (row < mWindow.getPanelFuzzing().getOutputTable().getModel()
+				.getRowCount()) {
 			ResponseDTO response = new ResponseDTO();
 			response.setConnectionId(connectionId);
-			response.setResponseBody(mWindow.getPanelFuzzing().getOutputTable().getModel().getValueAt(row, 2).toString());
-			response.setResponseHeader(mWindow.getPanelFuzzing().getOutputTable().getModel().getValueAt(row, 3).toString());
+			response.setResponseBody(mWindow.getPanelFuzzing().getOutputTable()
+					.getModel().getValueAt(row, 2).toString());
+			response.setResponseHeader(mWindow.getPanelFuzzing()
+					.getOutputTable().getModel().getValueAt(row, 3).toString());
 			response.setResponseId(row);
-			try{
-				response.setStatusCode(Integer.valueOf(mWindow.getPanelFuzzing().getOutputTable().getModel().getValueAt(row, 4).toString()));
-			}
-			catch (NumberFormatException e){
+			try {
+				response.setStatusCode(Integer.valueOf(mWindow
+						.getPanelFuzzing().getOutputTable().getModel()
+						.getValueAt(row, 4).toString()));
+			} catch (NumberFormatException e) {
 				e.printStackTrace();
 				response.setStatusCode(-1);
 			}
 			resV.add(response);
 			row++;
 		}
-		
+
 		ResponseDTO[] responses = new ResponseDTO[resV.size()];
-		for (int j = 0; j < resV.size(); j++){
+		for (int j = 0; j < resV.size(); j++) {
 			responses[j] = resV.get(j);
-		}		
+		}
 		return responses;
 	}
 
-	
 	/**
 	 * go from DTO to mWindow
+	 * 
 	 * @author daemonmidi@gmail.com
 	 * @since version 2.5
 	 * @param session
 	 * @param mWindow
 	 * @return filled mWindow
 	 */
-	public JBroFuzzWindow fillWindow(SessionDTO session, JBroFuzzWindow mWindow){
-		
-		mWindow.getPanelFuzzing().setTextURL(session.getConnectionDTO().getUrlString());
+	public JBroFuzzWindow fillWindow(SessionDTO session, JBroFuzzWindow mWindow) {
+
+		mWindow.getPanelFuzzing().setTextURL(
+				session.getConnectionDTO().getUrlString());
 
 		EncodersTableModel etM = new EncodersTableModel();
 		FuzzersTableModel ftM = new FuzzersTableModel();
-		
+
 		for (int row = 0; row < session.getMessage().length; row++) {
-			
+
 			// add Encoder
 			etM.addRow(session.getMessage()[row].getEncoding(), "", "");
-			
+
 			// Start, END
-			ftM.addRow("name", "type", "id", session.getMessage()[row].getStart(), session.getMessage()[row].getEnd());
-			
-			//PAYLOAD
-			mWindow.getPanelFuzzing().setEncodedPayload(session.getMessage()[row].getPayload());
-			
+			ftM.addRow("name", "type", "id",
+					session.getMessage()[row].getStart(),
+					session.getMessage()[row].getEnd());
+
+			// PAYLOAD
+			mWindow.getPanelFuzzing().setEncodedPayload(
+					session.getMessage()[row].getPayload());
+
 			// TextRequest
-			mWindow.getPanelFuzzing().setTextRequest(session.getMessage()[row].getTextRequest());
+			mWindow.getPanelFuzzing().setTextRequest(
+					session.getMessage()[row].getTextRequest());
 		}
 
 		EncodersTable et = new EncodersTable(etM);
 		mWindow.getPanelFuzzing().updateEncoderPanel(et);
-		
+
 		FuzzerTable ft = new FuzzerTable(ftM);
 		mWindow.getPanelFuzzing().updateFuzzerTable(ft);
-		
+
 		OutputTableModel otM = new OutputTableModel();
-		
+
 		for (int row = 0; row < session.getResponse().length; row++) {
 			// Response Body
 			Object[] obj = new Object[] {
 
 					"TODO", // FileName
-					session.getConnectionDTO().getUrlString(), 
-					StringUtils.abbreviate(session.getResponse()[row].getResponseBody(), 50), 
-					StringUtils.abbreviate(session.getResponse()[row].getResponseHeader(), 50),
-					session.getResponse()[row].getStatusCode(),
-					"TODO", // StringUtils.leftPad("" + outputMessage.getResponseTime(), 5, '0'),
-					"TODO" // StringUtils.leftPad("" + outputMessage.getByteCount(), 8, '0')
+					session.getConnectionDTO().getUrlString(),
+					StringUtils.abbreviate(
+							session.getResponse()[row].getResponseBody(), 50),
+					StringUtils.abbreviate(
+							session.getResponse()[row].getResponseHeader(), 50),
+					session.getResponse()[row].getStatusCode(), "TODO", // StringUtils.leftPad(""
+																		// +
+																		// outputMessage.getResponseTime(),
+																		// 5,
+																		// '0'),
+					"TODO" // StringUtils.leftPad("" +
+							// outputMessage.getByteCount(), 8, '0')
 			};
 			otM.addRow(obj);
 		}
 		OutputTable ot = new OutputTable(otM);
 		mWindow.getPanelFuzzing().updateOutputTable(ot);
-		return mWindow; 
+		return mWindow;
 	}
-	
-	
-	
+
 	/**
 	 * @author daemonmidi@gmail.com
 	 * @since version 2.5
