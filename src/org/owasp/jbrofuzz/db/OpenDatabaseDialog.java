@@ -346,7 +346,6 @@ KeyListener {
 			long[] lSessionId = null;
 			sessionsSQLiteBox.removeAllItems();
 			
-			try {
 				String dbName = "";
 				if (databaseBox.getSelectedItem().toString().length() > 0 && !databaseBox.getSelectedItem().toString().equals("")){
 					dbName = databaseBox.getSelectedItem().toString();
@@ -354,12 +353,11 @@ KeyListener {
 				else{
 					dbName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "");
 				}
-				lSessionId = sqlH.getSessionIds(sqlH.getConnection(dbName));
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+				try {
+					lSessionId = sqlH.getSessionIds(sqlH.getConnection(dbName));
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 
 			String[] sessionIds = new String[lSessionId.length];
 			
@@ -408,14 +406,8 @@ KeyListener {
 			Connection conn;
 			documentId = sessionsSQLiteBox.getSelectedItem().toString();
 			
-			try {
 				conn = sqlH.getConnection(dbName);
 				session = sqlH.read(conn, Long.valueOf(documentId));
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
 		}
 		
 		DTOCreator dtoC = new DTOCreator();

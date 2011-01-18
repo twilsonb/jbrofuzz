@@ -1,17 +1,21 @@
 package org.owasp.jbrofuzz.db;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
 import org.owasp.jbrofuzz.db.dto.MessageDTO;
 import org.owasp.jbrofuzz.db.dto.ResponseDTO;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
-import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
+import org.owasp.jbrofuzz.fuzz.MessageWriter;
 
 public class CouchDBMapper {
-
+	private static final SimpleDateFormat SD_FORMAT = new SimpleDateFormat(
+			"zzz-yyyy-MM-dd-HH-mm-ss-SSS", Locale.ENGLISH);
 	/**
 	 * maps content from JSONObject for CouchDB into SessionDTO
 	 * 
@@ -82,6 +86,53 @@ public class CouchDBMapper {
 		return session;
 	}
 
+	
+	/**
+	 * intermediate method for moving from dto to messageWrite as data container.
+	 * @param outputMessage
+	 * @return
+	 */
+	public JSONObject toCouch2(MessageWriter outputMessage){
+		JSONObject couch = new JSONObject();
+		Date date = new Date();
+		
+			try {
+				couch.accumulate("jVersion", System.getProperty("java.version"));
+				couch.accumulate("os", System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version"));
+				couch.accumulate("sessionId", "TODO");
+				couch.accumulate("timeStamp", SD_FORMAT.format(date));
+				
+				JSONObject connection = new JSONObject();
+				connection.accumulate("connectionId" ,"TODO");
+				connection.accumulate("sessionId", "TODO");
+				connection.accumulate("urlString", outputMessage.getTextURL());
+				couch.accumulate("connection", connection);
+
+				JSONObject mess = new JSONObject();
+				mess.accumulate("connectionId", "TODO");
+				mess.accumulate("encoding", "TODO");
+				mess.accumulate("end", outputMessage.getResponseTime());
+				mess.accumulate("messageId", "TODO");
+				mess.accumulate("payload", outputMessage.getEncodedPayload());
+				mess.accumulate("start", outputMessage.getStartDateFull());
+				mess.accumulate("textRequest", outputMessage.getPayload());
+				couch.put("message", mess);
+				
+				JSONObject resp = new JSONObject();
+				resp.accumulate("connectionId", "TODO");
+				resp.accumulate("responseId", "TODO");
+				resp.accumulate("timeTaken", outputMessage.getResponseTime());
+				resp.accumulate("status", outputMessage.getStatus());
+				couch.put("response", resp);
+				
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		
+		
+		return couch;
+	}
+	
 	
 	/**
 	 * maps content from SessionDTO into JSONObject for CouchDB

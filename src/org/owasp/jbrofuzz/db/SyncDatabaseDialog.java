@@ -357,8 +357,6 @@ public class SyncDatabaseDialog extends JDialog implements MouseListener, KeyLis
 					lSessionId = sqlH.getSessionIds(sqlH.getConnection(dbName));
 				} catch (SQLException e) {
 					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
 				}
 
 				String[] sessionIds = new String[lSessionId.length];
@@ -408,14 +406,8 @@ public class SyncDatabaseDialog extends JDialog implements MouseListener, KeyLis
 				Connection conn;
 				documentId = sessionsSQLiteBox.getSelectedItem().toString();
 				
-				try {
 					conn = sqlH.getConnection(dbName);
 					session = sqlH.read(conn, Long.valueOf(documentId));
-				} catch (SQLException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
 			}
 			
 			DTOCreator dtoC = new DTOCreator();

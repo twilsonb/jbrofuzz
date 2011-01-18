@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
@@ -201,43 +202,6 @@ public class CouchDBHandler{
 			return 1;
 		}
 	}
-
-	/**
-	 * proxy integration for connection to couchdb
-	 * @author daemonmidi@gmail.com
-	 * @since version 2.5
-	 * @return HttpConnection
-	 */
-	private org.apache.commons.httpclient.HttpConnection  createConnection(){
-		org.apache.commons.httpclient.HttpConnection connection = null;
-		
-			final boolean proxyEnabled = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DBSETTINGS[0].getId(), false);
-			if(proxyEnabled) {
-				
-				final String proxy = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[1].getId(), "");
-				final int port = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.DBSETTINGS[2].getId(), -1);
-				
-				HostConfiguration hc = new HostConfiguration();
-				hc.setHost(getHost(), getPort());
-				hc.setProxy(proxy, port);
-				connection = new org.apache.commons.httpclient.HttpConnection(hc);
-				
-				// Username:Password, yawn
-				final boolean proxyReqAuth = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.UPDATE[3].getId(), false);
-				if(proxyReqAuth) {
-					final String user = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[5].getId(), "");
-					final String pass = JBroFuzz.PREFS.get(JBroFuzzPrefs.UPDATE[6].getId(), "");
-					final String encodedPassword = EncoderHashCore.encode(user + ":" + pass, "Base64");
-					HttpConnectionParams params = new HttpConnectionParams();
-					params.setParameter("Proxy-Authorization", "Basic " + encodedPassword );
-					connection.setParams(params);	
-				}
-			} else {
-				connection = new org.apache.commons.httpclient.HttpConnection(getHost(), getPort());
-			}
-		return connection;
-	}
-	
 	
 	/**
 	 * creates initial DB
@@ -297,8 +261,6 @@ public class CouchDBHandler{
 	public int removeDocument(String dbName, String documentId){
 		int returnCode = 0;
 		String response ="";
-		String body = "";
-		JSONObject document = new JSONObject();
 		if (evaluateConfiguration() > 0){
 			String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbName + "/" + documentId;
 			response = sendDelete(url);
@@ -314,7 +276,8 @@ public class CouchDBHandler{
 	 * @param documentId
 	 * @return response from DB as String
 	 */
-	public String createOrUpdateDocument(String dbName, String documentId, JSONObject document){
+	public int store(String dbName, String documentId, JSONObject document){
+		int returnCode = 0;
 		String response = "";
 		String body = "";
 		if (documentId.length() < 0 || documentId.equals("")){
@@ -334,7 +297,10 @@ public class CouchDBHandler{
 				e.printStackTrace();
 			}
 		}
-		return response;
+		if (response.toLowerCase().contains("error")){
+			returnCode = 1;
+		}
+		return returnCode;
 	}
 	
 	
@@ -411,5 +377,5 @@ public class CouchDBHandler{
 			list = sendGet(url);
 		}
 		return list;
-	}	
+	}
 }
