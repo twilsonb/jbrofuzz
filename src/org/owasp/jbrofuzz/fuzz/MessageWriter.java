@@ -69,7 +69,6 @@ public class MessageWriter {
 		encodedPayload = fuzzingPanel.getEncodedPayload();
 		// Initialise the byte length
 		replyByteLength = 0;
-
 		// Create the StringBuffer starting with a comment
 		message = new StringBuffer("<!--\n");
 
@@ -201,6 +200,11 @@ public class MessageWriter {
 
 	}
 
+	
+	public String getMessage(){
+		return this.message.toString();
+	}
+	
 	@Override
 	public String toString() {
 
