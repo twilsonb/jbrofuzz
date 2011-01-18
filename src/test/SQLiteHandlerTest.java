@@ -52,25 +52,13 @@ public class SQLiteHandlerTest{
 		session.setTimestamp(timeStamp);
 		session.setSessionId(sessionId);
 
-		try {
 			conn = dbHandler.getConnection("jbrofuzzTestDB");
-			dbHandler.store(session, conn);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+			// dbHandler.store(session, conn);
 		
 
 		SessionDTO sessionRead = new SessionDTO();
 		conn = null;
-		try {
 			conn = dbHandler.getConnection("jbrofuzzTestDB");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
 		sessionRead = dbHandler.read(conn, sessionId);
 		
 		TestUtils.compareSessionDTOs(session, sessionRead);

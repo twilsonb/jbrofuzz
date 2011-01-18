@@ -58,7 +58,7 @@ public class CouchDBHandlerTest{
 		// dbHandler.createDocument(dbName, documentId);
 		CouchDBMapper couchMapper = new CouchDBMapper();
 		JSONObject document  = couchMapper.toCouch(session);
-		dbHandler.createOrUpdateDocument(dbName, documentId, document);
+		dbHandler.store(dbName, documentId, document);
 	
 		String doc = dbHandler.getDocument(dbName, documentId);
 		JSONObject readDoc = new JSONObject();
