@@ -33,7 +33,6 @@ import java.util.prefs.Preferences;
 
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.io.CommandLineInterpreter;
-import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.io.StorageHandler;
 import org.owasp.jbrofuzz.io.StorageInterface;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
