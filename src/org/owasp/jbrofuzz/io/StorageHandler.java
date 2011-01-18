@@ -1,30 +1,25 @@
 package org.owasp.jbrofuzz.io;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.db.SQLiteHandler;
+import org.owasp.jbrofuzz.db.DBAdaptor;
+import org.owasp.jbrofuzz.db.DBAdaptorFactory;
 import org.owasp.jbrofuzz.fuzz.MessageWriter;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 public class StorageHandler implements StorageInterface {
 
 	private FileHandler mFileHandler;
-	
-	private SQLiteHandler mSQLiteHandler;
-	
-	private int whichOne;
-	
+	private DBAdaptor mdbAdaptor;
+		
 	public StorageHandler() {
 	
 		final String dbType = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "-1");
 		
-		if(dbType.equals("SQLite")){
-			whichOne = 1;
-		}
-		else if (dbType.equals("CouchDB")) {
-			whichOne = 2;
-		}
+		if(dbType.equals("SQLite") || dbType.equals("CouchDB")){
+			mdbAdaptor =  DBAdaptorFactory.getInstance();
+			}
 		else /*(dbType.equals("None") ) */{
-			whichOne = 0;
 			mFileHandler = new FileHandler();
 		}
 		
@@ -33,7 +28,7 @@ public class StorageHandler implements StorageInterface {
 	@Override
 	public void createNewLocation() {
 		// TODO Auto-generated method stub
-		if(whichOne == 0) {
+		if(mFileHandler != null) {
 			mFileHandler.createNewLocation();
 		}
 
@@ -41,64 +36,41 @@ public class StorageHandler implements StorageInterface {
 
 	@Override
 	public String getLocationCanonicalPath() {
-		// TODO Auto-generated method stub
-		if(whichOne == 1) {
-			// sql lite
-			return null;
+		String canonicalPath = "";
+		if (mFileHandler != null){
+			canonicalPath =  mFileHandler.getLocationCanonicalPath() ;
 		}
-		if(whichOne == 2) {
-			return null;
-		}
-		else /* if(whichOne == 0) */ {
-			return mFileHandler.getLocationCanonicalPath() ;
-		}
+		return canonicalPath;
 	}
 
 	@Override
 	public String getFuzzURIString(String fileName) {
 		// TODO Auto-generated method stub
-		if(whichOne == 1) {
-			// sql lite
-			return null;
+		String fuzzerURI = "";
+		if (mFileHandler != null){
+			fuzzerURI =  mFileHandler.getFuzzURIString(fileName);
 		}
-		if(whichOne == 2) {
-			return null;
-		}
-		else /* if(whichOne == 0) */ {
-			return mFileHandler.getFuzzURIString(fileName);
-		}
+		return fuzzerURI;
 	}
 
 	@Override
 	public String getLocationURIString() {
-		// TODO Auto-generated method stub
-		if(whichOne == 1) {
-			// sql lite
-			return null;
+		String locationURI = "";
+		if (mFileHandler != null){
+			locationURI = mFileHandler.getLocationURIString();
 		}
-		if(whichOne == 2) {
-			return null;
-		}
-		else /* if(whichOne == 0) */ {
-			return mFileHandler.getLocationURIString();
-		}
+		return locationURI;
 	}
 
 	@Override
 	public void writeFuzzFile(MessageWriter outputMessage) {
-		// TODO Auto-generated method stub
-		if(whichOne == 1) {
-			// sql lite
-			
-		}
-		if(whichOne == 2) {
-			
-		}
-		else /* if(whichOne == 0) */ {
+		if (mFileHandler != null) {
+			Logger.log("storing data to file", 0);
 			mFileHandler.writeFuzzFile(outputMessage) ;
 		}
-
-
+		if (mdbAdaptor != null){
+			Logger.log("stroring data to database", 0);
+			mdbAdaptor.store(outputMessage);
+		}
 	}
-
 }
