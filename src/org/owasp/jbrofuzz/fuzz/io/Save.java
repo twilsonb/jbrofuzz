@@ -219,57 +219,6 @@ public class Save {
 	}
 	
 	/**
-	 * @author daemonmidi@gmail.com
-	 * @since version 2.5
-	 * @param dbType
-	 * @param mWindow
-	 */
-	public static void writeDBEntry(final String dbType, final JBroFuzzWindow mWindow ){
-		if (dbType.equals("SQLite")) writeSqlLite(mWindow);
-		else if (dbType.equals("CouchDB")) writeCouchDB(mWindow);
-	}
-	
-	
-	
-	/**
-	 * @author daemonmidi@gmail.com
-	 * @since version 2.5
-	 * @param mWindow
-	 */
-	private static void writeSqlLite(JBroFuzzWindow mWindow){
-		SQLiteHandler slh = new SQLiteHandler();
-		SessionDTO session = new SessionDTO();
-		
-		Connection con;
-		try {
-			con = slh.getConnection(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""));
-			DTOCreator dtoC = new DTOCreator();
-			session = dtoC.createSessionDTO(mWindow, -1);
-			slh.store(session, con);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	/**
-	 * @author daemonmidi@gmail.com
-	 * @since version 2.5
-	 * @param mWindow
-	 */
-	private static void writeCouchDB(JBroFuzzWindow mWindow){
-		DTOCreator dtoc = new DTOCreator();
-		SessionDTO session = dtoc.createSessionDTO(mWindow, -1);
-		CouchDBHandler couchHanlder = new CouchDBHandler();
-		CouchDBMapper couchMapper = new CouchDBMapper();
-		Date dat = new Date();
-		couchHanlder.createOrUpdateDocument(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""), String.valueOf(dat.getTime()), couchMapper.toCouch(session));
-	}
-	
-	
-	/**
 	 * <p>Method for obtaining the CSV output, given a table.</p>
 	 * <p>No "\n" is written at the end of the final line.</p>
 	 * 
