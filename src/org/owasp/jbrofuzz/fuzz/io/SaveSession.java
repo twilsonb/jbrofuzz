@@ -69,6 +69,8 @@ public class SaveSession {
 			DTOCreator dtoC = new DTOCreator();
 			CouchDBHandler couchHandler = new CouchDBHandler();
 			if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").length() <= 0  || JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").equals("")){
+				
+				/*
 				//start from scratch
 				String dbName = "";
 				String documentId = "";
@@ -79,9 +81,11 @@ public class SaveSession {
 				JSONObject document = cdbMapper.toCouch(session);
 				String dbNameReal = couchHandler.createDB(dbName);
 				couchHandler.createOrUpdateDocument(dbNameReal, documentId, document);
+				*/
 			}
 			else if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").length() > 0 && !JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").equals("")){
 				//use provided dbName
+				/*
 				Date dat = new Date();
 				String documentId = dat.getYear() + "_" + dat.getMonth() + "_" + dat.getDay() + "_" + dat.getHours() + ":" + dat.getMinutes();
 				long sessionid = dat.getTime();
@@ -89,6 +93,7 @@ public class SaveSession {
 				CouchDBMapper cdbMapper = new CouchDBMapper();
 				JSONObject document = cdbMapper.toCouch(session);
 				couchHandler.createOrUpdateDocument(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""), documentId, document);
+				*/
 			}
 			else{
 				throw new Exception("No DB Name provided");
@@ -96,6 +101,7 @@ public class SaveSession {
 		}
 		else if(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("sqlite")){
 			// write to SQLite in case somebody did sessin to file and now decides to go sqlite for whatever reason
+			/*
 			DTOCreator dtoC = new DTOCreator();
 			SQLiteHandler sqlH = new SQLiteHandler();
 			sqlH.setUpDB();
@@ -107,6 +113,7 @@ public class SaveSession {
 			Connection con = sqlH.getConnection(dbName);
 			SessionDTO session = dtoC.createSessionDTO(mWindow, -1);
 			sqlH.store(session, con);
+			*/
 		}
 		else {
 			// If there is a file already opened, save there

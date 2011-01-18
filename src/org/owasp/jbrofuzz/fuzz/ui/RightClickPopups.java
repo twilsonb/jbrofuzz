@@ -187,8 +187,7 @@ public final class RightClickPopups {
 
 						mFuzzingPanel.clearOutputTable();
 						// Create a new directory to store all data
-						mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
-						.createNewLocation();
+						mFuzzingPanel.getFrame().getJBroFuzz().getHandler().createNewLocation();
 					}
 
 				}
