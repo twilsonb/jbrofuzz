@@ -7,10 +7,6 @@ import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
-import org.owasp.jbrofuzz.db.dto.MessageDTO;
-import org.owasp.jbrofuzz.db.dto.ResponseDTO;
-import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
 
 public class CouchDBMapper {
@@ -24,7 +20,9 @@ public class CouchDBMapper {
 	 * @param couch
 	 * @return SessionDTO
 	 */
-	public SessionDTO toDTO(JSONObject couch) {
+	public MessageContainer toDTO(JSONObject couch) {
+		return null;
+	/*
 		SessionDTO session = new SessionDTO();
 		try {
 			//SessioDTO
@@ -84,6 +82,7 @@ public class CouchDBMapper {
 			e.printStackTrace();
 		}
 		return session;
+		*/
 	}
 
 	
@@ -142,8 +141,10 @@ public class CouchDBMapper {
 	 * @param session
 	 * @return JSONObject
 	 */
-	public JSONObject toCouch(SessionDTO session) {
+	public JSONObject toCouch(MessageContainer session) {
 		JSONObject couch = new JSONObject();
+		return couch;
+		/*
 		try {
 			couch.accumulate("jVersion", session.getJVersion());
 			couch.accumulate("os", session.getOs());
@@ -198,5 +199,6 @@ public class CouchDBMapper {
 			e.printStackTrace();
 		}
 		return couch;
+		 */
 	}
 }

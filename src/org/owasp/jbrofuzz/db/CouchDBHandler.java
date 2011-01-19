@@ -3,20 +3,14 @@ package org.owasp.jbrofuzz.db;
 import java.io.IOException;
 import java.util.Date;
 
-import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
-import org.apache.commons.httpclient.params.HttpConnectionParams;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.db.dto.SessionDTO;
-import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 

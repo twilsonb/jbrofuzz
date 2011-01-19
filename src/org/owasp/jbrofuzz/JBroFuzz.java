@@ -166,7 +166,7 @@ public class JBroFuzz {
 	 * 
 	 * @return The file IO Object of JBroFuzz
 	 */
-	public StorageInterface getHandler() {
+	public StorageInterface getStorageHandler() {
 
 		return mHandler;
 

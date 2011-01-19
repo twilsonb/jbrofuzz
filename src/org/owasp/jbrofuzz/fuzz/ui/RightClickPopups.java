@@ -99,7 +99,7 @@ public final class RightClickPopups {
 					return;
 				}
 
-				final String sURI = mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
+				final String sURI = mFuzzingPanel.getFrame().getJBroFuzz().getStorageHandler()
 				.getLocationURIString();
 
 				Browser.init();
@@ -128,7 +128,7 @@ public final class RightClickPopups {
 				final String name = (String) area.getModel()
 				.getValueAt(area.convertRowIndexToModel(c), 0);
 
-				final String sURi = mFuzzingPanel.getFrame().getJBroFuzz().getHandler().getLocationURIString();
+				final String sURi = mFuzzingPanel.getFrame().getJBroFuzz().getStorageHandler().getLocationURIString();
 				final File selFile = new File(sURi, name + ".html");
 
 				new WindowViewerFrame(mFuzzingPanel, selFile);
@@ -147,7 +147,7 @@ public final class RightClickPopups {
 				final String fileName = (String) area.getModel()
 				.getValueAt(area.convertRowIndexToModel(c), 0)
 				+ ".html";
-				final String s = mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
+				final String s = mFuzzingPanel.getFrame().getJBroFuzz().getStorageHandler()
 				.getFuzzURIString(fileName);
 
 				Browser.init();
@@ -171,7 +171,7 @@ public final class RightClickPopups {
 
 					mFuzzingPanel.clearOutputTable();
 					// Create a new directory to store all data
-					mFuzzingPanel.getFrame().getJBroFuzz().getHandler()
+					mFuzzingPanel.getFrame().getJBroFuzz().getStorageHandler()
 					.createNewLocation();
 
 				} else {
@@ -187,7 +187,7 @@ public final class RightClickPopups {
 
 						mFuzzingPanel.clearOutputTable();
 						// Create a new directory to store all data
-						mFuzzingPanel.getFrame().getJBroFuzz().getHandler().createNewLocation();
+						mFuzzingPanel.getFrame().getJBroFuzz().getStorageHandler().createNewLocation();
 					}
 
 				}

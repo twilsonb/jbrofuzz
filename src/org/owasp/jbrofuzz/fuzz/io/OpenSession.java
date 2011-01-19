@@ -36,8 +36,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -48,9 +46,6 @@ import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Prototype;
-import org.owasp.jbrofuzz.db.DTOCreator;
-import org.owasp.jbrofuzz.db.SQLiteHandler;
-import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;

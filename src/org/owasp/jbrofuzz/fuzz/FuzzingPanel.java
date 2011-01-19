@@ -36,7 +36,6 @@ import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -61,9 +60,6 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
-import org.owasp.jbrofuzz.db.DTOCreator;
-import org.owasp.jbrofuzz.db.SQLiteHandler;
-import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.fuzz.io.FuzzFileUtils;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
@@ -78,7 +74,6 @@ import org.owasp.jbrofuzz.fuzz.ui.OutputTableModel;
 import org.owasp.jbrofuzz.fuzz.ui.RightClickPopups;
 import org.owasp.jbrofuzz.fuzz.ui.WireTextArea;
 import org.owasp.jbrofuzz.io.FileHandler;
-import org.owasp.jbrofuzz.io.StorageHandler;
 import org.owasp.jbrofuzz.payloads.PayloadsDialog;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
@@ -579,7 +574,7 @@ public class FuzzingPanel extends AbstractPanel {
 							public String doInBackground() {
 
 								final String directory = getFrame()
-										.getJBroFuzz().getHandler()
+										.getJBroFuzz().getStorageHandler()
 										.getLocationURIString();
 								final File selFile = new File(directory, name
 										+ ".html");
@@ -1009,7 +1004,8 @@ public class FuzzingPanel extends AbstractPanel {
 					final MessageCreator currentMessage = new MessageCreator(
 							getTextURL(), getTextRequest(), encodedPayload,
 							start, end);
-					final MessageContainer outputMessage = new MessageContainer(this);
+					final MessageContainer outputMessage = new MessageContainer(
+							this);
 
 					// final int co_k =
 					// outputTableModel.addNewRow(outputMessage);
@@ -1067,9 +1063,8 @@ public class FuzzingPanel extends AbstractPanel {
 
 					}
 					Logger.log("activating storageHanlder now", 0);
-					StorageHandler sh = new StorageHandler();
-					sh.writeFuzzFile(outputMessage);
-
+					this.getFrame().getJBroFuzz().getStorageHandler()
+							.writeFuzzFile(outputMessage);
 				}
 
 			} catch (final NoSuchFuzzerException exp) {

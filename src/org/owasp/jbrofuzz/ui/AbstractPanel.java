@@ -285,7 +285,7 @@ public abstract class AbstractPanel extends JPanel {
 						final String fileName = (String) area.getModel()
 						.getValueAt(area.convertRowIndexToModel(c), 0)
 						+ ".html";
-						final String sURI = getFrame().getJBroFuzz().getHandler()
+						final String sURI = getFrame().getJBroFuzz().getStorageHandler()
 						.getFuzzURIString(fileName);
 
 						Browser.init();
@@ -375,7 +375,7 @@ public abstract class AbstractPanel extends JPanel {
 						final String name = (String) area.getModel()
 						.getValueAt(area.convertRowIndexToModel(c), 0);
 						
-						final String directory = getFrame().getJBroFuzz().getHandler().getLocationURIString();
+						final String directory = getFrame().getJBroFuzz().getStorageHandler().getLocationURIString();
 						final File selFile = new File(directory, name);
 						
 						new WindowViewerFrame(AbstractPanel.this, selFile);
