@@ -1009,7 +1009,7 @@ public class FuzzingPanel extends AbstractPanel {
 					final MessageCreator currentMessage = new MessageCreator(
 							getTextURL(), getTextRequest(), encodedPayload,
 							start, end);
-					final MessageWriter outputMessage = new MessageWriter(this);
+					final MessageContainer outputMessage = new MessageContainer(this);
 
 					// final int co_k =
 					// outputTableModel.addNewRow(outputMessage);

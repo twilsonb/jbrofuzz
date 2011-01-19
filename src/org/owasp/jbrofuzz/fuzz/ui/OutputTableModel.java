@@ -32,7 +32,7 @@ package org.owasp.jbrofuzz.fuzz.ui;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.lang.StringUtils;
-import org.owasp.jbrofuzz.fuzz.MessageWriter;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
 
 public class OutputTableModel extends DefaultTableModel {
 
@@ -53,7 +53,7 @@ public class OutputTableModel extends DefaultTableModel {
 		
 	}
 	
-	public void addNewRow(MessageWriter outputMessage) {
+	public void addNewRow(MessageContainer outputMessage) {
 
 		this.addRow(new Object[] {
 

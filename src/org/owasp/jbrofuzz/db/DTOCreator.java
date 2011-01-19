@@ -13,7 +13,7 @@ import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
 import org.owasp.jbrofuzz.db.dto.MessageDTO;
 import org.owasp.jbrofuzz.db.dto.ResponseDTO;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
-import org.owasp.jbrofuzz.fuzz.MessageWriter;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersTable;
 import org.owasp.jbrofuzz.fuzz.ui.EncodersTableModel;
@@ -32,7 +32,7 @@ public class DTOCreator {
 	 * @param mWindow
 	 * @return SessionDTO filled
 	 */
-	public SessionDTO createSessionDTO(MessageWriter outputMessage, long sessionId) {
+	public SessionDTO createSessionDTO(MessageContainer outputMessage, long sessionId) {
 		SessionDTO session = new SessionDTO();
 
 		session.setJVersion(System.getProperty("java.version"));

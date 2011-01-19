@@ -1,6 +1,6 @@
 package org.owasp.jbrofuzz.io;
 
-import org.owasp.jbrofuzz.fuzz.MessageWriter;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
 
 public interface StorageInterface {
 
@@ -51,6 +51,6 @@ public interface StorageInterface {
 	 */
 	public abstract String getLocationURIString();
 
-	public abstract void writeFuzzFile(MessageWriter outputMessage);
+	public abstract void writeFuzzFile(MessageContainer outputMessage);
 
 }
