@@ -15,7 +15,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -28,10 +27,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.db.dto.SessionDTO;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
@@ -385,6 +381,7 @@ KeyListener {
 	}
 
 	private void clickOK(JBroFuzzWindow mWindow) {
+		/*
 		SessionDTO session = new SessionDTO();
 		String dbName = databaseBox.getSelectedItem().toString();
 		String documentId = "" ;sessionsCouchBox.getSelectedItem().toString();
@@ -414,6 +411,7 @@ KeyListener {
 		dtoC.fillWindow(session, mWindow);
 		mWindow.doLayout();
 		mWindow.repaint();
+		*/
 	}
 
 	@Override

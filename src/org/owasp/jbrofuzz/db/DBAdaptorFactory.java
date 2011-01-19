@@ -25,14 +25,13 @@ public class DBAdaptorFactory {
 			if (dbAdaptor == null){
 				SQLiteHandler sqlH = new SQLiteHandler();
 				try{
-					String fileName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "") + ".db";
+					String fileName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "") + ".db";
 					File test = new File(fileName);
 					if (!test.exists()){
-						Logger.log("DB does not exist - creating new one.", 0);
 						sqlH.setUpDB();
 					}
 					else{
-						Logger.log("DB exisits", 0);
+						Logger.log("DB exists", 0);
 					}
 				}
 				catch(Exception e){

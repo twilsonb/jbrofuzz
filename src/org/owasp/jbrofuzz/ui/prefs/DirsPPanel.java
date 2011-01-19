@@ -70,7 +70,7 @@ class DirsPPanel extends AbstractPrefsPanel {
 		
 		// Directory Locations... Directory Save Browse
 
-		final String dir = dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().getLocationCanonicalPath();
+		final String dir = dialog.getJBroFuzzWindow().getJBroFuzz().getStorageHandler().getLocationCanonicalPath();
 
 		final JPanel dirPanel = new JPanel();
 		dirPanel.setLayout(new BoxLayout(dirPanel, BoxLayout.LINE_AXIS));
@@ -177,8 +177,8 @@ class DirsPPanel extends AbstractPrefsPanel {
 		
 		if(dirBox.isSelected()) {
 			JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
-			dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().createNewLocation();
-			dirTextField.setText(dialog.getJBroFuzzWindow().getJBroFuzz().getHandler().getLocationCanonicalPath());
+			dialog.getJBroFuzzWindow().getJBroFuzz().getStorageHandler().createNewLocation();
+			dirTextField.setText(dialog.getJBroFuzzWindow().getJBroFuzz().getStorageHandler().getLocationCanonicalPath());
 		} else {
 			JBroFuzz.PREFS.putBoolean(JBroFuzzPrefs.DIRS[1].getId(), false);
 		}

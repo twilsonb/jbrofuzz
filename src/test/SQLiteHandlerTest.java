@@ -3,9 +3,11 @@ package test;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.owasp.jbrofuzz.db.SQLiteHandler;
-import org.owasp.jbrofuzz.db.dto.*;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
 
 /**
  * 
@@ -37,26 +39,19 @@ public class SQLiteHandlerTest{
 	
 	@Test
 	public void simpleReadWriteTest(){
-		SessionDTO session = new SessionDTO();
-		ConnectionDTO connection = new ConnectionDTO();
-		ResponseDTO[] response = new ResponseDTO[10];
-		MessageDTO[] message = new MessageDTO[10];
+		MessageContainer session = null;
+		MessageContainer connection = null;
+		MessageContainer response = null;
+		MessageContainer message = null;
 		connection = TestUtils.fillConnection(connection, connectionId, sessionId);
 		response = TestUtils.fillResponse(response, connectionId);
 		message = TestUtils.fillMessage(message, connectionId);
-		session.setConnectionDTO(connection);
-		session.setResponse(response);
-		session.setMessage(message);
-		session.setJVersion(jVersion);
-		session.setOs(os);
-		session.setTimestamp(timeStamp);
-		session.setSessionId(sessionId);
 
 			conn = dbHandler.getConnection("jbrofuzzTestDB");
 			// dbHandler.store(session, conn);
 		
 
-		SessionDTO sessionRead = new SessionDTO();
+		MessageContainer sessionRead = null;
 		conn = null;
 			conn = dbHandler.getConnection("jbrofuzzTestDB");
 		sessionRead = dbHandler.read(conn, sessionId);
