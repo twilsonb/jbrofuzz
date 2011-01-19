@@ -28,6 +28,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  *
  */
 public class CouchDBHandler{
+	
 	private String protocol = "http";
 	private String host = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[9].getId(), "");
 	private int port = Integer.valueOf(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[10].getId(), ""));

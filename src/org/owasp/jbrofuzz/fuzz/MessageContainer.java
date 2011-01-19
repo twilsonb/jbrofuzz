@@ -33,7 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MessageWriter {
+public class MessageContainer {
 
 	private static final SimpleDateFormat SD_FORMAT = new SimpleDateFormat(
 	"zzz-yyyy-MM-dd-HH-mm-ss-SSS", Locale.ENGLISH);
@@ -52,7 +52,7 @@ public class MessageWriter {
 	private transient final String encodedPayload;
 	private transient int replyByteLength;
 
-	protected MessageWriter(final FuzzingPanel fuzzingPanel) {
+	protected MessageContainer(final FuzzingPanel fuzzingPanel) {
 
 		// Set the start & end time
 		start = new Date();

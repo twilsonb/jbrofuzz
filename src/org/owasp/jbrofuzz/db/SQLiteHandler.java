@@ -16,7 +16,7 @@ import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
 import org.owasp.jbrofuzz.db.dto.MessageDTO;
 import org.owasp.jbrofuzz.db.dto.ResponseDTO;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
-import org.owasp.jbrofuzz.fuzz.MessageWriter;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
@@ -117,7 +117,7 @@ public class SQLiteHandler {
 	 * @return int returncode > 0 -- OK | < 0 failed.
 	 * @throws SQLException
 	 */
-	public int store(MessageWriter outputMessage, Connection conn){
+	public int store(MessageContainer outputMessage, Connection conn){
 		int returnValue = 0;
 		try{
 			Date date = new Date();

@@ -11,7 +11,7 @@ import org.owasp.jbrofuzz.db.dto.ConnectionDTO;
 import org.owasp.jbrofuzz.db.dto.MessageDTO;
 import org.owasp.jbrofuzz.db.dto.ResponseDTO;
 import org.owasp.jbrofuzz.db.dto.SessionDTO;
-import org.owasp.jbrofuzz.fuzz.MessageWriter;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
 
 public class CouchDBMapper {
 	private static final SimpleDateFormat SD_FORMAT = new SimpleDateFormat(
@@ -92,7 +92,7 @@ public class CouchDBMapper {
 	 * @param outputMessage
 	 * @return
 	 */
-	public JSONObject toCouch2(MessageWriter outputMessage){
+	public JSONObject toCouch2(MessageContainer outputMessage){
 		JSONObject couch = new JSONObject();
 		Date date = new Date();
 		

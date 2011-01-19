@@ -3,7 +3,7 @@ package org.owasp.jbrofuzz.io;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.db.DBAdaptor;
 import org.owasp.jbrofuzz.db.DBAdaptorFactory;
-import org.owasp.jbrofuzz.fuzz.MessageWriter;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
@@ -63,7 +63,7 @@ public class StorageHandler implements StorageInterface {
 	}
 
 	@Override
-	public void writeFuzzFile(MessageWriter outputMessage) {
+	public void writeFuzzFile(MessageContainer outputMessage) {
 		if (mFileHandler != null) {
 			Logger.log("storing data to file", 0);
 			mFileHandler.writeFuzzFile(outputMessage) ;

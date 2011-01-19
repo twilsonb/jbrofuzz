@@ -4,7 +4,7 @@ import java.sql.Connection;
 
 import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.MessageWriter;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
@@ -21,7 +21,7 @@ public class DBAdaptor{
 	 * @param session SessionDTO - containing sessionData to be stored
 	 * @return returnCode int - 0 == OK | 1 == failed.
 	 */
-	public int store(MessageWriter outputMessage){
+	public int store(MessageContainer outputMessage){
 		String dbName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
 		Logger.log("Using DBName: " + dbName, 0);
 		Logger.log("DBHandlerType: " + this.dbHandler.getClass(), 0);

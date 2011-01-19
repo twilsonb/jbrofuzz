@@ -38,7 +38,7 @@ import java.io.InputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.MessageWriter;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
@@ -274,7 +274,7 @@ public class FileHandler implements StorageInterface {
 	}
 
 	@Override
-	public void writeFuzzFile(MessageWriter outputMessage) {
+	public void writeFuzzFile(MessageContainer outputMessage) {
 	
 		final String fileName = outputMessage.getFileName() + ".html";
 	
