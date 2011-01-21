@@ -46,7 +46,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzingPanel;
 import org.owasp.jbrofuzz.graph.GraphingPanel;
 import org.owasp.jbrofuzz.payloads.PayloadsPanel;
 import org.owasp.jbrofuzz.system.Logger;

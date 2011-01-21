@@ -52,7 +52,6 @@ import javax.swing.text.JTextComponent;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
-import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.viewers.PropertiesViewer;
 import org.owasp.jbrofuzz.ui.viewers.WindowViewerFrame;
@@ -668,7 +667,7 @@ public final class RightClickPopups {
 
 				if (mFuzzingPanel.isStopped()) {
 
-					mFuzzingPanel.clearFuzzersTable();
+					mFuzzingPanel.getFuzzersPanel().clearFuzzersTable();
 
 				} else {
 					// Clear the fuzzers if and only if a current fuzzing session is not running
@@ -680,7 +679,7 @@ public final class RightClickPopups {
 
 						mFuzzingPanel.stop();
 
-						mFuzzingPanel.clearFuzzersTable();
+						mFuzzingPanel.getFuzzersPanel().clearFuzzersTable();
 
 					}
 

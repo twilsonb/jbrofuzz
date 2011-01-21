@@ -12,8 +12,8 @@ import java.util.Locale;
 import java.util.Vector;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.FuzzingPanel;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzingPanel;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;

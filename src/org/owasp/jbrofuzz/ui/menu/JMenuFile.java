@@ -402,13 +402,13 @@ public class JMenuFile extends JMenu {
 						.getComponent(c);
 						p.stop();
 
-						mFrameWindow.getPanelFuzzing().clearFuzzersTable();
+						mFrameWindow.getPanelFuzzing().getFuzzersPanel().clearFuzzersTable();
 
 					}
 
 				} else {
 
-					mFrameWindow.getPanelFuzzing().clearFuzzersTable();
+					mFrameWindow.getPanelFuzzing().getFuzzersPanel().clearFuzzersTable();
 
 				}
 

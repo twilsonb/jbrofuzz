@@ -175,11 +175,12 @@ public class CommandLineInterpreter{
 			if (fuzzerId.length() == 0){
 				throw new NoSuchFuzzerException(fuzzers);
 			}
-			mWindow.getPanelFuzzing().addFuzzer(fuzzerId, fuzzersStart, fuzzersEnd);
+			
+			mWindow.getPanelFuzzing().getFuzzersPanel().addFuzzer(fuzzerId, fuzzersStart, fuzzersEnd);
 		}
 		
 		if (fuzzerNumber > 0 && encoder.length() > 0 && suffix.length() > 0 && prefix.length() >0){
-			mWindow.getPanelFuzzing().addTransform(fuzzerNumber, encoder, prefix, suffix);
+			mWindow.getPanelFuzzing().getTransformsPanel().addTransform(fuzzerNumber, encoder, prefix, suffix);
 		}
 
 		// start fuzzing

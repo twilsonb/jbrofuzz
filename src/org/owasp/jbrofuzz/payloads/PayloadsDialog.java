@@ -417,7 +417,7 @@ public class PayloadsDialog extends JDialog {
 						final String selID = mWindow.getJBroFuzz().
 						getDatabase().getIdFromName(name);
 
-						mWindow.getPanelFuzzing().addFuzzer(selID, start, end);
+						mWindow.getPanelFuzzing().getFuzzersPanel().addFuzzer(selID, start, end);
 						PayloadsDialog.this.dispose();
 
 					}

@@ -48,7 +48,7 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * @version 2.0
  * @since 1.3
  */
-class MessageCreator {
+public class MessageCreator {
 
 	// The message that will be placed on the wire
 	private String message;
@@ -65,7 +65,7 @@ class MessageCreator {
 	 */
 	private final String END_LINE;
 
-	protected MessageCreator(final String url, final String message, final String payload, final int start, final int finish) {
+	public MessageCreator(final String url, final String message, final String payload, final int start, final int finish) {
 
 		// Perform the necessary encoding on the payload specified
 		this.payload = payload;
