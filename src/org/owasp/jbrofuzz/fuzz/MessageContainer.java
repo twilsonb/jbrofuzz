@@ -33,6 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.owasp.jbrofuzz.fuzz.ui.FuzzingPanel;
+
 public class MessageContainer {
 
 	private static final SimpleDateFormat SD_FORMAT = new SimpleDateFormat(
@@ -52,7 +54,7 @@ public class MessageContainer {
 	private transient final String encodedPayload;
 	private transient int replyByteLength;
 
-	protected MessageContainer(final FuzzingPanel fuzzingPanel) {
+	public MessageContainer(final FuzzingPanel fuzzingPanel) {
 
 		// Set the start & end time
 		start = new Date();

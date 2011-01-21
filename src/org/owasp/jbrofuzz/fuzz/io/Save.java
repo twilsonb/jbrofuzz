@@ -44,7 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.fuzz.ui.EncodersRow;
+import org.owasp.jbrofuzz.fuzz.ui.TransformsRow;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
@@ -203,7 +203,7 @@ public class Save {
 		
 		final String url = mWindow.getPanelFuzzing().getTextURL();
 		final String request = mWindow.getPanelFuzzing().getTextRequest();
-		final String fuzzers = Save.getTableDataInCSVFormat(mWindow.getPanelFuzzing().getFuzzersTableModel());
+		final String fuzzers = Save.getTableDataInCSVFormat(mWindow.getPanelFuzzing().getFuzzersPanel().getFuzzersTableModel());
 		final String transforms = Save.getTableOfTransformsInCSVFormat(mWindow);
 		
 		Save.writeFile(outputFile, url, request, fuzzers, transforms);
@@ -311,7 +311,7 @@ public class Save {
 	 */
 	public static String getTableOfTransformsInCSVFormat(final JBroFuzzWindow mWindow) {
 		
-		FuzzersTableModel inputTableModel = mWindow.getPanelFuzzing().getFuzzersTableModel();
+		FuzzersTableModel inputTableModel = mWindow.getPanelFuzzing().getFuzzersPanel().getFuzzersTableModel();
 		
 		final StringBuffer output = new StringBuffer();
 		final int totalFuzzerRows = inputTableModel.getRowCount();
@@ -322,7 +322,7 @@ public class Save {
 
 		for (int fuzzerRow = 0; fuzzerRow < totalFuzzerRows; fuzzerRow++) {
 			
-			EncodersRow[] encoderRows = mWindow.getPanelFuzzing().getEncoders(fuzzerRow);
+			TransformsRow[] encoderRows = mWindow.getPanelFuzzing().getTransformsPanel().getTransforms(fuzzerRow);
 			
 			final int totalEncoderRows = encoderRows.length;
 			

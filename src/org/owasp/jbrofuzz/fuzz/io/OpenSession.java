@@ -324,7 +324,7 @@ public class OpenSession {
 
 			Logger.log("Adding Fuzzer Line: " + "\t" + (i + 1) + "\t"
 					+ fileContentsArray[i], 1);
-			mWindow.getPanelFuzzing().addFuzzer(fuzzerID, start, end);
+			mWindow.getPanelFuzzing().getFuzzersPanel().addFuzzer(fuzzerID, start, end);
 
 		}
 
@@ -423,7 +423,7 @@ public class OpenSession {
 
 			Logger.log("Adding Transform Line:\t" + (j + 1)
 					+ "\tOn Fuzzer Row:\t" + fuzzerNumber, 1);
-			mWindow.getPanelFuzzing().addTransform(fuzzerNumber, encoder,
+			mWindow.getPanelFuzzing().getTransformsPanel().addTransform(fuzzerNumber, encoder,
 					prefix, suffix);
 
 		}
