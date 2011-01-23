@@ -1,5 +1,5 @@
 /**
- * JBroFuzz 2.4
+ * JBroFuzz 2.5
  *
  * JBroFuzz - A stateless network protocol fuzzer for web applications.
  * 
@@ -33,41 +33,26 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.File;
 
 import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.SwingWorker;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableRowSorter;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
-import javax.swing.text.Highlighter;
 import javax.swing.text.StyledEditorKit;
 
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
 import org.owasp.jbrofuzz.fuzz.Connection;
 import org.owasp.jbrofuzz.fuzz.ConnectionException;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.fuzz.MessageCreator;
-import org.owasp.jbrofuzz.fuzz.io.FuzzFileUtils;
-import org.owasp.jbrofuzz.io.FileHandler;
 import org.owasp.jbrofuzz.payloads.PayloadsDialog;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
@@ -94,84 +79,41 @@ import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
  * 
  * <p>
  * Additionally the user can select a list of encoders, applied recursively from
- * top down to use to encode/hash the fuzzer, append a prefix/suffix or match and
- * replace a string value within the fuzzer.
+ * top down to use to encode/hash the fuzzer, append a prefix/suffix or match
+ * and replace a string value within the fuzzer.
  * </p>
  * 
  * <p>
  * Finally, all output (apart from being saved to file) is presented in the
  * second tab inside the output table.
  * </p>
- * 
- * @author subere@uncon.org
- * @author RG
- * @version 3.2
- * @since 0.2
  */
 public class FuzzingPanel extends AbstractPanel {
 
 	private static final long serialVersionUID = 6520864430220861584L;
 
-	// The JTextField
 	private final JTextField urlField;
-
-	// The JTextArea
 	private JTextPane requestPane;
-
-	// The JTable were results are outputted
-	private OutputTable mOutputTable;
-
-	// The JTableRowSorter
-	private TableRowSorter<OutputTableModel> outputSorter;
-
-	// And the table model that goes with it
-	private OutputTableModel outputTableModel;
-
-	// The JTable of the generator
-	//private final FuzzerTable fuzzersTable;
-
-	// And the table model that goes with it
-	//private final FuzzersTableModel mFuzzTableModel;
-
-	// A counter for the number of times fuzz has been clicked
 	private int counter;
-
-	// The "On The Wire" console
 	private final WireTextArea mWireTextArea;
-
 	private final FuzzSplitPane mainPane, bottomPane;
-
-	// the new main tabbed pane to contain the 3 tabs: input, output and on the
-	// wire
 	private final JTabbedPane fuzzerWindowPane;
-
 	private boolean stopped;
-
-	// the selected payload
-	private String payload;
-
-	// the top panel, contains the request text area
+	private String payload, encodedPayload;
 	private JPanel topPanel;
-
-	// the encoders toolbar which Bottom RHS of the screen
-//	private TransformsToolBar controlPanel;
-	private String encodedPayload;
-	private JTextPane outputRequestPane;
-	private JTextPane outputResponsePane;
-	private int lastIndex;
-	private Color HILIT_COLOR = Color.LIGHT_GRAY;
-	private JCheckBox csxReq;
-	private JCheckBox csxRes;
-
 	private TransformsPanel transformsPanel;
-
 	private FuzzersPanel fuzzersPanel;
+	private OutputPanel outputPanel;
 
-	/*
+	/**
+	 * <p>
 	 * This constructor is used for the " Fuzzing " panel that resides under the
 	 * FrameWindow, within the corresponding tabbed panel.
+	 * </p>
 	 * 
-	 * @param mWindow FrameWindow
+	 * 
+	 * @param mWindow
+	 *            FrameWindow
 	 */
 	public FuzzingPanel(final JBroFuzzWindow mWindow) {
 
@@ -186,9 +128,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 		// The Target panel
 		final JPanel targetPanel = new JPanel(new BorderLayout());
-		targetPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" Target "),
-				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(" Target "),BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 		urlField = new JTextField();
 		urlField.setEditable(true);
@@ -211,18 +151,14 @@ public class FuzzingPanel extends AbstractPanel {
 
 		// The on the wire panel
 		final JPanel onTheWirePanel = new JPanel();
-		onTheWirePanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" Requests "),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		onTheWirePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(" Requests "),BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		mWireTextArea = new WireTextArea();
 
 		// Right click: Cut, Copy, Paste, Select All
 		RightClickPopups.rightClickOnTheWireTextComponent(this, mWireTextArea);
 
-		final JScrollPane consoleScrollPane = new JScrollPane(mWireTextArea,
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		final JScrollPane consoleScrollPane = new JScrollPane(mWireTextArea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 		onTheWirePanel.setLayout(new BorderLayout());
 		onTheWirePanel.add(consoleScrollPane, BorderLayout.CENTER);
@@ -230,20 +166,19 @@ public class FuzzingPanel extends AbstractPanel {
 		// Set the scroll areas
 		topPanel = new JPanel(new BorderLayout());
 		topPanel.add(targetPanel, BorderLayout.PAGE_START);
-		topPanel.add(createScrollingPanel(" Request ", requestPane),
-				BorderLayout.CENTER);
+		topPanel.add(createScrollingPanel(" Request ", requestPane),BorderLayout.CENTER);
 
 		// create the outlining tabbed pane
 		fuzzerWindowPane = new JTabbedPane();
 
-		bottomPane = new FuzzSplitPane(FuzzSplitPane.HORIZONTAL_SPLIT,
-				FuzzSplitPane.FUZZ_BOTTOM);
+		bottomPane = new FuzzSplitPane(FuzzSplitPane.HORIZONTAL_SPLIT,FuzzSplitPane.FUZZ_BOTTOM);
 
-		bottomPane.setLeftComponent(fuzzersPanel);	
+		bottomPane.setLeftComponent(fuzzersPanel);
 		transformsPanel = new TransformsPanel(this);
 		bottomPane.setRightComponent(transformsPanel);
-		
-		mainPane = new FuzzSplitPane(FuzzSplitPane.VERTICAL_SPLIT,FuzzSplitPane.FUZZ_MAIN);
+
+		mainPane = new FuzzSplitPane(FuzzSplitPane.VERTICAL_SPLIT,
+				FuzzSplitPane.FUZZ_MAIN);
 		mainPane.setOneTouchExpandable(false);
 		mainPane.setTopComponent(topPanel);
 		mainPane.setBottomComponent(bottomPane);
@@ -252,21 +187,21 @@ public class FuzzingPanel extends AbstractPanel {
 		topPanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 		bottomPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
 
+		// Create the outputPanel
+		outputPanel = new OutputPanel(this);
+
 		// add the respective panes/panels to the tabbed pane
 		fuzzerWindowPane.addTab("Input", mainPane);
-		fuzzerWindowPane.addTab("Output", createOutputPanel());
+		fuzzerWindowPane.addTab("Output", outputPanel);
 		fuzzerWindowPane.addTab("On the wire", onTheWirePanel);
-
-		FuzzingPanel.this.add(fuzzerWindowPane, BorderLayout.CENTER);
+		add(fuzzerWindowPane, BorderLayout.CENTER);
 
 		// Display the last displayed url/request
-		this.setTextURL(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_URL, ""));
-		this.setTextRequest(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_REQUEST, ""));
-
-		
+		setTextURL(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_URL, ""));
+		setTextRequest(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_REQUEST, ""));
 	}
 
-	private JPanel createScrollingPanel(String title, JTextPane textPane) {
+	public static JPanel createScrollingPanel(String title, JTextPane textPane) {
 		// The request panel
 		final JPanel panel = new JPanel(new BorderLayout());
 		// The message scroll pane where the message pane sits
@@ -286,8 +221,7 @@ public class FuzzingPanel extends AbstractPanel {
 		JTextPane textPane = new JTextPane();
 
 		// Get the preferences for wrapping lines of text
-		final boolean wrapText = JBroFuzz.PREFS.getBoolean(
-				JBroFuzzPrefs.FUZZING[2].getId(), false);
+		final boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[2].getId(), false);
 
 		if (wrapText) {
 			textPane = new JTextPane();
@@ -308,7 +242,6 @@ public class FuzzingPanel extends AbstractPanel {
 
 			private static final long serialVersionUID = -6085642347022880064L;
 
-			@Override
 			public Document createDefaultDocument() {
 				return new TextHighlighter();
 			}
@@ -321,7 +254,7 @@ public class FuzzingPanel extends AbstractPanel {
 		return textPane;
 	}
 
-	private JTextPane createSimplePane() {
+	JTextPane createSimplePane() {
 		JTextPane textPane = new JTextPane();
 		textPane.setMargin(new Insets(1, 1, 1, 1));
 		textPane.setBackground(Color.WHITE);
@@ -330,241 +263,20 @@ public class FuzzingPanel extends AbstractPanel {
 
 	}
 
-	private void outputSearch(JTextPane toSearch, JTextField entry,
-			boolean ignoreCase) {
-		Highlighter hilit = new DefaultHighlighter();
-		toSearch.setHighlighter(hilit);
-		Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(
-				HILIT_COLOR);
-
-		final String s = entry.getText();
-
-		try {
-			final String content = toSearch.getDocument().getText(0,
-					toSearch.getDocument().getLength());
-
-			int index = -1;
-			if (ignoreCase) {
-				index = content.toLowerCase().indexOf(s.toLowerCase(), 0);
-			} else {
-				index = content.indexOf(s, 0);
-			}
-
-			if (lastIndex != 0 && lastIndex >= index) {
-
-				if (ignoreCase) {
-					final int tempIndex = content.toLowerCase().indexOf(
-							s.toLowerCase(), lastIndex + 1);
-					index = tempIndex;
-				} else {
-					final int tempIndex = content.indexOf(s, lastIndex + 1);
-					index = tempIndex;
-				}
-
-			}
-
-			if (index >= 0) { // match found
-				final int end = index + s.length();
-				hilit.addHighlight(index, end, painter);
-				toSearch.setCaretPosition(index);
-				lastIndex = index;
-			} else if (lastIndex > 0) {
-				lastIndex = 0;
-			} else {
-			}
-
-		} catch (final BadLocationException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	private JPanel createOutputPanel() {
-		// the output split pane model
-
-		final FuzzSplitPane outputMainPane = new FuzzSplitPane(
-				FuzzSplitPane.VERTICAL_SPLIT, FuzzSplitPane.OUTPUT_MAIN);
-		final FuzzSplitPane outputBottomPane = new FuzzSplitPane(
-				FuzzSplitPane.HORIZONTAL_SPLIT, FuzzSplitPane.OUTPUT_BOTTOM);
-
-		// The output panel
-		final JPanel outputTablePanel = new JPanel(new BorderLayout());
-
-		// Update the border of the output panel
-		outputTablePanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder(" Output "),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-
-		outputTableModel = new OutputTableModel();
-		mOutputTable = new OutputTable(outputTableModel);
-		outputSorter = new TableRowSorter<OutputTableModel>(outputTableModel);
-		mOutputTable.setRowSorter(outputSorter);
-		final JScrollPane outputScrollPane = new JScrollPane(mOutputTable);
-		// mOutputTable.setFillsViewportHeight(true);
-		outputScrollPane.setVerticalScrollBarPolicy(20);
-		// outputScrollPane.setPreferredSize(new Dimension(840, 130));
-		outputTablePanel.add(outputScrollPane);
-		outputTablePanel.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
-		RightClickPopups.rightClickOutputTable(this, mOutputTable);
-
-		outputRequestPane = createSimplePane();
-		outputRequestPane.setEditable(false);
-		outputResponsePane = createSimplePane();
-		outputResponsePane.setEditable(false);
-
-		JPanel bL = new JPanel(new BorderLayout());
-		JPanel bR = new JPanel(new BorderLayout());
-
-		bL.add(createScrollingPanel(" Request ", outputRequestPane),
-				BorderLayout.CENTER);
-		bR.add(createScrollingPanel(" Response ", outputResponsePane),
-				BorderLayout.CENTER);
-
-		final JTextField reqSearch = new JTextField();
-		final JTextField resSearch = new JTextField();
-
-		csxReq = new JCheckBox("Ignore Case");
-		csxRes = new JCheckBox("Ignore Case");
-		csxReq.setSelected(true);
-		csxRes.setSelected(true);
-
-		resSearch.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 10) {
-					outputSearch(outputResponsePane, resSearch,
-							csxRes.isSelected());
-				}
-			}
-		});
-
-		reqSearch.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(final KeyEvent ke) {
-				if (ke.getKeyCode() == 10) {
-					outputSearch(outputRequestPane, reqSearch,
-							csxReq.isSelected());
-				}
-			}
-		});
-
-		// configure the ignore case check boxes
-		JPanel pbL = new JPanel(new BorderLayout());
-		pbL.add(csxReq, BorderLayout.WEST);
-		pbL.add(reqSearch, BorderLayout.CENTER);
-
-		JPanel pbR = new JPanel(new BorderLayout());
-		pbR.add(csxRes, BorderLayout.WEST);
-		pbR.add(resSearch, BorderLayout.CENTER);
-
-		bL.add(pbL, BorderLayout.SOUTH);
-		bR.add(pbR, BorderLayout.SOUTH);
-
-		outputBottomPane.setLeftComponent(bL);
-		outputBottomPane.setRightComponent(bR);
-		outputBottomPane.getLeftComponent().setMinimumSize(
-				JBroFuzzFormat.ZERO_DIM);
-		outputBottomPane.getRightComponent().setMinimumSize(
-				JBroFuzzFormat.ZERO_DIM);
-		outputBottomPane.setMinimumSize(JBroFuzzFormat.ZERO_DIM);
-
-		outputMainPane.setTopComponent(outputTablePanel);
-		outputMainPane.setBottomComponent(outputBottomPane);
-
-		// list selection listener
-		mOutputTable.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-
-					public void valueChanged(ListSelectionEvent e) {
-
-						int cRow = mOutputTable.getSelectedRow();
-						try {
-							cRow = mOutputTable.convertRowIndexToModel(cRow);
-						} catch (final IndexOutOfBoundsException iob) {
-							return;
-						}
-						final String name = (String) mOutputTable.getModel()
-								.getValueAt(cRow, 0);
-
-						class FileLoader extends SwingWorker<String, Object> { // NO_UCD
-
-							String fuzzerLineOutput = new String();
-
-							public String doInBackground() {
-
-								final String directory = getFrame()
-										.getJBroFuzz().getStorageHandler()
-										.getLocationURIString();
-								final File selFile = new File(directory, name
-										+ ".html");
-								fuzzerLineOutput = FileHandler
-										.readFile(selFile);
-								return "done";
-							}
-
-							protected void done() {
-								final String dbType = JBroFuzz.PREFS.get(
-										JBroFuzzPrefs.DBSETTINGS[11].getId(),
-										"-1");
-								String request = new String();
-								String response = new String();
-								if (dbType.equals("None")) {
-									response = FuzzFileUtils
-											.getResponse(fuzzerLineOutput);
-									request = FuzzFileUtils
-											.getRequest(fuzzerLineOutput);
-								} else if (dbType.equals("SQLite")) {
-									// TODO: validation checks on the database
-									Logger.log(
-											"SQLITE database not implement - use none",
-											3);
-								} else {
-									// TODO: validation checks on the couch DB
-									// implementation
-									Logger.log(
-											"COUCHDB database not implement - use none",
-											3);
-								}
-
-								outputResponsePane.setText(response);
-								outputRequestPane.setText(request);
-								outputResponsePane.setCaretPosition(0);
-								outputResponsePane.setCaretPosition(0);
-								outputResponsePane.repaint();
-								outputRequestPane.repaint();
-							}
-						}
-						(new FileLoader()).execute();
-					}
-				});
-		JPanel outputPanel = new JPanel(new BorderLayout());
-		outputPanel.add(outputMainPane);
-		return outputPanel;
-	}
-
 	/**
 	 * <p>
 	 * Method for adding a fuzzer in the payloads table.
 	 * </p>
-	 * 
-	 * @version 1.5
 	 */
 	@Override
 	public void add() {
 
 		// Check to see what text has been selected
 		try {
-
 			requestPane.getSelectedText();
-
 		} catch (final IllegalArgumentException e) {
 
-			JOptionPane
-					.showInputDialog(
-							this,
-							"An exception was thrown while attempting to get the selected text",
-							"Add Fuzzer", JOptionPane.ERROR_MESSAGE);
-
+			JOptionPane.showInputDialog(this,"An exception was thrown while attempting to get the selected text","Add Fuzzer", JOptionPane.ERROR_MESSAGE);
 		}
 
 		// Find the location of where the text has been selected
@@ -575,8 +287,6 @@ public class FuzzingPanel extends AbstractPanel {
 
 	}
 
-	
-
 	/**
 	 * <p>
 	 * Clear the URL, Request and Payloads and Responses Table Fields. Also, set
@@ -585,11 +295,6 @@ public class FuzzingPanel extends AbstractPanel {
 	 * <p>
 	 * Used when opening a file, or with a File -> New operation.
 	 * </p>
-	 * 
-	 * 
-	 * @author subere@uncon.org
-	 * @version 1.3
-	 * @since 1.2
 	 */
 	public void clearAllFields() {
 
@@ -600,7 +305,7 @@ public class FuzzingPanel extends AbstractPanel {
 		transformsPanel.clear();
 		fuzzersPanel.clear();
 
-		outputTableModel.clearAllRows();
+		outputPanel.getOutputTableModel().clearAllRows();
 		urlField.requestFocusInWindow();
 	}
 
@@ -612,37 +317,234 @@ public class FuzzingPanel extends AbstractPanel {
 	 * Used when right clicking on the output table, or with a File -> Clear
 	 * Output.
 	 * </p>
-	 * 
-	 * 
-	 * @author subere@uncon.org
-	 * @version 2.2
-	 * @since 1.8
 	 */
 	public void clearOutputTable() {
+		outputPanel.clear();
+	}
 
-		outputTableModel.clearAllRows();
+	/**
+	 * <p>
+	 * Clear the "On The Wire" text area. Also, set the focus on the URL area.
+	 * </p>
+	 */
+	public void clearOnTheWire() {
+		mWireTextArea.setText("");
 		urlField.requestFocusInWindow();
-		outputRequestPane.setText("");
-		outputResponsePane.setText("");
+	}
+
+	public void pause() {
+
+	}
+
+	/**
+	 * <p>
+	 * Check if fuzzing is taking place.
+	 * </p>
+	 * 
+	 * @return True if a fuzzing session is underway.
+	 */
+	public boolean isStopped() {
+		return stopped;
+	}
+
+	/**
+	 * <p>
+	 * Method for removing a generator. This method operates by removing a row
+	 * from the corresponding table model of the generator table.
+	 * </p>
+	 */
+	@Override
+	public void remove() {
+
 	}
 
 
 
 	/**
 	 * <p>
-	 * Clear the "On The Wire" text area. Also, set the focus on the URL area.
+	 * Method for setting the URL text field.
 	 * </p>
 	 * 
-	 * @author subere@uncon.org
-	 * @version 2.1
-	 * @since 2.1
+	 * @param input
+	 * @see #setTextRequest(String)
 	 */
-	public void clearOnTheWire() {
+	public final void setTextURL(final String input) {
 
-		mWireTextArea.setText("");
-		urlField.requestFocusInWindow();
+		urlField.setText(input);
 
 	}
+
+	/**
+	 * <p>
+	 * Method trigered when the fuzz button is pressed in the current panel.
+	 * </p>
+	 * <p>
+	 * If no encoder or fuzzer selected, use a default value (Plain Text
+	 * encoder).
+	 * </p>
+	 */
+	public void start() {
+		if (!stopped) {
+			return;
+		}
+		stopped = false;
+
+		// Start, Stop, Pause, Add, Remove
+		setOptionsAvailable(false, true, false, false, false);
+
+		urlField.setEditable(false);
+		urlField.setBackground(Color.BLACK);
+		urlField.setForeground(Color.WHITE);
+
+		final int fuzzers_added = fuzzersPanel.getRowCount();
+
+		for (int i = 0; i < Math.max(fuzzers_added, 1); i++) {
+
+			String category;
+			TransformsRow[] transforms;
+			int start, end;
+			// If no fuzzers have been added, send a single plain request
+			if (fuzzers_added < 1) {
+				category = "000-ZER-ONE";
+				transforms = transformsPanel.addRow("Plain Text", "", "");
+				start = end = 0;
+			} else {
+				category = fuzzersPanel.getCategory(i);
+				transforms = transformsPanel.getTransforms(i);
+				start = fuzzersPanel.getStart(i);
+				end = fuzzersPanel.getEnd(i);
+			}
+
+			try {
+				for (final Fuzzer f = getFrame().getJBroFuzz().getDatabase().createFuzzer(category, Math.abs(end - start)); f.hasNext();) {
+
+					if (stopped)
+						return;
+
+					// Get the default value
+					final int showOnTheWire = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
+
+					// Set the payload, has to be called before the
+					// MessageWriter constructor
+					payload = f.next();
+
+					// Perform the necessary encoding on the payload specified
+					encodedPayload = TransformsPanel.encodeMany(payload,transforms);
+					final MessageCreator currentMessage = new MessageCreator(getTextURL(), getTextRequest(), encodedPayload,start, end);
+					final MessageContainer outputMessage = new MessageContainer(this);
+
+					// Put the message on the console as it goes out on the wire
+					if ((showOnTheWire == 1) || // 1 show only requests
+							(showOnTheWire == 3)) {// 3 show both requests and
+													// responses
+						// Show message
+						mWireTextArea.setText(currentMessage.getMessageForDisplayPurposes());
+					}
+
+					try {
+
+						// Connect
+						final Connection connection = new Connection(getTextURL(), currentMessage.getMessage());
+
+						// Update the message writer
+						outputMessage.setConnection(connection);
+
+						// Update the console (on the wire tab) with the output
+						if ((showOnTheWire == 2) || // 2 for showing only
+													// responses
+								(showOnTheWire == 3)) {// 3 for showing requests
+														// and responses
+
+							// toConsole("\n-->\n--> [JBROFUZZ FUZZING RESPONSE] -->\n-->\n");
+							mWireTextArea.setText(connection.getReply());
+
+						}
+
+						// Update the last row, indicating success
+						outputPanel.getOutputTableModel().addNewRow(outputMessage);
+
+					} catch (final ConnectionException e1) {
+						// Update the message writer
+						outputMessage.setException(e1);
+
+						// Update the console (on the wire tab) with the exception
+						if ((showOnTheWire == 2) || // 2 for showing only
+													// responses
+								(showOnTheWire == 3)) {// 3 for showing requests
+														// and responses
+
+							// toConsole("\n--> [JBROFUZZ FUZZING RESPONSE] <--\n");
+							mWireTextArea.setText("A connection exception occurred.");
+						}
+
+						// Update the last row, indicating an error
+						outputPanel.getOutputTableModel().addNewRow(outputMessage);
+					}
+					Logger.log("activating storageHanlder now", 0);
+					this.getFrame().getJBroFuzz().getStorageHandler().writeFuzzFile(outputMessage);
+				}
+
+			} catch (final NoSuchFuzzerException exp) {
+				Logger.log("The fuzzer could not be found...", 3);
+			}
+		}
+	}
+
+	/**
+	 * <p>
+	 * Method trigerred when attempting to stop any fuzzing taking place.
+	 * </p>
+	 */
+	@Override
+	public void stop() {
+		if (stopped) {
+			return;
+		}
+		stopped = true;
+		// Start, Stop, Pause, Add, Remove
+		setOptionsAvailable(true, false, false, true, true);
+		final int total = fuzzersPanel.getRowCount();
+
+		if (total > 0) {
+			setOptionRemove(true);
+
+		} else {
+			setOptionRemove(false);
+		}
+
+		urlField.setEditable(true);
+		urlField.setBackground(Color.WHITE);
+		urlField.setForeground(Color.BLACK);
+	}
+
+	public String getPayload() {
+		return payload;
+	}
+
+	public String getEncodedPayload() {
+		return encodedPayload;
+	}
+
+	public TransformsPanel getTransformsPanel() {
+		return transformsPanel;
+	}
+
+	public TransformsToolBar getControlPanel() {
+		return transformsPanel.getTransformsToolBar();
+	}
+
+	public OutputTable getOutputTable() {
+		return outputPanel.getOutputTable();
+	}
+
+	public JComponent getUrlField() {
+		return urlField;
+	}
+
+	public FuzzersPanel getFuzzersPanel() {
+		return fuzzersPanel;
+	}
+	
 
 	/**
 	 * <p>
@@ -675,9 +577,7 @@ public class FuzzingPanel extends AbstractPanel {
 	 * @return String
 	 */
 	public String getTextRequest() {
-
 		return StringUtils.abbreviate(requestPane.getText(), 16384);
-
 	}
 
 	/**
@@ -688,42 +588,9 @@ public class FuzzingPanel extends AbstractPanel {
 	 * @return String
 	 */
 	public String getTextURL() {
-
 		return StringUtils.abbreviate(urlField.getText(), 1024);
-
 	}
-
-	@Override
-	public void pause() {
-
-	}
-
-	/**
-	 * <p>
-	 * Check if fuzzing is taking place.
-	 * </p>
-	 * 
-	 * @return True if a fuzzing session is underway.
-	 * 
-	 * @author subere@uncon.org
-	 * @version 1.3
-	 * @since 1.2
-	 */
-	public boolean isStopped() {
-		return stopped;
-	}
-
-	/**
-	 * <p>
-	 * Method for removing a generator. This method operates by removing a row
-	 * from the corresponding table model of the generator table.
-	 * </p>
-	 */
-	@Override
-	public void remove() {
-
-	}
-
+	
 	/**
 	 * <p>
 	 * Method for setting the text displayed in the "Request" pane.
@@ -733,278 +600,10 @@ public class FuzzingPanel extends AbstractPanel {
 	 * </p>
 	 * 
 	 * @param input
-	 *            The String of header lines plus body to be displayed.
-	 * @see #setTextURL(String)
-	 * @author subere@uncon.org
-	 * @version 1.3
-	 * @since 1.2
+	 *            The String of header lines plus body to be displayed
 	 */
 	public final void setTextRequest(final String input) {
-
 		requestPane.setText(input);
 		requestPane.setCaretPosition(0);
-
-	}
-
-	/**
-	 * <p>
-	 * Method for setting the URL text field.
-	 * </p>
-	 * 
-	 * @param input
-	 * 
-	 * @see #setTextRequest(String)
-	 * @author subere@uncon.org
-	 * @version 1.3
-	 * @since 1.2
-	 */
-	public final void setTextURL(final String input) {
-
-		urlField.setText(input);
-
-	}
-
-	/**
-	 * <p>
-	 * Method trigered when the fuzz button is pressed in the current panel.
-	 * </p>
-	 * <p>
-	 * If no encoder or fuzzer selected, use a default value (Plain Text
-	 * encoder).
-	 * </p>
-	 * 
-	 * @author daemonmidi@gmail.com
-	 * @version 2.4
-	 * @since 2.3
-	 * 
-	 * @author subere@uncon.org
-	 * @author ranulf
-	 * @version 2.3
-	 * @since 1.0
-	 */
-	@Override
-	public void start() {
-		if (!stopped) {
-			return;
-		}
-		stopped = false;
-
-		// Start, Stop, Pause, Add, Remove
-		setOptionsAvailable(false, true, false, false, false);
-
-		urlField.setEditable(false);
-		urlField.setBackground(Color.BLACK);
-		urlField.setForeground(Color.WHITE);
-
-		final int fuzzers_added = fuzzersPanel.getRowCount();
-
-		for (int i = 0; i < Math.max(fuzzers_added, 1); i++) {
-
-			String category;
-			TransformsRow[] transforms;
-			int start;
-			int end;
-			// If no fuzzers have been added, send a single plain request
-			if (fuzzers_added < 1) {
-				category = "000-ZER-ONE";
-				
-				
-				transforms = transformsPanel.addRow("Plain Text", "", "");
-				
-				start = 0;
-				end = 0;
-
-			} else {
-				
-				category = fuzzersPanel.getCategory(i);
-			
-				transforms = transformsPanel.getTransforms(i);
-				
-				
-				start = fuzzersPanel.getStart(i);
-				end = fuzzersPanel.getEnd(i);
-			}
-
-			try {
-
-				for (final Fuzzer f = getFrame().getJBroFuzz().getDatabase()
-						.createFuzzer(category, Math.abs(end - start)); f
-						.hasNext();) {
-
-					if (stopped) {
-						return;
-					}
-
-					// Get the default value
-					final int showOnTheWire = JBroFuzz.PREFS.getInt(
-							JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
-					// Set the payload, has to be called
-					// before the MessageWriter constructor
-					payload = f.next();
-					// Perform the necessary encoding on the payload specified
-					encodedPayload = TransformsPanel.encodeMany(payload, transforms);
-					final MessageCreator currentMessage = new MessageCreator(
-							getTextURL(), getTextRequest(), encodedPayload,
-							start, end);
-					final MessageContainer outputMessage = new MessageContainer(this);
-
-					// Put the message on the console as it goes out on the wire
-					if ((showOnTheWire == 1) || // 1 show only requests
-							(showOnTheWire == 3)) {// 3 show both requests and
-													// responses
-						// Show message
-						mWireTextArea.setText(currentMessage
-								.getMessageForDisplayPurposes());
-					}
-
-					try {
-
-						// Connect
-						final Connection connection = new Connection(
-								getTextURL(), currentMessage.getMessage());
-
-						// Update the message writer
-						outputMessage.setConnection(connection);
-
-						// Update the console (on the wire tab) with the output
-						if ((showOnTheWire == 2) || // 2 for showing only
-													// responses
-								(showOnTheWire == 3)) {// 3 for showing requests
-														// and responses
-
-							// toConsole("\n-->\n--> [JBROFUZZ FUZZING RESPONSE] -->\n-->\n");
-							mWireTextArea.setText(connection.getReply());
-
-						}
-
-						// Update the last row, indicating success
-						outputTableModel.addNewRow(outputMessage);
-
-					} catch (final ConnectionException e1) {
-						// Update the message writer
-						outputMessage.setException(e1);
-
-						// Update the console (on the wire tab) with the
-						// exception
-						if ((showOnTheWire == 2) || // 2 for showing only
-													// responses
-								(showOnTheWire == 3)) {// 3 for showing requests
-														// and responses
-
-							// toConsole("\n--> [JBROFUZZ FUZZING RESPONSE] <--\n");
-							mWireTextArea
-									.setText("A connection exception occurred.");
-						}
-
-						// Update the last row, indicating an error
-						outputTableModel.addNewRow(outputMessage);
-
-					}
-					Logger.log("activating storageHanlder now", 0);
-					this.getFrame().getJBroFuzz().getStorageHandler()
-							.writeFuzzFile(outputMessage);
-				}
-
-			} catch (final NoSuchFuzzerException exp) {
-				Logger.log("The fuzzer could not be found...", 3);
-			}
-		}
-
-	}
-
-	/**
-	 * <p>
-	 * Method trigerred when attempting to stop any fuzzing taking place.
-	 * </p>
-	 */
-	@Override
-	public void stop() {
-
-		if (stopped) {
-			return;
-		}
-		stopped = true;
-		// Start, Stop, Pause, Add, Remove
-		setOptionsAvailable(true, false, false, true, true);
-		final int total = fuzzersPanel.getRowCount();
-
-		if (total > 0) {
-			setOptionRemove(true);
-
-		} else {
-			setOptionRemove(false);
-		}
-
-		urlField.setEditable(true);
-		urlField.setBackground(Color.WHITE);
-		urlField.setForeground(Color.BLACK);
-
-	}
-
-	public String getPayload() {
-		return payload;
-	}
-
-	public String getEncodedPayload() {
-		return encodedPayload;
-	}
-
-	public void setEncodedPayload(String payload) {
-		this.encodedPayload = payload;
-		// TODO update GUI
-	}
-	
-	/**
-	 * Update OutputTable with new Data
-	 * 
-	 * @author daemonmidi@gmail.com
-	 * @since version 2.5
-	 * 
-	 * @param OutputTable
-	 *            ot
-	 */
-	public void updateOutputTable(OutputTable ot) {
-		mOutputTable.removeAll();
-		JScrollPane scroll = new JScrollPane(ot,
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroll.setVerticalScrollBarPolicy(20);
-		mOutputTable.add(scroll, BorderLayout.CENTER);
-		mOutputTable.add(transformsPanel.getTransformsToolBar(), BorderLayout.EAST);
-		mOutputTable.updateUI();
-	}
-	
-	public TransformsPanel getTransformsPanel(){
-		return transformsPanel;
-	}
-	
-	public TransformsToolBar getControlPanel(){
-		return transformsPanel.getTransformsToolBar();
-	}
-
-	public OutputTable getOutputTable() {
-		return mOutputTable;
-
-	}
-
-	public JComponent getUrlField() {
-		return urlField;
-	}
-
-	public void updateRequestPane(int sFuzz, int eFuzz) {
-		requestPane.grabFocus();
-		try {
-			requestPane.setCaretPosition(sFuzz);
-		} catch (final IllegalArgumentException vad_arg) {
-			Logger.log(
-					"Could not pinpoint the position where the fuzzer is",
-					3);
-		}
-		requestPane.setSelectionStart(sFuzz);
-		requestPane.setSelectionEnd(eFuzz);
-	}
-
-	public FuzzersPanel getFuzzersPanel() {
-		return fuzzersPanel;
 	}
 }
