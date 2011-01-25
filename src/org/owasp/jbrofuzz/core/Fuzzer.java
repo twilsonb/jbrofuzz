@@ -135,6 +135,11 @@ public class Fuzzer implements Iterator<String> {
 
 	}
 	
+	public long getMaxValue(){
+		return maxValue;
+	}
+	
+	
 	/**
 	 * <p>Resets the current value back to 0, as the value is set
 	 * during construction.</p>

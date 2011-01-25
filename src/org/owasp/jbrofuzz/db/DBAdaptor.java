@@ -24,7 +24,6 @@ public class DBAdaptor{
 	public int store(MessageContainer outputMessage){
 		String dbName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
 		Logger.log("Using DBName: " + dbName, 0);
-		Logger.log("DBHandlerType: " + this.dbHandler.getClass(), 0);
 		int returnCode = 0;
 		
 		if (dbHandler.getClass().getName().equals(CouchDBHandler.class)){

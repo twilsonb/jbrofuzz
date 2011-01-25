@@ -54,7 +54,7 @@ public class SQLiteHandlerTest{
 		MessageContainer sessionRead = null;
 		conn = null;
 			conn = dbHandler.getConnection("jbrofuzzTestDB");
-		sessionRead = dbHandler.read(conn, sessionId);
+		// sessionRead = dbHandler.read(conn, sessionId);
 		
 		TestUtils.compareSessionDTOs(session, sessionRead);
 	}
