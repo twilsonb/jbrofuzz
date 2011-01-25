@@ -88,8 +88,16 @@ public class OutputPanel extends JPanel{
 		return mOutputTable;
 	}
 	
+	public void setOutputTable(OutputTable ot){
+		this.mOutputTable = ot;
+	}
+	
 	public OutputTableModel getOutputTableModel(){
 		return outputTableModel;
+	}
+	
+	public void setOutputTableModel(OutputTableModel otm){
+		this.outputTableModel = otm;
 	}
 	
 	public void clear(){

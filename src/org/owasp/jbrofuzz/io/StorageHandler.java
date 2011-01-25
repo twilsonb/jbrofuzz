@@ -1,10 +1,13 @@
 package org.owasp.jbrofuzz.io;
 
+import java.io.File;
+
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.db.DBAdaptor;
 import org.owasp.jbrofuzz.db.DBAdaptorFactory;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.system.Logger;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 public class StorageHandler implements StorageInterface {
@@ -22,7 +25,6 @@ public class StorageHandler implements StorageInterface {
 		else /*(dbType.equals("None") ) */{
 			mFileHandler = new FileHandler();
 		}
-		
 	}
 	
 	@Override
@@ -72,5 +74,19 @@ public class StorageHandler implements StorageInterface {
 			Logger.log("stroring data to database", 0);
 			mdbAdaptor.store(outputMessage);
 		}
+	}
+	
+	
+	@Override
+	public MessageContainer readFuzzFile(String name, String sessionId, JBroFuzzWindow mWindow){
+		if (mFileHandler != null){
+		//TODO read from file
+			Logger.log("Reading from file not implemented yet.", 3);
+		}
+		if (mdbAdaptor != null){
+			Logger.log("reading from database", 3);
+			return mdbAdaptor.read(name, sessionId, mWindow);
+		}
+		return null;
 	}
 }

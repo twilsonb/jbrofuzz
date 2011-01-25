@@ -227,9 +227,17 @@ public class FuzzersPanel extends JPanel {
 	public FuzzerTable getFuzzersTable(){
 		return fuzzersTable;
 	}
+	
+	public void setFuzzersTable(FuzzerTable ft){
+		this.fuzzersTable = ft;
+	}
 
 
 	public FuzzersTableModel getFuzzersTableModel() {
 		return mFuzzTableModel;
+	}
+	
+	public void setFuzzersTableModel(FuzzersTableModel ftm){
+		this.mFuzzTableModel = ftm;
 	}
 }

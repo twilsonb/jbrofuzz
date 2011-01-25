@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.system.Logger;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 
@@ -49,6 +50,27 @@ public class DBAdaptor{
 		}
 		
 		return returnCode;
+	}
+	
+	/**
+	 * @author daemonmidi@gmail.com
+	 * @since version 2.5
+	 * @param fileName
+	 * @return MessageContainer - content read from db
+	 */
+	public MessageContainer read(String fileName, String sessionId, JBroFuzzWindow mWindow){
+		MessageContainer mc = new MessageContainer(mWindow.getPanelFuzzing());
+
+		if (dbHandler.getClass().getName().equals(CouchDBHandler.class)){
+			Logger.log("TODO: reading from CouchDB", 0);
+		}
+		else{
+			Logger.log("Reading from SQLite", 0);
+			SQLiteHandler sqlH = (SQLiteHandler) dbHandler;
+			Connection conn = sqlH.getConnection(fileName);
+			mc = sqlH.read(conn, Long.valueOf(sessionId), mWindow.getPanelFuzzing());
+		}
+		return mc;
 	}
 	
 }
