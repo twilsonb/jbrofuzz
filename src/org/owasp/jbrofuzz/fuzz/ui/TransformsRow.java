@@ -1,5 +1,7 @@
 package org.owasp.jbrofuzz.fuzz.ui;
 
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
+
 
 
 /**
@@ -16,12 +18,18 @@ public class TransformsRow {
 	private String encoder;
 	private String prefixOrMatch;
 	private String suffixOrReplace;
-
 	
 	public TransformsRow(String encoder, String prefix, String suffix){
 		this.setEncoder(encoder);
 		this.setPrefixOrMatch(prefix);
 		this.setSuffixOrReplace(suffix);
+	}
+	
+	public TransformsRow(){
+		encoder = EncoderHashCore.CODES[0];
+		prefixOrMatch = "";
+		suffixOrReplace = "";
+		
 	}
 
 

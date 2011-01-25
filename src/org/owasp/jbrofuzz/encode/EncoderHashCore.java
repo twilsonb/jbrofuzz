@@ -44,7 +44,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.owasp.jbrofuzz.fuzz.ui.TransformsRow;
+import org.owasp.jbrofuzz.fuzz.ui.TransformsList;
 
 /**
  * @author subere@uncon.org,ranulf
@@ -563,13 +563,15 @@ public class EncoderHashCore {
 		}
 	}
 
-	public static String encodeMany(String payload, TransformsRow[] encoding) {
+	public static String encodeMany(String payload, TransformsList encoding) {
 		String encoded = payload;
 		String payloadTemp;
-		for(int i=0;i<encoding.length;i++){
-			String encoder = encoding[i].getEncoder();
-			String pom = timeControl(encoding[i].getPrefixOrMatch());
-			String sor = timeControl(encoding[i].getSuffixOrReplace());
+		for(int i=0;i<encoding.size();i++){
+			
+			String encoder = encoding.get(i).getEncoder();
+			String pom = timeControl(encoding.get(i).getPrefixOrMatch());
+			String sor = timeControl(encoding.get(i).getSuffixOrReplace());
+			
 			if(encoder.equals("Match & Replace")){
 				// match and replace
 				payloadTemp = matchAndReplace(pom, sor, encoded);

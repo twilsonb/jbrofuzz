@@ -49,13 +49,13 @@ public class TransformsTableModel extends AbstractTableModel {
 	{ "Encoder", "Prefix/Match", "Suffix/Replace"};
 
 	// The vector of fuzzer row data
-	private final ArrayList<TransformsRow> dataVector;
+	private final TransformsList dataVector;
 
 	/**
 	 * <p>Main Constructor passes the Fuzzing Panel.</p>
 	 */
 	public TransformsTableModel() {
-		dataVector = new ArrayList<TransformsRow>();
+		dataVector = new TransformsList();
 	}
 
 	/**
@@ -63,6 +63,12 @@ public class TransformsTableModel extends AbstractTableModel {
 	 */
 	public void addRow(String encoding, String matchOrPrefix, String replaceOrSuffix) {
 		dataVector.add(new TransformsRow(encoding, matchOrPrefix, replaceOrSuffix));
+		dataVector.trimToSize();
+		fireTableRowsInserted(dataVector.size(), dataVector.size());
+	}
+	
+	public void addRow(TransformsRow row) {
+		dataVector.add(row);
 		dataVector.trimToSize();
 		fireTableRowsInserted(dataVector.size(), dataVector.size());
 	}
@@ -167,6 +173,7 @@ public class TransformsTableModel extends AbstractTableModel {
 			fireTableRowsDeleted(0, row);
 		}
 	}
+
 
 
 

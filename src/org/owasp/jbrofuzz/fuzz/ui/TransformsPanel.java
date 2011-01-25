@@ -30,9 +30,12 @@
 package org.owasp.jbrofuzz.fuzz.ui;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import org.owasp.jbrofuzz.encode.EncoderHashCore;
 
@@ -44,10 +47,14 @@ public class TransformsPanel extends JPanel{
 	 * </p>
 	 */
 	private static final long serialVersionUID = 7196885404320613786L;
-	private TransformsTableList transformsTableList;
+	// private TransformsTableList transformsTableList;
 	private TransformsToolBar controlPanel;
 	private FuzzingPanel fp;
-
+	
+	private TransformsTableModel transformsTableModel;
+	private TransformsTable transformsTable;
+	private ArrayList<TransformsList> transformsLists;
+	
 	public TransformsPanel(FuzzingPanel fp){
 		this.fp = fp;
 		setLayout(new BorderLayout());
@@ -55,12 +62,26 @@ public class TransformsPanel extends JPanel{
 						BorderFactory
 								.createTitledBorder(" Added Fuzzer Transforms (rules applied top first) "),
 						BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-		// create the transformsTableList
-		transformsTableList = new TransformsTableList(fp);
-		// instantiate the control panel
+		
+		transformsTableModel = new TransformsTableModel();
+		transformsTable = new TransformsTable(transformsTableModel);
+		
+ 		transformsLists = new ArrayList<TransformsList>();
+		
 		controlPanel = new TransformsToolBar(fp);
-		// add a null transform to start with
-		this.updateTransformsPanel(null);	
+		
+		final JScrollPane fuzzersScrollPane = new JScrollPane(transformsTable);
+		fuzzersScrollPane.setVerticalScrollBarPolicy(20);
+
+		add(fuzzersScrollPane, BorderLayout.CENTER);
+		add(controlPanel, BorderLayout.EAST);
+
+//		// create the transformsTableList
+//		transformsTableList = new TransformsTableList(fp);
+//		// instantiate the control panel
+//		controlPanel = new TransformsToolBar(fp);
+//		// add a null transform to start with
+//		this.updateTransformsPanel(null);	
 	}
 
 	/**
@@ -73,46 +94,53 @@ public class TransformsPanel extends JPanel{
 	 * @param in
 	 * @author RG
 	 */
-	public void updateTransformsPanel(TransformsTable in) {
+/*	public void updateTransformsPanel(TransformsTable in) {
 		removeAll();
 		JScrollPane scroll = new JScrollPane(in,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.setVerticalScrollBarPolicy(20);
 		add(scroll, BorderLayout.CENTER);
-		add(controlPanel, BorderLayout.EAST);
+
 		updateUI();
 		fp.updateUI();
 		
-		System.out.println("adding transform");
-	}
 
-	public void addTableList() {
-		transformsTableList.add();
+	}*/
+
+	public void addTransformsList() {
+		transformsLists.add(new TransformsList());
+//		transformsTableList.add();
 		
 	}
 	
-	public TransformsRow[] getTransforms(int fuzzerRow) {
-
-		TransformsTableModel a = transformsTableList
-				.getTransformsTableModel(fuzzerRow);
-
-		if (a == null) {
-			TransformsRow row = new TransformsRow("Plain Text", "", "");
-			return new TransformsRow[] { row };
-		}
-		return a.getTransforms();
+	public TransformsList getTransforms(int fuzzerRow) {
+		return transformsLists.get(fuzzerRow);
 	}
+	
+	
+//	public TransformsRow[] getTransforms(int fuzzerRow) {
+//
+//		TransformsTableModel a = transformsTableList
+//				.getTransformsTableModel(fuzzerRow);
+//
+//		if (a == null) {
+//			TransformsRow row = new TransformsRow("Plain Text", "", "");
+//			return new TransformsRow[] { row };
+//		}
+//		return a.getTransforms();
+//	}
 
 
-	public void removeList(int i) {
-		transformsTableList.remove(i);
+	public void removeTransformsList(int i) {
+		transformsLists.remove(i);
+		transformsTableModel.removeRow(i);
 		
 	}
 
-	public TransformsTableList getTransformsTableList() {
-		return transformsTableList;
-	}
+//	public TransformsList getTransformsTableList() {
+//		return transformsTableList;
+//	}
 	
 	
 	/**
@@ -131,37 +159,93 @@ public class TransformsPanel extends JPanel{
 	 */
 	public void addTransform(int fuzzerNumber, String transform, String prefix,
 			String suffix) {
+		
+		TransformsRow tr = new TransformsRow(transform, prefix, suffix);
+		transformsLists.get(fuzzerNumber).add(tr);
+		transformsTableModel.addRow(tr);
 
-		transformsTableList.getTransformsTableModel(fuzzerNumber - 1).addRow(
-				transform, prefix, suffix);
+//		transformsTableList.getTransformsTableModel(fuzzerNumber - 1).addRow(
+//				transform, prefix, suffix);
 		// TransformsTableList.add(transform, prefix, suffix);
+
+	}
+	
+	public void addTransform(int fuzzer){
+		TransformsRow tr = new TransformsRow();
+		transformsLists.get(fuzzer).add(tr);
+		transformsTableModel.addRow(tr);
+		
 
 	}
 
 	public void showRow(int row) {
-		transformsTableList.show(row);
+		final int trSize = transformsLists.size();
+		if (trSize < 1) {
+			return;
+		}
+		
+	
+		
+		if( (row < trSize) && (row >= 0) ) {
+		
+			// transformsTableList.show(row);
+			TransformsList tl = transformsLists.get(row);
+			// transformsTable.setModel(null);
+			while (transformsTable.getRowCount() > 0) {
+					transformsTableModel.removeRow(0);
+					// fp.getTransformsPanel().removeList(0);
+			}
+			
+			for(TransformsRow tr1 : tl) {
+				transformsTableModel.addRow(tr1);
+			}
+			
+
+			if (row == 0) {
+				fp.getControlPanel().disableAll();
+				fp.getControlPanel().enableAdd();
+			} else if (row == 1) {
+				fp.getControlPanel().disableAll();
+				fp.getControlPanel().enableAdd();
+				fp.getControlPanel().enableDelete();
+			} else {
+				fp.getControlPanel().enableAll();
+			}
+
+			
+		}
 		
 	}
 
-	public TransformsRow[] addRow(String string, String string2, String string3) {
-		TransformsRow row = new TransformsRow("Plain Text", "", "");
-		return new TransformsRow[] { row };
-		
-	}
+//	public TransformsRow[] addRow(String string, String string2, String string3) {
+//		TransformsRow row = new TransformsRow("Plain Text", "", "");
+//		return new TransformsRow[] { row };
+//		
+//	}
 
-	public static String encodeMany(String payload, TransformsRow[] transforms) {
-		return EncoderHashCore.encodeMany(payload,
-				transforms);
-	}
+//	public static String encodeMany(String payload, TransformsRow[] transforms) {
+//		return EncoderHashCore.encodeMany(payload,
+//				transforms);
+//	}
 	
 	public void clear(){
-		while (transformsTableList.getSize() > 0) {
-			removeList(0);
+		while (transformsTable.getRowCount() > 0) {
+			transformsTableModel.removeRow(0);
+			// fp.getTransformsPanel().removeList(0);
+			transformsTableModel.removeRow(0);
 		}
 	}
 
 	public TransformsToolBar getTransformsToolBar() {
 		return controlPanel;
+	}
+
+	public TransformsTable getTransformsTable() {
+		return transformsTable;
+	}
+
+	public TransformsTableModel getTransformsTableModel() {
+		return transformsTableModel;
 	}
 	
 	
