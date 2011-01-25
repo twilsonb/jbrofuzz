@@ -2,6 +2,7 @@ package org.owasp.jbrofuzz.db;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -28,6 +29,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
+import org.owasp.jbrofuzz.fuzz.ui.OutputTable;
+import org.owasp.jbrofuzz.fuzz.ui.OutputTableModel;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
@@ -381,37 +387,11 @@ KeyListener {
 	}
 
 	private void clickOK(JBroFuzzWindow mWindow) {
-		/*
-		SessionDTO session = new SessionDTO();
-		String dbName = databaseBox.getSelectedItem().toString();
-		String documentId = "" ;sessionsCouchBox.getSelectedItem().toString();
-
-		if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("couchdb")){
-			CouchDBHandler cdbH = new CouchDBHandler();
-			CouchDBMapper cdbM = new CouchDBMapper();
-			documentId = sessionsCouchBox.getSelectedItem().toString();
-			
-			try {
-				session = cdbM.toDTO(new JSONObject(cdbH.getDocument(dbName, documentId)));
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			
-		}
-		else if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("sqlite")){
-			SQLiteHandler sqlH = new SQLiteHandler();
-			Connection conn;
-			documentId = sessionsSQLiteBox.getSelectedItem().toString();
-			
-				conn = sqlH.getConnection(dbName);
-				session = sqlH.read(conn, Long.valueOf(documentId));
-		}
-		
-		DTOCreator dtoC = new DTOCreator();
-		dtoC.fillWindow(session, mWindow);
+		MessageContainer mc = mWindow.getJBroFuzz().getStorageHandler().readFuzzFile(databaseBox.getSelectedItem().toString(), sessionsSQLiteBox.getSelectedItem().toString(), mWindow);
+		mWindow.getPanelFuzzing().setTextURL(mc.getTextURL());
+		mWindow.getPanelFuzzing().setTextRequest(mc.getEncodedPayload());
 		mWindow.doLayout();
 		mWindow.repaint();
-		*/
 	}
 
 	@Override

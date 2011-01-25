@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -44,10 +46,9 @@ public class SQLiteHandler {
 		Statement stat = conn.createStatement();
 		stat.executeUpdate("drop table if exists session;");
 		stat.executeUpdate("drop table if exists message;");
-		stat.executeUpdate("drop table if exists response;");
 
 		stat.executeUpdate("create table session (sessionId, timestamp, jVersion, Os, url);");
-		stat.executeUpdate("create table message (messageId, sessionId, textRequest, payload, start, end, status);");
+		stat.executeUpdate("create table message (messageId, sessionId, textRequest, payload, reply, start, end, status);");
 		conn.commit();
 		conn.setAutoCommit(true);
 		conn.close();
@@ -141,7 +142,7 @@ public class SQLiteHandler {
 			logMessage = "Storing to MessageTable: messageId: "
 					+ messageId + " sessionId: " + sessionId + " payload: " + outputMessage.getPayload()
 			        + " encodedPayload: "
-					+ outputMessage.getEncodedPayload() + " start: "
+					+ outputMessage.getEncodedPayload() + " reply: "  + outputMessage.getReply() + " start: "
 					+ outputMessage.getStartDateFull() + " end: " + end + " status: " + outputMessage.getStatus();
 			Logger.log(logMessage, 0);
 			returnValue = insertOrUpdateMessageTable(conn, 
@@ -149,6 +150,7 @@ public class SQLiteHandler {
 													 sessionId, 
 													 outputMessage.getPayload(), 
 													 outputMessage.getEncodedPayload(),
+													 outputMessage.getReply(),
 													 outputMessage.getStartDateFull(), 
 													 end,
 													 outputMessage.getStatus());
@@ -231,7 +233,7 @@ public class SQLiteHandler {
 	 */
 	private int insertOrUpdateMessageTable(Connection conn, long messageId,
 			long connectionId, String textRequest, 
-			String payload, String start, String end, String status) throws SQLException {
+			String payload, String reply, String start, String end, String status) throws SQLException {
 
 		System.out.println("messageId: " + messageId + " connectionId: "
 				+ connectionId);
@@ -247,26 +249,28 @@ public class SQLiteHandler {
 				PreparedStatement st1;
 				if (count > 0) {
 					// update
-					sqlString1 = "update message (connectionId, textRequest, encoding, payload, start, end, status) values (?, ?, ?, ?, ?) where messageId = ?;";
+					sqlString1 = "update message (connectionId, textRequest, encoding, payload, reply, start, end, status) values (?, ?, ?, ?, ?, ?) where messageId = ?;";
 					st1 = conn.prepareStatement(sqlString1);
 					st1.setLong(1, connectionId);
 					st1.setString(2, textRequest);
 					st1.setString(3, payload);
-					st1.setString(4, start);
-					st1.setString(5, end);
-					st1.setString(6, status);
-					st1.setLong(7, messageId);
+					st1.setString(4, reply);
+					st1.setString(5, start);
+					st1.setString(6, end);
+					st1.setString(7, status);
+					st1.setLong(8, messageId);
 				} else {
 					// new row
-					sqlString1 = "insert into message (messageId, sessionId, textRequest, payload, start, end, status) values (?,?,?,?,?,?,?);";
+					sqlString1 = "insert into message (messageId, sessionId, textRequest, payload, reply, start, end, status) values (?,?,?,?,?,?,?,?);";
 					st1 = conn.prepareStatement(sqlString1);
 					st1.setLong(1, messageId);
 					st1.setLong(2, connectionId);
 					st1.setString(3, textRequest);
 					st1.setString(4, payload);
-					st1.setString(5, start);
-					st1.setString(6, end);
-					st1.setString(7, status);
+					st1.setString(5, reply);
+					st1.setString(6, start);
+					st1.setString(7, end);
+					st1.setString(8, status);
 				}
 				returnValue = st1.executeUpdate();
 			}
@@ -277,10 +281,9 @@ public class SQLiteHandler {
 	/**
 	 * @author daemonmidi@gmail.com
 	 * @since version 2.5
-	 * @return int; > 0 -> ok ; < 0 -> failed
+	 * @return MessageContainer data from DB
 	 */
 	public MessageContainer read(Connection conn, long sessionId, FuzzingPanel fp) {
-		String sql1 = "select count(*) from session where sessionId = ?;";
 		MessageContainer session = null;
 		try {
 			PreparedStatement st1 = conn
@@ -321,7 +324,7 @@ public class SQLiteHandler {
 			throws SQLException {
 		//TODO
 		MessageContainer returnValue = new MessageContainer(fp);
-		String sqlStatement = "select url from session where session = ?";
+		String sqlStatement = "select url from session where sessionId = ?";
 		String url = new String();
 		PreparedStatement st1 = conn.prepareStatement(sqlStatement);
 		st1.setLong(1, sessionId);
@@ -332,16 +335,19 @@ public class SQLiteHandler {
 		returnValue.setTextURL(url);
 		
 		//messageId, sessionId, textRequest, payload, start, end
-		String sql2 = "Select textRequest, payload, start, end, status from message where sessionId = ?";
+		String sql2 = "Select textRequest, payload, reply, start, end, status from message where sessionId = ?";
 		PreparedStatement st2 = conn.prepareStatement(sql2);
 		st2.setLong(1, sessionId);
 		ResultSet rs2 = st2.executeQuery();
 		while (rs2.next()){
+			Logger.log("Read payload as: " + rs2.getString(1) + " encodedPayload as " + rs2.getString(2) + " reply as " + rs2.getString(3) + " startDate " + rs2.getString(4) + 
+					   " endDate" + rs2.getString(5) + " status: " + rs2.getString(6), 3);
 			returnValue.setPayload(rs2.getString(1));
 			returnValue.setEncodedPayload(rs2.getString(2));
-			returnValue.setStartDate(new Date(rs2.getString(3)));
-			returnValue.setEnd(new Date(rs2.getString(4)));
-			returnValue.setStatus(rs2.getString(5));
+			returnValue.setReply(rs2.getString(3));
+			returnValue.setStartDate(rs2.getDate(4));
+			returnValue.setEnd(rs2.getDate(5));
+			returnValue.setStatus(rs2.getString(6));
 		}
 		
 		return returnValue;

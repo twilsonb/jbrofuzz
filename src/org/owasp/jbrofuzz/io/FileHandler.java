@@ -40,6 +40,7 @@ import org.apache.commons.io.IOUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.system.Logger;
+import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
@@ -286,6 +287,13 @@ public class FileHandler implements StorageInterface {
 		} catch (final IOException e) {
 			Logger.log("Error writting fuzz file: " + fileName, 3);
 		}
+	}
+
+	@Override
+	public MessageContainer readFuzzFile(String fileName, String sessionId,
+			JBroFuzzWindow mWindow) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

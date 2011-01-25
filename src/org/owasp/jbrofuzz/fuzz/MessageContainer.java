@@ -38,10 +38,10 @@ import org.owasp.jbrofuzz.fuzz.ui.FuzzingPanel;
 public class MessageContainer {
 
 	private static final SimpleDateFormat SD_FORMAT = new SimpleDateFormat(
-	"zzz-yyyy-MM-dd-HH-mm-ss-SSS", Locale.ENGLISH);
-	
+			"zzz-yyyy-MM-dd-HH-mm-ss-SSS", Locale.ENGLISH);
+
 	private static final SimpleDateFormat SH_FORMAT = new SimpleDateFormat(
-	"DDD-HH-mm-ss-SSS", Locale.ENGLISH);
+			"DDD-HH-mm-ss-SSS", Locale.ENGLISH);
 
 	private transient final StringBuffer message;
 
@@ -53,6 +53,7 @@ public class MessageContainer {
 	private transient String payload;
 	private transient String encodedPayload;
 	private transient int replyByteLength;
+	private transient String reply;
 
 	public MessageContainer(final FuzzingPanel fuzzingPanel) {
 
@@ -75,10 +76,26 @@ public class MessageContainer {
 		message = new StringBuffer("<!--\n");
 	}
 
-	public void setEnd(Date date){
+	public void setEnd(Date date) {
 		this.end = date;
 	}
 	
+	public String getEndDateFull(){
+		return SD_FORMAT.format(this.end);
+	}
+	
+	public String getEndDateShort(){
+		return SH_FORMAT.format(this.end);
+	}
+	
+	public int getEndDateNumerical(){
+		return (int) this.end.getTime();
+	}
+	
+	public int getStartDateNumerical(){
+		return (int) this.start.getTime();
+	}
+
 	private void append(final int input) {
 
 		message.append(input);
@@ -103,10 +120,10 @@ public class MessageContainer {
 		return payload;
 	}
 
-	public void setPayload(String payload){
+	public void setPayload(String payload) {
 		this.payload = payload;
 	}
-	
+
 	public int getByteCount() {
 
 		return replyByteLength;
@@ -119,10 +136,10 @@ public class MessageContainer {
 
 	}
 
-	public void setFileName(String fileName){
+	public void setFileName(String fileName) {
 		this.filename = fileName;
 	}
-	
+
 	/**
 	 * <p>
 	 * Get the response time, in milliseconds
@@ -141,21 +158,21 @@ public class MessageContainer {
 
 	public String getStartDateFull() {
 
-		synchronized (this){
+		synchronized (this) {
 			return SD_FORMAT.format(start);
 		}
-		
+
 	}
 
 	public String getStartDateShort() {
-	
-		synchronized (this){
+
+		synchronized (this) {
 			return SH_FORMAT.format(start);
 		}
 
 	}
-	
-	public void setStartDate(Date date){
+
+	public void setStartDate(Date date) {
 		this.start = date;
 	}
 
@@ -164,8 +181,8 @@ public class MessageContainer {
 		return status;
 
 	}
-	
-	public void setStatus(String status){
+
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -174,8 +191,8 @@ public class MessageContainer {
 		return textURL;
 
 	}
-	
-	public void setTextURL(String url){
+
+	public void setTextURL(String url) {
 		this.textURL = url;
 	}
 
@@ -203,9 +220,18 @@ public class MessageContainer {
 		message.append("--jbrofuzz-->\n");
 		// Finally write the reply string
 		message.append(reply);
-
+		this.reply = reply;
 	}
 
+
+	public String getReply(){
+		return reply;
+	}
+	
+	public void setReply(String reply){
+		this.reply = reply;
+	}
+	
 	public void setException(final ConnectionException conException) {
 
 		// Update the reply
@@ -226,15 +252,14 @@ public class MessageContainer {
 
 	}
 
-	
-	public String getMessage(){
+	public String getMessage() {
 		return this.message.toString();
 	}
-	
-	public void setMessage(String message){
+
+	public void setMessage(String message) {
 		this.message.append(message);
 	}
-	
+
 	@Override
 	public String toString() {
 
@@ -245,8 +270,8 @@ public class MessageContainer {
 	public String getEncodedPayload() {
 		return encodedPayload;
 	}
-	
-	public void setEncodedPayload(String payload){
+
+	public void setEncodedPayload(String payload) {
 		this.encodedPayload = payload;
 	}
 }
