@@ -88,9 +88,8 @@ public class FuzzersPanel extends JPanel {
 
 		while (fuzzersTable.getRowCount() > 0) {
 			mFuzzTableModel.removeRow(0);
-			fp.getTransformsPanel().removeList(0);
 		}
-
+		fp.getTransformsPanel().clear();
 		fp.getUrlField().requestFocusInWindow();
 
 	}
@@ -133,19 +132,8 @@ public class FuzzersPanel extends JPanel {
 
 						if (row > -1) {
 							fp.getTransformsPanel().showRow(row);
-							int c = fp.getTransformsPanel().getTransformsTableList().getTransformsCount(row);
-						
-							if (c == 0) {
-								fp.getControlPanel().disableAll();
-								fp.getControlPanel().enableAdd();
-							} else if (c == 1) {
-								fp.getControlPanel().disableAll();
-								fp.getControlPanel().enableAdd();
-								fp.getControlPanel().enableDelete();
-							} else {
-								fp.getControlPanel().enableAll();
-							}
 						}
+
 					}
 				});
 	}
@@ -170,7 +158,7 @@ public class FuzzersPanel extends JPanel {
 
 			mFuzzTableModel.addRow(fuzzerId, type, fuzzerId, point1, point2);
 
-			fp.getTransformsPanel().addTableList();
+			fp.getTransformsPanel().addTransformsList();
 
 		} else {
 			Logger.log("Could not add the Fuzzer with ID: " + fuzzerId, 3);
@@ -219,7 +207,7 @@ public class FuzzersPanel extends JPanel {
 
 			mFuzzTableModel.removeRow(Integer.parseInt(selectedFuzzPoint
 					.split(" - ")[0]));
-			fp.getTransformsPanel().removeList(Integer.parseInt(selectedFuzzPoint
+			fp.getTransformsPanel().removeTransformsList(Integer.parseInt(selectedFuzzPoint
 					.split(" - ")[0]));
 		}
 	}

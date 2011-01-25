@@ -49,6 +49,7 @@ import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.core.Fuzzer;
 import org.owasp.jbrofuzz.core.NoSuchFuzzerException;
+import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.fuzz.Connection;
 import org.owasp.jbrofuzz.fuzz.ConnectionException;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
@@ -401,12 +402,14 @@ public class FuzzingPanel extends AbstractPanel {
 		for (int i = 0; i < Math.max(fuzzers_added, 1); i++) {
 
 			String category;
-			TransformsRow[] transforms;
+//			TransformsRow[] transforms;
+			TransformsList transforms;
+			
 			int start, end;
 			// If no fuzzers have been added, send a single plain request
 			if (fuzzers_added < 1) {
 				category = "000-ZER-ONE";
-				transforms = transformsPanel.addRow("Plain Text", "", "");
+				transforms = new TransformsList();
 				start = end = 0;
 			} else {
 				category = fuzzersPanel.getCategory(i);
@@ -429,7 +432,13 @@ public class FuzzingPanel extends AbstractPanel {
 					payload = f.next();
 
 					// Perform the necessary encoding on the payload specified
-					encodedPayload = TransformsPanel.encodeMany(payload,transforms);
+//					if(transformsPanel.getRowCount() ) {
+//						// encodedPayload = payload;
+//					} else {
+//						// encodedPayload = EncoderHashCore.encodeMany(payload,transforms);
+//					}
+					encodedPayload = EncoderHashCore.encodeMany(payload, transforms);
+					
 					final MessageCreator currentMessage = new MessageCreator(getTextURL(), getTextRequest(), encodedPayload,start, end);
 					final MessageContainer outputMessage = new MessageContainer(this);
 
