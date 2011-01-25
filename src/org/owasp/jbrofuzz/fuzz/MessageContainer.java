@@ -45,13 +45,13 @@ public class MessageContainer {
 
 	private transient final StringBuffer message;
 
-	private transient final String filename;
-	private transient final String textURL;
-	private transient final Date start;
+	private transient String filename;
+	private transient String textURL;
+	private transient Date start;
 	private transient Date end;
 	private transient String status;
-	private transient final String payload;
-	private transient final String encodedPayload;
+	private transient String payload;
+	private transient String encodedPayload;
 	private transient int replyByteLength;
 
 	public MessageContainer(final FuzzingPanel fuzzingPanel) {
@@ -73,9 +73,12 @@ public class MessageContainer {
 		replyByteLength = 0;
 		// Create the StringBuffer starting with a comment
 		message = new StringBuffer("<!--\n");
-
 	}
 
+	public void setEnd(Date date){
+		this.end = date;
+	}
+	
 	private void append(final int input) {
 
 		message.append(input);
@@ -99,6 +102,11 @@ public class MessageContainer {
 	public String getPayload() {
 		return payload;
 	}
+
+	public void setPayload(String payload){
+		this.payload = payload;
+	}
+	
 	public int getByteCount() {
 
 		return replyByteLength;
@@ -111,6 +119,10 @@ public class MessageContainer {
 
 	}
 
+	public void setFileName(String fileName){
+		this.filename = fileName;
+	}
+	
 	/**
 	 * <p>
 	 * Get the response time, in milliseconds
@@ -142,17 +154,29 @@ public class MessageContainer {
 		}
 
 	}
+	
+	public void setStartDate(Date date){
+		this.start = date;
+	}
 
 	public String getStatus() {
 
 		return status;
 
 	}
+	
+	public void setStatus(String status){
+		this.status = status;
+	}
 
 	public String getTextURL() {
 
 		return textURL;
 
+	}
+	
+	public void setTextURL(String url){
+		this.textURL = url;
 	}
 
 	public void setConnection(final Connection connection) {
@@ -207,6 +231,10 @@ public class MessageContainer {
 		return this.message.toString();
 	}
 	
+	public void setMessage(String message){
+		this.message.append(message);
+	}
+	
 	@Override
 	public String toString() {
 
@@ -217,5 +245,8 @@ public class MessageContainer {
 	public String getEncodedPayload() {
 		return encodedPayload;
 	}
-
+	
+	public void setEncodedPayload(String payload){
+		this.encodedPayload = payload;
+	}
 }
