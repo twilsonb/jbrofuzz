@@ -295,6 +295,12 @@ public class FileHandler implements StorageInterface {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String[] readTableRow(String sqlStatement) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 

@@ -24,7 +24,6 @@ public class DBAdaptor{
 	 */
 	public int store(MessageContainer outputMessage){
 		String dbName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
-		Logger.log("Using DBName: " + dbName, 0);
 		int returnCode = 0;
 		
 		if (dbHandler.getClass().getName().equals(CouchDBHandler.class)){
@@ -35,15 +34,11 @@ public class DBAdaptor{
 		}
 
 		else{
-			Logger.log("Storing to SQLite", 0);
 				SQLiteHandler sqlH = (SQLiteHandler) dbHandler;
 				try {
-					Logger.log("Setting up connection", 0);
 					Connection conn = sqlH.getConnection(dbName);
 					if (conn == null) Logger.log("Connection = null", 0);
-					Logger.log("executing store", 0);
 					returnCode = sqlH.store(outputMessage, conn);
-					Logger.log("done", 0);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -65,12 +60,23 @@ public class DBAdaptor{
 			Logger.log("TODO: reading from CouchDB", 0);
 		}
 		else{
-			Logger.log("Reading from SQLite", 0);
 			SQLiteHandler sqlH = (SQLiteHandler) dbHandler;
 			Connection conn = sqlH.getConnection(fileName);
 			mc = sqlH.read(conn, Long.valueOf(sessionId), mWindow.getPanelFuzzing());
 		}
 		return mc;
+	}
+	
+	public String[] executeQuery(String sql){
+		if (dbHandler.getClass().getName().equals(CouchDBHandler.class)){
+			Logger.log("TODO: reading form CouchDB", 3);
+		}
+		else{
+			SQLiteHandler sqlH = (SQLiteHandler) dbHandler;
+			Connection conn = sqlH.getConnection(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""));
+			return sqlH.executeQuery(conn, sql);
+		}
+		return null;
 	}
 	
 }

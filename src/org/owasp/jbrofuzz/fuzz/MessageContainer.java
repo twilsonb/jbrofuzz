@@ -53,7 +53,7 @@ public class MessageContainer {
 	private transient String payload;
 	private transient String encodedPayload;
 	private transient int replyByteLength;
-	private transient String reply;
+	private transient String textRequest; 
 
 	public MessageContainer(final FuzzingPanel fuzzingPanel) {
 
@@ -220,16 +220,15 @@ public class MessageContainer {
 		message.append("--jbrofuzz-->\n");
 		// Finally write the reply string
 		message.append(reply);
-		this.reply = reply;
 	}
 
 
-	public String getReply(){
-		return reply;
+	public String getTextRequest(){
+		return textRequest;
 	}
 	
-	public void setReply(String reply){
-		this.reply = reply;
+	public void setTextRequest(String textRequest){
+		this.textRequest = textRequest;
 	}
 	
 	public void setException(final ConnectionException conException) {

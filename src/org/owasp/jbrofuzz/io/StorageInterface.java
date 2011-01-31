@@ -56,5 +56,7 @@ public interface StorageInterface {
 	
 	
 	public abstract MessageContainer readFuzzFile(String fileName, String sessionId, JBroFuzzWindow mWindow);
+	
+	public abstract String[] readTableRow(String sqlStatement);
 
 }
