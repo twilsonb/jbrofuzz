@@ -241,10 +241,12 @@ public class OutputPanel extends JPanel{
 									request = FuzzFileUtils
 											.getRequest(fuzzerLineOutput);
 								} else if (dbType.equals("SQLite")) {
-									// TODO: validation checks on the database
-									Logger.log(
-											"SQLITE database not implement - use none",
-											3);
+									String sqlStatement = "Select textRequest, reply from message where filename='" + name + "'";
+									String[] result = fp.getFrame().getJBroFuzz().getStorageHandler().readTableRow(sqlStatement);
+									if (result.length > 0){
+										request = result[0];
+										response = result[1];
+									}
 								} else {
 									// TODO: validation checks on the couch DB
 									// implementation

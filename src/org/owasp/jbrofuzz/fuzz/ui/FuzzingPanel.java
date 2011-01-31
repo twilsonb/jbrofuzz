@@ -441,7 +441,8 @@ public class FuzzingPanel extends AbstractPanel {
 					
 					final MessageCreator currentMessage = new MessageCreator(getTextURL(), getTextRequest(), encodedPayload,start, end);
 					final MessageContainer outputMessage = new MessageContainer(this);
-
+					outputMessage.setTextRequest(currentMessage.getMessageForDisplayPurposes());
+					
 					// Put the message on the console as it goes out on the wire
 					if ((showOnTheWire == 1) || // 1 show only requests
 							(showOnTheWire == 3)) {// 3 show both requests and
@@ -489,7 +490,6 @@ public class FuzzingPanel extends AbstractPanel {
 						// Update the last row, indicating an error
 						outputPanel.getOutputTableModel().addNewRow(outputMessage);
 					}
-					Logger.log("activating storageHanlder now", 0);
 					this.getFrame().getJBroFuzz().getStorageHandler().writeFuzzFile(outputMessage);
 				}
 
@@ -542,10 +542,19 @@ public class FuzzingPanel extends AbstractPanel {
 		return transformsPanel.getTransformsToolBar();
 	}
 
+	
+	public OutputPanel getOutputPanel(){
+		return outputPanel;
+	}
+	
+	public void setOutputPanel(OutputPanel op){
+		this.outputPanel = op;
+	}
+/*
 	public OutputTable getOutputTable() {
 		return outputPanel.getOutputTable();
 	}
-
+*/	
 	public JComponent getUrlField() {
 		return urlField;
 	}

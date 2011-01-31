@@ -2,7 +2,6 @@ package org.owasp.jbrofuzz.db;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -30,8 +29,8 @@ import javax.swing.text.JTextComponent;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
-import org.owasp.jbrofuzz.fuzz.ui.FuzzerTable;
-import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
+import org.owasp.jbrofuzz.fuzz.ui.FuzzingPanel;
+import org.owasp.jbrofuzz.fuzz.ui.OutputPanel;
 import org.owasp.jbrofuzz.fuzz.ui.OutputTable;
 import org.owasp.jbrofuzz.fuzz.ui.OutputTableModel;
 import org.owasp.jbrofuzz.system.Logger;
@@ -75,7 +74,7 @@ KeyListener {
 
 	private JComboBox sessionsSQLiteBox;
 
-	private JComboBox sessionsCouchBox;
+	// private JComboBox sessionsCouchBox;
 
 	private final String methods[] = { "SQLite", "CouchDB"};
 	
@@ -121,33 +120,33 @@ KeyListener {
 
 
 		methodBox = new JComboBox(methods);
-		sessionsCouchBox = new JComboBox(sessionsCouch);
+		// sessionsCouchBox = new JComboBox(sessionsCouch);
 		sessionsSQLiteBox = new JComboBox(sessionsSQLite);
 
 		methodBox.setFont(new Font("Verdana", Font.BOLD, 10));
-		sessionsCouchBox.setFont(new Font("Verdana", Font.BOLD, 10));
+		// sessionsCouchBox.setFont(new Font("Verdana", Font.BOLD, 10));
 		sessionsSQLiteBox.setFont(new Font("Verdana", Font.BOLD, 10));
 
 		
 		methodBox.addKeyListener(this);
-		sessionsCouchBox.addKeyListener(this);
+		// sessionsCouchBox.addKeyListener(this);
 		sessionsSQLiteBox.addKeyListener(this);
 
 		
 		methodBox.setMaximumRowCount(3);
-		sessionsCouchBox.setMaximumRowCount(3);
+		// sessionsCouchBox.setMaximumRowCount(3);
 		sessionsSQLiteBox.setMaximumRowCount(3);
 		
 		methodBox.setBackground(Color.BLACK);
-		sessionsCouchBox.setBackground(Color.BLACK);
+		// sessionsCouchBox.setBackground(Color.BLACK);
 		sessionsSQLiteBox.setBackground(Color.BLACK);
 		
 		
 		methodBox.setForeground(Color.WHITE);
-		sessionsCouchBox.setForeground(Color.WHITE);
+		// sessionsCouchBox.setForeground(Color.WHITE);
 		sessionsSQLiteBox.setForeground(Color.WHITE);
 
-		sessionsCouchBox.setSelectedIndex(0);
+		// sessionsCouchBox.setSelectedIndex(0);
 		sessionsSQLiteBox.setSelectedIndex(0);
 		
 		// Buttons
@@ -307,7 +306,7 @@ KeyListener {
 			propertiesPanel.add(sessionsSQLiteBox);
 		}
 		else if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("couchdb")){
-			propertiesPanel.add(sessionsCouchBox);
+			// propertiesPanel.add(sessionsCouchBox);
 		}
 
 		final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 15));
@@ -375,23 +374,29 @@ KeyListener {
 		else if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("couchdb")){
 			CouchDBHandler cdbH = new CouchDBHandler();
 			String[] sessionsCouch = cdbH.getDocumentIds(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), ""));
-			sessionsCouchBox.removeAllItems();
+			// sessionsCouchBox.removeAllItems();
 			
 			for (int i = 0; i < sessionsCouch.length; i++){
-				sessionsCouchBox.addItem(sessionsCouch[i]);
+				// sessionsCouchBox.addItem(sessionsCouch[i]);
 			}
 			
-			sessionsCouchBox.setSelectedIndex(0);
+			// sessionsCouchBox.setSelectedIndex(0);
 			this.repaint();
 		}
 	}
 
 	private void clickOK(JBroFuzzWindow mWindow) {
 		MessageContainer mc = mWindow.getJBroFuzz().getStorageHandler().readFuzzFile(databaseBox.getSelectedItem().toString(), sessionsSQLiteBox.getSelectedItem().toString(), mWindow);
+		
 		mWindow.getPanelFuzzing().setTextURL(mc.getTextURL());
 		mWindow.getPanelFuzzing().setTextRequest(mc.getEncodedPayload());
+
+		mWindow.getPanelFuzzing().getOutputPanel().getOutputTableModel().clearAllRows();
+		mWindow.getPanelFuzzing().getOutputPanel().getOutputTableModel().addNewRow(mc);
+
 		mWindow.doLayout();
 		mWindow.repaint();
+
 	}
 
 	@Override

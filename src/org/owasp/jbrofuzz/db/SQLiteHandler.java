@@ -1,5 +1,6 @@
 package org.owasp.jbrofuzz.db;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -48,7 +49,7 @@ public class SQLiteHandler {
 		stat.executeUpdate("drop table if exists message;");
 
 		stat.executeUpdate("create table session (sessionId, timestamp, jVersion, Os, url);");
-		stat.executeUpdate("create table message (messageId, sessionId, textRequest, payload, reply, start, end, status);");
+		stat.executeUpdate("create table message (messageId, sessionId, fileName, textRequest, payload, reply, start, end, status);");
 		conn.commit();
 		conn.setAutoCommit(true);
 		conn.close();
@@ -105,6 +106,9 @@ public class SQLiteHandler {
 		return result;
 	}
 
+	
+
+	
 	/**
 	 * write content of DTO to database
 	 * 
@@ -119,8 +123,27 @@ public class SQLiteHandler {
 		int returnValue = 0;
 		try {
 			Date date = new Date();
-			long sessionId = getLastId(conn, "session") + 1;
-			long messageId = getLastId(conn, "message") + 1;
+			long sessionId = -1;
+			long messageId = -1;
+			try{
+				sessionId = getLastId(conn, "session") + 1;
+				messageId = getLastId(conn, "message") + 1;
+			}
+			catch (Exception ex){
+				Logger.log("Empty file or file of same name like db exists - replacing it with new DB!", 3);
+				// File test = new File(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "") + ".db");
+				// test.delete();
+				conn.close();
+				conn = getConnection(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""));
+				try {
+					setUpDB();
+					Logger.log("New DB created!",3);
+					sessionId = getLastId(conn, "session") + 1;
+					messageId = getLastId(conn, "message") + 1;
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				}
+			}
 			String end = SD_FORMAT.format(date);
 			String jVersion = System.getProperty("java.version");
 			String os = System.getProperty("os.name") + " "
@@ -128,33 +151,23 @@ public class SQLiteHandler {
 					+ System.getProperty("os.version");
 
 
-			String logMessage = "Storing to sessionTable: sessionId: " + sessionId + " startDate: " + outputMessage.getStartDateFull() + " jVersion: " + jVersion + " os: " + os + 
-			" urlString: " + outputMessage.getTextURL();
-			Logger.log(logMessage, 0);
 			returnValue = insertOrUpdateSessionTable(conn, 
 													 sessionId,
 													 outputMessage.getStartDateFull(), 
 													 jVersion, 
 													 os,
 													 outputMessage.getTextURL());
-			Logger.log("returnValue: " + returnValue, 0);
 
-			logMessage = "Storing to MessageTable: messageId: "
-					+ messageId + " sessionId: " + sessionId + " payload: " + outputMessage.getPayload()
-			        + " encodedPayload: "
-					+ outputMessage.getEncodedPayload() + " reply: "  + outputMessage.getReply() + " start: "
-					+ outputMessage.getStartDateFull() + " end: " + end + " status: " + outputMessage.getStatus();
-			Logger.log(logMessage, 0);
 			returnValue = insertOrUpdateMessageTable(conn, 
 													 messageId,
 													 sessionId, 
-													 outputMessage.getPayload(), 
+													 outputMessage.getFileName(),
+													 outputMessage.getTextRequest(), 
 													 outputMessage.getEncodedPayload(),
-													 outputMessage.getReply(),
-													 outputMessage.getStartDateFull(), 
+													 outputMessage.getMessage(),
+													 outputMessage.getStartDateFull(),
 													 end,
 													 outputMessage.getStatus());
-			Logger.log("result : " + returnValue, 0);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -232,11 +245,10 @@ public class SQLiteHandler {
 	 * @throws SQLException
 	 */
 	private int insertOrUpdateMessageTable(Connection conn, long messageId,
-			long connectionId, String textRequest, 
+			long connectionId, String fileName, String textRequest, 
 			String payload, String reply, String start, String end, String status) throws SQLException {
 
-		System.out.println("messageId: " + messageId + " connectionId: "
-				+ connectionId);
+		if (reply == null) reply = new String("--- none ---");
 		int returnValue = 1;
 		String sqlString1 = "";
 		if (messageId >= 0) {
@@ -249,28 +261,30 @@ public class SQLiteHandler {
 				PreparedStatement st1;
 				if (count > 0) {
 					// update
-					sqlString1 = "update message (connectionId, textRequest, encoding, payload, reply, start, end, status) values (?, ?, ?, ?, ?, ?) where messageId = ?;";
+					sqlString1 = "update message (connectionId, fileName, textRequest, encoding, payload, reply, start, end, status) values (?,?, ?, ?, ?, ?, ?) where messageId = ?;";
 					st1 = conn.prepareStatement(sqlString1);
 					st1.setLong(1, connectionId);
-					st1.setString(2, textRequest);
-					st1.setString(3, payload);
-					st1.setString(4, reply);
-					st1.setString(5, start);
-					st1.setString(6, end);
-					st1.setString(7, status);
-					st1.setLong(8, messageId);
-				} else {
-					// new row
-					sqlString1 = "insert into message (messageId, sessionId, textRequest, payload, reply, start, end, status) values (?,?,?,?,?,?,?,?);";
-					st1 = conn.prepareStatement(sqlString1);
-					st1.setLong(1, messageId);
-					st1.setLong(2, connectionId);
+					st1.setString(2, fileName);
 					st1.setString(3, textRequest);
 					st1.setString(4, payload);
 					st1.setString(5, reply);
 					st1.setString(6, start);
 					st1.setString(7, end);
 					st1.setString(8, status);
+					st1.setLong(9, messageId);
+				} else {
+					// new row
+					sqlString1 = "insert into message (messageId, sessionId, fileName, textRequest, payload, reply, start, end, status) values (?,?,?,?,?,?,?,?,?);";
+					st1 = conn.prepareStatement(sqlString1);
+					st1.setLong(1, messageId);
+					st1.setLong(2, connectionId);
+					st1.setString(3, fileName);
+					st1.setString(4, textRequest);
+					st1.setString(5, payload);
+					st1.setString(6, reply);
+					st1.setString(7, start);
+					st1.setString(8, end);
+					st1.setString(9, status);
 				}
 				returnValue = st1.executeUpdate();
 			}
@@ -340,11 +354,9 @@ public class SQLiteHandler {
 		st2.setLong(1, sessionId);
 		ResultSet rs2 = st2.executeQuery();
 		while (rs2.next()){
-			Logger.log("Read payload as: " + rs2.getString(1) + " encodedPayload as " + rs2.getString(2) + " reply as " + rs2.getString(3) + " startDate " + rs2.getString(4) + 
-					   " endDate" + rs2.getString(5) + " status: " + rs2.getString(6), 3);
 			returnValue.setPayload(rs2.getString(1));
 			returnValue.setEncodedPayload(rs2.getString(2));
-			returnValue.setReply(rs2.getString(3));
+			returnValue.setMessage(rs2.getString(3));
 			returnValue.setStartDate(rs2.getDate(4));
 			returnValue.setEnd(rs2.getDate(5));
 			returnValue.setStatus(rs2.getString(6));
@@ -364,10 +376,35 @@ public class SQLiteHandler {
 			throws SQLException {
 		long lastId = -1;
 		String sql1 = "select count(*) from " + tableName;
-		// TODO NullPointerException ??!!
 		PreparedStatement pst1 = conn.prepareStatement(sql1);
 		ResultSet rs1 = pst1.executeQuery();
 		lastId = rs1.getLong(1);
 		return lastId;
+	}
+	
+	
+	
+	/**
+	 * do query against db
+	 * @param conn
+	 * @param sql
+	 * @return String[] results
+	 */
+	public String[] executeQuery(Connection conn, String sql){
+		Vector<String> result = new Vector<String>();
+		//TODO Sanatize input from sql!!!!
+		try {
+			PreparedStatement st1 = conn.prepareStatement(sql);
+			ResultSet rs1 = st1.executeQuery();
+			while(rs1.next()){
+				//TODO a more generic way would be great here!!!
+				result.add(rs1.getString(1));
+				result.add(rs1.getString(2));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		String[] returnValue = result.toArray(new String[result.size()]);
+		return returnValue;
 	}
 }

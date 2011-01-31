@@ -67,11 +67,9 @@ public class StorageHandler implements StorageInterface {
 	@Override
 	public void writeFuzzFile(MessageContainer outputMessage) {
 		if (mFileHandler != null) {
-			Logger.log("storing data to file", 0);
 			mFileHandler.writeFuzzFile(outputMessage) ;
 		}
 		if (mdbAdaptor != null){
-			Logger.log("stroring data to database", 0);
 			mdbAdaptor.store(outputMessage);
 		}
 	}
@@ -84,8 +82,18 @@ public class StorageHandler implements StorageInterface {
 			Logger.log("Reading from file not implemented yet.", 3);
 		}
 		if (mdbAdaptor != null){
-			Logger.log("reading from database", 3);
 			return mdbAdaptor.read(name, sessionId, mWindow);
+		}
+		return null;
+	}
+
+	@Override
+	public String[] readTableRow(String sqlStatement) {
+		if (mFileHandler != null){
+			Logger.log("reading form file not implemented", 3);
+		}
+		if (mdbAdaptor != null){
+			return mdbAdaptor.executeQuery(sqlStatement);
 		}
 		return null;
 	}
