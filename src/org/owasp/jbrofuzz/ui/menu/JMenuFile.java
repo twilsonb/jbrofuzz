@@ -92,7 +92,7 @@ public class JMenuFile extends JMenu {
 		openDatabase.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 		
-		syncDatabase.setAccelerator(KeyStroke.getKeyStroke('Y', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
+		// syncDatabase.setAccelerator(KeyStroke.getKeyStroke('Y', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), false));
 		
 		loadFuzzers.setAccelerator(KeyStroke.getKeyStroke('M', Toolkit
 				.getDefaultToolkit().getMenuShortcutKeyMask(), false));
@@ -115,7 +115,7 @@ public class JMenuFile extends JMenu {
 		this.addSeparator();
 		this.add(openLocation);
 		this.add(openDatabase);
-		this.add(syncDatabase);
+		// this.add(syncDatabase);
 		this.addSeparator();
 		this.add(save);
 		this.add(saveAs);
