@@ -279,8 +279,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 			JOptionPane.showInputDialog(this,"An exception was thrown while attempting to get the selected text","Add Fuzzer", JOptionPane.ERROR_MESSAGE);
 		}
-
-		// Find the location of where the text has been selected
+				// Find the location of where the text has been selected
 		final int sPoint = requestPane.getSelectionStart();
 		final int fPoint = requestPane.getSelectionEnd();
 
@@ -403,13 +402,13 @@ public class FuzzingPanel extends AbstractPanel {
 
 			String category;
 //			TransformsRow[] transforms;
-			TransformsList transforms;
+			TransformsTableModel transforms;
 			
 			int start, end;
 			// If no fuzzers have been added, send a single plain request
 			if (fuzzers_added < 1) {
 				category = "000-ZER-ONE";
-				transforms = new TransformsList();
+				transforms = new TransformsTableModel();
 				start = end = 0;
 			} else {
 				category = fuzzersPanel.getCategory(i);

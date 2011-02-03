@@ -11,7 +11,7 @@ import org.owasp.jbrofuzz.encode.EncoderHashCore;
  * 
  * @author ragreen
  * @since 2.3
- *
+ *s
  */
 public class TransformsRow {
 	
@@ -60,6 +60,10 @@ public class TransformsRow {
 
 	public String getSuffixOrReplace() {
 		return suffixOrReplace;
+	}
+	
+	public String toString(){
+		return "Encoder: " + encoder + " Preffix/Match: " + prefixOrMatch + " Suffix/Replace: " + suffixOrReplace;
 	}
 	
 	

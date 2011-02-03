@@ -45,7 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.ui.FuzzersTableModel;
-import org.owasp.jbrofuzz.fuzz.ui.TransformsList;
+import org.owasp.jbrofuzz.fuzz.ui.TransformsTableModel;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.util.JBroFuzzFileFilter;
@@ -322,20 +322,20 @@ public class Save {
 
 		for (int fuzzerRow = 0; fuzzerRow < totalFuzzerRows; fuzzerRow++) {
 			
-			TransformsList encoderRows = mWindow.getPanelFuzzing().getTransformsPanel().getTransforms(fuzzerRow);
+			TransformsTableModel encoderRows = mWindow.getPanelFuzzing().getTransformsPanel().getTransforms(fuzzerRow);
 			
-			final int totalEncoderRows = encoderRows.size();
+			final int totalEncoderRows = encoderRows.getRowCount();
 			
 			for (int transformRow = 0; transformRow <totalEncoderRows; transformRow++) {
 				
 				output.append( (fuzzerRow + 1) );
 				output.append(',');
-				output.append( encoderRows.get(transformRow).getEncoder() );
+				output.append( encoderRows.getRow(transformRow).getEncoder() );
 				output.append(',');
 				
 				String prefix;
 				try {
-					prefix = Base64.encodeBase64String( encoderRows.get(transformRow).getPrefixOrMatch().getBytes("UTF-8") );
+					prefix = Base64.encodeBase64String( encoderRows.getRow(transformRow).getPrefixOrMatch().getBytes("UTF-8") );
 					prefix = StringUtils.chomp(prefix);
 				} catch (UnsupportedEncodingException e) {
 					prefix = "";
@@ -345,7 +345,7 @@ public class Save {
 				
 				String suffix;
 				try {
-					suffix = Base64.encodeBase64String( encoderRows.get(transformRow).getSuffixOrReplace().getBytes("UTF-8") );
+					suffix = Base64.encodeBase64String( encoderRows.getRow(transformRow).getSuffixOrReplace().getBytes("UTF-8") );
 					suffix = StringUtils.chomp(suffix);
 				} catch (UnsupportedEncodingException e) {
 					suffix = "";

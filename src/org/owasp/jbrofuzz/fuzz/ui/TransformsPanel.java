@@ -35,9 +35,6 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-
-import org.owasp.jbrofuzz.encode.EncoderHashCore;
 
 public class TransformsPanel extends JPanel{
 	
@@ -51,9 +48,8 @@ public class TransformsPanel extends JPanel{
 	private TransformsToolBar controlPanel;
 	private FuzzingPanel fp;
 	
-	private TransformsTableModel transformsTableModel;
 	private TransformsTable transformsTable;
-	private ArrayList<TransformsList> transformsLists;
+	private ArrayList<TransformsTableModel> transformsLists;
 	
 	public TransformsPanel(FuzzingPanel fp){
 		this.fp = fp;
@@ -63,10 +59,10 @@ public class TransformsPanel extends JPanel{
 								.createTitledBorder(" Added Fuzzer Transforms (rules applied top first) "),
 						BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		
-		transformsTableModel = new TransformsTableModel();
-		transformsTable = new TransformsTable(transformsTableModel);
+		transformsTable = new TransformsTable(new TransformsTableModel());
 		
- 		transformsLists = new ArrayList<TransformsList>();
+ 		transformsLists = new ArrayList<TransformsTableModel>();
+ 		
 		
 		controlPanel = new TransformsToolBar(fp);
 		
@@ -94,27 +90,33 @@ public class TransformsPanel extends JPanel{
 	 * @param in
 	 * @author RG
 	 */
-/*	public void updateTransformsPanel(TransformsTable in) {
-		removeAll();
-		JScrollPane scroll = new JScrollPane(in,
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroll.setVerticalScrollBarPolicy(20);
-		add(scroll, BorderLayout.CENTER);
-
-		updateUI();
-		fp.updateUI();
-		
-
-	}*/
+//	public void updateTransformsPanel(TransformsTable in) {
+//		removeAll();
+//		JScrollPane scroll = new JScrollPane(in,
+//				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+//				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//		scroll.setVerticalScrollBarPolicy(20);
+//		add(scroll, BorderLayout.CENTER);
+//
+//		updateUI();
+//		fp.updateUI();
+//		
+//
+//	}
 
 	public void addTransformsList() {
-		transformsLists.add(new TransformsList());
+		TransformsTableModel tm = new TransformsTableModel();
+		//tm.addRow(new TransformsRow());
+		transformsLists.add(tm);
+		System.out.println(transformsLists.size());
+		transformsTable.setModel(tm);
+		transformsTable.updateUI();
+		this.updateUI();
 //		transformsTableList.add();
 		
 	}
 	
-	public TransformsList getTransforms(int fuzzerRow) {
+	public TransformsTableModel getTransforms(int fuzzerRow) {
 		return transformsLists.get(fuzzerRow);
 	}
 	
@@ -134,7 +136,6 @@ public class TransformsPanel extends JPanel{
 
 	public void removeTransformsList(int i) {
 		transformsLists.remove(i);
-		transformsTableModel.removeRow(i);
 		
 	}
 
@@ -161,10 +162,9 @@ public class TransformsPanel extends JPanel{
 			String suffix) {
 		
 		TransformsRow tr = new TransformsRow(transform, prefix, suffix);
-		transformsLists.get(fuzzerNumber).add(tr);
-		transformsTableModel.addRow(tr);
-
-//		transformsTableList.getTransformsTableModel(fuzzerNumber - 1).addRow(
+		transformsLists.get(fuzzerNumber).addRow(tr);
+		
+		//		transformsTableList.getTransformsTableModel(fuzzerNumber - 1).addRow(
 //				transform, prefix, suffix);
 		// TransformsTableList.add(transform, prefix, suffix);
 
@@ -172,35 +172,17 @@ public class TransformsPanel extends JPanel{
 	
 	public void addTransform(int fuzzer){
 		TransformsRow tr = new TransformsRow();
-		transformsLists.get(fuzzer).add(tr);
-		transformsTableModel.addRow(tr);
+		System.out.println(tr.getEncoder()+ " " + tr.getPrefixOrMatch());
+		transformsLists.get(fuzzer).addRow(tr);
+		
 		
 
 	}
-
-	public void showRow(int row) {
-		final int trSize = transformsLists.size();
-		if (trSize < 1) {
-			return;
-		}
-		
 	
-		
-		if( (row < trSize) && (row >= 0) ) {
-		
-			// transformsTableList.show(row);
-			TransformsList tl = transformsLists.get(row);
-			// transformsTable.setModel(null);
-			while (transformsTable.getRowCount() > 0) {
-					transformsTableModel.removeRow(0);
-					// fp.getTransformsPanel().removeList(0);
-			}
-			
-			for(TransformsRow tr1 : tl) {
-				transformsTableModel.addRow(tr1);
-			}
-			
-
+	public void showTransformsList(int row){
+		TransformsTableModel tl = transformsLists.get(row);
+		 transformsTable.setModel(tl);
+		 transformsTable.updateUI();
 			if (row == 0) {
 				fp.getControlPanel().disableAll();
 				fp.getControlPanel().enableAdd();
@@ -211,11 +193,28 @@ public class TransformsPanel extends JPanel{
 			} else {
 				fp.getControlPanel().enableAll();
 			}
-
-			
-		}
-		
 	}
+
+//	public void showTransformsForFuzzer(int row) {
+//		final int trSize = transformsLists.size();
+//		if (trSize < 1) {
+//			return;
+//		}	
+//	
+//		
+//		if( (row < trSize) && (row >= 0) ) {
+//		
+//			
+//			TransformsTableModel tl = transformsLists.get(row);
+//			 transformsTable.setModel(tl);
+//			 transformsTable.updateUI();
+//			 updateTransformsPanel(new TransformsTable(tl));
+//		
+//
+//			
+//		}
+//		
+//	}
 
 //	public TransformsRow[] addRow(String string, String string2, String string3) {
 //		TransformsRow row = new TransformsRow("Plain Text", "", "");
@@ -229,11 +228,9 @@ public class TransformsPanel extends JPanel{
 //	}
 	
 	public void clear(){
-		while (transformsTable.getRowCount() > 0) {
-			transformsTableModel.removeRow(0);
-			// fp.getTransformsPanel().removeList(0);
-			transformsTableModel.removeRow(0);
-		}
+//		while (transformsTable.getRowCount() > 0) {
+//			transformsTable.getModel().removeRow(0);
+//		}
 	}
 
 	public TransformsToolBar getTransformsToolBar() {
@@ -244,8 +241,8 @@ public class TransformsPanel extends JPanel{
 		return transformsTable;
 	}
 
-	public TransformsTableModel getTransformsTableModel() {
-		return transformsTableModel;
+	public TransformsTableModel getTransformsTableModel(int index) {
+			return transformsLists.get(index);
 	}
 	
 	
