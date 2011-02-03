@@ -131,7 +131,7 @@ public class FuzzersPanel extends JPanel {
 						int row = fuzzersTable.getSelectedRow();
 
 						if (row > -1) {
-							fp.getTransformsPanel().showRow(row);
+							fp.getTransformsPanel().showTransformsList(row);
 						}
 
 					}

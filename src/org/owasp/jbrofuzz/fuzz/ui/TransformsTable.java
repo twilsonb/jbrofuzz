@@ -55,11 +55,12 @@ public class TransformsTable extends JTable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1876543211323L;
-
+	
 	// The types of encodings allowed within the encoding column
 	public TransformsTable(final TransformsTableModel model) {
 
 		super(model);
+
 
 		setFont(new Font("Monospaced", Font.BOLD, 12));
 		setBackground(Color.BLACK);
@@ -154,6 +155,16 @@ public class TransformsTable extends JTable {
 		else
 			return super.getCellRenderer(row, column);
 	}
+	
+//	public TransformsTableModel getModel(){
+//		//TransformsTableModel tm = getModel();
+//		return (TransformsTableModel) this.getM;
+//	}
+//	public void getModel(TransformsTableModel tm){
+//		//TransformsTableModel tm = getModel();
+//		this.model = tm;
+//	}
+	
 
 
 

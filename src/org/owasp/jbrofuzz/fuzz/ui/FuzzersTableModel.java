@@ -69,6 +69,7 @@ public class FuzzersTableModel extends AbstractTableModel {
 
 		dataVector.trimToSize();
 		fireTableRowsInserted(dataVector.size(), dataVector.size());
+		
 	}
 
 	/**

@@ -49,22 +49,20 @@ public class TransformsTableModel extends AbstractTableModel {
 	{ "Encoder", "Prefix/Match", "Suffix/Replace"};
 
 	// The vector of fuzzer row data
-	private final TransformsList dataVector;
+	private final ArrayList<TransformsRow> dataVector;
 
 	/**
 	 * <p>Main Constructor passes the Fuzzing Panel.</p>
 	 */
 	public TransformsTableModel() {
-		dataVector = new TransformsList();
+		dataVector = new ArrayList<TransformsRow>();
 	}
 
 	/**
 	 * <p>Add a fuzzer row to the table</p>
 	 */
 	public void addRow(String encoding, String matchOrPrefix, String replaceOrSuffix) {
-		dataVector.add(new TransformsRow(encoding, matchOrPrefix, replaceOrSuffix));
-		dataVector.trimToSize();
-		fireTableRowsInserted(dataVector.size(), dataVector.size());
+		addRow(new TransformsRow(encoding, matchOrPrefix, replaceOrSuffix));
 	}
 	
 	public void addRow(TransformsRow row) {
@@ -101,11 +99,11 @@ public class TransformsTableModel extends AbstractTableModel {
 	 * 
 	 * @param row
 	 *            int
-	 * @return String
+	 * @return TransformsRow
 	 */
-	public String getRow(final int row) {
+	public TransformsRow getRow(final int row) {
 
-		return row + " - " + getValueAt(row, 0);
+		return dataVector.get(row);
 
 	}
 
@@ -157,20 +155,18 @@ public class TransformsTableModel extends AbstractTableModel {
 	 * <p>
 	 * Remove a particular row from the table model.
 	 * </p>
-	 * 
+	 *
 	 * @param row
 	 *            The row to remove
-	 * 
-	 * @see
-	 * @author subere@uncon.org
-	 * @version 2.2
-	 * @since 1.2
 	 */
 	public void removeRow(final int row) {
-
+	
 		if ((row > -1) && (row < dataVector.size())) {
+//			System.out.println("removing row:" + row + " data: " + dataVector.get(row).toString());
 			dataVector.remove(row);
-			fireTableRowsDeleted(0, row);
+			dataVector.trimToSize();
+//			fireTableRowsDeleted(0, row);
+			fireTableDataChanged();
 		}
 	}
 
@@ -185,6 +181,8 @@ public class TransformsTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
 
+		System.out.println(((String)value) + " row: " + row + " column: " + column);
+		
 		final TransformsRow record = dataVector.get(row);
 
 		if(column == 0) {
@@ -243,16 +241,16 @@ public class TransformsTableModel extends AbstractTableModel {
 		}
 	}
 	
-	public TransformsRow[] getTransforms(){
-		TransformsRow[] a = new TransformsRow[dataVector.size()];
-		for(int i=0;i<a.length;i++){
-			a[i] = dataVector.get(i);
-		}
-		if(a == null || a.length == 0){
-			TransformsRow row = new TransformsRow("Plain Text","","");
-			return new TransformsRow[]{row};
-		}
-		return a;
-	}
-
+//	public TransformsRow[] getTransforms(){
+//		TransformsRow[] a = new TransformsRow[dataVector.size()];
+//		for(int i=0;i<a.length;i++){
+//			a[i] = dataVector.get(i);
+//		}
+//		if(a == null || a.length == 0){
+//			TransformsRow row = new TransformsRow("Plain Text","","");
+//			return new TransformsRow[]{row};
+//		}
+//		return a;
+//	}
+	
 }

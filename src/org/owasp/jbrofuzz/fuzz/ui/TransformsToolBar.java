@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
-import org.owasp.jbrofuzz.encode.EncoderHashCore;
 import org.owasp.jbrofuzz.version.ImageCreator;
 
 
@@ -30,11 +29,12 @@ public class TransformsToolBar extends JToolBar {
 	private JButton add;
 	private JButton delete;
 	private FuzzingPanel container;
-
+	
 	public TransformsToolBar(FuzzingPanel container){
 		
+		System.out.println("blah");
 		this.container = container;
-		
+			
 	// TODO: find appropriate images and add them to image creator
 		upAll = new JButton(ImageCreator.IMG_UPALL);
 		upOne = new JButton(ImageCreator.IMG_UP);
@@ -50,7 +50,7 @@ public class TransformsToolBar extends JToolBar {
 		add(add);
 		setOrientation(JToolBar.VERTICAL);
 		setFloatable(false);
-//		addActionListeners();
+		addActionListeners();
 		
 		upAll.setToolTipText("Move selected encoder to the top");
 		upOne.setToolTipText("Move selected encoder up one");
@@ -124,14 +124,13 @@ public class TransformsToolBar extends JToolBar {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				int index = container.getFuzzersPanel().getFuzzersTable().getSelectedRow();
-				TransformsRow tr = new TransformsRow();
 				if(index!=-1){
-					TransformsList tl = container.getTransformsPanel().getTransforms(index);
-					container.getTransformsPanel().addTransform(index);
-					//tl.add(tr);
-					if(tl.size() ==1){
+					TransformsTableModel tl = container.getTransformsPanel().getTransformsTableModel(index);
+					tl.addRow(new TransformsRow());
+								
+					if(tl.getRowCount() ==1){
 						enableDelete();
-					}else if(tl.size() == 2){
+					}else if(tl.getRowCount() == 2){
 						enablePositionModifiers();
 					}
 //					
@@ -154,7 +153,7 @@ public class TransformsToolBar extends JToolBar {
 				if(index!=-1){
 					int selectedRow = container.getTransformsPanel().getTransformsTable().getSelectedRow();
 					if(selectedRow!=-1 && selectedRow!=0){
-						container.getTransformsPanel().getTransformsTableModel().moveRowUpAll(selectedRow);
+						container.getTransformsPanel().getTransformsTableModel(index).moveRowUpAll(selectedRow);
 						container.getTransformsPanel().getTransformsTable().getSelectionModel().setSelectionInterval(0, 0);
 
 						
@@ -174,7 +173,7 @@ public class TransformsToolBar extends JToolBar {
 	//				int selectedRow = container.getTransformsPanel().getTransformsTableList().getEncoderTable(index).getSelectedRow();
 					int selectedRow = container.getTransformsPanel().getTransformsTable().getSelectedRow();
 					if(selectedRow!=-1 && selectedRow!=0){
-						container.getTransformsPanel().getTransformsTableModel().moveRowUpOne(selectedRow);
+						container.getTransformsPanel().getTransformsTableModel(index).moveRowUpOne(selectedRow);
 						container.getTransformsPanel().getTransformsTable().getSelectionModel().setSelectionInterval(selectedRow-1, selectedRow-1);
 //					if(selectedRow!=-1 && selectedRow!=0){
 //						container.getTransformsPanel().getTransformsTableList().getTransformsTableModel(index).moveRowUpOne(selectedRow);
@@ -192,7 +191,7 @@ public class TransformsToolBar extends JToolBar {
 				if(index!=-1){
 					int selectedRow = container.getTransformsPanel().getTransformsTable().getSelectedRow();
 					if(selectedRow!=-1 && selectedRow > 1){
-						container.getTransformsPanel().getTransformsTableModel().moveRowDownOne(selectedRow);
+						container.getTransformsPanel().getTransformsTableModel(index).moveRowDownOne(selectedRow);
 						container.getTransformsPanel().getTransformsTable().getSelectionModel().setSelectionInterval(selectedRow+1, selectedRow+1);
 //					int selectedRow = container.getTransformsPanel().getTransformsTableList().getEncoderTable(index).getSelectedRow();
 //					if(selectedRow!=-1 && selectedRow!=container.getTransformsPanel().getTransformsTableList().getEncoderTable(index).getRowCount()-1){
@@ -211,7 +210,7 @@ public class TransformsToolBar extends JToolBar {
 				if(index!=-1){
 					int selectedRow = container.getTransformsPanel().getTransformsTable().getSelectedRow();
 					if(selectedRow!=-1 && selectedRow > 1){
-						container.getTransformsPanel().getTransformsTableModel().moveRowDownAll(selectedRow);
+						container.getTransformsPanel().getTransformsTableModel(index).moveRowDownAll(selectedRow);
 						int numRows = container.getTransformsPanel().getTransformsTable().getRowCount();
 						container.getTransformsPanel().getTransformsTable().getSelectionModel().setSelectionInterval(numRows-1, numRows-1);
 //					int selectedRow = container.getTransformsPanel().getTransformsTableList().getEncoderTable(index).getSelectedRow();
@@ -230,8 +229,8 @@ public class TransformsToolBar extends JToolBar {
 				int index = container.getFuzzersPanel().getFuzzersTable().getSelectedRow();
 				if(index!=-1){
 					int selectedRow = container.getTransformsPanel().getTransformsTable().getSelectedRow();
-					container.getTransformsPanel().getTransformsTableModel().removeRow(selectedRow);
-					
+				//	container.getTransformsPanel().getTransformsTableModel(index).removeRow(selectedRow);
+					((TransformsTableModel) container.getTransformsPanel().getTransformsTable().getModel()).removeRow(selectedRow);
 					int numRows = container.getTransformsPanel().getTransformsTable().getRowCount();
 					if(numRows == 0){
 						disableDelete();
@@ -251,5 +250,7 @@ public class TransformsToolBar extends JToolBar {
 			}
 		});
 	}
+	
+
 
 }
