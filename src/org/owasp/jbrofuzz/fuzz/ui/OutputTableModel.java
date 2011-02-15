@@ -33,7 +33,6 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
-import org.owasp.jbrofuzz.system.Logger;
 
 public class OutputTableModel extends DefaultTableModel {
 

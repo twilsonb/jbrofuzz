@@ -108,7 +108,7 @@ public class CouchDBHandler{
 		client.getParams().setParameter("http.useragent", "jbrofuzz");
 		GetMethod method = new GetMethod(url);
 		try {
-			int returnCode = client.executeMethod(method);
+	//		int returnCode = client.executeMethod(method);
 			responseBody = method.getResponseBodyAsString();
 		} catch (HttpException e) {
 			e.printStackTrace();

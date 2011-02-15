@@ -66,8 +66,6 @@ public class TransformsTable extends JTable {
 		setBackground(Color.BLACK);
 		setForeground(Color.WHITE);
 
-		// Set the column widths
-		// TableColumn column = null;
 		for (int i = 0; i < model.getColumnCount(); i++) {
 			getColumnModel().getColumn(i).setPreferredWidth(30);
 		}
@@ -85,12 +83,10 @@ public class TransformsTable extends JTable {
 		String[] timeOptions = new String[]{new String(),"Epoch Time"/*,"DateFormat Time"*/};
 		final JComboBox pomcombo = new JComboBox(timeOptions);
 		pomcombo.setEditable(true);
-		//pomcombo.setEnabled(false);
 
 		final JComboBox sorcombo = new JComboBox(timeOptions);
 		sorcombo.setEditable(true);
-		//sorcombo.setEnabled(false);
-		
+			
 		pomcombo.addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent e) {
@@ -115,21 +111,6 @@ public class TransformsTable extends JTable {
 			}
 			
 		});
-/*
-		encoderCombo.addActionListener(new ActionListener(){
-
-			public void actionPerformed(ActionEvent e) {
-				String val = (String) encoderCombo.getSelectedItem();
-				if( val.equals("Prefix & Suffix") || val.equals("Match & Replace") ){
-					pomcombo.setEnabled(true);
-					sorcombo.setEnabled(true);
-				}else{
-					pomcombo.setEnabled(false);
-					sorcombo.setEnabled(false);
-				}
-			}
-		});
-*/
 
 		final int modelColumn = convertColumnIndexToModel( column );
 
@@ -156,18 +137,5 @@ public class TransformsTable extends JTable {
 			return super.getCellRenderer(row, column);
 	}
 	
-//	public TransformsTableModel getModel(){
-//		//TransformsTableModel tm = getModel();
-//		return (TransformsTableModel) this.getM;
-//	}
-//	public void getModel(TransformsTableModel tm){
-//		//TransformsTableModel tm = getModel();
-//		this.model = tm;
-//	}
-	
-
-
-
-
 }
 

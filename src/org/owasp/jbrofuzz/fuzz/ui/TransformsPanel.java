@@ -44,7 +44,6 @@ public class TransformsPanel extends JPanel{
 	 * </p>
 	 */
 	private static final long serialVersionUID = 7196885404320613786L;
-	// private TransformsTableList transformsTableList;
 	private TransformsToolBar controlPanel;
 	private FuzzingPanel fp;
 	
@@ -72,47 +71,14 @@ public class TransformsPanel extends JPanel{
 		add(fuzzersScrollPane, BorderLayout.CENTER);
 		add(controlPanel, BorderLayout.EAST);
 
-//		// create the transformsTableList
-//		transformsTableList = new TransformsTableList(fp);
-//		// instantiate the control panel
-//		controlPanel = new TransformsToolBar(fp);
-//		// add a null transform to start with
-//		this.updateTransformsPanel(null);	
 	}
-
-	/**
-	 * <b>updateTransformsPanel</b>
-	 * <p>
-	 * A method to show the transforms table linked to the fuzzer which has been
-	 * selected
-	 * </p>
-	 * 
-	 * @param in
-	 * @author RG
-	 */
-//	public void updateTransformsPanel(TransformsTable in) {
-//		removeAll();
-//		JScrollPane scroll = new JScrollPane(in,
-//				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-//				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//		scroll.setVerticalScrollBarPolicy(20);
-//		add(scroll, BorderLayout.CENTER);
-//
-//		updateUI();
-//		fp.updateUI();
-//		
-//
-//	}
 
 	public void addTransformsList() {
 		TransformsTableModel tm = new TransformsTableModel();
-		//tm.addRow(new TransformsRow());
 		transformsLists.add(tm);
-		System.out.println(transformsLists.size());
 		transformsTable.setModel(tm);
 		transformsTable.updateUI();
 		this.updateUI();
-//		transformsTableList.add();
 		
 	}
 	
@@ -121,28 +87,11 @@ public class TransformsPanel extends JPanel{
 	}
 	
 	
-//	public TransformsRow[] getTransforms(int fuzzerRow) {
-//
-//		TransformsTableModel a = transformsTableList
-//				.getTransformsTableModel(fuzzerRow);
-//
-//		if (a == null) {
-//			TransformsRow row = new TransformsRow("Plain Text", "", "");
-//			return new TransformsRow[] { row };
-//		}
-//		return a.getTransforms();
-//	}
-
-
 	public void removeTransformsList(int i) {
 		transformsLists.remove(i);
 		
 	}
 
-//	public TransformsList getTransformsTableList() {
-//		return transformsTableList;
-//	}
-	
 	
 	/**
 	 * <p>
@@ -163,20 +112,12 @@ public class TransformsPanel extends JPanel{
 		
 		TransformsRow tr = new TransformsRow(transform, prefix, suffix);
 		transformsLists.get(fuzzerNumber).addRow(tr);
-		
-		//		transformsTableList.getTransformsTableModel(fuzzerNumber - 1).addRow(
-//				transform, prefix, suffix);
-		// TransformsTableList.add(transform, prefix, suffix);
-
+	
 	}
 	
 	public void addTransform(int fuzzer){
 		TransformsRow tr = new TransformsRow();
-		System.out.println(tr.getEncoder()+ " " + tr.getPrefixOrMatch());
 		transformsLists.get(fuzzer).addRow(tr);
-		
-		
-
 	}
 	
 	public void showTransformsList(int row){
@@ -194,38 +135,6 @@ public class TransformsPanel extends JPanel{
 				fp.getControlPanel().enableAll();
 			}
 	}
-
-//	public void showTransformsForFuzzer(int row) {
-//		final int trSize = transformsLists.size();
-//		if (trSize < 1) {
-//			return;
-//		}	
-//	
-//		
-//		if( (row < trSize) && (row >= 0) ) {
-//		
-//			
-//			TransformsTableModel tl = transformsLists.get(row);
-//			 transformsTable.setModel(tl);
-//			 transformsTable.updateUI();
-//			 updateTransformsPanel(new TransformsTable(tl));
-//		
-//
-//			
-//		}
-//		
-//	}
-
-//	public TransformsRow[] addRow(String string, String string2, String string3) {
-//		TransformsRow row = new TransformsRow("Plain Text", "", "");
-//		return new TransformsRow[] { row };
-//		
-//	}
-
-//	public static String encodeMany(String payload, TransformsRow[] transforms) {
-//		return EncoderHashCore.encodeMany(payload,
-//				transforms);
-//	}
 	
 	public void clear(){
 //		while (transformsTable.getRowCount() > 0) {

@@ -29,10 +29,6 @@ import javax.swing.text.JTextComponent;
 
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
-import org.owasp.jbrofuzz.fuzz.ui.FuzzingPanel;
-import org.owasp.jbrofuzz.fuzz.ui.OutputPanel;
-import org.owasp.jbrofuzz.fuzz.ui.OutputTable;
-import org.owasp.jbrofuzz.fuzz.ui.OutputTableModel;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.ImageCreator;
@@ -66,7 +62,7 @@ KeyListener {
 			FlowLayout.RIGHT, 15, 15));
 	
 	// The frame that the sniffing panel is attached
-	private final JBroFuzzWindow m;
+	//private final JBroFuzzWindow m;
 
 	private final JPopupMenu popmenu;
 
@@ -80,7 +76,7 @@ KeyListener {
 	
 	private String sessionsSQLite[] = {"not loaded yet"};
 	
-	private String sessionsCouch[] = {"not loaded yet"};
+//	private String sessionsCouch[] = {"not loaded yet"};
 
 	private JBroFuzzWindow parent = null;
 	/**
@@ -104,7 +100,7 @@ KeyListener {
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 
 		setLayout(new BorderLayout());
-		m = parent;
+	//	m = parent;
 
 		// Components
 

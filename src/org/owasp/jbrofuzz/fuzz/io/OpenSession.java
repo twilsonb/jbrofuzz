@@ -65,7 +65,7 @@ public class OpenSession {
 
 	public OpenSession(JBroFuzzWindow mWindow, String fileName) {
 		this.mWindow = mWindow;
-		JBroFuzzPrefs prefs = new JBroFuzzPrefs();
+	//	JBroFuzzPrefs prefs = new JBroFuzzPrefs();
 		File file = null;
 		// Set the Fuzzing Panel as the one to view
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
@@ -77,7 +77,7 @@ public class OpenSession {
 		JFileChooser fc = new JFileChooser();
 
 		if ((fileName.length() == 0 || fileName.equals(""))
-				&& (!prefs.DBSETTINGS[11].getId().equals("SQLite") && !prefs.DBSETTINGS[11]
+				&& (!JBroFuzzPrefs.DBSETTINGS[11].getId().equals("SQLite") && !JBroFuzzPrefs.DBSETTINGS[11]
 						.getId().equals("CouchDB"))) {
 			try {
 				if ((new File(dirString).isDirectory())) {

@@ -32,7 +32,6 @@ package org.owasp.jbrofuzz.fuzz.io;
 import java.io.File;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.db.CouchDBHandler;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
@@ -58,7 +57,7 @@ public class SaveSession {
 		mWindow.setTabShow(JBroFuzzWindow.ID_PANEL_FUZZING);
 		if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("couchdb")){
 			// DTOCreator dtoC = new DTOCreator();
-			CouchDBHandler couchHandler = new CouchDBHandler();
+		//	CouchDBHandler couchHandler = new CouchDBHandler();
 			if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").length() <= 0  || JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "").equals("")){
 				
 				/*
