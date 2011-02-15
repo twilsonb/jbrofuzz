@@ -102,7 +102,6 @@ public class TransformsTableModel extends AbstractTableModel {
 	 * @return TransformsRow
 	 */
 	public TransformsRow getRow(final int row) {
-
 		return dataVector.get(row);
 
 	}
@@ -123,7 +122,6 @@ public class TransformsTableModel extends AbstractTableModel {
 	 * </p>
 	 */
 	public Object getValueAt(final int row, final int column) {
-
 		final TransformsRow record = dataVector.get(row);
 		switch (column) {
 		case 0:
@@ -136,12 +134,6 @@ public class TransformsTableModel extends AbstractTableModel {
 			return null;
 		}
 	}
-
-// TODO UCdetector: Remove unused code: 
-// 	public int getStart(final int row) {
-// 		final FuzzerRow rec_ = dataVector.get(row);
-// 		return Integer.valueOf(rec_.getStartPoint());
-// 	}
 
 	/**
 	 * <p>A cell is always editable within the fuzzers table.</p>
@@ -160,12 +152,9 @@ public class TransformsTableModel extends AbstractTableModel {
 	 *            The row to remove
 	 */
 	public void removeRow(final int row) {
-	
 		if ((row > -1) && (row < dataVector.size())) {
-//			System.out.println("removing row:" + row + " data: " + dataVector.get(row).toString());
 			dataVector.remove(row);
 			dataVector.trimToSize();
-//			fireTableRowsDeleted(0, row);
 			fireTableDataChanged();
 		}
 	}
@@ -180,11 +169,7 @@ public class TransformsTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public void setValueAt(final Object value, final int row, final int column) {
-
-		System.out.println(((String)value) + " row: " + row + " column: " + column);
-		
 		final TransformsRow record = dataVector.get(row);
-
 		if(column == 0) {
 			record.setEncoder((String) value);
 		}
@@ -200,7 +185,6 @@ public class TransformsTableModel extends AbstractTableModel {
 
 	public void moveRowUpOne(final int row){
 		if(row >=1){
-		
 			final TransformsRow rowToMove = dataVector.get(row);
 			final TransformsRow rowToReplace = dataVector.get(row-1);
 			dataVector.set(row-1, rowToMove);
@@ -215,19 +199,16 @@ public class TransformsTableModel extends AbstractTableModel {
 			dataVector.remove(row);
 			dataVector.add(0, rowToMove);
 			fireTableDataChanged();
-			
 		}
 	}
 	
 	public void moveRowDownOne(final int row){
-		if(row!=-1 || row < this.getRowCount()){
-			
+		if(row!=-1 && row < this.getRowCount()){
 			final TransformsRow rowToMove = dataVector.get(row);
 			final TransformsRow rowToReplace = dataVector.get(row+1);
 			dataVector.set(row+1, rowToMove);
 			dataVector.set(row, rowToReplace);
 			fireTableDataChanged();
-			
 		}
 	}
 	
@@ -237,20 +218,7 @@ public class TransformsTableModel extends AbstractTableModel {
 			dataVector.remove(row);
 			dataVector.add(dataVector.size(), rowToMove);
 			fireTableDataChanged();
-			
 		}
 	}
-	
-//	public TransformsRow[] getTransforms(){
-//		TransformsRow[] a = new TransformsRow[dataVector.size()];
-//		for(int i=0;i<a.length;i++){
-//			a[i] = dataVector.get(i);
-//		}
-//		if(a == null || a.length == 0){
-//			TransformsRow row = new TransformsRow("Plain Text","","");
-//			return new TransformsRow[]{row};
-//		}
-//		return a;
-//	}
-	
+
 }

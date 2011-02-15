@@ -6,15 +6,15 @@ import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.owasp.jbrofuzz.core.Database;
 import org.owasp.jbrofuzz.system.Logger;
-import org.owasp.jbrofuzz.ui.AbstractPanel;
 
 public class FuzzersPanel extends JPanel {
+	
+	private static final long serialVersionUID = -9150023615230879357L;
 	private FuzzersTableModel mFuzzTableModel;
 	private FuzzerTable fuzzersTable;
 	private FuzzingPanel fp;

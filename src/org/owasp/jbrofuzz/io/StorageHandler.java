@@ -1,7 +1,5 @@
 package org.owasp.jbrofuzz.io;
 
-import java.io.File;
-
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.db.DBAdaptor;
 import org.owasp.jbrofuzz.db.DBAdaptorFactory;

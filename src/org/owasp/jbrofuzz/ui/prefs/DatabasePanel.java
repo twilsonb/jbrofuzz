@@ -49,7 +49,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.owasp.jbrofuzz.JBroFuzz;
-import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
 /**
@@ -228,7 +227,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		dbTypePanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("DB-Type"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15,0));
+	//	JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15,0));
 		dbTypePanel.add(new JLabel(""));
 		dbTypePanel.add(dbTypeBox);
 		/* 
@@ -239,7 +238,7 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[9].getTitle()));
 		*/
 		
-		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15,0));
+	//	JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15,0));
 		/*
 		dbTypePanel.add(dbHostTextField);
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[10].getTitle()));
