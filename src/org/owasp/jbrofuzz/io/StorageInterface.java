@@ -1,6 +1,8 @@
 package org.owasp.jbrofuzz.io;
 
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
+import org.owasp.jbrofuzz.graph.FileSystemTreeNode;
+import org.owasp.jbrofuzz.graph.GraphingPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 
 public interface StorageInterface {
@@ -58,5 +60,7 @@ public interface StorageInterface {
 	public abstract MessageContainer readFuzzFile(String fileName, String sessionId, JBroFuzzWindow mWindow);
 	
 	public abstract String[] readTableRow(String sqlStatement);
+	
+	public FileSystemTreeNode getSystemTreeNodeFromWalker(GraphingPanel gPanel);
 
 }

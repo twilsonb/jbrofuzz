@@ -39,6 +39,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
+import org.owasp.jbrofuzz.graph.FileSystemTreeNode;
+import org.owasp.jbrofuzz.graph.GraphingPanel;
+import org.owasp.jbrofuzz.graph.utils.JohnyWalker;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzFormat;
@@ -301,7 +304,11 @@ public class FileHandler implements StorageInterface {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
 
+	@Override
+	public FileSystemTreeNode getSystemTreeNodeFromWalker(GraphingPanel gPanel) {
+		JohnyWalker test = new JohnyWalker(gPanel);
+		test.run();
+		return test.getFileSystemTreeNode();
+	}
 }

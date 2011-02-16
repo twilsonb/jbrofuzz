@@ -395,7 +395,6 @@ public class SQLiteHandler {
 			while(rs1.next()){
 				//TODO a more generic way would be great here!!!
 				result.add(rs1.getString(1));
-				result.add(rs1.getString(2));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
