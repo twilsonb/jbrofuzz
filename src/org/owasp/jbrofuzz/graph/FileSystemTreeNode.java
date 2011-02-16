@@ -30,6 +30,7 @@
 package org.owasp.jbrofuzz.graph;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 
 /**
  * 
@@ -51,7 +52,7 @@ public class FileSystemTreeNode extends DefaultMutableTreeNode {
 		return nodeIsDirectory;
 	}
 
-	protected void setAsDirectory() {
+	public void setAsDirectory() {
 		nodeIsDirectory = true;
 	}
 }

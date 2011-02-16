@@ -42,6 +42,9 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.text.BadLocationException;
 
+import org.owasp.jbrofuzz.graph.utils.DBWalker;
+import org.owasp.jbrofuzz.graph.utils.JohnyWalker;
+import org.owasp.jbrofuzz.io.StorageHandler;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
@@ -218,10 +221,8 @@ public class GraphingPanel extends AbstractPanel {
 		// Start to do what you need to do
 		setProgressBarStart();
 
-		final JohnyWalker jWalker = new JohnyWalker(this);
-		jWalker.run();
-		tree.setModel(new FileSystemTreeModel(jWalker.getFileSystemTreeNode()));
-
+		StorageHandler sh = (StorageHandler) this.getFrame().getJBroFuzz().getStorageHandler();
+		tree.setModel(new FileSystemTreeModel(sh.getSystemTreeNodeFromWalker(this)));
 	}
 
 	/**
@@ -250,7 +251,7 @@ public class GraphingPanel extends AbstractPanel {
 	 * 
 	 * @param input
 	 */
-	protected void toConsole(final String input) {
+	public void toConsole(final String input) {
 
 		// Use a FILO for the output to the console, never exceeding 500 lines
 		if (console.getLineCount() > 500) {

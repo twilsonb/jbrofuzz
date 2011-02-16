@@ -27,26 +27,27 @@
  * is preserved. 
  * 
  */
-package org.owasp.jbrofuzz.graph;
+package org.owasp.jbrofuzz.graph.utils;
 
 import java.io.File;
 
+
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.graph.FileSystemTreeNode;
+import org.owasp.jbrofuzz.graph.GraphingPanel;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
 
-class JohnyWalker {
+public class JohnyWalker implements Walker {
 
 	private FileSystemTreeNode master;
 
 	private final File directory;
 
 	private final GraphingPanel gPanel;
-
-	//
-
+	
 	private int fileCount, dirCount;
 
-	protected JohnyWalker(final GraphingPanel gPanel) {
+	public JohnyWalker(final GraphingPanel gPanel)  {
 
 		// Get the directory location from preferences
 		final boolean saveElsewhere = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.DIRS[1].getId(), true);
@@ -116,10 +117,8 @@ class JohnyWalker {
 
 	}
 
-	protected void run() {
-
+	public void run() {
 		listAllFiles(directory, master);
-
 		gPanel.toConsole("Total Files: " + fileCount);
 		gPanel.toConsole("Total Directories: " + dirCount);
 

@@ -5,6 +5,9 @@ import java.sql.Connection;
 import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
+import org.owasp.jbrofuzz.graph.GraphingPanel;
+import org.owasp.jbrofuzz.graph.utils.DBWalker;
+import org.owasp.jbrofuzz.graph.utils.Walker;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
@@ -77,6 +80,11 @@ public class DBAdaptor{
 			return sqlH.executeQuery(conn, sql);
 		}
 		return null;
+	}
+	
+	public DBWalker getWalker(GraphingPanel gPanel){
+		//TODO: Distinction between Couch and SQLite missing - only SQLite here and now.
+		return new DBWalker(gPanel);
 	}
 	
 }
