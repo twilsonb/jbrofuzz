@@ -30,6 +30,7 @@
 
 package org.owasp.jbrofuzz.ui.prefs;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -223,13 +224,18 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		
 		
 		// Panel for DB-Type selection
-		final JPanel dbTypePanel = new JPanel(new GridLayout(1,1));
+		// final JPanel dbTypePanel = new JPanel(new GridLayout(1,1));
+		final JPanel dbTypePanel = new JPanel(new BorderLayout());
+		Dimension dim = new Dimension();
+		dim.height=10;
+		dbTypePanel.setSize(dim);
 		dbTypePanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("DB-Type"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 	//	JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15,0));
 		dbTypePanel.add(new JLabel(""));
-		dbTypePanel.add(dbTypeBox);
+		dbTypePanel.add(dbTypeBox, BorderLayout.LINE_START);
+		
 		/* 
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[7].getTitle()));
 		dbTypePanel.add(dbUserTextField);
@@ -245,8 +251,9 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		dbTypePanel.add(dbPortTextField);
 		dbTypePanel.add(new JLabel(JBroFuzzPrefs.DBSETTINGS[12].getTitle()));
 		*/
-		dbTypePanel.add(dbNameTextField);
-		//dbTypePanel.setAlignmentX(0.0f);
+		dbTypePanel.add(dbNameTextField, BorderLayout.CENTER);
+		
+		// dbTypePanel.setAlignmentX(0.0f);
 
 		// Panel for our friends above: Username & Password
 		final JPanel userPassPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,
@@ -420,7 +427,10 @@ public class DatabasePanel extends AbstractPrefsPanel {
 		// add(proxyReqAuthBox);
 		// add(userPassPanel);
 		add(Box.createRigidArea(V_SPACE));
+		add(Box.createRigidArea(V_SPACE));
+		add(Box.createRigidArea(V_SPACE));
 		add(dbTypePanel);
+		add(Box.createRigidArea(new Dimension(120, 300)));
 		// add(topPanel);
 		// add(bottomPanel);
 		add(Box.createRigidArea(new Dimension(80, 300)));
