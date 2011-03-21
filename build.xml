@@ -52,7 +52,7 @@
 				<attribute name="Build-By" value="subere@uncon.org" />
 				<attribute name="Implementation-Title" value="org.owasp.jbrofuzz.encode" />
 				<attribute name="Implementation-Vendor" value="Open Web Application Security Project" />
-				<attribute name="Implementation-Version" value="2.4" />
+				<attribute name="Implementation-Version" value="2.5" />
 				<attribute name="Main-Class" value="org.owasp.jbrofuzz.encode.JBroFuzzEncoder" />
 				<attribute name="SplashScreen-Image" value="release/splashscreen.png" />				
 			</manifest>
@@ -88,7 +88,7 @@
 					<attribute name="Build-By" value="subere@uncon.org" />
 					<attribute name="Implementation-Title" value="org.owasp.jbrofuzz.headers" />
 					<attribute name="Implementation-Vendor" value="Open Web Application Security Project" />
-					<attribute name="Implementation-Version" value="2.4" />
+					<attribute name="Implementation-Version" value="2.5" />
 					<attribute name="Main-Class" value="org.owasp.jbrofuzz.headers.JBroFuzzHeader" />
 					<attribute name="SplashScreen-Image" value="release/splashscreen.png" />				
 				</manifest>
@@ -96,9 +96,9 @@
 			</jar>
 		</target>
 	
-	<target name="archive-core" depends="compile" description="Creating JBroFuzz Core API: jbrofuzz-core-2.4.jar">
-		<echo>Creating JBroFuzz Core API: jbrofuzz-core-2.4.jar</echo>
-		<jar compress="true" destfile="jar/jbrofuzz-core-2.4.jar">
+	<target name="archive-core" depends="compile" description="Creating JBroFuzz Core API: jbrofuzz-core-2.5.jar">
+		<echo>Creating JBroFuzz Core API: jbrofuzz-core-2.5.jar</echo>
+		<jar compress="true" destfile="jar/jbrofuzz-core-2.5.jar">
 			
 			<fileset dir="bin">
 				<include name="org/owasp/jbrofuzz/core/*.class" />
@@ -227,7 +227,7 @@
 		<copy file="jar/${app.name}Header.jar" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/${app.name}Header.exe" todir="jar/temp/jbrofuzz" />
 		<copy file="jar/jbrofuzz.sh" todir="jar/temp/jbrofuzz" />
-		<copy file="jar/jbrofuzz-core-2.4.jar" todir="jar/temp/jbrofuzz/library" />
+		<copy file="jar/jbrofuzz-core-2.5.jar" todir="jar/temp/jbrofuzz/library" />
 
 		<copy file="release/README" todir="jar/temp/jbrofuzz" />
 		<copy file="release/INSTALL" todir="jar/temp/jbrofuzz" />
