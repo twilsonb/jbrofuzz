@@ -66,14 +66,14 @@ public final class Verifier {
 	// The maximum number of chars to be read from file, regardless
 	private static final int MAX_CHARS = Character.MAX_VALUE;
 	// The maximum number of lines allowed to be read from the file
-	private static final int MAX_LINES = 4096;
+	private static final int MAX_LINES = 500000;
 	// The maximum length of a line allowed
 	private static final int MAX_LINE_LENGTH = 2048;
 
 	// The maximum name length for a prototype
 	private static final int MAX_PROTO_NAME_LENGTH = Byte.MAX_VALUE;
 	// The maximum number of payloads in a prototype
-	private static final int MAX_NO_OF_PAYLOADS = 1024;
+	private static final int MAX_NO_OF_PAYLOADS = 500000;
 	// The maximum number of categories of a prototype
 	private static final int MAX_NO_OF_CATEGORIES = Byte.MAX_VALUE;
 
