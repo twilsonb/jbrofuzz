@@ -33,6 +33,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -105,6 +108,12 @@ public class FuzzingPanel extends AbstractPanel {
 	private TransformsPanel transformsPanel;
 	private FuzzersPanel fuzzersPanel;
 	private OutputPanel outputPanel;
+	private static final SimpleDateFormat SD_FORMAT = new SimpleDateFormat(
+			"zzz-yyyy-MM-dd-HH-mm-ss-SSS", Locale.ENGLISH);
+
+	private static final SimpleDateFormat SH_FORMAT = new SimpleDateFormat(
+			"DDD-HH-mm-ss-SSS", Locale.ENGLISH);
+	private String sessionName = SD_FORMAT.format(new Date());
 
 	/**
 	 * <p>
@@ -129,7 +138,9 @@ public class FuzzingPanel extends AbstractPanel {
 
 		// The Target panel
 		final JPanel targetPanel = new JPanel(new BorderLayout());
-		targetPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(" Target "),BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		targetPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(" Target "),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 		urlField = new JTextField();
 		urlField.setEditable(true);
@@ -152,14 +163,18 @@ public class FuzzingPanel extends AbstractPanel {
 
 		// The on the wire panel
 		final JPanel onTheWirePanel = new JPanel();
-		onTheWirePanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder(" Requests "),BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		onTheWirePanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(" Requests "),
+				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		mWireTextArea = new WireTextArea();
 
 		// Right click: Cut, Copy, Paste, Select All
 		RightClickPopups.rightClickOnTheWireTextComponent(this, mWireTextArea);
 
-		final JScrollPane consoleScrollPane = new JScrollPane(mWireTextArea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		final JScrollPane consoleScrollPane = new JScrollPane(mWireTextArea,
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 		onTheWirePanel.setLayout(new BorderLayout());
 		onTheWirePanel.add(consoleScrollPane, BorderLayout.CENTER);
@@ -167,12 +182,14 @@ public class FuzzingPanel extends AbstractPanel {
 		// Set the scroll areas
 		topPanel = new JPanel(new BorderLayout());
 		topPanel.add(targetPanel, BorderLayout.PAGE_START);
-		topPanel.add(createScrollingPanel(" Request ", requestPane),BorderLayout.CENTER);
+		topPanel.add(createScrollingPanel(" Request ", requestPane),
+				BorderLayout.CENTER);
 
 		// create the outlining tabbed pane
 		fuzzerWindowPane = new JTabbedPane();
 
-		bottomPane = new FuzzSplitPane(FuzzSplitPane.HORIZONTAL_SPLIT,FuzzSplitPane.FUZZ_BOTTOM);
+		bottomPane = new FuzzSplitPane(FuzzSplitPane.HORIZONTAL_SPLIT,
+				FuzzSplitPane.FUZZ_BOTTOM);
 
 		bottomPane.setLeftComponent(fuzzersPanel);
 		transformsPanel = new TransformsPanel(this);
@@ -222,7 +239,8 @@ public class FuzzingPanel extends AbstractPanel {
 		JTextPane textPane = new JTextPane();
 
 		// Get the preferences for wrapping lines of text
-		final boolean wrapText = JBroFuzz.PREFS.getBoolean(JBroFuzzPrefs.FUZZING[2].getId(), false);
+		final boolean wrapText = JBroFuzz.PREFS.getBoolean(
+				JBroFuzzPrefs.FUZZING[2].getId(), false);
 
 		if (wrapText) {
 			textPane = new JTextPane();
@@ -277,9 +295,13 @@ public class FuzzingPanel extends AbstractPanel {
 			requestPane.getSelectedText();
 		} catch (final IllegalArgumentException e) {
 
-			JOptionPane.showInputDialog(this,"An exception was thrown while attempting to get the selected text","Add Fuzzer", JOptionPane.ERROR_MESSAGE);
+			JOptionPane
+					.showInputDialog(
+							this,
+							"An exception was thrown while attempting to get the selected text",
+							"Add Fuzzer", JOptionPane.ERROR_MESSAGE);
 		}
-				// Find the location of where the text has been selected
+		// Find the location of where the text has been selected
 		final int sPoint = requestPane.getSelectionStart();
 		final int fPoint = requestPane.getSelectionEnd();
 
@@ -358,8 +380,6 @@ public class FuzzingPanel extends AbstractPanel {
 
 	}
 
-
-
 	/**
 	 * <p>
 	 * Method for setting the URL text field.
@@ -398,12 +418,17 @@ public class FuzzingPanel extends AbstractPanel {
 
 		final int fuzzers_added = fuzzersPanel.getRowCount();
 
+		// create Sessionname if not set already
+		if (sessionName.length() == 0) {
+			sessionName = SD_FORMAT.format(new Date());
+		}
+
 		for (int i = 0; i < Math.max(fuzzers_added, 1); i++) {
 
 			String category;
-//			TransformsRow[] transforms;
+			// TransformsRow[] transforms;
 			TransformsTableModel transforms;
-			
+
 			int start, end;
 			// If no fuzzers have been added, send a single plain request
 			if (fuzzers_added < 1) {
@@ -418,42 +443,46 @@ public class FuzzingPanel extends AbstractPanel {
 			}
 
 			try {
-				for (final Fuzzer f = getFrame().getJBroFuzz().getDatabase().createFuzzer(category, Math.abs(end - start)); f.hasNext();) {
+				for (final Fuzzer f = getFrame().getJBroFuzz().getDatabase()
+						.createFuzzer(category, Math.abs(end - start)); f
+						.hasNext();) {
 
 					if (stopped)
 						return;
 
 					// Get the default value
-					final int showOnTheWire = JBroFuzz.PREFS.getInt(JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
+					final int showOnTheWire = JBroFuzz.PREFS.getInt(
+							JBroFuzzPrefs.FUZZINGONTHEWIRE[1].getId(), 3);
 
 					// Set the payload, has to be called before the
 					// MessageWriter constructor
 					payload = f.next();
 
-					// Perform the necessary encoding on the payload specified
-//					if(transformsPanel.getRowCount() ) {
-//						// encodedPayload = payload;
-//					} else {
-//						// encodedPayload = EncoderHashCore.encodeMany(payload,transforms);
-//					}
-					encodedPayload = EncoderHashCore.encodeMany(payload, transforms);
-					
-					final MessageCreator currentMessage = new MessageCreator(getTextURL(), getTextRequest(), encodedPayload,start, end);
-					final MessageContainer outputMessage = new MessageContainer(this);
-					outputMessage.setTextRequest(currentMessage.getMessageForDisplayPurposes());
-					
+					encodedPayload = EncoderHashCore.encodeMany(payload,
+							transforms);
+
+					final MessageCreator currentMessage = new MessageCreator(
+							getTextURL(), getTextRequest(), encodedPayload,
+							start, end);
+					final MessageContainer outputMessage = new MessageContainer(
+							this);
+					outputMessage.setTextRequest(currentMessage
+							.getMessageForDisplayPurposes());
+
 					// Put the message on the console as it goes out on the wire
 					if ((showOnTheWire == 1) || // 1 show only requests
 							(showOnTheWire == 3)) {// 3 show both requests and
 													// responses
 						// Show message
-						mWireTextArea.setText(currentMessage.getMessageForDisplayPurposes());
+						mWireTextArea.setText(currentMessage
+								.getMessageForDisplayPurposes());
 					}
 
 					try {
 
 						// Connect
-						final Connection connection = new Connection(getTextURL(), currentMessage.getMessage());
+						final Connection connection = new Connection(
+								getTextURL(), currentMessage.getMessage());
 
 						// Update the message writer
 						outputMessage.setConnection(connection);
@@ -470,26 +499,31 @@ public class FuzzingPanel extends AbstractPanel {
 						}
 
 						// Update the last row, indicating success
-						outputPanel.getOutputTableModel().addNewRow(outputMessage);
+						outputPanel.getOutputTableModel().addNewRow(
+								outputMessage);
 
 					} catch (final ConnectionException e1) {
 						// Update the message writer
 						outputMessage.setException(e1);
 
-						// Update the console (on the wire tab) with the exception
+						// Update the console (on the wire tab) with the
+						// exception
 						if ((showOnTheWire == 2) || // 2 for showing only
 													// responses
 								(showOnTheWire == 3)) {// 3 for showing requests
 														// and responses
 
 							// toConsole("\n--> [JBROFUZZ FUZZING RESPONSE] <--\n");
-							mWireTextArea.setText("A connection exception occurred.");
+							mWireTextArea
+									.setText("A connection exception occurred.");
 						}
 
 						// Update the last row, indicating an error
-						outputPanel.getOutputTableModel().addNewRow(outputMessage);
+						outputPanel.getOutputTableModel().addNewRow(
+								outputMessage);
 					}
-					this.getFrame().getJBroFuzz().getStorageHandler().writeFuzzFile(outputMessage);
+					this.getFrame().getJBroFuzz().getStorageHandler()
+							.writeFuzzFile(outputMessage, sessionName);
 				}
 
 			} catch (final NoSuchFuzzerException exp) {
@@ -541,19 +575,18 @@ public class FuzzingPanel extends AbstractPanel {
 		return transformsPanel.getTransformsToolBar();
 	}
 
-	
-	public OutputPanel getOutputPanel(){
+	public OutputPanel getOutputPanel() {
 		return outputPanel;
 	}
-	
-	public void setOutputPanel(OutputPanel op){
+
+	public void setOutputPanel(OutputPanel op) {
 		this.outputPanel = op;
 	}
-/*
-	public OutputTable getOutputTable() {
-		return outputPanel.getOutputTable();
-	}
-*/	
+
+	/*
+	 * public OutputTable getOutputTable() { return
+	 * outputPanel.getOutputTable(); }
+	 */
 	public JComponent getUrlField() {
 		return urlField;
 	}
@@ -561,7 +594,6 @@ public class FuzzingPanel extends AbstractPanel {
 	public FuzzersPanel getFuzzersPanel() {
 		return fuzzersPanel;
 	}
-	
 
 	/**
 	 * <p>
@@ -607,7 +639,7 @@ public class FuzzingPanel extends AbstractPanel {
 	public String getTextURL() {
 		return StringUtils.abbreviate(urlField.getText(), 1024);
 	}
-	
+
 	/**
 	 * <p>
 	 * Method for setting the text displayed in the "Request" pane.

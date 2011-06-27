@@ -62,8 +62,7 @@ public class SQLiteHandler {
 	public Connection getConnection(String dbName) {
 		Date dat = new Date();
 		if (dbName.length() == 0 && dbName.equals("")) {
-			dbName = dat.getYear() + "_" + dat.getMonth() + "_" + dat.getDay()
-					+ "_" + dat.getHours() + ":" + dat.getMinutes();
+			dbName = SD_FORMAT.format(dat);
 		}
 		Connection conn = null;
 		try {
@@ -84,18 +83,17 @@ public class SQLiteHandler {
 	 * @author daemonmidi@gmail.com
 	 * @since version 2.5
 	 * @param conn
-	 * @return long[] result -- sessionIds
+	 * @return String[] result -- sessionIds
 	 * @throws SQLException
 	 */
-	public long[] getSessionIds(Connection conn) throws SQLException {
-		PreparedStatement st1 = conn
-				.prepareStatement("Select sessionId from session");
+	public String[] getSessionIds(Connection conn) throws SQLException {
+		PreparedStatement st1 = conn.prepareStatement("Select sessionId from session");
 		ResultSet rs1 = st1.executeQuery();
-		Vector<Long> data = new Vector<Long>();
+		Vector<String> data = new Vector<String>();
 		while (rs1.next()) {
-			data.add(rs1.getLong(1));
+			data.add(rs1.getString(1));
 		}
-		long[] result = new long[data.size()];
+		String[] result = new String[data.size()];
 		for (int i = 0; i < data.size(); i++) {
 			result[i] = data.get(i);
 		}
@@ -115,26 +113,26 @@ public class SQLiteHandler {
 	 * @return int returncode > 0 -- OK | < 0 failed.
 	 * @throws SQLException
 	 */
-	public int store(MessageContainer outputMessage, Connection conn) {
+	public int store(MessageContainer outputMessage, Connection conn, String sessionId) {
 		int returnValue = 0;
+		Date date = new Date();
+		if (sessionId.length() == 0){
+			sessionId = getNewId("session");
+		}
+		
 		try {
-			Date date = new Date();
-			long sessionId = -1;
 			long messageId = -1;
 			try{
-				sessionId = getLastId(conn, "session") + 1;
 				messageId = getLastId(conn, "message") + 1;
 			}
 			catch (Exception ex){
 				Logger.log("Empty file or file of same name like db exists - replacing it with new DB!", 3);
-				// File test = new File(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "") + ".db");
-				// test.delete();
 				conn.close();
 				conn = getConnection(JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), ""));
 				try {
 					setUpDB();
 					Logger.log("New DB created!",3);
-					sessionId = getLastId(conn, "session") + 1;
+					sessionId = getNewId("session") + 1;
 					messageId = getLastId(conn, "message") + 1;
 				} catch (ClassNotFoundException e1) {
 					e1.printStackTrace();
@@ -145,7 +143,6 @@ public class SQLiteHandler {
 			String os = System.getProperty("os.name") + " "
 					+ System.getProperty("os.arch") + " "
 					+ System.getProperty("os.version");
-
 
 			returnValue = insertOrUpdateSessionTable(conn, 
 													 sessionId,
@@ -191,32 +188,31 @@ public class SQLiteHandler {
 	 * @return returnValue
 	 * @throws SQLException
 	 */
-	private int insertOrUpdateSessionTable(Connection conn, long sessionId,
+	private int insertOrUpdateSessionTable(Connection conn, String sessionId,
 			String timestamp, String jVersion, String Os, String url) throws SQLException {
 		int returnValue = 1;
 		String sqlString1 = "";
-		if (sessionId > 0) {
-			PreparedStatement st0 = conn
-					.prepareStatement("select count (*) from session where sessionId = ?");
-			st0.setLong(1, sessionId);
+		
+			PreparedStatement st0 = conn.prepareStatement("select count (*) from session where sessionId = ?");
+			st0.setString(1, sessionId);
 			ResultSet rs0 = st0.executeQuery();
 			while (rs0.next()) {
 				int count = rs0.getInt(1);
 				PreparedStatement st1;
 				if (count > 0) {
 					// update
-					sqlString1 = "update session (timestamp, jVersion, Os, url) values (?, ?, ?, ?) where sessionId = ?;";
+					sqlString1 = "update session set timestamp = ?, jVersion = ?, Os = ?, url =? where sessionId = ?;";
 					st1 = conn.prepareStatement(sqlString1);
 					st1.setString(1, timestamp);
 					st1.setString(2, jVersion);
 					st1.setString(3, Os);
 					st1.setString(4, url);
-					st1.setLong(5, sessionId);
+					st1.setString(5, sessionId);
 				} else {
 					// new row
 					sqlString1 = "insert into session (sessionId, timestamp, jVersion, Os, url) values (?,?,?,?,?);";
 					st1 = conn.prepareStatement(sqlString1);
-					st1.setLong(1, sessionId);
+					st1.setString(1, sessionId);
 					st1.setString(2, timestamp);
 					st1.setString(3, jVersion);
 					st1.setString(4, Os);
@@ -224,7 +220,6 @@ public class SQLiteHandler {
 				}
 				returnValue = st1.executeUpdate();
 			}
-		}
 		return returnValue;
 	}
 
@@ -241,7 +236,7 @@ public class SQLiteHandler {
 	 * @throws SQLException
 	 */
 	private int insertOrUpdateMessageTable(Connection conn, long messageId,
-			long connectionId, String fileName, String textRequest, 
+			String connectionId, String fileName, String textRequest, 
 			String payload, String reply, String start, String end, String status) throws SQLException {
 
 		if (reply == null) reply = new String("--- none ---");
@@ -259,7 +254,7 @@ public class SQLiteHandler {
 					// update
 					sqlString1 = "update message (connectionId, fileName, textRequest, encoding, payload, reply, start, end, status) values (?,?, ?, ?, ?, ?, ?) where messageId = ?;";
 					st1 = conn.prepareStatement(sqlString1);
-					st1.setLong(1, connectionId);
+					st1.setString(1, connectionId);
 					st1.setString(2, fileName);
 					st1.setString(3, textRequest);
 					st1.setString(4, payload);
@@ -273,7 +268,7 @@ public class SQLiteHandler {
 					sqlString1 = "insert into message (messageId, sessionId, fileName, textRequest, payload, reply, start, end, status) values (?,?,?,?,?,?,?,?,?);";
 					st1 = conn.prepareStatement(sqlString1);
 					st1.setLong(1, messageId);
-					st1.setLong(2, connectionId);
+					st1.setString(2, connectionId);
 					st1.setString(3, fileName);
 					st1.setString(4, textRequest);
 					st1.setString(5, payload);
@@ -293,8 +288,8 @@ public class SQLiteHandler {
 	 * @since version 2.5
 	 * @return MessageContainer data from DB
 	 */
-	public MessageContainer read(Connection conn, long sessionId, FuzzingPanel fp) {
-		MessageContainer session = null;
+	public Vector<MessageContainer> read(Connection conn, String sessionId, FuzzingPanel fp) {
+		Vector<MessageContainer> session = null;
 		try {
 			PreparedStatement st1 = conn
 					.prepareStatement("select count(*) from session where sessionId = ?;");
@@ -330,34 +325,38 @@ public class SQLiteHandler {
 	 * @return MessageContainer outputMessage
 	 * @throws SQLException
 	 */
-	private MessageContainer readSession(Connection conn, long sessionId, FuzzingPanel fp)
+	private Vector<MessageContainer> readSession(Connection conn, String sessionId, FuzzingPanel fp)
 			throws SQLException {
-		//TODO
-		MessageContainer returnValue = new MessageContainer(fp);
+		Vector<MessageContainer> returnValue = new Vector<MessageContainer>();
+		
 		String sqlStatement = "select url from session where sessionId = ?";
 		String url = new String();
 		PreparedStatement st1 = conn.prepareStatement(sqlStatement);
-		st1.setLong(1, sessionId);
+		st1.setString(1, sessionId);
 		ResultSet rs1 = st1.executeQuery();
 		while(rs1.next()){
 			url = rs1.getString(1);
 		}
-		returnValue.setTextURL(url);
 		
 		//messageId, sessionId, textRequest, payload, start, end
-		String sql2 = "Select textRequest, payload, reply, start, end, status from message where sessionId = ?";
+		String sql2 = "Select textRequest, payload, reply, start, end, status, filename from message where sessionId = ?";
 		PreparedStatement st2 = conn.prepareStatement(sql2);
-		st2.setLong(1, sessionId);
+		st2.setString(1, sessionId);
 		ResultSet rs2 = st2.executeQuery();
+
 		while (rs2.next()){
-			returnValue.setPayload(rs2.getString(1));
-			returnValue.setEncodedPayload(rs2.getString(2));
-			returnValue.setMessage(rs2.getString(3));
-			returnValue.setStartDate(rs2.getDate(4));
-			returnValue.setEnd(rs2.getDate(5));
-			returnValue.setStatus(rs2.getString(6));
+			MessageContainer mc = new MessageContainer(fp);
+			mc.setTextURL(url);
+			mc.setPayload(rs2.getString(1));
+			mc.setEncodedPayload(rs2.getString(2));
+			mc.setMessage(rs2.getString(3));
+			mc.setStartDate(rs2.getDate(4));
+			mc.setEnd(rs2.getDate(5));
+			mc.setStatus(rs2.getString(6));
+			mc.setFileName(rs2.getString(7));
+			
+			returnValue.add(mc);
 		}
-		
 		return returnValue;
 	}
 
@@ -365,11 +364,16 @@ public class SQLiteHandler {
  * determines last used Id
  * @param conn
  * @param tableName
- * @return long lastUsedId
+ * @return String newId
  * @throws SQLException
  */
-	public long getLastId(Connection conn, String tableName)
-			throws SQLException {
+	public String getNewId(String tableName) {
+		Date date = new Date();
+		return SD_FORMAT.format(date);
+	}
+	
+	
+	public long getLastId(Connection conn, String tableName) throws SQLException{
 		long lastId = -1;
 		String sql1 = "select count(*) from " + tableName;
 		PreparedStatement pst1 = conn.prepareStatement(sql1);

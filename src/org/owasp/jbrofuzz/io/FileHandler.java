@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -278,7 +279,7 @@ public class FileHandler implements StorageInterface {
 	}
 
 	@Override
-	public void writeFuzzFile(MessageContainer outputMessage) {
+	public void writeFuzzFile(MessageContainer outputMessage, String sessionId) {
 	
 		final String fileName = outputMessage.getFileName() + ".html";
 	
@@ -293,7 +294,7 @@ public class FileHandler implements StorageInterface {
 	}
 
 	@Override
-	public MessageContainer readFuzzFile(String fileName, String sessionId,
+	public Vector<MessageContainer> readFuzzFile(String fileName, String sessionId,
 			JBroFuzzWindow mWindow) {
 		// TODO Auto-generated method stub
 		return null;

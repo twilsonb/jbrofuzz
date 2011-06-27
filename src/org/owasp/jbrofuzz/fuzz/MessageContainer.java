@@ -53,7 +53,8 @@ public class MessageContainer {
 	private transient String payload;
 	private transient String encodedPayload;
 	private transient int replyByteLength;
-	private transient String textRequest; 
+	private transient String textRequest;
+	private transient int responseTime;
 
 	public MessageContainer(final FuzzingPanel fuzzingPanel) {
 
@@ -155,6 +156,12 @@ public class MessageContainer {
 		return (int) (end.getTime() - start.getTime());
 
 	}
+	
+	public void setResponseTime(int responseTime){
+		this.responseTime = responseTime;
+	}
+	
+
 
 	public String getStartDateFull() {
 

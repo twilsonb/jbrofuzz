@@ -339,7 +339,7 @@ public class SyncDatabaseDialog extends JDialog implements MouseListener, KeyLis
 		private void clickGetSessions(){
 			if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("sqlite")){
 				SQLiteHandler sqlH = new SQLiteHandler();
-				long[] lSessionId = null;
+				String[] lSessionId = null;
 				sessionsSQLiteBox.removeAllItems();
 				
 				try {
@@ -358,8 +358,7 @@ public class SyncDatabaseDialog extends JDialog implements MouseListener, KeyLis
 				String[] sessionIds = new String[lSessionId.length];
 				
 				for (int i = 0; i < lSessionId.length; i++){
-					sessionIds[i] = String.valueOf(lSessionId);
-					sessionsSQLiteBox.addItem(String.valueOf(lSessionId[i]));
+					sessionsSQLiteBox.addItem(lSessionId[i]);
 				}
 				
 				sessionsSQLiteBox.setSelectedIndex(0);
