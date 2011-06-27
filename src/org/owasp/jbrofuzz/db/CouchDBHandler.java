@@ -1,7 +1,9 @@
 package org.owasp.jbrofuzz.db;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -26,6 +28,8 @@ public class CouchDBHandler{
 	private String protocol = "http";
 	private String host = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[9].getId(), "");
 	private int port = Integer.valueOf(JBroFuzz.PREFS.getInt(JBroFuzzPrefs.DBSETTINGS[10].getId(), 0));
+	private static final SimpleDateFormat SD_FORMAT = new SimpleDateFormat(
+			"zzz-yyyy-MM-dd-HH-mm-ss-SSS", Locale.ENGLISH);
 
 	
 	/**
@@ -277,7 +281,7 @@ public class CouchDBHandler{
 		String body = "";
 		if (documentId.length() < 0 || documentId.equals("")){
 			Date dat = new Date();
-			documentId = dat.getYear() + "_" + dat.getMonth() + "_" + dat.getDay() + "_" + dat.getHours() + ":" + dat.getMinutes();;
+			documentId = SD_FORMAT.format(dat);
 		}
 		String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + dbName + "/" + documentId;
 		if (evaluateConfiguration() > 0){

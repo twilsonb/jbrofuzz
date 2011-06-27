@@ -16,6 +16,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -76,7 +77,6 @@ KeyListener {
 	
 	private String sessionsSQLite[] = {"not loaded yet"};
 	
-//	private String sessionsCouch[] = {"not loaded yet"};
 
 	private JBroFuzzWindow parent = null;
 	/**
@@ -340,7 +340,7 @@ KeyListener {
 	private void clickGetSessions(){
 		if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("sqlite")){
 			SQLiteHandler sqlH = new SQLiteHandler();
-			long[] lSessionId = null;
+			String[] lSessionId = null;
 			sessionsSQLiteBox.removeAllItems();
 			
 				String dbName = "";
@@ -355,16 +355,13 @@ KeyListener {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-
-			String[] sessionIds = new String[lSessionId.length];
 			
 			for (int i = 0; i < lSessionId.length; i++){
-				sessionIds[i] = String.valueOf(lSessionId);
 				sessionsSQLiteBox.addItem(String.valueOf(lSessionId[i]));
 			}
 			
 			sessionsSQLiteBox.setSelectedIndex(0);
-			sessionsSQLite = sessionIds;
+			sessionsSQLite = lSessionId;
 			this.repaint();
 		}
 		else if (JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "").toLowerCase().trim().equals("couchdb")){
@@ -382,14 +379,19 @@ KeyListener {
 	}
 
 	private void clickOK(JBroFuzzWindow mWindow) {
-		MessageContainer mc = mWindow.getJBroFuzz().getStorageHandler().readFuzzFile(databaseBox.getSelectedItem().toString(), sessionsSQLiteBox.getSelectedItem().toString(), mWindow);
-		
-		mWindow.getPanelFuzzing().setTextURL(mc.getTextURL());
-		mWindow.getPanelFuzzing().setTextRequest(mc.getEncodedPayload());
+		Vector<MessageContainer> mcv = mWindow.getJBroFuzz().getStorageHandler().readFuzzFile(databaseBox.getSelectedItem().toString(), sessionsSQLiteBox.getSelectedItem().toString(), mWindow);
+
+		mWindow.getPanelFuzzing().setTextURL(mcv.get(0).getTextURL());
+		mWindow.getPanelFuzzing().setTextRequest(mcv.get(0).getEncodedPayload());
 
 		mWindow.getPanelFuzzing().getOutputPanel().getOutputTableModel().clearAllRows();
-		mWindow.getPanelFuzzing().getOutputPanel().getOutputTableModel().addNewRow(mc);
-
+	
+		
+		for (int i = 0; i < mcv.size(); i++){
+			
+			mWindow.getPanelFuzzing().getOutputPanel().getOutputTableModel().addNewRow(mcv.get(i));
+		}
+		
 		mWindow.doLayout();
 		mWindow.repaint();
 

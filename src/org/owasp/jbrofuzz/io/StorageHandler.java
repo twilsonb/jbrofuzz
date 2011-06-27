@@ -1,5 +1,7 @@
 package org.owasp.jbrofuzz.io;
 
+import java.util.Vector;
+
 import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.db.DBAdaptor;
 import org.owasp.jbrofuzz.db.DBAdaptorFactory;
@@ -69,18 +71,18 @@ public class StorageHandler implements StorageInterface {
 	}
 
 	@Override
-	public void writeFuzzFile(MessageContainer outputMessage) {
+	public void writeFuzzFile(MessageContainer outputMessage, String sessionId) {
 		if (mFileHandler != null) {
-			mFileHandler.writeFuzzFile(outputMessage) ;
+			mFileHandler.writeFuzzFile(outputMessage, sessionId) ;
 		}
 		if (mdbAdaptor != null){
-			mdbAdaptor.store(outputMessage);
+			mdbAdaptor.store(outputMessage, sessionId);
 		}
 	}
 	
 	
 	@Override
-	public MessageContainer readFuzzFile(String name, String sessionId, JBroFuzzWindow mWindow){
+	public Vector<MessageContainer> readFuzzFile(String name, String sessionId, JBroFuzzWindow mWindow){
 		if (mFileHandler != null){
 		//TODO read from file
 			Logger.log("Reading from file not implemented yet.", 3);

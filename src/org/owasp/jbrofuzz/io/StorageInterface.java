@@ -1,5 +1,7 @@
 package org.owasp.jbrofuzz.io;
 
+import java.util.Vector;
+
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.graph.FileSystemTreeNode;
 import org.owasp.jbrofuzz.graph.GraphingPanel;
@@ -54,10 +56,10 @@ public interface StorageInterface {
 	 */
 	public abstract String getLocationURIString();
 
-	public abstract void writeFuzzFile(MessageContainer outputMessage);
+	public abstract void writeFuzzFile(MessageContainer outputMessage, String sessionName);
 	
 	
-	public abstract MessageContainer readFuzzFile(String fileName, String sessionId, JBroFuzzWindow mWindow);
+	public abstract Vector<MessageContainer> readFuzzFile(String fileName, String sessionId, JBroFuzzWindow mWindow);
 	
 	public abstract String[] readTableRow(String sqlStatement);
 	

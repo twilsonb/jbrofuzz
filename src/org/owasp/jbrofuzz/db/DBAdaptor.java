@@ -1,6 +1,7 @@
 package org.owasp.jbrofuzz.db;
 
 import java.sql.Connection;
+import java.util.Vector;
 
 import org.json.JSONObject;
 import org.owasp.jbrofuzz.JBroFuzz;
@@ -25,7 +26,7 @@ public class DBAdaptor{
 	 * @param session SessionDTO - containing sessionData to be stored
 	 * @return returnCode int - 0 == OK | 1 == failed.
 	 */
-	public int store(MessageContainer outputMessage){
+	public int store(MessageContainer outputMessage, String sessionName){
 		String dbName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
 		int returnCode = 0;
 		
@@ -41,7 +42,7 @@ public class DBAdaptor{
 				try {
 					Connection conn = sqlH.getConnection(dbName);
 					if (conn == null) Logger.log("Connection = null", 0);
-					returnCode = sqlH.store(outputMessage, conn);
+					returnCode = sqlH.store(outputMessage, conn, sessionName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -56,18 +57,19 @@ public class DBAdaptor{
 	 * @param fileName
 	 * @return MessageContainer - content read from db
 	 */
-	public MessageContainer read(String fileName, String sessionId, JBroFuzzWindow mWindow){
-		MessageContainer mc = new MessageContainer(mWindow.getPanelFuzzing());
-
+	public Vector<MessageContainer> read(String fileName, String sessionId, JBroFuzzWindow mWindow){
+		Vector<MessageContainer> mcv = new Vector<MessageContainer>();
+		
 		if (dbHandler.getClass().getName().equals(CouchDBHandler.class)){
 			Logger.log("TODO: reading from CouchDB", 0);
 		}
 		else{
 			SQLiteHandler sqlH = (SQLiteHandler) dbHandler;
 			Connection conn = sqlH.getConnection(fileName);
-			mc = sqlH.read(conn, Long.valueOf(sessionId), mWindow.getPanelFuzzing());
+			
+			mcv = sqlH.read(conn, sessionId, mWindow.getPanelFuzzing());
 		}
-		return mc;
+		return mcv;
 	}
 	
 	public String[] executeQuery(String sql){
