@@ -288,17 +288,20 @@ public class SQLiteHandler {
 	 * @since version 2.5
 	 * @return MessageContainer data from DB
 	 */
-	public Vector<MessageContainer> read(Connection conn, String sessionId, FuzzingPanel fp) {
+	public Vector<MessageContainer> read(Connection conn, String sessionId, String fileName, FuzzingPanel fp) {
 		Vector<MessageContainer> session = null;
+		
 		try {
-			PreparedStatement st1 = conn
-					.prepareStatement("select count(*) from session where sessionId = ?;");
+			PreparedStatement st1 = conn.prepareStatement("select count(*) from session where sessionId = ?;");
+			st1.setString(1, sessionId);
+			
 			ResultSet rs1 = st1.executeQuery();
 			while (rs1.next()) {
 				if (rs1.getInt(1) > 1) {
+					Logger.log("More than one record found", 3);
 					throw new Exception("More than one record found");
 				} else {
-					session = readSession(conn, sessionId, fp);
+					session = readSession(conn, sessionId, fileName, fp);
 				}
 			}
 		} catch (SQLException e) {
@@ -325,7 +328,7 @@ public class SQLiteHandler {
 	 * @return MessageContainer outputMessage
 	 * @throws SQLException
 	 */
-	private Vector<MessageContainer> readSession(Connection conn, String sessionId, FuzzingPanel fp)
+	private Vector<MessageContainer> readSession(Connection conn, String sessionId, String fileName, FuzzingPanel fp)
 			throws SQLException {
 		Vector<MessageContainer> returnValue = new Vector<MessageContainer>();
 		
@@ -338,10 +341,20 @@ public class SQLiteHandler {
 			url = rs1.getString(1);
 		}
 		
-		//messageId, sessionId, textRequest, payload, start, end
-		String sql2 = "Select textRequest, payload, reply, start, end, status, filename from message where sessionId = ?";
+		String sql2 = "";
+		if (fileName == null) {
+			sql2 = "Select textRequest, payload, reply, start, end, status, filename from message where sessionId = ?";
+		
+		}
+		else{
+			sql2 = "Select textRequest, payload, reply, start, end, status, filename from message where sessionId = ? and filename = ?";
+		}
+		
 		PreparedStatement st2 = conn.prepareStatement(sql2);
 		st2.setString(1, sessionId);
+		
+		if (fileName != null) st2.setString(2, fileName);
+		
 		ResultSet rs2 = st2.executeQuery();
 
 		while (rs2.next()){
@@ -359,6 +372,10 @@ public class SQLiteHandler {
 		}
 		return returnValue;
 	}
+	
+	
+	
+	
 
 /**
  * determines last used Id

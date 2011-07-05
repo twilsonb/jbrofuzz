@@ -65,9 +65,10 @@ public class DBAdaptor{
 		}
 		else{
 			SQLiteHandler sqlH = (SQLiteHandler) dbHandler;
-			Connection conn = sqlH.getConnection(fileName);
+			 String dbName = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[12].getId(), "");
+			Connection conn = sqlH.getConnection(dbName);
 			
-			mcv = sqlH.read(conn, sessionId, mWindow.getPanelFuzzing());
+			mcv = sqlH.read(conn, sessionId, fileName, mWindow.getPanelFuzzing());
 		}
 		return mcv;
 	}

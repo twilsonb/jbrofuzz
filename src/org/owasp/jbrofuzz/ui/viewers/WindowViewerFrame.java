@@ -62,7 +62,9 @@ import javax.swing.text.Highlighter;
 
 import org.apache.commons.lang.StringUtils;
 import org.owasp.jbrofuzz.JBroFuzz;
+import org.owasp.jbrofuzz.fuzz.MessageContainer;
 import org.owasp.jbrofuzz.io.FileHandler;
+import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.AbstractPanel;
 import org.owasp.jbrofuzz.util.NonWrappingTextPane;
 import org.owasp.jbrofuzz.version.ImageCreator;
@@ -113,9 +115,11 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 	 * @version 2.0
 	 * @since 2.0
 	 */
-	public WindowViewerFrame(final AbstractPanel parent, final File inputFile) {
+	public WindowViewerFrame(final AbstractPanel parent, final String name) {
 
-		super("JBroFuzz - File Viewer - " + inputFile.getName());
+		
+		super("JBroFuzz - File Viewer - " + name);
+		
 		setIconImage(ImageCreator.IMG_FRAME.getImage());
 
 		// The container pane
@@ -125,7 +129,7 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 		// Define the Panel
 		final JPanel listPanel = new JPanel();
 		listPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-				.createTitledBorder(inputFile.getName()), BorderFactory
+				.createTitledBorder(name), BorderFactory
 				.createEmptyBorder(1, 1, 1, 1)));
 		listPanel.setLayout(new BorderLayout());
 
@@ -242,12 +246,44 @@ public class WindowViewerFrame extends JFrame implements DocumentListener {
 
 				progressBar.setIndeterminate(true);
 
-				listTextArea.setText(
+				String dbType = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "-1");
+				
+				if  (dbType.equals("SQLite") || dbType.equals("CouchDB") ){
+
+					String sessionId = parent.getFrame().getJBroFuzz().getWindow().getPanelFuzzing().getSessionName();
+					
+					if(sessionId == null || sessionId.equals("null")){
+						sessionId = JBroFuzz.PREFS.get("sessionId", "");
+					}
+					
+					Logger.log("Reading Session: " +  sessionId + " with name: " + name, 3);
+
+					MessageContainer mc = parent.getFrame().getJBroFuzz().getStorageHandler().readFuzzFile(name, sessionId, parent.getFrame().getJBroFuzz().getWindow()).get(0);
+
+					
+					listTextArea.setText(
+							"Date: " + mc.getEndDateFull() + "\n" + 
+							"FileName: " + mc.getFileName() + "\n" + 
+							"URL: " + mc.getTextURL() + "\n" + 
+							"Payload: " + mc.getPayload() + "\n" +  
+							"EncodedPayload: " + mc.getEncodedPayload() + "\n" + 
+							"TextRequest:" + mc.getTextRequest() + "\n" + 
+							"Message: " + mc.getMessage() + "\n" + 
+							"Status: " + mc.getStatus() + "\n" 
+						
+					);
+					
+				}
+				else{
+					Logger.log("Loading data from file",3);
+					final File inputFile = new File(parent.getFrame().getJBroFuzz().getWindow().getPanelFuzzing().getFrame().getJBroFuzz().getStorageHandler().getLocationURIString(), name + ".html");
+					
+					listTextArea.setText(
 
 						FileHandler.readFile(inputFile)
 						
-				);
-				
+					);
+				}
 				return "done";
 			}
 
