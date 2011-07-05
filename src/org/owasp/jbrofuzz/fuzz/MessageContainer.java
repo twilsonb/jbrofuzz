@@ -55,7 +55,9 @@ public class MessageContainer {
 	private transient int replyByteLength;
 	private transient String textRequest;
 	private transient int responseTime;
-
+	private transient String reply;
+	
+	
 	public MessageContainer(final FuzzingPanel fuzzingPanel) {
 
 		// Set the start & end time
@@ -77,6 +79,14 @@ public class MessageContainer {
 		message = new StringBuffer("<!--\n");
 	}
 
+	public void setReply(String reply){
+		this.reply = reply;
+	}
+	
+	public String getReply(){
+		return this.reply;
+	}
+	
 	public void setEnd(Date date) {
 		this.end = date;
 	}

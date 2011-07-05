@@ -242,15 +242,16 @@ public class OutputPanel extends JPanel{
 									request = FuzzFileUtils
 											.getRequest(fuzzerLineOutput);
 								} else if (dbType.equals("SQLite")) {
-									String sqlStatement1 = "Select textRequest from message where filename='" + name + "'";
-									String sqlStatement2 = "Select reply from message where filename='" + name + "'";
+									
+									String sqlStatement1 = "Select payload from message where filename='" + name + "' and sessionId ='" + fp.getSessionName() + "'";
+									String sqlStatement2 = "Select reply from message where filename='" + name + "' and sessionId ='" + fp.getSessionName() + "'";
 									String[] result = fp.getFrame().getJBroFuzz().getStorageHandler().readTableRow(sqlStatement1);
 									if (result.length > 0){
 										request = result[0];
 									}
 									String[] result2 = fp.getFrame().getJBroFuzz().getStorageHandler().readTableRow(sqlStatement2);
 									if (result2.length > 0){
-										response = result[0];
+										response = result2[0];
 									}
 								} else {
 									// TODO: validation checks on the couch DB

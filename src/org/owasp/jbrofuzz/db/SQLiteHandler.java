@@ -157,7 +157,7 @@ public class SQLiteHandler {
 													 outputMessage.getFileName(),
 													 outputMessage.getTextRequest(), 
 													 outputMessage.getEncodedPayload(),
-													 outputMessage.getMessage(),
+													 outputMessage.getReply(),
 													 outputMessage.getStartDateFull(),
 													 end,
 													 outputMessage.getStatus());
@@ -252,7 +252,7 @@ public class SQLiteHandler {
 				PreparedStatement st1;
 				if (count > 0) {
 					// update
-					sqlString1 = "update message (connectionId, fileName, textRequest, encoding, payload, reply, start, end, status) values (?,?, ?, ?, ?, ?, ?) where messageId = ?;";
+					sqlString1 = "update message (connectionId, fileName, textRequest, textRequest, payload, reply, start, end, status) values (?,?, ?, ?, ?, ?, ?) where messageId = ?;";
 					st1 = conn.prepareStatement(sqlString1);
 					st1.setString(1, connectionId);
 					st1.setString(2, fileName);
@@ -362,7 +362,7 @@ public class SQLiteHandler {
 			mc.setTextURL(url);
 			mc.setPayload(rs2.getString(1));
 			mc.setEncodedPayload(rs2.getString(2));
-			mc.setMessage(rs2.getString(3));
+			mc.setReply(rs2.getString(3));
 			mc.setStartDate(rs2.getDate(4));
 			mc.setEnd(rs2.getDate(5));
 			mc.setStatus(rs2.getString(6));
