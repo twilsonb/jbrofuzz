@@ -491,7 +491,9 @@ public class FuzzingPanel extends AbstractPanel {
 						// Connect
 						final Connection connection = new Connection(
 								getTextURL(), currentMessage.getMessage());
-
+						outputMessage.setReply(connection.getReply());
+						Logger.log("received: " + outputMessage.getReply(), 3);						
+						
 						// Update the message writer
 						outputMessage.setConnection(connection);
 
@@ -524,6 +526,8 @@ public class FuzzingPanel extends AbstractPanel {
 							// toConsole("\n--> [JBROFUZZ FUZZING RESPONSE] <--\n");
 							mWireTextArea
 									.setText("A connection exception occurred.");
+							outputMessage.setReply(mWireTextArea.getText());
+							Logger.log("reply set to: " + outputMessage.getReply(), 3);
 						}
 
 						// Update the last row, indicating an error
