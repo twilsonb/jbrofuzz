@@ -215,6 +215,7 @@ public class OutputPanel extends JPanel{
 
 						class FileLoader extends SwingWorker<String, Object> { // NO_UCD
 
+							
 							String fuzzerLineOutput = new String();
 
 							public String doInBackground() {

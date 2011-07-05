@@ -379,13 +379,17 @@ KeyListener {
 	}
 
 	private void clickOK(JBroFuzzWindow mWindow) {
-		Vector<MessageContainer> mcv = mWindow.getJBroFuzz().getStorageHandler().readFuzzFile(databaseBox.getSelectedItem().toString(), sessionsSQLiteBox.getSelectedItem().toString(), mWindow);
+		Vector<MessageContainer> mcv = mWindow.getJBroFuzz().getStorageHandler().readFuzzFile(null, sessionsSQLiteBox.getSelectedItem().toString(), mWindow);
 
 		mWindow.getPanelFuzzing().setTextURL(mcv.get(0).getTextURL());
 		mWindow.getPanelFuzzing().setTextRequest(mcv.get(0).getEncodedPayload());
 
 		mWindow.getPanelFuzzing().getOutputPanel().getOutputTableModel().clearAllRows();
 	
+		mWindow.getPanelFuzzing().setSessionName(sessionsSQLiteBox.getSelectedItem().toString());
+		
+		JBroFuzz.PREFS.put("sessionId", sessionsSQLiteBox.getSelectedItem().toString());
+		
 		
 		for (int i = 0; i < mcv.size(); i++){
 			

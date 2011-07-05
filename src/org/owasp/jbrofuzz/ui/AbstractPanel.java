@@ -378,7 +378,7 @@ public abstract class AbstractPanel extends JPanel {
 						final String directory = getFrame().getJBroFuzz().getStorageHandler().getLocationURIString();
 						final File selFile = new File(directory, name);
 						
-						new WindowViewerFrame(AbstractPanel.this, selFile);
+						new WindowViewerFrame(AbstractPanel.this, name);
 
 					}
 

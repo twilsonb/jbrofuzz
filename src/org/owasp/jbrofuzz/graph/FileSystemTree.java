@@ -200,7 +200,7 @@ class FileSystemTree extends JTree implements MouseListener {
 					
 				} else {
 					
-					new WindowViewerFrame(graphingPanel, new File(stringFile));
+					new WindowViewerFrame(graphingPanel, stringFile);
 					
 				}
 

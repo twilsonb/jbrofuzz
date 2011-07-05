@@ -184,7 +184,13 @@ public class JBroFuzzPrefs {
 				"dbsettings.db.dbName",
 				" DBName ",
 				" Specify the name of the DB to be used "
-				)
+				),
+		
+		//13 SessionId
+		new PrefEntry(
+				"debsettings.db.sessionid",
+				" SessionId ",
+				" Specify the Id of the Session in DB")
 		};
 	
 	/**

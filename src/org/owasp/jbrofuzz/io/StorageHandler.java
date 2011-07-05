@@ -6,12 +6,10 @@ import org.owasp.jbrofuzz.JBroFuzz;
 import org.owasp.jbrofuzz.db.DBAdaptor;
 import org.owasp.jbrofuzz.db.DBAdaptorFactory;
 import org.owasp.jbrofuzz.fuzz.MessageContainer;
-import org.owasp.jbrofuzz.graph.FileSystemTreeModel;
 import org.owasp.jbrofuzz.graph.FileSystemTreeNode;
 import org.owasp.jbrofuzz.graph.GraphingPanel;
 import org.owasp.jbrofuzz.graph.utils.DBWalker;
 import org.owasp.jbrofuzz.graph.utils.JohnyWalker;
-import org.owasp.jbrofuzz.graph.utils.Walker;
 import org.owasp.jbrofuzz.system.Logger;
 import org.owasp.jbrofuzz.ui.JBroFuzzWindow;
 import org.owasp.jbrofuzz.version.JBroFuzzPrefs;
@@ -21,6 +19,8 @@ public class StorageHandler implements StorageInterface {
 
 	private FileHandler mFileHandler;
 	private DBAdaptor mdbAdaptor;
+	private String sessionId; 
+	
 	public StorageHandler() {
 	
 		final String dbType = JBroFuzz.PREFS.get(JBroFuzzPrefs.DBSETTINGS[11].getId(), "-1");
@@ -72,11 +72,18 @@ public class StorageHandler implements StorageInterface {
 
 	@Override
 	public void writeFuzzFile(MessageContainer outputMessage, String sessionId) {
+		if (sessionId != null && sessionId.length() != 0){
+			this.sessionId = sessionId;
+		}
+
+		else{
+			this.sessionId = JBroFuzz.PREFS.get("sessionId", "");
+		}
 		if (mFileHandler != null) {
-			mFileHandler.writeFuzzFile(outputMessage, sessionId) ;
+			mFileHandler.writeFuzzFile(outputMessage, this.sessionId) ;
 		}
 		if (mdbAdaptor != null){
-			mdbAdaptor.store(outputMessage, sessionId);
+			mdbAdaptor.store(outputMessage, this.sessionId);
 		}
 	}
 	
@@ -88,7 +95,11 @@ public class StorageHandler implements StorageInterface {
 			Logger.log("Reading from file not implemented yet.", 3);
 		}
 		if (mdbAdaptor != null){
-			return mdbAdaptor.read(name, sessionId, mWindow);
+			
+			if (sessionId != null){
+				this.sessionId = sessionId;
+			}
+			return mdbAdaptor.read(name, this.sessionId, mWindow);
 		}
 		return null;
 	}

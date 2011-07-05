@@ -127,10 +127,11 @@ public final class RightClickPopups {
 				final String name = (String) area.getModel()
 				.getValueAt(area.convertRowIndexToModel(c), 0);
 
-				final String sURi = mFuzzingPanel.getFrame().getJBroFuzz().getStorageHandler().getLocationURIString();
-				final File selFile = new File(sURi, name + ".html");
-
-				new WindowViewerFrame(mFuzzingPanel, selFile);
+				Logger.log("Calling WindowViewer with name: " + name, 3);
+					// final String sURi = mFuzzingPanel.getFrame().getJBroFuzz().getStorageHandler().getLocationURIString();
+					
+					new WindowViewerFrame(mFuzzingPanel, name);
+				
 
 			}
 		});

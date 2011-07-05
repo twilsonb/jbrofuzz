@@ -113,7 +113,7 @@ public class FuzzingPanel extends AbstractPanel {
 
 	private static final SimpleDateFormat SH_FORMAT = new SimpleDateFormat(
 			"DDD-HH-mm-ss-SSS", Locale.ENGLISH);
-	private String sessionName = SD_FORMAT.format(new Date());
+	private String sessionName = null;
 
 	/**
 	 * <p>
@@ -219,6 +219,14 @@ public class FuzzingPanel extends AbstractPanel {
 		setTextRequest(JBroFuzz.PREFS.get(JBroFuzzPrefs.TEXT_REQUEST, ""));
 	}
 
+	public String getSessionName(){
+		return sessionName;
+	}
+	
+	public void setSessionName(String sessionId){
+		this.sessionName = sessionId;
+	}
+	
 	public static JPanel createScrollingPanel(String title, JTextPane textPane) {
 		// The request panel
 		final JPanel panel = new JPanel(new BorderLayout());
@@ -405,7 +413,7 @@ public class FuzzingPanel extends AbstractPanel {
 	 */
 	public void start() {
 		if (!stopped) {
-			return;
+		 	return;
 		}
 		stopped = false;
 
@@ -418,8 +426,8 @@ public class FuzzingPanel extends AbstractPanel {
 
 		final int fuzzers_added = fuzzersPanel.getRowCount();
 
-		// create Sessionname if not set already
-		if (sessionName.length() == 0) {
+		// create  if not set already
+		if (sessionName == null) {
 			sessionName = SD_FORMAT.format(new Date());
 		}
 
