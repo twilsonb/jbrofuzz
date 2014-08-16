@@ -225,8 +225,10 @@ public class OutputPanel extends JPanel{
 										.getLocationURIString();
 								final File selFile = new File(directory, name
 										+ ".html");
-								fuzzerLineOutput = FileHandler
-										.readFile(selFile);
+                                if (selFile.exists()) {
+                                    fuzzerLineOutput = FileHandler
+                                            .readFile(selFile);
+                                }
 								return "done";
 							}
 
@@ -237,10 +239,12 @@ public class OutputPanel extends JPanel{
 								String request = new String();
 								String response = new String();
 								if (dbType.equals("None")) {
-									response = FuzzFileUtils
-											.getResponse(fuzzerLineOutput);
-									request = FuzzFileUtils
-											.getRequest(fuzzerLineOutput);
+                                    if (fuzzerLineOutput != null) {
+                                        response = FuzzFileUtils
+                                                .getResponse(fuzzerLineOutput);
+                                        request = FuzzFileUtils
+                                                .getRequest(fuzzerLineOutput);
+                                    }
 								} else if (dbType.equals("SQLite")) {
 									
 									String sqlStatement1 = "Select payload from message where filename='" + name + "' and sessionId ='" + fp.getSessionName() + "'";

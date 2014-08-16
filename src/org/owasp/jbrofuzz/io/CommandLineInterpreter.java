@@ -120,7 +120,7 @@ public class CommandLineInterpreter{
 				returnValue = -1;
 				return returnValue;
 			}
-			else if (args[j].equals("-p") || args[j].equals("--perfix")){
+			else if (args[j].equals("-p") || args[j].equals("--prefix")){
 				prefix = args[j +1];
 			}
 			else if (args[j].equals("-r") || args[j].equals("--request")){
