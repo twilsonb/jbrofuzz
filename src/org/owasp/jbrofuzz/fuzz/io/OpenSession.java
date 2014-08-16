@@ -394,7 +394,7 @@ public class OpenSession {
 
 				try {
 					prefix = new String(
-							Base64.decodeBase64(transformLineArray[2]), "UTF-8");
+							Base64.decodeBase64(transformLineArray[2].getBytes()), "UTF-8");
 				} catch (UnsupportedEncodingException e) {
 					Logger.log(
 							"Transform Line Syntax Error: Cannot Decode Prefix",
@@ -410,7 +410,7 @@ public class OpenSession {
 
 				try {
 					suffix = new String(
-							Base64.decodeBase64(transformLineArray[3]), "UTF-8");
+							Base64.decodeBase64(transformLineArray[3].getBytes()), "UTF-8");
 				} catch (UnsupportedEncodingException e) {
 					Logger.log(
 							"Transform Line Syntax Error: Cannot Decode Suffix",
