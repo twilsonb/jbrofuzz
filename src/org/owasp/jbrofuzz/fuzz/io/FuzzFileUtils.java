@@ -49,7 +49,12 @@ import org.owasp.jbrofuzz.system.Logger;
 public  class FuzzFileUtils {
 
 	public static String getResponse(String input){
-		return input.substring(input.indexOf("--jbrofuzz-->")+14,input.length());
+        if (input.length() >= ("--jbrofuzz-->").length()) {
+            return input.substring(input.indexOf("--jbrofuzz-->") + ("--jbrofuzz-->").length(), input.length());
+        } else {
+            Logger.log("Fuzzer file empty or does not exist", 3);
+            return "";
+        }
 	}
 
 	public static String getRequest(String input){
@@ -64,7 +69,7 @@ public  class FuzzFileUtils {
 				numLines ++;
 			}
 
-			
+
 
 			while (!(line = reader.readLine()).equals("--jbrofuzz-->")){
 				sBuf.append(line);
@@ -73,7 +78,11 @@ public  class FuzzFileUtils {
 
 		}catch(IOException ioe){
 			Logger.log("Fuzzer file is not in the correct format", 3);
-		}
+            return "";
+		}catch(NullPointerException npe){
+            Logger.log("Fuzzer file empty or does not exist", 3);
+            return "";
+        }
 		String rawReq = sBuf.toString();
 		return rawReq.substring(0,rawReq.lastIndexOf("--")-1);	
 	}
